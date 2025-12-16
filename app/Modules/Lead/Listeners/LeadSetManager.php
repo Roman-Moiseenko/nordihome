@@ -4,7 +4,6 @@ namespace App\Modules\Lead\Listeners;
 
 use App\Modules\Lead\Entity\LeadStatus;
 use App\Modules\Lead\Service\LeadService;
-use App\Modules\Order\Events\OrderHasCreated;
 use App\Modules\Order\Events\OrderHasSetManager;
 
 /**

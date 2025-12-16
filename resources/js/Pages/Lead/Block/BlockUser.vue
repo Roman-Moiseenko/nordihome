@@ -1,15 +1,12 @@
 <template>
-    <div v-if="lead.user">
+    <div v-if="lead.user" class="my-1">
         <Link :href="route('admin.user.show', {user: lead.user.id})" class="flex items-center w-full text-sm"
               type="primary"> {{ func.fullName(lead.user.fullname) }} </Link>
     </div>
-    <div v-if="!lead.user" class="flex">
+    <div v-if="!lead.user" class="flex my-1">
         <EditField :field="lead.name" @update:field="onSetName" class="text-sm font-medium"/>
     </div>
-    <div v-if="lead.order !== null">
-        <Link :href="route('admin.order.show', {order: lead.order.id})" class="flex items-center w-full text-sm"
-              type="primary">Заказ #{{ lead.order.number }} на {{ func.price(lead.order.amount)}} </Link>
-    </div>
+
 </template>
 
 <script setup lang="ts">

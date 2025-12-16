@@ -4,6 +4,9 @@ namespace App\Modules\Lead\Repository;
 
 use App\Modules\Lead\Entity\Lead;
 use App\Modules\Lead\Entity\LeadStatus;
+use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderItem;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\ExpectedValues;
 
@@ -74,15 +77,30 @@ class LeadRepository
                 'email' => $lead->user->email,
                 'phone' => $lead->user->phone,
             ],
-            'order' => is_null($lead->order) ? null : [
-                'id' => $lead->order->id,
-                'number' => $lead->order->number,
-                'status' => $lead->order->status->value(),
-                'amount' => $lead->order->getTotalAmount(),
-            ],
+            'order' => $this->OrderToArray($lead->order),
             'items' => $lead->items()->get()->toArray(),
             'leads' => $this->getRelatedLeads($lead),
         ]);
+    }
+
+    private function OrderToArray(?Order $order):? array
+    {
+        if (is_null($order)) return null;
+        return [
+            'id' => $order->id,
+            'number' => $order->number,
+            'status' => $order->status->value(),
+            'amount' => $order->getTotalAmount(),
+            'products' => $order->items()->get()->map(fn(OrderItem $item) => [
+                'code' => $item->product->code,
+                'quantity' => $item->quantity,
+            ])->toArray(),
+            'expenses' => $order->expenses()->get()->map(fn(OrderExpense $expense) => [
+                'id' => $expense->id,
+                'created_at' => $expense->created_at,
+                'status' => $expense->statusHTML(),
+            ])->toArray(),
+        ];
     }
 
     public function getBoards(): array

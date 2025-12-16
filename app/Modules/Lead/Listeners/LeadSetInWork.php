@@ -4,12 +4,15 @@ namespace App\Modules\Lead\Listeners;
 
 use App\Modules\Lead\Entity\Lead;
 use App\Modules\Lead\Service\LeadService;
+use App\Modules\Order\Events\OrderHasAwaiting;
 use App\Modules\Order\Events\OrderHasCanceled;
+use App\Modules\Order\Events\OrderHasPaid;
+use App\Modules\Order\Events\OrderHasWork;
 
 /**
  * Отмена заявки при отмене Заказа по событию OrderHasCanceled
  */
-class LeadCanceled
+class LeadSetInWork
 {
     private LeadService $service;
 
@@ -18,8 +21,8 @@ class LeadCanceled
         $this->service = $service;
     }
 
-    public function handle(OrderHasCanceled $event): void
+    public function handle(OrderHasWork $event): void
     {
-        $this->service->canceled($event->order->lead, Lead::CANCELED_ORDER_MANAGER);
+        $this->service->work($event->order->lead);
     }
 }

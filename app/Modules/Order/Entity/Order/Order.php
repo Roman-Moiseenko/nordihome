@@ -100,6 +100,7 @@ class Order extends Model
         'comment',
         'staff_id',
         'trader_id',
+        'number',
     ];
     protected $casts = [
         'created_at' => 'datetime',
@@ -299,6 +300,15 @@ class Order extends Model
         $quantity = 0;
         foreach ($this->items as $item) {
             $quantity += $item->getExpenseAmount();
+        }
+        return $quantity;
+    }
+
+    public function getQuantityRemains(): float
+    {
+        $quantity = 0;
+        foreach ($this->items as $item) {
+            $quantity += $item->getRemains();
         }
         return $quantity;
     }

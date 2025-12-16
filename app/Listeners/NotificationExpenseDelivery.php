@@ -2,11 +2,10 @@
 
 namespace App\Listeners;
 
-use App\Events\ExpenseHasDelivery;
-
 use App\Modules\Mail\Job\SendSystemMail;
 use App\Modules\Mail\Mailable\ExpenseDelivery;
 use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Events\ExpenseHasDelivery;
 
 class NotificationExpenseDelivery
 {

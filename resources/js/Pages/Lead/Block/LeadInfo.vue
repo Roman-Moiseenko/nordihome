@@ -1,7 +1,8 @@
 <template>
     <div class="shadow-lg mb-1 bg-white" style="width: 100%;">
         <BlockInfo :lead="lead" />
-        <BlockUserOrder :lead="lead" />
+        <BlockUser :lead="lead" />
+        <CollapseOrder v-if="lead.order !== null" :lead="lead" />
         <CollapseItems :lead="lead" @add:item="onAddItem"/>
         <CollapseData :lead="lead" />
         <CollapseLeads v-if="lead.leads.length > 0" :lead="lead" />
@@ -18,11 +19,12 @@
 <script setup lang="ts">
 import {defineProps} from "vue";
 
-import BlockUserOrder from './BlockUserOrder.vue'
+import BlockUser from './BlockUser.vue'
 import CollapseItems from './CollapseItems.vue'
 import CollapseData from './CollapseData.vue'
 import CollapseLeads from './CollapseLeads.vue'
 import BlockInfo from "./BlockInfo.vue";
+import CollapseOrder from "./CollapseOrder.vue";
 
 const props = defineProps({
     lead: Object,

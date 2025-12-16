@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Service;
 
-use App\Events\ExpenseHasDelivery;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Delivery\Entity\Local\Tariff;
@@ -11,6 +10,7 @@ use App\Modules\Delivery\Entity\Transport\DeliveryData;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Events\ExpenseHasDelivery;
 use App\Modules\Order\Service\ExpenseService;
 use App\Modules\Shop\CartItemInterface;
 use App\Modules\User\Entity\UserDelivery;
@@ -55,7 +55,7 @@ class DeliveryService
     }
 
     //TODO расчет расстояния
-    private function distance()
+    private function distance(): int
     {
         //Получаем базовые координаты центра из настроек
 
@@ -72,12 +72,11 @@ class DeliveryService
         if (!$expense->isRegion()) throw new \DomainException('Неверный тип доставки');
 
         $delivery = DeliveryCargo::new($request->integer('company_id'), $request->string('track')->trim()->value());
-
         $expense->delivery()->save($delivery);
-        event(new ExpenseHasDelivery($expense)); //Уведомляем клиента с трек-номером
-
         $expense->status = OrderExpense::STATUS_DELIVERY;
         $expense->save();
+        $expense->refresh();
+        event(new ExpenseHasDelivery($expense)); //Уведомляем клиента с трек-номером
         $this->logger->logOrder(order: $expense->order, action: 'Распоряжение в пути',
             value: !empty($track) ? ('Трек посылки ' . $track) : '',
             link: route('admin.order.expense.show', $expense)

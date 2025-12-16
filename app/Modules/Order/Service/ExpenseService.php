@@ -22,7 +22,10 @@ use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Entity\Order\OrderExpenseWorker;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Events\ExpenseHasAssembling;
+use App\Modules\Order\Events\ExpenseHasCanceled;
 use App\Modules\Order\Events\ExpenseHasCompleted;
+use App\Modules\Order\Events\OrderHasCompleted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -183,6 +186,7 @@ class ExpenseService
             $order->refresh();
         });
 
+        event(new ExpenseHasCanceled($expense));
         return $order;
     }
 
@@ -206,6 +210,8 @@ class ExpenseService
 
             ));
         }
+        event(new ExpenseHasAssembling($expense));
+
         $this->logger->logOrder(order: $expense->order, action: 'Распоряжение отправлено на сборку',
             value: $expense->htmlNumDate(),
             link: route('admin.order.expense.show', $expense));
@@ -348,12 +354,13 @@ class ExpenseService
             $order = $expense->order;
             $order->refresh();
             //Создание чеков если есть продажи по ЮКассе
-            foreach ($order->payments as $payment) {
+            /*
+             foreach ($order->payments as $payment) {
                 if ($payment->isYooKassa()) {
                     $this->yookassaService->createReceipt($expense, $payment);
                     break;
                 }
-            }
+            }*/
 
             if (($order->getTotalAmount() - $order->getExpenseAmount() + $order->getCoupon() + $order->getDiscountOrder()) < 1) {
                 $check = true;
@@ -364,6 +371,7 @@ class ExpenseService
                 //Проверить все ли распоряжения выданы?
                 if ($check) {
                     $expense->order->setStatus(OrderStatus::COMPLETED);
+                    event(new OrderHasCompleted($expense->order));
                     $this->logger->logOrder(order: $expense->order, action:  'Заказ завершен');
                 } else {
                     $this->logger->logOrder(order:$expense->order, action: 'Товар выдан по распоряжению',

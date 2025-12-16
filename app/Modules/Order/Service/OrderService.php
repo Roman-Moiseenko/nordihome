@@ -28,6 +28,7 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Events\OrderHasAwaiting;
 use App\Modules\Order\Events\OrderHasCanceled;
 use App\Modules\Order\Events\OrderHasCreated;
 use App\Modules\Order\Events\OrderHasSetManager;
@@ -424,7 +425,7 @@ class OrderService
                 $payment->trader_id = $order->trader_id;
                 $payment->save();
             }
-            event(new OrderHasCanceled($order)); //TODO event Отменить Lead
+            event(new OrderHasCanceled($order));
             $this->logger->logOrder(order: $order, action: 'Заказ отменен менеджером',
                 object: $comment);
 
@@ -482,8 +483,8 @@ class OrderService
                     $emails
                 );
             }
-            //TODO Или создаем событие //TODO event Отменить Lead
-            // event(new OrderHasAwaiting($order));
+            //TODO Или создаем событие //TODO event  Lead
+            event(new OrderHasAwaiting($order));
 
         });
     }
@@ -501,8 +502,11 @@ class OrderService
                     $addition->save();
                 }
             }
+            event(new OrderHasWork($order));
             $this->logger->logOrder(order: $order, action: 'Заказ вернулся в работу');
         });
+
+        //TODO event  Lead
     }
 
     /**
