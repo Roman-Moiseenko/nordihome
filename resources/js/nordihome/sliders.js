@@ -46,11 +46,6 @@ window.$ = jQuery;
     }
     if (document.getElementById('main-slider01') !== null) {
         let sliderPayment = $('#main-slider01');
-        let optionsSliderPayment = {...optionsSliderBase};
-        optionsSliderPayment.autoplay = false;
-        optionsSliderPayment.items = 5;
-        optionsSliderPayment.loop = false;
-        optionsSliderPayment.nav = false;
 
         sliderPayment.owlCarousel(optionsSliderPayment);
         sliderPayment.on('mousewheel', '.owl-stage', function (e) {
