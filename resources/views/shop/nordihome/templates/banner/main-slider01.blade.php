@@ -15,7 +15,7 @@
 @endphp
 <div class="main-specials">
     <div class="container">
-        <div id="slider-payment" class="owl-carousel owl-theme">
+        <div id="main-slider01" class="owl-carousel owl-theme">
             @foreach($widget->items as $item)
                 <div>
                     <a href="{{ $item->url }}">
