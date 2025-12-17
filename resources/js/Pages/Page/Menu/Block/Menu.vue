@@ -5,14 +5,14 @@
     <el-button type="danger" size="small" class="ml-4" @click="handleDeleteEntity">Delete</el-button>
     <div>
         <el-row :gutter="10">
-            <el-col :span="6">
+            <el-col :span="10">
                 <div :id="'menu-items-' + index" style="cursor: pointer; ">
                     <div v-for="(item, index) in items" class="border p-1">
                         <MenuItem :item="item" :index="index" @del:item="reloadItems"/>
                     </div>
                 </div>
             </el-col>
-            <el-col :span="18">
+            <el-col :span="14">
                 <MenuActions :id="menu.id" @add:item="reloadItems"/>
             </el-col>
         </el-row>
