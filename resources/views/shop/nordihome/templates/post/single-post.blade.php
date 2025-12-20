@@ -21,13 +21,4 @@
     <div>
         {!! $post->text !!} <img src="{{ $post->getImage('card') }}" alt="{{ $post->title }}">
     </div>
-
-    <div>
-        <h3>{{ $photo->title }}</h3>
-        <img src="{{ $photo->url }}" alt="{{ $photo->alt }}">
-        <div>
-            {{ $photo->description }}
-        </div>
-    </div>
-
 @endsection
