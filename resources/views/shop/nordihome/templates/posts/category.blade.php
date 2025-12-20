@@ -30,7 +30,7 @@ posts container-xl
     {{ $post->title }}
     <a href="{{ route('shop.post.view', $post->slug) }}">{{ $post->name }}</a>
     <div class="content">
-        {{ !! $post->getParagraphs(2) !! }}
+        {!! $post->getParagraphs(2) !!}
     </div>
 </div>
 @endforeach
