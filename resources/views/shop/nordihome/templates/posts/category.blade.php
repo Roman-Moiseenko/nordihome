@@ -26,13 +26,22 @@ posts container-xl
 </div>
 
 @foreach($posts as $post)
-<div>
-    {{ $post->title }}
-    <a href="{{ route('shop.post.view', $post->slug) }}">{{ $post->name }}</a>
-    <div class="content">
-        {!! $post->getParagraphs(2) !!}
+    <div class="item-news m-b_20">
+        <div class="row">
+            <div class="col-md-5 col-lg-4 img">
+                Картинка
+            </div>
+            <div class="col-md-7 col-lg-8">
+                <h3 class="news-head"><a href="{{ route('shop.post.view', $post->slug) }}">{{ $post->name }}</a></h3>
+                <div class="news-info">
+                    {!! $post->getParagraphs(1) !!}
+                </div>
+                <div class="news-more-link m-t_20">
+                    <a href="{{ route('shop.post.view', $post->slug) }}" class="btn btn-orange">Подробнее</a>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
 @endforeach
 <div class="products-page-list--bottom">
     {{ $posts->links('shop.nordihome.widgets.paginator') }}
