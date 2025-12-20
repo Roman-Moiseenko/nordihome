@@ -28,7 +28,14 @@
 }
 @media (max-width: 990px) {
     .product-hit-item-order-2 {order:2;}
-    .product-hit-item .info {padding: 20px;}
-    .product-hit-item h3 {margin-top:0;font-size: 24px;}
-    .product-hit-item {margin-bottom:15px;}
+    .product-hit-item {
+        margin-bottom:15px;
+        .info {
+            padding: 20px;
+        }
+        h3 {
+            margin-top:0;
+            font-size: 24px;
+        }
+    }
 }
