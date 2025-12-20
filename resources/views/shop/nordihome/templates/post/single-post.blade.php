@@ -19,7 +19,7 @@
     </div>
 
     <div>
-        {!! $post->text !!} <img src="{{ $post->getImage('card') }}" alt="{{ $photo->alt }}">
+        {!! $post->text !!} <img src="{{ $post->getImage('slide') }}" alt="{{ $photo->alt }}">
     </div>
 
     <div>
