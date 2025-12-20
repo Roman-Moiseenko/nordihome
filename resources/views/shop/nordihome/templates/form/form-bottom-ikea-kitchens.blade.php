@@ -27,7 +27,7 @@ use App\Modules\Page\Entity\FormWidget;
             <div class="row">
                 <div class="col-md-6 col-lg-2">
                     <label>
-                        <input name="name" required placeholder="{{ $widget->fields["name"] }}"/>
+                        <input name="name" type="text" required placeholder="{{ $widget->fields["name"] }}"/>
                     </label>
                 </div>
                 <div class="col-md-6 col-lg-3">
