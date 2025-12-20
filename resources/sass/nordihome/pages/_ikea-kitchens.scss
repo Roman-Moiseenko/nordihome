@@ -87,22 +87,6 @@
 }
 
 @media (max-width: 576px) {
-    .advantages-kitchen {
-        .advantages-kitchen-item {
-            margin-bottom: 20px;
-            > div {
-                width: calc(100% - 87px);
-            }
-            svg {
-                width:70px;
-                height: 70px;
-            }
-            .heading {
-                margin-bottom: 0px;
-                font-size: 16px;
-            }
-        }
-    }
     .quality-kitchens {
         .quality-kitchens-text {
             h3 {
