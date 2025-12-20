@@ -1,0 +1,36 @@
+///// Стили для формы, которая используется внизу всех статей, парсера и тд. Стандартная форма с именем, телефоном и вопросом
+.parser-fos {
+    background: #F2F2F2;
+    textarea {
+        height: 41px;
+        min-height: 41px;
+        width:100%;
+        border: 0px solid black;
+        box-shadow: 0px 0px 11px rgb(0 0 0 / 15%);
+    }
+    label {
+        display:block;
+        margin-bottom: 15px;
+    }
+    button[type=button] {
+        text-transform:uppercase;
+        width: 100%;
+        padding: 11px;
+        margin-bottom: 15px;
+    }
+    input {
+        width:100%;
+        border: 0px solid black;
+        box-shadow: 0px 0px 11px rgb(0 0 0 / 15%);
+    }
+}
+@media (max-width: 576px) {
+    .parser-fos {
+        textarea {
+            height: 80px;
+        }
+        .f-z_35 {
+            font-size: 24px;
+        }
+    }
+}
