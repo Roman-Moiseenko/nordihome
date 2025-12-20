@@ -20,17 +20,17 @@
                         <div class="text">
                             <p>Стильный и компактный комод с несколькими просторными ящиками, идеально подходящий для хранения одежды и аксессуаров.</p><p>Современный дизайн и легкость в уходе делают его идеальным выбором для любой спальни.</p>
                         </div>
-                        <a href="/?s=MALM&amp;post_type=product&amp;dgwt_wcas=1" class="d-block">Смотреть всю серию</a>
+                        <a href="/" class="d-block">Смотреть всю серию</a>
                     </div>
                     <div class="col-lg-6 ">
-                        <img src="/wp-content/uploads/2025/04/page-hit-01-min.jpg" alt="КОМОД MALM ikea">
+                        <img src="/uploads/gallery/2/page-hit-01-min.jpg" alt="КОМОД MALM ikea">
                     </div>
                 </div>
             </div>
             <div class="product-hit-item">
                 <div class="row">
                     <div class="col-lg-6 product-hit-item-order-2">
-                        <img src="/wp-content/uploads/2025/04/page-hit-02-min.jpg" alt="КРЕСЛО ОФИСНОЕ MARKUS ikea">
+                        <img src="/uploads/gallery/2/page-hit-02-min.jpg" alt="КРЕСЛО ОФИСНОЕ MARKUS ikea">
                     </div>
                     <div class="col-lg-6 bg-515151 info">
                         <h3>2. КРЕСЛО ОФИСНОЕ MARKUS</h3>
@@ -51,14 +51,14 @@
                         <a href="/shop/blidvader/" class="d-block">Перейтик товару</a>
                     </div>
                     <div class="col-lg-6">
-                        <img src="/wp-content/uploads/2025/04/page-hit-03-min.jpg" alt="НАСТОЛЬНАЯ ЛАМПА BLIDVADER ikea">
+                        <img src="/uploads/gallery/2/page-hit-03-min.jpg" alt="НАСТОЛЬНАЯ ЛАМПА BLIDVADER ikea">
                     </div>
                 </div>
             </div>
             <div class="product-hit-item">
                 <div class="row">
                     <div class="col-lg-6 product-hit-item-order-2">
-                        <img src="/wp-content/uploads/2025/04/page-hit-04-min.jpg" alt="КРЕСЛО OSKARSHAMN ikea">
+                        <img src="/uploads/gallery/2/page-hit-04-min.jpg" alt="КРЕСЛО OSKARSHAMN ikea">
                     </div>
                     <div class="col-lg-6 info">
                         <h3>4. КРЕСЛО OSKARSHAMN</h3>
@@ -79,14 +79,14 @@
                         <a href="/?s=FROSVI&amp;post_type=product&amp;dgwt_wcas=1" class="d-block">Смотреть всю серию</a>
                     </div>
                     <div class="col-lg-6">
-                        <img src="/wp-content/uploads/2025/04/page-hit-05-min.jpg" alt="СТУЛ FROSVI ikea">
+                        <img src="/uploads/gallery/2/page-hit-05-min.jpg" alt="СТУЛ FROSVI ikea">
                     </div>
                 </div>
             </div>
             <div class="product-hit-item">
                 <div class="row">
                     <div class="col-lg-6 product-hit-item-order-2">
-                        <img src="/wp-content/uploads/2025/04/page-hit-06-min.jpg" alt="ЗЕРКАЛО IKORNNES ikea">
+                        <img src="/uploads/gallery/2/page-hit-06-min.jpg" alt="ЗЕРКАЛО IKORNNES ikea">
                     </div>
                     <div class="col-lg-6 bg-orange info">
                         <h3>6. ЗЕРКАЛО IKORNNES</h3>
@@ -107,14 +107,14 @@
                         <a href="/?s=KALLAX&amp;post_type=product&amp;dgwt_wcas=1" class="d-block">Смотреть всю серию</a>
                     </div>
                     <div class="col-lg-6 product-hit-item-order-2">
-                        <img src="/wp-content/uploads/2025/04/page-hit-07-min.jpg" alt="СЕРИЯ KALLAX ikea">
+                        <img src="/uploads/gallery/2/page-hit-07-min.jpg" alt="СЕРИЯ KALLAX ikea">
                     </div>
                 </div>
             </div>
             <div class="product-hit-item">
                 <div class="row">
                     <div class="col-lg-6">
-                        <img src="/wp-content/uploads/2025/04/page-hit-08-min.jpg" alt="ТОРШЕР RINGSTA/SKAFTET ikea">
+                        <img src="/uploads/gallery/2/page-hit-08-min.jpg" alt="ТОРШЕР RINGSTA/SKAFTET ikea">
                     </div>
                     <div class="col-lg-6 bg-515151 info">
                         <h3>8. ТОРШЕР RINGSTA/SKAFTET</h3>
@@ -135,14 +135,14 @@
                         <a href="/?s=PARUP&amp;post_type=product&amp;dgwt_wcas=1" class="d-block">Смотреть всю серию</a>
                     </div>
                     <div class="col-lg-6">
-                        <img src="/wp-content/uploads/2025/04/page-hit-09-min.jpg" alt="ДИВАН PARUP ikea">
+                        <img src="/uploads/gallery/2/page-hit-09-min.jpg" alt="ДИВАН PARUP ikea">
                     </div>
                 </div>
             </div>
             <div class="product-hit-item">
                 <div class="row">
                     <div class="col-lg-6 product-hit-item-order-2">
-                        <img src="/wp-content/uploads/2025/04/page-hit-10-min.jpg" alt="СТОЛИК ЖУРНАЛЬНЫЙ GLADOM ikea">
+                        <img src="/uploads/gallery/2/page-hit-10-min.jpg" alt="СТОЛИК ЖУРНАЛЬНЫЙ GLADOM ikea">
                     </div>
                     <div class="col-lg-6 info">
                         <h3>10. СТОЛИК ЖУРНАЛЬНЫЙ GLADOM</h3>
@@ -161,13 +161,14 @@
                             <p>Гибкая система хранения, позволяющая создать шкаф по вашим размерам и желаниям.</p>
                         </div>
                         <a href="/?s=PAX&amp;post_type=product&amp;dgwt_wcas=1" class="d-block">Смотреть всю серию</a>
-                        <img src="/wp-content/uploads/2025/04/page-hit-12-min.jpg" alt="МОДУЛЬНАЯ СИСТЕМА PAX ikea" class="last">
+                        <img src="/uploads/gallery/2/page-hit-12-min.jpg" alt="МОДУЛЬНАЯ СИСТЕМА PAX ikea" class="last">
                     </div>
                     <div class="col-lg-6">
-                        <img src="/wp-content/uploads/2025/04/page-hit-11-min.jpg" alt="МОДУЛЬНАЯ СИСТЕМА PAX ikea">
+                        <img src="/uploads/gallery/2/page-hit-11-min.jpg" alt="МОДУЛЬНАЯ СИСТЕМА PAX ikea">
                     </div>
                 </div>
             </div>
+            <div><p>Если Вы ищете стильные и функциональные вещи для Вашего дома, не упустите возможность познакомиться с товарами ИКЕА. Превратите свой дом в уютное и стильное пространство!</p><p>P.S. Интересно, чем бы Вы дополнили подборку? Нам будет приятно получить обратную связь от Вас.</p></div>
         </div>
     </div>
     <div class="mt-4">
