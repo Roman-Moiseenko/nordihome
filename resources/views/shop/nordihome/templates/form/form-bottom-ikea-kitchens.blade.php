@@ -32,7 +32,7 @@ use App\Modules\Page\Entity\FormWidget;
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <label>
-                    <input name="phone" required placeholder="{{ $widget->fields["phone"] }}"/>
+                    <input name="phone" type="tel" required placeholder="{{ $widget->fields["phone"] }}"/>
                     </label>
                 </div>
                 <div class="col-md-9 col-lg-5">
