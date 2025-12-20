@@ -29,7 +29,7 @@ posts container-xl
     <div class="item-news m-b_20">
         <div class="row">
             <div class="col-md-5 col-lg-4 img">
-                Картинка {{ $post->getImage() }}
+                Картинка {{ $post->getImage('card') }}
             </div>
             <div class="col-md-7 col-lg-8">
                 <h3 class="news-head"><a href="{{ route('shop.post.view', $post->slug) }}">{{ $post->name }}</a></h3>
