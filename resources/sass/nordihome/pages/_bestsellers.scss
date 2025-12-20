@@ -1,0 +1,34 @@
+.product-hit-item {
+    .col-lg-6 {
+        padding:0;
+    }
+    .info {
+        padding:40px;
+    }
+    img {
+        display:block;
+    }
+    img.last {
+        margin-top:20px;
+    }
+    a {
+        color:$orange;
+    }
+    .info.bg-orange a {
+        color:black;
+    }
+}
+.product-hit-item.last {
+    .row {
+        align-items:end;
+    }
+    .info {
+        padding-bottom:0;
+    }
+}
+@media (max-width: 990px) {
+    .product-hit-item-order-2 {order:2;}
+    .product-hit-item .info {padding: 20px;}
+    .product-hit-item h3 {margin-top:0;font-size: 24px;}
+    .product-hit-item {margin-bottom:15px;}
+}
