@@ -20,16 +20,6 @@
         }
     }
 }
-
-.quality-kitchens {
-    img {
-    max-width:100%;
-    display:block;
-    }
-    .row {
-        align-items: end;
-    }
-}
 .main-kitchen {
     .main-kitchen-form button[type="button"] {
         background: $orange;
@@ -66,32 +56,6 @@
             right:auto;
             margin-top: 20px;
             transform: none;
-        }
-    }
-    .quality-kitchens {
-        h2 {
-        margin: 10px 0;
-        }
-        .row {
-            align-items: flex-start;
-        }
-        .quality-kitchens-text {
-            .m-b_50 {
-                margin-bottom: 20px;
-            }
-        }
-        img {
-            margin-bottom:10px;
-        }
-    }
-}
-
-@media (max-width: 576px) {
-    .quality-kitchens {
-        .quality-kitchens-text {
-            h3 {
-                font-size: 23px;
-            }
         }
     }
 }
