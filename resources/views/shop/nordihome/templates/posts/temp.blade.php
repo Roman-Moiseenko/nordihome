@@ -1,4 +1,4 @@
-<!--template:Записи основной-->
+<!--template:Категории тест-->
 @php
 
     /** @var \App\Modules\Page\Entity\PostCategory $category */

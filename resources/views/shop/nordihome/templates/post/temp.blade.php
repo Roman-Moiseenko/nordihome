@@ -1,4 +1,4 @@
-<!--template:Запись пример-->
+<!--template:Запись тест-->
 @php
     /** @var \App\Modules\Page\Entity\Post $post */
     $photo = photo_std('main_001', 'card');
