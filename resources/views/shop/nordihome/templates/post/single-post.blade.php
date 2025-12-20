@@ -19,6 +19,7 @@
     </div>
 
     <div>
-        {!! $post->text !!} <img src="{{ $post->getImage('card') }}" alt="{{ $post->title }}">
+        <img src="{{ $post->getImage('') }}" alt="{{ $post->title }}" class="img-alignright">
+        {!! $post->text !!}
     </div>
 @endsection
