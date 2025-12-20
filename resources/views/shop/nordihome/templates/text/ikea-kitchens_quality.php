@@ -1,3 +1,4 @@
+<!--template:Страница Кухни Икеа под заказ - преимущества кухонь-->
 <div class="t-a_center m-b_20"><a href="/" class="btn btn-black">СМОТРЕТЬ ВСЕ КУХНИ</a></div>
 <div class="quality-kitchens">
     <h2 class="page-h2"><span class="t-color_orange">Преимущества кухонь</span> от ИКЕА:</h2>
