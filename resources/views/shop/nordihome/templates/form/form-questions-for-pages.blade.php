@@ -21,8 +21,8 @@
         @endphp
         <div class="parser-fos p-t_50 p-b_50">
             <div class="container">
-                <div class="t-t_uppercase f-z_35 t-a_center f-w_600"><span class="t-color_orange">Получите бесплатную консультацию</span><br>по подбору кухни уже сегодня!</div>
-                <div class="m-t_10 m-b_20">Мы готовы ответить на Ваши вопросы и помочь с выбором кухни мечты. Заполните форму ниже, и наш менеджер перезвонит Вам в ближайшее время.</div>
+                <div class="t-t_uppercase f-z_35 t-a_center f-w_600">Остались вопросы?</div>
+                <div class="t-a_center m-t_10 m-b_20">Мы готовы ответить на Ваши вопросы: заполните форму ниже, и наш менеджер перезвонит Вам в ближайшее время.</div>
                 <div id="{{ $widget->id }}" class="feedback" not-hide>
                     <div class="row">
                         <div class="col-md-6 col-lg-2">
