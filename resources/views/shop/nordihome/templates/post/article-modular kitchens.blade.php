@@ -1,4 +1,4 @@
-<!--template:Запись шаблон по-умолчанию-->
+<!--template:Статья - Одна система, тысячи возможностей — модульные кухни ИКЕА-->
 @php
     /** @var \App\Modules\Page\Entity\Post $post */
     $photo = photo_std('main_001', 'card');
