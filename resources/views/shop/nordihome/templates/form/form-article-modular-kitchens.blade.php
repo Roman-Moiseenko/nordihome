@@ -21,8 +21,9 @@
 @endphp
 <div class="parser-fos p-t_50 p-b_50">
     <div class="container">
-        <div class="t-t_uppercase f-w_600 t-a_center f-z_23 m-b_10">Получите <span class="t-color_orange">дизайн-проект в подарок!*</span></div>
-        <div class="t-a_center m-b_10">Наш дизайнер с опытом работы более 10 лет в ИКЕА разработает дизайн-проект вашей кухни!</div>
+        <div class="t-t_uppercase f-w_600 t-a_center f-z_35 m-b_10 t-color_orange">Получите бесплатную консультацию</div>
+        <div class="t-t_uppercase f-z_35 t-a_center f-w_600">по подбору кухни уже сегодня!</div>
+        <div class="m-t_10 m-b_20 t-a_center">Оставьте заявку прямо сейчас — и ваша новая кухня начнет собираться уже сегодня.</div>
         <div id="{{ $widget->id }}" class="feedback" not-hide>
             <div class="row">
                 <div class="col-md-6 col-lg-2">
