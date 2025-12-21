@@ -17,6 +17,9 @@ const useStore = defineStore('table_data', () => {
             '| align lineheight | checklist numlist bullist indent outdent | emoticons charmap |' +
             '| removeformat ltr rtl fullscreen preview visualblocks | code',
         image_list: [],
+        forced_root_block : "",
+        force_br_newlines : true,
+        force_p_newlines : false,
         //tinymceScriptSrc: '/js/tinymce/tinymce.min.js',
     })
     const tiny = computed(() => _tiny)
