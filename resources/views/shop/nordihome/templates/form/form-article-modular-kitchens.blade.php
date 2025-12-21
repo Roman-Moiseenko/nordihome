@@ -27,23 +27,23 @@
                 <div class="m-b_10">
                     <div id="{{ $widget->id }}" class="feedback" not-hide>
                         <div class="row">
-                            <div class="col-md-6 col-lg-6 m-b_5">
+                            <div class="col-md-6 col-lg-2">
                                 <label>
                                     <input name="name" type="text" required placeholder="{{ $widget->fields["name"] }}"/>
                                 </label>
                             </div>
-                            <div class="col-md-6 col-lg-6 m-b_5">
+                            <div class="col-md-6 col-lg-3">
                                 <label>
                                     <input name="phone" type="tel" required placeholder="{{ $widget->fields["phone"] }}"/>
                                 </label>
                             </div>
-                            <div class="col-md-6 col-lg-6 m-b_5">
+                            <div class="col-md-9 col-lg-5">
                                 <label>
-                                    <input name="city" required placeholder="{{ $widget->fields["city"] }}"/>
+                                    <textarea placeholder="{{ $widget->fields["question"] }}"></textarea>
                                 </label>
                             </div>
-                            <div class="col-md-6 col-lg-6 m-b_5">
-                                <label><button class="btn-form" type="button">ОСТАВИТЬ ЗАЯВКУ</button></label>
+                            <div class="col-md-3 col-lg-2">
+                                <label><button class="btn-form" type="button">ОТПРАВИТЬ</button></label>
                             </div>
                             <div class="col-12">
                                 <label class="f-z_14">
