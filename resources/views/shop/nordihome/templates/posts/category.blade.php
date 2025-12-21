@@ -34,7 +34,7 @@ posts container-xl
             <div class="col-md-7 col-lg-8">
                 <h3 class="news-head"><a href="{{ route('shop.post.view', $post->slug) }}">{{ $post->name }}</a></h3>
                 <div class="news-info">
-                    {!! $post->getParagraphs(1) !!}
+                    {!! $post->getParagraphs(1) !!} {{ $post->description }}
                 </div>
                 <div class="news-more-link m-t_20">
                     <a href="{{ route('shop.post.view', $post->slug) }}" class="btn btn-orange">Подробнее</a>
