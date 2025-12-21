@@ -16,6 +16,7 @@
     <div class="container-xl">
         <h1 class="my-4">{{ $post->title }}</h1>
     </div>
+
     <div>
         {!! $post->text !!}
     </div>
