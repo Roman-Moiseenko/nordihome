@@ -61,7 +61,7 @@
         <el-col :span="8">
             <el-form label-width="auto">
 
-                <el-form-item label="Название рубрики">
+                <el-form-item label="Название статьи">
                     <el-input v-model="info.name"/>
                 </el-form-item>
                 <el-form-item label="Ссылка">
