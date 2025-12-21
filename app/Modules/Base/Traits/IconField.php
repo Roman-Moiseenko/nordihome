@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  */
 trait IconField
 {
-    protected bool $is_thumb = false;
 
     public function icon()
     {
@@ -23,7 +22,7 @@ trait IconField
             $this->icon->delete();
 
         if (empty($file)) return;
-        $this->icon->newUploadFile($file, 'icon', $this->is_thumb);
+        $this->icon->newUploadFile($file, 'icon', false);
     }
 
     public function getIcon(string $thumb = ''): ?string
@@ -32,11 +31,12 @@ trait IconField
         if (empty($thumb)) return $this->icon->getUploadUrl();
         return $this->icon->getThumbUrl($thumb);
     }
-/*
-    protected function iconUrl(): Attribute
+    public function addIconByUrl(string $url): ?Photo
     {
-        return Attribute::make(
-            get: fn() => $this->getIcon(),
-        );
-    }*/
+        if (empty($url)) return null;
+        $icon = Photo::uploadByUrl(url: $url, thumb: false);
+        $this->icon()->save($icon);
+        $icon->refresh();
+        return $icon;
+    }
 }

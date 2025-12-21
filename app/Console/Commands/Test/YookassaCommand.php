@@ -5,6 +5,7 @@ namespace App\Console\Commands\Test;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Service\PricingService;
 use App\Modules\Bank\Service\YookassaService;
+use App\Modules\Base\Entity\Photo;
 use App\Modules\Lead\Entity\Lead;
 use App\Modules\Lead\Entity\LeadStatus;
 use App\Modules\Parser\Service\ParserIkea;
@@ -23,6 +24,17 @@ class YookassaCommand extends Command
     public function handle(ParserIkea $service): void
     {
 
+        $photos = Photo::where('type', 'image')
+            ->where('thumb', false)
+            //->where('imageable_type', '<>', 'App\\Modules\\Parser\\Entity\\CategoryParser')
+            ->getModels();
+        $this->info('Найдено ' . count($photos));
+        //dd('1');
+        foreach ($photos as $i => $photo) {
+            $photo->setThumb(true);
+            $this->info($i);
+        }
+        $this->info('Обработано!');
      /*   $pricing = PricingDocument::first();
         foreach ($pricing->pricingProducts as $pricingProduct) {
             $pricingProduct->price_cost = $pricingProduct->price_retail / 2;

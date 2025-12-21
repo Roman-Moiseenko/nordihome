@@ -90,5 +90,6 @@ class PostService
 
         $post->saveImage($request->file('image'), $request->boolean('clear_image'));
         $post->saveIcon($request->file('icon'), $request->boolean('clear_icon'));
+
     }
 }

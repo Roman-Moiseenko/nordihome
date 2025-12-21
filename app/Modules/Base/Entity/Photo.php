@@ -65,7 +65,8 @@ class Photo extends Model
     //Генерация пути
     public function patternGeneratePath(): string
     {
-        return '/' . Str::slug(class_basename($this->imageable)) . '/' . $this->imageable->id . '/';
+        //if (is_null($this->imageable)) dd([$this->imageable_type, $this->imageable_id, Str::slug(class_basename($this->imageable_type))]);
+        return '/' . Str::slug(class_basename($this->imageable_type)) . '/' . $this->imageable_id . '/';
     }
 
     //Создание объекта
@@ -179,6 +180,12 @@ class Photo extends Model
     public function isId(int $id): bool
     {
         return $this->id == $id;
+    }
+
+    public function setThumb(bool $isThumb): void
+    {
+        $this->thumb = $isThumb;
+        $this->save();
     }
 
     //ВЫВОД для Фронтенда получаем URL

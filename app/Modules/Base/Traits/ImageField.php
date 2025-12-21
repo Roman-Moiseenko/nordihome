@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Casts\Attribute;
  */
 trait ImageField
 {
-    protected bool $is_thumb = false;
+    protected bool $is_thumb = true;
 
     public function image()
     {
@@ -24,7 +24,7 @@ trait ImageField
 
         if (empty($file)) return;
 
-        $this->image->newUploadFile($file, 'image', $this->is_thumb);
+        $this->image->newUploadFile($file, 'image', true);
     }
 
     public function getImage(string $thumb = ''): ?string
@@ -34,10 +34,10 @@ trait ImageField
         return $this->image->getThumbUrl($thumb);
     }
 
-    public function addImageByUrl(string $image_url): ?Photo
+    public function addImageByUrl(string $url): ?Photo
     {
         if (empty($url)) return null;
-        $photo = Photo::uploadByUrl(url: $url, thumb: $this->is_thumb);
+        $photo = Photo::uploadByUrl(url: $url, thumb: true);
         $this->image()->save($photo);
         $photo->refresh();
         return $photo;

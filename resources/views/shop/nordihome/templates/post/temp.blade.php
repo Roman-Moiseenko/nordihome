@@ -14,6 +14,7 @@
 
 @section('content')
     <h1 class="my-4">{{ $post->title }}</h1>
+    <img src="{{ $post->getImage('catalog') }}" />
     <div class="mt-4">
         {{ $post->description }}
     </div>
