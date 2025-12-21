@@ -280,6 +280,11 @@ class ShopRepository
                     'name' => $category->name,
                     'slug' => $category->slug,
                     'image' => $category->getImage(),
+                    'children' => $category->children()->get()->map(fn(CategoryParser $child) => [
+                        'id' => $child->id,
+                        'name' => $child->name,
+                        'slug' => $child->slug,
+                    ])->toArray(),
                 ];
             });
     }

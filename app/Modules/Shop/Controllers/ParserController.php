@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\Log;
 
 class ParserController extends ShopController
 {
@@ -44,15 +45,23 @@ class ParserController extends ShopController
         return $this->views->productParser($slug);
     }
 
+    public function search(Request $request)
+    {
+        Log::info($request->string('search')->value());
+        //dd($request->input('search'));
+        return \response()->json(route('shop.parser.view'));
+        $products = '';
+        //TODO если товар один то редирект на parser.product
+
+        //TODO если товаров больше, то страница parser.search
+
+    }
 
     public function view(Request $request)
     {
         $user_ui = $request->attributes->get('user_ui');
-
         $cart = $this->cart;
-        //if ()
         $cart->load($user_ui);
-
         $title = 'Купить товары Икеа по артикулу в Калининграде и с доставкой по России';
         $description = 'Закажите товары Икеа из Польши через наш поисковый сервис. Цены ниже чем в интернет магазине';
         return view($this->route('parser.show'), compact('cart', 'title', 'description'));

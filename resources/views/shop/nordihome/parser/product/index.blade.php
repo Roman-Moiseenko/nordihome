@@ -17,10 +17,9 @@
     <form action="" method="GET">
         <div class="mobile-manager">
         </div>
-    <div class="products-page-content d-flex position-relative">
+    <div class="products-page-content position-relative" style="display: flex;">
         @include('shop.nordihome.parser.product.filter')
         <div class="list">
-
             <div class="products">
                 <div class="row">
                 @foreach($products as $product)

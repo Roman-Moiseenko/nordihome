@@ -118,6 +118,8 @@ Route::group(
         ],
             function () {
                 Route::get('/catalog', [ParserController::class, 'index'])->name('view');
+               /// Route::get('/find', [ParserController::class, 'find'])->name('find');
+                Route::post('/search', [ParserController::class, 'search'])->name('search');
                 Route::get('/catalog/{slug}', [ParserController::class, 'catalog'])->name('catalog');
                 Route::get('/product/{slug}', [ParserController::class, 'product'])->name('product');
 

@@ -17,6 +17,20 @@ window.$ = jQuery;
     });
 
     let main = $('main');
+    /**  ПОИСК в ПАРСЕР   ***/
+    let parserSearchInput = $('#parser-search');
+    let parserSearch = $('.parser-search');
+    let parserSearchButton = $('#parser-search-button');
+    parserSearchInput.on('keyup', function (e){
+        if (e.which === 13) $.post(parserSearch.data('route'), {search: parserSearchInput.val()}, function (data) {
+            window.location.href = data
+        });
+    })
+    parserSearchButton.on('click', function () {
+        $.post(parserSearch.data('route'), {search: parserSearchInput.val()}, function (data) {
+            window.location.href = data
+        });
+    })
 
 
     /**  ПОИСК в ТОП-МЕНЮ    ***/
