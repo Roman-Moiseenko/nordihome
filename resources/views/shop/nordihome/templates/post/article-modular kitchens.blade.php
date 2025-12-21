@@ -17,6 +17,6 @@
         <h1 class="my-4">{{ $post->title }}</h1>
     </div>
     <div>
-        {!! $post->text !!} гггг
+        {!! $post->text !!}
     </div>
 @endsection
