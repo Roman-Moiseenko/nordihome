@@ -88,6 +88,7 @@
             </div>
         </div>
     </div>
+    <div id="консультация"></div>
     <div>
         {!! $post->text !!}
     </div>
