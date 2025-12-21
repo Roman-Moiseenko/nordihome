@@ -7,12 +7,14 @@
                 <span>{{ $category['name'] }}</span>
             </div>
         </a>
-        <ul>
-        @foreach($category['children'] as $child)
-        <li>
-            <a href="{{ route('shop.parser.catalog', $child['slug']) }}">{{ $child['name'] }}</a>
-        </li>
-        @endforeach
-        </ul>
+        @if(isset($category['children']))
+            <ul>
+                @foreach($category['children'] as $child)
+                    <li>
+                        <a href="{{ route('shop.parser.catalog', $child['slug']) }}">{{ $child['name'] }}</a>
+                    </li>
+                @endforeach
+            </ul>
+        @endif
     </div>
 </div>

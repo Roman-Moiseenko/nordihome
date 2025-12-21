@@ -1,20 +1,15 @@
 <?php
 
-namespace App\Console\Commands\Test;
+namespace App\Console\Commands;
 
-use App\Modules\Accounting\Entity\PricingDocument;
-use App\Modules\Accounting\Service\PricingService;
-use App\Modules\Bank\Service\YookassaService;
 use App\Modules\Base\Entity\Photo;
-use App\Modules\Lead\Entity\Lead;
-use App\Modules\Lead\Entity\LeadStatus;
+use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Service\ParserIkea;
-use App\Modules\Unload\Entity\Feed;
-use App\Modules\Unload\Repository\FeedRepository;
 use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 use Tests\CreatesApplication;
 
-class YookassaCommand extends Command
+class TestCommand extends Command
 {
     use CreatesApplication;
 
@@ -24,6 +19,15 @@ class YookassaCommand extends Command
     public function handle(ParserIkea $service): void
     {
 
+        $categories = CategoryParser::where('slug', null)->getModels();
+        $this->info('Найдено ' . count($categories));
+        foreach ($categories as $i => $category) {
+            $category->slug = Str::slug($category->name);
+            $category->save();
+            $this->info($i);
+        }
+
+/*
         $photos = Photo::where('type', 'image')
             ->where('thumb', false)
             //->where('imageable_type', '<>', 'App\\Modules\\Parser\\Entity\\CategoryParser')
@@ -35,6 +39,7 @@ class YookassaCommand extends Command
             $this->info($i);
         }
         $this->info('Обработано!');
+        */
      /*   $pricing = PricingDocument::first();
         foreach ($pricing->pricingProducts as $pricingProduct) {
             $pricingProduct->price_cost = $pricingProduct->price_retail / 2;
