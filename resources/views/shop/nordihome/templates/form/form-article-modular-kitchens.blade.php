@@ -1,24 +1,24 @@
 <!--template:Форма для статьи Одна система, тысячи возможностей — модульные кухни ИКЕА-->
 @php
-/**
-* $widget->name
-* $widget->url
-* $widget->caption
-* $widget->description
-* $widget->fields
-* $widget->lists
-*/
+    /**
+    * $widget->name
+    * $widget->url
+    * $widget->caption
+    * $widget->description
+    * $widget->fields
+    * $widget->lists
+    */
 
-/*
-* <div id="{{ $widget->id }}" class="feedback" not-hide> -
-    * Основной блок, где находятся поля данных и кнопка отправки сообщения
-    * атрибут not-hide - не скрывать после отправки
-    * <div id="{{ $widget->id }}-callback" style="display: none"> -
-        * блок, который показывается, после отправки сообщения
-        */
-        use App\Modules\Page\Entity\FormWidget;
-        /** @var FormWidget $widget  */
-        @endphp
+    /*
+    * <div id="{{ $widget->id }}" class="feedback" not-hide> -
+        * Основной блок, где находятся поля данных и кнопка отправки сообщения
+        * атрибут not-hide - не скрывать после отправки
+        * <div id="{{ $widget->id }}-callback" style="display: none"> -
+            * блок, который показывается, после отправки сообщения
+            */
+            use App\Modules\Page\Entity\FormWidget;
+            /** @var FormWidget $widget  */
+@endphp
 <div class="parser-fos p-t_50 p-b_50">
     <div class="container">
         <div class="t-t_uppercase f-w_600 t-a_center f-z_23 m-b_10">Получите <span class="t-color_orange">дизайн-проект в подарок!*</span></div>
