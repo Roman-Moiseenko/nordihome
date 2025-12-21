@@ -1,6 +1,6 @@
 <template>
     <el-row :gutter="10">
-        <el-col :span="12">
+        <el-col :span="14">
             <el-radio-group v-model="selectedUrlType" size="large" fill="#6cf" @change="onChangeType">
                 <div v-for="(type, index) in urlTypes">
                     <el-radio-button :label="type.name" :value="index"/>
@@ -16,8 +16,8 @@
                 <el-button v-if="showAddUrlItem" type="success" @click="onAddItem">Добавить элемент</el-button>
             </div>
         </el-col>
-        <el-col :span="12">
-            <el-form style="width: 300px;">
+        <el-col :span="10">
+            <el-form label-width="auto">
                 <el-form-item label="Ссылка">
                     <el-input v-model="form.url" />
                 </el-form-item>
