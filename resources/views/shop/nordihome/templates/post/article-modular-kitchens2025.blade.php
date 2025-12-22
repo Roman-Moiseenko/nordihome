@@ -87,9 +87,42 @@
                     </div>
                 </div>
             </div>
+            <div class="m-t_20">Можно ли купить кухню модульную IKEA 600×800, цена? Цена будет зависеть от фасадов, их количества и наполнения. На сайте магазина NORDI HOME вы можете обратиться к менеджерам для планирования и точного расчёта.</div>
         </div>
-        t
-
+        <h3 class="t-a_center t-t_uppercase">Тренды модульных кухонь IKEA</h3>
+        <div class="m-b_30">Мир диктует свои правила в дизайне и организации пространства вашего дома. Кухня, некогда считавшаяся просто местом для готовки, сегодня превратилась в центр семейного очага, а также местом встречи с друзьями. Поэтому выбор кухонного гарнитура - важное решение в обновлении ремонта вашего дома.</div>
+        <div class="row m-b_30">
+            <div class="col-lg-6">
+                <h3 class="m-t_0">Цветовые, стилистические решения</h3>
+                <ul>
+                    <li class="m-b_10"><b>Светлые оттенки:</b><br>Белые, светло-серые фасады визуально расширят пространство что придает лёгкость и свежесть.</li>
+                    <li class="m-b_10"><b>Натуральные материалы:</b><br>Деревянные фасады, столешницы добавят теплоту, уют, особенно в сочетании с натуральным материалами пола, фартука или раковины.</li>
+                    <li class="m-b_10"><b>Контрастные комбинации:</b><br>Сочетание цветов, текстур, например: яркий верх и древесный низ создадут интересный эффект.</li>
+                    <li class="m-b_10"><b>Яркие акценты:</b><br>Установка открытых полок с декоративными панелями в насыщенных оттенках добавит индивидуальности и выразительности.</li>
+                </ul>
+            </div>
+            <div class="col-lg-6">
+                <div class="swiper main-slider">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                            <img src="/wp-content/uploads/2025/10/statya-kuhni05.jpg" alt="Тренды модульных кухонь IKEA" class="d-block">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="/wp-content/uploads/2025/10/statya-kuhni06.jpg" alt="Тренды модульных кухонь IKEA" class="d-block">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="/wp-content/uploads/2025/10/statya-kuhni07.jpg" alt="Тренды модульных кухонь IKEA" class="d-block">
+                        </div>
+                        <div class="swiper-slide">
+                            <img src="/wp-content/uploads/2025/10/statya-kuhni08.jpg" alt="Тренды модульных кухонь IKEA" class="d-block">
+                        </div>
+                    </div>
+                    <div class="swiper-pagination"></div>
+                </div>
+                <div class="m-t_10"><a href="/product-category/gotovye-modulnye-kuhni-ikea/">Выбрать цвет и форму можно в разделе: модульная кухня IKEA: METOD, KNOXHULT, ENHET в NORDI HOME.</a></div>
+            </div>
+        </div>
+        77
     </div>
     <div>
         {!! $post->text !!}
