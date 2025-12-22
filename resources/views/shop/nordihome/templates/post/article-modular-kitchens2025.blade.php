@@ -102,6 +102,13 @@
                 </ul>
             </div>
             <div class="col-lg-6">
+                <div class="owl-carousel owl-theme" id="">
+                    <div class="slide" style="background-image: url('slide-1.jpg')">
+                        <h2 class="slide__title">Заголовок слайда</h2>
+                        <a href="#" class="slide__link">Кнопка</a>
+                    </div>
+                </div>
+
                 <div class="swiper main-slider">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
