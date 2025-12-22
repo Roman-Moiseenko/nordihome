@@ -53,6 +53,41 @@
                 </div>
             </div>
         </div>
+        <div>
+            <h3 class="t-a_center">Серии модульных кухонь IKEA: Metod, Knoxhult, Enhet</h3>
+            <div class="row">
+                <div class="col-md-6 col-lg-4">
+                    <div class="series-kitchen-2025">
+                        <img src="/uploads/gallery/4/statya-kuhni02-min.jpg" alt="Кухни METOD">
+                        <div class="bg-f2f2f2">
+                            <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни METOD</div>
+                            <div class="m-b_20 text">Универсальная система комбинаций фасадов и размеров. Для тех, кто ищет стиль и функциональность, Но при этом не хочет много тратить.</div>
+                            <div class="t-a_center"><a href="/product-tag/metod/" class="btn btn-black t-t_uppercase f-z_15">Смотреть в каталоге</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="series-kitchen-2025">
+                        <img src="/uploads/gallery/4/statya-kuhni03-min.jpg" alt="Кухни METOD">
+                        <div class="bg-f2f2f2">
+                            <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни KNOXHULT</div>
+                            <div class="m-b_20 text">Недорогой вариант, с простотой сборкой и базовыми размерами. Для тех, кто ищет классику без излишеств.</div>
+                            <div class="t-a_center"><a href="/product-tag/knoxhult/" class="btn btn-black t-t_uppercase f-z_15">Смотреть в каталоге</a></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                    <div class="series-kitchen-2025">
+                        <img src="/uploads/gallery/4/statya-kuhni04-min.jpg" alt="Кухни METOD">
+                        <div class="bg-f2f2f2">
+                            <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни ENHET</div>
+                            <div class="m-b_20 text">Лёгкая и мобильная система, с простой установкой. Для аренды, дачи или временного жилья.</div>
+                            <div class="t-a_center"><a href="/product-tag/enhet/" class="btn btn-black t-t_uppercase f-z_15">Смотреть в каталоге</a></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
     <div>
