@@ -26,7 +26,7 @@
                 <p><a href="/kuhni-pod-zakaz/" class="t-color_orange">&gt; Полный каталог готовых модульных кухонь IKEA в NORDI HOME</a></p>
                 <p></p>
             </div>
-            <div class="col-lg-6"><img src="/uploads/gallery/4/statya-kuhni01-min.jpg" alt="Полный каталог готовых модульных кухонь IKEA в NORDI HOME"></div>
+            <div class="col-lg-6"><img src="/uploads/gallery/4/statya-kuhni01-min.jpg" class="width_100" alt="Полный каталог готовых модульных кухонь IKEA в NORDI HOME"></div>
         </div>
         <div class="m-b_30"><h3>Почему модульные кухни ИКЕА так популярны в Европе?</h3>
             <p>Модульная мебель — это набор стандартных шкафов. Продуманные системы хранения, эргономичные решения, которые легко адаптировать под конкретные задачи. Будет это маленькая кухня в городской квартире или просторная зона для готовки в загородном доме - модульные решения от ИКЕА подойдут под любые запросы.</p>
@@ -58,7 +58,7 @@
             <div class="row">
                 <div class="col-md-6 col-lg-4">
                     <div class="series-kitchen-2025">
-                        <img src="/uploads/gallery/4/statya-kuhni02.jpg" alt="Кухни METOD">
+                        <img src="/uploads/gallery/4/statya-kuhni02.jpg" alt="Кухни METOD" class="width_100">
                         <div class="bg-f2f2f2">
                             <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни METOD</div>
                             <div class="m-b_20 text">Универсальная система комбинаций фасадов и размеров. Для тех, кто ищет стиль и функциональность, Но при этом не хочет много тратить.</div>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="col-md-6 col-lg-4">
                     <div class="series-kitchen-2025">
-                        <img src="/uploads/gallery/4/statya-kuhni03.jpg" alt="Кухни METOD">
+                        <img src="/uploads/gallery/4/statya-kuhni03.jpg" alt="Кухни METOD" class="width_100">
                         <div class="bg-f2f2f2">
                             <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни KNOXHULT</div>
                             <div class="m-b_20 text">Недорогой вариант, с простотой сборкой и базовыми размерами. Для тех, кто ищет классику без излишеств.</div>
@@ -78,7 +78,7 @@
                 </div>
                 <div class="col-md-6 col-lg-4">
                     <div class="series-kitchen-2025">
-                        <img src="/uploads/gallery/4/statya-kuhni03.jpg" alt="Кухни METOD">
+                        <img src="/uploads/gallery/4/statya-kuhni03.jpg" alt="Кухни METOD" class="width_100">
                         <div class="bg-f2f2f2">
                             <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни ENHET</div>
                             <div class="m-b_20 text">Лёгкая и мобильная система, с простой установкой. Для аренды, дачи или временного жилья.</div>
@@ -88,6 +88,7 @@
                 </div>
             </div>
         </div>
+        t
 
     </div>
     <div>
