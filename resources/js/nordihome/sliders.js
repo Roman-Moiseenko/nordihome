@@ -129,7 +129,18 @@ window.$ = jQuery;
             }
         });
     }
-
+    if (document.getElementByClassName('main-slider01') !== null) {
+        let sliderPayment = $('#main-slider01');
+        sliderPayment.owlCarousel(optionsSliderBase);
+        sliderPayment.on('mousewheel', '.owl-stage', function (e) {
+            if (e.originalEvent.deltaY > 0) {
+                sliderPayment.trigger('next.owl');
+            } else {
+                sliderPayment.trigger('prev.owl');
+            }
+            e.preventDefault();
+        });
+    }
     if (document.getElementById('slider-old-catalog') !== null) {
         let sliderOldCatalog = $('#slider-old-catalog');
         let optionsOldCatalog = optionsSliderBase;
