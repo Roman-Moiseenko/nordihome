@@ -102,10 +102,12 @@
                 </ul>
             </div>
             <div class="col-lg-6">
-                <div class="owl-carousel owl-theme" id="">
-                    <div class="slide" style="background-image: url('slide-1.jpg')">
-                        <h2 class="slide__title">Заголовок слайда</h2>
-                        <a href="#" class="slide__link">Кнопка</a>
+                <div class="owl-carousel owl-theme article-slider01" id="">
+                    <div class="slide">
+                        <img src="/uploads/gallery/4/statya-kuhni05.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                    </div>
+                    <div class="slide">
+                        <img src="/uploads/gallery/4/statya-kuhni05.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
                     </div>
                 </div>
 
