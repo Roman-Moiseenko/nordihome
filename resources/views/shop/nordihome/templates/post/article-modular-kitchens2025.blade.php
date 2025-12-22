@@ -58,7 +58,7 @@
             <div class="row">
                 <div class="col-md-6 col-lg-4">
                     <div class="series-kitchen-2025">
-                        <img src="/uploads/gallery/4/statya-kuhni02-min.jpg" alt="Кухни METOD">
+                        <img src="/uploads/gallery/4/statya-kuhni02.jpg" alt="Кухни METOD">
                         <div class="bg-f2f2f2">
                             <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни METOD</div>
                             <div class="m-b_20 text">Универсальная система комбинаций фасадов и размеров. Для тех, кто ищет стиль и функциональность, Но при этом не хочет много тратить.</div>
@@ -68,7 +68,7 @@
                 </div>
                 <div class="col-md-6 col-lg-4">
                     <div class="series-kitchen-2025">
-                        <img src="/uploads/gallery/4/statya-kuhni03-min.jpg" alt="Кухни METOD">
+                        <img src="/uploads/gallery/4/statya-kuhni03.jpg" alt="Кухни METOD">
                         <div class="bg-f2f2f2">
                             <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни KNOXHULT</div>
                             <div class="m-b_20 text">Недорогой вариант, с простотой сборкой и базовыми размерами. Для тех, кто ищет классику без излишеств.</div>
@@ -78,7 +78,7 @@
                 </div>
                 <div class="col-md-6 col-lg-4">
                     <div class="series-kitchen-2025">
-                        <img src="/uploads/gallery/4/statya-kuhni04-min.jpg" alt="Кухни METOD">
+                        <img src="/uploads/gallery/4/statya-kuhni03.jpg" alt="Кухни METOD">
                         <div class="bg-f2f2f2">
                             <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни ENHET</div>
                             <div class="m-b_20 text">Лёгкая и мобильная система, с простой установкой. Для аренды, дачи или временного жилья.</div>
