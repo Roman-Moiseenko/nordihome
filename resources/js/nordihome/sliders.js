@@ -130,7 +130,7 @@ window.$ = jQuery;
         });
     }
     if (document.getElementByClassName('article-slider01') !== null) {
-        let sliderPayment = $('.article-slider01');
+        let sliderPayment = $('article-slider01');
         sliderPayment.owlCarousel(optionsSliderBase);
         sliderPayment.on('mousewheel', '.owl-stage', function (e) {
             if (e.originalEvent.deltaY > 0) {
