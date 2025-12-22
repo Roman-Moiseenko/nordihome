@@ -102,7 +102,7 @@
                 </ul>
             </div>
             <div class="col-lg-6">
-                <div class="owl-carousel owl-theme article-slider01" id="">
+                <div class="owl-carousel owl-theme " id="main-slider01">
                     <div class="slide">
                         <img src="/uploads/gallery/4/statya-kuhni05.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
                     </div>
