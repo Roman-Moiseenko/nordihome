@@ -154,6 +154,10 @@ ul li, ol li {list-style-position: inside;}
 .bg-faf7f4 {background:#FAF7F4;}
 .bg-f2f2f2 {background: #F2F2F2;}
 
+img {
+    max-width: 100%;
+    height: auto;
+}
 .img-alignright {
     float: right;
     margin-left: 20px;
