@@ -107,26 +107,14 @@
                         <img src="/uploads/gallery/4/statya-kuhni05.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
                     </div>
                     <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni05.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                        <img src="/uploads/gallery/4/statya-kuhni06.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
                     </div>
-                </div>
-
-                <div class="swiper main-slider">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <img src="/wp-content/uploads/2025/10/statya-kuhni05.jpg" alt="Тренды модульных кухонь IKEA" class="d-block">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="/wp-content/uploads/2025/10/statya-kuhni06.jpg" alt="Тренды модульных кухонь IKEA" class="d-block">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="/wp-content/uploads/2025/10/statya-kuhni07.jpg" alt="Тренды модульных кухонь IKEA" class="d-block">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="/wp-content/uploads/2025/10/statya-kuhni08.jpg" alt="Тренды модульных кухонь IKEA" class="d-block">
-                        </div>
+                    <div class="slide">
+                        <img src="/uploads/gallery/4/statya-kuhni07.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
                     </div>
-                    <div class="swiper-pagination"></div>
+                    <div class="slide">
+                        <img src="/uploads/gallery/4/statya-kuhni08.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                    </div>
                 </div>
                 <div class="m-t_10"><a href="/product-category/gotovye-modulnye-kuhni-ikea/">Выбрать цвет и форму можно в разделе: модульная кухня IKEA: METOD, KNOXHULT, ENHET в NORDI HOME.</a></div>
             </div>
@@ -143,25 +131,22 @@
                 </ul>
             </div>
             <div class="col-lg-6">
-                <div class="swiper main-slider">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide">
-                            <img src="/wp-content/uploads/2025/10/statya-kuhni09-min.jpg" alt="Гибкость, адаптивность кухонь IKEA" class="d-block">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="/wp-content/uploads/2025/10/statya-kuhni10-min.jpg" alt="Гибкость, адаптивность кухонь IKEA" class="d-block">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="/wp-content/uploads/2025/10/statya-kuhni11-min.jpg" alt="Гибкость, адаптивность кухонь IKEA" class="d-block">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="/wp-content/uploads/2025/10/statya-kuhni12-min.jpg" alt="Гибкость, адаптивность кухонь IKEA" class="d-block">
-                        </div>
-                        <div class="swiper-slide">
-                            <img src="/wp-content/uploads/2025/10/statya-kuhni13-min.jpg" alt="Гибкость, адаптивность кухонь IKEA" class="d-block">
-                        </div>
+                <div class="owl-carousel owl-theme article-slider01" id="">
+                    <div class="slide">
+                        <img src="/uploads/gallery/4/statya-kuhni09.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
                     </div>
-                    <div class="swiper-pagination"></div>
+                    <div class="slide">
+                        <img src="/uploads/gallery/4/statya-kuhni10.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                    </div>
+                    <div class="slide">
+                        <img src="/uploads/gallery/4/statya-kuhni11.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                    </div>
+                    <div class="slide">
+                        <img src="/uploads/gallery/4/statya-kuhni12.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                    </div>
+                    <div class="slide">
+                        <img src="/uploads/gallery/4/statya-kuhni13.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                    </div>
                 </div>
                 <div class="m-t_10"><a href="/product-category/gotovye-modulnye-kuhni-ikea/">Прямые кухни модульные IKЕA в NORDI HOME.</a></div>
             </div>
