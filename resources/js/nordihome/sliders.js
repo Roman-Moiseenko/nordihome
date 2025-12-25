@@ -129,6 +129,24 @@ window.$ = jQuery;
             }
         });
     }
+
+    if (document.querySelectorAll('.article-slider02') !== null) {
+        let product_optionsSliderBase = optionsSliderBase;
+        let slidersImagesProduct = $('.article-slider02');
+        slidersImagesProduct.each(function (element) {
+            let sliderImagesProduct = $(this);
+                sliderImagesProduct.on('mousewheel', '.owl-stage', function (e) {
+                    if (e.originalEvent.deltaY > 0) {
+                        sliderImagesProduct.trigger('next.owl');
+                    } else {
+                        sliderImagesProduct.trigger('prev.owl');
+                    }
+                    e.preventDefault();
+                });
+
+        });
+    }
+
     if (document.getElementByClassName('article-slider01') !== null) {
         let sliderPayment = $('.article-slider01');
         sliderPayment.owlCarousel(optionsSliderBase);
