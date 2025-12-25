@@ -106,6 +106,25 @@ window.$ = jQuery;
         optionsOldReviews.responsive = { 0: {items: 1}, 576: {items: 2}, 768: {items: 3}, 991: {items: 4}, 1200: {items: 5}, 1400: {items: 6}};
         sliderOldReviews.owlCarousel(optionsOldReviews);
     }
+    if (document.querySelectorAll('.article-slider01') !== null) {
+        let product_optionsSliderBase = optionsSliderBase;
+        let slidersImagesProduct = $('.article-slider01');
+        slidersImagesProduct.each(function (element) {
+            let sliderImagesProduct = $(this);
+            let mouseScroll = sliderImagesProduct.data('mouse-scroll');
+            sliderImagesProduct.owlCarousel(product_optionsSliderBase);
+            if (mouseScroll !== 0) {
+                sliderImagesProduct.on('mousewheel', '.owl-stage', function (e) {
+                    if (e.originalEvent.deltaY > 0) {
+                        sliderImagesProduct.trigger('next.owl');
+                    } else {
+                        sliderImagesProduct.trigger('prev.owl');
+                    }
+                    e.preventDefault();
+                });
+            }
+        });
+    }
     if (document.querySelectorAll('.slider-images-product') !== null) {
         let product_optionsSliderBase = optionsSliderBase;
         let slidersImagesProduct = $('.slider-images-product');
@@ -127,39 +146,6 @@ window.$ = jQuery;
                     e.preventDefault();
                 });
             }
-        });
-    }
-
-    if (document.querySelectorAll('.slider-images-product1') !== null) {
-        let product_optionsSliderBase = optionsSliderBase;
-        let slidersImagesProduct = $('.slider-images-product1');
-        slidersImagesProduct.each(function (element) {
-            let sliderImagesProduct = $(this);
-            let mouseScroll = sliderImagesProduct.data('mouse-scroll');
-            sliderImagesProduct.owlCarousel(product_optionsSliderBase);
-            if (mouseScroll !== 0) {
-                sliderImagesProduct.on('mousewheel', '.owl-stage', function (e) {
-                    if (e.originalEvent.deltaY > 0) {
-                        sliderImagesProduct.trigger('next.owl');
-                    } else {
-                        sliderImagesProduct.trigger('prev.owl');
-                    }
-                    e.preventDefault();
-                });
-            }
-        });
-    }
-
-    if (document.getElementByClassName('article-slider01') !== null) {
-        let sliderPayment = $('.article-slider01');
-        sliderPayment.owlCarousel(optionsSliderBase);
-        sliderPayment.on('mousewheel', '.owl-stage', function (e) {
-            if (e.originalEvent.deltaY > 0) {
-                sliderPayment.trigger('next.owl');
-            } else {
-                sliderPayment.trigger('prev.owl');
-            }
-            e.preventDefault();
         });
     }
     if (document.getElementById('slider-old-catalog') !== null) {
