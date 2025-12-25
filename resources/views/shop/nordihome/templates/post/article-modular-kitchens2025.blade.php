@@ -133,19 +133,19 @@
             <div class="col-lg-6">
                 <div class="owl-carousel owl-theme article-slider01" id="">
                     <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni09.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                        <img src="/uploads/gallery/4/statya-kuhni09-min.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
                     </div>
                     <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni10.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                        <img src="/uploads/gallery/4/statya-kuhni10-min.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
                     </div>
                     <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni11.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                        <img src="/uploads/gallery/4/statya-kuhni11-min.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
                     </div>
                     <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni12.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                        <img src="/uploads/gallery/4/statya-kuhni12-min.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
                     </div>
                     <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni13.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                        <img src="/uploads/gallery/4/statya-kuhni13-min.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
                     </div>
                 </div>
                 <div class="m-t_10"><a href="/product-category/gotovye-modulnye-kuhni-ikea/">Прямые кухни модульные IKЕA в NORDI HOME.</a></div>
