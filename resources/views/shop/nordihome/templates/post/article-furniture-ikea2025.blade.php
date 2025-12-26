@@ -152,141 +152,85 @@
                 <li>Внедрите <b>модульные решения.</b> Они позволяют переставлять мебель по настроению и адаптировать комнату под любые задачи.</li>
             </ul>
         </div>
-
-
-
+        <div class="m-t_30 m-b_30">
+            <div class="article-mebel2025-img">
+                <div class="one"><a href="/shop/norden/"><img src="/uploads/gallery/5/mebel-ikea2025-15.jpg" alt="Раскладной стол NORDEN"></a></div>
+                <div class="two">
+                    <div class="d-flex">
+                        <a href="/shop/divan-2-mestnyj-skonaback-skonabak-2/" class="w-62"><img src="/uploads/gallery/5/mebel-ikea2025-16.jpg" alt="Диван 2-местный SKONABACK"></a> <a href="/shop/frosvi-5/" class="w-37"><img src="/uploads/gallery/5/mebel-ikea2025-17-1.jpg" alt="Складные стулья FROSVI" ></a>
+                    </div>
+                    <div class="d-flex">
+                        <a href="/?s=Полка%20настенная%20LACK&post_type=product&dgwt_wcas=1" class="w-37"><img src="/uploads/gallery/5/mebel-ikea2025-18-1.jpg" alt="Полка настенная LACK"></a> <a href="/?s=Комод%20MALM&post_type=product&dgwt_wcas=1" class="w-62"><img src="/uploads/gallery/5/mebel-ikea2025-19.jpg" alt="Комод MALM"></a>
+                    </div>
+                </div>
+            </div>
+            <div class="t-a_center f-z_13 m-t_10" <a href="/shop/norden/"><b>1. Раскладной стол NORDEN</b></a> – для малых пространств. <a href="/shop/divan-2-mestnyj-skonaback-skonabak-2/"><b>2. Диван 2-местный SKONABACK</b></a> – раскладывается под спальное место. <a href="/?s=Полка%20настенная%20LACK&post_type=product&dgwt_wcas=1"><b>3. Полка настенная LACK</b></a> – экономия площади и декор. <a href="/shop/frosvi-5/"><b>4. Складные стулья FROSVI</b></a> – удобство для гостей. <a href="/?s=Комод%20MALM&post_type=product&dgwt_wcas=1"><b>5. Комод MALM</a></b> – рациональное хранение вещей.</div>
+        </div>
         <div>
-            <h3 class="t-a_center">Серии модульных кухонь IKEA: Metod, Knoxhult, Enhet</h3>
-            <div class="row">
-                <div class="col-md-6 col-lg-4">
-                    <div class="series-kitchen-2025">
-                        <img src="/uploads/gallery/4/statya-kuhni02.jpg" alt="Кухни METOD" class="width_100">
-                        <div class="bg-f2f2f2">
-                            <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни METOD</div>
-                            <div class="m-b_20 text">Универсальная система комбинаций фасадов и размеров. Для тех, кто ищет стиль и функциональность, Но при этом не хочет много тратить.</div>
-                            <div class="t-a_center"><a href="/product-tag/metod/" class="btn btn-black t-t_uppercase f-z_15">Смотреть в каталоге</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                    <div class="series-kitchen-2025">
-                        <img src="/uploads/gallery/4/statya-kuhni03.jpg" alt="Кухни METOD" class="width_100">
-                        <div class="bg-f2f2f2">
-                            <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни KNOXHULT</div>
-                            <div class="m-b_20 text">Недорогой вариант, с простотой сборкой и базовыми размерами. Для тех, кто ищет классику без излишеств.</div>
-                            <div class="t-a_center"><a href="/product-tag/knoxhult/" class="btn btn-black t-t_uppercase f-z_15">Смотреть в каталоге</a></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4">
-                    <div class="series-kitchen-2025">
-                        <img src="/uploads/gallery/4/statya-kuhni03.jpg" alt="Кухни METOD" class="width_100">
-                        <div class="bg-f2f2f2">
-                            <div class="t-t_uppercase m-b_10 t-a_center f-w_700">Кухни ENHET</div>
-                            <div class="m-b_20 text">Лёгкая и мобильная система, с простой установкой. Для аренды, дачи или временного жилья.</div>
-                            <div class="t-a_center"><a href="/product-tag/enhet/" class="btn btn-black t-t_uppercase f-z_15">Смотреть в каталоге</a></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="m-t_20">Можно ли купить кухню модульную IKEA 600×800, цена? Цена будет зависеть от фасадов, их количества и наполнения. На сайте магазина NORDI HOME вы можете обратиться к менеджерам для планирования и точного расчёта.</div>
+            <div class="t-a_center t-t_uppercase bg-black p-block_15">Мебель IKEA для больших квартир и домов: простор и возможность выбора</div>
+            <ul class="m-t_30">
+                <li>Используйте <b>мебель для зонирования</b>: диваны, стеллажи, ковры.</li>
+                <li><b>Модульные системы</b> помогут легко перестраивать пространство под настроение или нужды семьи.</li>
+                <li>Добавляйте акцентные предметы мебели – кресла, светильники, журнальные столики. Они оживляют интерьер, делают его уютным.</li>
+                <li>Хранение - это ваш друг. Поддерживайте порядок с помощью <b>комодов, систем хранения.</b></li>
+                <li>Используйте <b>текстиль, освещение</b> для объединения зон. Это поможет сделать пространство гармоничным, комфортным.</li>
+            </ul>
         </div>
-        <h3 class="t-a_center t-t_uppercase">Тренды модульных кухонь IKEA</h3>
-        <div class="m-b_30">Мир диктует свои правила в дизайне и организации пространства вашего дома. Кухня, некогда считавшаяся просто местом для готовки, сегодня превратилась в центр семейного очага, а также местом встречи с друзьями. Поэтому выбор кухонного гарнитура - важное решение в обновлении ремонта вашего дома.</div>
-        <div class="row m-b_30">
-            <div class="col-lg-6">
-                <h3 class="m-t_0">Цветовые, стилистические решения</h3>
-                <ul>
-                    <li class="m-b_10"><b>Светлые оттенки:</b><br>Белые, светло-серые фасады визуально расширят пространство что придает лёгкость и свежесть.</li>
-                    <li class="m-b_10"><b>Натуральные материалы:</b><br>Деревянные фасады, столешницы добавят теплоту, уют, особенно в сочетании с натуральным материалами пола, фартука или раковины.</li>
-                    <li class="m-b_10"><b>Контрастные комбинации:</b><br>Сочетание цветов, текстур, например: яркий верх и древесный низ создадут интересный эффект.</li>
-                    <li class="m-b_10"><b>Яркие акценты:</b><br>Установка открытых полок с декоративными панелями в насыщенных оттенках добавит индивидуальности и выразительности.</li>
-                </ul>
-            </div>
-            <div class="col-lg-6">
-                <div class="owl-carousel owl-theme article-slider01" id="">
-                    <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni05.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+        <div class="m-t_30 m-b_30">
+            <div class="article-mebel2025-img">
+                <div class="one"><a href="/?s=PAX&post_type=product&dgwt_wcas=1"><img src="/uploads/gallery/5/mebel-ikea2025-20.jpg" alt="Каркас гардероба PAX"></a></div>
+                <div class="two">
+                    <div class="d-flex">
+                        <a href="/shop/stockholm-2025-40/" class="w-62"><img src="/uploads/gallery/5/mebel-ikea2025-21-1.jpg" alt="4-местный диван STOCKHOLM 2025"></a> <a href="/?s=KALLAX&post_type=product&dgwt_wcas=1" class="w-37"><img src="/uploads/gallery/5/mebel-ikea2025-22-1.jpg" alt="Стеллаж KALLAX" ></a>
                     </div>
-                    <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni06.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
-                    </div>
-                    <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni07.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
-                    </div>
-                    <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni08.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
+                    <div class="d-flex">
+                        <a href="/" class="w-37"><img src="/uploads/gallery/5/mebel-ikea2025-23.jpg" alt="Мебель икеа"></a> <a href="/shop/pinntorp-3/" class="w-62"><img src="/uploads/gallery/5/mebel-ikea2025-24-1.jpg" alt="Стол PINNTORP"></a>
                     </div>
                 </div>
-                <div class="m-t_10"><a href="/product-category/gotovye-modulnye-kuhni-ikea/">Выбрать цвет и форму можно в разделе: модульная кухня IKEA: METOD, KNOXHULT, ENHET в NORDI HOME.</a></div>
             </div>
+            <div class="t-a_center f-z_13 m-t_10"><a href="/?s=PAX&post_type=product&dgwt_wcas=1"><b>1. Каркас гардероба PAX</b></a> – оптимизация хранения одежды. <a href="/shop/stockholm-2025-40/"><b>2. 4-местный диван STOCKHOLM 2025</b></a> – центр зоны отдыха. <a href="/?s=KALLAX&post_type=product&dgwt_wcas=1"><b>4. Стеллаж KALLAX</b></a> – легкий, функциональный для зонирования пространства. <a href="/shop/pinntorp-3/"><b>5. Стол PINNTORP</b></a> – комфорт для больших семейных ужинов.</div>
         </div>
-        <h3 class="m-t_0">Гибкость, адаптивность</h3>
-        <div class="m-b_30">Подбирая уникальные комбинации из готовых модулей вы создадите пространство, отражающее вашу индивидуальность. В каталоге ИКЕА представлены модули, ящики и освещение под любой запрос:</div>
-        <div class="row m-b_30">
-            <div class="col-lg-6">
-                <ul>
-                    <li class="m-b_10"><b>Вертикальное - горизонтальное хранение:</b><br>Шкафы до потолка, острова, рейлинги,  открытые полки помогают эффективно использовать всё пространство.</li>
-                    <li class="m-b_10"><b>Умные ящики:</b><br>Системы полного выдвижения, разделители и органайзеры упростят доступ к полкам, поддержат порядок в шкафу.</li>
-                    <li class="m-b_10"><b>Интегрированная техника:</b><br>Встраиваемая техника: посудомоечные машины, микроволновые печи, кофемашины можно скрыть за фасадами, что придаст эстетичный вид.</li>
-                    <li class="m-b_10"><b>LED-подсветка:</b></br>Встроенная подсветка в шкафах или под столешницей улучшит освещённость рабочей зоны и наполнит атмосферой уюта.</li>
-                </ul>
-            </div>
-            <div class="col-lg-6">
-                <div class="owl-carousel owl-theme article-slider01" id="">
-                    <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni09-min.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
-                    </div>
-                    <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni10-min.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
-                    </div>
-                    <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni11-min.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
-                    </div>
-                    <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni12-min.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
-                    </div>
-                    <div class="slide">
-                        <img src="/uploads/gallery/4/statya-kuhni13-min.jpg" alt="Тренды модульных кухонь IKEA" class="d-block width_100">
-                    </div>
-                </div>
-                <div class="m-t_10"><a href="/product-category/gotovye-modulnye-kuhni-ikea/">Прямые кухни модульные IKЕA в NORDI HOME.</a></div>
-            </div>
-        </div>
-        <h3 class="t-a_center t-t_uppercase">Секреты правильного выбора модульной кухни:</h3>
+        <h3 class="t-a_center">Ответы на часто задаваемые вопросы:</h3>
         <div class="row">
-            <div class="col-lg-6">
-                <div class="article-kitchen-2025">
-                    <div class="heading">Шаг 1. определение потребностей</div>
-                    <div>Измерьте пространство перед тем, как выбрать модель. Нужно точно замерить размеры помещения, чтобы подобрать правильную конфигурацию модулей.</div>
-                </div>
-                <div class="article-kitchen-2025">
-                    <div class="heading">Шаг 2: выбор типа планировки</div>
-                    <div>Для <b>маленьких кухонь</b> подойдут прямые модели, как, например ENHET.<br>Можно ли заказать угловую модульную кухню в ИКЕА? Да, для этого подойдет серия KNOXHULT с модулями для сборки функциональных угловых моделей в маленьких или квадратных помещениях.<br>Для <b>просторных помещений</b> можно рассмотреть серию с островом или полуостровом METOD, дополнительные шкафы и пеналы, которые обеспечат дополнительную рабочую поверхность с местом для хранения.</div>
-                </div>
+            <div class="col-lg-7 order-2 order-lg-1 order-xl-1">
+                <div class="p-block_15 f-z_21 bg-f2f2f2 f-w_600 m-b_20">1. Где купить мебель IKEA по актуальной цене?</div>
+                <ul>
+                    <li>Официальные магазины в Польше.</li>
+                    <li>Онлайн на официальном сайте IKEA.</li>
+                    <li>На сайте NORDI HOME с доставкой по России.</li>
+                </ul>
+                <div class="p-block_15 f-z_21 bg-f2f2f2 f-w_600 m-b_20 m-t_20">2. Как заказать мебель ИКЕА с доставкой по России?</div>
+                <ol>
+                    <li>Сформируйте заказ в нашем интернет-магазине NORDI HOME. </li>
+                    <li>Оформите доставку мебели ИКЕА, осуществляется по всей России.</li>
+                    <li>Наш менеджер свяжется с вами.</li>
+                </ol>
             </div>
-            <div class="col-lg-6">
-                <div class="article-kitchen-2025">
-                    <div class="heading">Шаг 3: Выбор модулей и систем хранения</div>
-                    <div>Лёгкий монтаж позволит не тратить деньги на услуги сборщиков. При необходимости все элементы можно демонтировать или переустановить при переезде. В модульной системе возможно заменять отдельные элементы без необходимости полной замены всей кухни, что делает её покупку выгодной.</div>
-                </div>
-                <div class="article-kitchen-2025">
-                    <div class="heading">4. Дизайн, разнообразие:</div>
-                    <div>Выберете оттенки, фасады, которые будут подходить под стиль вашего дома.<br><b>Деревянные фасады:</b> Создадут атмосферу теплоты и уюта, особенно в сочетании с нейтральными оттенками.<br><b>Ламинированные фасады:</b> Прочны, легко чистятся, доступны в цветах и текстурах.<br><b>Столешницы:</b> Влагостойкие, прочные материалы: кварц или акрил, обеспечат долговечность.<br>Правильно подобранная модель станет центром вашего дома, и прослужит на долгие годы.</div>
-                </div>
+            <div class="col-lg-5 order-1 order-lg-2 order-xl-2">
+                <table width="100%" class="article-mebel-table">
+                    <tr>
+                        <th class="bg-f2f2f2">Источник</th>
+                        <th class="bg-f2f2f2">Преимущества</th>
+                        <th class="bg-f2f2f2">Недостатки</th>
+                    </tr>
+                    <tr>
+                        <td>Официальный сайт IKEA</td>
+                        <td>Подробный каталог, новинки</td>
+                        <td>Ограниченная доставка в РФ, возможные задержки</td>
+                    </tr>
+                    <tr>
+                        <td>Польская IKEA</td>
+                        <td>Заводские цены</td>
+                        <td>Самостоятельная логистика</td>
+                    </tr>
+                    <tr>
+                        <td>NORDI HOME</td>
+                        <td>Широкий выбор, доставка по России, акции</td>
+                        <td>Не обнаружено</td>
+                    </tr>
+                </table>
             </div>
         </div>
-        <h3 class="t-a_center t-t_uppercase">Где купить модульную кухню IKEA?</h3>
-        <div class="m-b_20">Магазины IKEA остаются основным каналом покупки кухонных гарнитуров. Там вы можете посмотреть, проконсультироваться и заказать на месте. Но с уходом магазинов ИКЕА в России купить модульную мебель для кухни стало сложнее. </div>
-        <div class="row">
-            <div class="col-lg-6">
-                <img src="/uploads/gallery/4/statya-kuhni14-min.jpg" alt="Где купить модульную кухню IKEA?">
-            </div>
-            <div class="col-lg-6">К счастью, компания NORDI HOME предлагает комплексное сопровождение с возможностью оформить заказ напрямую из польской ИКЕА:<br><br>- Разработаем индивидуальный проект с учётом всех ваших пожеланий;<br>- Подготовим договор и предоставим все необходимые документы;<br>- Организуем доставку из польской ИКЕА до вашего дома;<br>- Будем на связи на всех этапах — от подбора до установки.<br><br>Переходите в каталог и выбирайте готовый кухонный гарнитур с доставкой от NORDI HOME.
-                <div class="m-t_10 t-a_center"><a href="/product-category/gotovye-modulnye-kuhni-ikea/" class="btn btn-black">ОТКРЫТЬ КАТАЛОГ</a></div>
-            </div>
-        </div>
-        <div class="m-t_20">Купить кухню ИКЕА в NORDI HOME — значит сэкономить время, деньги и нервы. Выбирайте надёжную компанию, которая обеспечит быструю доставку и проконтролирует все этапы: от заказа до получения вами заказа.</div>
     </div>
     <div>
         {!! $post->text !!}
