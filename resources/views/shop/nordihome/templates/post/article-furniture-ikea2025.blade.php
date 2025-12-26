@@ -1,4 +1,4 @@
-<!--template:Статья - Какие модульные кухни выбирают в 2025 году?-->
+<!--template:Статья - Какую выбрать мебель ИКЕА в 2025 году?-->
 @php
     /** @var \App\Modules\Page\Entity\Post $post */
     $photo = photo_std('main_001', 'card');
