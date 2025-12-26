@@ -23,13 +23,13 @@
         <h3 class="t-a_center">Основные новинки и тренды мебели IKEA в 2025 году:</h3>
         <p>Тренды 2025 года – это многофункциональность, экологичность и гибкость использования. Сейчас на пике популярности – трансформируемые диваны; шкафы из экологичных материалов и системы хранения; натуральные материалы и текстуры; а также светлые оттенки и минимализм.</p>
         <div class="article-mebel2025-img">
-            <div class="one"><a href="/shop/nordkisa/"><img src="/wp-content/uploads/2025/10/mebel-ikea2025-01.jpg" alt="Открытый шкаф с раздвижными дверями NORDKISA"></a></div>
+            <div class="one"><a href="/shop/nordkisa/"><img src="/uploads/gallery/5/mebel-ikea2025-01.jpg" alt="Открытый шкаф с раздвижными дверями NORDKISA"></a></div>
             <div class="two">
                 <div class="d-flex">
-                    <a href="/shop/divan-krovat-fridhult-fridhult/" class="w-62"><img src="/wp-content/uploads/2025/10/mebel-ikea2025-02.jpg" alt="Диван-кровать FRIDHULT"></a> <a href="/shop/branas/" class="w-37"><img src="/wp-content/uploads/2025/10/mebel-ikea2025-04.jpg" alt="Корзина из ротанга BRANAS" ></a>
+                    <a href="/shop/divan-krovat-fridhult-fridhult/" class="w-62"><img src="/uploads/gallery/5/mebel-ikea2025-02.jpg" alt="Диван-кровать FRIDHULT"></a> <a href="/shop/branas/" class="w-37"><img src="/uploads/gallery/5/mebel-ikea2025-04.jpg" alt="Корзина из ротанга BRANAS" ></a>
                 </div>
                 <div class="d-flex">
-                    <a href="/?s=TROFAST&post_type=product&dgwt_wcas=1" class="w-37"><img src="/wp-content/uploads/2025/10/mebel-ikea2025-03.jpg" alt="Система хранения TROFAST"></a> <a href="/shop/manalg/" class="w-62"><img src="/wp-content/uploads/2025/10/mebel-ikea2025-05.jpg" alt="Настенный светильник MANALG"></a>
+                    <a href="/?s=TROFAST&post_type=product&dgwt_wcas=1" class="w-37"><img src="/uploads/gallery/5/mebel-ikea2025-03.jpg" alt="Система хранения TROFAST"></a> <a href="/shop/manalg/" class="w-62"><img src="/uploads/gallery/5/mebel-ikea2025-05.jpg" alt="Настенный светильник MANALG"></a>
                 </div>
             </div>
         </div>
