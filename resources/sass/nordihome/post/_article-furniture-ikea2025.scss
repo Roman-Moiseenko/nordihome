@@ -1,21 +1,36 @@
-.article-mebel2025-img {display:flex;flex-wrap:wrap;}
-.article-mebel2025-img div.one {width:29%;margin-right: 11px;}
-.article-mebel2025-img div.two {width:69%;}
-.article-mebel2025-img div.two .d-flex {justify-content:space-between;}
-.article-mebel2025-img div.two .d-flex:first-child {margin-bottom: 11px;}
-.article-mebel2025-img div.two a {display:flex;}
-.article-mebel2025-img div.two .w-62 {width: 62%;}
-.article-mebel2025-img div.two .w-37 {width: 37%;}
-.article-mebel2025-img div img {width:100%;display:block;}
-
+.article-mebel2025-img {
+    display:flex;flex-wrap:wrap;
+    div.one {
+        width:29%;
+        margin-right: 11px;
+    }
+    div.two {
+        width:69%;
+        .d-flex {justify-content:space-between;}
+        .d-flex:first-child {margin-bottom: 11px;}
+        a {display:flex;}
+        .w-62 {width: 62%;}
+        .w-37 {width: 37%;}
+    }
+    div {
+        img {width:100%;display:block;}
+    }
+}
 
 @media (max-width: 990px) {
-    .article-mebel2025-img div.one {margin-right: 8px;}
-    .article-mebel2025-img div.two .d-flex:first-child {
-        margin-bottom: 8px;}
-    .article-mebel2025-img div.two {width: 68%;}
-    .article-mebel2025-img div.two .w-37 {width: 36%;}
+    .article-mebel2025-img {
+        div.one {margin-right: 8px;}
+        div.two {
+            width: 68%;
+            .d-flex:first-child {margin-bottom: 8px;}
+            .w-37 {width: 36%;}
+        }
+    }
 }
 @media (max-width: 576px) {
-    .article-mebel2025-img div.two .d-flex:first-child {margin-bottom: 2.5%;}
+    .article-mebel2025-img {
+        div.two {
+            .d-flex:first-child {margin-bottom: 2.5%;}
+        }
+    }
 }
