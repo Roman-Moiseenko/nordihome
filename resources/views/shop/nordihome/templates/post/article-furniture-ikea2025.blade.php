@@ -231,6 +231,7 @@
                 </table>
             </div>
         </div>
+
     </div>
     <div>
         {!! $post->text !!}

@@ -16,7 +16,17 @@
         img {width:100%;display:block;}
     }
 }
-
+.article-mebel-table {
+    width:100%;
+    text-align:left;
+    border-collapse:collapse;
+    border-radius: 5px;
+    overflow: hidden;
+    font-size:12px;
+    td, th {
+        border:1px solid #B9B9B9;padding: 10px 5px;
+    }
+}
 @media (max-width: 990px) {
     .article-mebel2025-img {
         div.one {margin-right: 8px;}
@@ -26,6 +36,7 @@
             .w-37 {width: 36%;}
         }
     }
+    .article-mebel-table {margin-bottom:30px;}
 }
 @media (max-width: 576px) {
     .article-mebel2025-img {
