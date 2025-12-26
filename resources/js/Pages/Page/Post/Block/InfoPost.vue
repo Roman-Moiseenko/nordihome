@@ -73,7 +73,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Дата публикации">
-                    <el-date-picker v-model="info.published_at" />
+                    <el-date-picker v-model="info.published_at" type="datetime" />
                 </el-form-item>
                 <el-form-item label="Заголовок">
                     <el-input v-model="info.title"/>
@@ -153,7 +153,7 @@ const info = reactive({
 })
 
 function onSetInfo() {
-    info.published_at = func.date(info.published_at)
+    info.published_at = func.datetime(info.published_at)
     router.visit(
         route('admin.page.post.set-info', {post: props.post.id}), {
             method: "post",
