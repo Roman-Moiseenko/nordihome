@@ -164,7 +164,7 @@
                     </div>
                 </div>
             </div>
-            <div class="t-a_center f-z_13 m-t_10"></div> <a href="/shop/norden/"><b>1. Раскладной стол NORDEN</b></a> – для малых пространств. <a href="/shop/divan-2-mestnyj-skonaback-skonabak-2/"><b>2. Диван 2-местный SKONABACK</b></a> – раскладывается под спальное место. <a href="/?s=Полка%20настенная%20LACK&post_type=product&dgwt_wcas=1"><b>3. Полка настенная LACK</b></a> – экономия площади и декор. <a href="/shop/frosvi-5/"><b>4. Складные стулья FROSVI</b></a> – удобство для гостей. <a href="/?s=Комод%20MALM&post_type=product&dgwt_wcas=1"><b>5. Комод MALM</a></b> – рациональное хранение вещей.</div>
+            <div class="t-a_center f-z_13 m-t_10"> <a href="/shop/norden/"><b>1. Раскладной стол NORDEN</b></a> – для малых пространств. <a href="/shop/divan-2-mestnyj-skonaback-skonabak-2/"><b>2. Диван 2-местный SKONABACK</b></a> – раскладывается под спальное место. <a href="/?s=Полка%20настенная%20LACK&post_type=product&dgwt_wcas=1"><b>3. Полка настенная LACK</b></a> – экономия площади и декор. <a href="/shop/frosvi-5/"><b>4. Складные стулья FROSVI</b></a> – удобство для гостей. <a href="/?s=Комод%20MALM&post_type=product&dgwt_wcas=1"><b>5. Комод MALM</a></b> – рациональное хранение вещей.</div>
         </div>
         <div>
             <div class="t-a_center t-t_uppercase bg-black p-block_15">Мебель IKEA для больших квартир и домов: простор и возможность выбора</div>
