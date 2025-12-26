@@ -109,6 +109,38 @@
                     </ul>
                 </div>
             </div>
+            <div class="row m-t_30">
+                <div class="col-lg-6">
+                    <div class="article-kitchen-2025">
+                        <div class="heading">Ванная: комфорт и безопасность</div>
+                        <ul class="">
+                            <li class="m-b_10">Мебель должна быть <b>с влагостойкими фасадами и фурнитурой.</b></li>
+                            <li class="m-b_10">Используйте <b>открытые полки</b> для упрощенного доступа к косметике, полотенцам.</li>
+                            <li class="m-b_10"><b>Зеркала и светлые тона</b> визуально увеличат пространство.</li>
+                            <li class="m-b_10">Используйте <b>тумбы под раковину</b> с дополнительными ящиками для хранения.</li>
+                            <li class="m-b_10">Храните мелочи <b>в органайзерах</b>, чтобы каждая вещь занимала свое место, и ее легко можно было найти.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="owl-carousel owl-theme article-slider01" id="">
+                        <div class="slide">
+                            <img src="/uploads/gallery/5/mebel-ikea2025-12.jpg" alt="Ванная: комфорт и безопасность" class="d-block width_100">
+                        </div>
+                        <div class="slide">
+                            <img src="/uploads/gallery/5/mebel-ikea2025-13.jpg" alt="Ванная: комфорт и безопасность" class="d-block width_100">
+                        </div>
+                        <div class="slide">
+                            <img src="/uploads/gallery/5/mebel-ikea2025-14.jpg" alt="Ванная: комфорт и безопасность" class="d-block width_100">
+                        </div>
+                    </div>
+                    <ul class="f-z_13">
+                        <li><a href="/shop/hemnes-21/"><b>Шкаф с зеркалом HEMNES</b></a> – компактный с визуальным расширением пространства.</li>
+                        <li><a href="/shop/dragan/"><b>Органайзер DRAGAN</b></a> – хранение мелочей из натурального материала.</li>
+                        <li><a href="/shop/angsjon/"><b>Тумба под раковину ANGSJON</b></a> – вместительная и стильная.</li>
+                    </ul>
+                </div>
+            </div>
         </div>
 
 
