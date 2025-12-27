@@ -24,13 +24,12 @@ use App\Modules\Page\Entity\Widgets\FormWidget;
 <div>По вопросам сотрудничества: <a href="mailto:partnership@nordihome.ru">partnership@nordihome.ru</a></div>
 <div class="m-t_30">
     <div id="{{ $widget->id }}" class="feedback" not-hide>
-        <h2 class="fw-semibold mt-5">{{ $widget->caption }}</h2>
-        <h3>{{ $widget->description }}</h3>
+        <div class="m-b_10 m-t_10"><label> Ваше имя <input name="name" required placeholder="{{ $widget->fields["name"] }}"/></div>
         <div>
             <input name="email" class="form-control" required placeholder="{{ $widget->fields["email"] }}"/>
         </div>
         <div>
-            <input name="user" class="form-control" required placeholder="{{ $widget->fields["name"] }}"/>
+            <input name="name" required placeholder="{{ $widget->fields["name"] }}"/>
         </div>
         <div>
             <input name="wish" class="form-control" placeholder="Пожелания"/>
