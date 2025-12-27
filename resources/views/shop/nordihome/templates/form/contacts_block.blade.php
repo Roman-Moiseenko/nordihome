@@ -22,7 +22,7 @@ use App\Modules\Page\Entity\Widgets\FormWidget;
 
 <div class="heading f-w_600 f-z_23 m-b_20">ФОРМА ОБРАТНОЙ СВЯЗИ</div>
 <div>По вопросам сотрудничества: <a href="mailto:partnership@nordihome.ru">partnership@nordihome.ru</a></div>
-<div class="m-t_30">
+<div>
     <div id="{{ $widget->id }}" class="feedback" not-hide>
         <div class="m-b_10 m-t_10"><label> {{ $widget->fields["name"] }} <input name="name" class="width_100" required placeholder="Елена"/></label></div>
         <div class="m-b_10"><label> {{ $widget->fields["phone"] }} <input name="phone" class="width_100" required placeholder="+79097589135"/></label></div>
