@@ -243,7 +243,7 @@ input, button[type="submit"], textarea, select, .feedback button[type="button"] 
 textarea {
     min-height: 219px;
 }
-label {margin-bottom:5px;}
+label {margin-bottom:5px;display:block;}
 button[type="submit"], .feedback button[type="button"] {
     background:black;
     color:white;
