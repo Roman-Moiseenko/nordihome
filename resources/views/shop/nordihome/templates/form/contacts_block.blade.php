@@ -24,20 +24,27 @@ use App\Modules\Page\Entity\Widgets\FormWidget;
 <div>По вопросам сотрудничества: <a href="mailto:partnership@nordihome.ru">partnership@nordihome.ru</a></div>
 <div>
     <div id="{{ $widget->id }}" class="feedback" not-hide>
-        <div class="m-b_10 m-t_10"><label> {{ $widget->fields["name"] }} <input name="name" class="width_100" required placeholder="Елена"/></label></div>
-        <div class="m-b_10"><label> {{ $widget->fields["phone"] }} <input name="phone" class="width_100" required placeholder="+79097589135"/></label></div>
-        <div>
-            <input name="name" required placeholder="{{ $widget->fields["name"] }}"/>
+        <div class="m-b_10 m-t_10">
+            <label> {{ $widget->fields["name"] }} <input name="name" class="width_100" required placeholder="Елена"/></label>
+        </div>
+        <div class="m-b_10">
+            <label> {{ $widget->fields["phone"] }} <input name="phone" class="width_100" required placeholder="+79097589135"/></label>
+        </div>
+        <div class="m-b_10">
+            <label>{{ $widget->fields["question"] }} <textarea class="width_100" placeholder="Мой вопрос"></textarea>
+            </label>
         </div>
         <div>
-            <input name="wish" class="form-control" placeholder="Пожелания"/>
+            <label class="f-z_14">
+                <input type="checkbox" name="agreement" value="{{ $widget->fields["agreement"] }}"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
+            </label>
         </div>
-        <hr/>
-        <textarea name="message" class="form-control" placeholder="Сообщение"></textarea>
-        <button class="btn btn-success" type="button">Ответить</button>
+        <div>
+            <label><button class="btn-form" type="button">ОТПРАВИТЬ</button></label>
+        </div>
     </div>
     <div id="{{ $widget->id }}-callback" style="display: none">
-        *** Спасибо за ваше обращение ***
+        Спасибо за Ваше сообщение. Оно успешно отправлено. Наш менеджер свяжется с Вами в ближайшее время.
     </div>
 
 
