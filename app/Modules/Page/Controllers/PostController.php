@@ -105,9 +105,10 @@ class PostController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function post_destroy(Post $post)
+    public function post_destroy(Post $post): RedirectResponse
     {
-
+        $this->service->destroyPost($post);
+        return redirect()->back()->with('success', 'Удалено');
     }
 
     public function post_toggle(Post $post): RedirectResponse

@@ -92,4 +92,9 @@ class PostService
         $post->saveIcon($request->file('icon'), $request->boolean('clear_icon'));
 
     }
+
+    public function destroyPost(Post $post): void
+    {
+        $post->delete();
+    }
 }

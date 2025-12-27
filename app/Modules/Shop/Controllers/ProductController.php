@@ -46,11 +46,15 @@ class ProductController extends ShopController
             flash('Товар опубликован, неверная ссылка');
             return redirect()->back();
         }
+
+        return $this->views->product_draft($product->slug);
+  /*
         $title = 'Черновик ' . $product->name . ' купить по цене ' . $product->getPriceRetail() . '₽ ☛ Доставка по всей России ★★★
         Интернет-магазин ' . $this->web->title_city;
         $description = $product->short;
         $productAttributes = $this->repository->getProdAttributes($product);
         return view($this->route('product.view'), compact('product', 'title', 'description', 'productAttributes'));
+*/
     }
 
     public function old_slug($old_slug)

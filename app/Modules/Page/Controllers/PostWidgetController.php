@@ -54,7 +54,7 @@ class PostWidgetController extends Controller
 
     public function show(PostWidget $widget, Request $request): Response
     {
-        $templates = $this->templates->getTemplates('banner');
+        $templates = $this->templates->getTemplates('post_widget');
         $categories = $this->postRepository->getCategories($request);
 
         return Inertia::render('Page/Widget/Post/Show', [
