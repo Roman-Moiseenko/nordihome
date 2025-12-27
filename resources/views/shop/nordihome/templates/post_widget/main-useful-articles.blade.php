@@ -15,10 +15,21 @@
     /** @var App\Modules\Page\Entity\Widgets\PostWidget $widget  */
     /** @var \App\Modules\Page\Entity\Post $post */
     @endphp
-    <div class="text-center mt-5 py-4 widget-home-3-group">
-        @foreach($widget->getPost() as $post)
-        <div>
-            {!! $post->getParagraphs() !!}
+<div class="main-articles p-t_50 p-b_50">
+    <div class="container">
+        <h2 class="page-h2">Полезные статьи</h2>
+        <div class="row">
+            @foreach($widget->getPost() as $post)
+            <div class="col-sm-6 col-md-4">
+                <a href="{{ route('shop.post.view', $post->slug) }}" class="item-article d-block">
+                    <div class="img"><img src="{{ $post->getImage('post') }}" alt="{{ $post->name }}"></div>
+                    <div class="m-t_10 m-b_10">{{ $post->name }}</div>
+                </a>
+            </div>
+            @endforeach
         </div>
-        @endforeach
+        <div class="t-a_center m-t_30"><a href="/posts/poleznye-stati" class="btn btn-white-b">Посмотреть все статьи</a></div>
     </div>
+</div>
+
+
