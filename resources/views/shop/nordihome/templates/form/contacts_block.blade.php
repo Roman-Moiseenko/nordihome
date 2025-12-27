@@ -40,7 +40,7 @@ use App\Modules\Page\Entity\Widgets\FormWidget;
             </label>
         </div>
         <div>
-            <label><button class="btn-form" type="button" class="width_100">ОТПРАВИТЬ</button></label>
+            <label><button class="btn-form" type="button" class="width_100">Отправить</button></label>
         </div>
     </div>
     <div id="{{ $widget->id }}-callback" style="display: none">
