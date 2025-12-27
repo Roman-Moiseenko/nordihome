@@ -5,7 +5,7 @@
             Виджет {{ widget.name }}
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <PostInfo :widget="widget" :templates="templates"/>
+            <PostInfo :widget="widget" :templates="templates" :categories="categories"/>
         </div>
 
         <div class="mt-3 p-3 bg-white rounded-lg ">
@@ -23,6 +23,7 @@ import PostInfo from './Block/Info.vue'
 const props = defineProps({
     widget: Object,
     templates: Array,
+    categories: Array,
     title: {
         type: String,
         default: 'Карточка виджета',

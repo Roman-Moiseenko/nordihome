@@ -28,44 +28,53 @@
             </el-tooltip>
         </el-col>
         <el-col :span="12">
-    <el-descriptions :column="3" border class="mb-5">
-        <el-descriptions-item label="Баннер">
-            {{ widget.name }}
-        </el-descriptions-item>
-        <el-descriptions-item label="Шаблон">
-            {{ widget.template }}
-        </el-descriptions-item>
-        <el-descriptions-item label="Заголовок">
-            {{ widget.caption }}
-        </el-descriptions-item>
-        <el-descriptions-item label="Описание">
-            {{ widget.description }}
-        </el-descriptions-item>
-    </el-descriptions>
+            <el-descriptions :column="3" border class="mb-5">
+                <el-descriptions-item label="Баннер">
+                    {{ widget.name }}
+                </el-descriptions-item>
+                <el-descriptions-item label="Шаблон">
+                    {{ widget.template }}
+                </el-descriptions-item>
+                <el-descriptions-item label="Рубрика">
+                    {{ widget.category.name }}
+                </el-descriptions-item>
+                <el-descriptions-item label="Заголовок">
+                    {{ widget.caption }}
+                </el-descriptions-item>
+                <el-descriptions-item label="Описание">
+                    {{ widget.description }}
+                </el-descriptions-item>
+            </el-descriptions>
         </el-col>
     </el-row>
     <el-button v-if="!editWidget" type="warning" @click="editWidget = true">Изменить</el-button>
     <el-row :gutter="10" v-if="editWidget">
         <el-col :span="8">
-            <el-form label-width="auto" >
-        <el-form-item label="Баннер">
-            <el-input v-model="form.name" />
-        </el-form-item>
-        <el-form-item label="Шаблон">
-            <el-select v-model="form.template">
-                <el-option v-for="item in templates" :key="item.value" :value="item.value" :label="item.label" />
-            </el-select>
-        </el-form-item>
-        <el-form-item label="Заголовок">
-            <el-input v-model="form.caption" />
-        </el-form-item>
-        <el-form-item label="Описание">
-            <el-input v-model="form.description" type="textarea" rows="3"/>
-        </el-form-item>
+            <el-form label-width="auto">
+                <el-form-item label="Баннер">
+                    <el-input v-model="form.name"/>
+                </el-form-item>
+                <el-form-item label="Шаблон">
+                    <el-select v-model="form.template">
+                        <el-option v-for="item in templates" :key="item.value" :value="item.value" :label="item.label"/>
+                    </el-select>
+                </el-form-item>
 
-        <el-button type="info" @click="editWidget = false">Отмена</el-button>
-        <el-button type="success" @click="setBanner">Сохранить</el-button>
-    </el-form>
+                <el-form-item label="Рубрика">
+                    <el-select v-model="form.category_id" clearable>
+                        <el-option v-for="item in categories" :key="item.id" :value="item.id" :label="item.name"/>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Заголовок">
+                    <el-input v-model="form.caption"/>
+                </el-form-item>
+                <el-form-item label="Описание">
+                    <el-input v-model="form.description" type="textarea" rows="3"/>
+                </el-form-item>
+
+                <el-button type="info" @click="editWidget = false">Отмена</el-button>
+                <el-button type="success" @click="setBanner">Сохранить</el-button>
+            </el-form>
         </el-col>
         <el-col :span="8">
             <UploadImageFile
@@ -90,6 +99,7 @@ import UploadImageFile from "@Comp/UploadImageFile.vue";
 const props = defineProps({
     widget: Object,
     templates: Array,
+    categories: Array,
 })
 
 const editWidget = ref(false)
@@ -117,6 +127,7 @@ function setBanner() {
         }
     })
 }
+
 function onSelectImage(val) {
     form.clear_image = val.clear_file;
     form.image = val.file

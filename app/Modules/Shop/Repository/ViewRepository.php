@@ -61,6 +61,23 @@ class ViewRepository
             compact('product', 'title', 'description', 'productAttributes', 'schema'/*, 'url_page'*/));
     }
 
+    public function product_draft(string $slug): View
+    {
+        //$url_page = route('shop.product.view', $slug);
+
+        $product = $this->slugs->getProductBySlug($slug);
+
+        $meta = $this->seo->seo($product);
+        $title = $meta->title;
+        $description = $meta->description;
+
+        $productAttributes = $this->repository->getProdAttributes($product);
+        $product = $this->repository->ProductToArrayView($product);
+        $schema = "";
+        return view($this->route('product.view'),
+            compact('product', 'title', 'description', 'productAttributes', 'schema'/*, 'url_page'*/));
+    }
+
     public function root(array $request)
     {
         $url_page = route('shop.category.index');

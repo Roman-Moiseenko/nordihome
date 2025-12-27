@@ -837,7 +837,7 @@ class ProductService
 
         if ($product->getPriceRetail() == 0) {
             //Для товара не задана цена
-            if (is_null($product->modification) && is_null($product->parser)) {
+            if (is_null($product->modification)/* && is_null($product->parser)*/) {
                 //у товара нет модификации и нет товара из парсера
                 throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
             } else {
