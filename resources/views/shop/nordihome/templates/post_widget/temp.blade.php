@@ -17,7 +17,7 @@
 @endphp
 <div class="text-center mt-5 py-4 widget-home-3-group">
     @foreach($widget->getPost() as $post)
-        <div>{{ $post->name }} {{ $post->getImage('post') }}
+        <div>
             {!! $post->getParagraphs() !!}
         </div>
     @endforeach
