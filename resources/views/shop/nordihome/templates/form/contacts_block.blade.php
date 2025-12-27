@@ -25,9 +25,7 @@ use App\Modules\Page\Entity\Widgets\FormWidget;
 <div class="m-t_30">
     <div id="{{ $widget->id }}" class="feedback" not-hide>
         <div class="m-b_10 m-t_10"><label> {{ $widget->fields["name"] }} <input name="name" class="width_100" required placeholder="Елена"/></label></div>
-        <div>
-            <input name="email" class="form-control" required placeholder="{{ $widget->fields["email"] }}"/>
-        </div>
+        <div class="m-b_10"><label> {{ $widget->fields["phone"] }} <input name="phone" class="width_100" required placeholder="+79097589135"/></label></div>
         <div>
             <input name="name" required placeholder="{{ $widget->fields["name"] }}"/>
         </div>
