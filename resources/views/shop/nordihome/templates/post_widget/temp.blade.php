@@ -17,7 +17,7 @@
 @endphp
 <div class="text-center mt-5 py-4 widget-home-3-group">
     @foreach($widget->getPost() as $post)
-        <div>
+        <div>{{ $post->name }}
             {!! $post->getParagraphs() !!}
         </div>
     @endforeach
