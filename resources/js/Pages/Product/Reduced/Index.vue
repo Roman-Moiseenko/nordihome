@@ -1,13 +1,13 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl">Товары приоритетного показа</h1>
+        <h1 class="font-medium text-xl">Товары из категории Цена снижена</h1>
         <div class="flex mt-5">
 
             <SearchAddProduct
-                :route="route('admin.product.priority.add-product')"
+                :route="route('admin.product.reduced.add-product')"
             />
-            <SearchAddProducts :route="route('admin.product.priority.add-products')" class="ml-3"/>
+            <SearchAddProducts :route="route('admin.product.reduced.add-products')" class="ml-3"/>
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
 
                 <el-select filterable v-model="filter.category" placeholder="Категория" class="mt-1">
@@ -50,7 +50,7 @@
         />
 
     </el-config-provider>
-    <DeleteEntityModal name_entity="Товар из приоритетного показа" />
+    <DeleteEntityModal name_entity="Товар из категории" />
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref, defineProps} from "vue";
@@ -68,7 +68,7 @@ const props = defineProps({
     products: Object,
     title: {
         type: String,
-        default: 'Товары приоритетного показа',
+        default: 'Товары из категории Цена снижена',
     },
     filters: Array,
     categories: Array,
@@ -82,7 +82,7 @@ const filter = reactive({
 })
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.priority.del-product', {product: row.id}));
+    $delete_entity.show(route('admin.product.reduced.del-product', {product: row.id}));
 }
 function routeClick(row) {
     router.get(route('admin.product.edit', {product: row.id}))

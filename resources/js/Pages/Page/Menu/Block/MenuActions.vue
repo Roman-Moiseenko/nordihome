@@ -56,7 +56,7 @@ const emit = defineEmits(['add:item']);
 const loadUrls = () => {
     axios.post(route('admin.page.menu.get-urls', {menu: props.id})).then(response => {
         urlTypes.value = response.data
-        console.log(response.data)
+        //console.log(response.data)
         onChangeType()
     }).catch(response => {
         //console.log(response)

@@ -9,6 +9,7 @@ use App\Modules\Product\Controllers\ModificationController;
 use App\Modules\Product\Controllers\ParserController;
 use App\Modules\Product\Controllers\PriorityController;
 use App\Modules\Product\Controllers\ProductController;
+use App\Modules\Product\Controllers\ReducedController;
 use App\Modules\Product\Controllers\SeriesController;
 use App\Modules\Product\Controllers\TagController;
 use Illuminate\Support\Facades\Route;
@@ -113,6 +114,17 @@ Route::group(
             Route::post('/add-products', [PriorityController::class, 'add_products'])->name('add-products');
             Route::delete('/del-product/{product}', [PriorityController::class, 'del_product'])->name('del-product');
         });
+        //Снижение цен
+        Route::group([
+            'prefix' => 'reduced',
+            'as' => 'reduced.',
+        ], function () {
+            Route::get('/', [ReducedController::class, 'index'])->name('index');
+            Route::post('/add-product', [ReducedController::class, 'add_product'])->name('add-product');
+            Route::post('/add-products', [ReducedController::class, 'add_products'])->name('add-products');
+            Route::delete('/del-product/{product}', [ReducedController::class, 'del_product'])->name('del-product');
+        });
+
         //SIZE
         /*
         Route::group([

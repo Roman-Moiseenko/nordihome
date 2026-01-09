@@ -191,7 +191,11 @@ Breadcrumbs::for('admin.product.priority.index', function (BreadcrumbTrail $trai
     $trail->parent('admin.product.index');
     $trail->push('Приоритетный показ товаров', route('admin.product.priority.index'));
 });
-
+//REDUCED
+Breadcrumbs::for('admin.product.reduced.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Цена снижена на товар', route('admin.product.reduced.index'));
+});
 //GROUP
 Breadcrumbs::for('admin.product.size.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.product.index');

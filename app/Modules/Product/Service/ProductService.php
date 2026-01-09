@@ -651,6 +651,7 @@ class ProductService
             $product->priority = $request->boolean('priority');
             $product->hide_price = $request->boolean('hide_price');
             $product->frequency = $request->integer('frequency');
+            $product->price_reduced = $request->boolean('reduced');
             $product->save();
 
             $product->balance->min = $request->integer('balance.min');
@@ -794,18 +795,6 @@ class ProductService
     {
         $product->delImage($request->integer('photo_id'));
         JobCacheProduct::dispatch($product->id);
-    }
-
-    #[Deprecated]
-    public function upPhoto(int $photo_id, Product $product): void
-    {
-        $product->upImage($photo_id);
-    }
-
-    #[Deprecated]
-    public function downPhoto(int $photo_id, Product $product): void
-    {
-        $product->downImage($photo_id);
     }
 
     public function movePhoto(Request $request, Product $product): void

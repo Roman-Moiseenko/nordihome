@@ -66,6 +66,7 @@ use JetBrains\PhpStorm\Pure;
  * @property bool $local Доставка по региону
  * @property bool $priority Приоритетный показ
  * @property bool $not_sale Снят с продажи
+ * @property bool $price_reduced Цена снижена
  *
  * @property Dimensions $dimensions Габариты товара (+ вес),
  * @property Packages $packages Упаковки + вес + кол-во пачек
@@ -92,7 +93,6 @@ use JetBrains\PhpStorm\Pure;
  * @property Category $category
  * @property Category[] $categories
  * @property Attribute[] $prod_attributes
- *
  *
  * @property Video[] $videos
  *
@@ -333,7 +333,6 @@ class Product extends Model
         return $this->getQuantity() < $this->balance->min;
     }
 
-
     public function isMarking(): bool
     {
         return $this->marking_type_id != null;
@@ -372,6 +371,12 @@ class Product extends Model
     public function setPriority(bool $priority): void
     {
         $this->priority = $priority;
+        $this->save();
+    }
+
+    public function setReduced(bool $price_reduced): void
+    {
+        $this->price_reduced = $price_reduced;
         $this->save();
     }
 

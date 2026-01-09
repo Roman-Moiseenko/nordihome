@@ -91,6 +91,14 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-flag-pennant',
             ],
+            'price_reduced' => [
+                'icon' => 'flag-triangle-right  ',
+                'title' => 'Цена снижена',
+                'route_name' => 'admin.product.reduced.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-money-check-dollar-pen',
+            ],
+
             'parser' => [
                 'icon' => 'package-search',
                 'title' => 'Парсер * (временно)',

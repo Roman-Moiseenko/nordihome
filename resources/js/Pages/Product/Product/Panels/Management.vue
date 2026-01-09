@@ -26,6 +26,9 @@
                     <el-form-item label="Приоритетный показ">
                         <el-checkbox v-model="form.priority" :checked="product.priority" @change="onAutoSave" :disabled="isSaving"/>
                     </el-form-item>
+                    <el-form-item label="Цена снижена">
+                        <el-checkbox v-model="form.reduced" :checked="product.price_reduced" @change="onAutoSave" :disabled="isSaving"/>
+                    </el-form-item>
                     <el-form-item label="Скрывать в прайс-листах">
                         <el-checkbox v-model="form.hide_price" :checked="product.hide_price" @change="onAutoSave" :disabled="isSaving"/>
                     </el-form-item>
@@ -111,6 +114,7 @@ const form = reactive({
     published: props.product.published,
     not_sale: props.product.not_sale,
     priority: props.product.priority,
+    reduced: props.product.price_reduced,
     hide_price: props.product.hide_price,
     storages: [...props.product.storages],
     balance: props.product.balance,

@@ -824,23 +824,25 @@ class ShopRepository
             'name' => is_null($product->modification) ? $product->name : $product->modification->name,
             'slug' => $product->slug,
 
-            'is_new' => $product->isNew(),
-            'is_wish' => !is_null($this->user) && $product->isWish($this->user->id),
-            'is_sale' => $product->isSale(),
-            'rating' => $product->current_rating,
-            'count_reviews' => $product->countReviews(),
-            'price' => $product->getPrice(false, $this->user),
-            'price_previous' => $product->getPrice(true, $this->user),
+            'is_new' => $product->isNew(), //Товар новый
+            'is_wish' => !is_null($this->user) && $product->isWish($this->user->id), //В избранном у клиента
+            'is_sale' => $product->isSale(), //Доступен для продажи
+            'rating' => $product->current_rating, //Рейтинг по отзывам
+            'count_reviews' => $product->countReviews(), //Кол-во отзывов
+            'price' => $product->getPrice(false, $this->user), //Тек.цена
+            'price_previous' => $product->getPrice(true, $this->user), //Пред.цена
             'quantity' => $product->getQuantity(),
             'image' => [
                 'src' => $product->getImage('card'),
             ],
+            'priority' => $product->priority, //Приоритетный показ
+            'reduced' => $product->price_reduced, //Цена снижена
 
             'modification' => is_null($product->modification) ? null : $this->ModificationToArray($product->modification),
-            'promotion' => [
-                'has' => $product->hasPromotion(),
-                'price' => $product->hasPromotion() ? $product->promotion()->pivot->price : 0,
-                'title' => is_null($product->promotion()) ? null : $product->promotion()->title,
+            'promotion' => [  //Акции
+                'has' => $product->hasPromotion(), //Акционные
+                'price' => $product->hasPromotion() ? $product->promotion()->pivot->price : 0, //Акционная цена
+                'title' => is_null($product->promotion()) ? null : $product->promotion()->title, //Название акции
             ],
         ];
     }
