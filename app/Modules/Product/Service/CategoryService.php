@@ -57,6 +57,7 @@ class CategoryService
         $category->top_description = $request->string('top_description')->trim()->value();
         $category->bottom_text = $request->string('bottom_text')->trim()->value();
         $category->data = $request->string('data')->trim()->value();
+        $category->svg = $request->string('svg')->trim()->value();
 
         $category->save();
         $category->saveImage($request->file('image'), $request->boolean('clear_image'));

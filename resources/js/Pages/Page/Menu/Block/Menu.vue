@@ -52,7 +52,6 @@ const props = defineProps({
 })
 
 const items = ref([...props.menu.items])
-
 const editDialog = ref(false)
 const $delete_entity = inject("$delete_entity")
 const form = reactive({

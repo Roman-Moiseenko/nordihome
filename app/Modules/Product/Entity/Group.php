@@ -55,4 +55,9 @@ class Group extends Model
         return false;
     }
 
+    public function scopeActive($query)
+    {
+        return $query->where('published', true);
+    }
+
 }

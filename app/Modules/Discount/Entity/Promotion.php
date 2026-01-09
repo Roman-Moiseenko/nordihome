@@ -35,11 +35,11 @@ class Promotion extends Model
 {
     use ImageField, IconField;
 
-    const STATUS_DRAFT = 101;
-    const STATUS_WAITING = 102;
-    const STATUS_STARTED = 103;
-    const STATUS_FINISHED = 104;
-    const STATUSES = [
+    const int STATUS_DRAFT = 101;
+    const int STATUS_WAITING = 102;
+    const int STATUS_STARTED = 103;
+    const int STATUS_FINISHED = 104;
+    const array STATUSES = [
         self::STATUS_DRAFT => 'Черновик',
         self::STATUS_WAITING => 'В ожидании',
         self::STATUS_STARTED => 'Запущена',
@@ -170,5 +170,8 @@ class Promotion extends Model
             'promotion_id', 'product_id')->withPivot(['price']);
     }
 
-
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }
 }

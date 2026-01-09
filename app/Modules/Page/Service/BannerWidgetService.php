@@ -47,9 +47,8 @@ class BannerWidgetService extends WidgetService
     public function setItem(BannerWidgetItem $item, Request $request): void
     {
         $item->saveImage($request->file('file'), $request->boolean('clear_file'));
-
         $item->slug = $request->string('slug')->trim()->value();
-
+        $item->marking = $request->string('marking')->trim()->value();
         $item->url = $request->string('url')->trim()->value();
         $item->caption = $request->string('caption')->trim()->value();
         $item->description = $request->string('description')->trim()->value();

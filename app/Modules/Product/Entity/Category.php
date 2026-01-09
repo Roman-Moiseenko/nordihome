@@ -23,7 +23,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property Category[] $children
  * @property Attribute[] $prod_attributes
  * @property Product[] $products
- *
+ * @property string $svg
  * @property int $_lft
  * @property int $_rgt
  *

@@ -9,8 +9,8 @@
 
             <div class="mt-2">
                 <el-select v-model="newItem" style="width: 200px"
-                           placeholder="Выберите ссылку">
-                    <el-option v-for="item in urlItems" :value="item" :key="item.url" :label="item.name"/>
+                           placeholder="Выберите ссылку" filterable>
+                    <el-option v-for="item in urlItems" :value="item.url" :key="item.url" :label="item.name"/>
                 </el-select>
 
                 <el-button v-if="showAddUrlItem" type="success" @click="onAddItem">Добавить элемент</el-button>
@@ -56,6 +56,7 @@ const emit = defineEmits(['add:item']);
 const loadUrls = () => {
     axios.post(route('admin.page.menu.get-urls', {menu: props.id})).then(response => {
         urlTypes.value = response.data
+        console.log(response.data)
         onChangeType()
     }).catch(response => {
         //console.log(response)

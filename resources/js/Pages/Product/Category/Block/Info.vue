@@ -35,6 +35,9 @@
                 <el-descriptions-item label="Ссылка">
                     {{ category.slug }}
                 </el-descriptions-item>
+                <el-descriptions-item label="SVG">
+                    <span v-html="category.svg" class="svg-category"></span>
+                </el-descriptions-item>
                 <el-descriptions-item label="Meta-Title">
                     {{ category.title }}
                 </el-descriptions-item>
@@ -63,6 +66,9 @@
                 </el-form-item>
                 <el-form-item label="Ссылка">
                     <el-input v-model="info.slug" clearable/>
+                </el-form-item>
+                <el-form-item label="SVG">
+                    <el-input v-model="info.svg" clearable type="textarea" :rows="3"/>
                 </el-form-item>
                 <el-form-item label="Meta-Title">
                     <el-input v-model="info.title" />
@@ -145,6 +151,7 @@ const info = reactive({
     description: props.category.description,
     slug: props.category.slug,
     parent_id: props.category.parent_id,
+    svg: props.category.svg,
     image: null,
     clear_image: false,
     icon: null,
@@ -181,3 +188,9 @@ function onSelectIcon(val) {
     info.icon = val.file
 }
 </script>
+
+<style scoped>
+    span.svg-category::v-deep>svg {
+        max-height: 50px;
+    }
+</style>

@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property string $url
+ * @property string $marking
  * @property BannerWidget $widget
  */
 class BannerWidgetItem extends WidgetItem

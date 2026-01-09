@@ -2,16 +2,26 @@
 
 namespace App\Modules\Page\Repository;
 
+use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Menu;
 use App\Modules\Page\Entity\MenuItem;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
+use App\Modules\Product\Entity\Category;
+use App\Modules\Product\Entity\Group;
+use App\Modules\Product\Repository\CategoryRepository;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
 class MenuRepository
 {
+    private CategoryRepository $categoryRepository;
+
+    public function __construct(CategoryRepository $categoryRepository)
+    {
+        $this->categoryRepository = $categoryRepository;
+    }
 
     public function getMenus(Request $request): Arrayable
     {
@@ -44,6 +54,10 @@ class MenuRepository
                 'name' => 'Магазин',
                 'items' => [],
             ],
+            'category' => [
+                'name' => 'Категории',
+                'items' => [],
+            ],
         ];
 
         $items = $menu->items()->get()->map(fn(MenuItem $item) => $item->url)->toArray();
@@ -58,12 +72,12 @@ class MenuRepository
                 ];
         }
 
-        $categories = PostCategory::orderBy('name')->get();
-        foreach ($categories as $category) {
-            $url = route('shop.posts.view', $category->slug, false);
+        $post_categories = PostCategory::orderBy('name')->get();
+        foreach ($post_categories as $post_category) {
+            $url = route('shop.posts.view', $post_category->slug, false);
             if (!in_array($url, $items))
                 $urls['posts']['items'][] = [
-                    'name' => $category->name,
+                    'name' => $post_category->name,
                     'url' => $url,
                 ];
         }
@@ -85,6 +99,32 @@ class MenuRepository
                 'name' => 'Каталог',
                 'url' => $url,
             ];
+        $groups = Group::orderBy('name')->active()->get();
+        foreach ($groups as $group) {
+            $url = route('shop.group.view', $group->slug, false);
+            $urls['shop']['items'][] = [
+                'name' => $group->name,
+                'url' => $url,
+            ];
+        }
+
+        $promotions = Promotion::orderBy('name')->active()->get();
+        foreach ($promotions as $promotion) {
+            $url = route('shop.promotion.view', $promotion->slug, false);
+            $urls['shop']['items'][] = [
+                'name' => $promotion->name,
+                'url' => $url,
+            ];
+        }
+        $categories = $this->getCategories();
+        foreach ($categories as $category) {
+            $url = route('shop.category.view', $category['slug'], false);
+            $urls['category']['items'][] = [
+                'name' => $category['name'],
+                'url' => $url,
+            ];
+        }
+
       /*
         $url = route('shop.home', [], false);
         if (!in_array($url, $items))
@@ -103,5 +143,16 @@ class MenuRepository
             'items' =>
                 $menu->items()->get()->map(fn(MenuItem $item) => $item->toArray())
         ];
+    }
+
+    private function getCategories(): array
+    {
+        return array_map(function (Category $category) {
+            $_depth = str_repeat('-', $category->depth);
+            return [
+                'slug' => $category->slug,
+                'name' => trim($_depth . ' ' . $category->name),
+            ];
+        }, Category::defaultOrder()->withDepth()->getModels());
     }
 }

@@ -22,6 +22,11 @@
                 <EditField :field="scope.row.caption" @update:field="val => setCaption(scope.row, val)" />
             </template>
         </el-table-column>
+        <el-table-column prop="marking" label="Маркировка" >
+            <template #default="scope">
+                <EditField :field="scope.row.marking" @update:field="val => setMarking(scope.row, val)" />
+            </template>
+        </el-table-column>
         <el-table-column prop="description" label="Описание" >
             <template #default="scope">
                 <EditField :field="scope.row.description" @update:field="val => setDescription(scope.row, val)" />
@@ -63,6 +68,7 @@ const form = reactive({
     url: null,
     caption: null,
     description: null,
+    marking: null,
 })
 const $delete_entity = inject("$delete_entity")
 
@@ -103,6 +109,11 @@ function setUrl(row, val) {
 function setCaption(row, val) {
     getRow(row)
     form.caption = val
+    setItem(row)
+}
+function setMarking(row, val) {
+    getRow(row)
+    form.marking = val
     setItem(row)
 }
 function setDescription(row, val) {
