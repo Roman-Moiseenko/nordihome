@@ -652,6 +652,7 @@ class ProductService
             $product->hide_price = $request->boolean('hide_price');
             $product->frequency = $request->integer('frequency');
             $product->price_reduced = $request->boolean('reduced');
+            $product->only_on_order = $request->boolean('only_on_order');
             $product->save();
 
             $product->balance->min = $request->integer('balance.min');

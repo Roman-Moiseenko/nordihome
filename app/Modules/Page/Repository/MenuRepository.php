@@ -99,6 +99,13 @@ class MenuRepository
                 'name' => 'Каталог',
                 'url' => $url,
             ];
+        $url = route('shop.novelty', [], false);;
+        if (!in_array($url, $items))
+            $urls['shop']['items'][] = [
+                'name' => 'Новинки',
+                'url' => $url,
+            ];
+
         $groups = Group::orderBy('name')->active()->get();
         foreach ($groups as $group) {
             $url = route('shop.group.view', $group->slug, false);

@@ -32,8 +32,11 @@
                     <el-form-item label="Скрывать в прайс-листах">
                         <el-checkbox v-model="form.hide_price" :checked="product.hide_price" @change="onAutoSave" :disabled="isSaving"/>
                     </el-form-item>
-                    <el-form-item label="Доступен для предзаказ">
+                    <el-form-item label="Доступен для предзаказа">
                         <el-checkbox v-model="form.pre_order" :checked="product.pre_order" @change="onAutoSave" :disabled="isSaving"/>
+                    </el-form-item>
+                    <el-form-item label="Только под заказ">
+                        <el-checkbox v-model="form.only_on_order" :checked="product.only_on_order" @change="onAutoSave" :disabled="isSaving"/>
                     </el-form-item>
                     <!-- Повторить -->
 
@@ -121,6 +124,7 @@ const form = reactive({
     frequency: props.product.frequency,
     modification: props.product.modification,
     pre_order: props.product.pre_order,
+    only_on_order: props.product.only_on_order,
 })
 
 function onAutoSave() {

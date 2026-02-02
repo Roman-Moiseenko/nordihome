@@ -98,7 +98,13 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-money-check-dollar-pen',
             ],
-
+            'only_on_order' => [
+                'icon' => 'flag-triangle-right  ',
+                'title' => 'Только под заказ',
+                'route_name' => 'admin.product.on-order.index', //
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-truck-container',
+            ],
             'parser' => [
                 'icon' => 'package-search',
                 'title' => 'Парсер * (временно)',

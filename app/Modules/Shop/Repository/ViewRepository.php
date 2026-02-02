@@ -134,15 +134,15 @@ class ViewRepository
             ->through(fn(Product $product) => $this->product_card_cache($product));
         return view(
             $this->route('product.index'),
-                compact('products', 'prod_attributes', 'tags',
-                    'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
-                    'order', 'children', 'count_in_category', 'schema', 'url_page', 'page'));
+            compact('products', 'prod_attributes', 'tags',
+                'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
+                'order', 'children', 'count_in_category', 'schema', 'url_page', 'page'));
     }
 
     public function category(array $request, string $slug)
     {
         // $begin = now();
-       // $url_page = route('shop.category.view', $slug);
+        // $url_page = route('shop.category.view', $slug);
         $category = $this->slugs->CategoryBySlug($slug);
         $page = $request['page'] ?? 1;
         if (is_null($category)) return abort(404);
@@ -191,7 +191,7 @@ class ViewRepository
         $query = $this->repository->filter($request, $product_ids); //0.0015 сек
         $count_in_category = $query->count();
         $products = $query->paginate($this->web->paginate);
-       // $title = $category->title;
+        // $title = $category->title;
 
 
         $products = $products->withQueryString()
@@ -202,9 +202,40 @@ class ViewRepository
         //     \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
         return view(
             $this->route('product.index'),
-                compact('category', 'products', 'prod_attributes', 'tags',
-                    'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
-                    'order', 'children', 'count_in_category'/*, 'schema'*/, 'page'));
+            compact('category', 'products', 'prod_attributes', 'tags',
+                'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
+                'order', 'children', 'count_in_category'/*, 'schema'*/, 'page'));
+    }
+
+    public function novelty(array $request)
+    {
+        $page = $request['page'] ?? 1;
+        $title = 'Новинки';
+        $description = 'Новинки Икеа оригинал из Европы с доставкой по всей России. IKEA доступные цены! В наличии в интернет магазине NORDI HOME';
+
+        //TODO Schema для парсер категории
+
+        $query = Product::orderByDesc('priority')
+            ->where('published', true)
+            ->where('published_at', '>', now()->subMonths(2));
+
+        $query = match ($request['order'] ?? null) {
+            'price-down' => $query->orderBy('current_price', 'desc'),
+            'price-up' => $query->orderBy('current_price', 'asc'),
+            'rating' => $query->orderBy('current_rating', 'asc'),
+            'name' => $query->orderBy('name', 'asc'),
+            default => $query->orderBy('name', 'asc'),
+        };
+
+        $order = $request['order'] ?? 'name';
+        $count_in_category = $query->count();
+        $products = $query->paginate($this->web->paginate)->withQueryString()
+            ->through(fn(Product $product) => $this->product_card_cache($product));
+
+        return view(
+            $this->route('product.novelty'),
+            compact('products', 'request', 'title', 'description',
+                'order', 'count_in_category'/*, 'schema'*/, 'page'));
     }
 
     /**
@@ -265,6 +296,7 @@ class ViewRepository
             return $callback();
         }
     }
+
 
     private function category_children_cache(Category $category)
     {
@@ -381,8 +413,8 @@ class ViewRepository
         $url_page = route('shop.parser.view');
         $title = $this->web->categories_title;
         $description = $this->web->categories_desc;
-       // $page = $request['page'] ?? 1;
-       // $schema = '';
+        // $page = $request['page'] ?? 1;
+        // $schema = '';
 
         $categories = $this->repository->getChildrenParser();
         return view($this->route('parser.catalog'), compact('title', 'description', 'categories', 'url_page'));
@@ -401,12 +433,12 @@ class ViewRepository
         $description = $meta->description;
 
         //$schema = $this->schema_category_cache($category);
-/*
-        if ($this->web->is_category && $category->children()->count() > 0) {
-            $children = $this->repository->getChildrenParser($category->id);
-            return view($this->route('parser.subcatalog'), compact('category', 'children', 'title', 'description'));
-        }
-*/
+        /*
+                if ($this->web->is_category && $category->children()->count() > 0) {
+                    $children = $this->repository->getChildrenParser($category->id);
+                    return view($this->route('parser.subcatalog'), compact('category', 'children', 'title', 'description'));
+                }
+        */
         $children = $this->parser_category_children_cache($category);
 
         //$in_stock = isset($request['in_stock']);
@@ -457,6 +489,7 @@ class ViewRepository
             return $this->repository->ParserProductToArrayView($product);
         }
     }
+
     private function parser_category_children_cache(CategoryParser $category)
     {
         $callback = function () use ($category) {
@@ -511,6 +544,7 @@ class ViewRepository
             return $this->repository->ParserProductToArrayCard($product);
         }
     }
+
     private function categories_cache()
     {
         return Cache::rememberForever(CacheHelper::MENU_CATEGORIES, function () {

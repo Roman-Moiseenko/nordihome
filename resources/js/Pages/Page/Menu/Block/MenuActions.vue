@@ -81,9 +81,17 @@ function onChangeType() {
     newItem.value = null
 }
 function onAddItem() {
+
+    let _form = {};
+    for (let key in urlItems.value) {
+       // let obj = urlItems.value[key]
+        if (urlItems.value[key].url === newItem.value) _form = urlItems.value[key];
+    }
+
+    console.log(newItem.value)
     router.visit(route('admin.page.menu.add-item', {menu: props.id}), {
         method: "post",
-        data: newItem.value,
+        data: _form,
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {

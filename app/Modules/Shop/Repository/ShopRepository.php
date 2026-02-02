@@ -824,11 +824,13 @@ class ShopRepository
             'name' => is_null($product->modification) ? $product->name : $product->modification->name,
             'slug' => $product->slug,
 
-            'is_new' => $product->isNew(), //Товар новый
+
             'is_wish' => !is_null($this->user) && $product->isWish($this->user->id), //В избранном у клиента
             'is_sale' => $product->isSale(), //Доступен для продажи
             'rating' => $product->current_rating, //Рейтинг по отзывам
             'count_reviews' => $product->countReviews(), //Кол-во отзывов
+
+            //'price_reduced' => $product->price_reduced, //Цена снижена
             'price' => $product->getPrice(false, $this->user), //Тек.цена
             'price_previous' => $product->getPrice(true, $this->user), //Пред.цена
             'quantity' => $product->getQuantity(),
@@ -836,7 +838,10 @@ class ShopRepository
                 'src' => $product->getImage('card'),
             ],
             'priority' => $product->priority, //Приоритетный показ
+
+            'is_new' => $product->isNew(), //Товар новый
             'reduced' => $product->price_reduced, //Цена снижена
+            'only_on_order' => $product->only_on_order, //Только под заказ
 
             'modification' => is_null($product->modification) ? null : $this->ModificationToArray($product->modification),
             'promotion' => [  //Акции

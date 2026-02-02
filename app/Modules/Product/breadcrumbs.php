@@ -196,6 +196,11 @@ Breadcrumbs::for('admin.product.reduced.index', function (BreadcrumbTrail $trail
     $trail->parent('admin.product.index');
     $trail->push('Цена снижена на товар', route('admin.product.reduced.index'));
 });
+//ON-ORDER
+Breadcrumbs::for('admin.product.on-order.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.product.index');
+    $trail->push('Только под заказ', route('admin.product.on-order.index'));
+});
 //GROUP
 Breadcrumbs::for('admin.product.size.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.product.index');

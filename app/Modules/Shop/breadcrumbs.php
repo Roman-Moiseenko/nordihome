@@ -20,6 +20,10 @@ Breadcrumbs::for('shop.category.index', function (BreadcrumbTrail $trail) { //Б
     $trail->parent('shop.home');
     $trail->push('Каталог', route('shop.category.index'));
 });
+Breadcrumbs::for('shop.novelty', function (BreadcrumbTrail $trail) { //Без указания главной - home
+    $trail->parent('shop.category.index');
+    $trail->push('Новинки', route('shop.novelty'));
+});
 
 Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) use ($settings) { //Без указания главной - home
    // \Log::info('shop.category.view ' .$slug);

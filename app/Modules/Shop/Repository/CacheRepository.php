@@ -61,4 +61,9 @@ class CacheRepository
     {
         return $this->views->post($slug);
     }
+
+    public function novelty(array $request)
+    {
+        return $this->views->novelty($request);
+    }
 }

@@ -6,6 +6,7 @@ use App\Modules\Product\Controllers\CategoryController;
 use App\Modules\Product\Controllers\EquivalentController;
 use App\Modules\Product\Controllers\GroupController;
 use App\Modules\Product\Controllers\ModificationController;
+use App\Modules\Product\Controllers\OnOrderController;
 use App\Modules\Product\Controllers\ParserController;
 use App\Modules\Product\Controllers\PriorityController;
 use App\Modules\Product\Controllers\ProductController;
@@ -124,7 +125,16 @@ Route::group(
             Route::post('/add-products', [ReducedController::class, 'add_products'])->name('add-products');
             Route::delete('/del-product/{product}', [ReducedController::class, 'del_product'])->name('del-product');
         });
-
+        //Только под заказ
+        Route::group([
+            'prefix' => 'on-order',
+            'as' => 'on-order.',
+        ], function () {
+            Route::get('/', [OnOrderController::class, 'index'])->name('index');
+            Route::post('/add-product', [OnOrderController::class, 'add_product'])->name('add-product');
+            Route::post('/add-products', [OnOrderController::class, 'add_products'])->name('add-products');
+            Route::delete('/del-product/{product}', [OnOrderController::class, 'del_product'])->name('del-product');
+        });
         //SIZE
         /*
         Route::group([

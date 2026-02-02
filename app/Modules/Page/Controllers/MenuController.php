@@ -31,7 +31,6 @@ class MenuController extends Controller
     public function index(Request $request): Response
     {
         $menus = $this->repository->getMenus($request);
-
         return Inertia::render('Page/Menu/Index', [
             'page_menus' => $menus,
         ]);

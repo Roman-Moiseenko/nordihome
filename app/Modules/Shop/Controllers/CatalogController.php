@@ -48,7 +48,6 @@ class CatalogController extends ShopController
 
     public function view(Request $request, $slug)
     {
-
         $page = $request->has('page');
 
         if ((empty($request->all()) || (count($request->all()) == 1 && $page)) && $this->web->is_cache) {
@@ -73,6 +72,17 @@ class CatalogController extends ShopController
             $result = ['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]];
         }
         return \response()->json($result);
+    }
+
+    public function novelty(Request $request)
+    {
+        $page = $request->has('page');
+
+        if ((empty($request->all()) || (count($request->all()) == 1 && $page)) && $this->web->is_cache) {
+            return $this->caches->novelty($request->all());
+        } else {
+            return $this->views->novelty($request->all());
+        }
     }
 
 

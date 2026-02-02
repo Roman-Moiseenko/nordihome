@@ -67,6 +67,7 @@ use JetBrains\PhpStorm\Pure;
  * @property bool $priority Приоритетный показ
  * @property bool $not_sale Снят с продажи
  * @property bool $price_reduced Цена снижена
+ * @property bool $only_on_order Только под заказ
  *
  * @property Dimensions $dimensions Габариты товара (+ вес),
  * @property Packages $packages Упаковки + вес + кол-во пачек
@@ -377,6 +378,12 @@ class Product extends Model
     public function setReduced(bool $price_reduced): void
     {
         $this->price_reduced = $price_reduced;
+        $this->save();
+    }
+
+    public function setOnOrder(bool $value): void
+    {
+        $this->only_on_order = $value;
         $this->save();
     }
 
@@ -973,5 +980,6 @@ class Product extends Model
             'stock' => $this->getQuantitySell() > 0,
         ];
     }
+
 
 }

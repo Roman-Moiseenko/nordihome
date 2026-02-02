@@ -74,6 +74,7 @@ Route::group(
 
         Route::get('/cart', [CartController::class, 'view'])->name('cart.view');
 
+        Route::get('/novelty', [CatalogController::class, 'novelty'])->name('novelty');
 
         Route::get('/promotion/{slug}', [PromotionController::class, 'view'])->name('promotion.view');
         Route::get('/group/{slug}', [GroupController::class, 'view'])->name('group.view');
