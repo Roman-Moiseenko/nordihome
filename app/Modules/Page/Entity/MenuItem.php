@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
  * @property int $sort
  * @property string $name
  * @property string $url
+ * @property string $svg
  * @property Menu $menu
  */
 class MenuItem extends Model

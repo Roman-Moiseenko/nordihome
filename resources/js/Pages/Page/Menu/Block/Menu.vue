@@ -8,7 +8,7 @@
             <el-col :span="10">
                 <div :id="'menu-items-' + index" style="cursor: pointer; ">
                     <div v-for="(item, index) in items" class="border p-1">
-                        <MenuItem :item="item" :index="index" @del:item="reloadItems"/>
+                        <MenuItem :item="item" :index="index" @update:item="reloadItems"/>
                     </div>
                 </div>
             </el-col>

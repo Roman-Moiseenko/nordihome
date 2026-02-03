@@ -77,6 +77,8 @@ class MenuService
     {
         $item->name = $request->string('name')->trim()->value();
         $item->url = $request->string('url')->trim()->value();
+        $item->svg = $request->string('svg')->trim()->value();
+
         $item->save();
         $item->refresh();
     }

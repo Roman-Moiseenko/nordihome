@@ -15,7 +15,6 @@ use Illuminate\Support\Str;
  * @property bool $published
  * @property string $description
  * @property Product[] $products
-// * @property Promotion[] $promotions
  */
 class Group extends Model
 {
