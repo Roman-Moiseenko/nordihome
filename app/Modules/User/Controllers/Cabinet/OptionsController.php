@@ -26,7 +26,7 @@ class OptionsController extends AuthCabinetController
 
     public function index(Request $request)
     {
-        $subscriptions = Subscription::where('published', true)->get();
+        $subscriptions = Subscription::orderBy('name')->active()->get();
         return view($this->route('cabinet.options'), compact('subscriptions'));
     }
 

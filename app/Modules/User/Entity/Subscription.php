@@ -63,4 +63,9 @@ class Subscription extends Model
     {
         return $this->belongsToMany(User::class, 'users_subscriptions', 'subscription_id', 'user_id');
     }
+
+    public function scopeActive($query)
+    {
+        return $query->where('active', true);
+    }
 }

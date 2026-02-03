@@ -33,15 +33,16 @@ class PageController extends ShopController
     {
 
         if (!is_null(Page::where('slug', 'home')->active()->first())) {
+
             $callback = fn() => $this->views->page('home'); //$page->view();
         } else {
             $callback = fn() => view($this->route('home'))->render();
         }
+        //return $this->caches->page('home');
+        return $callback();
 
         //TODO Настройка использовать кеширование
-        //return $callback();
         if ($this->web->is_cache) {
-
             return Cache::rememberForever('home', $callback);
         } else {
             return $callback();
@@ -50,6 +51,7 @@ class PageController extends ShopController
 
     public function view($slug)
     {
+        //return $this->views->page($slug);
         if ($this->web->is_cache) {
             return $this->caches->page($slug);
         } else {

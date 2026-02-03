@@ -87,6 +87,8 @@ class AdminComposer
                  */
 
                 $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
+                //dd($user);
+
                 $view->with('user', $user);
                 $view->with('config', config('shop.frontend'));
 

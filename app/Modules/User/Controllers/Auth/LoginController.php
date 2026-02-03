@@ -116,7 +116,6 @@ class LoginController extends Controller
                 return \response()->json(['login' => true]);
             }
 
-
             //Проверяем Зарегистрирован или нет
             if (empty(User::where('email', $request['email'])->first())) {
 
@@ -132,10 +131,10 @@ class LoginController extends Controller
                 $request->only(['email', 'password']),
                 true
             );
+
             if ($authenticate) {
                 /** @var User $user */
                 $user = Auth::user(); //Auth::guard('user')->user();
-
                 if ($user->isWait()) {
                     Auth::logout();
                     return \response()->json(['verification' => true]);
