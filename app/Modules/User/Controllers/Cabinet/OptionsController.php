@@ -31,7 +31,7 @@ class OptionsController extends AuthCabinetController
     }
 
     //AJAX
-    public function subscription(Subscription $subscription)
+    public function subscription(Subscription $subscription): \Illuminate\Http\JsonResponse
     {
         /** @var User $user */
         $user = Auth::guard('user')->user();
