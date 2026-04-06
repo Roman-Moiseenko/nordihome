@@ -50,6 +50,7 @@ class Admin extends Authenticatable
         self::ROLE_STAFF => 'bg-primary',
     ];
 
+
     protected string $guard = 'admin';
 
     protected $attributes = [

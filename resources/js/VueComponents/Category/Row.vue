@@ -57,7 +57,6 @@
         </div>
     </div>
     <div v-if="showChildren" class="pl-5 ml-2 mb-5 pb-2 pt-2">
-        <!--CategoryRow v-for="item in category.children" :category="item" @delete:category="handleDeleteEntity" /-->
         <CategoryChildren :category="category" />
     </div>
 
