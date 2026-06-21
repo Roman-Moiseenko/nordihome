@@ -24,7 +24,6 @@ class ViewRepository
 {
     private ShopRepository $repository;
     private SlugRepository $slugs;
-    protected string $theme;
     public Web $web;
     private Schema $schema;
     private MetaTemplateRepository $seo;
@@ -37,7 +36,6 @@ class ViewRepository
         $this->slugs = $slugs;
         $settings = app()->make(Settings::class);
         $this->web = $settings->web;
-        $this->theme = config('shop.theme');
 
         $this->schema = $schema;
         $this->seo = $seo;

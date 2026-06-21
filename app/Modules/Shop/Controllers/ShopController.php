@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Auth;
 abstract class ShopController extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
-    protected string $theme;
     public Web $web;
     protected ?User $user;
 
@@ -31,7 +30,6 @@ abstract class ShopController extends BaseController
 
         $settings = app()->make(Settings::class);
         $this->web = $settings->web;
-        $this->theme = config('shop.theme'); // $options->shop->theme;
     }
 
     final public function route(string $blade): string

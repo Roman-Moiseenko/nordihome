@@ -16,9 +16,7 @@ class ReportService
 {
     public function template(string $name, ): string
     {
-        $theme = config('shop.theme');
         $config = (new Options())->report[$name];
-        if (isset($config[$theme])) return resource_path() . $config[$theme];
 
         return resource_path() . $config['template'];
     }
