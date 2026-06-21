@@ -36,6 +36,6 @@ abstract class ShopController extends BaseController
 
     final public function route(string $blade): string
     {
-        return 'shop.' . $this->theme . '.' . $blade;
+        return 'shop.' . $blade;
     }
 }

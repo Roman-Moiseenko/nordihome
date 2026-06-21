@@ -251,7 +251,7 @@ class ViewRepository
 
     final public function route(string $blade): string
     {
-        return 'shop.' . $this->theme . '.' . $blade;
+        return 'shop.' . $blade;
     }
 
     private function product_card_cache(Product $product)
