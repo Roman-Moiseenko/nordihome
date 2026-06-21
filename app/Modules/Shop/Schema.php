@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Cache;
 class Schema
 {
     private string $url;
-    private Trader $trader;
+    private ?Trader $trader;
 
     public function __construct()
     {

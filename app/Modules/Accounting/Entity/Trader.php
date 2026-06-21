@@ -33,7 +33,7 @@ class Trader extends Model
         return self::create(['name' => $name]);
     }
 
-    public static function default(): self
+    public static function default(): ?self
     {
         return self::where('default', true)->first();
     }
