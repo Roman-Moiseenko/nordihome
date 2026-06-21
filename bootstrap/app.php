@@ -67,16 +67,7 @@ return Application::configure(basePath: dirname(__DIR__))
             AddQueuedCookiesToResponse::class,
             StartSession::class,
             ShareErrorsFromSession::class,
-            SubstituteBindings::class,
-            HandleInertiaRequests::class,
-        ]);
-
-        $middleware->web([
-            EncryptCookies::class,
-            AddQueuedCookiesToResponse::class,
-            StartSession::class,
-            ShareErrorsFromSession::class,
-            VerifyCsrfToken::class,
+//            VerifyCsrfToken::class,
             SubstituteBindings::class,
             HandleInertiaRequests::class,
         ]);
@@ -103,7 +94,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        //
+        $exceptions->dontReportDuplicates();
     })
     ->withSchedule(function (Schedule $schedule) {
         $schedule->command('cron:promotion')->dailyAt('00:01');

@@ -12,19 +12,24 @@ class VerifyCsrfToken extends Middleware
      * @var array<int, string>
      */
     protected $except = [
-        '/api/*',
-        '/api/telegram/web-hook/',
-        '/admin/mail/system/attachment',
-        '/file-upload',
-        '/admin/staff/photo/*',
-        '/admin/accounting/bank/upload',
-        '/admin/product/upload',
-        '/csrf-token',
-        '/product/search',
-      //  '/login_register ',
-        /*'/catalog/search',
-        '/cart_post/cart',
-        '/cabinet/wish/get'*/
-        //'/admin/product/attribute/get_by_categories',
+        'api/*',
+        'api/telegram/web-hook/',
+        'admin/mail/system/attachment',
+        'file-upload',
+        'admin/staff/photo/*',
+        'admin/accounting/bank/upload',
+        'admin/product/upload',
+        'csrf-token',
+        'product/search',
+        'admin/*',
     ];
+
+    public function handle($request, \Closure $next)
+    {
+        if ($request->header('X-Inertia')) {
+            return $next($request);
+        }
+
+        return parent::handle($request, $next);
+    }
 }
