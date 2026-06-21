@@ -1,44 +1,163 @@
 {
-    "pa_brend": {
-        "name": "pa_brend",
-        "value": [
-            833
-        ]
-    },
-    "pa_czveta": {
-        "name": "pa_czveta",
-        "value": [
-            156,
-            34
-        ]
-    },
-    "pa_komnaty": {
-        "name": "pa_komnaty",
-        "value": [
-            839,
-            842,
-            843,
-            841,
-            838
-        ]
-    },
-    "pa_vid-mebeli": {
-        "name": "pa_vid-mebeli",
-        "value": [
-            43,
-            46
-        ]
-    },
-    "pa_dlina": {
-        "name": "pa_dlina",
-        "value": [
-            329
-        ]
-    },
-    "pa_shirina": {
-        "name": "pa_shirina",
-        "value": [
-            323
-        ]
+    "numberOfPackages": 3,
+    "packages": [
+        {
+            "name": "SEGER\u00d6N",
+            "typeName": "Krzes\u0142o z pod\u0142okietnikami, ogr.",
+            "itemNo": "19494841",
+            "articleNumber": {
+                "label": "Numer artyku\u0142u",
+                "value": "194.948.41"
+            },
+            "measurementGroups": [],
+            "quantity": {
+                "label": "Paczka(i)",
+                "value": 1
+            },
+            "multiPackDisclaimerText": "Ten produkt sk\u0142ada si\u0119 kilku paczek"
+        },
+        {
+            "name": "SEGER\u00d6N",
+            "typeName": "Krzes\u0142o z pod\u0142okietnikami, ogr.",
+            "itemNo": "10514754",
+            "articleNumber": {
+                "label": "Numer artyku\u0142u",
+                "value": "105.147.54"
+            },
+            "measurementGroups": [
+                {
+                    "heading": null,
+                    "measurements": [
+                        {
+                            "label": "Szeroko\u015b\u0107",
+                            "type": "width",
+                            "text": "68 cm",
+                            "value": 68
+                        },
+                        {
+                            "label": "Wysoko\u015b\u0107",
+                            "type": "height",
+                            "text": "40 cm",
+                            "value": 40
+                        },
+                        {
+                            "label": "D\u0142ugo\u015b\u0107",
+                            "type": "length",
+                            "text": "68 cm",
+                            "value": 68
+                        },
+                        {
+                            "label": "Waga",
+                            "type": "weight",
+                            "text": "6.90 kg",
+                            "value": 6.9
+                        }
+                    ]
+                }
+            ],
+            "quantity": {
+                "label": "Paczka(i)",
+                "value": 1
+            },
+            "multiPackDisclaimerText": null
+        },
+        {
+            "name": "FR\u00d6S\u00d6N",
+            "typeName": "Pokrycie poduszk\u0119 krzes\u0142a",
+            "itemNo": "10391710",
+            "articleNumber": {
+                "label": "Numer artyku\u0142u",
+                "value": "103.917.10"
+            },
+            "measurementGroups": [
+                {
+                    "heading": null,
+                    "measurements": [
+                        {
+                            "label": "Szeroko\u015b\u0107",
+                            "type": "width",
+                            "text": "11 cm",
+                            "value": 11
+                        },
+                        {
+                            "label": "Wysoko\u015b\u0107",
+                            "type": "height",
+                            "text": "4 cm",
+                            "value": 4
+                        },
+                        {
+                            "label": "D\u0142ugo\u015b\u0107",
+                            "type": "length",
+                            "text": "26 cm",
+                            "value": 26
+                        },
+                        {
+                            "label": "Waga",
+                            "type": "weight",
+                            "text": "0.24 kg",
+                            "value": 0.24
+                        }
+                    ]
+                }
+            ],
+            "quantity": {
+                "label": "Paczka(i)",
+                "value": 1
+            },
+            "multiPackDisclaimerText": null
+        },
+        {
+            "name": "DUVHOLMEN",
+            "typeName": "Poduszka wewn poduchy krzes\u0142a",
+            "itemNo": "80391844",
+            "articleNumber": {
+                "label": "Numer artyku\u0142u",
+                "value": "803.918.44"
+            },
+            "measurementGroups": [
+                {
+                    "heading": null,
+                    "measurements": [
+                        {
+                            "label": "Szeroko\u015b\u0107",
+                            "type": "width",
+                            "text": "48 cm",
+                            "value": 48
+                        },
+                        {
+                            "label": "Wysoko\u015b\u0107",
+                            "type": "height",
+                            "text": "4 cm",
+                            "value": 4
+                        },
+                        {
+                            "label": "D\u0142ugo\u015b\u0107",
+                            "type": "length",
+                            "text": "48 cm",
+                            "value": 48
+                        },
+                        {
+                            "label": "Waga",
+                            "type": "weight",
+                            "text": "0.44 kg",
+                            "value": 0.44
+                        }
+                    ]
+                }
+            ],
+            "quantity": {
+                "label": "Paczka(i)",
+                "value": 1
+            },
+            "multiPackDisclaimerText": null
+        }
+    ],
+    "totalNoOfPackagesText": "Ten produkt sk\u0142ada si\u0119 z 3 paczek.",
+    "maxMeasurements": {
+        "weightText": "6.90 kg",
+        "widthText": "68 cm",
+        "lengthText": "68 cm",
+        "heightText": "40 cm",
+        "diameterText": ""
     }
 }

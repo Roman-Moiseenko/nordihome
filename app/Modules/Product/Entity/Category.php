@@ -26,6 +26,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property string $svg
  * @property int $_lft
  * @property int $_rgt
+ * @property bool $published
  *
  * @property string $top_title
  * @property string $top_description
@@ -42,11 +43,13 @@ class Category extends Model
         'top_description' => '',
         'bottom_text' => '',
         'data' => '',
+
     ];
 
 
     protected $fillable = [
-      'name', 'parent_id', 'slug', 'title', 'description',
+        'name', 'parent_id', 'slug', 'title', 'description',
+        'published',
     ];
     public $timestamps = false;
 
@@ -75,6 +78,7 @@ class Category extends Model
             'slug' => $slug,
             'title' => $title,
             'description' => $description,
+            'published' => false,
         ]);
     }
 

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('type');
             $table->integer('sort')->default(0);
             $table->boolean('published')->default(false);
+            $table->string('slug')->nullable();
         });
     }
 

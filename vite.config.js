@@ -12,6 +12,11 @@ import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
 
 export default defineConfig({
+    server: {
+        hmr: {
+            host: 'localhost',
+        },
+    },
     build: {
         commonjsOptions: {
             include: ["tailwind.config.js", "node_modules/**"],

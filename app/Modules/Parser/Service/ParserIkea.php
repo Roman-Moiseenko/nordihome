@@ -36,8 +36,8 @@ class ParserIkea extends ParserAbstract
     const string API_URL_QUANTITY = 'https://api.ingka.ikea.com/cia/availabilities/ru/pl?itemNos=%s&expand=StoresList,Restocks,SalesLocations,DisplayLocations,ChildItems,FoodAvailabilities';
     private ParserLogService $logService;
 
-    public function __construct(        CategoryParserService $categoryParserService,
-                                        TranslateService      $translate, ParserLogService $logService)
+    public function __construct(CategoryParserService $categoryParserService,
+                                TranslateService      $translate, ParserLogService $logService)
     {
         parent::__construct($categoryParserService, $translate);
 
@@ -57,34 +57,34 @@ class ParserIkea extends ParserAbstract
     }
 
 
-   /* public function parserProductsByCategoryJob(CategoryParser $categoryParser): void
-    {
-        $products = [];
-        $start = 0;
-        $end = 1000;
-        do {
-            $_url = sprintf(self::API_URL_PRODUCTS, $categoryParser->url, $start, $end);
-            $json_product = $this->httpPage->getPage($_url);
-            if (!is_null($json_product)) {
-                $_array = json_decode($json_product, true);
-                $list = $_array['moreProducts']['productWindow'];
-            } else {
-                $list = [];
-            }
-            $products = array_merge($products, $list);
-            $start += 1000;
-            $end += 1000;
-        } while (count($list) == 1000);
-        foreach ($products as $product) {
-            $product['parser_category_id'] = $categoryParser->id;
-            CreateParserProduct::dispatch($product);
-        }
-    }
+    /* public function parserProductsByCategoryJob(CategoryParser $categoryParser): void
+     {
+         $products = [];
+         $start = 0;
+         $end = 1000;
+         do {
+             $_url = sprintf(self::API_URL_PRODUCTS, $categoryParser->url, $start, $end);
+             $json_product = $this->httpPage->getPage($_url);
+             if (!is_null($json_product)) {
+                 $_array = json_decode($json_product, true);
+                 $list = $_array['moreProducts']['productWindow'];
+             } else {
+                 $list = [];
+             }
+             $products = array_merge($products, $list);
+             $start += 1000;
+             $end += 1000;
+         } while (count($list) == 1000);
+         foreach ($products as $product) {
+             $product['parser_category_id'] = $categoryParser->id;
+             CreateParserProduct::dispatch($product);
+         }
+     }
 
-    */
+     */
     /**
-    * Процедура для Job - по урл категории Икеа, получаем весь список товаров для запуска Job по их созданию
-    */
+     * Процедура для Job - по урл категории Икеа, получаем весь список товаров для запуска Job по их созданию
+     */
     public function getProductsByCategoryJob(string $url): array
     {
         $products = [];
@@ -126,7 +126,7 @@ class ParserIkea extends ParserAbstract
             $price_base = (float)(str_replace(' ', '', $product_data['salesPrice']['lowestPreviousSalesPrice']['wholeNumber']) . '.' . $product_data['salesPrice']['lowestPreviousSalesPrice']['decimals']);
             if ($price_base > (float)$price_sell) $price_sell = $price_base;
         }
-
+        $data = $this->parsingDataByUrl($url);
         //Создаем товар, если его нет в базе
         if (is_null($product = Product::whereCode($code)->first())) {
             Log::debug('ParserIkea->createProductJob: Создаем товар - ' . $name);
@@ -497,7 +497,7 @@ class ParserIkea extends ParserAbstract
             return null;
         }
         $_array = json_decode($json_product, true);
-        //  Log::info($json_product);
+        // Log::info($_array);
         if ($_array == null) {
             Log::error('Икеа Парсинг ' . $search . ' null');
             return null;
@@ -573,15 +573,34 @@ class ParserIkea extends ParserAbstract
     public function parsingDataByUrl(string $url): array|null
     {
 
+        //dd($url);
 
         $pageProduct = $this->httpPage->getPage($url);
-        preg_match_all('#<script type="text\/hydrate">(.+?)<\/script>#su', $pageProduct, $res);
-        $_res = $res[1][0];
-        $_data = json_decode($_res, true);
+        //  dd($pageProduct);
+        $old_pattern = '#<script type="text\/hydrate">(.+?)<\/script>#su';
+        $pattern = '#data-hydration-props="(.+?)"#su';
+        preg_match_all($old_pattern, $pageProduct, $res);
+        $dataProduct = null;
+        foreach ($res[1] as $item_res) {
+            $_data = json_decode($item_res, true);
+            if (isset($_data["pageProps"])) {
+                $dataProduct = $_data["pageProps"]["product"];
+                break;
+            }
+        }
+        if ($dataProduct == null) throw new \DomainException("Что-то пошло не так");
+
+
+        // dd($res);
+        //$_res = $res[1][0];
+        //$_data = json_decode($_res, true);
+        //Log::info(json_encode($_data));
+
         //dd($_data["pageProps"]);
-        $dataProduct = $_data["pageProps"]["product"]; //clientProduct
-        Log::info($_res);
-        //dd($_data);
+        //$dataProduct = $_data["pageProps"]["product"]; //clientProduct
+        Log::info('*********');
+        Log::info(json_encode($dataProduct));
+
         //Составные товары
         $composite = array_map(function ($subProduct) {
             return [
@@ -592,24 +611,34 @@ class ParserIkea extends ParserAbstract
 
         //Пачки товара
         $packaging = $dataProduct['packaging'];
+        \Log::info('*-*');
+        \Log::info(json_encode($packaging));
         $pack = $packaging['numberOfPackages'];
         $_packages = $packaging['packages'];
         $packages = [];
+
         foreach ($_packages as $_package) {
-            if(!empty($measurements = $_package['measurements'])) {
+            // dd($_package['measurementGroups'][0]['measurements']);
+            if (!empty($measurementGroups = $_package['measurementGroups'])) {
                 $_quantity = $_package['quantity']['value'];
-                foreach ($measurements as $measurement) { //Если товар в 1 пачке разбит на несколько
+                foreach ($measurementGroups as $itemGroup) {
+                    $measurements = $itemGroup['measurements'];
+
+
+                    //   foreach ($measurements as $measurement) { //Если товар в 1 пачке разбит на несколько
+                    //\Log::info('*');
+                    //\Log::info(json_encode($measurements));
                     $packages[] = Package::create(
-                        $this->toHeight($measurement),
-                        $this->toWidth($measurement),
-                        $this->toLength($measurement),
-                        $this->toWeight($measurement),
+                        $this->toHeight($measurements),
+                        $this->toWidth($measurements),
+                        $this->toLength($measurements),
+                        $this->toWeight($measurements),
                         $_quantity,
                     );
                 }
             }
         }
-
+        dd($packages);
         $description = $dataProduct['description'] .
             (empty($dataProduct['itemMeasureReferenceText']) ? '' : ', ' . $dataProduct['itemMeasureReferenceText']);
         $description = $this->translate->translate($description);
@@ -617,7 +646,7 @@ class ParserIkea extends ParserAbstract
         $images = [];
         $_list_images = $dataProduct['mediaList']; //$_data['mediaGrid']['fullMediaList']
         foreach ($_list_images as $item) {
-            if ($item['type'] == 'image' /* && $item['content']['type'] != 'MAIN_PRODUCT_IMAGE'*/ ) //Возможно разблокировать
+            if ($item['type'] == 'image' /* && $item['content']['type'] != 'MAIN_PRODUCT_IMAGE'*/) //Возможно разблокировать
                 $images[] = $item['content']['url'];
         }
 
@@ -642,6 +671,7 @@ class ParserIkea extends ParserAbstract
     private function toHeight(array $_measures)
     {
         $height = 0.0;
+
         foreach ($_measures as $_measure) {
             if ($_measure['type'] == "height") $height = $_measure['value'];
         }

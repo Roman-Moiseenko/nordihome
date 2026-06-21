@@ -1,37 +1,145 @@
-[
-    {
-        "slug": "id",
-        "name": "id",
-        "value": "3"
-    },
-    {
-        "slug": "ask",
-        "name": "\u0412\u0430\u0440\u0438\u0430\u043d\u0442 \u043e\u0442\u0432\u0435\u0442\u0430",
-        "value": "3"
-    },
-    {
-        "slug": "url",
-        "name": "url",
-        "value": "http:\/\/127.0.0.1:8000\/"
-    },
-    {
-        "slug": "user",
-        "name": "user",
-        "value": "qqq"
-    },
-    {
-        "slug": "wish",
-        "name": "\u041f\u043e\u0436\u0435\u043b\u0430\u043d\u0438\u0435",
-        "value": "qq"
-    },
-    {
-        "slug": "email",
-        "name": "Email",
-        "value": "qqq"
-    },
-    {
-        "slug": "message",
-        "name": "\u0421\u043e\u043e\u0431\u0449\u0435\u043d\u0438\u0435",
-        "value": "q"
+{
+    "numberOfPackages": 4,
+    "packages": [
+        {
+            "name": "HEMNES",
+            "typeName": "Rama le\u017canki z 3 szufladami",
+            "itemNo": "90349326",
+            "articleNumber": {
+                "label": "Numer artyku\u0142u",
+                "value": "903.493.26"
+            },
+            "measurementGroups": [
+                {
+                    "heading": "Paczka 1",
+                    "measurements": [
+                        {
+                            "label": "Szeroko\u015b\u0107",
+                            "type": "width",
+                            "text": "53 cm",
+                            "value": 53
+                        },
+                        {
+                            "label": "Wysoko\u015b\u0107",
+                            "type": "height",
+                            "text": "6 cm",
+                            "value": 6
+                        },
+                        {
+                            "label": "D\u0142ugo\u015b\u0107",
+                            "type": "length",
+                            "text": "206 cm",
+                            "value": 206
+                        },
+                        {
+                            "label": "Waga",
+                            "type": "weight",
+                            "text": "27.20 kg",
+                            "value": 27.2
+                        }
+                    ]
+                },
+                {
+                    "heading": "Paczka 2",
+                    "measurements": [
+                        {
+                            "label": "Szeroko\u015b\u0107",
+                            "type": "width",
+                            "text": "29 cm",
+                            "value": 29
+                        },
+                        {
+                            "label": "Wysoko\u015b\u0107",
+                            "type": "height",
+                            "text": "6 cm",
+                            "value": 6
+                        },
+                        {
+                            "label": "D\u0142ugo\u015b\u0107",
+                            "type": "length",
+                            "text": "206 cm",
+                            "value": 206
+                        },
+                        {
+                            "label": "Waga",
+                            "type": "weight",
+                            "text": "23.30 kg",
+                            "value": 23.3
+                        }
+                    ]
+                },
+                {
+                    "heading": "Paczka 3",
+                    "measurements": [
+                        {
+                            "label": "Szeroko\u015b\u0107",
+                            "type": "width",
+                            "text": "84 cm",
+                            "value": 84
+                        },
+                        {
+                            "label": "Wysoko\u015b\u0107",
+                            "type": "height",
+                            "text": "6 cm",
+                            "value": 6
+                        },
+                        {
+                            "label": "D\u0142ugo\u015b\u0107",
+                            "type": "length",
+                            "text": "100 cm",
+                            "value": 100
+                        },
+                        {
+                            "label": "Waga",
+                            "type": "weight",
+                            "text": "24.50 kg",
+                            "value": 24.5
+                        }
+                    ]
+                },
+                {
+                    "heading": "Paczka 4",
+                    "measurements": [
+                        {
+                            "label": "Szeroko\u015b\u0107",
+                            "type": "width",
+                            "text": "84 cm",
+                            "value": 84
+                        },
+                        {
+                            "label": "Wysoko\u015b\u0107",
+                            "type": "height",
+                            "text": "6 cm",
+                            "value": 6
+                        },
+                        {
+                            "label": "D\u0142ugo\u015b\u0107",
+                            "type": "length",
+                            "text": "100 cm",
+                            "value": 100
+                        },
+                        {
+                            "label": "Waga",
+                            "type": "weight",
+                            "text": "24.00 kg",
+                            "value": 24
+                        }
+                    ]
+                }
+            ],
+            "quantity": {
+                "label": "Paczka(i)",
+                "value": 1
+            },
+            "multiPackDisclaimerText": "Ten produkt sk\u0142ada si\u0119 kilku paczek"
+        }
+    ],
+    "totalNoOfPackagesText": "Ten produkt sk\u0142ada si\u0119 z 4 paczek.",
+    "maxMeasurements": {
+        "weightText": "27.20 kg",
+        "widthText": "84 cm",
+        "lengthText": "206 cm",
+        "heightText": "6 cm",
+        "diameterText": ""
     }
-]
+}

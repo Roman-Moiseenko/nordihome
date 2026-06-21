@@ -40,13 +40,14 @@ return new class extends Migration
                 'type' => 4,
             ],
         ];
-        foreach ($contacts as $contact) {
+        foreach ($contacts as $slug => $contact) {
             $model = Contact::register(
                 name: $contact['name'],
                 icon: $contact['icon'],
                 color: $contact['color'],
                 url: $contact['url'],
-                type: (int)$contact['type']
+                type: (int)$contact['type'],
+                slug: $slug,
             );
             $model->published = true;
             $model->save();

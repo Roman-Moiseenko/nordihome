@@ -24,8 +24,9 @@ class ParserCommand extends Command
 
         //$code = $this->ask('Артикул товара');
 
-        $code = '194.948.41';
-    //    $code = '40178888';
+        $code = '903.493.26'; // - сложный
+        //$code = '194.948.41'; // - составной
+    //    $code = '40178888'; // - одинарный
 
         $product = $parserIkea->findProduct($code);
         $this->info(json_encode($product));
