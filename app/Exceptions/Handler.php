@@ -50,8 +50,7 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        $theme = config('shop.theme');
-        $shop_errors = 'shop.' . $theme . '.errors.';
+        $shop_errors = 'shop.errors.';
 
         $response = parent::render($request, $e);
 

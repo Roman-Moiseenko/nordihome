@@ -36,7 +36,7 @@ class Template
      */
     public static function Path(string $type): string
     {
-        return resource_path() . '/views/shop/' . config('shop.theme') . '/templates/' . $type . '/';
+        return resource_path() . '/views/shop/templates/' . $type . '/';
     }
 
     /**
@@ -46,7 +46,7 @@ class Template
      */
     public static function blade(string $type): string
     {
-        return 'shop.' . config('shop.theme') . '.templates.' . $type . '.';
+        return 'shop.templates.' . $type . '.';
     }
 
     /**
@@ -67,7 +67,7 @@ class Template
      */
     public static function Base(string $type): string
     {
-        return resource_path('views/shop/' . config('shop.theme') . '/templates/base/' . $type . '.stub');
+        return resource_path('views/shop/templates/base/' . $type . '.stub');
     }
 
     public static function renderClasses(string|null $text): array|string|null

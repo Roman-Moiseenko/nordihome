@@ -2,7 +2,7 @@
 
 return [
     /* COMMON */
-    'theme' => env('SHOP_THEME', ''),
+ //   'theme' => env('SHOP_THEME', ''),
     'yookassa-id' => env('YOOKASSA_SHOP_ID', ''),
     'yookassa-key' => env('YOOKASSA_KEY', ''),
     'crm' => [
