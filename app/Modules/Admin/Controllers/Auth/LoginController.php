@@ -11,31 +11,15 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Illuminate\View\View;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
-
-use function back;
-use function flash;
-use function redirect;
-use function trans;
 
 class LoginController extends Controller
 {
 
     use ThrottlesLogins;
-    /**
-     * Where to redirect users after login.
-     *
-     * @var string
-     */
-    protected $redirectTo = RouteServiceProvider::HOME;
 
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
+    protected $redirectTo = RouteServiceProvider::HOME;
 
     public function __construct()
     {
@@ -56,18 +40,10 @@ class LoginController extends Controller
     {
         //TODO Не работает vue3
         return Inertia::render('Admin/Auth/Login');
-      //  return view('admin.login');
     }
 
-
     public function login(Request $request)
-    {/*
-        $this->validate($request, [
-            'name'   => 'required',
-            'password' => 'required|min:6'
-        ]);
-*/
-
+    {
         if (Auth::guard('admin')->attempt(['name' => $request['name'], 'password' => $request['password']], $request->get('remember'))) {
 
             /** @var Admin $admin */
@@ -75,15 +51,21 @@ class LoginController extends Controller
             if ($admin->isBlocked()) {
                 Auth::logout();
                 throw new \DomainException('Ваш аккаунт заблокирован');
-                //return back()->with('danger', 'Ваш аккаунт заблокирован');
             }
 
-            //flash('Добро пожаловать ' . $admin->fullname->getFullName(), 'success');
+            $request->session()->regenerate();
+
             return redirect()->intended('/admin')->with('success', 'Добро пожаловать ' . $admin->fullname->getFullName());
         }
-        throw new \DomainException('Неверный логин или пароль');
-       // return back()->with('danger', 'Неверный логин или пароль')->withInput($request->only('name', 'remember'));
 
+                throw new \DomainException('Неверный логин или пароль');
+    }
+
+
+
+    protected function guard(): StatefulGuard
+    {
+        return Auth::guard('admin');
     }
 
     /**
@@ -169,15 +151,7 @@ class LoginController extends Controller
         //
     }
 
-    /**
-     * Get the guard to be used during authentication.
-     *
-     * @return StatefulGuard
-     */
-    protected function guard(): StatefulGuard
-    {
-        return Auth::guard('admin');
-    }
+
 
     protected function authenticated(Request $request, $user)
     {
@@ -189,6 +163,7 @@ class LoginController extends Controller
         } */
         return redirect()->intended($this->redirectPath());
     }
+
     protected function username(): string
     {
         return 'name';
