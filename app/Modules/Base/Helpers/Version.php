@@ -5,11 +5,14 @@ namespace App\Modules\Base\Helpers;
 
 class Version
 {
-    const VERSION = '0.8.9.0';
+    const VERSION = '0.8.9.1';
 
     public static function updated(): array
     {
         return [
+            '22.06.2026' => [
+                'Laravel 12',
+            ],
             '05.11.2025' => [
                 'Добавлен раздел Записи с Рубриками для Сайта',
                 '- Добавлен раздел Меню для Сайта'

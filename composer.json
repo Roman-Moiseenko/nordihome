@@ -9,15 +9,15 @@
         "ext-curl": "*",
         "ext-simplexml": "*",
         "ext-zip": "*",
-        "diglactic/laravel-breadcrumbs": "^v9.0.0",
+        "diglactic/laravel-breadcrumbs": "^10.0",
         "guzzlehttp/guzzle": "^7.2",
         "hflabs/dadata": "^24.4",
-        "inertiajs/inertia-laravel": "2.0",
+        "inertiajs/inertia-laravel": "^2.0",
         "intervention/image": "^2.7",
         "kalnoy/nestedset": "^6.0",
         "laracasts/flash": "^3.2",
-        "laravel-notification-channels/telegram": "^5.0.0",
-        "laravel/framework": "^11.00",
+        "laravel-notification-channels/telegram": "^7.0",
+        "laravel/framework": "^12.00",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
@@ -39,9 +39,34 @@
         "fakerphp/faker": "^1.9.1",
         "laravel/pint": "^v1.18.2",
         "mockery/mockery": "^1.4.4",
-        "nunomaduro/collision": "^8.1",
+        "nunomaduro/collision": "^8.5",
         "phpunit/phpunit": "^11.4.3",
         "spatie/laravel-ignition": "^2.0"
+    },
+    "config": {
+        "policy.advisories.ignore-id": [
+            "PKSA-m5cs-t1y6-qpcs",
+            "PKSA-3r5d-mb8f-1qw9",
+            "PKSA-mdq4-51ck-6kdq",
+            "PKSA-8qx3-n5y5-vvnd",
+            "PKSA-q46n-4fdk-zjr4",
+            "PKSA-qzrn-rnz3-85w1",
+            "PKSA-w7xr-vk7n-rstm",
+            "PKSA-p3rx-dfwp-73ny",
+            "PKSA-ckwp-rt7t-c46m",
+            "PKSA-4npr-btr6-zhny",
+            "PKSA-njrm-6dtg-m2pc",
+            "PKSA-985r-hryy-555b",
+            "PKSA-zwc5-qtrz-zm1n"
+        ],
+        "policy.advisories.block": false,
+        "optimize-autoloader": true,
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
+        }
     },
     "autoload": {
         "psr-4": {
@@ -79,15 +104,7 @@
             "dont-discover": []
         }
     },
-    "config": {
-        "optimize-autoloader": true,
-        "preferred-install": "dist",
-        "sort-packages": true,
-        "allow-plugins": {
-            "pestphp/pest-plugin": true,
-            "php-http/discovery": true
-        }
-    },
+
     "minimum-stability": "stable",
     "prefer-stable": true
 }
