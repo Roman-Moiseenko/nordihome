@@ -6,7 +6,7 @@ use App\Modules\Nordihome\Service\FunctionService;
 use App\Modules\Nordihome\Service\GoogleSheetService;
 use App\Modules\Parser\Job\FurnitureParser;
 use Illuminate\Console\Command;
-use Tests\CreatesApplication;
+use App\Console\CreatesApplication;
 
 class FurnitureCommand extends Command
 {

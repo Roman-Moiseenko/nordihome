@@ -7,7 +7,7 @@ use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Delivery\Service\GdeposylkaService;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use Illuminate\Console\Command;
-use Tests\CreatesApplication;
+use App\Console\CreatesApplication;
 
 class DeliveryCommand extends Command
 {

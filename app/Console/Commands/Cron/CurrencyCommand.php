@@ -8,7 +8,7 @@ use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
-use Tests\CreatesApplication;
+use App\Console\CreatesApplication;
 
 class CurrencyCommand extends Command
 {

@@ -6,7 +6,7 @@ use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Parser\Job\ParserAvailablePriceProduct;
 use Illuminate\Console\Command;
-use Tests\CreatesApplication;
+use App\Console\CreatesApplication;
 
 /**
  * Проверяем на Икеа доступность товара и новую цену

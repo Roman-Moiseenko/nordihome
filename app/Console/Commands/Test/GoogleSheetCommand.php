@@ -6,7 +6,7 @@ use App\Modules\Bank\Service\YookassaService;
 use App\Modules\Nordihome\Service\FunctionService;
 use App\Modules\Nordihome\Service\GoogleSheetService;
 use Illuminate\Console\Command;
-use Tests\CreatesApplication;
+use App\Console\CreatesApplication;
 
 class GoogleSheetCommand extends Command
 {

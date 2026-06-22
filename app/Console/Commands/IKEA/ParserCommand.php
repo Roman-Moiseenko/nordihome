@@ -8,7 +8,7 @@ use App\Modules\Nordihome\Service\GoogleSheetService;
 use App\Modules\Parser\Job\FurnitureParser;
 use App\Modules\Parser\Service\ParserIkea;
 use Illuminate\Console\Command;
-use Tests\CreatesApplication;
+use App\Console\CreatesApplication;
 
 class ParserCommand extends Command
 {

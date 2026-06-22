@@ -10,7 +10,7 @@ use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
-use Tests\CreatesApplication;
+use App\Console\CreatesApplication;
 
 
 class StorageCommand extends Command

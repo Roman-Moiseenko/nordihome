@@ -6,7 +6,7 @@ use App\Modules\Parser\Job\ParserCategory;
 use App\Modules\Parser\Service\ParserIkea;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use Tests\CreatesApplication;
+use App\Console\CreatesApplication;
 
 /**
  * Парсим новые каталоги и подкаталоги Икеа

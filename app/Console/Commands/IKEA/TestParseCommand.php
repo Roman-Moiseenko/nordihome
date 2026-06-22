@@ -8,7 +8,7 @@ use App\Modules\Parser\Job\ParserProductsByCategory;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Tests\CreatesApplication;
+use App\Console\CreatesApplication;
 
 class TestParseCommand extends Command
 {

@@ -6,7 +6,7 @@ namespace App\Console\Commands\Test;
 
 use App\Modules\Shop\Parser\ParserService;
 use Illuminate\Console\Command;
-use Tests\CreatesApplication;
+use App\Console\CreatesApplication;
 
 class ParserOneCommand extends Command
 {
