@@ -17,7 +17,6 @@ class CountryController extends Controller
 
     public function __construct(CountryService $service)
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
     }
 

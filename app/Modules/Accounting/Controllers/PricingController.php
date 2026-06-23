@@ -31,8 +31,6 @@ class PricingController extends Controller
         StaffRepository   $staffs,
     )
     {
-        $this->middleware(['auth:admin', 'can:pricing']);
-        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
         $this->repository = $repository;
         $this->staffs = $staffs;

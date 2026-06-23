@@ -12,6 +12,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageArrivalItem;
 use App\Modules\Accounting\Entity\StorageDepartureItem;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\OrderReserveService;
@@ -39,8 +40,8 @@ class MovementService extends AccountingService
     {
         if ($storage_out == $storage_in) throw new \DomainException('Склады совпадают');
 
-        /** @var Admin $manager */
-        $manager = Auth::guard('admin')->user();
+        /** @var Staff $manager */
+        $manager = auth()->user()->profileable;
 
         return MovementDocument::register(
             $storage_out,

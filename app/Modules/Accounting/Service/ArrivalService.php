@@ -17,6 +17,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Service\OrderReserveService;
 use App\Modules\Product\Entity\Product;
@@ -54,8 +55,8 @@ class ArrivalService extends AccountingService
 
     public function create(int $distributor_id, bool $is_manager = true): ArrivalDocument
     {
-        /** @var Admin $manager */
-        $staff = Auth::guard('admin')->user();
+        /** @var Staff $manager */
+        $staff = auth()->user()->profileable;
         /** @var Distributor $distributor */
         $distributor = Distributor::find($distributor_id);
         $storage = Storage::where('default', true)->first();
@@ -69,8 +70,8 @@ class ArrivalService extends AccountingService
 
     public function create_storage(int $storage_id): ArrivalDocument
     {
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
+        /** @var Staff $staff */
+        $staff = auth()->user()->profileable;
         $currency = Currency::where('name', 'Рубль')->first();
         return ArrivalDocument::register(
             null,

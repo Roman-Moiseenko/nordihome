@@ -19,15 +19,15 @@ Breadcrumbs::for('admin.staff.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.staff.index');
     $trail->push('Добавить нового', route('admin.staff.create'));
 });
-Breadcrumbs::for('admin.staff.show', function (BreadcrumbTrail $trail, Admin $staff) {
+Breadcrumbs::for('admin.staff.show', function (BreadcrumbTrail $trail, \App\Modules\Auth\Infrastructure\Models\Staff $staff) {
     $trail->parent('admin.staff.index');
-    $trail->push($staff->fullname->getShortname(), route('admin.staff.show', $staff));
+    $trail->push($staff->fullName, route('admin.staff.show', $staff));
 });
-Breadcrumbs::for('admin.staff.edit', function (BreadcrumbTrail $trail, Admin $staff) {
+Breadcrumbs::for('admin.staff.edit', function (BreadcrumbTrail $trail, \App\Modules\Auth\Infrastructure\Models\Staff $staff) {
     $trail->parent('admin.staff.show', $staff);
     $trail->push('Редактировать', route('admin.staff.edit', $staff));
 });
-Breadcrumbs::for('admin.staff.security', function (BreadcrumbTrail $trail, Admin $staff) {
+Breadcrumbs::for('admin.staff.security', function (BreadcrumbTrail $trail, \App\Modules\Auth\Infrastructure\Models\Staff $staff) {
     $trail->parent('admin.staff.show', $staff);
     $trail->push('Сменить пароль', route('admin.staff.security', $staff));
 });

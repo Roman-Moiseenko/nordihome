@@ -46,7 +46,7 @@ class ReviewService
 
     public function create(array $request): Review
     {
-        $user = Auth::guard('user')->user();
+        $user = Auth::guard('web')->user();
         if (is_null($user)) throw new \DomainException('Отзыв можно оставлять только зарегистрированным пользователям!');
         $review = Review::register((int)$request['product_id'], $user->id, $request['text'],(int)$request['rating'] );
 

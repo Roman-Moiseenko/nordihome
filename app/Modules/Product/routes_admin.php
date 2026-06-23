@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
+        'middleware' => 'role:admin|staff',
         'prefix' => 'product',
         'as' => 'product.',
         //'namespace' => 'Product',

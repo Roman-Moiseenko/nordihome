@@ -23,7 +23,6 @@ class GalleryController extends Controller
         GalleryRepository $repository,
     )
     {
-        $this->middleware(['auth:admin', 'can:options']);
         $this->service = $service;
         $this->repository = $repository;
     }

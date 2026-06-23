@@ -1,4 +1,4 @@
- <?php
+<?php
 
 return [
 
@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => 'user',
+        'guard' => 'web',
         'passwords' => 'users',
     ],
 
@@ -36,13 +36,9 @@ return [
     */
 
     'guards' => [
-        'user' => [
+        'web' => [
             'driver' => 'session',
             'provider' => 'users',
-        ],
-        'admin' => [
-            'driver' => 'session',
-            'provider' => 'admins',
         ],
     ],
 
@@ -66,11 +62,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Modules\User\Entity\User::class,
-        ],
-        'admins' => [
-            'driver' => 'eloquent',
-            'model' => \App\Modules\Admin\Entity\Admin::class
+            'model' => App\Modules\Auth\Infrastructure\Models\User::class,
         ],
         // 'users' => [
         //     'driver' => 'database',

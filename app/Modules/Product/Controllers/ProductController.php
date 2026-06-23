@@ -50,8 +50,6 @@ class ProductController extends Controller
         CategoryRepository $categories,
     )
     {
-        $this->middleware(['auth:admin']);
-        $this->middleware(['can:product'])->except(['rename']);
         $this->service = $service;
         $this->options = $options;
         $this->repository = $repository;

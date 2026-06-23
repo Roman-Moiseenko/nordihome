@@ -20,7 +20,6 @@ class TagController extends Controller
 
     public function __construct(TagService $service, TagRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->repository = $repository;
     }

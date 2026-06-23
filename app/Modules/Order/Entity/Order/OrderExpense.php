@@ -6,6 +6,7 @@ namespace App\Modules\Order\Entity\Order;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Worker;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FullName;
@@ -332,7 +333,7 @@ class OrderExpense extends Model
 
     public function staff(): BelongsTo
     {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
 
     public function items(): HasMany

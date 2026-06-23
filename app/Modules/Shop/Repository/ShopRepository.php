@@ -25,7 +25,7 @@ use App\Modules\Product\Repository\ModificationRepository;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
 use App\Modules\Setting\Repository\SettingRepository;
-use App\Modules\User\Entity\User;
+use App\Modules\Auth\Infrastructure\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -46,8 +46,8 @@ class ShopRepository
     {
         $this->web = $settings->web;
 
-        if (Auth::guard('user')->check()) {
-            $this->user = Auth::guard('user')->user();
+        if (Auth::guard('web')->check()) {
+            $this->user = Auth::guard('web')->user();
         } else {
             $this->user = null;
         }
@@ -535,7 +535,7 @@ class ShopRepository
 
     public function getCoupon(string $code, int $user_id = null): ?Coupon
     {
-        if (is_null($user_id)) $user_id = Auth::guard('user')->user()->id;
+        if (is_null($user_id)) $user_id = Auth::guard('web')->user()->id;
 
         $coupon = Coupon::where('code', $code)
             ->where('user_id', $user_id)

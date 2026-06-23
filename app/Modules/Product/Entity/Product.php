@@ -460,7 +460,7 @@ class Product extends Model
         $price = 0;
         if (!$this->isSale()) return $price;
         if (is_null($user)) {
-            $user = Auth::guard('user')->user();
+            $user = Auth::guard('web')->user();
         }
 
         if (!is_null($user)) {

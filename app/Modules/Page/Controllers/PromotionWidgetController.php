@@ -27,8 +27,6 @@ class PromotionWidgetController extends Controller
         PromotionWidgetService $service,
     )
     {
-        $this->middleware(['auth:admin', 'can:options']);
-
         $this->templates = $templates;
         $this->repository = $repository;
         $this->service = $service;

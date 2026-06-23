@@ -32,8 +32,6 @@ class InventoryController extends Controller
         InventoryReport        $report,
     )
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
-        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
         $this->repository = $repository;
 

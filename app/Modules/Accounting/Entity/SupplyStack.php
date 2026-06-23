@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
 use Carbon\Carbon;
@@ -94,7 +95,7 @@ class SupplyStack extends Model
 
     public function staff(): BelongsTo
     {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
 
 

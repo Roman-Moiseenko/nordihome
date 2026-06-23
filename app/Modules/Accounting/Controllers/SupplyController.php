@@ -44,8 +44,6 @@ class SupplyController extends Controller
         OrganizationRepository $organizations,
     )
     {
-        $this->middleware(['auth:admin', 'can:accounting'])->except(['work', 'destroy']);
-        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
         $this->stacks = $stacks;
         $this->repository = $repository;

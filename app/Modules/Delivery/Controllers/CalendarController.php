@@ -19,8 +19,6 @@ class CalendarController extends Controller
 
     public function __construct(CalendarService $service, CalendarRepository $repository)
     {
-        $this->middleware(['can:order'])->only(['schedule']);
-        $this->middleware(['auth:admin', 'can:delivery']);
         $this->service = $service;
         $this->repository = $repository;
     }

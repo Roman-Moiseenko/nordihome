@@ -17,7 +17,6 @@ class MeasuringController extends Controller
 
     public function __construct(MeasuringService $service)
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
     }
 

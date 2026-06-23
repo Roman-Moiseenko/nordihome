@@ -6,6 +6,7 @@ use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
 use App\Modules\Accounting\Entity\ArrivalExpenseItem;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,8 +14,8 @@ class ArrivalExpenseService extends AccountingService
 {
     public function create(ArrivalDocument $arrival): ArrivalExpenseDocument
     {
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
+        /** @var Staff $staff */
+        $staff = auth()->user()->profileable;
         $expense = ArrivalExpenseDocument::register($staff->id);
        // $arrival->expenses()
         $arrival->expenses()->save($expense);

@@ -15,7 +15,7 @@ class LeadRepository
 
     public function getIndex(Request $request): array
     {
-        $staff = \Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $query = Lead::where('staff_id', $staff->id);
         $query_new = Lead::where('staff_id', null);
 
@@ -46,7 +46,7 @@ class LeadRepository
 
     public function getMyLeads(): array
     {
-        $staff = \Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $query = Lead::where('staff_id', $staff->id);
 
         return [

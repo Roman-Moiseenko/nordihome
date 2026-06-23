@@ -2,14 +2,12 @@
 
 namespace App\Livewire\Admin;
 
-use App\Modules\Admin\Entity\Admin;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\Attributes\On;
 
 class Notification extends Component
 {
-    /** @var Admin $staff */
     public mixed $staff;
 
     public int $count;
@@ -20,7 +18,8 @@ class Notification extends Component
 
     public function boot()
     {
-        $this->staff = Auth::guard('admin')->user();
+        $user = Auth::user();
+        $this->staff = $user->profileable;
         $this->count = $this->staff->unreadNotifications()->count();
     }
 

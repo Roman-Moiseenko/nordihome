@@ -50,7 +50,6 @@ class OrderController extends Controller
         OrderReserveService    $reserveService,
     )
     {
-        $this->middleware(['auth:admin', 'can:order']);
         $this->staffs = $staffs;
         $this->repository = $repository;
         $this->service = $service;
@@ -127,8 +126,7 @@ class OrderController extends Controller
     /** СМЕНА СОСТОЯНИЯ (СТАТУСА) ЗАКАЗА */
     public function take(Order $order): RedirectResponse
     {
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $this->service->setManager($order, $staff->id);
 
         return redirect()->back()->with('success', 'Вы взяли заказ в работу');

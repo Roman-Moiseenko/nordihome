@@ -16,7 +16,6 @@ class CronController extends Controller
 {
     public function __construct()
     {
-        $this->middleware(['auth:admin', 'can:admin-panel']);
     }
 
     public function index(Request $request): Response

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -180,7 +181,7 @@ class OrderExpenseRefund extends Model
 
     public function staff(): BelongsTo
     {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
 
     public function relatedDocuments(): array

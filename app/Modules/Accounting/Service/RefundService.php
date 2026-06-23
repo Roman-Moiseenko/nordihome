@@ -20,7 +20,7 @@ class RefundService extends AccountingService
 
     public function create(int $arrival_id): RefundDocument
     {
-        $staff = \Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable; // \Auth::guard('admin')->user();
         $arrival = ArrivalDocument::find($arrival_id);
 
         return RefundDocument::register($staff->id, $arrival->id, $arrival->distributor_id, $arrival->storage_id);

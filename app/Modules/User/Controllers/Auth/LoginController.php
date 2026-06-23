@@ -89,7 +89,7 @@ class LoginController extends Controller
             $request->session()->regenerate();
             $this->clearLoginAttempts($request);
 
-            //$user = Auth::user(); //Auth::guard('user')->user();
+            //$user = Auth::user(); //Auth::guard('web')->user();
 
             /*if ($user->status != User::STATUS_ACTIVE) {
                 Auth::logout();
@@ -134,7 +134,7 @@ class LoginController extends Controller
 
             if ($authenticate) {
                 /** @var User $user */
-                $user = Auth::user(); //Auth::guard('user')->user();
+                $user = Auth::user(); //Auth::guard('web')->user();
                 if ($user->isWait()) {
                     Auth::logout();
                     return \response()->json(['verification' => true]);
@@ -207,7 +207,7 @@ class LoginController extends Controller
     {
         $this->guard()->logout();
         //if (Auth::guard('admin')->check()) throw new \DomainException('Пользователь Админ');
-        //if (Auth::guard('user')->check()) $this->guard()->logout();
+        //if (Auth::guard('web')->check()) $this->guard()->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
@@ -234,7 +234,7 @@ class LoginController extends Controller
 
     protected function guard(): StatefulGuard
     {
-        return Auth::guard('user');
+        return Auth::guard('web');
     }
 
 

@@ -14,7 +14,6 @@ class ReserveController extends Controller
 
     public function __construct()
     {
-        $this->middleware(['auth:admin', 'can:order']);
     }
 
     public function index(Request $request)

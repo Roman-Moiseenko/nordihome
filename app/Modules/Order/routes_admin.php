@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 //Заказы
 Route::group(
     [
+        'middleware' => 'role:admin|staff',
         'prefix' => 'order',
         'as' => 'order.',
     ],

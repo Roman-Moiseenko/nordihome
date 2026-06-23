@@ -12,8 +12,7 @@ class NotificationRepository
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         if (is_null($staff)) throw new \DomainException('Что-то пошло не так');
         $query = $staff->notifications();
 

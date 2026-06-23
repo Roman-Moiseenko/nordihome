@@ -23,7 +23,6 @@ class ParserController extends Controller
 
     public function __construct(ParserRepository $repository, CategoryRepository $categories)
     {
-        $this->middleware(['auth:admin', 'can:product']);
         $this->repository = $repository;
         $this->categories = $categories;
     }

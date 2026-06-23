@@ -23,7 +23,6 @@ class MenuController extends Controller
         MenuRepository $repository,
     )
     {
-        $this->middleware(['auth:admin', 'can:options']);
         $this->service = $service;
         $this->repository = $repository;
     }

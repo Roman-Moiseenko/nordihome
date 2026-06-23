@@ -19,7 +19,6 @@ class LeadController extends Controller
 
     public function __construct(LeadService $service, LeadRepository $repository)
     {
-        $this->middleware(['auth:admin']);
         $this->service = $service;
         $this->repository = $repository;
     }

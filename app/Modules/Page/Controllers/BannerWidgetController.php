@@ -27,7 +27,6 @@ class BannerWidgetController extends Controller
         BannerWidgetRepository $repository,
     )
     {
-        $this->middleware(['auth:admin', 'can:options']);
         $this->service = $service;
         $this->templates = $templates;
         $this->repository = $repository;

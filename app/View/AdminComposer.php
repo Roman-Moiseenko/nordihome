@@ -64,7 +64,7 @@ class AdminComposer
 
 
 
-                     $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
+                     $user = (Auth::guard('web')->check()) ? Auth::guard('web')->user() : null;
                      $view->with('user', $user);
                     // $view->with('config', config('shop.frontend'));
                    //  $city = 'Россия';
@@ -86,7 +86,7 @@ class AdminComposer
                  * Глобальные данные для клиентской части
                  */
 
-                $user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
+                $user = (Auth::guard('web')->check()) ? Auth::guard('web')->user() : null;
                 //dd($user);
 
                 $view->with('user', $user);

@@ -21,7 +21,6 @@ class ParserLogController extends Controller
         ParserLogService    $service,
     )
     {
-        $this->middleware(['auth:admin', 'can:product']);
         $this->repository = $repository;
         $this->service = $service;
     }

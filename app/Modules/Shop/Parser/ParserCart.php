@@ -33,8 +33,8 @@ class ParserCart //Repository
 
     public function load(string $user_ui = '')
     {
-        if (Auth::guard('user')->check()) {
-            $this->user_id = Auth::guard('user')->user()->id;
+        if (Auth::guard('web')->check()) {
+            $this->user_id = Auth::guard('web')->user()->id;
         } else {
             $this->user_ui = Cookie::get('user_cookie_id');
             if (empty($this->user_ui)) {

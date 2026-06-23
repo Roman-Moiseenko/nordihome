@@ -35,7 +35,7 @@ class StaffController extends Controller
         $this->repository = $repository;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $admins = $this->repository->getIndex($request, $filters);
         return Inertia::render('Admin/Staff/Index', [
@@ -64,17 +64,6 @@ class StaffController extends Controller
             'roles' => array_select(Admin::ROLES),
             'responsibilities' => array_select(Responsibility::RESPONSE),
         ]);
-    }
-
-    public function edit(Admin $staff)
-    {
-        $roles = Admin::ROLES;
-        return view('admin.staff.edit', compact('staff', 'roles'));
-    }
-
-    public function security(Admin $staff)
-    {
-        return view('admin.staff.security', compact('staff'));
     }
 
     public function password(PasswordRequest $request, Admin $staff): RedirectResponse
@@ -109,27 +98,10 @@ class StaffController extends Controller
         return redirect()->back()->with('success', 'Активирован');
     }
 
-    public function notification(Request $request)
-    {
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
-        $query = $staff->notifications();
-        $notifications = $this->pagination($query, $request, $pagination);
-
-        return view('admin.staff.notification', compact('notifications', 'pagination'));
-    }
-
     public function notification_read(DatabaseNotification $notification)
     {
         $notification->markAsRead();
         return response()->json(true);
-    }
-
-    public function test(Request $request)
-    {
-        return response()->json([
-            'name' => $request['file'],
-        ]);
     }
 
     public function responsibility(Request $request, Admin $staff): RedirectResponse

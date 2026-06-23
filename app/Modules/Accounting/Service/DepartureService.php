@@ -8,6 +8,7 @@ use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\DepartureProduct;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
@@ -25,8 +26,8 @@ class DepartureService extends AccountingService
 
     public function create(int $storage_id, int $customer_id = null): DepartureDocument
     {
-        /** @var Admin $manager */
-        $manager = Auth::guard('admin')->user();
+        /** @var Staff $manager */
+        $manager = auth()->user()->profileable;
         $departure = DepartureDocument::register($storage_id, $manager->id);
         if (is_null($customer_id)) {
             $trader = Trader::default();

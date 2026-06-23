@@ -34,7 +34,6 @@ class ExpenseController extends Controller
         CalendarService $calendar,
     )
     {
-        $this->middleware(['auth:admin', 'can:order']);
         $this->service = $service;
         $this->report = $report;
         $this->repository = $repository;

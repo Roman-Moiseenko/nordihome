@@ -23,8 +23,7 @@ class SurplusService extends AccountingService
 
     public function create_storage(int $storage_id, int $customer_id = null): SurplusDocument
     {
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $surplus = SurplusDocument::register($storage_id, $staff->id);
         if (is_null($customer_id)) {
             $trader = Trader::default();

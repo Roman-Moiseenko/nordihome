@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Analytics\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Order\Entity\Order\Order;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -62,7 +63,7 @@ class LoggerOrder extends Model
 
     public function staff(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
 
     public function order()

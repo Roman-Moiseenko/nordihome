@@ -22,10 +22,10 @@ class AppServiceProvider extends ServiceProvider
             return new Settings();
         });
   /*
-        if (!Auth::guard('user')->check()) {
+        if (!Auth::guard('web')->check()) {
             $userId = null;
         } else {
-            $userId = Auth::guard('user')->id();
+            $userId = Auth::guard('web')->id();
         }
 
         App::bind(HybridStorage::class, function () use ($userId) {

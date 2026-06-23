@@ -20,7 +20,7 @@ abstract class AuthCabinetController extends BaseController
     {
         $this->middleware(['auth:user']);
 
-        $this->user = Auth::guard('user')->user();
+        $this->user = Auth::guard('web')->user();
 
         $settings = app()->make(Settings::class);
         $this->web = $settings->web;

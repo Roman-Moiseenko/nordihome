@@ -7,6 +7,7 @@ if (config('shop.theme') != 'nordihome') return;
 
 Route::group(
     [
+        'middleware' => 'role:admin|staff',
         'prefix' => 'nordihome',
         'as' => 'nordihome.',
     ], function () {

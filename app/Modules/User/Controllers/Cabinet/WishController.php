@@ -27,7 +27,7 @@ class WishController extends AuthCabinetController
 
     public function index()
     {
-        $user_id = Auth::guard('user')->user()->id;
+        $user_id = Auth::guard('web')->user()->id;
         $products = Product::whereHas('wishes', function ($query) use ($user_id) {
             $query->where('user_id', $user_id);
         })->get();
@@ -38,7 +38,7 @@ class WishController extends AuthCabinetController
     public function toggle(Product $product)
     {
         /** @var User $user */
-        $user = Auth::guard('user')->user();
+        $user = Auth::guard('web')->user();
         $result = $this->service->toggle($user->id, $product->id);
         $products = $this->repository->getWish($user);
 
@@ -50,12 +50,12 @@ class WishController extends AuthCabinetController
 
     public function get()
     {
-        if (!Auth::guard('user')->check())
+        if (!Auth::guard('web')->check())
             return response()->json([
                 'items' => [],
             ]);
         /** @var User $user */
-        $user = Auth::guard('user')->user();
+        $user = Auth::guard('web')->user();
         $products = $this->repository->getWish($user);
         return response()->json([
             'items' => $products,
@@ -65,7 +65,7 @@ class WishController extends AuthCabinetController
     public function clear()
     {
         /** @var User $user */
-        $user = Auth::guard('user')->user();
+        $user = Auth::guard('web')->user();
         $this->service->clear($user->id);
 
         return response()->json(true);

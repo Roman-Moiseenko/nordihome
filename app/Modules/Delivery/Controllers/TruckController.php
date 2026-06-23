@@ -20,7 +20,6 @@ class TruckController extends Controller
 
     public function __construct(TruckService $service, TruckRepository $repository)
     {
-        $this->middleware(['auth:admin']);
         $this->service = $service;
         $this->repository = $repository;
     }

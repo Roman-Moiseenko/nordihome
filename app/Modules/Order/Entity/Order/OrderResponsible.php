@@ -5,6 +5,7 @@ namespace App\Modules\Order\Entity\Order;
 
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\Deprecated;
@@ -63,6 +64,6 @@ class OrderResponsible extends Model
 
     public function staff()
     {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
 }

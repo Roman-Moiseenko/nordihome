@@ -24,12 +24,12 @@ class HybridStorage implements StorageInterface
      */
     private function getStorage()
     {
-        $user_id = Auth::guard('user')->check() ? Auth::guard('user')->user()->id : null;
+        $user_id = Auth::guard('web')->check() ? Auth::guard('web')->user()->id : null;
         if (empty($this->storage)) {
             $cookieStorage = app()->make(CookieDBStorage::class);
             if (is_null($user_id)) {
                 $this->storage = $cookieStorage;
-                //throw new \DomainException('user_id - null' . Auth::guard('user')->user()->id . Auth::guard('user')->check());
+                //throw new \DomainException('user_id - null' . Auth::guard('web')->user()->id . Auth::guard('web')->check());
             } else {
                 $dbStorage = app()->make(DBStorage::class);
                 if ($cookieItems = $cookieStorage->load()) {

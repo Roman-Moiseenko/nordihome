@@ -18,7 +18,6 @@ class FormController extends Controller
 
     public function __construct(FormService $service, FormRepository $repository)
     {
-        $this->middleware(['auth:admin'])->except(['from_shop']);
         $this->service = $service;
         $this->repository = $repository;
     }

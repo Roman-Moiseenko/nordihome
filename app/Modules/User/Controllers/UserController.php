@@ -22,10 +22,9 @@ class UserController extends Controller
     private RegisterService $service;
     private UserRepository $repository;
 
+
     public function __construct(RegisterService $service, UserRepository $repository)
     {
-        $this->middleware(['auth:admin']);
-        $this->middleware(['can:user'])->except(['search_add']);
         $this->service = $service;
         $this->repository = $repository;
     }

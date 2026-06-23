@@ -7,8 +7,10 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Responsibility;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
+use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\ExpectedValues;
 
+#[Deprecated]
 class StaffRepository
 {
     public function getStaffsByCode(#[ExpectedValues(valuesFromClass: Responsibility::class)] int $code, bool $chief = false): array

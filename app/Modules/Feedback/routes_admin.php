@@ -5,9 +5,9 @@ use App\Modules\Feedback\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
+    'middleware' => 'role:admin|staff',
     'prefix' => 'feedback',
     'as' => 'feedback.',
-    //'namespace' => 'Feedback',
 ], function() {
 
     Route::group([

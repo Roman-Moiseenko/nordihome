@@ -23,7 +23,6 @@ class ProductController extends Controller
         CategoryRepository $categories,
     )
     {
-        $this->middleware(['auth:admin', 'can:order']);
         $this->staffs = $staffs;
         $this->products = $products;
         $this->categories = $categories;

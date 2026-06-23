@@ -25,7 +25,6 @@ class CategoryParserController extends Controller
         CategoryRepository $categoryRepository
     )
     {
-        $this->middleware(['auth:admin', 'can:product']);
         $this->repository = $repository;
         $this->service = $service;
         $this->categoryRepository = $categoryRepository;

@@ -26,7 +26,6 @@ class PageController extends Controller
         PageRepository     $repository,
     )
     {
-        $this->middleware(['auth:admin', 'can:options']);
         $this->service = $service;
         $this->templates = $templates;
         $this->repository = $repository;

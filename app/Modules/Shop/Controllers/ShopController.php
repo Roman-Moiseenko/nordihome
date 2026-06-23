@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Controllers;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
 use App\Modules\User\Entity\User;
@@ -15,17 +16,17 @@ abstract class ShopController extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
     public Web $web;
-    protected ?User $user;
+    protected ?Client $client;
 
     public function __construct()
     {
         $this->middleware(['guest', 'guest:user']);
-        if (Auth::guard('admin')->check()) Auth::logout();
+        if (auth()->check()) Auth::logout();
 
-        if (Auth::guard('user')->check()) {
-            $this->user = Auth::guard('user')->user();
+        if (Auth::guard('web')->check()) {
+            $this->client = auth()->user()->profileable;
         } else {
-            $this->user = null;
+            $this->client = null;
         }
 
         $settings = app()->make(Settings::class);

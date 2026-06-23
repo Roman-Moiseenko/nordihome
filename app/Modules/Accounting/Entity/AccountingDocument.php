@@ -3,6 +3,7 @@
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -190,7 +191,7 @@ abstract class AccountingDocument extends Model
     //RELATION...
     final public function staff(): BelongsTo
     {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
 
     abstract public function products(): HasMany;

@@ -17,7 +17,6 @@ class VATController extends Controller
 
     public function __construct(VATService $service)
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
     }
 

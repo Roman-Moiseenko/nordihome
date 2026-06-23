@@ -3,6 +3,7 @@
 namespace App\Modules\Notification\Service;
 
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Employee\Entity\Employee;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Helpers\NotificationHelper;
@@ -16,7 +17,7 @@ use JetBrains\PhpStorm\Deprecated;
 class NotificationService
 {
 
-    public function create(Request $request)
+    public function create(Request $request): void
     {
         $staff_ids = $request->input('staffs');
         $employee_ids = $request->input('employees');
@@ -26,8 +27,7 @@ class NotificationService
         }
 
         foreach ($staff_ids as $staff_id) {
-            /** @var Admin $staff */
-            $staff = Admin::find($staff_id);
+            $staff = Staff::find($staff_id);
             $staff->notify(
                 new StaffMessage(
                     event: NotificationHelper::EVENT_CHIEF,

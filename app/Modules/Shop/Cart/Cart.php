@@ -378,7 +378,7 @@ class Cart
 
     private function calcInfoBlock(array $items): CartInfoBlock
     {
-        $user = \Auth::guard('user')->user();
+        $user = \Auth::guard('web')->user();
 
         $result = new CartInfoBlock();
         /** @var CartItem[] $items */

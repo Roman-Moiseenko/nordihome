@@ -12,8 +12,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+use JetBrains\PhpStorm\Deprecated;
 use Symfony\Component\HttpFoundation\Response;
 
+#[Deprecated]
 class LoginController extends Controller
 {
 
@@ -123,7 +125,7 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        //if (Auth::guard('user')->check()) throw new \DomainException('Неверный тип пользователя'); //$this->guard('user')->logout();
+        //if (Auth::guard('web')->check()) throw new \DomainException('Неверный тип пользователя'); //$this->guard('user')->logout();
         if (Auth::guard('admin')->check()) {
             $this->guard()->logout();
 

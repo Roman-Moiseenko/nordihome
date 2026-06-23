@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
+        'middleware' => 'role:admin|staff',
         'prefix' => 'parser',
         'as' => 'parser.',
     ],

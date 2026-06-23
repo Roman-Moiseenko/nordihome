@@ -51,8 +51,7 @@ class SupplyService extends AccountingService
     //Создание пустого заказа
     public function createEmpty(Distributor $distributor): SupplyDocument
     {
-        /** @var Admin $manager */
-        $manager = Auth::guard('admin')->user();
+        $manager = auth()->user()->profileable;
         $supply = SupplyDocument::register(
             $distributor->id,
             $manager->id,
@@ -304,8 +303,7 @@ class SupplyService extends AccountingService
 
         if (!is_null($item->supply_stack_id )) throw new \DomainException('Позиция уже отправлена в заказ!');
 
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $stack = SupplyStack::register($item->product_id, $item->quantity, $staff->id, $storage_id, 'Заказ # ' . $item->order->htmlNum());
         $item->supply_stack_id = $stack->id;
         $item->save();

@@ -5,6 +5,7 @@ namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Casts\BankPaymentCast;
 use App\Modules\Base\Entity\BankPayment;
 use Carbon\Carbon;
@@ -177,7 +178,7 @@ class OrderPayment extends Model
 
     public function staff(): BelongsTo
     {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
 
     //Хелперы

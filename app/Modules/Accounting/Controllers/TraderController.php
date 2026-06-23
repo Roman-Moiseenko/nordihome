@@ -23,7 +23,6 @@ class TraderController extends Controller
 
     public function __construct(TraderService $service, TraderRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
         $this->repository = $repository;
     }

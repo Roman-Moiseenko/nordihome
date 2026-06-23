@@ -36,8 +36,6 @@ class MovementController extends Controller
         MovementReport     $report,
     )
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
-        $this->middleware(['auth:admin', 'can:admin-panel'])->only(['work', 'destroy']);
         $this->service = $service;
         $this->staffs = $staffs;
         $this->repository = $repository;

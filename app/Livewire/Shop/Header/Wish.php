@@ -17,7 +17,7 @@ class Wish extends Component
     public function mount()
     {
 
-        $this->user = (Auth::guard('user')->check()) ? Auth::guard('user')->user() : null;
+        $this->user = (Auth::guard('web')->check()) ? Auth::guard('web')->user() : null;
 
         $this->refresh_fields();
     }

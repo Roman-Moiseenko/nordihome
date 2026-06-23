@@ -22,8 +22,7 @@ class PricingService extends AccountingService
 
     public function create(int $arrival_id = null): PricingDocument
     {
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
 
         $pricing = PricingDocument::register($staff->id);
         if (!is_null($arrival_id)) {

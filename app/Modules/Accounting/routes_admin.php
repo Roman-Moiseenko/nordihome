@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(
     [
+        'middleware' => 'role:admin|staff',
         'prefix' => 'accounting',
         'as' => 'accounting.',
     ],

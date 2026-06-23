@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Service\MovementService;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\LoggerService;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Bank\Service\BankService;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
@@ -154,9 +155,9 @@ class OrderService
     {
         $enabled = true;
         $error = '';
-        if (Auth::guard('user')->check()) {
+        if (Auth::guard('web')->check()) {
             /** @var User $user */
-            $user = Auth::guard('user')->user();
+            $user = Auth::guard('web')->user();
         } else {
             throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
         }
@@ -254,9 +255,9 @@ class OrderService
        //dd($this->cart->getItems());
 
         DB::transaction(function () use ($request, &$order) {
-            if (Auth::guard('user')->check()) {
+            if (Auth::guard('web')->check()) {
                 /** @var User $user */
-                $user = Auth::guard('user')->user();
+                $user = Auth::guard('web')->user();
             } else {
                 throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
             }
@@ -296,9 +297,9 @@ class OrderService
     public function create_parser(): Order
     {
         DB::transaction(function () use (&$order) {
-            if (Auth::guard('user')->check()) {
+            if (Auth::guard('web')->check()) {
                 /** @var User $user */
-                $user = Auth::guard('user')->user();
+                $user = Auth::guard('web')->user();
             } else {
                 throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
             }
@@ -323,8 +324,8 @@ class OrderService
     public function create_click(Request $request)
     {
         DB::transaction(function () use ($request, &$order) {
-            if (Auth::guard('user')->check()) { //Проверяем клиент залогинен
-                $user = Auth::guard('user')->user();
+            if (Auth::guard('web')->check()) { //Проверяем клиент залогинен
+                $user = Auth::guard('web')->user();
             } else {
                 $email = $request->string('email')->trim()->value();
                 $user = User::where('email', $email)->first();
@@ -375,8 +376,8 @@ class OrderService
         DB::transaction(function () use (&$order, $user_id) {
             $order = $this->createOrder(type: Order::MANUAL); //Создаем пустой заказ
 
-            /** @var Admin $staff */
-            $staff = Auth::guard('admin')->user();
+
+            $staff = auth()->user()->profileable;
             $order->setStatus(OrderStatus::SET_MANAGER);
             $order->setManager($staff->id);
             $order->setUser($user_id);
@@ -394,8 +395,8 @@ class OrderService
     public function setManager(Order $order, int $staff_id): void
     {
         $old = $order->staff_id == null ? '' : $order->staff->fullname->getFullName();
-        /** @var Admin $staff */
-        $staff = Admin::find($staff_id);
+
+        $staff = Staff::find($staff_id);
         if (empty($staff)) throw new \DomainException('Менеджер под ID ' . $staff_id . ' не существует!');
         $order->setStatus(OrderStatus::SET_MANAGER);
         $order->setManager($staff->id);

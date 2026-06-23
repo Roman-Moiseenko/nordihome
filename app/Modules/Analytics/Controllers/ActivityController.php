@@ -8,6 +8,7 @@ use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\Entity\LoggerActivity;
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Analytics\Repository\ActivityRepository;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\UseCase\PaginationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -19,7 +20,6 @@ class ActivityController extends Controller
 
     public function __construct(ActivityRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:admin-panel']);
         $this->repository = $repository;
     }
 
@@ -27,7 +27,7 @@ class ActivityController extends Controller
     {
         $activities = $this->repository->getIndex($request, $filters);
 
-        $staffs = Admin::get()->toArray();
+        $staffs = Staff::get()->toArray();
         return Inertia::render('Analytics/Activity/Index', [
             'activities' => $activities,
             'filters' => $filters,

@@ -21,7 +21,7 @@ class ParserLogService
     {
         $log->read_at = now();
         $log->read = true;
-        $log->staff_id = \Auth::guard('admin')->user()->id;
+        $log->staff_id = auth()->user()->profileable->id;
         $log->save();
     }
 }

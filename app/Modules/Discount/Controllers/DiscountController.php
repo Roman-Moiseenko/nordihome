@@ -20,7 +20,6 @@ class DiscountController extends Controller
 
     public function __construct(DiscountService $service, DiscountRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:discount']);
         $this->service = $service;
         $this->repository = $repository;
     }

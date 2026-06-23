@@ -17,7 +17,6 @@ class MarkingTypeController extends Controller
 
     public function __construct(MarkingTypeService $service)
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
     }
 

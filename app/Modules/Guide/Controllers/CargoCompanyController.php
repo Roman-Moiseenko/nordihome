@@ -21,7 +21,6 @@ class CargoCompanyController extends Controller
 
     public function __construct(CargoCompanyService $service)
     {
-        $this->middleware(['auth:admin', 'can:accounting']);
         $this->service = $service;
     }
 

@@ -37,7 +37,7 @@ class OrderPaymentService
     public function createUnresolved(int $shopper_id, int $trader_id, float $amount, int $method): OrderPayment
     {
         $payment = OrderPayment::new($amount, $method);
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $payment->staff_id = $staff->id;
         $payment->shopper_id = $shopper_id;
         $payment->trader_id = $trader_id;
@@ -52,7 +52,7 @@ class OrderPaymentService
     public function create(Order $order, float $amount, int $method): OrderPayment
     {
         $payment = OrderPayment::new($amount, $method);
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $payment->staff_id = $staff->id;
         $order->payments()->save($payment);
 
@@ -106,7 +106,7 @@ class OrderPaymentService
 
         $debt = $order->getTotalAmount() - $order->getPaymentAmount();
         $payment = OrderPayment::new($debt, $_method);
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $payment->staff_id = $staff->id;
         $payment->manual = true;
         if ($payment->isCard()) $payment->commission = $this->commission_card;
@@ -118,7 +118,7 @@ class OrderPaymentService
     public function createYookassa(Order $order, string $id): OrderPayment
     {
         $payment = OrderPayment::new($order->getTotalAmount(), OrderPayment::METHOD_YOOKASSA);
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $payment->staff_id = $staff->id;
         $payment->manual = false;
         $payment->commission = $this->commission_yookassa;
@@ -195,7 +195,7 @@ class OrderPaymentService
         if (is_null($method)) throw new \DomainException('Не найдены платежи по заказу');
         $payment = OrderPayment::new($refund->amount(), $method);
 
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $payment->staff_id = $staff->id;
         $payment->is_refund = true; //Возврат
         $payment->manual = true; //В ручную

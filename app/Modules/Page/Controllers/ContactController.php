@@ -16,7 +16,6 @@ class ContactController extends Controller
 
     public function __construct(ContactService $service)
     {
-        $this->middleware(['auth:admin', 'can:options']);
         $this->service = $service;
     }
 

@@ -9,6 +9,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SurplusProduct;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Product\Entity\Product;
 use DB;
 use Illuminate\Http\Request;
@@ -28,8 +29,8 @@ class InventoryService extends AccountingService
 
     public function create(int $storage_id): InventoryDocument
     {
-        /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
+        /** @var Staff $staff */
+        $staff = auth()->user()->profileable;
         $storage = Storage::find($storage_id);
         $inventory = InventoryDocument::register($storage_id, $staff->id);
 /*

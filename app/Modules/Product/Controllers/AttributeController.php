@@ -39,7 +39,6 @@ class AttributeController extends Controller
         AttributeGroupRepository $groupRepository,
     )
     {
-        $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->groupService = $groupService;
         $this->categories = $categories;

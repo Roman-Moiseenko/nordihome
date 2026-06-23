@@ -36,7 +36,6 @@ class DeliveryController extends Controller
         DeliveryService $service,
     )
     {
-        $this->middleware(['auth:admin', 'can:delivery', 'can:order']);
         $this->expenseService = $expenseService;
         $this->repository = $repository;
         $this->calendarService = $calendarService;

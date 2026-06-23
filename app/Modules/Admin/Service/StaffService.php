@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class StaffService
 {
     public function register(Request $request): Admin
@@ -63,8 +65,7 @@ class StaffService
 
     public function blocking(Admin $admin): void
     {
-        /** @var Admin $current */
-        $current = Auth::guard('admin')->user();//Проверка на себя,
+        $current = auth()->user();//Проверка на себя,
         if ($current->id == $admin->id) {
             throw new \DomainException('Нельзя заблокировать самого себя');
         }

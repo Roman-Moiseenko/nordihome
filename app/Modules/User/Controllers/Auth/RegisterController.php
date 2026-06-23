@@ -30,7 +30,7 @@ class RegisterController extends Controller
 
     public function verify($token)
     {
-        if (!$user = Admin::where('verify_token', $token)->first()) {
+        if (!$user = User::where('verify_token', $token)->first()) {
             flash('Ошибка верификации', 'danger');
             return redirect()->route('login');
         }
@@ -74,7 +74,7 @@ class RegisterController extends Controller
      */
     protected function guard()
     {
-        return Auth::guard('user');
+        return Auth::guard('web');
     }
 
 

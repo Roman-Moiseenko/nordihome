@@ -19,7 +19,6 @@ class SeriesController extends Controller
 
     public function __construct(SeriesService $service, SeriesRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->repository = $repository;
     }

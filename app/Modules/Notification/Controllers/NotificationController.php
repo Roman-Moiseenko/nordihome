@@ -5,6 +5,7 @@ namespace App\Modules\Notification\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Worker;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Employee\Entity\Employee;
 use App\Modules\Notification\Entity\Notification;
 use App\Modules\Notification\Helpers\NotificationHelper;
@@ -32,13 +33,12 @@ class NotificationController extends Controller
 
     public function index(Request $request)
     {
-        /** @var Admin $admin */
-        $admin = Auth::guard('admin')->user();
+        $admin = auth()->user()->profileable;
         $notifications = $this->repository->getIndex($request, $filters);
 
         return Inertia::render('Notification/Notification/Index', [
                 'notifications' => $notifications,
-                'chief' => $admin->isAdmin() || $admin->isChief(),
+                'chief' => true, //$admin->isAdmin() || $admin->isChief(),
                 'filters' => $filters,
                 'events' => array_select(NotificationHelper::EVENTS),
             ]
@@ -53,7 +53,7 @@ class NotificationController extends Controller
 
     public function create(Request $request)
     {
-        $staffs = Admin::where('active', true)->get()->map(function (Admin $staff) {
+        $staffs = Staff::where('active', true)->get()->map(function (Staff $staff) {
             return [
                 'id' => $staff->id,
                 'telegram_id' => $staff->telegram_user_id,

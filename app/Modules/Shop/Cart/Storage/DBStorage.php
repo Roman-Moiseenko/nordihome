@@ -15,9 +15,9 @@ class DBStorage implements StorageInterface
 
     public function __construct()
     {
-        if (!Auth::guard('user')->check())
+        if (!Auth::guard('web')->check())
             throw new \DomainException('Неправильный вызов DBStorage, user == null');
-        $this->user_id = Auth::guard('user')->user()->id;
+        $this->user_id = Auth::guard('web')->user()->id;
     }
 
     /** @return CartItem[] */

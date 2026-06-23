@@ -13,9 +13,9 @@ class LoggerService
     public function logOrder(Order $order, string $action, $object = '', $value = '', $old = '', $link = null): void
     {
 
-        if (!Auth::guard('admin')->check()) return;
+        if (!auth()->check()) return;
         /** @var Admin $staff */
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $logger = LoggerOrder::register($order->id, $staff->id, $action, (string)$object, (string)$value, (string)$old, $link);
         if (empty($logger)) throw new \DomainException('Ошибка записи лога учета действий по Заказу');
     }

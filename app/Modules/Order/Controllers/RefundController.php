@@ -30,7 +30,6 @@ class RefundController extends Controller
         RefundRepository $repository,
     )
     {
-        $this->middleware(['auth:admin', 'can:refund']);
         $this->service = $service;
         $this->repository = $repository;
         $this->staffs = $staffs;

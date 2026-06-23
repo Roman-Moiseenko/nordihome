@@ -16,7 +16,7 @@ class OutboxService
 {
     public function create(Request $request): Outbox
     {
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         $outbox = Outbox::register($staff->id,
             $request->input('emails'),
             $request->string('subject')->trim()->value(),

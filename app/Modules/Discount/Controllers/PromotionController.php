@@ -23,7 +23,6 @@ class PromotionController extends Controller
         PromotionRepository $repository,
     )
     {
-        $this->middleware(['auth:admin', 'can:discount']);
         $this->service = $service;
         $this->repository = $repository;
     }

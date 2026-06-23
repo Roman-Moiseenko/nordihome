@@ -26,7 +26,7 @@ class OrderController extends AuthCabinetController
 
     public function index(): View
     {
-        $orders = Order::where('user_id', Auth::guard('user')->user()->id)->orderByDesc('updated_at')->get();
+        $orders = Order::where('user_id', Auth::guard('web')->user()->id)->orderByDesc('updated_at')->get();
         return view(
             $this->route('cabinet.order.index'),
             compact('orders')

@@ -34,7 +34,7 @@ class OptionsController extends AuthCabinetController
     public function subscription(Subscription $subscription): \Illuminate\Http\JsonResponse
     {
         /** @var User $user */
-        $user = Auth::guard('user')->user();
+        $user = Auth::guard('web')->user();
         $this->service->toggle($user, $subscription);
         return response()->json(true);
     }

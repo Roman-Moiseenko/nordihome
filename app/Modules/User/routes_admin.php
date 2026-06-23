@@ -8,6 +8,7 @@ use App\Modules\User\Controllers\WishController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
+    'middleware' => 'role:admin|staff',
     'prefix' => 'user',
     'as' => 'user.',
 ], function(){

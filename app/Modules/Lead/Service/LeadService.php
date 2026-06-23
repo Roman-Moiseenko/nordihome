@@ -75,7 +75,7 @@ class LeadService
 
         if ($lead->isNew()) {
             //$lead->setStaff(\Auth::guard('admin')->user()->id);
-            $lead->staff_id = \Auth::guard('admin')->user()->id;
+            $lead->staff_id = auth()->user()->profileable->id;
             $lead->setStatus($newStatus);
             $lead->save();
             $lead->refresh();
@@ -145,7 +145,7 @@ class LeadService
     public function work(Lead $lead): void
     {
         $lead->setStatus(LeadStatus::STATUS_IN_WORK);
-        $staff = \Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
         if (!is_null($staff)) $lead->staff_id = $staff->id;
         $lead->save();
     }

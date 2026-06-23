@@ -7,6 +7,7 @@ use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\Entity\LoggerOrder;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Lead\Entity\Lead;
@@ -658,7 +659,7 @@ class Order extends Model
 
     public function staff(): BelongsTo
     {
-        return $this->belongsTo(Admin::class, 'staff_id', 'id');
+        return $this->belongsTo(Staff::class, 'staff_id', 'id');
     }
 
     public function expenses(): HasMany

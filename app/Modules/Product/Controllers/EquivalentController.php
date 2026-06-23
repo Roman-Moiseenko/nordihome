@@ -33,7 +33,6 @@ class EquivalentController extends Controller
         CategoryRepository   $categories,
         )
     {
-        $this->middleware(['auth:admin', 'can:product']);
         $this->service = $service;
         $this->repository = $repository;
         $this->categories = $categories;

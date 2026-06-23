@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class CreateCommand extends Command
 {
-    protected $signature = 'admin:create {name}';
+    protected $signature = 'admin_old:create {name}';
     protected $description = 'Command description';
 
     public function handle()

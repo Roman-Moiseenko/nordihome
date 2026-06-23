@@ -57,8 +57,8 @@ class OrderController extends ShopController
     public function create(Request $request): \Illuminate\View\View
     {
 
-        if (Auth::guard('user')->check()) {
-            $user_id = Auth::guard('user')->user()->id;
+        if (Auth::guard('web')->check()) {
+            $user_id = Auth::guard('web')->user()->id;
         } else {
             throw new \DomainException('Доступ ограничен');
         }
@@ -99,8 +99,8 @@ class OrderController extends ShopController
 
     public function create_parser(Request $request)
     {
-        if (Auth::guard('user')->check()) {
-            $user_id = Auth::guard('user')->user()->id;
+        if (Auth::guard('web')->check()) {
+            $user_id = Auth::guard('web')->user()->id;
         } else {
             throw new \DomainException('Доступ ограничен');
         }
@@ -149,7 +149,7 @@ class OrderController extends ShopController
 
         public function index(Request $request)
         {
-            $orders = Order::where('user_id', Auth::guard('user')->user()->id)->orderByDesc('updated_at')->get();
+            $orders = Order::where('user_id', Auth::guard('web')->user()->id)->orderByDesc('updated_at')->get();
             return view('shop.order.index', compact('orders'));
         }
     */

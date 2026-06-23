@@ -6,6 +6,7 @@ namespace App\Modules\Order\Service;
 use App\Modules\Accounting\Service\BatchSaleService;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\LoggerService;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderExpenseRefundAddition;
@@ -29,8 +30,8 @@ class RefundService
     public function create(OrderExpense $expense, $request): OrderExpenseRefund
     {
         DB::transaction(function () use ($expense, $request, &$refund) {
-            /** @var Admin $staff */
-            $staff = Auth::guard('admin')->user();
+            /** @var Staff $staff */
+            $staff = auth()->user()->profileable;
 
             $refund = OrderExpenseRefund::register($expense->id, $staff->id, $request->input('reason'));
 

@@ -15,7 +15,7 @@ class PaymentDocumentService extends AccountingService
 {
     public function create(int $recipient_id, int $payer_id, float $amount): PaymentDocument
     {
-        $staff = Auth::guard('admin')->user();
+        $staff = auth()->user()->profileable;
 
         return PaymentDocument::register(
             $recipient_id, //Получатель

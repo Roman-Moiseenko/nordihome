@@ -14,7 +14,6 @@ class TemplateController extends Controller
 
     public function __construct(TemplateService $service, TemplateRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:options']);
         $this->service = $service;
         $this->repository = $repository;
     }
