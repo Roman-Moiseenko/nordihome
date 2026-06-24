@@ -6,7 +6,6 @@ namespace App\Modules\Shop\Controllers;
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
-use App\Modules\User\Entity\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;

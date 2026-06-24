@@ -15,7 +15,7 @@ class StaffIndexData extends Data
         #[Required, IntegerType]
         public int $id,
         public readonly string $fullName,
-        public readonly string $position,
+        public readonly array $positions,
         public readonly ?string $department = null,
         public readonly ?string $workPhone = null,
         public readonly ?string $workEmail = null,
@@ -28,7 +28,7 @@ class StaffIndexData extends Data
         return new self(
             $staff->id,
             $staff->fullName->getValue(),
-            $staff->position,
+            $staff->positions->toArrayOfStrings(),
             $staff->department,
             $staff->workPhone,
             $staff->workEmail,

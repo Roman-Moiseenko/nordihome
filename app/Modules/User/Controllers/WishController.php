@@ -17,7 +17,6 @@ class WishController extends Controller
 
     public function __construct(WishRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:order']);
         $this->repository = $repository;
     }
 

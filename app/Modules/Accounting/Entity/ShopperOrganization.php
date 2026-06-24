@@ -2,14 +2,14 @@
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\User\Entity\User;
+use App\Modules\Auth\Infrastructure\Models\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $user_id
  * @property int $organization_id
  * @property boolean $default
- * @property User $user
+ * @property Client $client
  * @property Organization $organization
  */
 class ShopperOrganization extends Model
@@ -22,7 +22,7 @@ class ShopperOrganization extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Client::class);
     }
 
     public function organization(): BelongsTo

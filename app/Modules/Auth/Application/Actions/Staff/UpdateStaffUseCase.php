@@ -8,6 +8,7 @@ use App\Modules\Auth\Domain\Entities\StaffEntity;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
+use App\Modules\Auth\Domain\ValueObjects\StaffPositions;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use DateTimeImmutable;
@@ -35,7 +36,7 @@ readonly class UpdateStaffUseCase
             $dto->middleName,
         ])));
         $staff->fullName = $fullName;
-        $staff->position = $dto->position;
+        $staff->positions = new StaffPositions($dto->positions);
         $staff->department = $dto->department;
         $staff->workPhone = $dto->workPhone ? new PhoneNumber($dto->workPhone) : null;
         $staff->personalPhone = $dto->personalPhone ? new PhoneNumber($dto->personalPhone) : null;

@@ -29,11 +29,11 @@ class SendSystemMail implements ShouldQueue
 
 
     public function __construct(
-        Admin|User $user,
+        Admin|User       $user,
         AbstractMailable $mail,
-        string $systemable_type = null,
-        int|null $systemable_id = null,
-        array $emails = [])
+        string           $systemable_type = null,
+        int|null         $systemable_id = null,
+        array            $emails = [])
     {
         $this->user = $user;
         $this->mail = $mail;

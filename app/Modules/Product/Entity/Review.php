@@ -20,7 +20,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $status
  * @property Carbon $created_at
  * @property Carbon $updated_at
-
  * @property \App\Modules\Base\Entity\Video $video
  * @property DiscountReview $discount
  *

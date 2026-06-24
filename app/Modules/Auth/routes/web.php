@@ -61,16 +61,17 @@ Route::group([
         Route::middleware(['role:admin|staff'])->group(function () {
             //Route::get('/user', [AuthController::class, 'profile']);
             //Сотрудники Staff
-            Route::apiResource('staff', StaffController::class);
+            Route::get('staff/positions', [StaffController::class, 'positions'])->name('staff.positions');
+            Route::get('permission/grouped', [RoleController::class, 'permissions'])->name('role.permissions');
+            Route::Resource('staff', StaffController::class);
             Route::post('/staff/{id}/user', [StaffController::class, 'user']);
 
             //Внештатные сотрудники Freelance
-            Route::apiResource('freelance', FreelanceController::class);
+            Route::Resource('freelance', FreelanceController::class);
             Route::post('/freelance/{id}/user', [FreelanceController::class, 'user']);
 
             //Управление ролями
-            Route::apiResource('role', RoleController::class)->except(['create', 'edit']);
-            Route::get('permission/grouped', [RoleController::class, 'permissions']);
+            Route::Resource('role', RoleController::class)->except(['create', 'edit']);
         });
     });
 });

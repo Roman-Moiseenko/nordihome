@@ -29,7 +29,7 @@ class FormService
                 $email = $request->string('email')->trim()->value();
                 $user = User::where('email', $email)->first();
                 if (!is_null($user)) {
-                    $form->lead->user_id = $user->id;
+                    $form->lead->client_id = $user->id;
                     $form->lead->save();
                 }
             }

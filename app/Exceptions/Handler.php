@@ -50,6 +50,21 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
+        // Исключение модуля Auth и других бизнес-исключений
+        // Обрабатываем ДО parent::render(), чтобы при APP_DEBUG=true
+        // не показывался debug-трейс, а делался редирект с ошибкой
+        if ($e instanceof \DomainException) {
+            if ($request->inertia()) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+
+            if ($request->ajax() || $request->expectsJson()) {
+                return \response()->json(['error' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine(), 'type' => 'error']);
+            }
+
+            return redirect()->back()->with('error', $e->getMessage());
+        }
+
         $shop_errors = 'shop.errors.';
 
         $response = parent::render($request, $e);
@@ -60,12 +75,12 @@ class Handler extends ExceptionHandler
                 if ($response->status() == 403) return redirect()->back()->with('error', 'Отказано в доступе');
                 if ($response->status() > 500) {
                     if (config('app.debug')) {
-                        return $response;
+        return $response;
                     } else {
                         event(new ThrowableHasAppeared($e));
                         return redirect()->back()->with('error', 'Непредвиденная ошибка');
-                    }
-                }
+    }
+}
 
                 if ($response->status() == 404) return Inertia::render('Error', ['status' => 404])
                     ->toResponse($request)
@@ -95,7 +110,8 @@ class Handler extends ExceptionHandler
         }
 
 
-        //Исключение CRM
+        // Исключение CRM - дублируем на случай, если не сработал блок в начале
+        // (например, для не-Inertia запросов)
         if ($e instanceof \DomainException) {
             if ($request->inertia()) {
                 return redirect()->back()->with('error', $e->getMessage());

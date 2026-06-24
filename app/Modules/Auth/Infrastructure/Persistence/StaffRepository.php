@@ -6,6 +6,8 @@ use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\StaffEntity;
 use App\Modules\Auth\Domain\Entities\UserEntity;
 use App\Modules\Auth\Domain\ValueObjects\HashedPassword;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+use App\Modules\Auth\Domain\ValueObjects\StaffPositions;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
@@ -25,7 +27,7 @@ class StaffRepository implements StaffRepositoryInterface
         $model->last_name = $staff->fullName->getLastName();
         $model->first_name = $staff->fullName->getFirstName();
         $model->middle_name = $staff->fullName->getMiddleName();
-        $model->position = $staff->position;
+        $model->positions = $staff->positions->toArrayOfStrings();
         $model->department = $staff->department;
         $model->work_phone = $staff->workPhone;
         $model->personal_phone = $staff->personalPhone;
@@ -78,9 +80,10 @@ class StaffRepository implements StaffRepositoryInterface
     {
 
         $fullName = new FullName($model->full_name); // предполагаем, что FullName умеет парсить строку
+        $positions = new StaffPositions($model->positions ?? []);
         $staff = new StaffEntity(
             $fullName,
-            $model->position,
+            $positions,
         );
         $staff->id = $model->id;
 

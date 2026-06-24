@@ -3,6 +3,7 @@
 namespace App\Modules\Auth\Application\DTOs\Staff;
 
 use App\Modules\Auth\Domain\Entities\StaffEntity;
+use Spatie\LaravelData\Attributes\Validation\ArrayType;
 use Spatie\LaravelData\Attributes\Validation\BooleanType;
 use Spatie\LaravelData\Attributes\Validation\Date;
 use Spatie\LaravelData\Attributes\Validation\Email;
@@ -19,8 +20,8 @@ class StaffUpdateData extends Data
         public readonly string $lastName,
         #[Required, StringType, Max(255)]
         public readonly string $firstName,
-        #[Required, StringType, Max(255)]
-        public readonly string $position,
+        #[Required, ArrayType]
+        public readonly array $positions,
         #[Nullable, StringType, Max(255)]
         public readonly ?string $middleName = null,
         #[Nullable, StringType, Max(255)]
@@ -50,8 +51,8 @@ class StaffUpdateData extends Data
         return new self(
             $staff->fullName->getLastName(),
             $staff->fullName->getFirstName(),
+            $staff->positions->getPositions(),
             $staff->fullName->getMiddleName(),
-            $staff->position,
             $staff->department,
             $staff->workPhone,
             $staff->personalPhone,

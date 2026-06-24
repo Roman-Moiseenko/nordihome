@@ -19,6 +19,7 @@ use App\Modules\Auth\Application\DTOs\User\UpdateUserData;
 use App\Modules\Auth\Application\DTOs\User\UserViewData;
 use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\RoleName;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -41,28 +42,33 @@ class StaffController extends Controller
     {
     }
 
-    public function index(UserPermission $userPermission): \Inertia\Response
+    public function index(Request $request, UserPermission $userPermission): \Inertia\Response
     {
+        //TODO Сделать filters
         $staffs = $this->indexStaffUseCase->execute($userPermission);
-        return Inertia::render('Admin/Staff/Index', [
+        return Inertia::render('Auth/Staff/Index', [
             'staffs' => StaffIndexData::collect($staffs),
             'filters' => [],
-            'roles' => array_select(RoleName::BASE),
         ]);
 
         //return response()->json(StaffIndexData::collect($staffs), Response::HTTP_CREATED);
     }
 
-    public function show(int $id, UserPermission $userPermission): JsonResponse
+    public function show(int $id, UserPermission $userPermission): \Inertia\Response
     {
         $staff = $this->viewStaffUseCase->execute($id, $userPermission);
-        return response()->json(StaffViewData::fromEntity($staff), Response::HTTP_CREATED);
+
+        return Inertia::render('Auth/Staff/Show', [
+            'staff' => StaffViewData::fromEntity($staff),
+        ]);
+
+        // return response()->json(StaffViewData::fromEntity($staff), Response::HTTP_CREATED);
     }
 
     /**
      * @throws \Throwable
      */
-    public function store(Request $request, UserPermission $userPermission): JsonResponse
+    public function store(Request $request, UserPermission $userPermission)
     {
         try {
             $dto = StaffCreateData::validateAndCreate($request->all());
@@ -71,7 +77,7 @@ class StaffController extends Controller
         }
 
         $staffDTO = $this->createStaffUseCase->execute($dto, $userPermission);
-        return response()->json(StaffViewData::fromEntity($staffDTO), Response::HTTP_CREATED);
+        return redirect()->route('admin.staff.show', $staffDTO->id);
     }
 
     /**
@@ -116,6 +122,11 @@ class StaffController extends Controller
             $userOut = $this->updateUserUseCase->execute($id, $dto, $userPermission);
         }
         return response()->json(UserViewData::fromEntity($userOut), Response::HTTP_OK);
+    }
+
+    public function positions()
+    {
+        return response()->json(array_select(StaffPosition::positions()), Response::HTTP_OK);
     }
 
 }

@@ -3,10 +3,13 @@
 namespace App\Modules\Lead\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Auth\Application\Actions\Client\CreateClientUseCase;
+use App\Modules\Auth\Application\DTOs\Client\ClientCreateData;
 use App\Modules\Lead\Entity\Lead;
 use App\Modules\Lead\Entity\LeadStatus;
 use App\Modules\Lead\Repository\LeadRepository;
 use App\Modules\Lead\Service\LeadService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,7 +20,11 @@ class LeadController extends Controller
     private LeadService $service;
     private LeadRepository $repository;
 
-    public function __construct(LeadService $service, LeadRepository $repository)
+    public function __construct(
+        LeadService $service,
+        LeadRepository $repository,
+        private CreateClientUseCase $createClientUseCase
+    )
     {
         $this->service = $service;
         $this->repository = $repository;
@@ -78,9 +85,19 @@ class LeadController extends Controller
         return redirect()->back()->with('success', 'Заявка завершена!');
     }*/
 
-    public function create_user(Lead $lead, Request $request): RedirectResponse
+    public function create_user(Lead $lead, Request $request, UserPermission $permissions): RedirectResponse
     {
-        $this->service->createUser($lead, $request);
+        //TODO Переделать передачу полей под DTO
+        $dto = new ClientCreateData(
+            lastName: $request->string('surname')->trim()->value(),
+            firstName: $request->string('firstname')->trim()->value(),
+            email: $request->string('email')->trim()->value(),
+            middleName: $request->string('secondname')->trim()->value(),
+            phone: $request->string('phone')->trim()->value(),
+        );
+        $client = $this->createClientUseCase->execute($dto, $permissions);
+
+        $this->service->createUser($lead, $client);
         return redirect()->back()->with('success', 'Обновлено!');
     }
 

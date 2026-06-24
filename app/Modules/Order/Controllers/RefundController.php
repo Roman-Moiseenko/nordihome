@@ -18,7 +18,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class RefundController extends Controller
+class   RefundController extends Controller
 {
     private RefundService $service;
     private RefundRepository $repository;

@@ -7,6 +7,7 @@ use App\Modules\Auth\Application\Actions\User\RegisterAdminUseCase;
 use App\Modules\Auth\Application\DTOs\AdminData;
 use App\Modules\Auth\Application\DTOs\Staff\StaffCreateData;
 use App\Modules\Auth\Domain\Exceptions\UserAlreadyExistsException;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use Illuminate\Console\Command;
 
 class AdminCreateCommand extends Command
@@ -49,7 +50,7 @@ class AdminCreateCommand extends Command
                     ]
                 ]
             );
-            $dto = new StaffCreateData(lastName: "Admin", firstName: "Admin", position: "Admin");
+            $dto = new StaffCreateData(lastName: "Admin", firstName: "Admin", positions: [StaffPosition::ADMINISTRATOR]);
             $this->staffUseCase->execute($dto, null);
             return self::SUCCESS;
         } catch (UserAlreadyExistsException $e) {

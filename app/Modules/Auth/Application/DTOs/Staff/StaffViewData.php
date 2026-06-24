@@ -15,11 +15,11 @@ class StaffViewData extends Data
 {
     public function __construct(
         #[Required, IntegerType]
-        public int $id,
-        public readonly string $lastName,
-        public readonly string $firstName,
-        public readonly ?string $middleName = null,
-        public readonly string $position,
+        public int                    $id,
+        public readonly string        $lastName,
+        public readonly string        $firstName,
+        public readonly ?string       $middleName = null,
+        public readonly array         $positions,
         public readonly ?string       $department = null,
         public readonly ?string       $workPhone = null,
         public readonly ?string       $personalPhone = null,
@@ -31,7 +31,9 @@ class StaffViewData extends Data
         public readonly ?string       $notes = null,
         public readonly bool          $terminated = false,
         public readonly ?UserViewData $user = null,
-    ) {}
+    )
+    {
+    }
 
     public static function fromEntity(StaffEntity $staff): self
     {
@@ -40,7 +42,7 @@ class StaffViewData extends Data
             $staff->fullName->getLastName(),
             $staff->fullName->getFirstName(),
             $staff->fullName->getMiddleName(),
-            $staff->position,
+            $staff->positions->toArrayOfStrings(),
             $staff->department,
             $staff->workPhone,
             $staff->personalPhone,

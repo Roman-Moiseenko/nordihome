@@ -239,7 +239,7 @@ class Organization extends Model
             User::class,
             ShopperOrganization::class,
             'organization_id', 'id', 'id',
-            'user_id');
+            'client_id');
 
         //return $this->hasOne(User::class, 'organization_id', 'id');
     }

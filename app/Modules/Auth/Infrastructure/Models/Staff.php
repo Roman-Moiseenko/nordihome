@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string $last_name
  * @property string $first_name
  * @property string $middle_name
- * @property string $position
+ * @property array $positions
  * @property string $department
  * @property string $fullName
  * @property string $notes
@@ -43,6 +43,7 @@ class Staff extends Model
         'hire_date' => 'date',
         'termination_date' => 'date',
         'birth_date' => 'date',
+        'positions' => 'array',
     ];
 
     /**

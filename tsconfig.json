@@ -1,3 +1,23 @@
 {
-
+  "compilerOptions": {
+    "target": "ES2015",
+    "module": "ESNext",
+    "lib": ["ES2015", "DOM"],
+    "moduleResolution": "node",
+    "strict": false,
+    "jsx": "preserve",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["resources/js/*"],
+      "@Page/*": ["resources/js/Pages/*"],
+      "@Comp/*": ["resources/js/VueComponents/*"],
+      "@Res/*": ["resources/js/Resources/*"]
+    }
+  },
+  "include": ["resources/js/**/*.ts", "resources/js/**/*.vue"]
 }

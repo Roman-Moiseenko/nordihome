@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Repository;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\User\Entity\Subscription;
-use App\Modules\User\Entity\User;
 use App\Modules\User\Entity\Wish;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
@@ -20,7 +20,7 @@ class UserRepository
 
     public function getIndex(Request $request, &$filters): Arrayable
     {
-        $query = User::orderByDesc('id');
+        $query = Client::orderByDesc('id');
         $filters = [];
         if (($name = $request->string('name')) != '') {
             $filters['name'] = $name;
@@ -49,11 +49,11 @@ class UserRepository
 
         return $query->paginate($request->input('size', 20))
             ->withQueryString()
-            ->through(fn(User $user) => $this->UserToArray($user));
+            ->through(fn(Client $user) => $this->UserToArray($user));
 
     }
 
-    public function UserToArray(User $user): array
+    public function UserToArray(Client $user): array
     {
 
         return array_merge($user->toArray(), [
@@ -68,7 +68,7 @@ class UserRepository
         ]);
     }
 
-    public function UserWithToArray(User $user, Request $request): array
+    public function UserWithToArray(Client $user, Request $request): array
     {
         return array_merge($this->UserToArray($user), [
             'organizations' => $user->organizations,
@@ -101,7 +101,7 @@ class UserRepository
         ]);
     }
 
-    public function getWish(User $user): array
+    public function getWish(Client $user): array
     {
         return array_map(function (Wish $wish) {
             return [
@@ -119,7 +119,7 @@ class UserRepository
     {
         $subscription = Subscription::where('listener', $class)->first();
 
-        return User::where('active', true)->whereHas('subscriptions', function ($query) use ($subscription) {
+        return Client::where('active', true)->whereHas('subscriptions', function ($query) use ($subscription) {
             $query->where('subscription_id', $subscription->id);
         })->getModels();
     }
@@ -127,8 +127,8 @@ class UserRepository
     #[ArrayShape(['last' => "string", 'count' => "int", 'amount' => "string"])]
     public function getOrderData(int $id): array
     {
-        /** @var User $user */
-        $user = User::find($id);
+        /** @var Client $user */
+        $user = Client::find($id);
 
         if (is_null($user->getLastOrder())) {
             $last = '<span class="text-slate-500  text-xs p-1 mt-0.5 rounded-full text-white bg-secondary" > нет</span >';
@@ -148,13 +148,13 @@ class UserRepository
         ];
     }
 
-    public function findOrCreate(string $phone = null, string $email = null): User
+    public function findOrCreate(string $phone = null, string $email = null): Client
     {
         if (empty($phone) && empty($email)) throw new \DomainException('Должен быть заполнен хотя бы один параметр');
 
         if (!empty($phone)) {
-            if (is_null($user = User::where('phone', $phone)->get())) {
-                $user = User::create([
+            if (is_null($user = Client::where('phone', $phone)->get())) {
+                $user = Client::create([
                     'phone' => $phone,
                     'email' => $email,
                     'password' => Str::random(8),
@@ -165,8 +165,8 @@ class UserRepository
 
         if (!empty($email)) {
 
-            if (is_null($user = User::where('email', $email)->get())) {
-                $user = User::create([
+            if (is_null($user = Client::where('email', $email)->get())) {
+                $user = Client::create([
                     'phone' => $phone,
                     'email' => $email,
                     'password' => Str::random(8),
@@ -205,7 +205,7 @@ class UserRepository
 
     public function search(string $value): Arrayable
     {
-        $query = User::where('phone', 'like', "%$value%")
+        $query = Client::where('phone', 'like', "%$value%")
             ->orWhere('email', 'like', "%$value%")
             ->orWhereRaw("LOWER(fullname) like LOWER('%$value%')")
             ->orWhereHas('organizations', function ($query) use ($value) {
@@ -219,7 +219,7 @@ class UserRepository
                     });
             });
 
-        return $query->get()->map(function (User $user) {
+        return $query->get()->map(function (Client $user) {
             return array_merge($user->toArray(), [
                 'public_name' => $user->getPublicName(),
             ]);

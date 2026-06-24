@@ -100,6 +100,18 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->dontReportDuplicates();
+
+        $exceptions->render(function (\DomainException $e, \Illuminate\Http\Request $request) {
+            if ($request->inertia()) {
+                return redirect()->back()->with('error', $e->getMessage());
+            }
+
+            if ($request->ajax() || $request->expectsJson()) {
+                return response()->json(['error' => $e->getMessage()], 422);
+            }
+
+            return redirect()->back()->with('error', $e->getMessage());
+        });
     })
     ->withSchedule(function (Schedule $schedule) {
         $schedule->command('cron:promotion')->dailyAt('00:01');

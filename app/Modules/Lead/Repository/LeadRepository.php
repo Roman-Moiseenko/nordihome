@@ -71,11 +71,11 @@ class LeadRepository
         return array_merge($lead->toArray(), [
             'type' => $lead->getType(),
             'status' => $lead->status->value,
-            'user' => is_null($lead->user) ? null : [
-                'id' => $lead->user->id,
-                'fullname' => $lead->user->fullname,
-                'email' => $lead->user->email,
-                'phone' => $lead->user->phone,
+            'user' => is_null($lead->client) ? null : [
+                'id' => $lead->client->id,
+                'fullname' => $lead->client->fullname,
+                'email' => $lead->client->email,
+                'phone' => $lead->client->phone,
             ],
             'order' => $this->OrderToArray($lead->order),
             'items' => $lead->items()->get()->toArray(),
@@ -129,7 +129,7 @@ class LeadRepository
         }
         if (empty($email) && empty($phone)) return [];
 
-        return Lead::where('user_id', null)->where(function ($query) use ($email, $phone) {
+        return Lead::where('client_id', null)->where(function ($query) use ($email, $phone) {
             if (empty($email)) {
                 $query->where('data', 'LIKE', "%$phone%");
             } else {

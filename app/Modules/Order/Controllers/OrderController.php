@@ -61,6 +61,8 @@ class OrderController extends Controller
     public function index(Request $request): Response
     {
         $orders = $this->repository->getIndex($request, $filters);
+
+        //MAIN Получить список сотрудников через UseCase -
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
 
         return Inertia::render('Order/Order/Index', [

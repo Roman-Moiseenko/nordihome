@@ -21,7 +21,6 @@ class CartController extends Controller
 
     public function __construct(CartRepository $repository)
     {
-        $this->middleware(['auth:admin', 'can:order']);
         $this->repository = $repository;
     }
 

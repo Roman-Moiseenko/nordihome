@@ -351,7 +351,7 @@ class User extends Authenticatable
 
     public function leads(): HasMany
     {
-        return $this->hasMany(Lead::class, 'user_id', 'id');
+        return $this->hasMany(Lead::class, 'client_id', 'id');
     }
 
     //*** Хелперы

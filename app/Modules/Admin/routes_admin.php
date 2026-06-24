@@ -7,7 +7,7 @@ use App\Modules\Admin\Controllers\StaffController;
 use App\Modules\Admin\Controllers\WorkerController;
 use Illuminate\Support\Facades\Route;
 
-
+/*
 Route::group([
     'prefix' => 'staff',
     'as' => 'staff.',
@@ -21,6 +21,8 @@ Route::group([
     //Route::post('/photo/{staff}', [StaffController::class, 'setPhoto'])->name('photo');
  //   Route::post('/responsibility/{staff}', [StaffController::class, 'responsibility'])->name('responsibility');
 });
+//Route::resource('staff', 'StaffController',); //CRUD
+*/
 Route::group([
     'prefix' => 'worker',
     'as' => 'worker.',
@@ -29,7 +31,7 @@ Route::group([
     Route::post('/update/{worker}', [WorkerController::class, 'update'])->name('update');
 });
 
-//Route::resource('staff', 'StaffController',); //CRUD
+
 Route::resource('worker', 'WorkerController')->except(['create', 'edit', 'update']); //CRUD
 
 //Настройки

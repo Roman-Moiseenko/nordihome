@@ -1,8 +1,8 @@
 <?php
 
 namespace App\Modules\Lead\Service;
+use App\Modules\Auth\Domain\Entities\ClientEntity;
 
-use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Feedback\Entity\FormBack;
 use App\Modules\Lead\Entity\Lead;
 use App\Modules\Lead\Entity\LeadItem;
@@ -11,20 +11,17 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Service\OrderService;
-use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\Deprecated;
 
 class LeadService
 {
 
-    private OrderService $orderService;
-
-    public function __construct(OrderService $orderService)
+    public function __construct(
+        private OrderService $orderService)
     {
-        $this->orderService = $orderService;
+
     }
 
     public function createLeadFromForm(FormBack $form): void
@@ -34,17 +31,7 @@ class LeadService
         $form->createLead($form->data());
         //TODO Вытащить из $form->data()  email и name
 
-        /*
-         if ($request->has('email')) {
-             $email = $request->string('email')->trim()->value();
-             $user = User::where('email', $email)->first();
-             $form->lead->user_id = $user->id;
-             $form->lead->save();
-         } else if ($request->has('name')) {
-             $form->lead->name = $request->string('name')->trim()->value();
-             $form->lead->save();
-         }
-         */
+
 
     }
 
@@ -54,7 +41,7 @@ class LeadService
         $data = [];
         $order->lead->create_lead($data);
         $order->lead->order_id = $order->id;
-        $order->lead->user_id = $order->user_id;
+        $order->lead->client_id = $order->user_id;
         $order->lead->save();
 
         //Если есть менеджер ф-ция create_sales()
@@ -74,7 +61,6 @@ class LeadService
         if (!$this->checkStatus($lead, $newStatus)) return false;
 
         if ($lead->isNew()) {
-            //$lead->setStaff(\Auth::guard('admin')->user()->id);
             $lead->staff_id = auth()->user()->profileable->id;
             $lead->setStatus($newStatus);
             $lead->save();
@@ -237,25 +223,15 @@ class LeadService
         $lead->save();
     }
 
-    public function createUser(Lead $lead, Request $request): void
+    public function createUser(Lead $lead, ClientEntity $client): void
     {
-        $user = User::new(
-            $request->string('email')->trim()->value(),
-            $request->string('phone')->trim()->value()
-        );
-        $user->setNameField(
-            $request->string('surname')->trim()->value(),
-            $request->string('firstname')->trim()->value(),
-            $request->string('secondname')->trim()->value(),
-
-        );
-        $lead->user_id = $user->id;
+        $lead->client_id = $client->id;
         $lead->save();
     }
 
     public function createOrder(Lead $lead, Request $request): Order
     {
-        $order = $this->orderService->createOrder($lead->user_id);
+        $order = $this->orderService->createOrder($lead->client_id);
         $order->setStatus(OrderStatus::SET_MANAGER);
         $order->setManager($lead->staff_id);
         $lead->order_id = $order->id;

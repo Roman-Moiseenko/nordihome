@@ -2,6 +2,7 @@
 
 namespace App\Modules\Lead\Entity;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Feedback\Casts\DataFieldFeedbackCasts;
 use App\Modules\Feedback\Classes\DataFieldFeedback;
 use App\Modules\Feedback\Entity\FormBack;
@@ -18,7 +19,7 @@ use JetBrains\PhpStorm\ExpectedValues;
 /**
  * @property int $id
  * @property int $staff_id
- * @property int $user_id
+ * @property int $client_id
  * @property int $order_id
  * @property int $leadable_id
  * @property string $leadable_type
@@ -27,7 +28,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property LeadStatus[] $statuses
  * @property LeadStatus $status
  * @property DataFieldFeedback[] $data
- * @property User $user
+ * @property Client $client
  * @property Order $order
  * @property string $comment
  * @property string $name
@@ -44,7 +45,7 @@ class Lead extends Model
     const int CANCELED_ORDER_MANAGER = 101;
 
     protected $fillable = [
-        'user_id',
+        'client_id',
         'order_id',
     ];
     protected $attributes = [
@@ -99,7 +100,7 @@ class Lead extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class, 'client_id', 'id');
     }
 
     public function order(): BelongsTo

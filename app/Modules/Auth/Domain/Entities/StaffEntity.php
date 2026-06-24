@@ -5,6 +5,8 @@ namespace App\Modules\Auth\Domain\Entities;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+use App\Modules\Auth\Domain\ValueObjects\StaffPositions;
 use DateTimeImmutable;
 
 class StaffEntity
@@ -33,9 +35,9 @@ class StaffEntity
         get => $this->workEmail;
         set => $this->workEmail = $value;
     }
-    public string $position {
-        get => $this->position;
-        set => $this->position = $value;
+    public StaffPositions $positions {
+        get => $this->positions;
+        set => $this->positions = $value;
     }
     public ?string $department = null {
         get => $this->department;
@@ -69,10 +71,10 @@ class StaffEntity
         set => $this->notes = $value;
     }
 
-    public function __construct(FullName $fullName, string $position)
+    public function __construct(FullName $fullName, StaffPositions $positions)
     {
         $this->fullName = $fullName;
-        $this->position = $position;
+        $this->positions = $positions;
     }
 
     public function terminate(DateTimeImmutable $date): void

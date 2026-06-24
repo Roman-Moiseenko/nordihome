@@ -9,7 +9,9 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Repository\OrderRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class ParserController extends Controller
 {
     private OrderRepository $repository;
