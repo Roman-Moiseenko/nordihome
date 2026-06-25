@@ -10,7 +10,6 @@ class ProductCreateRequest extends FormRequest
 
     protected function prepareForValidation()
     {
-        //dd($this->id);
     }
 
     public function authorize()

@@ -2,11 +2,10 @@
 
 use Illuminate\Support\Facades\Route;
 
-
 Route::group([
     'middleware' => 'role:admin|staff',
     'prefix' => 'admin',
     'as' => 'admin.',
-],function () {
+], function () {
     //Маршруты тут
 });

@@ -44,9 +44,9 @@ class ProductController extends Controller
     private CategoryRepository $categories;
 
     public function __construct(
-        ProductService $service,
-                                Options $options,
-        ProductRepository $repository,
+        ProductService     $service,
+        Options            $options,
+        ProductRepository  $repository,
         CategoryRepository $categories,
     )
     {
@@ -94,12 +94,11 @@ class ProductController extends Controller
 
     public function store(ProductCreateRequest $request): RedirectResponse
     {
-        try {
-            $product = $this->service->createFull($request);
-            return redirect()->route('admin.product.edit', $product)->with('success', 'Товар создан');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        //dd($request->all());
+
+        $product = $this->service->createFull($request);
+        return redirect()->route('admin.product.edit', $product)->with('success', 'Товар создан');
+
     }
 
     public function fast_create(Request $request): JsonResponse
@@ -149,8 +148,8 @@ class ProductController extends Controller
             'frequencies' => array_select(Product::FREQUENCIES),
             'equivalents' => Equivalent::orderBy('name')
                 ->whereHas('category', function ($query) use ($product) {
-                    $query->where('_lft', '<=' ,$product->category->_lft)
-                        ->where('_rgt', '>=' ,$product->category->_rgt);
+                    $query->where('_lft', '<=', $product->category->_lft)
+                        ->where('_rgt', '>=', $product->category->_rgt);
                 })
                 ->getModels(),
         ]);
@@ -399,7 +398,7 @@ class ProductController extends Controller
     {
         //return redirect()->back()->with('error', $request->boolean('pre_order'));
 
-     //   dd($request->boolean('pre_order'));
+        //   dd($request->boolean('pre_order'));
         try {
             $this->service->editManagement($product, $request);
             return redirect()->back()->with('success', 'Сохранено');

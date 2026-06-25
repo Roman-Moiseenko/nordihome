@@ -108,6 +108,7 @@ const props = defineProps({
     },
     vat_trader: Number,
 })
+console.log(props)
 const form = reactive({
     name: null,
     name_print: null,
@@ -138,6 +139,7 @@ function onName() {
 
 
 function onCreate() {
+
     router.post(route('admin.product.store'), form)
 }
 

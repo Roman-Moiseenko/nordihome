@@ -105,12 +105,21 @@ return Application::configure(basePath: dirname(__DIR__))
             if ($request->inertia()) {
                 return redirect()->back()->with('error', $e->getMessage());
             }
-
             if ($request->ajax() || $request->expectsJson()) {
                 return response()->json(['error' => $e->getMessage()], 422);
             }
 
             return redirect()->back()->with('error', $e->getMessage());
+        });
+
+        // Обработка ValidationException для Inertia
+        $exceptions->render(function (\Illuminate\Validation\ValidationException $e, \Illuminate\Http\Request $request) {
+            // Стандартный редирект назад с ошибками
+            if ($request->inertia()) {
+                return redirect()->back()->with('error', $e->getMessage());
+            } else {
+                //TODO сделать для Blade
+            }
         });
     })
     ->withSchedule(function (Schedule $schedule) {

@@ -50,9 +50,6 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        // Исключение модуля Auth и других бизнес-исключений
-        // Обрабатываем ДО parent::render(), чтобы при APP_DEBUG=true
-        // не показывался debug-трейс, а делался редирект с ошибкой
         if ($e instanceof \DomainException || $e instanceof \InvalidArgumentException) {
             if ($request->inertia()) {
                 return redirect()->back()->with('error', $e->getMessage());
@@ -75,17 +72,17 @@ class Handler extends ExceptionHandler
                 if ($response->status() == 403) return redirect()->back()->with('error', 'Отказано в доступе');
                 if ($response->status() > 500) {
                     if (config('app.debug')) {
-        return $response;
+                        return $response;
                     } else {
                         event(new ThrowableHasAppeared($e));
                         return redirect()->back()->with('error', 'Непредвиденная ошибка');
-    }
-}
+                    }
+                }
 
                 if ($response->status() == 404) return Inertia::render('Error', ['status' => 404])
                     ->toResponse($request)
                     ->setStatusCode($response->status());
-                if ($response->status() == 419 )return redirect()->back()->with('warning', 'Срок действия страницы истек, попробуйте еще раз.');
+                if ($response->status() == 419) return redirect()->back()->with('warning', 'Срок действия страницы истек, попробуйте еще раз.');
             }
             //Ошибки при работе с базой данный
             if ($e instanceof \Illuminate\Database\QueryException) {
@@ -110,6 +107,7 @@ class Handler extends ExceptionHandler
         }
 
 
+
         // Исключение CRM - дублируем на случай, если не сработал блок в начале
         // (например, для не-Inertia запросов)
         if ($e instanceof \DomainException || $e instanceof \InvalidArgumentException) {
@@ -124,14 +122,19 @@ class Handler extends ExceptionHandler
             }
         }
 
-        if ($e instanceof ValidationException) return $response;
-//TODO
-       /*
-        *  if ($e instanceof \Throwable) {
-            event(new ThrowableHasAppeared($e));
-            return redirect()->back()->with('error', 'Непредвиденная ошибка');
+        if ($e instanceof ValidationException) {
+            if ($request->inertia()) {
+                return redirect()->back()->withErrors($e->errors())->withInput();
+            }
+            return $response;
         }
-        */
+//TODO
+        /*
+         *  if ($e instanceof \Throwable) {
+             event(new ThrowableHasAppeared($e));
+             return redirect()->back()->with('error', 'Непредвиденная ошибка');
+ }
+         */
         return $response;
     }
 }

@@ -36,6 +36,12 @@ class HandleInertiaRequests extends Middleware
     {
         //dd(\Diglactic\Breadcrumbs\Breadcrumbs::view('breadcrumbs::json-ld')->getData()['breadcrumbs']);
         return array_merge(parent::share($request), [
+            'errors' => function () use ($request) {
+                // Inertia передаёт ошибки через сессию, но если их нет - пустой объект
+                return $request->session()->get('errors')
+                    ? $request->session()->get('errors')->getBag('default')->getMessages()
+                    : (object) [];
+            },
             'auth' => function () use ($request) {
                 if (!$request->user()) {
                     return ['user' => null];
