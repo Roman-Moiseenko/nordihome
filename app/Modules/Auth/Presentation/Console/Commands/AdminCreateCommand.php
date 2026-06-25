@@ -20,7 +20,7 @@ class AdminCreateCommand extends Command
 
     public function __construct(
         private readonly RegisterAdminUseCase $registerAdmin,
-        private readonly CreateStaffUseCase $staffUseCase,
+        //private readonly CreateStaffUseCase $staffUseCase,
     )
     {
         parent::__construct();
@@ -50,8 +50,8 @@ class AdminCreateCommand extends Command
                     ]
                 ]
             );
-            $dto = new StaffCreateData(lastName: "Admin", firstName: "Admin", positions: [StaffPosition::ADMINISTRATOR]);
-            $this->staffUseCase->execute($dto, null);
+            //$dto = new StaffCreateData(lastName: "Admin", firstName: "Admin", positions: [StaffPosition::ADMINISTRATOR]);
+            //$this->staffUseCase->execute($dto, null);
             return self::SUCCESS;
         } catch (UserAlreadyExistsException $e) {
             $this->error('❌ Ошибка: ' . $e->getMessage());
