@@ -36,7 +36,7 @@ class UpdateUserUseCase
             }
             $user->email = $newEmail;
         }
-        if ($dto->password !== null)
+        if (!is_null($dto->password) && $dto->password !== '')
             $user->updatePassword(HashedPassword::fromPlainText($dto->password, $this->passwordHasher));
 
 

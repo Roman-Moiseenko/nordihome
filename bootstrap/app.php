@@ -101,7 +101,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions) {
         $exceptions->dontReportDuplicates();
 
-        $exceptions->render(function (\DomainException $e, \Illuminate\Http\Request $request) {
+        $exceptions->render(function (\DomainException|\InvalidArgumentException $e, \Illuminate\Http\Request $request) {
             if ($request->inertia()) {
                 return redirect()->back()->with('error', $e->getMessage());
             }

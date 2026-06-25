@@ -31,6 +31,10 @@ readonly class RegisterStaffUserUseCase
             throw new UserAlreadyExistsException("Пользователь с email {$dto->email} уже существует");
         }
 
+        if (empty($dto->password)) {
+            throw new \InvalidArgumentException('Пароль обязателен для нового пользователя');
+        }
+
         $user = new UserEntity(
             $email,
             HashedPassword::fromPlainText($dto->password, $this->passwordHasher),

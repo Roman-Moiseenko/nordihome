@@ -73,8 +73,13 @@ class RoleController extends Controller
         $this->deleteRole->execute($id, $userPermission);
         return response()->json(null, 204);
     }
+    public function roles(Request $request, UserPermission $userPermission): JsonResponse
+    {
+        $roles = $this->indexCustomRoleUseCase->execute(false, $userPermission);
+        return response()->json(RoleViewData::collect($roles), Response::HTTP_CREATED);
 
-    // Получение сгруппированных разрешений (по системным ролям)
+    }
+        // Получение сгруппированных разрешений (по системным ролям)
     public function permissions(UserPermission $userPermission): JsonResponse
     {
         return response()->json(

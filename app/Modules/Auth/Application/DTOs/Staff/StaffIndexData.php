@@ -18,7 +18,7 @@ class StaffIndexData extends Data
         public readonly array $positions,
         public readonly ?string $department = null,
         public readonly ?string $workPhone = null,
-        public readonly ?string $workEmail = null,
+        public readonly ?string $telegramChatId = null,
         public readonly bool $isActive = false,
         public readonly bool $isUser = false,
     ) {}
@@ -31,7 +31,7 @@ class StaffIndexData extends Data
             $staff->positions->toArrayOfStrings(),
             $staff->department,
             $staff->workPhone,
-            $staff->workEmail,
+            $staff->telegramChatId,
             $staff->isActive,
             !is_null($staff->user),
         );

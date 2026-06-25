@@ -63,8 +63,9 @@ Route::group([
             //Сотрудники Staff
             Route::get('staff/positions', [StaffController::class, 'positions'])->name('staff.positions');
             Route::get('permission/grouped', [RoleController::class, 'permissions'])->name('role.permissions');
+            Route::get('roles', [RoleController::class, 'roles'])->name('role.roles');
             Route::Resource('staff', StaffController::class);
-            Route::post('/staff/{id}/user', [StaffController::class, 'user']);
+            Route::post('/staff/{id}/user', [StaffController::class, 'user'])->name('staff.user');
 
             //Внештатные сотрудники Freelance
             Route::Resource('freelance', FreelanceController::class);

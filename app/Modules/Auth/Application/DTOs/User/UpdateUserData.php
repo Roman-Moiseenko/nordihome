@@ -16,8 +16,7 @@ class UpdateUserData extends Data
         public bool $active,
         #[Required, Email]
         public string  $email,
-        #[Required, StringType] // пароль обязателен только при создании
-        public string $password,
+        public ?string $password = null,
         #[ArrayType]
         public array $roleNames,
     )

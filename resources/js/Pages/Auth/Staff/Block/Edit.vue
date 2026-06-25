@@ -75,8 +75,6 @@ import { router } from "@inertiajs/vue3"
 const props = defineProps({
     staff: Object,
     errors: Object,
-    responsibilities: Array,
-    roles: Array,
 })
 
 const form = reactive({

@@ -62,7 +62,7 @@ class OrderController extends Controller
     {
         $orders = $this->repository->getIndex($request, $filters);
 
-        //MAIN Получить список сотрудников через UseCase -
+        //MAINDO Получить список сотрудников через UseCase -
         $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
 
         return Inertia::render('Order/Order/Index', [

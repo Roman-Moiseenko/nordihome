@@ -33,7 +33,7 @@
                         {{ func.phone(scope.row.workPhone) }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="telegram_user_id" label="Телеграм" width="180" align="center"/>
+                <el-table-column prop="telegramChatId" label="Телеграм" width="180" align="center"/>
                 <el-table-column prop="isActive" label="Активен" width="180" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.isActive"/>
@@ -94,6 +94,7 @@ const props = defineProps({
     },
     filters: Array,
 })
+console.log(props.staffs)
 const store = useStore();
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")

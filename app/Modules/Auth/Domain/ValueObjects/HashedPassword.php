@@ -15,8 +15,8 @@ final class HashedPassword
 
     public static function fromPlainText(string $plain, PasswordHasherInterface $hasher): self
     {
-        if (strlen($plain) < 8) {
-            throw new InvalidArgumentException('Пароль должен содержать минимум 8 символов');
+        if (strlen($plain) < 6) {
+            throw new InvalidArgumentException('Пароль должен содержать минимум 6 символов');
         }
         return new self($hasher->make($plain));
     }

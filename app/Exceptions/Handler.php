@@ -53,7 +53,7 @@ class Handler extends ExceptionHandler
         // Исключение модуля Auth и других бизнес-исключений
         // Обрабатываем ДО parent::render(), чтобы при APP_DEBUG=true
         // не показывался debug-трейс, а делался редирект с ошибкой
-        if ($e instanceof \DomainException) {
+        if ($e instanceof \DomainException || $e instanceof \InvalidArgumentException) {
             if ($request->inertia()) {
                 return redirect()->back()->with('error', $e->getMessage());
             }
@@ -112,7 +112,7 @@ class Handler extends ExceptionHandler
 
         // Исключение CRM - дублируем на случай, если не сработал блок в начале
         // (например, для не-Inertia запросов)
-        if ($e instanceof \DomainException) {
+        if ($e instanceof \DomainException || $e instanceof \InvalidArgumentException) {
             if ($request->inertia()) {
                 return redirect()->back()->with('error', $e->getMessage());
             }

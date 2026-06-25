@@ -83,16 +83,13 @@ class StaffController extends Controller
     /**
      * @throws \DateMalformedStringException
      */
-    public function update(Request $request, int $id, UserPermission $userPermission): JsonResponse
+    public function update(Request $request, int $id, UserPermission $userPermission)
     {
-        try {
-            $dto = StaffUpdateData::validateAndCreate($request->all());
-        } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+
+        $dto = StaffUpdateData::validateAndCreate($request->all());
 
         $staff = $this->updateStaffUseCase->execute($id, $dto, $userPermission);
-        return response()->json(StaffViewData::fromEntity($staff));
+        return redirect()->route('admin.staff.show', $staff->id);
     }
 
     public function destroy(int $id, UserPermission $userPermission): JsonResponse
@@ -107,21 +104,19 @@ class StaffController extends Controller
         return response()->json(null, Response::HTTP_OK);
     }
 
-    public function user(Request $request, int $id, UserPermission $userPermission): JsonResponse
+    public function user(Request $request, int $id, UserPermission $userPermission)
     {
         $staff = $this->staffRepository->findById($id);
         if (!$staff) return response()->json(['message' => 'Сотрудник не найден'], Response::HTTP_NOT_FOUND);
-        try {
-            $dto = UpdateUserData::validateAndCreate($request->all());
-        } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+
+        $dto = UpdateUserData::validateAndCreate($request->all());
+
         if (is_null($staff->user)) {
             $userOut = $this->registerStaffUserUseCase->execute($id, $dto, $userPermission);
         } else {
             $userOut = $this->updateUserUseCase->execute($id, $dto, $userPermission);
         }
-        return response()->json(UserViewData::fromEntity($userOut), Response::HTTP_OK);
+        return redirect()->route('admin.staff.show', $staff->id);
     }
 
     public function positions()
