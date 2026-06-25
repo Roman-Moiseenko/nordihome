@@ -10,7 +10,6 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Report\RefundReport;
 use App\Modules\Accounting\Repository\RefundRepository;
 use App\Modules\Accounting\Service\RefundService;
-use App\Modules\Admin\Repository\StaffRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,32 +19,27 @@ class RefundController extends Controller
 {
     private RefundService $service;
     private RefundRepository $repository;
-    private StaffRepository $staffs;
     private RefundReport $report;
 
     public function __construct(
         RefundService    $service,
         RefundRepository $repository,
-        StaffRepository  $staffs,
         RefundReport     $report,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->staffs = $staffs;
         $this->report = $report;
     }
 
     public function index(Request $request): \Inertia\Response
     {
         $distributors = Distributor::orderBy('name')->get();
-        $staffs = $this->staffs->getStaffsChiefs();
         $refunds = $this->repository->getIndex($request, $filters);
         return Inertia::render('Accounting/Refund/Index', [
             'refunds' => $refunds,
             'filters' => $filters,
             'distributors' => $distributors,
-            'staffs' => $staffs
         ]);
     }
 

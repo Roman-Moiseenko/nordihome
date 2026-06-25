@@ -3,26 +3,23 @@
 namespace App\Listeners;
 
 use App\Events\PriceHasMinimum;
-use App\Modules\Admin\Repository\StaffRepository;
-use App\Notifications\StaffMessage;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+
 
 class NotificationPriceMinimum
 {
-    private StaffRepository $staffs;
-
-    public function __construct(StaffRepository $staffs)
-    {
-        $this->staffs = $staffs;
-    }
+    public function __construct(private readonly ListStaffByPositionUseCase $positionUseCase)
+    {}
 
     /**
      * Handle the event.
      */
     public function handle(PriceHasMinimum $event): void
     {
-        $staffs = $this->staffs->getChief();
+        $staffs = $this->positionUseCase->execute(StaffPosition::supervisor());
+                //FIXME Модуль Notification - через RecipientResolverInterface
+      /*
 
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
@@ -32,7 +29,7 @@ class NotificationPriceMinimum
                 'badge-russian-ruble'
             ));
         }
-
+*/
         //throw new \DomainException('Цена продажи меньше установленной минимальной для товара ' . $event->item->product->name);
     }
 }

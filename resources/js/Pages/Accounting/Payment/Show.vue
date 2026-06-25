@@ -46,6 +46,7 @@ import {Head, router} from '@inertiajs/vue3'
 import {func} from '@Res/func.js'
 import PaymentInfo from "./Blocks/Info.vue";
 import PaymentActions from "./Blocks/Actions.vue";
+import {useAuthStore} from "@Res/authStore";
 
 const props = defineProps({
     payment: Object,

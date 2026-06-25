@@ -3,24 +3,20 @@
 namespace App\Listeners;
 
 use App\Events\DepartureHasCompleted;
-use App\Modules\Admin\Entity\Responsibility;
-use App\Modules\Admin\Repository\StaffRepository;
-use App\Notifications\StaffMessage;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+
 
 class NotificationDepartureNew
 {
-    private StaffRepository $staffs;
-
-    public function __construct(StaffRepository $staffs)
-    {
-        $this->staffs = $staffs;
-    }
+    public function __construct(private readonly ListStaffByPositionUseCase $positionUseCase)
+    {}
 
     public function handle(DepartureHasCompleted $event): void
     {
-        $staffs = $this->staffs->getChief();// $this->staffs->getStaffsByCode(Responsibility::MANAGER_ACCOUNTING);
+        $staffs = $this->positionUseCase->execute(StaffPosition::supervisor());
+                //FIXME Модуль Notification - через RecipientResolverInterface
+      /*
 
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
@@ -30,6 +26,6 @@ class NotificationDepartureNew
                 'folder-output'
             ));
         }
-
+*/
     }
 }

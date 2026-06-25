@@ -10,19 +10,15 @@ use App\Http\Requests\Auth\RegisterRequest;
 use App\Mail\UserRegister;
 use App\Mail\VerifyMail;
 use App\Modules\Accounting\Service\OrganizationService;
-use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
-use App\Modules\Discount\Entity\Coupon;
 use App\Modules\User\Entity\User;
-use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use function event;
 
 class RegisterService
 {
-
     private OrganizationService $service;
 
     public function __construct(OrganizationService $service)

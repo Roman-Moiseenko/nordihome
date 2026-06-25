@@ -3,20 +3,16 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Controllers;
 
-
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Distributor;
-use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
-use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Report\SupplyReport;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Repository\SupplyRepository;
 use App\Modules\Accounting\Service\SupplyService;
-use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Brand;
 use Illuminate\Http\RedirectResponse;
@@ -31,7 +27,6 @@ class SupplyController extends Controller
     private SupplyService $service;
     private StackRepository $stacks;
     private SupplyRepository $repository;
-    private StaffRepository $staffs;
     private SupplyReport $report;
     private OrganizationRepository $organizations;
 
@@ -39,7 +34,6 @@ class SupplyController extends Controller
         SupplyService          $service,
         StackRepository        $stacks,
         SupplyRepository       $repository,
-        StaffRepository        $staffs,
         SupplyReport           $report,
         OrganizationRepository $organizations,
     )
@@ -47,7 +41,6 @@ class SupplyController extends Controller
         $this->service = $service;
         $this->stacks = $stacks;
         $this->repository = $repository;
-        $this->staffs = $staffs;
         $this->report = $report;
         $this->organizations = $organizations;
     }
@@ -57,13 +50,11 @@ class SupplyController extends Controller
         $distributors = Distributor::orderBy('name')->getModels();
         $stack_count = SupplyStack::where('supply_id', null)->count();
         $supplies = $this->repository->getIndex($request, $filters);
-        $staffs = $this->staffs->getStaffsChiefs();
         return Inertia::render('Accounting/Supply/Index', [
             'supplies' => $supplies,
             'filters' => $filters,
             'distributors' => $distributors,
             'stack_count' => $stack_count,
-            'staffs' => $staffs
         ]);
     }
 
@@ -71,12 +62,10 @@ class SupplyController extends Controller
     {
         $brands = Brand::orderBy('name')->getModels();
         $stacks = $this->repository->getStacks($request, $filters);
-        $staffs = $this->staffs->getStaffsChiefs();
         return Inertia::render('Accounting/Supply/Stack', [
             'stacks' => $stacks,
             'filters' => $filters,
             'brands' => $brands,
-            'staffs' => $staffs
         ]);
     }
 

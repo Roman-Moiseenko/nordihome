@@ -4,15 +4,11 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
 use App\Modules\Accounting\Repository\PricingRepository;
 use App\Modules\Accounting\Service\PricingService;
-use App\Modules\Admin\Repository\StaffRepository;
-use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Repository\ProductRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,29 +19,24 @@ class PricingController extends Controller
 
     private PricingService $service;
     private PricingRepository $repository;
-    private StaffRepository $staffs;
 
     public function __construct(
         PricingService    $service,
         PricingRepository $repository,
-        StaffRepository   $staffs,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->staffs = $staffs;
     }
 
     public function index(Request $request): \Inertia\Response
     {
         $pricings = $this->repository->getIndex($request, $filters);
-        $staffs = $this->staffs->getStaffsChiefs();
         $distributors = Distributor::orderBy('name')->get();
         return Inertia::render('Accounting/Pricing/Index', [
             'pricings' => $pricings,
             'filters' => $filters,
             'distributors' => $distributors,
-            'staffs' => $staffs,
         ]);
     }
 

@@ -3,27 +3,25 @@
 namespace App\Listeners;
 
 use App\Events\PricingHasCompleted;
-use App\Mail\ProductPricing;
-use App\Modules\Admin\Entity\Responsibility;
-use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\SubscriptionService;
-use App\Notifications\StaffMessage;
-use Illuminate\Support\Facades\Mail;
 
 class NotificationPricingCompleted
 {
     private array $users;
-    private StaffRepository $staffRepository;
+    private ListStaffByPositionUseCase $positionUseCase;
 
-    public function __construct(SubscriptionService $subscriptionService, UserRepository $userRepository, StaffRepository $staffRepository)
+    public function __construct(SubscriptionService $subscriptionService, UserRepository $userRepository,
+                                ListStaffByPositionUseCase $positionUseCase)
     {
         if ($subscriptionService->check_subscription(self::class)) {
             $this->users = $userRepository->getUsersBySubscription(self::class);
         } else {
             $this->users = [];
         }
-        $this->staffRepository = $staffRepository;
+        $this->positionUseCase = $positionUseCase;
     }
 
     /**
@@ -31,7 +29,10 @@ class NotificationPricingCompleted
      */
     public function handle(PricingHasCompleted $event): void
     {
-        $staffs = $this->staffRepository->getStaffsByCode(Responsibility::MANAGER_ORDER);
+        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager());
+
+        //FIXME Модуль Notification - через RecipientResolverInterface
+/*
 
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
@@ -60,5 +61,6 @@ class NotificationPricingCompleted
                     Mail::to($user->email)->queue(new ProductPricing($user_products, $user));
             }
         }
+*/
     }
 }

@@ -7,7 +7,8 @@ use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
 use App\Modules\Accounting\Service\PricingService;
 use App\Modules\Accounting\Service\StorageService;
-use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Job\LoadingImageProduct;
 use App\Modules\Product\Entity\Brand;
@@ -37,12 +38,14 @@ class LoadCommand extends Command
     protected $description = 'Загрузка данных';
     private Common $common;
 
-    public function handle(): bool
+    public function handle(ListStaffByPositionUseCase $positionUseCase): bool
     {
         if (! $this->confirmToProceed()) {
             return false;
         }
-
+        $staffs = $positionUseCase->execute(StaffPosition::administrator());
+        if (count($staffs) == 0) {return false;}
+        $staff = $staffs[0];
         $this->storage = public_path() . '/temp/';
         $type = $this->option('type');
 
@@ -56,7 +59,6 @@ class LoadCommand extends Command
         }
         if ($type == 'product' || $type == null) {
 
-            $staff = Admin::where('role', Admin::ROLE_ADMIN)->first();
             $pricingService = new PricingService();
             $this->pricing = PricingDocument::register($staff->id);
 

@@ -11,20 +11,25 @@ export const useAuthStore = defineStore('auth', () => {
     const positions = ref<any[]>([])
     const permissions = ref<any[]>([])
     const roles = ref<any[]>([])
+    const staffs = ref<any[]>([])
     //TODO списки сотрудников по positions - ?
 
 
 
     async function fetchData() {
-        const [positionsRes, permissionsRes, rolesRes] = await Promise.all([
+        const [
+            positionsRes, permissionsRes, rolesRes, staffsRes
+        ] = await Promise.all([
             axios.get(route('admin.staff.positions'), {withCredentials: true}),
             axios.get(route('admin.role.permissions'), {withCredentials: true}),
             axios.get(route('admin.role.roles'), {withCredentials: true}),
+            axios.get(route('admin.staff.groups'), {withCredentials: true}),
         ])
 
         positions.value = positionsRes.data
         permissions.value = permissionsRes.data
         roles.value = rolesRes.data
+        staffs.value = staffsRes.data
     }
 
     ;(async () => {
@@ -51,5 +56,6 @@ export const useAuthStore = defineStore('auth', () => {
         positions,
         permissions,
         roles,
+        staffs,
         reload}
 })

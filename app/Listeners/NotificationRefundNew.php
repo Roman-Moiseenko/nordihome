@@ -2,25 +2,24 @@
 
 namespace App\Listeners;
 
-use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Order\Events\OrderHasRefund;
-use App\Notifications\StaffMessage;
+
 
 class NotificationRefundNew
 {
-    private StaffRepository $staffs;
-
-    public function __construct(StaffRepository $staffs)
-    {
-        $this->staffs = $staffs;
-    }
+    public function __construct(private readonly ListStaffByPositionUseCase $positionUseCase)
+    {}
 
     /**
      * Handle the event.
      */
     public function handle(OrderHasRefund $event): void
     {
-        $staffs = $this->staffs->getChief();
+        $staffs = $this->positionUseCase->execute(StaffPosition::supervisor());
+                //FIXME Модуль Notification - через RecipientResolverInterface
+      /*
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
                 'Возврат по заказу',
@@ -29,5 +28,6 @@ class NotificationRefundNew
                 'refresh-ccw'
             ));
         }
+      */
     }
 }

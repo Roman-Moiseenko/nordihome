@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\ExpectedValues;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -26,8 +27,9 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string $post //Должность
  * @property int $telegram_user_id
  * @property FullName $fullname
- * @property Responsibility[] $responsibilities
  */
+
+#[Deprecated]
 class Admin extends Authenticatable
 {
 
@@ -175,31 +177,7 @@ class Admin extends Authenticatable
         return $this->telegram_user_id;
     }
 
-    public function isResponsibility(#[ExpectedValues(valuesFromClass: Responsibility::class)] int $resp): bool
-    {
-        if (!$this->isStaff()) return false;
-        foreach ($this->responsibilities as $responsibility) {
-            if ($responsibility->code == $resp) return true;
-        }
-        return false;
-    }
 
-    public function responsibilities()
-    {
-        return $this->hasMany(Responsibility::class, 'admin_id', 'id');
-    }
-
-    public function toggleResponsibilities(int $code)
-    {
-        foreach ($this->responsibilities as $responsibility) { //Если Обязанность уже назначена, то удаляем
-            if ($responsibility->code == $code) {
-                $responsibility->delete();
-                return;
-            }
-        }
-        //Иначе добавляем Обязанность
-        $this->responsibilities()->save(Responsibility::new($code));
-    }
     public function roleText(): string
     {
         return self::ROLES[$this->role];

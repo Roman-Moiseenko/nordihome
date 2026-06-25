@@ -6,13 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\PaymentDecryption;
 use App\Modules\Accounting\Entity\PaymentDocument;
-use App\Modules\Accounting\Entity\SupplyDocument;
-use App\Modules\Accounting\Entity\Trader;
+
 use App\Modules\Accounting\Repository\PaymentDocumentRepository;
 use App\Modules\Accounting\Repository\TraderRepository;
 use App\Modules\Accounting\Service\PaymentDocumentService;
-use App\Modules\Admin\Repository\StaffRepository;
-use App\Modules\Order\Entity\Order\OrderPayment;
+
 use DB;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,36 +19,24 @@ use Inertia\Response;
 
 class PaymentController extends Controller
 {
-    private PaymentDocumentService $service;
-    private PaymentDocumentRepository $repository;
-    private TraderRepository $traders;
-    private StaffRepository $staffs;
 
     public function __construct(
-        PaymentDocumentService    $service,
-        PaymentDocumentRepository $repository,
-        TraderRepository          $traders,
-        StaffRepository           $staffs,
+        private readonly PaymentDocumentService    $service,
+        private readonly PaymentDocumentRepository $repository,
+        private readonly TraderRepository          $traders,
     )
-    {
-        $this->service = $service;
-        $this->repository = $repository;
-        $this->traders = $traders;
-        $this->staffs = $staffs;
-    }
+    {}
 
     public function index(Request $request): Response
     {
         $payments = $this->repository->getIndex($request, $filters);
         $distributors = Distributor::orderBy('name')->getModels();
-        $staffs = $this->staffs->getStaffsChiefs();
         $traders = $this->traders->getTraders();
         return Inertia::render('Accounting/Payment/Index', [
             'payments' => $payments,
             'filters' => $filters,
             'traders' => $traders,
             'distributors' => $distributors,
-            'staffs' => $staffs,
         ]);
     }
 

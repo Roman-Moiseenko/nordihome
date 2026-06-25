@@ -11,22 +11,15 @@ use App\Modules\Accounting\Report\DepartureReport;
 use App\Modules\Accounting\Repository\DepartureRepository;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Service\DepartureService;
-use App\Modules\Admin\Entity\Admin;
-use App\Modules\Admin\Repository\StaffRepository;
-use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Repository\ProductRepository;
-
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
-use function Symfony\Component\Translation\t;
+
 
 class DepartureController extends Controller
 {
     private DepartureService $service;
     private DepartureRepository $repository;
-    private StaffRepository $staffs;
     private OrganizationRepository $organizations;
     private DepartureReport $report;
 
@@ -34,14 +27,12 @@ class DepartureController extends Controller
     public function __construct(
         DepartureService       $service,
         DepartureRepository    $repository,
-        StaffRepository        $staffs,
         OrganizationRepository $organizations,
         DepartureReport        $report,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->staffs = $staffs;
         $this->organizations = $organizations;
         $this->report = $report;
     }
@@ -50,13 +41,11 @@ class DepartureController extends Controller
     {
         $storages = Storage::orderBy('name')->get();
         $departures = $this->repository->getIndex($request, $filters);
-        $staffs = $this->staffs->getStaffsChiefs();
 
         return Inertia::render('Accounting/Departure/Index', [
             'departures' => $departures,
             'filters' => $filters,
             'storages' => $storages,
-            'staffs' => $staffs
         ]);
     }
 

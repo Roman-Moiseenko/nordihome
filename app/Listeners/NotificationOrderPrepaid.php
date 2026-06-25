@@ -2,28 +2,25 @@
 
 namespace App\Listeners;
 
-use App\Mail\OrderPrepaid;
-use App\Modules\Admin\Entity\Responsibility;
-use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Order\Events\OrderHasPrepaid;
-use App\Notifications\StaffMessage;
-use Illuminate\Support\Facades\Mail;
 
 class NotificationOrderPrepaid
 {
-    private StaffRepository $staffs;
+    public function __construct(private readonly ListStaffByPositionUseCase $positionUseCase)
+    {}
 
-    public function __construct(StaffRepository $staffs)
-    {
-        $this->staffs = $staffs;
-    }
 
     /**
      * Handle the event.
      */
     public function handle(OrderHasPrepaid $event): void
     {
-        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager());
+
+        //FIXME Модуль Notification - через RecipientResolverInterface
+/*
 
         foreach ($staffs as $staff) {
             if ($event->order->staff_id == $staff->id) {
@@ -37,6 +34,6 @@ class NotificationOrderPrepaid
         }
 
         Mail::to($event->order->user->email)->queue(new OrderPrepaid($event->order));
-
+*/
     }
 }

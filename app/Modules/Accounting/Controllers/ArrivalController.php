@@ -14,7 +14,7 @@ use App\Modules\Accounting\Report\ArrivalReport;
 use App\Modules\Accounting\Repository\ArrivalRepository;
 use App\Modules\Accounting\Service\ArrivalExpenseService;
 use App\Modules\Accounting\Service\ArrivalService;
-use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,38 +22,25 @@ use Inertia\Response;
 
 class ArrivalController extends Controller
 {
-    private ArrivalService $service;
-    private ArrivalRepository $repository;
-    private StaffRepository $staffs;
-    private ArrivalExpenseService $expenseService;
-    private ArrivalReport $report;
 
     public function __construct(
-        ArrivalService        $service,
-        ArrivalExpenseService $expenseService,
-        ArrivalRepository     $repository,
-        StaffRepository       $staffs,
-        ArrivalReport         $report,
+        private readonly ArrivalService        $service,
+        private readonly ArrivalExpenseService $expenseService,
+        private readonly ArrivalRepository     $repository,
+        private readonly ArrivalReport         $report,
     )
     {
-        $this->service = $service;
-        $this->repository = $repository;
-        $this->staffs = $staffs;
-        $this->expenseService = $expenseService;
-        $this->report = $report;
     }
 
     public function index(Request $request): Response
     {
         $distributors = Distributor::orderBy('name')->get();
-        $staffs = $this->staffs->getStaffsChiefs();
         $arrivals = $this->repository->getIndex($request, $filters);
 
         return Inertia::render('Accounting/Arrival/Index', [
             'arrivals' => $arrivals,
             'filters' => $filters,
             'distributors' => $distributors,
-            'staffs' => $staffs,
         ]);
     }
 

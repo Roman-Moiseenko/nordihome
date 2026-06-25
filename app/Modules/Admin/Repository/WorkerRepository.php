@@ -3,12 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Admin\Repository;
 
-use App\Modules\Admin\Entity\Admin;
-use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Entity\Worker;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
-use JetBrains\PhpStorm\ExpectedValues;
 
 class WorkerRepository
 {

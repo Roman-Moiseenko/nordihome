@@ -3,27 +3,23 @@
 namespace App\Listeners;
 
 use App\Events\ReviewHasEdit;
-use App\Modules\Admin\Entity\Responsibility;
-use App\Modules\Admin\Repository\StaffRepository;
-use App\Notifications\StaffMessage;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 
 class NotificationReviewEdit
 {
-    private StaffRepository $staffs;
-
-    public function __construct(StaffRepository $staffs)
-    {
-        $this->staffs = $staffs;
-    }
+    public function __construct(private readonly ListStaffByPositionUseCase $positionUseCase)
+    {}
 
     /**
      * Handle the event.
      */
     public function handle(ReviewHasEdit $event): void
     {
-        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_REVIEW);
+        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager());
+
+        //FIXME Модуль Notification - через RecipientResolverInterface
+/*
 
         foreach ($staffs as $staff) {
 
@@ -35,5 +31,6 @@ class NotificationReviewEdit
             ));
 
         }
+*/
     }
 }

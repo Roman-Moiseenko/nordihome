@@ -10,7 +10,6 @@ use App\Modules\Accounting\Report\InventoryReport;
 use App\Modules\Accounting\Repository\InventoryRepository;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Service\InventoryService;
-use App\Modules\Admin\Repository\StaffRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,14 +19,12 @@ class InventoryController extends Controller
 {
     private InventoryService $service;
     private InventoryRepository $repository;
-    private StaffRepository $staffs;
     private OrganizationRepository $organizations;
     private InventoryReport $report;
 
     public function __construct(
         InventoryService       $service,
         InventoryRepository    $repository,
-        StaffRepository        $staffs,
         OrganizationRepository $organizations,
         InventoryReport        $report,
     )
@@ -35,21 +32,18 @@ class InventoryController extends Controller
         $this->service = $service;
         $this->repository = $repository;
 
-        $this->staffs = $staffs;
         $this->organizations = $organizations;
         $this->report = $report;
     }
 
     public function index(Request $request): Response
     {
-        $staffs = $this->staffs->getStaffsChiefs();
         $inventories = $this->repository->getIndex($request, $filters);
         $storages = Storage::orderBy('name')->getModels();
 
         return Inertia::render('Accounting/Inventory/Index', [
             'inventories' => $inventories,
             'filters' => $filters,
-            'staffs' => $staffs,
             'storages' => $storages,
         ]);
     }

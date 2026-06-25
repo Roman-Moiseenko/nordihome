@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Admin\Entity\Admin;
 use App\Modules\Auth\Application\Actions\Staff\CreateStaffUseCase;
 use App\Modules\Auth\Application\Actions\Staff\IndexStaffUseCase;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffGroupPositions;
 use App\Modules\Auth\Application\Actions\Staff\RemoveStaffUseCase;
 use App\Modules\Auth\Application\Actions\Staff\UpdateStaffUseCase;
 use App\Modules\Auth\Application\Actions\Staff\ViewStaffUseCase;
@@ -38,6 +39,7 @@ class StaffController extends Controller
         private readonly RemoveStaffUseCase       $removeStaffUseCase,
         private readonly IndexStaffUseCase        $indexStaffUseCase,
         private readonly ViewStaffUseCase         $viewStaffUseCase,
+        private readonly ListStaffGroupPositions  $listStaffGroupPositions,
     )
     {
     }
@@ -122,6 +124,12 @@ class StaffController extends Controller
     public function positions()
     {
         return response()->json(array_select(StaffPosition::positions()), Response::HTTP_OK);
+    }
+
+    public function groups(Request $request, UserPermission $userPermission)
+    {
+        $staffs = $this->listStaffGroupPositions->execute();
+        return response()->json($staffs, Response::HTTP_OK);
     }
 
 }

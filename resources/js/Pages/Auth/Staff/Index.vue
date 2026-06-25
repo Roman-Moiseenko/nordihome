@@ -84,7 +84,6 @@ import {func} from "@Res/func";
 import AuthStaffCreate from "@Comp/Auth/Staff/Create.vue"
 import {useAuthStore} from "@Res/authStore";
 
-
 const props = defineProps({
     staffs: Object,
     errors: Object,
@@ -94,7 +93,6 @@ const props = defineProps({
     },
     filters: Array,
 })
-console.log(props.staffs)
 const store = useStore();
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")

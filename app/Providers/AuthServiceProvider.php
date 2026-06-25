@@ -3,7 +3,6 @@
 namespace App\Providers;
 
 use App\Modules\Admin\Entity\Admin;
-use App\Modules\Admin\Entity\Responsibility;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -49,7 +48,7 @@ class AuthServiceProvider extends ServiceProvider
             if ($user->isAdmin() || $user->isChief()) return true;
 
         });
-
+/*
         Gate::define('accounting', function ($user) {
            return $user->isResponsibility(Responsibility::MANAGER_ACCOUNTING);
         });
@@ -106,8 +105,8 @@ class AuthServiceProvider extends ServiceProvider
         Gate::define('feedback', function (Admin $user) {
             return $user->isResponsibility(Responsibility::MANAGER_FEEDBACK);
         });
+*/
 
-        //TODO Добавить доступы разграничения
         Gate::define('', function (Admin $user) {
             return true;
         });

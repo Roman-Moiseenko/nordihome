@@ -86,7 +86,7 @@ import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import {route} from "ziggy-js";
-
+import {useAuthStore} from "@Res/authStore";
 
 
 const props = defineProps({

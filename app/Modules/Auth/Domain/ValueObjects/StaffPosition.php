@@ -14,6 +14,15 @@ final class StaffPosition
     public const string ASSEMBLER = 'assembler';                 // Сборщик
     public const string LOGIST = 'logist';                       // Логист
 
+    private const array MANAGERS = [
+        self::CUSTOMER_MANAGER,
+        self::PURCHASE_MANAGER,
+    ];
+    private const array WORKERS = [
+        self::DRIVER,
+        self::ASSEMBLER,
+        self::LOGIST,
+    ];
     private const array ALLOWED = [
         self::SUPERVISOR,
         self::ADMINISTRATOR,
@@ -70,11 +79,22 @@ final class StaffPosition
         return self::POSITIONS;
     }
 
+    public static function managers(): array
+    {
+        return self::MANAGERS;
+    }
+
+    public static function workers(): array
+    {
+        return self::WORKERS;
+    }
+
     // Статические фабрики для удобства
     public static function supervisor(): self { return new self(self::SUPERVISOR); }
     public static function customerManager(): self { return new self(self::CUSTOMER_MANAGER); }
     public static function purchaseManager(): self { return new self(self::PURCHASE_MANAGER); }
     public static function driver(): self { return new self(self::DRIVER); }
     public static function assembler(): self { return new self(self::ASSEMBLER); }
+    public static function administrator(): self { return new self(self::ADMINISTRATOR); }
     public static function logist(): self { return new self(self::LOGIST); }
 }

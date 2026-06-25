@@ -3,27 +3,24 @@
 namespace App\Listeners;
 
 use App\Events\SupplyHasCompleted;
-use App\Modules\Admin\Entity\Responsibility;
-use App\Modules\Admin\Repository\StaffRepository;
-use App\Notifications\StaffMessage;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+
 
 class NotificationSupplyCompleted
 {
-    private StaffRepository $staffs;
-
-    public function __construct(StaffRepository $staffs)
-    {
-        $this->staffs = $staffs;
-    }
+    public function __construct(private readonly ListStaffByPositionUseCase $positionUseCase)
+    {}
 
     /**
      * Handle the event.
      */
     public function handle(SupplyHasCompleted $event): void
     {
-        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager());
+
+        //FIXME Модуль Notification - через RecipientResolverInterface
+/*
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
                 'Поступление товара от поставщика',
@@ -32,5 +29,6 @@ class NotificationSupplyCompleted
                 'folder-pen'
             ));
         }
+*/
     }
 }

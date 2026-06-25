@@ -3,26 +3,9 @@
 
 use App\Modules\Admin\Controllers\HomeController;
 use App\Modules\Admin\Controllers\ShopSettingsController;
-use App\Modules\Admin\Controllers\StaffController;
 use App\Modules\Admin\Controllers\WorkerController;
 use Illuminate\Support\Facades\Route;
 
-/*
-Route::group([
-    'prefix' => 'staff',
-    'as' => 'staff.',
-], function () {
-    //Route::get('/notification', [StaffController::class, 'notification'])->name('notification');
-   // Route::post('/notification-read/{notification}', [StaffController::class, 'notification_read'])->name('notification-read');
-
-    //Route::get('/security/{staff}', [StaffController::class, 'security'])->name('security');
-  //  Route::post('/password/{staff}', [StaffController::class, 'password'])->name('password');
-//    Route::post('/activate/{staff}', [StaffController::class, 'activate'])->name('activate');
-    //Route::post('/photo/{staff}', [StaffController::class, 'setPhoto'])->name('photo');
- //   Route::post('/responsibility/{staff}', [StaffController::class, 'responsibility'])->name('responsibility');
-});
-//Route::resource('staff', 'StaffController',); //CRUD
-*/
 Route::group([
     'prefix' => 'worker',
     'as' => 'worker.',

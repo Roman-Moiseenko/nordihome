@@ -2,21 +2,15 @@
 
 namespace App\Listeners;
 
-use App\Mail\OrderPaid;
-use App\Modules\Admin\Entity\Responsibility;
-use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Order\Events\OrderHasPaid;
-use App\Notifications\StaffMessage;
-use Illuminate\Support\Facades\Mail;
 
 class NotificationOrderPaid
 {
-    private StaffRepository $staffs;
+    public function __construct(private readonly ListStaffByPositionUseCase $positionUseCase)
+    {}
 
-    public function __construct(StaffRepository $staffs)
-    {
-        $this->staffs = $staffs;
-    }
 
     /**
      * Handle the event.
@@ -24,9 +18,11 @@ class NotificationOrderPaid
     public function handle(OrderHasPaid $event): void
     {
 
-        //TODO
-        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager());
 
+
+        //FIXME Модуль Notification - через RecipientResolverInterface
+/*
         foreach ($staffs as $staff) {
             if ($event->order->staff_id == $staff->id) {
                 $staff->notify(new StaffMessage(
@@ -39,5 +35,6 @@ class NotificationOrderPaid
         }
 
         Mail::to($event->order->user->email)->queue(new OrderPaid($event->order));
+*/
     }
 }

@@ -5,10 +5,7 @@ namespace App\Console\Commands\Admin;
 
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
-use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\DepartureDocument;
-use App\Modules\Accounting\Entity\Distributor;
-use App\Modules\Accounting\Entity\DistributorProduct;
 use App\Modules\Accounting\Entity\InventoryDocument;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\PaymentDocument;
@@ -19,9 +16,6 @@ use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
-use App\Modules\Accounting\Service\MovementService;
-use App\Modules\Accounting\Service\StorageService;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
@@ -36,8 +30,7 @@ use App\Modules\User\Entity\ParserStorage;
 use App\Modules\User\Entity\Wish;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
-use Illuminate\Support\Facades\DB;
-use function Laravel\Prompts\confirm;
+
 
 class ClearCommand extends Command
 {
@@ -93,12 +86,8 @@ class ClearCommand extends Command
             ]);
         }*/
 
-        /** @var Admin[] $staffs */
-        $staffs = Admin::get();
-        foreach ($staffs as $staff) {
-            $staff->notifications()->delete();
 
-        }
+        //FIXME - очистка уведомлений
         $this->info('Уведомления очищены');
 
         /** @var Report[] $reports */
@@ -112,37 +101,6 @@ class ClearCommand extends Command
         $this->info('*******');
 
 
-        $distributors = Distributor::get();
-
-        $staff = Admin::where('role', Admin::ROLE_ADMIN)->first();
-        return true;
-
-        foreach ($distributors as $distributor) {
-
-            $supply = SupplyDocument::register(
-                $distributor->id,
-                $staff->id,
-                $distributor->currency->exchange,
-                $distributor->currency_id,
-            );
-            $supply->organization_id = $distributor->organization->id;
-            $supply->save();
-            $this->warn('Загрузка товаров ' . $distributor->products()->count() . ' В Заказ');
-            foreach ($distributor->products as $product) {
-                $distributor->products()->updateExistingPivot($product->id, ['cost' => 0, 'pre_cost' => null]);
-                $item = SupplyProduct::new(
-                    $product->id,
-                    10,
-                    1
-                );
-                $supply->products()->save($item);
-            }
-            $supply->number .= ' БП';
-            $supply->comment = 'Базовое поступление';
-            $supply->save();
-            $this->info('Загрузка завершена');
-            //$supply->completed();
-        }
 
 
 

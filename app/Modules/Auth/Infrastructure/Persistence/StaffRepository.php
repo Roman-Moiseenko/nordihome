@@ -59,6 +59,15 @@ class StaffRepository implements StaffRepositoryInterface
         return $model ? $this->hydrate($model) : null;
     }
 
+    public function findAll(): array
+    {
+        return Staff::with('user')
+            ->where('termination_date', null)
+            ->get()
+            ->map(fn (Staff $model) => $this->hydrate($model))
+            ->toArray();
+    }
+
     public function delete(int $id): bool
     {
         $model = Staff::find($id);
@@ -107,5 +116,25 @@ class StaffRepository implements StaffRepositoryInterface
         $staff->user = $this->hydrateUser($model->user);
 
         return $staff;
+    }
+
+    public function findByPosition(StaffPosition|StaffPositions $position): array
+    {
+        $values = $position instanceof StaffPosition
+            ? [$position->getValue()]
+            : $position->toArrayOfStrings();
+
+        $models = Staff::query();
+        foreach ($values as $index => $value) {
+            if ($index === 0) {
+                $models->whereJsonContains('positions', $value);
+            } else {
+                $models->orWhereJsonContains('positions', $value);
+            }
+        }
+
+        return $models->get()
+            ->map(fn (Staff $model) => $this->hydrate($model))
+            ->toArray();
     }
 }

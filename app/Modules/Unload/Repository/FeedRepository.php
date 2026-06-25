@@ -2,7 +2,6 @@
 
 namespace App\Modules\Unload\Repository;
 
-use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Product;
@@ -128,6 +127,7 @@ class FeedRepository
             'preprice' => $feed->set_preprice,
         ];
     }
+
 
 
 }

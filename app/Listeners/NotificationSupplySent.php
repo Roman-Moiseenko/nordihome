@@ -3,27 +3,22 @@
 namespace App\Listeners;
 
 use App\Events\SupplyHasSent;
-use App\Modules\Admin\Entity\Responsibility;
-use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Notifications\StaffMessage;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class NotificationSupplySent
 {
-    private StaffRepository $staffs;
-
-    public function __construct(StaffRepository $staffs)
-    {
-        $this->staffs = $staffs;
-    }
+    public function __construct(private readonly ListStaffByPositionUseCase $positionUseCase)
+    {}
 
     /**
      * Handle the event.
      */
     public function handle(SupplyHasSent $event): void
     {
-        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_SUPPLY);
+        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager());
+
 
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(

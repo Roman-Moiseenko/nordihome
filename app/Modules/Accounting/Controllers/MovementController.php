@@ -11,33 +11,25 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Report\MovementReport;
 use App\Modules\Accounting\Repository\MovementRepository;
 use App\Modules\Accounting\Service\MovementService;
-use App\Modules\Admin\Repository\StaffRepository;
-use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Repository\ProductRepository;
 use App\UseCase\PaginationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 use Inertia\Response;
-use JetBrains\PhpStorm\Deprecated;
 
 class MovementController extends Controller
 {
     private MovementService $service;
-    private StaffRepository $staffs;
     private MovementRepository $repository;
     private MovementReport $report;
 
     public function __construct(
         MovementService    $service,
-        StaffRepository    $staffs,
         MovementRepository $repository,
         MovementReport     $report,
     )
     {
         $this->service = $service;
-        $this->staffs = $staffs;
         $this->repository = $repository;
         $this->report = $report;
     }
@@ -45,7 +37,6 @@ class MovementController extends Controller
     public function index(Request $request): Response
     {
         $storages = Storage::orderBy('name')->get()->toArray();
-        $staffs = $this->staffs->getStaffsChiefs();
         $movements = $this->repository->getIndex($request, $filters);
         $statuses = MovementDocument::STATUSES;
 
@@ -53,7 +44,6 @@ class MovementController extends Controller
             'movements' => $movements,
             'filters' => $filters,
             'storages' => $storages,
-            'staffs' => $staffs,
             'statuses' => $statuses,
         ]);
     }

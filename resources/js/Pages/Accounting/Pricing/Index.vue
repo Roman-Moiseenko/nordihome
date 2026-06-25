@@ -24,8 +24,8 @@
                                :value="item.id"/>
                 </el-select>
                 <el-select v-model="filter.staff_id" placeholder="Ответственный" class="mt-1">
-                    <el-option v-for="item in staffs" :key="item.id" :label="func.fullName(item.fullname)"
-                               :value="item.id"/>
+                    <el-option v-for="item in useAuth.staffs.managers" :key="item.id" :label="item.fullName"
+                               :value="item.id" />
                 </el-select>
                 <el-input v-model="filter.comment" placeholder="Комментарий" class="mt-1"/>
                 <el-checkbox v-model="filter.draft" label="Не проведенные" :checked="filter.draft"/>
@@ -109,7 +109,8 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import AccountingSoftDelete from "@Comp/Accounting/SoftDelete.vue";
 import {classes} from "@Res/className"
-
+import {useAuthStore} from "@Res/authStore";
+const useAuth = useAuthStore();
 const props = defineProps({
     pricings: Object,
     title: {
@@ -118,7 +119,6 @@ const props = defineProps({
     },
     filters: Array,
     distributors: Array,
-    staffs: Array,
 })
 const store = useStore();
 const $delete_entity = inject("$delete_entity")

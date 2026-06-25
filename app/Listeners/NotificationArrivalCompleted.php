@@ -3,19 +3,16 @@
 namespace App\Listeners;
 
 use App\Events\ArrivalHasCompleted;
-use App\Mail\ProductArrival;
-use App\Modules\Accounting\Entity\ArrivalProduct;
-use App\Modules\Admin\Entity\Responsibility;
-use App\Modules\Admin\Repository\StaffRepository;
+
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\SubscriptionService;
-use App\Notifications\StaffMessage;
-use Illuminate\Support\Facades\Mail;
 
 class NotificationArrivalCompleted
 {
     private array $users;
-    private StaffRepository $staffs;
+    private ListStaffByPositionUseCase $positionUseCase;
 
     /**
      * Create the event listener.
@@ -23,14 +20,14 @@ class NotificationArrivalCompleted
     public function __construct(
         SubscriptionService $subscriptionService,
         UserRepository      $userRepository,
-        StaffRepository     $staffs)
+        ListStaffByPositionUseCase $positionUseCase)
     {
         if ($subscriptionService->check_subscription(self::class)) {
             $this->users = $userRepository->getUsersBySubscription(self::class);
         } else {
             $this->users = [];
         }
-        $this->staffs = $staffs;
+        $this->positionUseCase = $positionUseCase;
     }
 
     /**
@@ -39,8 +36,10 @@ class NotificationArrivalCompleted
     public function handle(ArrivalHasCompleted $event): void
     {
 
-        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager());
+        //FIXME Модуль Notification - через RecipientResolverInterface
 
+/*
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
                 'Поступление товаров на склад',
@@ -52,7 +51,7 @@ class NotificationArrivalCompleted
 
         if (!empty($this->users)) {
             $products = []; //Список товаров в поступлении, которых не было
-            /** @var ArrivalProduct $arrivalProduct */
+
             foreach ($event->arrival->products()->getModels() as $arrivalProduct) {
                 if ($arrivalProduct->product->getQuantitySell() <= $arrivalProduct->quantity) { //Кол-во на продажу, до поступления было = 0
                     $products[] = $arrivalProduct->product;
@@ -68,5 +67,7 @@ class NotificationArrivalCompleted
                     Mail::to($user->email)->queue(new ProductArrival($user_products, $user));
             }
         }
+
+        */
     }
 }

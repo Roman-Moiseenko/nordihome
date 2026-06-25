@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Order\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Admin\Repository\StaffRepository;
-use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\ProductRepository;
 use Illuminate\Http\Request;
@@ -13,17 +11,14 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
-    private StaffRepository $staffs;
     private ProductRepository $products;
     private CategoryRepository $categories;
 
     public function __construct(
-        StaffRepository   $staffs,
         ProductRepository $products,
         CategoryRepository $categories,
     )
     {
-        $this->staffs = $staffs;
         $this->products = $products;
         $this->categories = $categories;
     }

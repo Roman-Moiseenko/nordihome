@@ -4,9 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Order\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Admin\Entity\Responsibility;
-use App\Modules\Admin\Repository\StaffRepository;
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderExpenseRefundAddition;
@@ -18,27 +17,21 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class   RefundController extends Controller
+class  RefundController extends Controller
 {
-    private RefundService $service;
-    private RefundRepository $repository;
-    private StaffRepository $staffs;
 
     public function __construct(
-        RefundService    $service,
-        StaffRepository  $staffs,
-        RefundRepository $repository,
+        private readonly RefundService    $service,
+        private readonly RefundRepository $repository,
+        private readonly ListStaffByPositionUseCase $positionUseCase
     )
-    {
-        $this->service = $service;
-        $this->repository = $repository;
-        $this->staffs = $staffs;
-    }
+    {}
 
     public function index(Request $request): Response
     {
         $refunds = $this->repository->getIndex($request, $filters);
-        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_REFUND);
+        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager()
+        );
         return Inertia::render('Order/Refund/Index', [
             'refunds' => $refunds,
             'filters' => $filters,

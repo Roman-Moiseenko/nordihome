@@ -29,6 +29,7 @@ use App\Listeners\NotificationCouponCreated;
 use App\Listeners\NotificationDepartureNew;
 use App\Listeners\NotificationExpenseAssembly;
 use App\Listeners\NotificationExpenseDelivery;
+use App\Listeners\NotificationExpenseInfo;
 use App\Listeners\NotificationMovementCompleted;
 use App\Listeners\NotificationMovementNew;
 use App\Listeners\NotificationNewLogger;
@@ -126,9 +127,11 @@ class EventServiceProvider extends ServiceProvider
         ],
         ExpenseHasAssembling::class => [
             LeadSetAssembling::class,
+            NotificationExpenseInfo::class,
         ],
         ExpenseHasDelivery::class => [
             NotificationExpenseDelivery::class,
+
             LeadSetDelivery::class,
         ],
 

@@ -4,12 +4,14 @@ declare(strict_types=1);
 namespace App\Modules\Admin\Entity;
 
 use Illuminate\Database\Eloquent\Model;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
  * @property int $admin_id
  * @property int $code
  */
+#[Deprecated]
 class Responsibility extends Model
 {
     protected $table = 'responsibilities';

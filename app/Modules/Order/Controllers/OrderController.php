@@ -7,9 +7,8 @@ namespace App\Modules\Order\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Repository\OrganizationRepository;
-use App\Modules\Admin\Entity\Admin;
-use App\Modules\Admin\Entity\Responsibility;
-use App\Modules\Admin\Repository\StaffRepository;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
@@ -17,6 +16,7 @@ use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\OrderReserveService;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Service\Report\InvoiceReport;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\User\Entity\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -34,36 +34,23 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
  */
 class OrderController extends Controller
 {
-    private StaffRepository $staffs;
-    private OrderRepository $repository;
-    private OrderService $service;
-    private InvoiceReport $report;
-    private OrganizationRepository $organizations;
-    private OrderReserveService $reserveService;
 
     public function __construct(
-        OrderService           $service,
-        StaffRepository        $staffs,
-        OrderRepository        $repository,
-        InvoiceReport          $report,
-        OrganizationRepository $organizations,
-        OrderReserveService    $reserveService,
+        private readonly OrderService           $service,
+        private readonly OrderRepository        $repository,
+        private readonly InvoiceReport          $report,
+        private readonly OrganizationRepository $organizations,
+        private readonly OrderReserveService    $reserveService,
+        private readonly ListStaffByPositionUseCase $positionUseCase
     )
     {
-        $this->staffs = $staffs;
-        $this->repository = $repository;
-        $this->service = $service;
-        $this->report = $report;
-        $this->organizations = $organizations;
-        $this->reserveService = $reserveService;
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request, UserPermission $permissions): Response
     {
         $orders = $this->repository->getIndex($request, $filters);
 
-        //MAINDO Получить список сотрудников через UseCase -
-        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
 
         return Inertia::render('Order/Order/Index', [
             'orders' => $orders,
@@ -72,9 +59,9 @@ class OrderController extends Controller
         ]);
     }
 
-    public function show(Request $request, Order $order): Response
+    public function show(Request $request, Order $order, UserPermission $permissions): Response
     {
-        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_ORDER);
+        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
         $storages = Storage::orderBy('name')->getModels();
         $mainStorage = Storage::where('default', true)->first();
         $additions = $this->repository->guideAddition();

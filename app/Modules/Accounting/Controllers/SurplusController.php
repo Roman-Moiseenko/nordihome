@@ -12,7 +12,6 @@ use App\Modules\Accounting\Report\SurplusReport;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Repository\SurplusRepository;
 use App\Modules\Accounting\Service\SurplusService;
-use App\Modules\Admin\Repository\StaffRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -22,21 +21,18 @@ class SurplusController extends Controller
 {
     private SurplusService $service;
     private SurplusRepository $repository;
-    private StaffRepository $staffs;
     private SurplusReport $report;
     private OrganizationRepository $organizations;
 
     public function __construct(
         SurplusService         $service,
         SurplusRepository      $repository,
-        StaffRepository        $staffs,
         SurplusReport          $report,
         OrganizationRepository $organizations,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->staffs = $staffs;
         $this->report = $report;
         $this->organizations = $organizations;
     }
@@ -45,13 +41,11 @@ class SurplusController extends Controller
     {
         $storages = Storage::orderBy('name')->get();
         $surpluses = $this->repository->getIndex($request, $filters);
-        $staffs = $this->staffs->getStaffsChiefs();
 
         return Inertia::render('Accounting/Surplus/Index', [
             'surpluses' => $surpluses,
             'filters' => $filters,
             'storages' => $storages,
-            'staffs' => $staffs
         ]);
     }
 

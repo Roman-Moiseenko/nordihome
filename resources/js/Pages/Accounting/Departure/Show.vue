@@ -70,6 +70,7 @@ import Pagination from '@Comp/Pagination.vue'
 import DepartureInfo from './Blocks/Info.vue'
 import DepartureActions from './Blocks/Actions.vue'
 import {classes} from "@Res/className"
+import {useAuthStore} from "@Res/authStore";
 
 const props = defineProps({
     departure: Object,

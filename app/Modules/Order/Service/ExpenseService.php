@@ -5,11 +5,9 @@ namespace App\Modules\Order\Service;
 
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\BatchSaleService;
-use App\Modules\Admin\Entity\Responsibility;
 use App\Modules\Admin\Entity\Worker;
-use App\Modules\Admin\Repository\StaffRepository;
 use App\Modules\Analytics\LoggerService;
-use App\Modules\Bank\Service\YookassaService;
+use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Helpers\NotificationHelper;
@@ -28,30 +26,19 @@ use App\Modules\Order\Events\ExpenseHasCompleted;
 use App\Modules\Order\Events\OrderHasCompleted;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 
 class ExpenseService
 {
-    private OrderReserveService $reserveService;
-    private LoggerService $logger;
-    private BatchSaleService $batchSaleService;
-    private StaffRepository $staffs;
-    private YookassaService $yookassaService;
-
     public function __construct(
-        OrderReserveService $reserveService,
-        LoggerService       $logger,
-        BatchSaleService    $batchSaleService,
-        StaffRepository     $staffs,
-        YookassaService     $yookassaService,
+        private readonly OrderReserveService $reserveService,
+        private readonly LoggerService       $logger,
+        private readonly BatchSaleService    $batchSaleService,
+        //private readonly StaffRepository     $staffs,
+       // private readonly YookassaService     $yookassaService,
+        private readonly StaffRepositoryInterface $staffRepository
     )
     {
-        $this->reserveService = $reserveService;
-        $this->logger = $logger;
-        $this->batchSaleService = $batchSaleService;
-        $this->staffs = $staffs;
-        $this->yookassaService = $yookassaService;
     }
 
     /**
@@ -201,16 +188,7 @@ class ExpenseService
         $expense->setNumber();
         $expense->assembly();
 
-        //Уведомление на склад на выдачу
-        $staffs = $this->staffs->getStaffsByCode(Responsibility::MANAGER_DELIVERY);
-        foreach ($staffs as $staff) {
-            $staff->notify(new StaffMessage(
-                event: NotificationHelper::EVENT_INFO,
-                message: 'Новое распоряжение на сборку',
-
-            ));
-        }
-        event(new ExpenseHasAssembling($expense));
+        event(new ExpenseHasAssembling($expense)); //Уведомление на склад на выдачу
 
         $this->logger->logOrder(order: $expense->order, action: 'Распоряжение отправлено на сборку',
             value: $expense->htmlNumDate(),

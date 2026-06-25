@@ -62,6 +62,7 @@ Route::group([
             //Route::get('/user', [AuthController::class, 'profile']);
             //Сотрудники Staff
             Route::get('staff/positions', [StaffController::class, 'positions'])->name('staff.positions');
+            Route::get('staff/groups', [StaffController::class, 'groups'])->name('staff.groups');
             Route::get('permission/grouped', [RoleController::class, 'permissions'])->name('role.permissions');
             Route::get('roles', [RoleController::class, 'roles'])->name('role.roles');
             Route::Resource('staff', StaffController::class);
