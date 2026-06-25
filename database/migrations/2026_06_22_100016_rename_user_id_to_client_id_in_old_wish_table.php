@@ -14,6 +14,14 @@ return new class extends Migration
                 $table->dropForeign(['user_id']);
                 $table->dropIndex(['user_id', 'product_id']);
                 $table->renameColumn('user_id', 'client_id');
+            });
+
+            // Удаляем записи, где client_id нет в clients
+            DB::table('wish')
+                ->whereNotIn('client_id', DB::table('clients')->select('id'))
+                ->delete();
+
+            Schema::table('wish', function (Blueprint $table) {
                 $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
                 $table->index(['client_id', 'product_id']);
             });

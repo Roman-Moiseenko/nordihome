@@ -12,6 +12,14 @@ return new class extends Migration
         Schema::table('orders', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->renameColumn('user_id', 'client_id');
+        });
+
+        // Удаляем записи, где client_id нет в clients — иначе FK (restrict) не даст создать
+        DB::table('orders')
+            ->whereNotIn('client_id', DB::table('clients')->select('id'))
+            ->delete();
+
+        Schema::table('orders', function (Blueprint $table) {
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('restrict');
         });
     }

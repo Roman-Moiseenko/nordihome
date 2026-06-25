@@ -13,6 +13,12 @@ return new class extends Migration
             if (Schema::hasColumn('leads', 'user_id')) {
                 $table->dropForeign(['user_id']);
                 $table->renameColumn('user_id', 'client_id');
+
+                // Удаляем записи, где client_id нет в clients
+                DB::table('leads')
+                    ->whereNotIn('client_id', DB::table('clients')->select('id'))
+                    ->delete();
+
                 $table->foreign('client_id')->references('id')->on('clients')->onDelete('set null');
             }
         });

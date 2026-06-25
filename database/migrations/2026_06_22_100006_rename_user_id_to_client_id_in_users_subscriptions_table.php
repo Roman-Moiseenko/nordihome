@@ -11,6 +11,14 @@ return new class extends Migration
         Schema::table('users_subscriptions', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->renameColumn('user_id', 'client_id');
+        });
+
+        // Удаляем записи, где client_id нет в clients
+        DB::table('users_subscriptions')
+            ->whereNotIn('client_id', DB::table('clients')->select('id'))
+            ->delete();
+
+        Schema::table('users_subscriptions', function (Blueprint $table) {
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }

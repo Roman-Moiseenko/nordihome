@@ -12,6 +12,14 @@ return new class extends Migration
             try { $table->dropForeign(['user_id']); } catch (\Exception $e) {}
             try { $table->dropIndex(['user_id', 'product_id']); } catch (\Exception $e) {}
             $table->renameColumn('user_id', 'client_id');
+        });
+
+        // Удаляем записи, где client_id нет в clients — иначе FK не создастся
+        DB::table('cart_storage')
+            ->whereNotIn('client_id', DB::table('clients')->select('id'))
+            ->delete();
+
+        Schema::table('cart_storage', function (Blueprint $table) {
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
             try { $table->index(['client_id', 'product_id']); } catch (\Exception $e) {}
         });

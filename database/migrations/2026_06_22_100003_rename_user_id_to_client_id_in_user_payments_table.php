@@ -11,6 +11,14 @@ return new class extends Migration
         Schema::table('user_payments', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->renameColumn('user_id', 'client_id');
+        });
+
+        // Удаляем записи, где client_id нет в clients — иначе FK не создастся
+        DB::table('user_payments')
+            ->whereNotIn('client_id', DB::table('clients')->select('id'))
+            ->delete();
+
+        Schema::table('user_payments', function (Blueprint $table) {
             $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }

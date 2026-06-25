@@ -15,9 +15,23 @@ return new class extends Migration
 
     public function up(): void
     {
+        // 1. Дропаем старые FK (на admins)
         foreach ($this->tables as $table) {
             Schema::table($table, function (Blueprint $t) {
                 $t->dropForeign(['staff_id']);
+            });
+        }
+
+        // 2. Удаляем записи, где staff_id нет в staffs
+        foreach ($this->tables as $table) {
+            DB::table($table)
+                ->whereNotIn('staff_id', DB::table('staffs')->select('id'))
+                ->delete();
+        }
+
+        // 3. Создаём новые FK на staffs
+        foreach ($this->tables as $table) {
+            Schema::table($table, function (Blueprint $t) {
                 $t->foreign('staff_id')->references('id')->on('staffs')->onDelete('set null');
             });
         }

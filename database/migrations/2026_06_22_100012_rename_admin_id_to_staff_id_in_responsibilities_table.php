@@ -11,6 +11,14 @@ return new class extends Migration
         Schema::table('responsibilities', function (Blueprint $table) {
             $table->dropForeign(['admin_id']);
             $table->renameColumn('admin_id', 'staff_id');
+        });
+
+        // Удаляем записи, где staff_id нет в staffs
+        DB::table('responsibilities')
+            ->whereNotIn('staff_id', DB::table('staffs')->select('id'))
+            ->delete();
+
+        Schema::table('responsibilities', function (Blueprint $table) {
             $table->foreign('staff_id')->references('id')->on('staffs')->onDelete('cascade');
         });
     }
