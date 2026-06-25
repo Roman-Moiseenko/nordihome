@@ -1,17 +1,8 @@
 <?php
 
 return [
-    'staff' => [
-        'sort' => 1,
-        'icon' => 'contact',
-        'title' => 'Сотрудники',
-        'route_name' => 'admin.staff.index',
-        'can' => 'staff',
-        'vue' => true,
-        'font_awesome' => 'fa-light fa-address-book'
-    ],
     'worker' => [
-        'sort' => 2,
+        'sort' => 3,
         'icon' => 'anvil',
         'title' => 'Рабочие',
         'route_name' => 'admin.worker.index',

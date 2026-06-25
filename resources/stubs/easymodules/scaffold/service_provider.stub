@@ -1,69 +1,46 @@
 <?php
 
-namespace App\Modules\Auth\Providers;
+namespace {{ class_namespace }};
 
-use App\Modules\Auth\Application\Actions\User\ChangeUserCredentialsUseCase;
-use App\Modules\Auth\Application\Actions\User\RegisterUserClientUseCase;
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\FreelanceRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
-use App\Modules\Auth\Database\Seeders\AuthRoleSeeder;
-use App\Modules\Auth\Domain\Exceptions\ClientNotFoundException;
-use App\Modules\Auth\Domain\Exceptions\RoleInvalidArgumentException;
-use App\Modules\Auth\Domain\Exceptions\StaffNotFoundException;
-use App\Modules\Auth\Domain\Services\PasswordHasherInterface;
-use App\Modules\Auth\Domain\Services\PermissionProviderInterface;
-use App\Modules\Auth\Domain\Services\RoleRepositoryInterface;
-use App\Modules\Auth\Infrastructure\Persistence\ClientRepository;
-use App\Modules\Auth\Infrastructure\Persistence\FreelanceRepository;
-use App\Modules\Auth\Infrastructure\Persistence\RoleRepository;
-use App\Modules\Auth\Infrastructure\Persistence\StaffRepository;
-use App\Modules\Auth\Infrastructure\Persistence\UserRepository;
-use App\Modules\Auth\Infrastructure\Services\LaravelPasswordHasher;
-use App\Modules\Auth\Infrastructure\Services\PermissionProvider;
-use App\Modules\Auth\Presentation\Console\Commands\AdminCreateCommand;
-use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Service Provider for Auth module
+ * Service Provider for {{ name }} module
  *
  * This provider handles automatic registration of all module components:
  * commands, translations, configuration, events, routes, views, migrations,
  * factories and seeders.
  *
- * @package App\Modules\Auth\Providers
+ * @package {{ class_namespace }}
  * @author Easy Module Generator
  * @version 1.0.0
  */
-class AuthServiceProvider extends ServiceProvider
+class {{ class }} extends ServiceProvider
 {
     /**
      * Module name
      */
-    protected string $name = 'Auth';
+    protected string $name = '{{ name }}';
 
     /**
      * Module base path within app/
      */
-    protected string $basePath = 'Modules/Auth';
+    protected string $basePath = '{{ base_path }}';
 
     /**
      * Module base namespace
      */
-    protected string $baseNamespace = 'App\Modules\Auth';
+    protected string $baseNamespace = '{{ base_namespace }}';
 
     /**
      * Namespace used for views and translations
      */
-    protected string $scopeNamespace = 'auth';
+    protected string $scopeNamespace = '{{ scope_namespace }}';
 
     /**
      * Default middlewares for web routes
@@ -84,9 +61,8 @@ class AuthServiceProvider extends ServiceProvider
      * Boot the service provider - Register all module components
      *
      * CORRECTION: Signature sans type de retour (classe parente n'en a pas)
-     * @throws BindingResolutionException
      */
-    public function boot(): void
+    public function boot()
     {
         $this->registerCommands();
         $this->registerTranslations();
@@ -98,23 +74,6 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerMigrations();
         $this->registerFactories();
         $this->registerSeeders();
-
-        // Регистрируем обработчик исключения только для этого модуля
-        $this->app->booted(function () {
-            $handler = $this->app->make(ExceptionHandler::class);
-            $handler->renderable(function (StaffNotFoundException $e) {
-                return response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
-            });
-            $handler->renderable(function (ClientNotFoundException $e) {
-                return response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
-            });
-            $handler->renderable(function (RoleInvalidArgumentException $e) {
-                return response()->json(['message' => $e->getMessage()], Response::HTTP_UNPROCESSABLE_ENTITY);
-            });
-
-
-        });
-
     }
 
     /**
@@ -122,42 +81,8 @@ class AuthServiceProvider extends ServiceProvider
      *
      * CORRECTION: Signature sans type de retour (classe parente n'en a pas)
      */
-    public function register(): void
+    public function register()
     {
-        $this->app->bind(
-            UserRepositoryInterface::class,
-            UserRepository::class
-        );
-        $this->app->bind(
-            StaffRepositoryInterface::class,
-            StaffRepository::class
-        );
-        $this->app->bind(
-            ClientRepositoryInterface::class,
-            ClientRepository::class
-        );
-        $this->app->bind(
-            FreelanceRepositoryInterface::class,
-            FreelanceRepository::class
-        );
-        $this->app->bind(
-            PasswordHasherInterface::class,
-            LaravelPasswordHasher::class
-        );
-        $this->app->bind(
-            RoleRepositoryInterface::class,
-            RoleRepository::class
-        );
-        $this->app->bind(
-            PermissionProviderInterface::class,
-            PermissionProvider::class
-        );
-        $this->app->when(ChangeUserCredentialsUseCase::class)
-            ->needs('$frontendUrl')
-            ->give(config('app.frontend_url'));
-        $this->app->when(RegisterUserClientUseCase::class)
-            ->needs('$frontendUrl')
-            ->give(config('app.frontend_url'));
         // Register module-specific services
     }
 
@@ -170,10 +95,10 @@ class AuthServiceProvider extends ServiceProvider
      *
      * Expected format: [CommandClass::class, AnotherCommand::class]
      */
-    protected function registerCommands(): void
+    protected function registerCommands()
     {
         $this->commands([
-            AdminCreateCommand::class,
+            // Add command classes here
         ]);
     }
 
@@ -187,7 +112,7 @@ class AuthServiceProvider extends ServiceProvider
      * First searches in resources/lang/modules/{scope}
      * then in the module's lang directory
      */
-    public function registerTranslations(): void
+    public function registerTranslations()
     {
         $langPath = resource_path('lang/modules/' . $this->scopeNamespace);
 
@@ -195,7 +120,7 @@ class AuthServiceProvider extends ServiceProvider
             $this->loadTranslationsFrom($langPath, $this->scopeNamespace);
             $this->loadJsonTranslationsFrom($langPath);
         } else {
-            $moduleLangPath = $this->getPath('lang');
+            $moduleLangPath = $this->getPath('{{ lang_path }}');
             $this->loadTranslationsFrom($moduleLangPath, $this->scopeNamespace);
             $this->loadJsonTranslationsFrom($moduleLangPath);
         }
@@ -213,7 +138,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected function registerConfig()
     {
-        $configPath = $this->getPath('config');
+        $configPath = $this->getPath('{{ config_path }}');
 
         if (!is_dir($configPath)) {
             return;
@@ -306,7 +231,7 @@ class AuthServiceProvider extends ServiceProvider
     /**
      * Register all module routes (web, api, console)
      */
-    public function registerRoutes(): void
+    public function registerRoutes()
     {
         $this->registerWebRoutes();
         $this->registerApiRoutes();
@@ -318,7 +243,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function registerWebRoutes()
     {
-        $routePath = $this->getPath('routes/web.php');
+        $routePath = $this->getPath('{{ routes_path }}/web.php');
 
         if (file_exists($routePath)) {
             Route::middleware($this->getWebMiddlewares())->group($routePath);
@@ -330,7 +255,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function registerApiRoutes()
     {
-        $routePath = $this->getPath('routes/api.php');
+        $routePath = $this->getPath('{{ routes_path }}/api.php');
 
         if (file_exists($routePath)) {
             Route::middleware($this->getApiMiddlewares())->group($routePath);
@@ -342,7 +267,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function registerConsoleRoutes()
     {
-        $routePath = $this->getPath('routes/console.php');
+        $routePath = $this->getPath('{{ routes_path }}/console.php');
 
         if (file_exists($routePath)) {
             Route::middleware($this->getConsoleMiddlewares())->group($routePath);
@@ -386,13 +311,13 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function registerViews()
     {
-        $sourcePath = $this->getPath('Presentation/resources/views');
+        $sourcePath = $this->getPath('{{ view_path }}');
         $viewPaths = array_merge($this->getExternalModuleViewPaths(), [$sourcePath]);
 
         $this->loadViewsFrom($viewPaths, $this->scopeNamespace);
 
         // Register Blade components
-        $componentsNamespace = $this->getNamespace('Presentation/Views/Components');
+        $componentsNamespace = $this->getNamespace('{{ component_path }}');
         Blade::componentNamespace($componentsNamespace, $this->scopeNamespace);
     }
 
@@ -426,7 +351,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function registerMigrations()
     {
-        $migrationsPath = $this->getPath('Database/Migrations');
+        $migrationsPath = $this->getPath('{{ migration_path }}');
 
         if (is_dir($migrationsPath)) {
             $this->loadMigrationsFrom($migrationsPath);
@@ -438,7 +363,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function registerFactories()
     {
-        $factoriesPath = $this->getPath('Database/Factories');
+        $factoriesPath = $this->getPath('{{ factory_path }}');
 
         if (is_dir($factoriesPath)) {
             $this->loadFactoriesFrom($factoriesPath);
@@ -456,7 +381,7 @@ class AuthServiceProvider extends ServiceProvider
 
         $this->app->afterResolving('seed.handler', function ($handler) {
             $handler->register([
-                AuthRoleSeeder::class,
+                // Add seeder classes here
             ]);
         });
     }
@@ -471,9 +396,9 @@ class AuthServiceProvider extends ServiceProvider
      * If a breadcrumbs.php file exists in Presentation/Http/, it will be
      * automatically loaded to register all breadcrumb definitions for this module.
      */
-    protected function registerBreadcrumbs(): void
+    protected function registerBreadcrumbs()
     {
-        $breadcrumbsPath = $this->getPath('Presentation/Http//breadcrumbs.php');
+        $breadcrumbsPath = $this->getPath('{{ breadcrumbs }}/breadcrumbs.php');
 
         if (file_exists($breadcrumbsPath)) {
             require $breadcrumbsPath;

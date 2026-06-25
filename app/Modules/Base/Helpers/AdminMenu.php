@@ -13,6 +13,10 @@ class AdminMenu
             $menus = array_merge($menus, include $filePath);
         });
 
+        modules_callback('Presentation/Http/menus.php', function ($filePath) use (&$menus) {
+            $menus = array_merge($menus, include $filePath);
+        });
+
         uasort($menus, function ($a, $b) {
             if (!isset($a['sort'])) return true;
             if (!isset($b['sort'])) return false;
@@ -21,5 +25,4 @@ class AdminMenu
         });
         return $menus;
     }
-
 }
