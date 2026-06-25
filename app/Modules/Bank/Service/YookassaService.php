@@ -25,9 +25,9 @@ class YookassaService
         $payment = $client->createPayment(
             [
                 'customer' => [
-                    'full_name' => $order->user->fullname->getFullName(),
-                    'phone' => $order->user->phone,
-                    'email' => $order->user->email,
+                    'full_name' => $order->client->fullname->getFullName(),
+                    'phone' => $order->client->phone,
+                    'email' => $order->client->email,
                 ],
                 'amount' => [
                     'value' => $order->getTotalAmount(),
@@ -44,9 +44,9 @@ class YookassaService
                 'description' => 'Предоплата по Заказу №' . $order->number . ' от ' . $order->htmlDate(),
                 'receipt' => [
                     'customer' => [
-                        'full_name' => $order->user->fullname->getFullName(),
-                        'phone' => $order->user->phone,
-                        'email' => $order->user->email,
+                        'full_name' => $order->client->fullname->getFullName(),
+                        'phone' => $order->client->phone,
+                        'email' => $order->client->email,
                     ],
                     'items' => $this->items($order),
                 ],
@@ -70,9 +70,9 @@ class YookassaService
         $response = $client->createReceipt(
             [
                 'customer' => [
-                    'full_name' => $expense->order->user->fullname->getFullName(),
-                    'phone' => $expense->order->user->phone,
-                    'email' => $expense->order->user->email,
+                    'full_name' => $expense->order->client->fullname->getFullName(),
+                    'phone' => $expense->order->client->phone,
+                    'email' => $expense->order->client->email,
                 ],
                 'payment_id' => $payment->yookassa_id,
                 'type' => 'payment',

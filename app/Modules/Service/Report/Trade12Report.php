@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Service\Report;
 
-use App\Modules\Accounting\Entity\Organization;
-use App\Modules\Accounting\Entity\Trader;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Service\ReportParams;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
@@ -77,9 +74,9 @@ class Trade12Report
             '{organization}' => $this->service->OrganizationText($trader, true),
             '{storage}' => $expense->storage->name,
             '{user}' => is_null($expense->order->shopper_id)
-                ? $expense->order->userFullName()
+                ? $expense->order->clientFullName()
                 : $this->service->OrganizationText($expense->order->shopper, true),
-            '{document}' => $expense->order->user->getDocumentName(),
+            '{document}' => $expense->order->client->getDocumentName(),
             '{number}' => $expense->number,
             '{date}' => $expense->created_at->format('d.m.Y'),
             '{day}' => $expense->created_at->format('d'),

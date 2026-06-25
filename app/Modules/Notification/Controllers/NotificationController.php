@@ -3,20 +3,16 @@
 namespace App\Modules\Notification\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Worker;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Employee\Entity\Employee;
-use App\Modules\Notification\Entity\Notification;
 use App\Modules\Notification\Helpers\NotificationHelper;
 use App\Modules\Notification\Requests\NotificationRequest;
 use App\Modules\Notification\Repository\NotificationRepository;
 use App\Modules\Notification\Service\NotificationService;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\DatabaseNotification;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use JetBrains\PhpStorm\Deprecated;
 
 class NotificationController extends Controller
 {

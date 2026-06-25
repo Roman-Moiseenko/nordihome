@@ -4,12 +4,12 @@
 namespace App\Modules\Admin\Request;
 
 
-use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
 /**
- * @property \App\Modules\Admin\Entity\Admin $staff
+ * @property Staff $staff
  */
 class StaffUpdateRequest extends FormRequest
 {

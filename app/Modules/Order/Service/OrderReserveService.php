@@ -5,12 +5,10 @@ namespace App\Modules\Order\Service;
 
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Support\Facades\DB;
 
 class OrderReserveService

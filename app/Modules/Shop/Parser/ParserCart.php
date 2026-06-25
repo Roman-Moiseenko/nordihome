@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Parser;
 
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\User\Entity\ParserStorage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;

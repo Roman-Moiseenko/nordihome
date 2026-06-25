@@ -3,11 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Admin\Entity\Admin;
-use App\Modules\Base\Traits\CompletedFieldModel;
-use App\Traits\HtmlInfoData;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use JetBrains\PhpStorm\Deprecated;

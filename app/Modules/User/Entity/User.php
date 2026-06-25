@@ -298,7 +298,7 @@ class User extends Authenticatable
 
     public function orders(): HasMany
     {
-        return $this->hasMany(Order::class, 'user_id', 'id')->orderByDesc('created_at');
+        return $this->hasMany(Order::class, 'client_id', 'id')->orderByDesc('created_at');
     }
 
     public function reviews(): HasMany

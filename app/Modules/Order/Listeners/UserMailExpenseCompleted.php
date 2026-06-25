@@ -23,7 +23,7 @@ class UserMailExpenseCompleted
     public function handle(ExpenseHasCompleted $event): void
     {
         SendSystemMail::dispatch(
-            $event->expense->order->user,
+            $event->expense->order->client,
             new ExpenseCompleted($event->expense),
             Order::class,
             $event->expense->order->id

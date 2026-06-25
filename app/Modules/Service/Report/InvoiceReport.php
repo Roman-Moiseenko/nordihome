@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Service\Report;
 
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderItem;
-use Illuminate\Contracts\Support\Arrayable;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf;
@@ -32,7 +30,7 @@ class InvoiceReport
 
         //Данные о клиенте
         if (is_null($order->shopper_id)) {
-            $client = $order->userFullName();
+            $client = $order->clientFullName();
         } else {
             $organization = $order->shopper;
             $client = $organization->full_name . ', ИНН ' .

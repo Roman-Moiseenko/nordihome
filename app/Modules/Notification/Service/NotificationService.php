@@ -2,7 +2,7 @@
 
 namespace App\Modules\Notification\Service;
 
-use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Employee\Entity\Employee;
 use App\Modules\Notification\Events\TelegramHasReceived;
@@ -27,18 +27,22 @@ class NotificationService
         }
 
         foreach ($staff_ids as $staff_id) {
-            $staff = Staff::find($staff_id);
-            $staff->notify(
-                new StaffMessage(
-                    event: NotificationHelper::EVENT_CHIEF,
-                    message: $message,
-                    params: $params ?? null
-                )
-            );
-        }
 
-        foreach ($employee_ids as $employee_id) {
-            /** @var Employee $employee */
+            $staff = Staff::find($staff_id);
+            //FIXME Отправка сообщений
+            /*
+        $staff->notify(
+            new StaffMessage(
+                event: NotificationHelper::EVENT_CHIEF,
+                message: $message,
+                params: $params ?? null
+            )
+        );
+            */
+    }
+/*
+    foreach ($employee_ids as $employee_id) {
+
             $employee = Employee::find($employee_id);
             $employee->notify(
                 new StaffMessage(
@@ -48,6 +52,7 @@ class NotificationService
                 )
             );
         }
+    */
     }
 
     /**
@@ -56,21 +61,24 @@ class NotificationService
     public function handle(TelegramHasReceived $event): void
     {
         if ($event->operation == TelegramParams::OPERATION_READ) {
-            $event->user->notify(
-                new StaffMessage(
-                    NotificationHelper::EVENT_INFO,
-                    'Спасибо!'
-                )
-            );
-        }
+            //FIXME Отправка сообщений
+            /*
+        $event->staff->notify(
+            new StaffMessage(
+                NotificationHelper::EVENT_INFO,
+                'Спасибо!'
+            )
+        );
+             */
     }
+}
 
-    #[Deprecated]
-    public function update(Notification $notification, Request $request)
-    {
-        /**
-         * Сохраняем базовые поля
-         */
+#[Deprecated]
+public function update(Notification $notification, Request $request)
+{
+    /**
+     * Сохраняем базовые поля
+     */
         $notification->name = $request->string('name')->trim()->value();
         $notification->save();
 

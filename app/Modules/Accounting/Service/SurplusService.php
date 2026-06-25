@@ -6,11 +6,9 @@ namespace App\Modules\Accounting\Service;
 use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Accounting\Entity\SurplusProduct;
 use App\Modules\Accounting\Entity\Trader;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Product\Entity\Product;
 use DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class SurplusService extends AccountingService
 {

@@ -22,6 +22,6 @@ class NotificationOrderCanceled
     public function handle(OrderHasCanceled $event): void
     {
         //Письмо клиенту, что заказ отменен
-        Mail::to($event->order->user->email)->queue(new OrderCanceled($event->order));
+        Mail::to($event->order->client->email)->queue(new OrderCanceled($event->order));
     }
 }

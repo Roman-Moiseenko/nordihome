@@ -7,12 +7,10 @@ use App\Events\DepartureHasCompleted;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\DepartureProduct;
 use App\Modules\Accounting\Entity\Trader;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Product\Entity\Product;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class DepartureService extends AccountingService

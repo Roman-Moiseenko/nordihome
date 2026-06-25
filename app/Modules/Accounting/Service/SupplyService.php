@@ -18,14 +18,10 @@ use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Repository\StackRepository;
-use App\Modules\Accounting\Repository\SupplyRepository;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
 use App\Notifications\StaffMessage;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use JetBrains\PhpStorm\Deprecated;
 
 class SupplyService extends AccountingService
 {
@@ -315,12 +311,15 @@ class SupplyService extends AccountingService
         if (!is_null($stack->orderItem)) throw new \DomainException('Нельзя удалить товар из стека под Заказ клиенту!');
         $staff = $stack->staff;
         //Оповещение Менеджера
+                        //FIXME Отправка сообщений
+                /*
         $staff->notify(new StaffMessage(
             'Из стека поставщику удален товар',
             $stack->product->name,
             '',
             'folder-pen'
         ));
+                */
         $stack->delete();
     }
     ////<==========

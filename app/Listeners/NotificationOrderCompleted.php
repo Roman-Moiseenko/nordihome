@@ -28,7 +28,7 @@ class NotificationOrderCompleted
     public function handle(OrderHasCompleted $event): void
     {
 
-        Mail::to($event->order->user->email)->queue(new OrderCompleted($event->order));
+        Mail::to($event->order->client->email)->queue(new OrderCompleted($event->order));
         //Отправляем в очередь для запроса отзывов на купленный товар и начисления бонусов
         //TODO Переключить на продакшн
         RequestReview::dispatch($event->order)->delay(now()->addMinutes(1));

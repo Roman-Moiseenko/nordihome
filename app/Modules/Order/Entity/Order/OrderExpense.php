@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Admin\Entity\Worker;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Casts\FullNameCast;
@@ -51,7 +50,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property OrderExpenseAddition[] $additions
  * @property Storage $storage
  * @property Order $order
- * @property Admin $staff
+ * @property Staff $staff
  * @property Worker[] $workers
  * @property CalendarPeriod[] $calendarPeriods
  * @property CalendarPeriod $calendarPeriod

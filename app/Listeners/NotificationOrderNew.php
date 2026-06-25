@@ -28,7 +28,7 @@ readonly class NotificationOrderNew
     public function handle(OrderHasCreated $event): void
     {
         //Письмо клиенту о новом заказе
-        SendSystemMail::dispatch($event->order->user, new OrderNew($event->order), Order::class, $event->order->id);
+        SendSystemMail::dispatch($event->order->client, new OrderNew($event->order), Order::class, $event->order->id);
 
         $_items = '';
         foreach ($event->order->items as $item) {

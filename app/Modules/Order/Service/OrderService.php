@@ -7,7 +7,6 @@ use App\Events\PriceHasMinimum;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Service\MovementService;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Bank\Service\BankService;
@@ -380,7 +379,7 @@ class OrderService
             $staff = auth()->user()->profileable;
             $order->setStatus(OrderStatus::SET_MANAGER);
             $order->setManager($staff->id);
-            $order->setUser($user_id);
+            $order->setClient($user_id);
             $order->refresh();
             $this->logger->logOrder(order: $order, action: 'Заказ создан менеджером');
         });
@@ -477,7 +476,7 @@ class OrderService
                 //Создаем ссылку на оплату
                 $link_payment = $request->boolean('payment.qr') ? $this->bankService->createPaymentLink($order) : null;
                 SendSystemMail::dispatch(
-                    $order->user,
+                    $order->client,
                     new OrderAwaitingMail($order, $invoice, $link_payment),
                     Order::class,
                     $order->id,
@@ -555,7 +554,7 @@ class OrderService
             \Log::info('2');
         }
 
-        $last_price = $product->getPrice(false, $order->user);
+        $last_price = $product->getPrice(false, $order->client);
         \Log::info('$quantity = ' . $quantity);
         \Log::info('$quantity_preorder = ' . $quantity_preorder);
         if ($quantity > 0) {
@@ -953,7 +952,7 @@ class OrderService
                     $order->coupon_amount = 0;
                 }
             } else {
-                $coupon = $this->repository->getCoupon($code, $order->user_id);
+                $coupon = $this->repository->getCoupon($code, $order->client_id);
                 if (is_null($coupon)) throw new \DomainException('Неверный код купона');
                 if ($coupon->started_at->gt(now())) throw new \DomainException('Купон еще не действует');
                 if ($coupon->finished_at->lt(now())) throw new \DomainException('Купон уже не действует');
@@ -1004,7 +1003,7 @@ class OrderService
     public function setUser(Order $order, Request $request): void
     {
         $user = User::find($request->integer('user_id'));
-        $order->user_id = $user->id;
+        $order->client_id = $user->id;
         if (!is_null($user->organization)) $order->shopper_id = $user->organization->id;
         $order->save();
     }
@@ -1047,21 +1046,27 @@ class OrderService
             /** @var Order $order */
             $order = Order::find($event->id);
             try {
-                $order->setManager($event->user->id);
+                $order->setManager($event->staff->id);
                 $order->setStatus(OrderStatus::SET_MANAGER);
-                $event->user->notify(
+                //FIXME Отправка сообщений
+                /*
+                $event->staff->notify(
                     new StaffMessage(
                         NotificationHelper::EVENT_INFO,
                         'Принято!'
                     )
                 );
+                */
             } catch (\DomainException $e) {
-                $event->user->notify(
+                                //FIXME Отправка сообщений
+                /*
+                $event->staff->notify(
                     new StaffMessage(
                         NotificationHelper::EVENT_ERROR,
                         $e->getMessage()
                     )
                 );
+                */
             }
 
         }

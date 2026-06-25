@@ -8,13 +8,10 @@ use App\Modules\Accounting\Entity\InventoryProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SurplusProduct;
 use App\Modules\Accounting\Entity\Trader;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Product\Entity\Product;
 use DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use JetBrains\PhpStorm\Deprecated;
 
 class InventoryService extends AccountingService
 {

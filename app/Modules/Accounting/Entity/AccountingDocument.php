@@ -2,7 +2,6 @@
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
@@ -23,7 +22,7 @@ use JetBrains\PhpStorm\Pure;
  * @property int $staff_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property Admin $staff
+ * @property Staff $staff
  * @property AccountingProduct[] $products
  */
 abstract class AccountingDocument extends Model

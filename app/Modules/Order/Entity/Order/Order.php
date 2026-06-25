@@ -5,8 +5,8 @@ namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Organization;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Analytics\Entity\LoggerOrder;
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
@@ -16,7 +16,6 @@ use App\Modules\Mail\Entity\SystemMail;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Service\Entity\Report;
-use App\Modules\User\Entity\User;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -33,13 +32,13 @@ use JetBrains\PhpStorm\Pure;
 /**
  * @property int $id
  * @property int $number - номер заказа, присваивается автоматически ++ при отправке на оплату
- * @property int $user_id
+ * @property int $client_id
  * @property int $shopper_id
  * @property int $trader_id
  * @property int $type //ONLINE, MANUAL, SHOP, PARSER
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
- * @property int $staff_id // Admin::class - менеджер, создавший или прикрепленный к заказу
+ * @property int $staff_id // Staff::class - менеджер, создавший или прикрепленный к заказу
  * @property int $discount_id //Скидка на заказ - от суммы, или по дням
  * @property int $discount_amount //Скидка в рублях для фиксации конечного значения
  * @property float $coupon_amount //Примененная сумма скидки по товару
@@ -56,13 +55,13 @@ use JetBrains\PhpStorm\Pure;
  * @property OrderPayment $payment //Последний платежи за заказ
  * @property OrderExpense[] $expenses //Расходники на выдачу товаров и услуг - расчет от $issuances
  * @property OrderItem[] $items
- * @property User $user Клиент покупатель
+ * @property Client $client Клиент покупатель
  * @property Organization $shopper Организация покупатель
  * @property Organization $trader Организация продавец
  * @property OrderResponsible[] $responsible - удалить
  * @property MovementDocument[] $movements
  * @property Discount $discount
- * @property Admin $staff
+ * @property Staff $staff
  * @property Coupon $coupon
  * @property OrderExpenseRefund $refund
  * @property LoggerOrder[] $logs
@@ -89,7 +88,7 @@ class Order extends Model
     ];
 
     protected $fillable = [
-        'user_id',
+        'client_id',
         'type',
         'paid',
         'finished',
@@ -109,11 +108,11 @@ class Order extends Model
         'coupon_amount' => 'float',
     ];
 
-    public static function register(int|null $user_id, int $type, int $trader_id): self
+    public static function register(int|null $client_id, int $type, int $trader_id): self
     {
         $number = self::get()->count();
         $order = self::create([
-            'user_id' => $user_id,
+            'client_id' => $client_id,
             'type' => $type,
             'paid' => false,
             'trader_id' => $trader_id,
@@ -239,10 +238,10 @@ class Order extends Model
         $this->save();
     }
 
-    public function setUser(int $user_id = null): void
+    public function setClient(int $client_id = null): void
     {
-        if ($this->user_id != null) throw new \DomainException("Заказ уже привязан к клиенту");
-        $this->user_id = $user_id;
+        if ($this->client_id != null) throw new \DomainException("Заказ уже привязан к клиенту");
+        $this->client_id = $client_id;
         $this->save();
     }
 
@@ -353,7 +352,7 @@ class Order extends Model
         }
         return null;
     }
-    public function getManager(): ?Admin
+    public function getManager(): ?Staff
     {
         if (is_null($this->staff_id)) return null;
         return $this->staff->first();
@@ -678,14 +677,14 @@ class Order extends Model
         return $this->hasMany(OrderResponsible::class, 'order_id', 'id');
     }
 
-    public function user(): BelongsTo
+    public function client(): BelongsTo
     {
         return $this
-            ->belongsTo(User::class, 'user_id', 'id')
-            ->withDefault(function (User $user) {
-                $user->fullname->surname = 'Розничный клиент';
-                $user->email = null;
-                $user->phone = '';
+            ->belongsTo(Client::class, 'client_id', 'id')
+            ->withDefault(function (Client $client) {
+                $client->fullname->surname = 'Розничный клиент';
+                $client->email = null;
+                $client->phone = '';
             });
     }
 
@@ -760,9 +759,9 @@ class Order extends Model
         return OrderStatus::STATUSES[$this->status->value] . $comment;
     }
 
-    public function userFullName(): string
+    public function clientFullName(): string
     {
-        return $this->user->fullname->getFullName();
+        return $this->client->fullname->getFullName();
     }
 
     public function clearReserve(): void

@@ -3,17 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Admin\Entity\Admin;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Entity\Photo;
-use App\Modules\Base\Traits\CompletedFieldModel;
-use App\Traits\HtmlInfoData;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
 
 /**
@@ -23,7 +18,7 @@ use JetBrains\PhpStorm\Deprecated;
  *
  * @property Storage $storage
  * @property DepartureProduct[] $departureProducts
- * @property Admin $staff
+ * @property Staff $staff
  * @property InventoryDocument $inventory
  * @property Photo[] $photos
  * @property Organization $customer Заказчик

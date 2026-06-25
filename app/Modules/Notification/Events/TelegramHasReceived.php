@@ -2,8 +2,7 @@
 
 namespace App\Modules\Notification\Events;
 
-use App\Modules\Admin\Entity\Admin;
-use App\Modules\Admin\Entity\Worker;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Employee\Entity\Employee;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
@@ -15,13 +14,13 @@ class TelegramHasReceived
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Admin|Worker $user;
+    public Staff $staff;
     public int $operation;
     public int $id;
 
-    public function __construct(Admin|Worker $user, int $operation, int $id)
+    public function __construct(Staff $staff, int $operation, int $id)
     {
-        $this->user = $user;
+        $this->staff = $staff;
         $this->operation = $operation;
         $this->id = $id;
     }

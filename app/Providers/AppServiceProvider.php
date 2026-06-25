@@ -2,11 +2,8 @@
 
 namespace App\Providers;
 
-use App\Modules\Admin\Entity\Options;
-use App\Modules\Setting\Entity\Setting;
 use App\Modules\Setting\Entity\Settings;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -43,9 +40,6 @@ class AppServiceProvider extends ServiceProvider
         */
        // $options = new Options();
 
-        App::bind(Options::class, function() {
-            return new Options();
-        });
 
 
     }

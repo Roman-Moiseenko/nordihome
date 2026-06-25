@@ -3,10 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Cart;
 
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Storage\HybridStorage;
 use JetBrains\PhpStorm\ArrayShape;

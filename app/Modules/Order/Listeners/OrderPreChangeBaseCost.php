@@ -28,8 +28,8 @@ class OrderPreChangeBaseCost
 
             foreach ($order->items as $item) {
                 if ($item->preorder) {
-                    $item->base_cost = $item->product->getPrice(false, $order->user);
-                    $item->sell_cost = $item->product->getPrice(false, $order->user);
+                    $item->base_cost = $item->product->getPrice(false, $order->client);
+                    $item->sell_cost = $item->product->getPrice(false, $order->client);
                     $item->save();
                 }
             }

@@ -4,7 +4,6 @@
 namespace App\Modules\Order\Entity\Order;
 
 
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +19,7 @@ use JetBrains\PhpStorm\Deprecated;
  * @property Carbon $created_at
  * @property Carbon $close_at
  * @property int $staff_post
- * @property Admin $staff
+ * @property Staff $staff
  *
  */
 class OrderResponsible extends Model

@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Notification\Repository;
 
-use App\Modules\Admin\Entity\Admin;
-use App\Modules\Admin\Entity\Worker;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Employee\Entity\Employee;
 use App\Modules\Notification\Entity\TelegramRead;
 use App\Modules\Notification\Helpers\NotificationHelper;
@@ -15,17 +14,15 @@ class TelegramRepository
 
     public function getUserByTelegram(mixed $telegram_user_id)
     {
-        //Сотрудник?
-        $user = Admin::where('telegram_user_id', $telegram_user_id)->first();
-        if (is_null($user)) {
+        //FIXME сделать через UseCase из Auth\Staff
+        $staff = Staff::where('telegram_chat_id', $telegram_user_id)->first();
+        if (is_null($staff)) {
             //Персонал?
-            $user = Worker::where('telegram_user_id', $telegram_user_id)->first();
-            if (is_null($user)) {
-                //TODO Сообщение Админу на блокировку $telegram_user_id
-                throw new \DomainException('Посторонний в чате ' . $telegram_user_id);
-            }
+            //TODO Сообщение Админу на блокировку $telegram_user_id
+            throw new \DomainException('Посторонний в чате ' . $telegram_user_id);
+
         }
-        return $user;
+        return $staff;
     }
 
     public function checkMessage(int $message_id, int $telegram_user_id, string $message)

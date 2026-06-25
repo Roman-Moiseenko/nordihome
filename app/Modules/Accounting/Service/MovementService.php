@@ -8,21 +8,14 @@ use App\Events\ThrowableHasAppeared;
 use App\Modules\Accounting\Entity\AccountingDocument;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\MovementProduct;
-use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageArrivalItem;
 use App\Modules\Accounting\Entity\StorageDepartureItem;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Auth\Infrastructure\Models\Staff;
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Service\OrderReserveService;
 use App\Modules\Product\Entity\Product;
 use App\Notifications\StaffMessage;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Deprecated;
 
 class MovementService extends AccountingService
 {
@@ -104,7 +97,10 @@ class MovementService extends AccountingService
             }
             $document->statusCompleted();
             if (!is_null($document->order)) { //Уведомляем менеджера, что товар поступил
+                //FIXME Отправка сообщений
+                /*
                 $document->order->staff->notify(new StaffMessage('Перемещение товара по заказу', $document->order->htmlNum()));
+                */
             }
         });
     }

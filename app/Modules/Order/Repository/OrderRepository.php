@@ -125,8 +125,8 @@ class OrderRepository
         return array_merge($order->toArray(), [
             'staff' => is_null($order->staff_id) ? 'Не назначен' : $order->staff->fullname->getShortname(),
             'user' => [
-                'name' => $order->user->getPublicName(),
-                'phone' => $order->user->phone,
+                'name' => $order->client->getPublicName(),
+                'phone' => $order->client->phone,
             ],
             'amount' => $order->getTotalAmount(),
             'refund' => $order->getRefundAmount(),
@@ -155,7 +155,7 @@ class OrderRepository
             'pre_order' => $order->items()->where('preorder', true)->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
             'items' => $order->items()->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
             'additions' => $order->additions()->get()->map(fn(OrderAddition $orderAddition) => $this->OrderAdditionToArray($orderAddition)),
-            'user' => is_null($order->user_id) ? null : $this->users->UserToArray($order->user),
+            'user' => is_null($order->client_id) ? null : $this->users->UserToArray($order->client),
             'amount' => [
                 'base' => $order->getBaseAmount(),
                 'manual' => (int)$order->manual,
@@ -169,7 +169,7 @@ class OrderRepository
                 'refund' => $order->getRefundAmount(),
             ],
             'emails' => is_null($order->shopper_id) ? [] : array_select($order->shopper->getEmails()),
-            'shoppers' => is_null($order->user) ? [] : $order->user->organizations,
+            'shoppers' => is_null($order->client) ? [] : $order->client->organizations,
             'reserve' => $order->getReserveTo(),
             'payments' => $order->payments()->get()->map(fn(OrderPayment $payment) => [
                 'id' => $payment->id,
@@ -313,8 +313,8 @@ class OrderRepository
                 'periods' => $this->calendar->getDayPeriods($expense->calendarPeriod->calendar->date_at),
             ],
             'user' => [
-                'name' => $expense->order->user->getPublicName(),
-                'phone' => $expense->order->user->phone,
+                'name' => $expense->order->client->getPublicName(),
+                'phone' => $expense->order->client->phone,
             ],
             'workers' => $expense->workers()->get()->map(function (Worker $worker) {
                 return array_merge($worker->toArray(), [

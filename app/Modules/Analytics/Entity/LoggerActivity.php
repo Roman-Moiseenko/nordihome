@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Analytics\Entity;
 
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

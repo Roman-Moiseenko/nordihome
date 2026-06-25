@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Service;
 
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
 use JetBrains\PhpStorm\Pure;
 
 class CouponService

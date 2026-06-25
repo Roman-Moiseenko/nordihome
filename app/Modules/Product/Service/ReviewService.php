@@ -6,14 +6,12 @@ namespace App\Modules\Product\Service;
 
 use App\Events\CouponHasCreated;
 use App\Events\ReviewHasEdit;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\DiscountReview;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Review;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\User\Entity\User;
 use Illuminate\Support\Facades\Auth;
 

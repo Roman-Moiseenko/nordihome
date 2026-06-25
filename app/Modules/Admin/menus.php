@@ -10,18 +10,4 @@ return [
         'vue' => true,
         'font_awesome' => 'fa-light fa-user-helmet-safety'
     ],
-   /* 'task' => [
-        'sort' => 70,
-        'icon' => 'clipboard-check',
-        'title' => 'Задачи',
-        'can' => '',
-        'sub_menu' => [
-            'notification' => [
-                'icon' => 'bell-ring',
-                'title' => 'Уведомления',
-                'route_name' => 'admin.staff.notification',
-                'action' => true,
-            ],
-        ],
-    ],*/
 ];

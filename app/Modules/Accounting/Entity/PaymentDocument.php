@@ -2,12 +2,8 @@
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Base\Casts\BankPaymentCast;
 use App\Modules\Base\Entity\BankPayment;
-use App\Modules\Base\Traits\CompletedFieldModel;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 

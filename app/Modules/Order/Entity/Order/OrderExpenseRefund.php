@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
@@ -27,7 +26,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property OrderExpenseRefundAddition[] $additions
  *
  * @property OrderExpense $expense
- * @property Admin $staff
+ * @property Staff $staff
  */
 class OrderExpenseRefund extends Model
 {

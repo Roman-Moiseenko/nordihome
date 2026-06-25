@@ -2,10 +2,7 @@
 
 namespace App\Console\Commands\Admin;
 
-use App\Modules\Admin\Entity\Admin;
-use App\Modules\Product\Entity\Attribute;
 use App\Modules\Product\Entity\Modification;
-use App\Modules\Product\Entity\Product;
 use Illuminate\Console\Command;
 
 class DelModifCommand extends Command

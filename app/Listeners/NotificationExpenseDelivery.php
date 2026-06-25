@@ -18,7 +18,7 @@ class NotificationExpenseDelivery
     {
         if ($event->expense->isRegion())
             SendSystemMail::dispatch(
-                $event->expense->order->user,
+                $event->expense->order->client,
                 new ExpenseDelivery($event->expense),
                 Order::class,
                 $event->expense->order->id

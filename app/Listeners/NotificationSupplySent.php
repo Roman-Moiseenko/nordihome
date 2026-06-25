@@ -19,7 +19,8 @@ class NotificationSupplySent
     {
         $staffs = $this->positionUseCase->execute(StaffPosition::customerManager());
 
-
+                //FIXME Отправка сообщений
+                /*
         foreach ($staffs as $staff) {
             $staff->notify(new StaffMessage(
                 'Поступило распоряжение на сборку',
@@ -28,5 +29,6 @@ class NotificationSupplySent
                 'folder-pen'
             ));
         }
+                */
     }
 }

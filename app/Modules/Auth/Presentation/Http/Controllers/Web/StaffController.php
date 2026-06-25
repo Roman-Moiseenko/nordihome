@@ -3,7 +3,6 @@
 namespace App\Modules\Auth\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Auth\Application\Actions\Staff\CreateStaffUseCase;
 use App\Modules\Auth\Application\Actions\Staff\IndexStaffUseCase;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffGroupPositions;
@@ -17,9 +16,7 @@ use App\Modules\Auth\Application\DTOs\Staff\StaffIndexData;
 use App\Modules\Auth\Application\DTOs\Staff\StaffUpdateData;
 use App\Modules\Auth\Application\DTOs\Staff\StaffViewData;
 use App\Modules\Auth\Application\DTOs\User\UpdateUserData;
-use App\Modules\Auth\Application\DTOs\User\UserViewData;
 use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
-use App\Modules\Auth\Domain\ValueObjects\RoleName;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;

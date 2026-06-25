@@ -41,7 +41,7 @@ class LeadService
         $data = [];
         $order->lead->create_lead($data);
         $order->lead->order_id = $order->id;
-        $order->lead->client_id = $order->user_id;
+        $order->lead->client_id = $order->client_id;
         $order->lead->save();
 
         //Если есть менеджер ф-ция create_sales()

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Accounting\Entity\Organization;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Casts\BankPaymentCast;
 use App\Modules\Base\Entity\BankPayment;
@@ -32,7 +31,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property int $method
  * @property string $comment
  * @property bool $is_refund - Возврат
- * @property Admin $staff
+ * @property Staff $staff
  * @property Order $order
  * @property Organization $shopper
  * @property Organization $trader
@@ -184,7 +183,7 @@ class OrderPayment extends Model
     //Хелперы
     public function getUserFullName(): string
     {
-        return $this->order->user->fullname->getFullName();
+        return $this->order->client->fullname->getFullName();
     }
 
     public function htmlDate(string $field = 'created_at'): string

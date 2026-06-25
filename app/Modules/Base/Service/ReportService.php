@@ -4,8 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Base\Service;
 
 use App\Modules\Accounting\Entity\Organization;
-use App\Modules\Admin\Entity\Options;
-use App\Modules\Setting\Entity\Settings;
+use Illuminate\Support\Facades\Config;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -14,9 +13,9 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
 class ReportService
 {
-    public function template(string $name, ): string
+    public function template(string $name): string
     {
-        $config = (new Options())->report[$name];
+        $config = Config::get('shop.report')[$name];
 
         return resource_path() . $config['template'];
     }

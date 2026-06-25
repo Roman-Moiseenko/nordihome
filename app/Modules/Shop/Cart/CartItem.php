@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Cart;
 
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Shop\CartItemInterface;
 

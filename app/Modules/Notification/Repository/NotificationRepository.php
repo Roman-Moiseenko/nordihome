@@ -2,10 +2,8 @@
 
 namespace App\Modules\Notification\Repository;
 
-use App\Modules\Admin\Entity\Admin;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class NotificationRepository
 {

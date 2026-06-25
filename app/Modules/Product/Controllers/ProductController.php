@@ -6,7 +6,6 @@ namespace App\Modules\Product\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Trader;
-use App\Modules\Admin\Entity\Options;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Packages;
 use App\Modules\Guide\Entity\Country;
@@ -14,23 +13,18 @@ use App\Modules\Guide\Entity\MarkingType;
 use App\Modules\Guide\Entity\Measuring;
 use App\Modules\Guide\Entity\VAT;
 use App\Modules\Product\Entity\AttributeGroup;
-use App\Modules\Product\Entity\Bonus;
 use App\Modules\Product\Entity\Brand;
-use App\Modules\Product\Entity\Category;
 use App\Modules\Product\Entity\Equivalent;
 use App\Modules\Product\Entity\Product;
 use App\Modules\Product\Entity\Series;
 use App\Modules\Product\Entity\Tag;
-use App\Modules\Product\Helper\ProductHelper;
 use App\Modules\Product\Repository\CategoryRepository;
 use App\Modules\Product\Repository\ProductRepository;
 use App\Modules\Product\Request\ProductCreateRequest;
 use App\Modules\Product\Service\ProductService;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 use Inertia\Response;
 use JetBrains\PhpStorm\Deprecated;
@@ -39,19 +33,16 @@ use Log;
 class ProductController extends Controller
 {
     private ProductService $service;
-    private Options $options;
     private ProductRepository $repository;
     private CategoryRepository $categories;
 
     public function __construct(
         ProductService     $service,
-        Options            $options,
         ProductRepository  $repository,
         CategoryRepository $categories,
     )
     {
         $this->service = $service;
-        $this->options = $options;
         $this->repository = $repository;
         $this->categories = $categories;
     }

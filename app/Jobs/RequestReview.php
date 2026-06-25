@@ -30,7 +30,7 @@ class RequestReview implements ShouldQueue
     public function handle(ReviewService $service): void
     {
         try {
-            $user = $this->order->user;
+            $user = $this->order->client;
             $products = [];
             foreach ($this->order->expenses as $expense) {
                 foreach ($expense->items as $item) {

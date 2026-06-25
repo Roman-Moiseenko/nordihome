@@ -4,7 +4,6 @@ namespace App\Modules\User\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
-use App\Modules\Admin\Entity\Admin;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\RegisterService;
 use App\Providers\RouteServiceProvider;

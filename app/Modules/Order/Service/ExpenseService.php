@@ -106,7 +106,7 @@ class ExpenseService
 
 
         if ($method == 'expense') {
-            $user = $expense->order->user;
+            $user = $expense->order->client;
             $expense->recipient = clone $user->fullname;
             $expense->address = clone $user->address;
             $expense->phone = $user->phone;
@@ -116,8 +116,8 @@ class ExpenseService
         }
 
         $expense->type = OrderExpense::DELIVERY_STORAGE;
-        $expense->recipient = clone $expense->order->user->fullname;
-        $expense->phone = $expense->order->user->phone;
+        $expense->recipient = clone $expense->order->client->fullname;
+        $expense->phone = $expense->order->client->phone;
         $expense->save();
         $expense->setNumber();
 
@@ -294,20 +294,26 @@ class ExpenseService
         if ($event->operation == TelegramParams::OPERATION_ASSEMBLING) {
             $expense = OrderExpense::find($event->id);
             if ($expense->isAssembled()) {
-                $event->user->notify(
+                //FIXME Отправка сообщений
+                /*
+                $event->staff->notify(
                     new StaffMessage(
                         NotificationHelper::EVENT_ERROR,
                         'Вы уже отметили!'
                     )
                 );
+                */
             } else {
                 $this->assembled($expense);
-                $event->user->notify(
+                //FIXME Отправка сообщений
+                /*
+                $event->staff->notify(
                     new StaffMessage(
                         NotificationHelper::EVENT_INFO,
                         'Принято!'
                     )
                 );
+                */
             }
         }
     }
