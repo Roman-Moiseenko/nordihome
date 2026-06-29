@@ -5,9 +5,9 @@
         <div class="flex mt-5">
 
             <SearchAddProduct
-                :route="route('admin.product.reduced.add-product')"
+                :route="route('admin.catalog.reduced.add-product')"
             />
-            <SearchAddProducts :route="route('admin.product.reduced.add-products')" class="ml-3"/>
+            <SearchAddProducts :route="route('admin.catalog.reduced.add-products')" class="ml-3"/>
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
 
                 <el-select filterable v-model="filter.category" placeholder="Категория" class="mt-1">
@@ -82,10 +82,10 @@ const filter = reactive({
 })
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.reduced.del-product', {product: row.id}));
+    $delete_entity.show(route('admin.catalog.reduced.del-product', {product: row.id}));
 }
 function routeClick(row) {
-    router.get(route('admin.product.product.edit', {product: row.id}))
+    router.get(route('admin.catalog.product.edit', {product: row.id}))
 }
 </script>
 

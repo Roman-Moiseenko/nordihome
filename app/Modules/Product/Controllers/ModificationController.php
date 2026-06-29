@@ -32,7 +32,7 @@ class ModificationController extends Controller
     public function index(Request $request): Response
     {
         $modifications = $this->repository->getIndex($request, $filters);
-        return Inertia::render('Product/Modification/Index', [
+        return Inertia::render('Catalog/Modification/Index', [
             'modifications' => $modifications,
             'filters' => $filters,
         ]);
