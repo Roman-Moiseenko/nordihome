@@ -1,34 +1,82 @@
 <?php
 
-declare(strict_types=1);
-
-/*
-|--------------------------------------------------------------------------
-| Admin menu items for Product module
-|--------------------------------------------------------------------------
-|
-| Register menu items following the format below.
-| Replace 'Product' with the plural form (e.g., 'users', 'pages').
-|
-| Each item requires:
-|   - sort:        int (sorting order in sidebar)
-|   - icon:        string (Lucide icon name, e.g. 'users', 'settings')
-|   - title:       string (display text in sidebar)
-|   - route_name:  string (named route, e.g. 'admin.catalog.index')
-|   - can:         string (permission gate, e.g. 'staff', 'pages')
-|   - vue:         bool (uses Vue/Inertia frontend)
-|   - font_awesome: string (Font Awesome class, e.g. 'fa-light fa-users')
-|
-*/
-
 return [
-    '{{ name_plural }}' => [
-        'sort'         => 10,
-        'icon'         => 'users',
-        'title'        => 'Product',
-        'route_name'   => 'admin.catalog.product.index',
-        'can'          => 'Product',
-        'vue'          => true,
-        'font_awesome' => 'fa-light fa-users',
+    'shop' => [
+        'sort' => 40,
+        'title' => 'Магазин',
+        'can' => 'product',
+        'font_awesome' => 'fa-light fa-shop',
+        'sub_menu' => [
+            'product' => [
+                'title' => 'Все Товары',
+                'route_name' => 'admin.catalog.product.index',
+                'font_awesome' => 'fa-light fa-box-open',
+            ],
+            'category' => [
+                'title' => 'Категории',
+                'route_name' => 'admin.catalog.category.index',
+                'font_awesome' => 'fa-light fa-folder-tree',
+            ],
+            'rooms' => [
+                'title' => 'По комнатам',
+                'route_name' => 'admin.catalog.category.index',
+                'font_awesome' => 'fa-light fa-house-laptop',
+            ],
+            'modification' => [
+                'title' => 'Модификации',
+                'route_name' => 'admin.catalog.modification.index', // 'admin.catalog.tag.index'
+                'font_awesome' => 'fa-light fa-folder-gear',
+            ],
+            'equivalent' => [
+                'title' => 'Аналоги',
+                'route_name' => 'admin.catalog.equivalent.index',
+                'font_awesome' => 'fa-light fa-balloons',
+            ],
+            'group' => [
+                'title' => 'Группы товаров',
+                'route_name' => 'admin.catalog.group.index',
+                'font_awesome' => 'fa-light fa-boxes-stacked',
+            ],
+            'attribute' => [
+                'title' => 'Атрибуты',
+                'route_name' => 'admin.catalog.attribute.index',
+                'font_awesome' => 'fa-light fa-pallet-boxes',
+            ],
+            'tags' => [
+                'title' => 'Метки',
+                'route_name' => 'admin.catalog.tag.index',
+                'font_awesome' => 'fa-light fa-tags',
+            ],
+            'brands' => [
+                'title' => 'Бренды',
+                'route_name' => 'admin.catalog.brand.index',
+                'font_awesome' => 'fa-light fa-copyright',
+            ],
+            'series' => [
+                'title' => 'Серии',
+                'route_name' => 'admin.catalog.series.index',
+                'font_awesome' => 'fa-regular fa-booth-curtain',
+            ],
+            'priority' => [
+                'title' => 'Приоритет',
+                'route_name' => 'admin.catalog.priority.index',
+                'font_awesome' => 'fa-light fa-flag-pennant',
+            ],
+            'price_reduced' => [
+                'title' => 'Цена снижена',
+                'route_name' => 'admin.catalog.reduced.index',
+                'font_awesome' => 'fa-light fa-money-check-dollar-pen',
+            ],
+            'only_on_order' => [
+                'title' => 'Только под заказ',
+                'route_name' => 'admin.catalog.on-order.index', //
+                'font_awesome' => 'fa-light fa-truck-container',
+            ],
+            'parser' => [
+                'title' => 'Парсер * (временно)',
+                'route_name' => 'admin.catalog.parser.index',
+                'font_awesome' => 'fa-light fa-folder-magnifying-glass',
+            ],
+        ],
     ],
 ];

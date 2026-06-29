@@ -20,7 +20,7 @@ use RecursiveIteratorIterator;
  * @author Easy Module Generator
  * @version 1.0.0
  */
-class ProductServiceProvider extends ServiceProvider
+class CatalogServiceProvider extends ServiceProvider
 {
     /**
      * Module name
@@ -40,7 +40,7 @@ class ProductServiceProvider extends ServiceProvider
     /**
      * Namespace used for views and translations
      */
-    protected string $scopeNamespace = 'product';
+    protected string $scopeNamespace = 'caat';
 
     /**
      * Default middlewares for web routes
@@ -398,7 +398,7 @@ class ProductServiceProvider extends ServiceProvider
      */
     protected function registerBreadcrumbs()
     {
-        $breadcrumbsPath = $this->getPath('{{ breadcrumbs }}/breadcrumbs.php');
+        $breadcrumbsPath = $this->getPath('Presentation/Http/breadcrumbs.php');
 
         if (file_exists($breadcrumbsPath)) {
             require $breadcrumbsPath;
