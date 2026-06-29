@@ -12,7 +12,7 @@ use App\Modules\Accounting\Entity\StorageArrivalItem;
 use App\Modules\Accounting\Entity\StorageDepartureItem;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Order\Service\OrderReserveService;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Notifications\StaffMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

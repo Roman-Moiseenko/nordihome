@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,7 +14,7 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn('frequency_json');
-            $table->integer('frequency')->default(\App\Modules\Product\Entity\Product::FREQUENCY_NOT);
+            $table->integer('frequency')->default(Product::FREQUENCY_NOT);
         });
     }
 

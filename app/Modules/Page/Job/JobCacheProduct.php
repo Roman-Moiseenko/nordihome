@@ -5,7 +5,7 @@ namespace App\Modules\Page\Job;
 
 use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Mail\Mailable\OutboxMail;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shop\Repository\CacheRepository;
 use Illuminate\Bus\Queueable;

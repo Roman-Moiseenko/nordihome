@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Repository\SlugRepository;
 use Diglactic\Breadcrumbs\Breadcrumbs;

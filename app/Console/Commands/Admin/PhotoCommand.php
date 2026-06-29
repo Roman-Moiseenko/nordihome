@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Console\Commands\Admin;
 
 
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use function Laravel\Prompts\confirm;

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Schema\Blueprint;

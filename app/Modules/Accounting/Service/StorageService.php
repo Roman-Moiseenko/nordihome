@@ -6,7 +6,7 @@ namespace App\Modules\Accounting\Service;
 use App\Modules\Accounting\Entity\AccountingProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Base\Entity\Photo;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;

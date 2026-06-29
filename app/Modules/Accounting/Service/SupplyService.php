@@ -19,7 +19,7 @@ use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Notifications\StaffMessage;
 use Illuminate\Support\Facades\DB;
 

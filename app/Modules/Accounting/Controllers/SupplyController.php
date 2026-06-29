@@ -14,7 +14,7 @@ use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Repository\SupplyRepository;
 use App\Modules\Accounting\Service\SupplyService;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Product\Entity\Brand;
+use App\Modules\Catalog\Entity\Brand;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 

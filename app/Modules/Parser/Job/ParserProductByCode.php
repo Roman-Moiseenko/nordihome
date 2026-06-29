@@ -7,7 +7,7 @@ use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Page\Job\JobCacheProduct;
 use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Parser\Service\ParserAbstract;
-use App\Modules\Product\Service\ProductService;
+use App\Modules\Catalog\Service\ProductService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Container\Attributes\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;

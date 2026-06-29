@@ -3,16 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Base\Casts\BankDetailCast;
-use App\Modules\Base\Casts\CompanyContactCast;
-use App\Modules\Base\Casts\CompanyDetailCast;
-use App\Modules\Base\Casts\GeoAddressCast;
-use App\Modules\Base\Entity\BankDetail;
-use App\Modules\Base\Entity\CompanyContact;
-use App\Modules\Base\Entity\CompanyDetail;
-use App\Modules\Base\Entity\CompanyModel;
-use App\Modules\Base\Entity\GeoAddress;
-use App\Modules\Product\Entity\Product;
+
+use App\Modules\Catalog\Entity\Product;
 use Faker\Provider\ar_EG\Company;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

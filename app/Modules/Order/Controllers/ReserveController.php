@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

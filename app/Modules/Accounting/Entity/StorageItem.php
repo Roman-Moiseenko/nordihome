@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Order\Entity\OrderReserve;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;

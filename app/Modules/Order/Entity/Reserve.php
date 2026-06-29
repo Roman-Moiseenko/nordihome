@@ -5,7 +5,7 @@ namespace App\Modules\Order\Entity;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\User\Entity\CartStorage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

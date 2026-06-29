@@ -8,9 +8,9 @@ use App\Modules\Page\Entity\MenuItem;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
-use App\Modules\Product\Entity\Category;
-use App\Modules\Product\Entity\Group;
-use App\Modules\Product\Repository\CategoryRepository;
+use App\Modules\Catalog\Entity\Category;
+use App\Modules\Catalog\Entity\Group;
+use App\Modules\Catalog\Repository\CategoryRepository;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 

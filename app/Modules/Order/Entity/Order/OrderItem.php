@@ -6,7 +6,7 @@ namespace App\Modules\Order\Entity\Order;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Order\Entity\OrderReserve;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\Shop\CartItemInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

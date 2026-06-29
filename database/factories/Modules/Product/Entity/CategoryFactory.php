@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace Database\Factories\Modules\Product\Entity;
 
-use App\Modules\Product\Entity\Category;
+use App\Modules\Catalog\Entity\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class CategoryFactory extends Factory

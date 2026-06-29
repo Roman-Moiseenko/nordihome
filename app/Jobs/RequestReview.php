@@ -6,7 +6,7 @@ use App\Events\ThrowableHasAppeared;
 use App\Mail\UserReview;
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Product\Service\ReviewService;
+use App\Modules\Catalog\Service\ReviewService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Application;

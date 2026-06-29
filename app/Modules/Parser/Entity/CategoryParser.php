@@ -4,8 +4,8 @@ namespace App\Modules\Parser\Entity;
 
 use App\Modules\Base\Traits\ImageField;
 use App\Modules\Base\Traits\PhotoField;
-use App\Modules\Product\Entity\Brand;
-use App\Modules\Product\Entity\Category;
+use App\Modules\Catalog\Entity\Brand;
+use App\Modules\Catalog\Entity\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

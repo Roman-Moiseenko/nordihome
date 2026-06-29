@@ -28,7 +28,7 @@
 * $product->getPrice(true) - предыдущая цена
 
 
-Остальное см в app\Modules\Product\Entity
+Остальное см в app\Modules\Catalog\Entity
 
 */
 

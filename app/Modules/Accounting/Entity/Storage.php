@@ -5,7 +5,7 @@ namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Traits\ImageField;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;

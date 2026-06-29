@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Order\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Product\Repository\CategoryRepository;
-use App\Modules\Product\Repository\ProductRepository;
+use App\Modules\Catalog\Repository\CategoryRepository;
+use App\Modules\Catalog\Repository\ProductRepository;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 

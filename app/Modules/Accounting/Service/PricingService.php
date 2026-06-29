@@ -10,7 +10,7 @@ use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\PricingProduct;
 use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Accounting\Entity\SurplusProduct;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

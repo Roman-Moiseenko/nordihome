@@ -7,7 +7,7 @@ use App\Modules\Base\Helpers\AdminMenu;
 use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Shop\Repository\MenuRepository;
 use Cache;
-use App\Modules\Product\Repository\CategoryRepository;
+use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Repository\ShopRepository;
 use Illuminate\Support\Facades\Auth;

@@ -16,7 +16,7 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Page\Entity\PostCategory;
-use App\Modules\Product\Entity\Category;
+use App\Modules\Catalog\Entity\Category;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;

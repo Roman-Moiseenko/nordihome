@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderPayment;
@@ -86,7 +87,7 @@ Breadcrumbs::for('admin.order.product.index', function (BreadcrumbTrail $trail) 
     $trail->push('Все товары', route('admin.order.product.index'));
 });
 
-Breadcrumbs::for('admin.order.product.show', function (BreadcrumbTrail $trail, \App\Modules\Product\Entity\Product $product) {
+Breadcrumbs::for('admin.order.product.show', function (BreadcrumbTrail $trail, Product $product) {
     $trail->parent('admin.order.product.index');
     $trail->push($product->name, route('admin.order.product.show', $product));
 });

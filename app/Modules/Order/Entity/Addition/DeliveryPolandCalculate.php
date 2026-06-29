@@ -5,7 +5,7 @@ namespace App\Modules\Order\Entity\Addition;
 
 use App\Modules\Admin\Entity\Setting;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Product\Entity\Brand;
+use App\Modules\Catalog\Entity\Brand;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use Illuminate\Support\Facades\Log;

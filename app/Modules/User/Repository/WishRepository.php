@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Repository;
 
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 

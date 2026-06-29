@@ -32,7 +32,7 @@ use App\Modules\Order\Events\OrderHasAwaiting;
 use App\Modules\Order\Events\OrderHasCanceled;
 use App\Modules\Order\Events\OrderHasCreated;
 use App\Modules\Order\Events\OrderHasSetManager;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Settings;

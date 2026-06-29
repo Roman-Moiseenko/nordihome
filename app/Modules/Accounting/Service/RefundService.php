@@ -6,7 +6,7 @@ use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\RefundDocument;
 use App\Modules\Accounting\Entity\RefundProduct;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Http\Request;
 
 class RefundService extends AccountingService

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Page\Entity\Widgets;
 
 use App\Modules\Base\Traits\ImageField;
-use App\Modules\Product\Entity\Group;
+use App\Modules\Catalog\Entity\Group;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**

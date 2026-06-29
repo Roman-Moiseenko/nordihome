@@ -6,8 +6,8 @@ use App\Modules\Base\Service\HttpPage;
 use App\Modules\Base\Service\TranslateService;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;
-use App\Modules\Product\Entity\Brand;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Brand;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Contracts\Support\Arrayable;
 
 abstract class ParserAbstract

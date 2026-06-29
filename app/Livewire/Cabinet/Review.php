@@ -3,8 +3,8 @@
 namespace App\Livewire\Cabinet;
 
 use App\Modules\Base\Entity\Photo;
-use App\Modules\Product\Entity\Review as ProductReview;
-use App\Modules\Product\Service\ReviewService;
+use App\Modules\Catalog\Entity\Review as ProductReview;
+use App\Modules\Catalog\Service\ReviewService;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 

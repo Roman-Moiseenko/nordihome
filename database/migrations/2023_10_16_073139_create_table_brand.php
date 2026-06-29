@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Catalog\Entity\Brand;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -19,7 +20,7 @@ return new class extends Migration
             $table->json('sameas_json');
             $table->string('photo')->default('');
         });
-        \App\Modules\Product\Entity\Brand::create(['name' => 'NONAME', 'description' => 'Default Brand']);
+       Brand::create(['name' => 'NONAME', 'description' => 'Default Brand']);
     }
 
     /**

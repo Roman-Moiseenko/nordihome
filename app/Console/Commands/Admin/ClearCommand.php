@@ -21,7 +21,7 @@ use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\OrderReserve;
 
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\Service\Entity\Report;
 use App\Modules\Shop\Cart\Storage\DBStorage;
 use App\Modules\User\Entity\CartCookie;

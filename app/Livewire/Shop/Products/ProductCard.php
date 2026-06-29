@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Shop\Products;
 
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\WishService;
 use Livewire\Attributes\On;

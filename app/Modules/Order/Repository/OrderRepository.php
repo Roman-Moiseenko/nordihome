@@ -21,7 +21,7 @@ use App\Modules\Order\Entity\Order\OrderMovement;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Helpers\OrderHelper;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Repository\UserRepository;
 use Illuminate\Contracts\Support\Arrayable;

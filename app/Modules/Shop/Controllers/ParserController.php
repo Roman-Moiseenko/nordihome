@@ -6,7 +6,7 @@ namespace App\Modules\Shop\Controllers;
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\Parser\ParserService;
 use App\Modules\Shop\Repository\ViewRepository;

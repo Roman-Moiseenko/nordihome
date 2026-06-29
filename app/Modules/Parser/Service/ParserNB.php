@@ -11,12 +11,12 @@ use App\Modules\Guide\Entity\VAT;
 use App\Modules\NBRussia\Helper\MenuListing;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;
-use App\Modules\Product\Entity\Attribute;
-use App\Modules\Product\Entity\AttributeVariant;
-use App\Modules\Product\Entity\Category;
-use App\Modules\Product\Entity\Modification;
-use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Service\ModificationService;
+use App\Modules\Catalog\Entity\Attribute;
+use App\Modules\Catalog\Entity\AttributeVariant;
+use App\Modules\Catalog\Entity\Category;
+use App\Modules\Catalog\Entity\Modification;
+use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Service\ModificationService;
 use Illuminate\Support\Facades\Log;
 
 class ParserNB extends ParserAbstract

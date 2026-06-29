@@ -9,7 +9,7 @@ use App\Modules\Base\Entity\BankDetail;
 use App\Modules\Base\Entity\CompanyContact;
 use App\Modules\Base\Entity\CompanyDetail;
 use App\Modules\Base\Entity\GeoAddress;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

@@ -3,9 +3,9 @@
 namespace App\Modules\Unload\Repository;
 
 use App\Modules\Base\Entity\Photo;
-use App\Modules\Product\Entity\Category;
-use App\Modules\Product\Entity\Product;
-use App\Modules\Product\Entity\Tag;
+use App\Modules\Catalog\Entity\Category;
+use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Entity\Tag;
 use App\Modules\Unload\Entity\Feed;
 use Illuminate\Http\Request;
 

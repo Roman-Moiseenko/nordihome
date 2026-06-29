@@ -5,7 +5,7 @@ namespace App\Console\Commands\Admin;
 
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Job\ConvertPhotoProduct;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 

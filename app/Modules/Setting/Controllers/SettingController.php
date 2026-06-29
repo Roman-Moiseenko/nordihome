@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Setting\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Product\Entity\Group;
+use App\Modules\Catalog\Entity\Group;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Setting\Service\SettingService;

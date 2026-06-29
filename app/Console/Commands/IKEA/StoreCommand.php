@@ -3,8 +3,8 @@
 namespace App\Console\Commands\IKEA;
 
 use App\Modules\Parser\Service\ParserIkea;
-use App\Modules\Product\Entity\Category;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Category;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Console\Command;
 
 class StoreCommand extends Command

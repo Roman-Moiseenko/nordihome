@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Admin;
 
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Console\Command;
 
 class ModelCommand extends Command

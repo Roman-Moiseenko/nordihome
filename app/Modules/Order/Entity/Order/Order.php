@@ -14,7 +14,7 @@ use App\Modules\Lead\Entity\Lead;
 use App\Modules\Lead\Traits\LeadField;
 use App\Modules\Mail\Entity\SystemMail;
 use App\Modules\Order\Entity\OrderReserve;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\Service\Entity\Report;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;

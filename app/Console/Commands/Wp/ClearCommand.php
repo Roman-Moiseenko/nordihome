@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Wp;
 
-use App\Modules\Product\Entity\Category;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Category;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 

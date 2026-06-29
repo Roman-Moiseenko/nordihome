@@ -2,7 +2,7 @@
 
 namespace App\Events;
 
-use App\Modules\Product\Entity\Review;
+use App\Modules\Catalog\Entity\Review;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;

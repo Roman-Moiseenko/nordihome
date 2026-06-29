@@ -5,7 +5,7 @@ namespace App\Modules\Page\Repository;
 
 use App\Modules\Page\Entity\Widgets\ProductWidget;
 use App\Modules\Page\Entity\Widgets\ProductWidgetItem;
-use App\Modules\Product\Entity\Group;
+use App\Modules\Catalog\Entity\Group;
 use Illuminate\Contracts\Support\Arrayable;
 
 class ProductWidgetRepository

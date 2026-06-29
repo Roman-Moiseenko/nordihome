@@ -3,7 +3,7 @@
 namespace App\Livewire\Admin;
 
 
-use App\Modules\Product\Repository\ProductRepository;
+use App\Modules\Catalog\Repository\ProductRepository;
 use Livewire\Attributes\On;
 use Livewire\Component;
 

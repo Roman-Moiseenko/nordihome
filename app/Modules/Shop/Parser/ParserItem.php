@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Parser;
 
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\Shop\CartItemInterface;
 use JetBrains\PhpStorm\Deprecated;
 

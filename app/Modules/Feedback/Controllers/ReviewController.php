@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Feedback\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Product\Entity\Review;
-use App\Modules\Product\Repository\ReviewRepository;
-use App\Modules\Product\Service\ReviewService;
+use App\Modules\Catalog\Entity\Review;
+use App\Modules\Catalog\Repository\ReviewRepository;
+use App\Modules\Catalog\Service\ReviewService;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller

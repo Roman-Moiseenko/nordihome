@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands\Admin;
 
-use App\Modules\Product\Entity\Attribute;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Attribute;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Console\Command;
 
 class AttributeCommand extends Command

@@ -3,7 +3,7 @@
 
 namespace App\Modules\User\Entity;
 
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 

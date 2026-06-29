@@ -8,7 +8,7 @@ use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Discount\Repository\PromotionRepository;
 use App\Modules\Order\Entity\ItemInterface;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Product\Entity\Bonus;
+use App\Modules\Catalog\Entity\Bonus;
 use App\Modules\Shop\Cart\CartItem;
 use App\Modules\Shop\CartItemInterface;
 

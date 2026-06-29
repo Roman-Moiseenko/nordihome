@@ -12,7 +12,7 @@ use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Repository\DistributorRepository;
 use App\Modules\Accounting\Service\DistributorService;
 use App\Modules\Accounting\Service\SupplyService;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\UseCase\PaginationService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;

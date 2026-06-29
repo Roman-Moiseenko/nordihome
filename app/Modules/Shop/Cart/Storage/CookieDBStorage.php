@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Cart\Storage;
 
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\Shop\Cart\CartItem;
 use App\Modules\User\Entity\CartCookie;
 

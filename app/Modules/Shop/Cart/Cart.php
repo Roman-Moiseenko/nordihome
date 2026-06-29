@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Cart;
 
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Storage\HybridStorage;

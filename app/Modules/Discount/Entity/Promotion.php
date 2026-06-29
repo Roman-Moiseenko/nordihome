@@ -6,7 +6,7 @@ namespace App\Modules\Discount\Entity;
 use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

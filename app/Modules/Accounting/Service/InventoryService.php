@@ -9,7 +9,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SurplusProduct;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Auth\Infrastructure\Models\Staff;
-use App\Modules\Product\Entity\Product;
+use App\Modules\Catalog\Entity\Product;
 use DB;
 use Illuminate\Http\Request;
 

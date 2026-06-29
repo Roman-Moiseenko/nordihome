@@ -2,7 +2,7 @@
 
 namespace App\Livewire\NBRussia;
 
-use App\Modules\Product\Entity\Category;
+use App\Modules\Catalog\Entity\Category;
 use Livewire\Component;
 
 class TableSizes extends Component

@@ -14,7 +14,7 @@ use App\Modules\Lead\Entity\Lead;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
-use App\Modules\Product\Entity\Review;
+use App\Modules\Catalog\Entity\Review;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
