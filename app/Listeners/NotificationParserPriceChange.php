@@ -25,7 +25,7 @@ class NotificationParserPriceChange
             $staff->notify(new StaffMessage(
                 'Изменилась цена в Икеа',
                 "Артикул товара " . $event->productParser->product->code,
-                route('admin.product.edit', $event->productParser->product),
+                route('admin.product.product.edit', $event->productParser->product),
                 'package-open'
             ));
         }

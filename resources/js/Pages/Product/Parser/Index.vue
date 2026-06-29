@@ -46,7 +46,7 @@
                                 {{ scope.row.sanctioned ? 'Не санкционный' : 'Санкционный' }}
                             </el-link>
                             &nbsp;|&nbsp;
-                            <Link type="primary" :href="route('admin.product.edit', {product: scope.row.product_id})">К товару</Link>
+                            <Link type="primary" :href="route('admin.product.product.edit', {product: scope.row.product_id})">К товару</Link>
                             &nbsp;|&nbsp;
                             <el-link
                                 @click="onBlock(scope.row.id)"

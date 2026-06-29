@@ -3,6 +3,7 @@
 namespace App\Modules\Auth\Domain\ValueObjects;
 
 use InvalidArgumentException;
+use setasign\Fpdi\PdfParser\Filter\Lzw;
 
 final class StaffPosition
 {
@@ -13,6 +14,7 @@ final class StaffPosition
     public const string DRIVER = 'driver';                       // Водитель
     public const string ASSEMBLER = 'assembler';                 // Сборщик
     public const string LOGIST = 'logist';                       // Логист
+    public const string LOADER = 'loader';                       // Грузчик
 
     private const array MANAGERS = [
         self::CUSTOMER_MANAGER,
@@ -22,6 +24,7 @@ final class StaffPosition
         self::DRIVER,
         self::ASSEMBLER,
         self::LOGIST,
+        self::LOADER,
     ];
     private const array ALLOWED = [
         self::SUPERVISOR,
@@ -31,6 +34,7 @@ final class StaffPosition
         self::DRIVER,
         self::ASSEMBLER,
         self::LOGIST,
+        self::LOADER,
     ];
 
     private const array POSITIONS = [
@@ -41,6 +45,7 @@ final class StaffPosition
         self::DRIVER => "Водитель",
         self::ASSEMBLER => "Сборщик",
         self::LOGIST => "Логист",
+        self::LOADER => "Грузчик",
     ];
 
     private string $value;

@@ -34,7 +34,7 @@
                     <span class="font-medium ml-2">
                         <Link
                             :type="product.modification.base_product_id === prod.id ? 'danger' : 'primary'"
-                              :href="route('admin.product.edit', prod.id)">
+                              :href="route('admin.product.product.edit', prod.id)">
                             {{ prod.name }}
                         </Link>
                     </span>

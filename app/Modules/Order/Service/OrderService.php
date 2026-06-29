@@ -154,9 +154,11 @@ class OrderService
     {
         $enabled = true;
         $error = '';
-        if (Auth::guard('web')->check()) {
+        if (auth()->check()) {
             /** @var User $user */
-            $user = Auth::guard('web')->user();
+            $user = auth()->user();
+            $client = auth()->user()->profileable;
+            //FIXME User в Client
         } else {
             throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
         }

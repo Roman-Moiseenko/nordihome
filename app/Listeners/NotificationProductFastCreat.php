@@ -24,7 +24,7 @@ class NotificationProductFastCreat
             $staff->notify(new StaffMessage(
                 'Создан новый товар в продажах ',
                 "Артикул товара " . $event->product->code,
-                route('admin.product.edit', $event->product),
+                route('admin.product.product.edit', $event->product),
                 'package-open'
             ));
         }

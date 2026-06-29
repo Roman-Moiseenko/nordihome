@@ -23,7 +23,7 @@ class SystemMailService
         $data['html'] = $mail->content;
 
         Mail::send('mail.repeat', $data, function($message) use ($mail) {
-            $message->to($mail->emails, $mail->user->getPublicName())->subject($mail->title);
+            $message->to($mail->emails, $mail->client->getPublicName())->subject($mail->title);
 
             foreach($mail->attachments as $file) {
                 $message->attach($file);

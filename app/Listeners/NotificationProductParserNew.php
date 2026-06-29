@@ -25,7 +25,7 @@ class NotificationProductParserNew
             $staff->notify(new StaffMessage(
                 'Добавлен новый товар через Парсер',
                 "Артикул товара " . $event->product->code,
-                route('admin.product.edit', $event->product),
+                route('admin.product.product.edit', $event->product),
                 'package-open'
             ));
         }

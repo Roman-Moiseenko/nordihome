@@ -6,6 +6,7 @@ namespace App\Modules\Product\Entity;
 use App\Modules\Accounting\Entity\BalanceProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Casts\DimensionsCast;
 use App\Modules\Base\Casts\PackagesCast;
 use App\Modules\Base\Entity\Dimensions;
@@ -455,17 +456,18 @@ class Product extends Model
      * Показывать на сайте (Фронтенд)
      */
     //TODO Переделать, везде запрашивать $user
-    public function getPrice(bool $previous = false, User $user = null): float
+    public function getPrice(bool $previous = false, Client $client = null): float
     {
         $price = 0;
         if (!$this->isSale()) return $price;
-        if (is_null($user)) {
-            $user = Auth::guard('web')->user();
+        if (is_null($client)) {
+            $user = auth()->user();
+            if ($user->profileable instanceof Client) $client = $user->profileable;
         }
 
-        if (!is_null($user)) {
-            if ($user->isBulk() && $this->getPriceBulk($previous) != 0) $price = $this->getPriceBulk($previous); //Оптовый клиент
-            if ($user->isSpecial() && $this->getPriceSpecial($previous) != 0) $price = $this->getPriceSpecial($previous); //Спец Клиент
+        if (!is_null($client)) {
+            if ($client->isBulk() && $this->getPriceBulk($previous) != 0) $price = $this->getPriceBulk($previous); //Оптовый клиент
+            if ($client->isSpecial() && $this->getPriceSpecial($previous) != 0) $price = $this->getPriceSpecial($previous); //Спец Клиент
         }
         //Проверяем установленные цены
         if ($price == 0) $price = $this->getPriceRetail($previous);
@@ -474,7 +476,7 @@ class Product extends Model
         if ($price == 0) $price = $this->getPriceParser($previous);
         //Проверяем модификацию
         if ($price == 0 && !is_null($this->modification) && ($this->id != $this->modification->base_product_id)) {
-            return $this->modification->base_product->getPrice($previous, $user);
+            return $this->modification->base_product->getPrice($previous, $client);
         }
 
         return $price;
@@ -976,7 +978,7 @@ class Product extends Model
             'code_search' => $this->code_search,
             'image' => $this->getImage(),
             'price' => $this->getPrice(),
-            'url' => route('admin.product.edit', $this),
+            'url' => route('admin.product.product.edit', $this),
             'count' => $this->getQuantitySell(),
             'stock' => $this->getQuantitySell() > 0,
         ];

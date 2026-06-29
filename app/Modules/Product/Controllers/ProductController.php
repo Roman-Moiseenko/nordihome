@@ -88,7 +88,7 @@ class ProductController extends Controller
         //dd($request->all());
 
         $product = $this->service->createFull($request);
-        return redirect()->route('admin.product.edit', $product)->with('success', 'Товар создан');
+        return redirect()->route('admin.product.product.edit', $product)->with('success', 'Товар создан');
 
     }
 
@@ -154,12 +154,6 @@ class ProductController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    #[Deprecated]
-    public function update(Request $request, Product $product)
-    {
-        $product = $this->service->update($request, $product);
-        return redirect()->route('admin.product.edit', compact('product'));
-    }
 
     public function destroy(Product $product): RedirectResponse
     {
@@ -171,7 +165,7 @@ class ProductController extends Controller
     {
         $this->service->restore($id);
         flash('Товар восстановлен', 'success');
-        return redirect()->back();//route('admin.product.index');
+        return redirect()->back();
     }
 
     public function full_delete(int $id): RedirectResponse
@@ -250,7 +244,7 @@ class ProductController extends Controller
         return response()->json($result);
     }
 
-    public function search_add(Request $request)
+    public function search_add(Request $request): JsonResponse
     {
         $result = [];
         $products = $this->repository->search($request['search']);

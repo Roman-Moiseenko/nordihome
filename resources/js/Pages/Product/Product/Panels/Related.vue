@@ -15,7 +15,7 @@
                     Сохранять для всех товаров из Модификации
                 </el-checkbox>
                 <SearchAddProduct  caption="Добавить аксессуар"
-                                   :route="route('admin.product.edit.related', {product: product.id})"
+                                   :route="route('admin.product.product.edit.related', {product: product.id})"
                                    :preserveState="true"
                                    :params="form"
                 />
@@ -25,7 +25,7 @@
                 <div v-for="prod in product.related" class="mt-3 flex items-center p-2 bg-slate-100 rounded-md" >
                     <img v-if="prod.image" :src="prod.image" width="40" height="40"/>
                     <span class="font-medium ml-3" style="width: 120px;">{{ prod.code }}</span>
-                    <span class="font-medium ml-2"><Link type="primary" :href="route('admin.product.edit', prod.id)">{{ prod.name }}</Link></span>
+                    <span class="font-medium ml-2"><Link type="primary" :href="route('admin.product.product.edit', prod.id)">{{ prod.name }}</Link></span>
                     <div class="ml-auto">
                         <el-button type="danger" @click="onRemoveRelated(prod.id)" ><i
                             class="fa-light fa-trash"></i></el-button>
@@ -54,7 +54,7 @@ const form = reactive({
 
 function onRemoveRelated(id) {
     isSaving.value = true;
-    router.visit(route('admin.product.edit.related', {product: props.product.id}), {
+    router.visit(route('admin.product.product.edit.related', {product: props.product.id}), {
         method: "post",
         data: {
             product_id: id,

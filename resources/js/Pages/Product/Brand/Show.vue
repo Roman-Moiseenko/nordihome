@@ -47,7 +47,7 @@ const store = useStore();
 const tableData = ref([...props.brand.products.data])
 
 function routeClick(row) {
-    router.get(route('admin.product.show', {product: row.id}))
+    router.get(route('admin.product.product.show', {product: row.id}))
 }
 </script>
 

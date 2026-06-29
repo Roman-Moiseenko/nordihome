@@ -11,7 +11,7 @@
             <!-- Колонка 1 -->
             <el-col :span="8">
                 <SearchAddProduct  caption="Добавить"
-                                   :route="route('admin.product.edit.composite', {product: product.id})"
+                                   :route="route('admin.product.product.edit.composite', {product: product.id})"
                                    :preserveState="true"
                                    :quantity="true"
                 />
@@ -21,7 +21,7 @@
                 <div v-for="prod in form.composite" class="mt-3 flex items-center p-2 bg-slate-100 rounded-md" >
                     <img v-if="prod.image" :src="prod.image" width="40" height="40"/>
                     <span class="font-medium ml-3" style="width: 120px;">{{ prod.code }}</span>
-                    <span class="font-medium ml-2"><Link type="primary" :href="route('admin.product.edit', prod.id)">{{ prod.name }}</Link></span>
+                    <span class="font-medium ml-2"><Link type="primary" :href="route('admin.product.product.edit', prod.id)">{{ prod.name }}</Link></span>
                     <el-input v-model="prod.quantity" @change="onAutoSave" :disabled="isSaving" class="ml-2" style="width: 160px;">
                         <template #append>шт</template>
                     </el-input>
@@ -59,7 +59,7 @@ function onAutoSave() {
 }
 function onRemoveComposite(id) {
     isSaving.value = true
-    router.visit(route('admin.product.edit.composite', {product: props.product.id}), {
+    router.visit(route('admin.product.product.edit.composite', {product: props.product.id}), {
         method: "post",
         data: {
             product_id: id,
@@ -78,7 +78,7 @@ function onRemoveComposite(id) {
 function onSave() {
     isSaving.value = true;
     form.action = 'edit'
-    router.visit(route('admin.product.edit.composite', {product: props.product.id}), {
+    router.visit(route('admin.product.product.edit.composite', {product: props.product.id}), {
         method: "post",
         data: form,
         preserveState: true,

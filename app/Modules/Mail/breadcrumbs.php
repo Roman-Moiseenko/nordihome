@@ -13,7 +13,7 @@ Breadcrumbs::for('admin.mail.system.index', function (BreadcrumbTrail $trail) {
 });
 Breadcrumbs::for('admin.mail.system.show', function (BreadcrumbTrail $trail, SystemMail $mail) {
     $trail->parent('admin.mail.system.index');
-    $trail->push($mail->user->fullname->getShortName(), route('admin.mail.system.show', $mail));
+    $trail->push($mail->client->fullname->getShortName(), route('admin.mail.system.show', $mail));
 });
 //Входящая
 Breadcrumbs::for('admin.mail.inbox.index', function (BreadcrumbTrail $trail) {

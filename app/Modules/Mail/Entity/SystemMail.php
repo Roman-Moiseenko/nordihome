@@ -2,6 +2,7 @@
 
 namespace App\Modules\Mail\Entity;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Mail\Mailable\AbstractMailable;
 use App\Modules\Mail\Mailable\ExpenseCompleted;
 use App\Modules\Mail\Mailable\ExpenseDelivery;
@@ -19,7 +20,7 @@ use Illuminate\Support\Facades\Log;
 /**
  * @property int $id
  * @property string $mailable
- * @property int $user_id
+ * @property int $client_id
  * @property string $title
  * @property string $content
  * @property array $attachments
@@ -30,7 +31,7 @@ use Illuminate\Support\Facades\Log;
  * @property int $systemable_id
  * @property string $systemable_type
  * @property array $emails
- * @property User $user
+ * @property Client $client
  */
 class SystemMail extends Model
 {
@@ -49,7 +50,7 @@ class SystemMail extends Model
     ];
     protected $fillable = [
         'mailable',
-        'user_id',
+        'client_id',
         'content',
         'attachments',
         'count',
@@ -75,7 +76,7 @@ class SystemMail extends Model
     {
         return self::create([
             'mailable' => $mailable::class,
-            'user_id' => $user_id,
+            'client_id' => $user_id,
             'title' => $mailable->envelope()->subject,
             'content' => $mailable->render(),
             'attachments' => $mailable->getFiles(),
@@ -95,9 +96,9 @@ class SystemMail extends Model
         return self::MAILABLES[$this->mailable];
     }
 
-    public function user(): BelongsTo
+    public function client(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 
 

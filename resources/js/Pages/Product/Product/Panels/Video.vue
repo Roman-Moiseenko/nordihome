@@ -83,7 +83,7 @@ function onAutoSave() {
 }
 function onSave() {
     isSaving.value = true;
-    router.visit(route('admin.product.edit.video', {product: props.product.id}), {
+    router.visit(route('admin.product.product.edit.video', {product: props.product.id}), {
         method: "post",
         data: form,
         preserveState: true,

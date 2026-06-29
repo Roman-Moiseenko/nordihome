@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->integer('client')->default(\App\Modules\User\Entity\User::CLIENT_RETAIL);
+            $table->integer('client')->default(7700);
         });
     }
 

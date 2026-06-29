@@ -15,11 +15,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('active')->default(false);
         });
-        $users = User::where('status', 'active')->get();
-        foreach ($users as $user) {
-            $user->active = true;
-            $user->save();
-        }
+
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('status');
         });
@@ -41,11 +37,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->string('status')->default('wait');
         });
-        $users = User::where('active', true)->get();
-        foreach ($users as $user) {
-            $user->status = 'active';
-            $user->save();
-        }
+
 
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('active');

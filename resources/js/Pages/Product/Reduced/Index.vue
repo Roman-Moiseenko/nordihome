@@ -85,7 +85,7 @@ function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.product.reduced.del-product', {product: row.id}));
 }
 function routeClick(row) {
-    router.get(route('admin.product.edit', {product: row.id}))
+    router.get(route('admin.product.product.edit', {product: row.id}))
 }
 </script>
 

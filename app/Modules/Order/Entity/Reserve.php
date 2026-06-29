@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Product\Entity\Product;
 use App\Modules\User\Entity\CartStorage;
-use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\Deprecated;
@@ -14,7 +14,7 @@ use function now;
 
 /**
  * @property int $id
- * @property int $user_id
+ * @property int $client_id
  * @property int $product_id
  * @property float $quantity
  * @property int $storage_id
@@ -22,7 +22,7 @@ use function now;
  * @property Carbon $created_at
  * @property Carbon $reserve_at
  * @property Product $product
- * @property User $user
+ * @property Client $client
  * @property CartStorage $cart
  * @property OrderItem $orderItem
  * @property string $type
@@ -39,7 +39,7 @@ class Reserve extends Model
     public $timestamps = false;
     protected $table = 'reserve';
     protected $fillable = [
-        'user_id',
+        'client_id',
         'product_id',
         'quantity',
         'created_at',
@@ -55,7 +55,7 @@ class Reserve extends Model
     public static function register(int $product_id, int $quantity, int $user_id, int $minutes, string $type): self
     {
         return self::create([
-            'user_id' => $user_id,
+            'client_id' => $user_id,
             'product_id' => $product_id,
             'quantity' => $quantity,
             'created_at' => now(),
@@ -92,7 +92,7 @@ class Reserve extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 
     public function cart()

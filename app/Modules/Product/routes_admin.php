@@ -200,34 +200,45 @@ Route::group(
             Route::post('/set/{product}', [ProductController::class, 'set_image'])->name('set');
             Route::post('/move/{product}', [ProductController::class, 'move_image'])->name('move');
         });
+
         Route::group([
-            'prefix' => 'edit',
-            'as' => 'edit.'
+            'prefix' => 'product',
+            'as' => 'product.'
         ], function () {
-            Route::post('/common/{product}', [ProductController::class, 'edit_common'])->name('common');
-            Route::post('/description/{product}', [ProductController::class, 'edit_description'])->name('description');
-            Route::post('/dimensions/{product}', [ProductController::class, 'edit_dimensions'])->name('dimensions');
-            Route::post('/video/{product}', [ProductController::class, 'edit_video'])->name('video');
-            Route::post('/attribute/{product}', [ProductController::class, 'edit_attribute'])->name('attribute');
-            Route::post('/management/{product}', [ProductController::class, 'edit_management'])->name('management');
-            Route::post('/equivalent/{product}', [ProductController::class, 'edit_equivalent'])->name('equivalent');
-            Route::post('/related/{product}', [ProductController::class, 'edit_related'])->name('related');
-            Route::post('/bonus/{product}', [ProductController::class, 'edit_bonus'])->name('bonus');
-            Route::post('/composite/{product}', [ProductController::class, 'edit_composite'])->name('composite');
+            Route::post('/rename/{product}', [ProductController::class, 'rename'])->name('rename');
+            Route::post('/search', [ProductController::class, 'search'])->name('search');
+            Route::post('/search-add', [ProductController::class, 'search_add'])->name('search-add');
+            //Route::post('/search_bonus', [ProductController::class, 'search_bonus'])->name('search-bonus');
+            Route::post('/attr-modification/{product}', [ProductController::class, 'attr_modification'])->name('attr-modification');
+            Route::post('/toggle/{product}', [ProductController::class, 'toggle'])->name('toggle');
+            Route::post('/sale/{product}', [ProductController::class, 'sale'])->name('sale');
+            Route::post('/restore/{id}', [ProductController::class, 'restore'])->name('restore');
+            Route::delete('/full-delete/{id}', [ProductController::class, 'full_delete'])->name('full-delete');
+            Route::post('/fast-create', [ProductController::class, 'fast_create'])->name('fast-create');
+
+
+            Route::group([
+                'prefix' => 'edit',
+                'as' => 'edit.'
+            ], function () {
+                Route::post('/common/{product}', [ProductController::class, 'edit_common'])->name('common');
+                Route::post('/description/{product}', [ProductController::class, 'edit_description'])->name('description');
+                Route::post('/dimensions/{product}', [ProductController::class, 'edit_dimensions'])->name('dimensions');
+                Route::post('/video/{product}', [ProductController::class, 'edit_video'])->name('video');
+                Route::post('/attribute/{product}', [ProductController::class, 'edit_attribute'])->name('attribute');
+                Route::post('/management/{product}', [ProductController::class, 'edit_management'])->name('management');
+                Route::post('/equivalent/{product}', [ProductController::class, 'edit_equivalent'])->name('equivalent');
+                Route::post('/related/{product}', [ProductController::class, 'edit_related'])->name('related');
+                Route::post('/bonus/{product}', [ProductController::class, 'edit_bonus'])->name('bonus');
+                Route::post('/composite/{product}', [ProductController::class, 'edit_composite'])->name('composite');
+            });
+
+
         });
 
-        Route::post('/rename/{product}', [ProductController::class, 'rename'])->name('rename');
-        Route::post('/search', [ProductController::class, 'search'])->name('search');
-        Route::post('/search-add', [ProductController::class, 'search_add'])->name('search-add');
-        //Route::post('/search_bonus', [ProductController::class, 'search_bonus'])->name('search-bonus');
-        Route::post('/attr-modification/{product}', [ProductController::class, 'attr_modification'])->name('attr-modification');
-        Route::post('/toggle/{product}', [ProductController::class, 'toggle'])->name('toggle');
-        Route::post('/sale/{product}', [ProductController::class, 'sale'])->name('sale');
-        Route::post('/restore/{id}', [ProductController::class, 'restore'])->name('restore');
-        Route::delete('/full-delete/{id}', [ProductController::class, 'full_delete'])->name('full-delete');
-        Route::post('/fast-create', [ProductController::class, 'fast_create'])->name('fast-create');
 
+        Route::resource('product', 'ProductController')->except(['update']);
     }
 );
 
-Route::resource('product', 'ProductController');
+

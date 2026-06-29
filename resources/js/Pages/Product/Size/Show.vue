@@ -65,7 +65,6 @@ function handleDeleteEntity(row) {
 }
 function saveNameSize(id, val) {
 
-    //router.post(route('admin.product.rename', {product: props.product.id}), {name: val})
 
     router.visit(route('admin.product.size.set-size', {size: id}), {
         method: "post",

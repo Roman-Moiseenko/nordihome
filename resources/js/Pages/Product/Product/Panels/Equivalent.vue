@@ -37,7 +37,7 @@
                             <span class="font-medium ml-3" style="width: 160px;">{{ equi_prod.code }}</span>
                             <span class="font-medium ml-2">
                                 <span v-if="equi_prod.id === product.id">{{ equi_prod.name }}</span>
-                                <Link v-else type="primary" :href="route('admin.product.edit', {product: equi_prod.id})">{{ equi_prod.name }}</Link>
+                                <Link v-else type="primary" :href="route('admin.product.product.edit', {product: equi_prod.id})">{{ equi_prod.name }}</Link>
                             </span>
                         </div>
                     </div>
@@ -74,7 +74,7 @@ function onAutoSave() {
 }
 function onSave() {
     isSaving.value = true;
-    router.visit(route('admin.product.edit.equivalent', {product: props.product.id}), {
+    router.visit(route('admin.product.product.edit.equivalent', {product: props.product.id}), {
         method: "post",
         data: form,
         preserveState: true,

@@ -135,7 +135,7 @@ function onOpenDialog() {
 function handleGetProduct(val) {
     form.product_id = val
 
-    const getAttributes = route('admin.product.attr-modification', {product: form.product_id});
+    const getAttributes = route('admin.product.product.attr-modification', {product: form.product_id});
 
     axios.post(getAttributes).then(response => {
         console.log(response.data)

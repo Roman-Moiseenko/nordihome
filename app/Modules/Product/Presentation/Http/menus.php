@@ -26,7 +26,7 @@ return [
         'sort'         => 10,
         'icon'         => 'users',
         'title'        => 'Product',
-        'route_name'   => 'admin.product.index',
+        'route_name'   => 'admin.product.product.index',
         'can'          => 'Product',
         'vue'          => true,
         'font_awesome' => 'fa-light fa-users',

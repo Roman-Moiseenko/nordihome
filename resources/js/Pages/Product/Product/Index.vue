@@ -7,15 +7,15 @@
                 Создать товар
             </el-button>
             <div class="ml-3 my-auto">
-                <Link type="primary" :href="route('admin.product.index')">Все</Link>
+                <Link type="primary" :href="route('admin.product.product.index')">Все</Link>
                 ({{ count.all }}) |
-                <Link type="primary" :href="route('admin.product.index', {show: 'active'})">Опубликованные</Link>
+                <Link type="primary" :href="route('admin.product.product.index', {show: 'active'})">Опубликованные</Link>
                 ({{ count.active }}) |
-                <Link type="primary" :href="route('admin.product.index', {show: 'not_sale'})">Снятые с продажи</Link>
+                <Link type="primary" :href="route('admin.product.product.index', {show: 'not_sale'})">Снятые с продажи</Link>
                 ({{ count.not_sale }}) |
-                <Link type="primary" :href="route('admin.product.index', {show: 'draft'})">Черновики</Link>
+                <Link type="primary" :href="route('admin.product.product.index', {show: 'draft'})">Черновики</Link>
                 ({{ count.draft }})
-                <Link type="primary" :href="route('admin.product.index', {show: 'delete'})">Удаленные</Link>
+                <Link type="primary" :href="route('admin.product.product.index', {show: 'delete'})">Удаленные</Link>
                 ({{ count.delete }})
             </div>
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
@@ -169,7 +169,7 @@ function onRestore(row) {
         text: 'Идет восстановление',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-    router.visit(route('admin.product.restore', {id: row.id}), {
+    router.visit(route('admin.product.product.restore', {id: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
@@ -183,11 +183,11 @@ function onRestore(row) {
 }
 
 function onFullDelete(row) {
-    $delete_entity.show(route('admin.product.full-delete', {id: row.id}));
+    $delete_entity.show(route('admin.product.product.full-delete', {id: row.id}));
 }
 
-function onEdit(row) {
-    router.visit(route('admin.product.edit', {product: row.id}), {
+function onEdit(row: { id: any; }) {
+    router.visit(route('admin.product.product.edit', {product: row.id}), {
         method: "get",
         preserveState: true,
         preserveScroll: true,
@@ -195,16 +195,16 @@ function onEdit(row) {
 }
 
 function onAnalitics(row) {
-    router.get(route('admin.product.show', {product: row.id}))
+    router.get(route('admin.product.product.show', {product: row.id}))
 }
 
 function onCreateProduct() {
-    router.get(route('admin.product.create'))
+    router.get(route('admin.product.product.create'))
 
 }
 
 function onSaleToggle(row) {
-    router.visit(route('admin.product.sale', {product: row.id}), {
+    router.visit(route('admin.product.product.sale', {product: row.id}), {
         method: "post",
         preserveState: false,
         preserveScroll: true,
@@ -212,7 +212,7 @@ function onSaleToggle(row) {
 }
 
 function onPublishedToggle(row) {
-    router.visit(route('admin.product.toggle', {product: row.id}), {
+    router.visit(route('admin.product.product.toggle', {product: row.id}), {
         method: "post",
         preserveState: true,
         preserveScroll: true,
@@ -224,11 +224,11 @@ function onPublishedToggle(row) {
 
 
 function routeClick(row) {
-    router.get(route('admin.product.show', {product: row.id}))
+    router.get(route('admin.product.product.show', {product: row.id}))
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.destroy', {product: row.id}));
+    $delete_entity.show(route('admin.product.product.destroy', {product: row.id}));
 }
 
 ///Массовые действия

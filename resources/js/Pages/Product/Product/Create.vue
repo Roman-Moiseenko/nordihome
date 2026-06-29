@@ -140,7 +140,7 @@ function onName() {
 
 function onCreate() {
 
-    router.post(route('admin.product.store'), form)
+    router.post(route('admin.product.product.store'), form)
 }
 
 </script>

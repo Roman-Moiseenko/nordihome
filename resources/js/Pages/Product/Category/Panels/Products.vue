@@ -96,19 +96,19 @@ const props = defineProps({
 const tableData = ref([...props.category.products]);
 const $delete_entity = inject("$delete_entity", "product")
 function routeClick(row) {
-    router.get(route('admin.product.edit', {product: row.id}))
+    router.get(route('admin.product.product.edit', {product: row.id}))
 }
 
 function onRestore(row) {
-    router.post(route('admin.product.restore', {product: row.id}))
+    router.post(route('admin.product.product.restore', {product: row.id}))
 }
 
 function onFullDelete(row) {
-    $delete_entity.show(route('admin.product.full-delete', {id: row.id}));
+    $delete_entity.show(route('admin.product.product.full-delete', {id: row.id}));
 }
 
 function onEdit(row) {
-    router.visit(route('admin.product.edit', {product: row.id}), {
+    router.visit(route('admin.product.product.edit', {product: row.id}), {
         method: "get",
         preserveState: true,
         preserveScroll: true,
@@ -116,16 +116,16 @@ function onEdit(row) {
 }
 
 function onAnalitics(row) {
-    router.get(route('admin.product.show', {product: row.id}))
+    router.get(route('admin.product.product.show', {product: row.id}))
 }
 
 function onCreateProduct() {
-    router.get(route('admin.product.create'))
+    router.get(route('admin.product.product.create'))
 
 }
 
 function onSaleToggle(row) {
-    router.visit(route('admin.product.sale', {product: row.id}), {
+    router.visit(route('admin.product.product.sale', {product: row.id}), {
         method: "post",
         preserveState: false,
         preserveScroll: true,
@@ -133,7 +133,7 @@ function onSaleToggle(row) {
 }
 
 function onPublishedToggle(row) {
-    router.visit(route('admin.product.toggle', {product: row.id}), {
+    router.visit(route('admin.product.product.toggle', {product: row.id}), {
         method: "post",
         preserveState: true,
         preserveScroll: true,

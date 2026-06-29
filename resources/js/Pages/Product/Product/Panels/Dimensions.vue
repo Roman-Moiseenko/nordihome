@@ -155,7 +155,7 @@ function onAutoSave() {
 }
 function onSave() {
     isSaving.value = true;
-    router.visit(route('admin.product.edit.dimensions', {product: props.product.id}), {
+    router.visit(route('admin.product.product.edit.dimensions', {product: props.product.id}), {
         method: "post",
         data: form,
         preserveState: true,

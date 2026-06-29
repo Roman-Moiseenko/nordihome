@@ -35,7 +35,7 @@ class DepartureRepository extends AccountingRepository
             'date' => $document->htmlDate(),
             'quantity' => $document->getQuantity(),
             'amount' => $document->getAmount(),
-            'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
+            'staff' => !is_null($document->staff) ? $document->staff->fullName : '-',
         ]);
     }
 

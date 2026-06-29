@@ -74,12 +74,12 @@ import {router} from "@inertiajs/vue3";
 import axios from "axios";
 import {ElLoading} from "element-plus";
 
-const search = route('admin.product.search-add')
+const search = route('admin.product.product.search-add')
 const props = defineProps({
     route: String, //Ссылка на добавление товара в документ. Метод POST.
     search: {
         type: String,
-        default: route('admin.product.search-add'),
+        default: route('admin.product.product.search-add'),
     },
     quantity: {  //Поле quantity
         default: false,
@@ -146,6 +146,7 @@ const loading = ref(false)
 const remoteMethod = (query: string) => {
     if (query) {
         loading.value = true
+        console.log(props.search)
         axios.post(props.search, {search: query}).then(response => {
             if (response.data.error !== undefined) console.log(response.data.error)
             form.product_id = response.data[0].id;
@@ -237,7 +238,7 @@ function storeProduct() {
         text: 'Идет создание товара',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-    axios.post(route('admin.product.fast-create'), formCreate).then(response => {
+    axios.post(route('admin.product.product.fast-create'), formCreate).then(response => {
         if (response.data.product_id === undefined) {
             form.product_id = null
             console.log(JSON.parse(response.data))
