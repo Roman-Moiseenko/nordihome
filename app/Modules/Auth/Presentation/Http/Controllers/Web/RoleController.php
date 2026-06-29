@@ -16,6 +16,7 @@ use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
 class RoleController extends Controller
@@ -29,57 +30,68 @@ class RoleController extends Controller
         private readonly IndexCustomRoleUseCase $indexCustomRoleUseCase
     ) {}
 
-    // Список всех ролей (можно добавить фильтр по is_system через параметр запроса)
-    public function index(Request $request, UserPermission $userPermission): JsonResponse
+    public function index(Request $request, UserPermission $userPermission): \Inertia\Response
     {
         $is_system = $request->has('type') && $request->type == 'system';
         $roles = $this->indexCustomRoleUseCase->execute($is_system, $userPermission);
-        return response()->json(RoleViewData::collect($roles), Response::HTTP_CREATED);
+
+        return Inertia::render('Auth/Role/Index', [
+            'roles' => RoleViewData::collect($roles),
+            'filters' => [
+                'type' => $request->type ?? 'custom',
+            ],
+        ]);
     }
 
-    public function show(int $id, UserPermission $userPermission): JsonResponse
+    public function show(int $id, UserPermission $userPermission): \Inertia\Response
     {
         $role = $this->viewCustomRoleUseCase->execute($id, $userPermission);
-        return response()->json(RoleViewData::fromEntity($role), Response::HTTP_CREATED);
+
+        return Inertia::render('Auth/Role/Show', [
+            'role' => RoleViewData::fromEntity($role),
+        ]);
     }
 
-    public function store(Request $request, UserPermission $userPermission): JsonResponse
+    public function store(Request $request, UserPermission $userPermission)
     {
-        \Log::warning(json_encode($request->all()));
         try {
-            $dto = RoleCreateData::validateAndCreate($request);
+            $dto = RoleCreateData::validateAndCreate($request->all());
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return redirect()->back()->withErrors($e->errors())->withInput();
         }
+
         $role = $this->createRole->execute($dto, $userPermission);
-        return response()->json(RoleViewData::fromEntity($role), Response::HTTP_CREATED);
+        return redirect()->route('admin.role.show', $role->id);
     }
 
-    public function update(int $id, Request $request, UserPermission $userPermission): JsonResponse
+    public function update(int $id, Request $request, UserPermission $userPermission)
     {
-
         try {
-            $dto = RoleUpdateData::validateAndCreate($request);
+            $dto = RoleUpdateData::validateAndCreate($request->all());
         } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
+            return redirect()->back()->withErrors($e->errors())->withInput();
         }
 
         $updatedRole = $this->updateRole->execute($id, $dto, $userPermission);
-        return response()->json(RoleViewData::fromEntity($updatedRole), Response::HTTP_CREATED);
+        return redirect()->route('admin.role.show', $updatedRole->id);
     }
 
     public function destroy(int $id, UserPermission $userPermission): JsonResponse
     {
-        $this->deleteRole->execute($id, $userPermission);
-        return response()->json(null, 204);
+        try {
+            $this->deleteRole->execute($id, $userPermission);
+            return response()->json(null, Response::HTTP_OK);
+        } catch (\InvalidArgumentException $e) {
+            return response()->json(['message' => $e->getMessage()], Response::HTTP_NOT_FOUND);
+        }
     }
+
     public function roles(Request $request, UserPermission $userPermission): JsonResponse
     {
         $roles = $this->indexCustomRoleUseCase->execute(false, $userPermission);
         return response()->json(RoleViewData::collect($roles), Response::HTTP_CREATED);
-
     }
-        // Получение сгруппированных разрешений (по системным ролям)
+
     public function permissions(UserPermission $userPermission): JsonResponse
     {
         return response()->json(

@@ -15,8 +15,8 @@ class RoleCreateData extends Data
     public function __construct(
         #[Required, StringType, Max(255), Unique('roles', 'name')]
         public readonly string $name,
-        #[Required, ArrayType]
-        public readonly array $permissions, // массив строковых идентификаторов разрешений
+        #[Nullable, ArrayType]
+        public readonly ?array $permissions, // массив строковых идентификаторов разрешений
         #[Nullable, StringType, Max(255)]
         public readonly ?string $description,
     ) {}

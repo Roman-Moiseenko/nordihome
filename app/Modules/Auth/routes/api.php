@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\Auth\Presentation\Http\Controllers\Api\AuthController;
 
 //middleware(['load.permissions'])->
+/*
 Route::prefix('v1/auth')->group(function () {
     //Без доступа
     //Аутентификация
@@ -52,3 +53,4 @@ Route::prefix('v1/auth')->group(function () {
         });
     });
 });
+*/

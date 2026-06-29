@@ -21,7 +21,7 @@ readonly class CreateCustomRoleUseCase
         return $this->transactionManager->execute(function () use ($dto) {
             $role = $this->roleRepository->create([
                 'name' => $dto->name,
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'is_system' => false,
                 'description' => $dto->description,
             ]);
