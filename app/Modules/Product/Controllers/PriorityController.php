@@ -37,7 +37,7 @@ class PriorityController extends Controller
         $products = $this->repository->getIndex($request, $filters);
         $categories = $this->categories->forFilters();
 
-        return Inertia::render('Product/Priority/Index', [
+        return Inertia::render('Catalog/Priority/Index', [
             'products' => $products,
             'filters' => $filters,
             'categories' => $categories,

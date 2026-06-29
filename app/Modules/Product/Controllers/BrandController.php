@@ -32,7 +32,7 @@ class BrandController extends Controller
     public function index(Request $request): \Inertia\Response
     {
         $brands = $this->repository->getIndex($request, $filters);
-        return Inertia::render('Product/Brand/Index', [
+        return Inertia::render('Catalog/Brand/Index', [
             'brands' => $brands,
             'filters' => $filters,
         ]);
@@ -45,7 +45,7 @@ class BrandController extends Controller
         ]);
         try {
             $brand = $this->service->create($request);
-            return redirect()->route('admin.product.brand.show', $brand)->with('success', 'Бренд создан');
+            return redirect()->route('admin.catalog.brand.show', $brand)->with('success', 'Бренд создан');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -53,7 +53,7 @@ class BrandController extends Controller
 
     public function show(Brand $brand, Request $request)
     {
-        return Inertia::render('Product/Brand/Show', [
+        return Inertia::render('Catalog/Brand/Show', [
             'brand' => $this->repository->BrandWithToArray($brand, $request),
             'parsers' => array_select(ParserAbstract::PARSERS),
             'currencies' => Currency::getModels(),

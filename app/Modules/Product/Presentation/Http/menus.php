@@ -14,7 +14,7 @@ declare(strict_types=1);
 |   - sort:        int (sorting order in sidebar)
 |   - icon:        string (Lucide icon name, e.g. 'users', 'settings')
 |   - title:       string (display text in sidebar)
-|   - route_name:  string (named route, e.g. 'admin.product.index')
+|   - route_name:  string (named route, e.g. 'admin.catalog.index')
 |   - can:         string (permission gate, e.g. 'staff', 'pages')
 |   - vue:         bool (uses Vue/Inertia frontend)
 |   - font_awesome: string (Font Awesome class, e.g. 'fa-light fa-users')
@@ -26,7 +26,7 @@ return [
         'sort'         => 10,
         'icon'         => 'users',
         'title'        => 'Product',
-        'route_name'   => 'admin.product.product.index',
+        'route_name'   => 'admin.catalog.product.index',
         'can'          => 'Product',
         'vue'          => true,
         'font_awesome' => 'fa-light fa-users',

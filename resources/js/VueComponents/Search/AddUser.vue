@@ -119,7 +119,7 @@ function createUser() {
 }
 
 function storeUser() {
-   /* axios.post(route('admin.product.fast-create'), formCreate).then(response => {
+   /* axios.post(route('admin.catalog.product.fast-create'), formCreate).then(response => {
         form.product_id = response.data
         onAdd()
         dialogCreate.value = false

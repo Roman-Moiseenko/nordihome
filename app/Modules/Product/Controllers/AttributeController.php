@@ -51,7 +51,7 @@ class AttributeController extends Controller
         $categories = $this->categories->forFilters();
         $groups = $this->groupRepository->get(order_by: 'name');
         $attributes = $this->repository->getIndex($request, $filters);
-        return Inertia::render('Product/Attribute/Index', [
+        return Inertia::render('Catalog/Attribute/Index', [
             'attributes' => $attributes,
             'filters' => $filters,
             'categories' => $categories,
@@ -80,7 +80,7 @@ class AttributeController extends Controller
     {
         $categories = $this->categories->forFilters();
         $groups = $this->groupRepository->get(order_by: 'name');
-        return Inertia::render('Product/Attribute/Show', [
+        return Inertia::render('Catalog/Attribute/Show', [
             'attribute' => $this->repository->AttributeWithToArray($attribute),
             'categories' => $categories,
             'groups' => $groups,
@@ -123,7 +123,7 @@ class AttributeController extends Controller
     public function groups(Request $request): Response
     {
         $groups = $this->groupRepository->get(order_by: 'sort');
-        return Inertia::render('Product/Attribute/Groups', [
+        return Inertia::render('Catalog/Attribute/Groups', [
             'groups' => $groups,
         ]);
     }

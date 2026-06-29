@@ -31,7 +31,7 @@ class ParserController extends Controller
     {
         $categories = $this->categories->forFilters();
         $parsers = $this->repository->getFilter($request, $filters);
-        return Inertia::render('Product/Parser/Index', [
+        return Inertia::render('Catalog/Parser/Index', [
             'parsers' => $parsers,
             'filters' => $filters,
             'categories' => $categories,

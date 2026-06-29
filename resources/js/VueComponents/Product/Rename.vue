@@ -14,7 +14,7 @@ function saveNameProduct(val) {
 
     //router.post(route('admin.product.rename', {product: props.product.id}), {name: val})
 
-    router.visit(route('admin.product.product.rename', {product: props.product.id}), {
+    router.visit(route('admin.catalog.product.rename', {product: props.product.id}), {
         method: "post",
         data: {name: val},
         preserveScroll: true,

@@ -36,7 +36,7 @@ class OnOrderController extends Controller
         $products = $this->repository->getIndex($request, $filters);
         $categories = $this->categories->forFilters();
 
-        return Inertia::render('Product/OnOrder/Index', [
+        return Inertia::render('Catalog/OnOrder/Index', [
             'products' => $products,
             'filters' => $filters,
             'categories' => $categories,

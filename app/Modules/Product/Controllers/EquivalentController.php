@@ -42,7 +42,7 @@ class EquivalentController extends Controller
     {
         $categories = $this->categories->forFilters();
         $equivalents = $this->repository->getIndex($request, $filters);
-        return Inertia::render('Product/Equivalent/Index', [
+        return Inertia::render('Catalog/Equivalent/Index', [
             'equivalents' => $equivalents,
             'filters' => $filters,
             'categories' => $categories,
@@ -57,7 +57,7 @@ class EquivalentController extends Controller
         ]);
         try {
             $equivalent = $this->service->register($request);
-            return redirect()->route('admin.product.equivalent.show', $equivalent)->with('success', 'Группа создана');
+            return redirect()->route('admin.catalog.equivalent.show', $equivalent)->with('success', 'Группа создана');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -65,7 +65,7 @@ class EquivalentController extends Controller
 
     public function show(Equivalent $equivalent): Response
     {
-        return Inertia::render('Product/Equivalent/Show', [
+        return Inertia::render('Catalog/Equivalent/Show', [
             'equivalent' => $this->repository->EquivalentWithToArray($equivalent),
         ]);
     }

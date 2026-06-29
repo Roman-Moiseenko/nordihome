@@ -30,7 +30,7 @@ class CategoryController extends Controller
     public function index(): Response
     {
         $categories = $this->repository->getTree();
-        return Inertia::render('Product/Category/Index', [
+        return Inertia::render('Catalog/Category/Index', [
             'categories' => $categories,
         ]);
     }
@@ -38,7 +38,7 @@ class CategoryController extends Controller
     public function show(Category $category): Response
     {
         $categories = $this->repository->forFilters();
-        return Inertia::render('Product/Category/Show', [
+        return Inertia::render('Catalog/Category/Show', [
             'category' => $this->repository->CategoryWith($category),
             'categories' => $categories,
         ]);

@@ -34,7 +34,7 @@ class ReducedController extends Controller
         $products = $this->repository->getIndex($request, $filters);
         $categories = $this->categories->forFilters();
 
-        return Inertia::render('Product/Reduced/Index', [
+        return Inertia::render('Catalog/Reduced/Index', [
             'products' => $products,
             'filters' => $filters,
             'categories' => $categories,

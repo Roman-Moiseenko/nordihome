@@ -47,7 +47,7 @@ class ModificationController extends Controller
         ]);
         try {
             $modification = $this->service->create($request);
-            return redirect()->route('admin.product.modification.show', $modification)->with('success', 'Модификация создана');
+            return redirect()->route('admin.catalog.modification.show', $modification)->with('success', 'Модификация создана');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
@@ -55,7 +55,7 @@ class ModificationController extends Controller
 
     public function show(Modification $modification): Response
     {
-        return Inertia::render('Product/Modification/Show', [
+        return Inertia::render('Catalog/Modification/Show', [
             'modification' => $this->repository->ModificationWithToArray($modification),
         ]);
     }
@@ -117,7 +117,7 @@ class ModificationController extends Controller
                 $result[] = $product->toArrayForSearch();
             } else {
                 if ($request['action'] == 'index') {
-                    $other = route('admin.product.modification.show', $product->modification);
+                    $other = route('admin.catalog.modification.show', $product->modification);
                 } else {
                     $other = $product->modification->id;
                 }

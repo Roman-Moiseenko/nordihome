@@ -27,7 +27,7 @@ class TagController extends Controller
     public function index(Request $request): \Inertia\Response
     {
         $tags = $this->repository->getIndex($request, $filters);
-        return Inertia::render('Product/Tag/Index', [
+        return Inertia::render('Catalog/Tag/Index', [
             'tags' => $tags,
             'filters' => $filters,
         ]);

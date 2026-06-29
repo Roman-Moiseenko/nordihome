@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::group(
     [
         'middleware' => 'role:admin|staff',
-        'prefix' => 'product',
-        'as' => 'product.',
+        'prefix' => 'catalog',
+        'as' => 'catalog.',
         //'namespace' => 'Product',
     ],
     function () {
@@ -185,22 +185,9 @@ Route::group(
         Route::resource('group', 'GroupController')->except(['create', 'edit', 'update']); //CRUD
         Route::resource('modification', 'ModificationController'); //CRUD
         Route::resource('series', 'SeriesController')->except(['create', 'edit']); //CRUD
-      //  Route::resource('size', 'SizeController')->except(['create', 'edit']); //CRUD
+        //  Route::resource('size', 'SizeController')->except(['create', 'edit']); //CRUD
 
         //PRODUCT
-        Route::group([
-            'prefix' => 'image',
-            'as' => 'image.',
-        ], function () {
-            Route::post('/add/{product}', [ProductController::class, 'add_image'])->name('add');
-            Route::post('/get/{product}', [ProductController::class, 'get_images'])->name('get');
-            Route::delete('/del/{product}', [ProductController::class, 'del_image'])->name('del');
-            //Route::post('/up/{product}', [ProductController::class, 'up_image'])->name('up');
-            //Route::post('/down/{product}', [ProductController::class, 'down_image'])->name('down');
-            Route::post('/set/{product}', [ProductController::class, 'set_image'])->name('set');
-            Route::post('/move/{product}', [ProductController::class, 'move_image'])->name('move');
-        });
-
         Route::group([
             'prefix' => 'product',
             'as' => 'product.'
@@ -216,7 +203,18 @@ Route::group(
             Route::delete('/full-delete/{id}', [ProductController::class, 'full_delete'])->name('full-delete');
             Route::post('/fast-create', [ProductController::class, 'fast_create'])->name('fast-create');
 
-
+            Route::group([
+                'prefix' => 'image',
+                'as' => 'image.',
+            ], function () {
+                Route::post('/add/{product}', [ProductController::class, 'add_image'])->name('add');
+                Route::post('/get/{product}', [ProductController::class, 'get_images'])->name('get');
+                Route::delete('/del/{product}', [ProductController::class, 'del_image'])->name('del');
+                //Route::post('/up/{product}', [ProductController::class, 'up_image'])->name('up');
+                //Route::post('/down/{product}', [ProductController::class, 'down_image'])->name('down');
+                Route::post('/set/{product}', [ProductController::class, 'set_image'])->name('set');
+                Route::post('/move/{product}', [ProductController::class, 'move_image'])->name('move');
+            });
             Route::group([
                 'prefix' => 'edit',
                 'as' => 'edit.'
@@ -232,11 +230,7 @@ Route::group(
                 Route::post('/bonus/{product}', [ProductController::class, 'edit_bonus'])->name('bonus');
                 Route::post('/composite/{product}', [ProductController::class, 'edit_composite'])->name('composite');
             });
-
-
         });
-
-
         Route::resource('product', 'ProductController')->except(['update']);
     }
 );

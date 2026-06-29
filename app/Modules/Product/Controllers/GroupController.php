@@ -31,7 +31,7 @@ class GroupController extends Controller
     public function index(Request $request)
     {
         $groups = $this->repository->getIndex($request, $filters);
-        return Inertia::render('Product/Group/Index', [
+        return Inertia::render('Catalog/Group/Index', [
             'groups' => $groups,
             'filters' => $filters,
         ]);
@@ -43,12 +43,12 @@ class GroupController extends Controller
             'name' => 'required|string'
         ]);
         $group = $this->service->create($request);
-        return redirect()->route('admin.product.group.show', $group)->with('success', 'Группа создана');
+        return redirect()->route('admin.catalog.group.show', $group)->with('success', 'Группа создана');
     }
 
     public function show(Group $group, Request $request): Response
     {
-        return Inertia::render('Product/Group/Show', [
+        return Inertia::render('Catalog/Group/Show', [
             'group' => $this->repository->GroupWithToArray($group, $request),
         ]);
     }

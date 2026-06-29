@@ -7,7 +7,7 @@
             <img v-if="category.icon_url" :src="category.icon_url" style="width: 40px; height: 40px;">
         </div>
         <div class="ml-4" style="width: 350px;">
-            <Link type="primary" :href="route('admin.product.category.show', {category: category.id})">{{ category.name }}</Link>
+            <Link type="primary" :href="route('admin.catalog.category.show', {category: category.id})">{{ category.name }}</Link>
         </div>
         <div class="ml-4" style="width: 350px;">
             <span class="text-cyan-800">/catalog/{{ category.slug }}</span>
@@ -85,26 +85,26 @@ const showChildren = computed(() => {
 })
 
 function onUp() {
-    router.visit(route('admin.product.category.up', {category: props.category.id}), {
+    router.visit(route('admin.catalog.category.up', {category: props.category.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function onDown() {
-    router.visit(route('admin.product.category.down', {category: props.category.id}), {
+    router.visit(route('admin.catalog.category.down', {category: props.category.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function handleDeleteEntity() {
-    $delete_entity.show(route('admin.product.category.destroy', {category: props.category.id}), {name: 'category'});
+    $delete_entity.show(route('admin.catalog.category.destroy', {category: props.category.id}), {name: 'category'});
 
 }
 function handleChild() {
     //console.log(form)
-    router.post(route('admin.product.category.store', form))
+    router.post(route('admin.catalog.category.store', form))
 }
 
 

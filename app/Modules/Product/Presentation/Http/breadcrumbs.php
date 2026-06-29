@@ -14,9 +14,9 @@ use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 |
 | Example:
 |
-| Breadcrumbs::for('admin.product.index', function (BreadcrumbTrail $trail) {
+| Breadcrumbs::for('admin.catalog.index', function (BreadcrumbTrail $trail) {
 |     $trail->parent('admin.home');
-|     $trail->push('Product', route('admin.product.index'));
+|     $trail->push('Product', route('admin.catalog.index'));
 | });
 |
 */

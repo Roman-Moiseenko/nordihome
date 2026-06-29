@@ -74,12 +74,12 @@ import {router} from "@inertiajs/vue3";
 import axios from "axios";
 import {ElLoading} from "element-plus";
 
-const search = route('admin.product.product.search-add')
+const search = route('admin.catalog.product.search-add')
 const props = defineProps({
     route: String, //Ссылка на добавление товара в документ. Метод POST.
     search: {
         type: String,
-        default: route('admin.product.product.search-add'),
+        default: route('admin.catalog.product.search-add'),
     },
     quantity: {  //Поле quantity
         default: false,
@@ -219,9 +219,9 @@ function createProduct() {
             background: 'rgba(0, 0, 0, 0.7)',
         })
 
-        axios.post(route('admin.product.brand.list')).then(response => {
+        axios.post(route('admin.catalog.brand.list')).then(response => {
             brands.value = [...response.data]
-            axios.post(route('admin.product.category.list')).then(response => {
+            axios.post(route('admin.catalog.category.list')).then(response => {
                 categories.value = [...response.data]
                 dialogCreate.value = true
                 loading.close()
@@ -238,7 +238,7 @@ function storeProduct() {
         text: 'Идет создание товара',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-    axios.post(route('admin.product.product.fast-create'), formCreate).then(response => {
+    axios.post(route('admin.catalog.product.fast-create'), formCreate).then(response => {
         if (response.data.product_id === undefined) {
             form.product_id = null
             console.log(JSON.parse(response.data))

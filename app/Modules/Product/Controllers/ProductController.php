@@ -59,7 +59,7 @@ class ProductController extends Controller
         ];
 
         $products = $this->repository->getIndex($request, $filters);
-        return Inertia::render('Product/Product/Index', [
+        return Inertia::render('Catalog/Product/Index', [
             'products' => $products,
             'filters' => $filters,
             'categories' => $categories,
@@ -69,7 +69,7 @@ class ProductController extends Controller
 
     public function create(Request $request): Response
     {
-        return Inertia::render('Product/Product/Create', [
+        return Inertia::render('Catalog/Product/Create', [
             'categories' => $this->categories->forFilters(),
             'brands' => Brand::orderBy('name')->getModels(),
             'tags' => Tag::orderBy('name')->getModels(),
@@ -115,14 +115,14 @@ class ProductController extends Controller
 
     public function show(Product $product): Response
     {
-        return Inertia::render('Product/Product/Show', [
+        return Inertia::render('Catalog/Product/Show', [
             'product' => $product
         ]);
     }
 
     public function edit(Product $product): Response
     {
-        return Inertia::render('Product/Product/Edit', [
+        return Inertia::render('Catalog/Product/Edit', [
             'product' => $this->repository->ProductWithToArray($product),
             'categories' => $this->categories->forFilters(),
             'brands' => Brand::orderBy('name')->getModels(),
@@ -246,9 +246,6 @@ class ProductController extends Controller
 
     public function search_add(Request $request): JsonResponse
     {
-        $result = [];
-        $products = $this->repository->search($request['search']);
-
         //Применить map()
         /** @var Product $product */
         foreach ($products as $product) {

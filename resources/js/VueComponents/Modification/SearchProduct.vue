@@ -33,7 +33,7 @@ import { reactive, ref, defineProps } from "vue";
 import axios from "axios";
 import {route} from "ziggy-js";
 
-const search = route('admin.product.modification.search')
+const search = route('admin.catalog.modification.search')
 
 const props = defineProps({
     action: String,

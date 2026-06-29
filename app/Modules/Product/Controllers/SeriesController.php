@@ -35,12 +35,12 @@ class SeriesController extends Controller
     public function store(Request $request)
     {
         $series = $this->service->create($request['name']);
-        return redirect()->route('admin.product.series.show', compact('series'));
+        return redirect()->route('admin.catalog.series.show', compact('series'));
     }
 
     public function show(Series $series): Response
     {
-        return Inertia::render('Product/Series/Show', [
+        return Inertia::render('Catalog/Series/Show', [
             'series' => $this->repository->SeriesToArray($series),
         ]);
     }

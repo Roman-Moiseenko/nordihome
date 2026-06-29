@@ -71,7 +71,7 @@ const upload = ref<UploadInstance>()
 const textUpload = ref(null)
 
 function selectBrand() {
-    route_upload.value = route('admin.product.upload', {brand_id: formCreate.brand_id});
+    route_upload.value = route('admin.catalog.product.upload', {brand_id: formCreate.brand_id});
 }
 function openDialog() {
     //Загружаем список брендов и категорий в диалог
@@ -81,8 +81,8 @@ function openDialog() {
             text: 'Загружаем бренды',
             background: 'rgba(0, 0, 0, 0.7)',
         })
-        route_upload.value = route('admin.product.upload');
-        axios.post(route('admin.product.brand.list')).then(response => {
+        route_upload.value = route('admin.catalog.product.upload');
+        axios.post(route('admin.catalog.brand.list')).then(response => {
             brands.value = [...response.data]
             loading.close()
             uploadDialog.value = true
@@ -119,7 +119,7 @@ function findProducts(data) {
     data.forEach(function (product) {
         i++;
         setTimeout(() => {
-            axios.post(route('admin.product.find-parser'), {code: product.code, brand_id: formCreate.brand_id}).then(response => {
+            axios.post(route('admin.catalog.product.find-parser'), {code: product.code, brand_id: formCreate.brand_id}).then(response => {
                 console.log('response', response.data)
                 count.value++;
                 if ((response.data.error === undefined || response.data.error === null) && response.data !== 0) {
