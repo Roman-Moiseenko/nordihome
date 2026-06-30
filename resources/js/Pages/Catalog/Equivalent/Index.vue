@@ -22,7 +22,7 @@
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-input v-model="filter.product" placeholder="Товар" class="mt-1"/>
                 <el-input v-model="filter.name" placeholder="Группа" class="mt-1"/>
-                <el-select v-model="filter.category" placeholder="Категория" class="mt-1">
+                <el-select v-model="filter.room" placeholder="Категория" class="mt-1">
                     <el-option v-for="item in categories" :value="item.id" :label="item.name" :key="item.id" />
                 </el-select>
             </TableFilter>
@@ -94,7 +94,7 @@ const tableData = ref([...props.equivalents.data])
 const filter = reactive({
     name: props.filters.name,
     product: props.filters.product,
-    category: props.filters.category,
+    room: props.filters.room,
 })
 
 const form = reactive({

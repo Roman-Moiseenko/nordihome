@@ -209,7 +209,9 @@ Breadcrumbs::for('admin.catalog.room.index', function (BreadcrumbTrail $trail) {
     $trail->push('По комнатам', route('admin.catalog.room.index'));
 });
 
-Breadcrumbs::for('admin.catalog.room.show', function (BreadcrumbTrail $trail, RoomEntity $room) {
+Breadcrumbs::for('admin.catalog.room.show', function (BreadcrumbTrail $trail, int|string $id) {
+    $roomRepository = app(App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface::class);
+    $room = $roomRepository->getById((int) $id);
     $trail->parent('admin.catalog.room.index');
     $trail->push($room->name, route('admin.catalog.room.show', $room->id));
 });

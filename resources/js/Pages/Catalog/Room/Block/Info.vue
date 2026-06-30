@@ -4,24 +4,24 @@
             <el-tooltip content="Изображение для каталога" placement="top-start" effect="dark">
             <el-image
                 style="width: 200px; height: 200px"
-                :src="category.image"
+                :src="room.image"
                 :zoom-rate="1.2"
                 :max-scale="7"
                 :min-scale="0.2"
                 :initial-index="4"
-                :preview-src-list="[category.image]"
+                :preview-src-list="[room.image]"
                 fit="cover"
             />
             </el-tooltip>
             <el-tooltip content="Иконка для меню" placement="top-start" effect="dark">
                 <el-image
                     style="width: 100px; height: 100px"
-                    :src="category.icon"
+                    :src="room.icon"
                     :zoom-rate="1.2"
                     :max-scale="7"
                     :min-scale="0.2"
                     :initial-index="4"
-                    :preview-src-list="[category.icon]"
+                    :preview-src-list="[room.icon]"
                     fit="cover"
                     class="ml-3"
                 />
@@ -29,20 +29,20 @@
         </el-col>
         <el-col :span="12">
             <el-descriptions :column="1" border class="mb-5">
-                <el-descriptions-item label="Категория">
-                    {{ category.name }}
+                <el-descriptions-item label="Комната">
+                    {{ room.name }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Ссылка">
-                    {{ category.slug }}
+                    {{ room.slug }}
                 </el-descriptions-item>
                 <el-descriptions-item label="SVG">
-                    <span v-html="category.svg" class="svg-category"></span>
+                    <span v-html="room.svg" class="svg-category"></span>
                 </el-descriptions-item>
                 <el-descriptions-item label="Meta-Title">
-                    {{ category.title }}
+                    {{ room.title }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Meta-Description">
-                    {{ category.description }}
+                    {{ room.description }}
                 </el-descriptions-item>
             </el-descriptions>
         </el-col>
@@ -56,8 +56,8 @@
     <el-row :gutter="10" v-if="showEdit">
         <el-col :span="8">
             <el-form label-width="auto">
-                <el-form-item label="Родительская категория">
-                    <el-select v-model="info.parent_id">
+                <el-form-item label="Родительская комната">
+                    <el-select v-model="info.parentId">
                         <el-option v-for="item in categories" :key="item.id" :value="item.id" :label="item.name" />
                     </el-select>
                 </el-form-item>
@@ -88,18 +88,18 @@
         <el-col :span="8">
             <UploadImageFile
                 label="Изображение для каталога"
-                v-model:image="category.image"
+                v-model:image="room.image"
                 @selectImageFile="onSelectImage"
             />
             <UploadImageFile
                 label="Иконка для меню"
-                v-model:image="category.icon"
+                v-model:image="room.icon"
                 @selectImageFile="onSelectIcon"
             />
         </el-col>
         <el-col :span="8">
             <HelpBlock>
-                <p><b>Название категории</b> является обязательным полем.</p>
+                <p><b>Название комнаты</b> является обязательным полем.</p>
                 <p>Поле <b>Slug</b> (ссылка на категорию) можно не заполнять, тогда оно заполнится автоматически. При заполнении использовать латинский алфавит.</p>
                 <p>Рекомендуемое разрешение для <b>картинок</b> в карточку категории 700х700.</p>
                 <p><b>Иконки</b> для меню рекомендуется сохранять в форматах разрешающие прозрачный цвет - png, svg. Разрешение не более 200х200.</p>
@@ -107,30 +107,7 @@
             </HelpBlock>
         </el-col>
     </el-row>
-    <el-row :gutter="10" v-if="showEdit" class="mt-2">
-        <el-col :span="6">
-            <h2>Данные перед списком товаров</h2>
-            <el-form-item label="Заголовок">
-                <el-input v-model="info.top_title"/>
-            </el-form-item>
-            <el-form-item label="Текст">
-                <el-input v-model="info.top_description" type="textarea" rows="5"/>
-            </el-form-item>
-        </el-col>
-        <el-col :span="12">
-            <h2>Данные после списка товаров</h2>
 
-                <el-input v-model="info.bottom_text" type="textarea" rows="10"/>
-
-        </el-col>
-
-        <el-col :span="6">
-            <h2>Скрытые данные</h2>
-
-                <el-input v-model="info.data" type="textarea" rows="10"/>
-
-        </el-col>
-    </el-row>
 </template>
 
 <script setup>
@@ -150,17 +127,10 @@ const info = reactive({
     title: props.room.title,
     description: props.room.description,
     slug: props.room.slug,
-    parent_id: props.room.parent_id,
+    parentId: props.room.parentId,
     svg: props.room.svg,
-    image: null,
-    clear_image: false,
-    icon: null,
-    clear_icon: false,
 
-    top_title: props.room.top_title,
-    top_description: props.room.top_description,
-    bottom_text: props.room.bottom_text,
-    data: props.room.data,
+
 
 
 })
@@ -168,7 +138,7 @@ const showEdit = ref(false)
 
 function onSetInfo() {
     router.visit(
-        route('admin.catalog.category.set-info', {room: props.room.id}), {
+        route('admin.catalog.room.update', {room: props.room.id}), {
             method: "post",
             data: info,
             onSuccess: page => {
@@ -178,15 +148,6 @@ function onSetInfo() {
     );
 }
 
-function onSelectImage(val) {
-    info.clear_image = val.clear_file;
-    info.image = val.file
-}
-
-function onSelectIcon(val) {
-    info.clear_icon = val.clear_file;
-    info.icon = val.file
-}
 </script>
 
 <style scoped>

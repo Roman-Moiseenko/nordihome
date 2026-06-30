@@ -74,8 +74,8 @@ function onToggle(row) {
         preserveState: true,
         preserveScroll: true,
         onSuccess: page => {
-            console.log(page.props.category.posts)
-            tableData.value = [...page.props.category.posts]
+            console.log(page.props.room.posts)
+            tableData.value = [...page.props.room.posts]
         }
     })
 }

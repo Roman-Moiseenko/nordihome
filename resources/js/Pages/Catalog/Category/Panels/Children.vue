@@ -30,13 +30,13 @@ import {router} from "@inertiajs/vue3";
 import CategoryChildren from "@Comp/Category/Children.vue";
 
 const props = defineProps({
-    category: Object,
+    room: Object,
 })
 const visible_create = ref(false)
 
 const form = reactive({
     name: null,
-    parent_id: props.category.id,
+    parent_id: props.room.id,
 })
 function createButton() {
     router.post(route('admin.catalog.category.store', form))

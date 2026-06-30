@@ -6,7 +6,7 @@
 
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-input v-model="filter.name" placeholder="Товар"/>
-                <el-select v-model="filter.category" placeholder="Выберите категорию" class="mt-1">
+                <el-select v-model="filter.room" placeholder="Выберите категорию" class="mt-1">
                     <el-option v-for="item in categories" :key="item.id" :value="item.id" :label="item.name"/>
                 </el-select>
                 <el-select v-model="filter.show" placeholder="Показать" class="mt-1">
@@ -115,7 +115,7 @@ const props = defineProps({
 const tableData = ref([...props.products.data])
 const filter = reactive({
     name: props.filters.name,
-    category: props.filters.category,
+    room: props.filters.room,
     show: props.filters.show,
 })
 const store = useStore();

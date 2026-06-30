@@ -10,7 +10,7 @@
             <SearchAddProducts :route="route('admin.catalog.on-order.add-products')" class="ml-3"/>
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
 
-                <el-select filterable v-model="filter.category" placeholder="Категория" class="mt-1">
+                <el-select filterable v-model="filter.room" placeholder="Категория" class="mt-1">
                     <el-option v-for="item in categories" :key="item.id" :label="item.name"
                                :value="item.id"/>
                 </el-select>
@@ -78,7 +78,7 @@ const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.products.data])
 const filter = reactive({
     product: props.filters.product,
-    category: props.filters.category,
+    room: props.filters.room,
 })
 
 function handleDeleteEntity(row) {

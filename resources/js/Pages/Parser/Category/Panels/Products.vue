@@ -56,7 +56,7 @@ import Active from "@Comp/Elements/Active.vue";
 import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
-    category: Object,
+    room: Object,
 })
 function routeClick(row) {
     router.get(route('admin.catalog.product.edit', {product: row.product_id}))

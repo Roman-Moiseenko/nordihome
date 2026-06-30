@@ -58,7 +58,7 @@ import {ElLoading} from "element-plus";
 import axios from "axios";
 
 const props = defineProps({
-    category: Object,
+    room: Object,
     product_categories: Array,
     title: {
         type: String,
@@ -66,10 +66,10 @@ const props = defineProps({
     },
 })
 const showEdit = ref(false)
-const category_id = ref(props.category.category_id)
+const category_id = ref(props.room.category_id)
 function onSetCategory() {
     router.visit(
-        route('admin.parser.category.set-category', {category: props.category.id}), {
+        route('admin.parser.category.set-category', {room: props.room.id}), {
             method: "post",
             data: {category_id: category_id.value},
             onSuccess: page => {
@@ -91,7 +91,7 @@ function products() {
     })
 
     const count = ref(0);
-    axios.post(route('admin.parser.category.parser-products', {category: props.category.id})).then(response => {
+    axios.post(route('admin.parser.category.parser-products', {room: props.room.id})).then(response => {
         watch(() => count.value, (newValues, oldValues) => {
             if (newValues === response.data.length) loading.close();
         });
@@ -101,7 +101,7 @@ function products() {
 
          //   router.post(route('admin.parser.category.parser-product', {category: props.category.id}), {product: product});
 
-            axios.post(route('admin.parser.category.parser-product', {category: props.category.id}), {product: product}).then(response => {
+            axios.post(route('admin.parser.category.parser-product', {room: props.room.id}), {product: product}).then(response => {
                 console.log('response', response)
                 count.value++;
                 loading.text.value = text + ' Спарсено ' + count.value

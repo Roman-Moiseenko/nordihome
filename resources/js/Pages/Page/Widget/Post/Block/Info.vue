@@ -36,7 +36,7 @@
                     {{ widget.template }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Рубрика">
-                    {{ widget.category.name }}
+                  {{ widget.room.name }}
                 </el-descriptions-item>
                 <el-descriptions-item label="Заголовок">
                     {{ widget.caption }}

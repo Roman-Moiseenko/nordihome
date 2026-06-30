@@ -6,7 +6,7 @@
 
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-input v-model="filter.product" placeholder="Товар" class="mt-1"/>
-                <el-select filterable v-model="filter.category" placeholder="Категория" class="mt-1">
+                <el-select filterable v-model="filter.room" placeholder="Категория" class="mt-1">
                     <el-option v-for="item in categories" :key="item.id" :label="item.name"
                                :value="item.id"/>
                 </el-select>
@@ -110,7 +110,7 @@ const props = defineProps({
 const tableData = ref([...props.parsers.data])
 const filter = reactive({
     product: props.filters.product,
-    category: props.filters.category,
+    room: props.filters.room,
 })
 
 function onFragile(id){

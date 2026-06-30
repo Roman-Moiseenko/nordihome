@@ -62,17 +62,17 @@ import CategoryChildren from "./Children.vue";
 import Active from "@Comp/Elements/Active.vue";
 
 const props = defineProps({
-    category: Object,
+    room: Object,
     product_categories: Array,
 })
 const $emit = defineEmits(['delete:category'])
 const visible_create = ref(false)
 const form = reactive({
     name: null,
-    parent_id: props.category.id,
+    parent_id: props.room.id,
 })
 const checkChildren = ref(false)
-const isChildren = ref(props.category.children.length > 0)
+const isChildren = ref(props.room.children.length > 0)
 
 const showChildren = computed(() => {
     return isChildren && checkChildren.value
@@ -80,7 +80,7 @@ const showChildren = computed(() => {
 const category_id = ref(null)
 
 function onToggle() {
-    router.visit(route('admin.parser.category.toggle', {category_parser: props.category.id}), {
+    router.visit(route('admin.parser.category.toggle', {category_parser: props.room.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,
@@ -91,7 +91,7 @@ function onToggle() {
 }
 
 function handleDeleteEntity() {
-    $emit('delete:category', props.category.id)
+    $emit('delete:category', props.room.id)
 }
 
 

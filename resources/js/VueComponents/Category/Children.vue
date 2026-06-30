@@ -6,7 +6,7 @@ import CategoryRow from "@Comp/Category/Row.vue";
 import {computed, defineEmits, defineProps, ref} from "vue";
 
 const props = defineProps({
-    category: {
+    room: {
         type: Object,
         default: null,
     },
@@ -17,7 +17,7 @@ const props = defineProps({
 })
 const $emit = defineEmits(['delete:category'])
 const children = computed(() => {
-    return props.category === null ? props.categories : props.category.children
+    return props.room === null ? props.categories : props.room.children
 })
 
 

@@ -7,7 +7,7 @@
             <img v-if="category.icon_url" :src="category.icon_url" style="width: 40px; height: 40px;">
         </div>
         <div class="ml-4" style="width: 350px;">
-            <Link type="primary" :href="route('admin.catalog.category.show', {category: category.id})">{{ category.name }}</Link>
+            <Link type="primary" :href="route('admin.catalog.category.show', {room: category.id})">{{ category.name }}</Link>
         </div>
         <div class="ml-4" style="width: 350px;">
             <span class="text-cyan-800">/catalog/{{ category.slug }}</span>
@@ -68,16 +68,16 @@ import {computed, inject, reactive, ref} from "vue";
 import CategoryChildren from "@Comp/Category/Children.vue";
 
 const props = defineProps({
-    category: Object,
+    room: Object,
 })
 const $emit = defineEmits(['delete:category'])
 const visible_create = ref(false)
 const form = reactive({
     name: null,
-    parent_id: props.category.id,
+    parent_id: props.room.id,
 })
 const checkChildren = ref(false)
-const isChildren = ref(props.category.children.length > 0)
+const isChildren = ref(props.room.children.length > 0)
 const $delete_entity = inject("$delete_entity")
 
 const showChildren = computed(() => {
@@ -85,21 +85,21 @@ const showChildren = computed(() => {
 })
 
 function onUp() {
-    router.visit(route('admin.catalog.category.up', {category: props.category.id}), {
+    router.visit(route('admin.catalog.category.up', {room: props.room.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function onDown() {
-    router.visit(route('admin.catalog.category.down', {category: props.category.id}), {
+    router.visit(route('admin.catalog.category.down', {room: props.room.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function handleDeleteEntity() {
-    $delete_entity.show(route('admin.catalog.category.destroy', {category: props.category.id}), {name: 'category'});
+    $delete_entity.show(route('admin.catalog.category.destroy', {room: props.room.id}), {name: 'category'});
 
 }
 function handleChild() {

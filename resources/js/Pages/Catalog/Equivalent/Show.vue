@@ -1,7 +1,7 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl">Группа аналогов {{ equivalent.name }} [{{ equivalent.category }}]</h1>
+        <h1 class="font-medium text-xl">Группа аналогов {{ equivalent.name }} [{{ equivalent.room }}]</h1>
 
         <div class="flex mt-5">
             <SearchAddProduct

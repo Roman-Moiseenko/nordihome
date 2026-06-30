@@ -127,7 +127,7 @@ window.$ = jQuery;
     function _updateSubMenu(element) {
         element.addClass('active-item');
         $.post(catalog.data('route'), {
-                category: element.data('id')
+                room: element.data('id')
             },
             function (data) {
                 common.error(data);

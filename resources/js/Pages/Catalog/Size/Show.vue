@@ -49,7 +49,7 @@ import GroupInfo from  './Block/Info.vue'
 import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({
-    category: Object,
+    room: Object,
     title: {
         type: String,
         default: 'Карточка группы товаров',
@@ -58,7 +58,7 @@ const props = defineProps({
 })
 const store = useStore();
 const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.category.sizes])
+const tableData = ref([...props.room.sizes])
 
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.catalog.size.del-size', {size: row.id}));
