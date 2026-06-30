@@ -91,9 +91,9 @@ import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 
 const props = defineProps({
-    room: Object,
+    category: Object,
 })
-const tableData = ref([...props.room.products]);
+const tableData = ref([...props.category.products]);
 const $delete_entity = inject("$delete_entity", "product")
 function routeClick(row) {
     router.get(route('admin.catalog.product.edit', {product: row.id}))
@@ -138,7 +138,7 @@ function onPublishedToggle(row) {
         preserveState: true,
         preserveScroll: true,
         onSuccess: page => {
-            tableData.value = [...page.props.room.products.data]
+            tableData.value = [...page.props.category.products.data]
         }
     })
 }

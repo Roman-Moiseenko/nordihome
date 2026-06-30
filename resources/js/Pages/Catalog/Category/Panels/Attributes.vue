@@ -60,9 +60,9 @@ import Active from "@Comp/Elements/Active.vue";
 import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
-    room: Object,
+    category: Object,
 })
-console.log(props.room.attributes)
+console.log(props.category.attributes)
 
 function routeClick(row) {
     router.get(route('admin.catalog.attribute.show', {attribute: row.id}))

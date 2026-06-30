@@ -2,29 +2,11 @@
     <el-row :gutter="10" v-if="!showEdit">
         <el-col :span="6">
             <el-tooltip content="Изображение для каталога" placement="top-start" effect="dark">
-            <el-image
-                style="width: 200px; height: 200px"
-                :src="room.image"
-                :zoom-rate="1.2"
-                :max-scale="7"
-                :min-scale="0.2"
-                :initial-index="4"
-                :preview-src-list="[room.image]"
-                fit="cover"
-            />
+                <PhotoDTO model-type="catalog.room" :entity-id="room.id" type="image" />
+
             </el-tooltip>
             <el-tooltip content="Иконка для меню" placement="top-start" effect="dark">
-                <el-image
-                    style="width: 100px; height: 100px"
-                    :src="room.icon"
-                    :zoom-rate="1.2"
-                    :max-scale="7"
-                    :min-scale="0.2"
-                    :initial-index="4"
-                    :preview-src-list="[room.icon]"
-                    fit="cover"
-                    class="ml-3"
-                />
+                <PhotoDTO model-type="catalog.room" :entity-id="room.id" type="icon" />
             </el-tooltip>
         </el-col>
         <el-col :span="12">
@@ -115,6 +97,7 @@ import {reactive, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import UploadImageFile from '@Comp/UploadImageFile.vue'
 import HelpBlock from "@Comp/HelpBlock.vue";
+import PhotoDTO from "@Comp/PhotoDTO.vue";
 
 
 const props = defineProps({

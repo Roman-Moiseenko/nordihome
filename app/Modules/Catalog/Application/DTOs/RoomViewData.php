@@ -13,8 +13,6 @@ class RoomViewData extends Data
         public readonly int $id,
         public readonly string $name,
         public readonly string $slug,
-        public readonly ?string $image,
-        public readonly ?string $icon,
         public readonly ?string $svgIcon,
         public readonly bool $published,
         public readonly ?array $meta,
@@ -34,8 +32,6 @@ class RoomViewData extends Data
             id: $room->id,
             name: $room->name,
             slug: (string) $room->slug,
-            image: $room->image?->getUrl(),
-            icon: $room->icon?->getUrl(),
             svgIcon: $room->svgIcon,
             published: $room->isPublished(),
             meta: $room->meta ? [

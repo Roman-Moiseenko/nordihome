@@ -2,9 +2,11 @@
 
 namespace App\Modules\Shared\Providers;
 
+use App\Modules\Shared\Application\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Application\Interfaces\SettingRepositoryInterface;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
 use App\Modules\Shared\Application\Interfaces\UserPermissionRepositoryInterface;
+use App\Modules\Shared\Infrastructure\Persistence\PhotoRepository;
 use App\Modules\Shared\Infrastructure\Persistence\SettingRepository;
 use App\Modules\Shared\Infrastructure\Persistence\UserPermissionRepositoryFromAuth;
 use App\Modules\Shared\Infrastructure\Services\LaravelTransactionManager;
@@ -100,6 +102,10 @@ class SharedServiceProvider extends ServiceProvider
             SettingRepositoryInterface::class,
             SettingRepository::class)
         ;
+        $this->app->bind(
+            PhotoRepositoryInterface::class,
+            PhotoRepository::class
+        );
     }
 
     // =====================================================================

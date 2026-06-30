@@ -141,26 +141,26 @@ import HelpBlock from "@Comp/HelpBlock.vue";
 
 
 const props = defineProps({
-    room: Object,
+    category: Object,
     categories: Array,
 })
 const iSavingInfo = ref(false)
 const info = reactive({
-    name: props.room.name,
-    title: props.room.title,
-    description: props.room.description,
-    slug: props.room.slug,
-    parent_id: props.room.parent_id,
-    svg: props.room.svg,
+    name: props.category.name,
+    title: props.category.title,
+    description: props.category.description,
+    slug: props.category.slug,
+    parent_id: props.category.parent_id,
+    svg: props.category.svg,
     image: null,
     clear_image: false,
     icon: null,
     clear_icon: false,
 
-    top_title: props.room.top_title,
-    top_description: props.room.top_description,
-    bottom_text: props.room.bottom_text,
-    data: props.room.data,
+    top_title: props.category.top_title,
+    top_description: props.category.top_description,
+    bottom_text: props.category.bottom_text,
+    data: props.category.data,
 
 
 })
@@ -168,7 +168,7 @@ const showEdit = ref(false)
 
 function onSetInfo() {
     router.visit(
-        route('admin.catalog.category.set-info', {room: props.room.id}), {
+        route('admin.catalog.category.set-info', {category: props.category.id}), {
             method: "post",
             data: info,
             onSuccess: page => {

@@ -17,13 +17,13 @@ class RoomRepository implements RoomRepositoryInterface
      */
     public function getAll(): array
     {
-        $models = Room::with(['image', 'icon'])->get();
+        $models = Room::get();
         return $models->map(fn(Room $model) => $this->hydrate($model))->toArray();
     }
 
     public function getById(int $id): RoomEntity
     {
-        $model = Room::with(['image', 'icon'])->findOrFail($id);
+        $model = Room::findOrFail($id);
         return $this->hydrate($model);
     }
 
@@ -48,7 +48,7 @@ class RoomRepository implements RoomRepositoryInterface
 
         $model->save();
 
-        return $this->hydrate($model->fresh()->load(['image', 'icon']));
+        return $this->hydrate($model);
     }
 
     public function delete(int $id): void
@@ -92,24 +92,8 @@ class RoomRepository implements RoomRepositoryInterface
 
         $entity->id = $model->id;
 
-        // Image — через полиморфную связь (трейт ImageField)
-        if ($model->relationLoaded('image') && $model->image && $model->image->file) {
-            $entity->image = new Image(
-                url: $model->image->getUploadUrl(),
-                alt: $model->image->alt,
-            );
-        }
-
-        // Icon — через полиморфную связь (трейт IconField)
-        if ($model->relationLoaded('icon') && $model->icon && $model->icon->file) {
-            $entity->icon = new Image(
-                url: $model->icon->getUploadUrl(),
-                alt: $model->icon->alt,
-            );
-        }
-
         $entity->svgIcon = $model->svg;
-        $entity->published = (bool) $model->published;
+        $entity->published = $model->published;
 
         // Meta
         $metaData = is_array($model->meta) ? $model->meta : [];

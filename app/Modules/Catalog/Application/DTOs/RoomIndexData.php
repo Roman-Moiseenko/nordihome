@@ -14,8 +14,8 @@ class RoomIndexData extends Data
         public readonly int $id,
         public readonly string $name,
         public readonly string $slug,
-        public readonly ?string $image,
-        public readonly ?string $icon,
+        public readonly ?string $image_url,
+        public readonly ?string $icon_url,
         /** @var RoomIndexData[] */
         public readonly array $children = []
     )
@@ -28,8 +28,8 @@ class RoomIndexData extends Data
             id: $room->id,
             name: $room->name,
             slug: (string) $room->slug,
-            image: $room->image?->getUrl(),
-            icon: $room->icon?->getUrl(),
+            image_url: $room->image_url,
+            icon_url: $room->icon_url,
             children: array_map(
                 fn(RoomEntity $child) => self::fromEntity($child),
                 $room->children

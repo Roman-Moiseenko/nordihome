@@ -25,7 +25,7 @@ import PanelAttributes from './Panels/Attributes.vue'
 import PanelProducts from  './Panels/Products.vue'
 
 const props = defineProps({
-    room: Object,
+    category: Object,
     categories: Array,
     title: {
         type: String,

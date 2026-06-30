@@ -22,7 +22,7 @@ import RoomInfo from "./Block/Info.vue";
 
 const props = defineProps({
     room: Object,
-    categories: Array,
+    rooms: Array,
     title: {
         type: String,
         default: 'Карточка категории',

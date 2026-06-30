@@ -24,13 +24,13 @@ final class RoomEntity
         set => $this->slug = $value;
     }
 
-    public ?Image $image = null {
-        get => $this->image;
-        set => $this->image = $value;
+    public ?string $image_url = null {
+        get => $this->image_url;
+        set => $this->image_url = $value;
     }
-    public ?Image $icon = null {
-        get => $this->icon;
-        set => $this->icon = $value;
+    public ?string $icon_url = null {
+        get => $this->icon_url;
+        set => $this->icon_url = $value;
     }
     public ?string $svgIcon = null {
         get => $this->svgIcon;
