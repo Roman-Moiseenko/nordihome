@@ -88,7 +88,7 @@ class ProductController extends Controller
         //dd($request->all());
 
         $product = $this->service->createFull($request);
-        return redirect()->route('admin.product.product.edit', $product)->with('success', 'Товар создан');
+        return redirect()->route('admin.catalog.product.edit', $product)->with('success', 'Товар создан');
 
     }
 
@@ -246,6 +246,9 @@ class ProductController extends Controller
 
     public function search_add(Request $request): JsonResponse
     {
+        $result = [];
+        $products = $this->repository->search($request['search']);
+
         //Применить map()
         /** @var Product $product */
         foreach ($products as $product) {

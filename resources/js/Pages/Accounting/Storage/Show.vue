@@ -14,7 +14,7 @@
             <el-table-column prop="product.code" label="Артикул" width="160" />
             <el-table-column prop="product.name" label="Товар" show-overflow-toolti>
                 <template #default="scope">
-                    <Link type="info" :href="route('admin.product.product.edit', {product: scope.row.product.id})">{{ scope.row.product.name }}</Link>
+                    <Link type="info" :href="route('admin.catalog.product.edit', {product: scope.row.product.id})">{{ scope.row.product.name }}</Link>
                 </template>
             </el-table-column>
             <el-table-column prop="cell" label="Ячейка" width="120" />

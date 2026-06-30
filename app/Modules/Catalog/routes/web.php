@@ -13,11 +13,12 @@ use App\Modules\Catalog\Controllers\ProductController;
 use App\Modules\Catalog\Controllers\ReducedController;
 use App\Modules\Catalog\Controllers\SeriesController;
 use App\Modules\Catalog\Controllers\TagController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
     'middleware' => 'role:admin|staff',
-    'prefix' => 'admin.catalog',
+    'prefix' => 'admin/catalog',
     'as' => 'admin.catalog.',
 ],    function () {
 
@@ -62,6 +63,17 @@ Route::group([
         Route::post('/list', [CategoryController::class, 'list'])->name('list');
         Route::post('/set-info/{category}', [CategoryController::class, 'set_info'])->name('set-info');
     });
+    //ROOMS
+    Route::group([
+        'prefix' => 'room',
+        'as' => 'room.',
+    ], function () {
+        Route::get('/tree', [RoomController::class, 'tree'])->name('tree');
+        Route::post('/up/{id}', [CategoryController::class, 'up'])->name('up');
+        Route::post('/down/{id}', [CategoryController::class, 'down'])->name('down');
+
+    });
+    Route::resource('room', RoomController::class)->except(['create', 'edit']); //CRUD
     //TAG
     Route::group([
         'prefix' => 'tag',

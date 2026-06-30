@@ -59,7 +59,7 @@ const props = defineProps({
     category: Object,
 })
 function routeClick(row) {
-    router.get(route('admin.product.product.edit', {product: row.product_id}))
+    router.get(route('admin.catalog.product.edit', {product: row.product_id}))
 }
 function onParser(row) {
     router.visit(route('admin.parser.product.parser', {product_parser: row.id}), {

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Repository;
 
 use App\Modules\Accounting\Entity\DepartureDocument;
-use App\Modules\Base\Entity\Photo;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 

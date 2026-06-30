@@ -37,6 +37,7 @@ class CategoryController extends Controller
 
     public function show(Category $category): Response
     {
+
         $categories = $this->repository->forFilters();
         return Inertia::render('Catalog/Category/Show', [
             'category' => $this->repository->CategoryWith($category),
@@ -65,12 +66,12 @@ class CategoryController extends Controller
     public function create(Request $request)
     {
         $parents = $this->repository->withDepth();
-        return view('admin.product.category.create', compact('parents'));
+        return view('admin.catalog.category.create', compact('parents'));
     }
 
     public function child(Category $category)
     {
-        return view('admin.product.category.child', compact('category'));
+        return view('admin.catalog.category.child', compact('category'));
     }
 
     public function store(Request $request)
@@ -80,20 +81,20 @@ class CategoryController extends Controller
             'parent_id' => 'nullable|integer|exists:categories,id',
         ]);
         $category = $this->service->register($request);
-        return redirect()->route('admin.product.category.show', $category)->with('success', 'Категория создана');
+        return redirect()->route('admin.catalog.category.show', $category)->with('success', 'Категория создана');
     }
 
 
     public function edit(Category $category)
     {
         $categories = $this->repository->withDepth();
-        return view('admin.product.category.edit', compact('category', 'categories'));
+        return view('admin.catalog.category.edit', compact('category', 'categories'));
     }
 
     public function update(Request $request, Category $category)
     {
         $category = $this->service->update($request, $category);
-        return redirect(route('admin.product.category.show', $category));
+        return redirect(route('admin.catalog.category.show', $category));
     }
 
     public function destroy(Category $category)

@@ -51,7 +51,7 @@ class BrandController extends Controller
         }
     }
 
-    public function show(Brand $brand, Request $request)
+    public function show(Brand $brand, Request $request): \Inertia\Response
     {
         return Inertia::render('Catalog/Brand/Show', [
             'brand' => $this->repository->BrandWithToArray($brand, $request),

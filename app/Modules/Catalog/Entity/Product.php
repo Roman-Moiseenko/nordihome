@@ -978,7 +978,7 @@ class Product extends Model
             'code_search' => $this->code_search,
             'image' => $this->getImage(),
             'price' => $this->getPrice(),
-            'url' => route('admin.product.product.edit', $this),
+            'url' => route('admin.catalog.product.edit', $this),
             'count' => $this->getQuantitySell(),
             'stock' => $this->getQuantitySell() > 0,
         ];

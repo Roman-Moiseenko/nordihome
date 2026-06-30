@@ -70,7 +70,7 @@ class AttributeController extends Controller
         ]);
         try {
             $attribute = $this->service->create($request);
-            return redirect()->route('admin.product.attribute.show', $attribute)->with('success', 'Атрибут создан');
+            return redirect()->route('admin.catalog.attribute.show', $attribute)->with('success', 'Атрибут создан');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

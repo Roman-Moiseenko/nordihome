@@ -39,6 +39,6 @@ const props = defineProps({
 })
 
 function routeClick(row) {
-    router.get(route('admin.product.product.edit', {product: row.product_id}))
+    router.get(route('admin.catalog.product.edit', {product: row.product_id}))
 }
 </script>

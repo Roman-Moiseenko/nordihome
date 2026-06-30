@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Modules\Base\Entity\Photo;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 
 if (!function_exists('price')) {
     function price($value): string

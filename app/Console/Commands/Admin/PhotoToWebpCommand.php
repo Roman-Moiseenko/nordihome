@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Admin;
 
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Job\ConvertPhotoProduct;
 use App\Modules\Catalog\Entity\Product;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 

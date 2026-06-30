@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('name')->default('');
             $table->string('slug')->default('');
             $table->string('svg')->nullable();
+            $table->boolean('published')->default(false);
             $table->json('meta');
             NestedSet::columns($table);
         });

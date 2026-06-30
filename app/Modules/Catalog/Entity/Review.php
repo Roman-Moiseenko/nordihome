@@ -3,7 +3,6 @@
 
 namespace App\Modules\Catalog\Entity;
 
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Base\Traits\PhotoField;
 use App\Modules\Discount\Entity\DiscountReview;

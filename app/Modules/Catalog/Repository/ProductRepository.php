@@ -5,12 +5,12 @@ namespace App\Modules\Catalog\Repository;
 
 
 use App\Modules\Accounting\Entity\StorageItem;
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\Category;
 use App\Modules\Catalog\Entity\Equivalent;
 use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Entity\Tag;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 
 class ProductRepository
 {

@@ -89,13 +89,13 @@ const filter = reactive({
 const new_series = ref('')
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.series.destroy', {series: row.id}));
+    $delete_entity.show(route('admin.catalog.series.destroy', {series: row.id}));
 }
 function createButton() {
-    router.post(route('admin.product.series.store', {name: new_series.value}))
+    router.post(route('admin.catalog.series.store', {name: new_series.value}))
 }
 function routeClick(row) {
-    router.get(route('admin.product.series.show', {series: row.id}))
+    router.get(route('admin.catalog.series.show', {series: row.id}))
 }
 </script>
 

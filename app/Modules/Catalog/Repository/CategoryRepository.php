@@ -52,7 +52,7 @@ class CategoryRepository
                 'id' => $id_attribute,
                 'attribute' => $attr_obj->name,
                 'group' => $attr_obj->group->name,
-                'block' => view('admin.product.product.blocks.attribute', ['attribute' => $attr_obj, 'value' => $value])->render(),
+                'block' => view('admin.catalog.product.blocks.attribute', ['attribute' => $attr_obj, 'value' => $value])->render(),
                 'id_tom_select' => 'select-variant-' . $id_attribute,
                 'complete' => !is_null($value),
             ];
@@ -66,7 +66,7 @@ class CategoryRepository
                         'id' => $attribute->id,
                         'attribute' => $attribute->name,
                         'group' => $attribute->group->name,
-                        'block' => view('admin.product.product.blocks.attribute', ['attribute' => $attribute, 'value' => $product->Value($attribute->id)])->render(),
+                        'block' => view('admin.catalog.product.blocks.attribute', ['attribute' => $attribute, 'value' => $product->Value($attribute->id)])->render(),
                         'id_tom_select' => 'select-variant-' . $attribute->id,
                         'complete' => !is_null($product->Value($attribute->id)),
                     ];

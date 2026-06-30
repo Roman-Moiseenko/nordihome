@@ -5,7 +5,6 @@ namespace App\Modules\Shop\Parser;
 
 use App\Events\ProductHasParsed;
 use App\Modules\Base\Entity\Package;
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Service\GoogleTranslateForFree;
 use App\Modules\Base\Service\HttpPage;
 use App\Modules\Catalog\Entity\Brand;
@@ -14,7 +13,6 @@ use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Service\ProductService;
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
 

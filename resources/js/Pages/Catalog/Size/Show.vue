@@ -61,12 +61,12 @@ const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.category.sizes])
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.size.del-size', {size: row.id}));
+    $delete_entity.show(route('admin.catalog.size.del-size', {size: row.id}));
 }
 function saveNameSize(id, val) {
 
 
-    router.visit(route('admin.product.size.set-size', {size: id}), {
+    router.visit(route('admin.catalog.size.set-size', {size: id}), {
         method: "post",
         data: {name: val},
         preserveScroll: true,

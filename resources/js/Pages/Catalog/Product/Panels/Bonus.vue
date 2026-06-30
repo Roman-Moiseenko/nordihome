@@ -25,7 +25,7 @@
                 <div v-for="prod in form.bonus" class="mt-3 flex items-center p-2 bg-slate-100 rounded-md" >
                     <img v-if="prod.image" :src="prod.image" width="40" height="40"/>
                     <span class="font-medium ml-3" style="width: 120px;">{{ prod.code }}</span>
-                    <span class="font-medium ml-2"><Link type="primary" :href="route('admin.product.product.edit', prod.id)">{{ prod.name }}</Link></span>
+                    <span class="font-medium ml-2"><Link type="primary" :href="route('admin.catalog.product.edit', prod.id)">{{ prod.name }}</Link></span>
                     <span class="text-red-800 line-through ml-auto">{{ func.price(prod.price) }}</span>
                     <el-input v-model="prod.discount" @change="onAutoSave" :disabled="isSaving" class="ml-2" style="width: 160px;">
                         <template #append>₽</template>

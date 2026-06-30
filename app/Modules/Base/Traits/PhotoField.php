@@ -2,7 +2,7 @@
 
 namespace App\Modules\Base\Traits;
 
-use App\Modules\Base\Entity\Photo;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**

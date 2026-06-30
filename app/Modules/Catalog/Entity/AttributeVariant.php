@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Entity;
 
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

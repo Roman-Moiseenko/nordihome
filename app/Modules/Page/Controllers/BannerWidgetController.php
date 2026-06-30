@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Page\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Page\Entity\Widgets\BannerWidget;
 use App\Modules\Page\Entity\Widgets\BannerWidgetItem;
 use App\Modules\Page\Repository\BannerWidgetRepository;

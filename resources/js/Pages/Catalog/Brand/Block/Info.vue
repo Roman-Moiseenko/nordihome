@@ -111,7 +111,7 @@ const showEdit = ref(false)
 
 function onSetInfo() {
     router.visit(
-        route('admin.product.brand.set-info', {brand: props.brand.id}), {
+        route('admin.catalog.brand.set-info', {brand: props.brand.id}), {
             method: "post",
             data: info,
             onSuccess: page => {

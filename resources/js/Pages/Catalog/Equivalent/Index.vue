@@ -102,16 +102,16 @@ const form = reactive({
     category_id: null,
 })
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.equivalent.destroy', {equivalent: row.id}));
+    $delete_entity.show(route('admin.catalog.equivalent.destroy', {equivalent: row.id}));
 }
 function createButton() {
-    router.post(route('admin.product.equivalent.store', form))
+    router.post(route('admin.catalog.equivalent.store', form))
 }
 function routeClick(row) {
-    router.get(route('admin.product.equivalent.show', {equivalent: row.id}))
+    router.get(route('admin.catalog.equivalent.show', {equivalent: row.id}))
 }
 function onSetName(val, id) {
-    router.visit(route('admin.product.equivalent.rename', {equivalent: id, name: val}), {
+    router.visit(route('admin.catalog.equivalent.rename', {equivalent: id, name: val}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,

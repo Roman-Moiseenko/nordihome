@@ -92,7 +92,7 @@ const showEdit = ref(false)
 
 function onSetInfo() {
     router.visit(
-        route('admin.product.group.set-info', {group: props.group.id}), {
+        route('admin.catalog.group.set-info', {group: props.group.id}), {
             method: "post",
             data: info,
             onSuccess: page => {

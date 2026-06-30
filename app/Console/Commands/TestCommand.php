@@ -2,12 +2,11 @@
 
 namespace App\Console\Commands;
 
-use App\Modules\Base\Entity\Photo;
+use App\Console\CreatesApplication;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Service\ParserIkea;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
-use App\Console\CreatesApplication;
 
 class TestCommand extends Command
 {

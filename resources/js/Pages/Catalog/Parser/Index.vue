@@ -46,7 +46,7 @@
                                 {{ scope.row.sanctioned ? 'Не санкционный' : 'Санкционный' }}
                             </el-link>
                             &nbsp;|&nbsp;
-                            <Link type="primary" :href="route('admin.product.product.edit', {product: scope.row.product_id})">К товару</Link>
+                            <Link type="primary" :href="route('admin.catalog.product.edit', {product: scope.row.product_id})">К товару</Link>
                             &nbsp;|&nbsp;
                             <el-link
                                 @click="onBlock(scope.row.id)"
@@ -114,21 +114,21 @@ const filter = reactive({
 })
 
 function onFragile(id){
-    router.visit(route('admin.product.parser.fragile', {parser: id}), {
+    router.visit(route('admin.catalog.parser.fragile', {parser: id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function onSanctioned(id){
-    router.visit(route('admin.product.parser.sanctioned', {parser: id}), {
+    router.visit(route('admin.catalog.parser.sanctioned', {parser: id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function onBlock(id){
-    router.visit(route('admin.product.parser.block', {parser: id}), {
+    router.visit(route('admin.catalog.parser.block', {parser: id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,

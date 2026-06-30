@@ -1,6 +1,7 @@
 <?php
 declare(strict_types=1);
 
+use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Catalog\Entity\Brand;
 use App\Modules\Catalog\Entity\CategorySize;
 use App\Modules\Catalog\Entity\Equivalent;
@@ -200,4 +201,15 @@ Breadcrumbs::for('admin.catalog.size.index', function (BreadcrumbTrail $trail) {
 Breadcrumbs::for('admin.catalog.size.show', function (BreadcrumbTrail $trail, CategorySize $category) {
     $trail->parent('admin.catalog.size.index');
     $trail->push($category->name, route('admin.catalog.size.show', $category));
+});
+
+//ROOMS
+Breadcrumbs::for('admin.catalog.room.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.catalog.product.index');
+    $trail->push('По комнатам', route('admin.catalog.room.index'));
+});
+
+Breadcrumbs::for('admin.catalog.room.show', function (BreadcrumbTrail $trail, RoomEntity $room) {
+    $trail->parent('admin.catalog.room.index');
+    $trail->push($room->name, route('admin.catalog.room.show', $room->id));
 });

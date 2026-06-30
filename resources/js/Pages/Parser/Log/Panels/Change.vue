@@ -40,6 +40,6 @@ const props = defineProps({
 })
 console.log(props.items)
 function routeClick(row) {
-    router.get(route('admin.product.product.show', {product: row.product_id}))
+    router.get(route('admin.catalog.product.show', {product: row.product_id}))
 }
 </script>

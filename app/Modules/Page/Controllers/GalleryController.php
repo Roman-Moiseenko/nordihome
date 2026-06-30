@@ -3,10 +3,10 @@
 namespace App\Modules\Page\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Page\Entity\Gallery;
 use App\Modules\Page\Repository\GalleryRepository;
 use App\Modules\Page\Service\GalleryService;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

@@ -82,14 +82,14 @@ const new_category = ref('')
 
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.size.destroy', {category: row.id}));
+    $delete_entity.show(route('admin.catalog.size.destroy', {category: row.id}));
 }
 function createButton() {
-    router.post(route('admin.product.size.store'), {name: new_category.value})
+    router.post(route('admin.catalog.size.store'), {name: new_category.value})
 }
 function routeClick(row) {
     console.log(row.id)
-    router.get(route('admin.product.size.show', {category: row.id}))
+    router.get(route('admin.catalog.size.show', {category: row.id}))
 }
 </script>
 

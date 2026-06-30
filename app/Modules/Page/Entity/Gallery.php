@@ -2,7 +2,7 @@
 
 namespace App\Modules\Page\Entity;
 
-use App\Modules\Base\Entity\Photo;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;

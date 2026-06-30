@@ -4,9 +4,9 @@
         <h1 class="font-medium text-xl">Серия {{ series.name }}</h1>
         <div class="flex mt-5">
             <SearchAddProduct
-                :route="route('admin.product.series.add-product', {series: series.id})"
+                :route="route('admin.catalog.series.add-product', {series: series.id})"
             />
-            <SearchAddProducts :route="route('admin.product.series.add-products', {series: series.id})" class="ml-3"/>
+            <SearchAddProducts :route="route('admin.catalog.series.add-products', {series: series.id})" class="ml-3"/>
         </div>
 
         <div class="p-5 bg-white rounded-md">
@@ -58,7 +58,7 @@ const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.series.products])
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.series.del-product', {series: props.series.id, product_id: row.id}));
+    $delete_entity.show(route('admin.catalog.series.del-product', {series: props.series.id, product_id: row.id}));
 }
 
 </script>

@@ -5,33 +5,25 @@ namespace App\Modules\Shop\Repository;
 
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Auth\Infrastructure\Models\User;
 use App\Modules\Base\Entity\Dimensions;
-use App\Modules\Base\Entity\Photo;
-use App\Modules\Discount\Entity\Coupon;
-use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Page\Entity\Page;
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\AttributeProduct;
 use App\Modules\Catalog\Entity\AttributeVariant;
 use App\Modules\Catalog\Entity\Category;
-use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Entity\Modification;
 use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Entity\Review;
 use App\Modules\Catalog\Entity\Tag;
-use App\Modules\Catalog\Repository\ModificationRepository;
+use App\Modules\Discount\Entity\Coupon;
+use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Entity\ProductParser;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
-use App\Modules\Setting\Repository\SettingRepository;
-use App\Modules\Auth\Infrastructure\Models\User;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use JetBrains\PhpStorm\Deprecated;
-use function Sodium\add;
 
 class ShopRepository
 {

@@ -2,6 +2,8 @@
 
 namespace App\Modules\Catalog\Providers;
 
+use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
+use App\Modules\Catalog\Infrastructure\Persistence\RoomRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -83,7 +85,10 @@ class CatalogServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register module-specific services
+        $this->app->bind(
+            RoomRepositoryInterface::class,
+            RoomRepository::class
+        );
     }
 
     // =====================================================================

@@ -132,16 +132,16 @@ const form = reactive({
 
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.attribute.destroy', {attribute: row.id}));
+    $delete_entity.show(route('admin.catalog.attribute.destroy', {attribute: row.id}));
 }
 function createButton() {
-    router.post(route('admin.product.attribute.store', form))
+    router.post(route('admin.catalog.attribute.store', form))
 }
 function routeClick(row) {
-    router.get(route('admin.product.attribute.show', {attribute: row.id}))
+    router.get(route('admin.catalog.attribute.show', {attribute: row.id}))
 }
 function handleGroup() {
-    router.get(route('admin.product.attribute.groups'))
+    router.get(route('admin.catalog.attribute.groups'))
 }
 </script>
 

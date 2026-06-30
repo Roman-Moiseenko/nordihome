@@ -27,7 +27,7 @@ class NotificationProductBlocked
             $staff->notify(new StaffMessage(
                 'Товар снят с продажи ',
                 "Артикул товара " . $event->product->code . ' Общее кол-во = ' . $event->product->getQuantity(),
-                route('admin.product.product.edit', $event->product),
+                route('admin.catalog.product.edit', $event->product),
                 'package-open'
             ));
         }*/

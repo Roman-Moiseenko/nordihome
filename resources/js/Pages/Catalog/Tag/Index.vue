@@ -10,7 +10,7 @@
                         <el-icon class="ml-1"><ArrowDown /></el-icon>
                     </el-button>
                 </template>
-                <el-input v-model="new_tag" placeholder="Серия" class="mt-1"/>
+                <el-input v-model="new_tag" placeholder="Метка" class="mt-1"/>
                 <div class="mt-2">
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
@@ -91,10 +91,10 @@ const filter = reactive({
 const new_tag = ref('')
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.tag.destroy', {tag: row.id}));
+    $delete_entity.show(route('admin.catalog.tag.destroy', {tag: row.id}));
 }
 function createButton() {
-    router.visit(route('admin.product.tag.store', {name: new_tag.value}), {
+    router.visit(route('admin.catalog.tag.store', {name: new_tag.value}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
@@ -104,7 +104,7 @@ function createButton() {
     })
 }
 function onSetName(val, id) {
-    router.visit(route('admin.product.tag.rename', {tag: id, name: val}), {
+    router.visit(route('admin.catalog.tag.rename', {tag: id, name: val}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
@@ -113,7 +113,7 @@ function onSetName(val, id) {
 
 /*
 function routeClick(row) {
-    router.get(route('admin.product.tag.show', {series: row.id}))
+    router.get(route('admin.catalog.tag.show', {series: row.id}))
 }*/
 </script>
 

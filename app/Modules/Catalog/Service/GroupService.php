@@ -3,11 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Service;
 
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Catalog\Entity\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use JetBrains\PhpStorm\Deprecated;
 
 class GroupService
 {

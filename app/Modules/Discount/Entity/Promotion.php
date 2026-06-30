@@ -3,16 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Entity;
 
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
 use App\Modules\Catalog\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Support\Str;
-use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id

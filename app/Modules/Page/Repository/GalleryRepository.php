@@ -2,8 +2,8 @@
 
 namespace App\Modules\Page\Repository;
 
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Page\Entity\Gallery;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Http\Request;
 
 class GalleryRepository

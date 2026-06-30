@@ -12,7 +12,7 @@ const props = defineProps({
 
 function saveNameProduct(val) {
 
-    //router.post(route('admin.product.rename', {product: props.product.id}), {name: val})
+    //router.post(route('admin.catalog.rename', {product: props.product.id}), {name: val})
 
     router.visit(route('admin.catalog.product.rename', {product: props.product.id}), {
         method: "post",

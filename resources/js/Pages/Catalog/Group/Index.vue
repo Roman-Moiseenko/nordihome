@@ -97,13 +97,13 @@ const new_group = ref('')
 
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.group.destroy', {group: row.id}));
+    $delete_entity.show(route('admin.catalog.group.destroy', {group: row.id}));
 }
 function createButton() {
-    router.post(route('admin.product.group.store', {name: new_group.value}))
+    router.post(route('admin.catalog.group.store', {name: new_group.value}))
 }
 function routeClick(row) {
-    router.get(route('admin.product.group.show', {group: row.id}))
+    router.get(route('admin.catalog.group.show', {group: row.id}))
 }
 </script>
 

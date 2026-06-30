@@ -83,7 +83,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('category', function ($value) {
             if (str_contains(Route::currentRouteName(), 'admin.page.post-category'))
                 return PostCategory::find($value);
-            if (str_contains(Route::currentRouteName(), 'admin.product.category'))
+            if (str_contains(Route::currentRouteName(), 'admin.catalog.category'))
             return Category::find($value);
         });
     }

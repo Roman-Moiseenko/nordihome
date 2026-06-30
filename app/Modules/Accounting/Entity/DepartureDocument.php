@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Entity;
 
 use App\Modules\Auth\Infrastructure\Models\Staff;
-use App\Modules\Base\Entity\Photo;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;

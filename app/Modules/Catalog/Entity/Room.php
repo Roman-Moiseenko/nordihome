@@ -9,6 +9,7 @@ use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
+use JetBrains\PhpStorm\Deprecated;
 use Kalnoy\Nestedset\NodeTrait;
 
 /**
@@ -26,6 +27,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property int $_rgt
  * @property bool $published
  */
+#[Deprecated]
 class Room extends Model
 {
     use NodeTrait, ImageField, IconField;
@@ -84,7 +86,8 @@ class Room extends Model
         return $this->hasMany(Product::class, 'main_room_id', 'id');
     }
 
-    public function allProducts(int $pagination = null)
+    #[Deprecated]
+    public function allProducts()
     {
 
         $query = Product::where('published', true) //Опубликован AND
@@ -103,17 +106,5 @@ class Room extends Model
         });
 
         return $query->get();
-
-
-
-        //TODO Связанные таблицы ......
-        $subCategories = []; //Получаем все подкатегории всех уровней вложенности
-        //Ищем товары, у которых category_id IN $subCategories
-        //Ищем по вторичным категориям в таблице CategoryAssignment
-        //Возвращаем
-        //if $pagination == null -> все товары
-        // иначе через пагинацию
-
-        return null;
     }
 }

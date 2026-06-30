@@ -139,7 +139,7 @@ import {reactive, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import UploadImageFile from '@Comp/UploadImageFile.vue'
 import Active from "@Comp/Elements/Active.vue";
-import VarianField from "@Page/Product/Attribute/Block/VarianField.vue";
+import VarianField from "./VarianField.vue";
 import HelpBlock from "@Comp/HelpBlock.vue";
 
 const props = defineProps({
@@ -170,7 +170,7 @@ function onSetInfo() {
     if (info.type === props.variant) info.variants = Variants.value
 
     router.visit(
-        route('admin.product.attribute.set-info', {attribute: props.attribute.id}), {
+        route('admin.catalog.attribute.set-info', {attribute: props.attribute.id}), {
             method: "post",
             data: info,
             onSuccess: page => {

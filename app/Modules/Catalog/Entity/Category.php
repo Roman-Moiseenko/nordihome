@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Entity;
 
-use App\Modules\Base\Entity\Photo;
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -137,7 +137,7 @@ class Category extends Model
         return $this->belongsToMany(Attribute::class, 'attributes_categories', 'category_id', 'attribute_id');
     }
 
-    public function products(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'main_category_id', 'id');
     }

@@ -64,6 +64,6 @@ const props = defineProps({
 })
 console.log(props.category.attributes)
 function routeClick(row) {
-    router.get(route('admin.product.attribute.show', {attribute: row.id}))
+    router.get(route('admin.catalog.attribute.show', {attribute: row.id}))
 }
 </script>

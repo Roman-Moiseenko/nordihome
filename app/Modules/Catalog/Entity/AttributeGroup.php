@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Entity;
 
-use App\Modules\Base\Entity\Photo;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Database\Eloquent\Model;
 
 /**

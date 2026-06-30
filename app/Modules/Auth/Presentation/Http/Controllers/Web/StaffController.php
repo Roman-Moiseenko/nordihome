@@ -93,9 +93,6 @@ class StaffController extends Controller
 
     public function destroy(int $id, UserPermission $userPermission): JsonResponse
     {
-        $staff = $this->staffRepository->findById($id);
-        if (!$staff) return response()->json(['message' => 'Сотрудник не найден'], Response::HTTP_NOT_FOUND);
-
         $deleted = $this->removeStaffUseCase->execute($id, $userPermission);
         if (!$deleted)
             return response()->json(['message' => 'Ошибка удаления сотрудника'], Response::HTTP_NOT_MODIFIED);

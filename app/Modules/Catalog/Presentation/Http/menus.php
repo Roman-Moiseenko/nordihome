@@ -19,7 +19,7 @@ return [
             ],
             'rooms' => [
                 'title' => 'По комнатам',
-                'route_name' => 'admin.catalog.category.index',
+                'route_name' => 'admin.catalog.room.index',
                 'font_awesome' => 'fa-light fa-house-laptop',
             ],
             'modification' => [

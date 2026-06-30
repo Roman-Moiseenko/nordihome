@@ -4,14 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Shop;
 
 use App\Modules\Accounting\Entity\Trader;
-use App\Modules\Base\Entity\Photo;
-use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Catalog\Entity\Category;
 use App\Modules\Catalog\Entity\Product;
-use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Entity\Web;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Cache;
 
 //TODO Автоматизировать и брать данные из Таблиц и настроек
 

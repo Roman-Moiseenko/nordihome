@@ -11,7 +11,7 @@
                     </el-button>
                 </template>
                 <el-input v-model="form.name" placeholder="Название"/>
-                <el-select v-model="form.parent_id" placeholder="Родительская категория" class="mt-1" filterable clearable>
+                <el-select v-model="form.parentId" placeholder="Родительская категория" class="mt-1" filterable clearable>
                     <el-option v-for="item in categories" :value="item.id" :label="item.name" />
                 </el-select>
                 <div class="mt-2">
@@ -29,7 +29,6 @@
 import {Head, router} from "@inertiajs/vue3";
 import {inject, reactive, ref} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
-import CategoryRow from "./CategoryRow.vue";
 import CategoryChildren from "@Comp/Category/Children.vue";
 
 const props = defineProps({
@@ -49,10 +48,10 @@ const form = reactive({
     parent_id: null,
 })
 function createButton() {
-    router.post(route('admin.product.category.store', form))
+    router.post(route('admin.catalog.category.store', form))
 }
 
 function routeClick(row) {
-    router.get(route('admin.product.category.show', {category: row.id}))
+    router.get(route('admin.catalog.category.show', {category: row.id}))
 }
 </script>

@@ -52,7 +52,7 @@ const showEdit = ref(false)
 function onRename(val) {
     info.name = val
     router.visit(
-        route('admin.product.modification.rename', {modification: props.modification.id}), {
+        route('admin.catalog.modification.rename', {modification: props.modification.id}), {
             method: "post",
             data: info,
             onSuccess: page => {

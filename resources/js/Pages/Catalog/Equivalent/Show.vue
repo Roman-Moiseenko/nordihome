@@ -5,8 +5,8 @@
 
         <div class="flex mt-5">
             <SearchAddProduct
-                :route="route('admin.product.equivalent.add-product', {equivalent: equivalent.id})"
-                :search="route('admin.product.equivalent.search', {equivalent: equivalent.id})"
+                :route="route('admin.catalog.equivalent.add-product', {equivalent: equivalent.id})"
+                :search="route('admin.catalog.equivalent.search', {equivalent: equivalent.id})"
             />
         </div>
 
@@ -59,11 +59,11 @@ const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.equivalent.products])
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.product.equivalent.del-product', {equivalent: props.equivalent.id, product_id: row.id}));
+    $delete_entity.show(route('admin.catalog.equivalent.del-product', {equivalent: props.equivalent.id, product_id: row.id}));
 }
 
 function routeClick(row) {
-    router.get(route('admin.product.product.edit', {product: row.id}))
+    router.get(route('admin.catalog.product.edit', {product: row.id}))
 }
 </script>
 

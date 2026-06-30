@@ -2,8 +2,7 @@
 
 namespace App\Modules\Base\Traits;
 
-use App\Modules\Base\Entity\Photo;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 
 /**
  * @property Photo $icon

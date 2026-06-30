@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Base\Job;
 
-use App\Modules\Base\Entity\Photo;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
