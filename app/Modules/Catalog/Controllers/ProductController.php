@@ -18,7 +18,6 @@ use App\Modules\Catalog\Entity\Equivalent;
 use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Entity\Series;
 use App\Modules\Catalog\Entity\Tag;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Catalog\Repository\ProductRepository;
 use App\Modules\Catalog\Request\ProductCreateRequest;
 use App\Modules\Catalog\Service\ProductService;
@@ -34,17 +33,14 @@ class ProductController extends Controller
 {
     private ProductService $service;
     private ProductRepository $repository;
-    private CategoryRepository $categories;
 
     public function __construct(
         ProductService     $service,
         ProductRepository  $repository,
-        CategoryRepository $categories,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->categories = $categories;
     }
 
     public function index(Request $request): Response

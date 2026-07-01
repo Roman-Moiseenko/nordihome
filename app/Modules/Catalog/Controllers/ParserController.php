@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Catalog\Repository\ParserRepository;
 use App\Modules\Shop\Parser\ProductParser;
 use Illuminate\Http\RedirectResponse;
@@ -15,12 +14,10 @@ use Inertia\Response;
 class ParserController extends Controller
 {
     private ParserRepository $repository;
-    private CategoryRepository $categories;
 
-    public function __construct(ParserRepository $repository, CategoryRepository $categories)
+    public function __construct(ParserRepository $repository)
     {
         $this->repository = $repository;
-        $this->categories = $categories;
     }
 
     public function index(Request $request): Response

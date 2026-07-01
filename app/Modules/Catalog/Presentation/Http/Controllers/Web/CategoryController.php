@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Controllers;
+namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Catalog\Application\Actions\Attribute\ListAttributeByCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\Category\CreateCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\DownCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\IndexCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\RemoveCategoryUseCase;
@@ -11,12 +13,13 @@ use App\Modules\Catalog\Application\Actions\Category\ToggleCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\TreeCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\UpCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\UpdateCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\Category\ViewCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\Product\ListProductByCategoryUseCase;
+use App\Modules\Catalog\Application\DTOs\Category\CategoryCreateData;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryIndexData;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryTreeData;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryUpdateData;
-use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Catalog\Repository\CategoryRepository;
-use App\Modules\Catalog\Service\CategoryService;
+use App\Modules\Catalog\Application\DTOs\Category\CategoryViewData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -28,8 +31,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 class CategoryController extends Controller
 {
     public function __construct(
-        private readonly CategoryService $service,
-        private readonly CategoryRepository $repository,
+        private readonly CreateCategoryUseCase $createCategoryUseCase,
         private readonly IndexCategoryUseCase $indexCategoryUseCase,
         private readonly TreeCategoryUseCase $treeCategoryUseCase,
         private readonly ToggleCategoryUseCase $toggleCategoryUseCase,
@@ -37,6 +39,9 @@ class CategoryController extends Controller
         private readonly DownCategoryUseCase $downCategoryUseCase,
         private readonly RemoveCategoryUseCase $removeCategoryUseCase,
         private readonly UpdateCategoryUseCase $updateCategoryUseCase,
+        private readonly ViewCategoryUseCase $viewCategoryUseCase,
+        private readonly ListAttributeByCategoryUseCase $listAttributeByCategoryUseCase,
+        private readonly ListProductByCategoryUseCase $listProductByCategoryUseCase,
     )
     {
     }
@@ -52,9 +57,9 @@ class CategoryController extends Controller
 
     public function show(int $id, UserPermission $userPermission): Response
     {
-        $category = Category::find($id);
+        $category = $this->viewCategoryUseCase->execute($id, $userPermission);
         return Inertia::render('Catalog/Category/Show', [
-            'category' => $this->repository->CategoryWith($category),
+            'category' => CategoryViewData::fromEntity($category),
         ]);
     }
 
@@ -77,37 +82,26 @@ class CategoryController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-
-    public function store(Request $request)
+    public function store(Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string',
-            'parent_id' => 'nullable|integer|exists:categories,id',
-        ]);
-        $category = $this->service->register($request);
-        return redirect()->route('admin.catalog.category.show', $category)->with('success', 'Категория создана');
+        $dto = CategoryCreateData::validateAndCreate($request->all());
+        $categoryDTO = $this->createCategoryUseCase->execute($dto, $userPermission);
+        return redirect()->route('admin.catalog.category.show', $categoryDTO->id)->with('success', 'Категория создана');
     }
 
-
-    public function destroy(int $id, UserPermission $userPermission)
+    public function destroy(int $id, UserPermission $userPermission): RedirectResponse
     {
         $this->removeCategoryUseCase->execute($id, $userPermission);
         return redirect()->back()->with('success', 'Категория удалена');
     }
 
-    public function list(): JsonResponse
+    public function toggle(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $categories = array_map(function (Category $category) {
-
-            $depth = str_repeat('-', $category->depth);
-            return [
-                'id' => $category->id,
-                'name' => $depth . $category->name,
-            ];
-        }, $this->repository->withDepth());
-
-        return response()->json($categories);
+        $this->toggleCategoryUseCase->execute($id, $userPermission);
+        return redirect()->back()->with('success', 'Сохранено');
     }
+
+    /* api запросы */
 
     public function tree(): JsonResponse
     {
@@ -115,10 +109,20 @@ class CategoryController extends Controller
         return response()->json(CategoryTreeData::fromEntityArray($categories), SymfonyResponse::HTTP_OK);
     }
 
-    public function toggle(int $id, UserPermission $userPermission): RedirectResponse
+    public function products(int $id, Request $request): JsonResponse
     {
-        $this->toggleCategoryUseCase->execute($id, $userPermission);
-        return redirect()->back()->with('success', 'Сохранено');
+        $page = $request->integer('page', 1);
+        $perPage = $request->integer('per_page', 15);
+        $list = $this->listProductByCategoryUseCase->execute($id, $perPage, $page);
+
+        return response()->json($list, SymfonyResponse::HTTP_OK);
+    }
+
+    public function attributes(int $id): JsonResponse
+    {
+        $list = $this->listAttributeByCategoryUseCase->execute($id);
+
+        return response()->json($list, SymfonyResponse::HTTP_OK);
     }
 
 }

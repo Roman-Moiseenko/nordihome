@@ -105,7 +105,7 @@
                         <el-tree
                             class="!bg-green-50"
                             style="max-width: 600px"
-                            :data="categories"
+                            :data="useCatalog.categories"
                             show-checkbox
                             node-key="id"
                             :props="defaultProps"
@@ -117,7 +117,7 @@
                         <el-tree
                             class="!bg-red-50"
                             style="max-width: 600px"
-                            :data="categories"
+                            :data="useCatalog.categories"
                             show-checkbox
                             node-key="id"
                             :props="defaultProps"
@@ -138,16 +138,18 @@ import {Head, router} from "@inertiajs/vue3";
 import SearchAddProducts from "@Comp/Search/AddProducts.vue";
 import SearchAddProduct from "@Comp/Search/AddProduct.vue";
 import FeedInfo from "./Block/Info.vue"
+import {useCatalogStore} from "@Res/catalogStore";
 
+const useCatalog = useCatalogStore()
 const props = defineProps({
     feed: Object,
     tags: Array,
-    categories: Array,
     title: {
         type: String,
         default: 'Карточка фида',
     },
 })
+console.log(props.categories)
 const defaultProps = {
     children: 'children',
     label: 'name',

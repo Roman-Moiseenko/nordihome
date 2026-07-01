@@ -4,11 +4,8 @@ namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Entity\Product;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Catalog\Repository\OnOrderRepository;
-use App\Modules\Catalog\Repository\ReducedRepository;
 use App\Modules\Catalog\Service\OnOrderService;
-use App\Modules\Catalog\Service\ReducedService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -18,17 +15,14 @@ class OnOrderController extends Controller
 {
     private OnOrderService $service;
     private OnOrderRepository $repository;
-    private CategoryRepository $categories;
 
     public function __construct(
         OnOrderService    $service,
         OnOrderRepository $repository,
-        CategoryRepository $categories,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->categories = $categories;
     }
 
     public function index(Request $request): Response

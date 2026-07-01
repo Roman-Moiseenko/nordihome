@@ -151,6 +151,8 @@ class Product extends Model
         'published_at' => 'datetime',
         'dimensions' => DimensionsCast::class,
         'packages' => PackagesCast::class,
+        'published' => 'boolean',
+        'not_sale' => 'boolean',
     ];
     protected $attributes = [
         'short' => '',

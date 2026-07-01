@@ -7,8 +7,8 @@
         </div>
         <el-tabs>
             <PanelChildren :category="category" />
-            <PanelAttributes :category="category" />
-            <PanelProducts :category="category" />
+            <PanelAttributes :category-id="category.id" />
+            <PanelProducts :category-id="category.id" />
         </el-tabs>
     </el-config-provider>
 </template>

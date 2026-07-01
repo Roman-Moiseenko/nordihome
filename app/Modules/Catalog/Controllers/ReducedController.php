@@ -4,7 +4,6 @@ namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Entity\Product;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Catalog\Repository\ReducedRepository;
 use App\Modules\Catalog\Service\ReducedService;
 use Illuminate\Http\RedirectResponse;
@@ -16,17 +15,14 @@ class ReducedController extends Controller
 {
     private ReducedService $service;
     private ReducedRepository $repository;
-    private CategoryRepository $categories;
 
     public function __construct(
         ReducedService    $service,
         ReducedRepository $repository,
-        CategoryRepository $categories,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->categories = $categories;
     }
 
     public function index(Request $request): Response

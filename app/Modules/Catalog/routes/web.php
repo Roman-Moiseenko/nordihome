@@ -2,7 +2,6 @@
 
 use App\Modules\Catalog\Controllers\AttributeController;
 use App\Modules\Catalog\Controllers\BrandController;
-use App\Modules\Catalog\Controllers\CategoryController;
 use App\Modules\Catalog\Controllers\EquivalentController;
 use App\Modules\Catalog\Controllers\GroupController;
 use App\Modules\Catalog\Controllers\ModificationController;
@@ -13,6 +12,7 @@ use App\Modules\Catalog\Controllers\ProductController;
 use App\Modules\Catalog\Controllers\ReducedController;
 use App\Modules\Catalog\Controllers\SeriesController;
 use App\Modules\Catalog\Controllers\TagController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;
 use Illuminate\Support\Facades\Route;
 
@@ -59,11 +59,10 @@ Route::group([
     ], function () {
         Route::post('/up/{id}', [CategoryController::class, 'up'])->name('up');
         Route::post('/down/{id}', [CategoryController::class, 'down'])->name('down');
-        //Route::get('/child/{category}', [CategoryController::class, 'child'])->name('child');
-        Route::post('/list', [CategoryController::class, 'list'])->name('list');
-        //Route::post('/set-info/{category}', [CategoryController::class, 'set_info'])->name('set-info');
         Route::get('/tree', [CategoryController::class, 'tree'])->name('tree');
         Route::post('/toggle/{id}', [CategoryController::class, 'toggle'])->name('toggle');
+        Route::get('/products/{id}', [CategoryController::class, 'products'])->name('products');
+        Route::get('/attributes/{id}', [CategoryController::class, 'attributes'])->name('attributes');
     });
     Route::resource('category', CategoryController::class)->parameters(['category' => 'id']); //CRUD
     //ROOMS

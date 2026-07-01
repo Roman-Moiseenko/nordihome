@@ -6,8 +6,7 @@ namespace App\Modules\Catalog\Controllers;
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Entity\Equivalent;
-use App\Modules\Catalog\Entity\Product;
-use App\Modules\Catalog\Repository\CategoryRepository;
+
 use App\Modules\Catalog\Repository\EquivalentRepository;
 use App\Modules\Catalog\Service\EquivalentService;
 use Illuminate\Http\JsonResponse;
@@ -22,20 +21,17 @@ class EquivalentController extends Controller
 
     private EquivalentService $service;
     private EquivalentRepository $repository;
-    private CategoryRepository $categories;
 
     public function __construct(
         EquivalentService    $service,
         EquivalentRepository $repository,
-        CategoryRepository   $categories,
         )
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->categories = $categories;
     }
 
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $equivalents = $this->repository->getIndex($request, $filters);
         return Inertia::render('Catalog/Equivalent/Index', [

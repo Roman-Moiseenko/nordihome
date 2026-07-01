@@ -53,7 +53,7 @@
             </el-form-item>
             <el-form-item label="Категория">
                 <el-select v-model="formCreate.category_id" filterable>
-                    <el-option v-for="item in categories" :value="item.id" :label="item.name"/>
+                    <el-option v-for="item in useCatalog.categoriesForFilters" :value="item.id" :label="item.name"/>
                 </el-select>
             </el-form-item>
 
@@ -73,6 +73,7 @@ import {inject, reactive, ref, defineProps, computed} from "vue";
 import {router} from "@inertiajs/vue3";
 import axios from "axios";
 import {ElLoading} from "element-plus";
+import {useCatalogStore} from "@Res/catalogStore";
 
 const search = route('admin.catalog.product.search-add')
 const props = defineProps({
@@ -165,6 +166,8 @@ const form = reactive({
     preorder: null,
 })
 
+
+const useCatalog = useCatalogStore()
 function onSelect() {
     if (props.quantity) {
         document.getElementById('quantity').focus()
@@ -208,25 +211,25 @@ interface ISelect {
     name: String,
 }
 const brands = ref<ISelect[]>([]);
-const categories = ref<ISelect[]>([]);
+
+
+
 
 function createProduct() {
     //Загружаем список брендов и категорий в диалог
+
+    //MAINDO сделать через useCatalogStore().brands !!!
     if (brands.value.length === 0) {
         const loading = ElLoading.service({
             lock: false,
-            text: 'Загружаем категории',
+            text: 'Загружаем бренды',
             background: 'rgba(0, 0, 0, 0.7)',
         })
 
         axios.post(route('admin.catalog.brand.list')).then(response => {
             brands.value = [...response.data]
-            axios.post(route('admin.catalog.category.list')).then(response => {
-                categories.value = [...response.data]
-                dialogCreate.value = true
-                loading.close()
-            });
-
+            dialogCreate.value = true
+            loading.close()
         });
     } else {
         dialogCreate.value = true

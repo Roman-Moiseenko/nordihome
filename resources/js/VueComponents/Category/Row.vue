@@ -75,6 +75,7 @@
 import {router, Link} from "@inertiajs/vue3";
 import {computed, inject, reactive, ref} from "vue";
 import CategoryChildren from "@Comp/Category/Children.vue";
+import {useCatalogStore} from "@Res/catalogStore";
 
 const props = defineProps({
     category: Object,
@@ -120,7 +121,13 @@ function handleDeleteEntity() {
     $delete_entity.show(route('admin.catalog.category.destroy', {id: props.category.id}), {name: 'category'});
 }
 function handleChild() {
-    router.post(route('admin.catalog.category.store', form))
+    router.visit(route('admin.catalog.category.store'), {
+        method: "post",
+        data: form,
+        onSuccess: page => {
+            useCatalogStore().reload()
+        }
+    })
 }
 
 

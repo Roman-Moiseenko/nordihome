@@ -21,19 +21,19 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
-class RoomController
+readonly class RoomController
 {
 
     public function __construct(
-        public readonly IndexRoomUseCase $indexRoomUseCase,
-        public readonly CreateRoomUseCase $createRoomUseCase,
-        public readonly ViewRoomUseCase $viewRoomUseCase,
-        public readonly UpdateRoomUseCase $updateRoomUseCase,
-        public readonly RemoveRoomUseCase $removeRoomUseCase,
-        public readonly TreeRoomUseCase $treeRoomUseCase,
-        public readonly UpRoomUseCase $upRoomUseCase,
-        public readonly DownRoomUseCase $downRoomUseCase,
-        public readonly ToggleRoomUseCase $toggleRoomUseCase,
+        public IndexRoomUseCase  $indexRoomUseCase,
+        public CreateRoomUseCase $createRoomUseCase,
+        public ViewRoomUseCase   $viewRoomUseCase,
+        public UpdateRoomUseCase $updateRoomUseCase,
+        public RemoveRoomUseCase $removeRoomUseCase,
+        public TreeRoomUseCase   $treeRoomUseCase,
+        public UpRoomUseCase     $upRoomUseCase,
+        public DownRoomUseCase   $downRoomUseCase,
+        public ToggleRoomUseCase $toggleRoomUseCase,
     )
     {
     }

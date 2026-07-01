@@ -6,18 +6,15 @@ namespace App\Modules\Catalog\Service;
 use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\AttributeVariant;
 use App\Modules\Catalog\Repository\AttributeGroupRepository;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AttributeService
 {
-    private CategoryRepository $categories;
     private AttributeGroupRepository $groups;
 
-    public function __construct(CategoryRepository $categories, AttributeGroupRepository $groups)
+    public function __construct( AttributeGroupRepository $groups)
     {
-        $this->categories = $categories;
         $this->groups = $groups;
     }
 
@@ -31,8 +28,7 @@ class AttributeService
             );
 
             foreach ($request->input('categories') as $category_id) {
-                if ($this->categories->exists((int)$category_id))
-                    $attribute->categories()->attach((int)$category_id);
+                $attribute->categories()->attach((int)$category_id);
             }
             $attribute->push();
         });
@@ -68,9 +64,7 @@ class AttributeService
                 $attribute->categories()->detach((int)$item);
             }
             foreach ($array_new as $item) {
-                if ($this->categories->exists((int)$item)) {
-                    $attribute->categories()->attach((int)$item);
-                }
+                $attribute->categories()->attach((int)$item);
             }
             //Варианты
             $variants = $request->input('variants');

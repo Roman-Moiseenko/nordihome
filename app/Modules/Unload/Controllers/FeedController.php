@@ -4,7 +4,6 @@ namespace App\Modules\Unload\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Entity\Tag;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Unload\Entity\Feed;
 use App\Modules\Unload\Repository\FeedRepository;
 use App\Modules\Unload\Service\FeedService;
@@ -17,14 +16,13 @@ class FeedController extends Controller
 {
     private FeedService $service;
     private FeedRepository $repository;
-    private CategoryRepository $categories;
+
 
     public function __construct(FeedService $service,
-                                FeedRepository $repository, CategoryRepository $categories)
+                                FeedRepository $repository)
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->categories = $categories;
     }
 
     public function index(Request $request): Response
@@ -40,11 +38,9 @@ class FeedController extends Controller
     public function show(Feed $feed): Response
     {
         $tags = Tag::orderBy('name')->get()->toArray();
-        $categories = $this->categories->getTree();
         return Inertia::render('Unload/Feed/Show', [
             'feed' => fn() => $this->repository->FeedToArray($feed),
             'tags' => $tags,
-            'categories' => $categories,
         ]);
     }
 

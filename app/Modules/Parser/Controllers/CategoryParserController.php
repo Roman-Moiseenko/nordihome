@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Repository\CategoryParserRepository;
 use App\Modules\Parser\Service\CategoryParserService;
-use App\Modules\Catalog\Entity\Brand;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,17 +15,14 @@ class CategoryParserController extends Controller
 {
     private CategoryParserRepository $repository;
     private CategoryParserService $service;
-    private CategoryRepository $categoryRepository;
 
     public function __construct(
         CategoryParserRepository $repository,
         CategoryParserService    $service,
-        CategoryRepository $categoryRepository
     )
     {
         $this->repository = $repository;
         $this->service = $service;
-        $this->categoryRepository = $categoryRepository;
     }
 
     public function index(): Response

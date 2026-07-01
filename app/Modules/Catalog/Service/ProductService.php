@@ -17,7 +17,6 @@ use App\Modules\Catalog\Entity\Brand;
 use App\Modules\Catalog\Entity\Composite;
 use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Entity\Product;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Catalog\Repository\TagRepository;
 use App\Modules\Page\Job\JobCacheProduct;
 use App\Modules\Parser\Service\ParserAbstract;
@@ -34,7 +33,6 @@ use JetBrains\PhpStorm\Deprecated;
 
 class ProductService
 {
-    private CategoryRepository $categories;
     private TagRepository $tags;
     private TagService $tagService;
     private EquivalentService $equivalentService;
@@ -46,7 +44,6 @@ class ProductService
 
 
     public function __construct(
-        CategoryRepository $categories,
         TagRepository      $tags,
         TagService         $tagService,
         EquivalentService  $equivalentService,
@@ -58,7 +55,6 @@ class ProductService
     {
         //Конфигурация
 
-        $this->categories = $categories;
         $this->tags = $tags;
         $this->tagService = $tagService;
         $this->equivalentService = $equivalentService;
@@ -120,8 +116,7 @@ class ProductService
             $product->brand_id = $request->integer('brand_id');
             if (!empty($request['categories'])) {
                 foreach ($request['categories'] as $category_id) {
-                    if ($this->categories->exists((int)$category_id))
-                        $product->categories()->attach((int)$category_id);
+                    $product->categories()->attach((int)$category_id);
                 }
             }
             $this->series($request, $product);
@@ -149,8 +144,7 @@ class ProductService
             $product->brand_id = $request->integer('brand_id');
             if (!empty($request['categories'])) {
                 foreach ($request['categories'] as $category_id) {
-                    if ($this->categories->exists((int)$category_id))
-                        $product->categories()->attach((int)$category_id);
+                    $product->categories()->attach((int)$category_id);
                 }
             }
             $product->push();
@@ -492,9 +486,7 @@ class ProductService
             if (!is_null($array_new)) {//Список категорий, которые надо добавить
                 $update_attributes = true;
                 foreach ($array_new as $item) {
-                    if ($this->categories->exists((int)$item)) {
-                        $product->categories()->attach((int)$item);
-                    }
+                    $product->categories()->attach((int)$item);
                 }
             }
 

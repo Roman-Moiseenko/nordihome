@@ -49,7 +49,13 @@ const form = reactive({
     parent_id: null,
 })
 function createButton() {
-    router.post(route('admin.catalog.category.store', form))
+    router.visit(route('admin.catalog.category.store'), {
+        method: "post",
+        data: form,
+        onSuccess: page => {
+            useCatalog.reload()
+        }
+    })
 }
 
 function routeClick(row) {

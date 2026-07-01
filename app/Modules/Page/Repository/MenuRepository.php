@@ -4,7 +4,6 @@ namespace App\Modules\Page\Repository;
 
 use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Menu;
 use App\Modules\Page\Entity\MenuItem;
@@ -16,12 +15,9 @@ use Illuminate\Http\Request;
 
 class MenuRepository
 {
-    private CategoryRepository $categoryRepository;
 
-    public function __construct(CategoryRepository $categoryRepository)
-    {
-        $this->categoryRepository = $categoryRepository;
-    }
+
+
 
     public function getMenus(Request $request): Arrayable
     {

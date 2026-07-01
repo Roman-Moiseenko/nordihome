@@ -8,7 +8,6 @@ use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\AttributeGroup;
 use App\Modules\Catalog\Repository\AttributeGroupRepository;
 use App\Modules\Catalog\Repository\AttributeRepository;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Catalog\Service\AttributeGroupService;
 use App\Modules\Catalog\Service\AttributeService;
 use Illuminate\Http\RedirectResponse;
@@ -21,7 +20,7 @@ class AttributeController extends Controller
 
     private AttributeService $service;
     private AttributeGroupService $groupService;
-    private CategoryRepository $categories;
+
     private AttributeRepository $repository;
     private AttributeGroupRepository $groupRepository;
 
@@ -29,14 +28,12 @@ class AttributeController extends Controller
     public function __construct(
         AttributeService         $service,
         AttributeGroupService    $groupService,
-        CategoryRepository       $categories,
         AttributeRepository      $repository,
         AttributeGroupRepository $groupRepository,
     )
     {
         $this->service = $service;
         $this->groupService = $groupService;
-        $this->categories = $categories;
         $this->repository = $repository;
         $this->groupRepository = $groupRepository;
     }

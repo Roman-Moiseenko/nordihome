@@ -7,7 +7,6 @@ use App\Modules\Base\Helpers\AdminMenu;
 use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Shop\Repository\MenuRepository;
 use Cache;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Repository\ShopRepository;
 use Illuminate\Support\Facades\Auth;
@@ -15,14 +14,12 @@ use Illuminate\View\View;
 
 class AdminComposer
 {
-    private CategoryRepository $categories;
     private ShopRepository $shopRepository;
     private Settings $settings;
     private MenuRepository $menuRepository;
 
-    public function __construct(CategoryRepository $categories, ShopRepository $shopRepository, Settings $settings, MenuRepository $menuRepository)
+    public function __construct(ShopRepository $shopRepository, Settings $settings, MenuRepository $menuRepository)
     {
-        $this->categories = $categories;
         $this->shopRepository = $shopRepository;
         $this->settings = $settings;
         $this->menuRepository = $menuRepository;
