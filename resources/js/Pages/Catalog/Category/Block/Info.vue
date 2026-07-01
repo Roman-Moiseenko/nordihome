@@ -12,7 +12,7 @@
         <el-col :span="8">
             <el-form label-width="auto">
                 <el-form-item label="Родительская категория">
-                    <el-select v-model="info.parent_id" >
+                    <el-select v-model="info.parentId" >
                         <template v-for="item in useCatalog.categoriesForFilters" :key="item.id">
                             <el-option  v-if="item.id !== category.id" :value="item.id" :label="item.name" />
                         </template>
@@ -25,13 +25,13 @@
                     <el-input v-model="info.slug" clearable/>
                 </el-form-item>
                 <el-form-item label="SVG">
-                    <el-input v-model="info.svg" clearable type="textarea" :rows="3"/>
+                    <el-input v-model="info.svgIcon" clearable type="textarea" :rows="3"/>
                 </el-form-item>
                 <el-form-item label="Meta-Title">
-                    <el-input v-model="info.title" />
+                    <el-input v-model="info.metaTitle" />
                 </el-form-item>
                 <el-form-item label="Meta-Description">
-                    <el-input v-model="info.description" type="textarea" :rows="5"/>
+                    <el-input v-model="info.metaDescription" type="textarea" :rows="5"/>
                 </el-form-item>
 
                 <el-button v-if="hasChanges" type="info" @click="onCancel" style="margin-left: 4px">
@@ -74,11 +74,11 @@ const iSavingInfo = ref(false)
 // --- Исходные данные из пропсов (эталон для отмены) ---
 const initialInfo = {
     name: props.category?.name ?? '',
-    title: props.category?.title ?? '',
-    description: props.category?.description ?? '',
+    metaTitle: props.category?.meta?.title ?? '',
+    metaDescription: props.category?.meta?.description ?? '',
     slug: props.category?.slug ?? '',
-    parent_id: props.category?.parent_id ?? null,
-    svg: props.category?.svg ?? '',
+    parentId: props.category?.parent_id ?? null,
+    svgIcon: props.category?.svg ?? '',
 }
 
 const info = reactive({...initialInfo})
@@ -99,11 +99,11 @@ function onCancel() {
 function onSetInfo() {
     iSavingInfo.value = true;
     router.visit(
-        route('admin.catalog.category.set-info', {category: props.category.id}), {
+        route('admin.catalog.category.update', {id: props.category.id}), {
             method: "put",
             data: info,
             preserveScroll: true,
-            preserveState: true,
+            preserveState: false,
             onSuccess: page => {
                 iSavingInfo.value = false;
             },

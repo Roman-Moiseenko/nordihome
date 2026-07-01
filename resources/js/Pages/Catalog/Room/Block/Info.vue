@@ -1,5 +1,5 @@
 <template>
-    <el-row :gutter="10" v-if="!showEdit">
+    <el-row :gutter="10">
         <el-col :span="4">
             <el-tooltip content="Изображение для каталога" placement="top-start" effect="dark">
                 <PhotoDTO model-type="catalog.room" :entity-id="room.id" type="image" />
@@ -24,7 +24,7 @@
                     <el-input v-model="info.slug" clearable/>
                 </el-form-item>
                 <el-form-item label="SVG">
-                    <el-input v-model="info.svg" clearable type="textarea" :rows="3"/>
+                    <el-input v-model="info.svgIcon" clearable type="textarea" :rows="3"/>
                 </el-form-item>
                 <el-form-item label="Meta-Title">
                     <el-input v-model="info.title" />
@@ -77,7 +77,7 @@ const initialInfo = {
     description: props.room?.description ?? '',
     slug: props.room?.slug ?? '',
     parentId: props.room?.parentId ?? null,
-    svg: props.room?.svg ?? '',
+    svgIcon: props.room?.svgIcon ?? '',
 }
 
 const info = reactive({...initialInfo})

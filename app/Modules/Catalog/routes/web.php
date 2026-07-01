@@ -61,10 +61,11 @@ Route::group([
         Route::post('/down/{id}', [CategoryController::class, 'down'])->name('down');
         //Route::get('/child/{category}', [CategoryController::class, 'child'])->name('child');
         Route::post('/list', [CategoryController::class, 'list'])->name('list');
-        Route::post('/set-info/{category}', [CategoryController::class, 'set_info'])->name('set-info');
+        //Route::post('/set-info/{category}', [CategoryController::class, 'set_info'])->name('set-info');
         Route::get('/tree', [CategoryController::class, 'tree'])->name('tree');
         Route::post('/toggle/{id}', [CategoryController::class, 'toggle'])->name('toggle');
     });
+    Route::resource('category', CategoryController::class)->parameters(['category' => 'id']); //CRUD
     //ROOMS
     Route::group([
         'prefix' => 'room',
@@ -176,7 +177,7 @@ Route::group([
 
     //resource
     Route::resource('brand', BrandController::class); //CRUD
-    Route::resource('category', CategoryController::class); //CRUD
+
     Route::resource('attribute', AttributeController::class); //CRUD
     Route::resource('equivalent', EquivalentController::class); //CRUD
     Route::resource('group', GroupController::class)->except(['create', 'edit', 'update']); //CRUD

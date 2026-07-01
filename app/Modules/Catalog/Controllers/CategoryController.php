@@ -10,8 +10,10 @@ use App\Modules\Catalog\Application\Actions\Category\RemoveCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\ToggleCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\TreeCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\UpCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\Category\UpdateCategoryUseCase;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryIndexData;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryTreeData;
+use App\Modules\Catalog\Application\DTOs\Category\CategoryUpdateData;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Catalog\Service\CategoryService;
@@ -34,6 +36,7 @@ class CategoryController extends Controller
         private readonly UpCategoryUseCase $upCategoryUseCase,
         private readonly DownCategoryUseCase $downCategoryUseCase,
         private readonly RemoveCategoryUseCase $removeCategoryUseCase,
+        private readonly UpdateCategoryUseCase $updateCategoryUseCase,
     )
     {
     }
@@ -47,17 +50,19 @@ class CategoryController extends Controller
         ]);
     }
 
-    public function show(Category $category): Response
+    public function show(int $id, UserPermission $userPermission): Response
     {
+        $category = Category::find($id);
         return Inertia::render('Catalog/Category/Show', [
             'category' => $this->repository->CategoryWith($category),
         ]);
     }
 
-    public function set_info(Category $category, Request $request): RedirectResponse
+    public function update(int $id, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->setInfo($request, $category);
-        return redirect()->back()->with('success', 'Сохранено');
+        $dto = CategoryUpdateData::validateAndCreate($request->all());
+        $categoryDto = $this->updateCategoryUseCase->execute($id, $dto, $userPermission);
+        return redirect()->route('admin.catalog.category.show', $categoryDto->id)->with('success', 'Сохранено');
     }
 
     public function up(int $id, UserPermission $userPermission): RedirectResponse

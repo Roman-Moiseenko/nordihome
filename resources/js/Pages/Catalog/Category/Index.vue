@@ -53,6 +53,6 @@ function createButton() {
 }
 
 function routeClick(row) {
-    router.get(route('admin.catalog.category.show', {room: row.id}))
+    router.get(route('admin.catalog.category.show', {id: row.id}))
 }
 </script>

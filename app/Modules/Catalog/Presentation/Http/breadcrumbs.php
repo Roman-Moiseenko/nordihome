@@ -63,26 +63,31 @@ Breadcrumbs::for('admin.catalog.category.create', function (BreadcrumbTrail $tra
     $trail->parent('admin.catalog.category.index');
     $trail->push('Добавить категорию', route('admin.catalog.category.create'));
 });
-Breadcrumbs::for('admin.catalog.category.child', function (BreadcrumbTrail $trail, Category $category) {
-    $trail->parent('admin.catalog.category.show', $category);
+Breadcrumbs::for('admin.catalog.category.child', function (BreadcrumbTrail $trail, int|string $id) {
+    $trail->parent('admin.catalog.category.show', $id);
     $trail->push('Добавить подкатегорию', route('admin.catalog.category.create'));
 });
-Breadcrumbs::for('admin.catalog.category.show', function (BreadcrumbTrail $trail, Category $category) {
-    if ($category->parent) {
-        $trail->parent('admin.catalog.category.show', $category->parent);
+Breadcrumbs::for('admin.catalog.category.show', function (BreadcrumbTrail $trail, int|string $id) {
+    $categoryRepository = app(App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface::class);
+    $category = $categoryRepository->getById((int) $id);
+    if ($category->parentId) {
+        $parentCategory = $categoryRepository->getById($category->parentId);
+        $trail->parent('admin.catalog.category.show', $parentCategory->id);
     } else {
         $trail->parent('admin.catalog.category.index');
     }
-    $trail->push($category->name, route('admin.catalog.category.show', $category));
+    $trail->push($category->name, route('admin.catalog.category.show', $category->id));
 });
 
-Breadcrumbs::for('admin.catalog.category.edit', function (BreadcrumbTrail $trail, Category $category) {
-    $trail->parent('admin.catalog.category.show', $category);
-    $trail->push('Редактировать', route('admin.catalog.category.edit', $category));
+Breadcrumbs::for('admin.catalog.category.edit', function (BreadcrumbTrail $trail, int|string $id) {
+    $trail->parent('admin.catalog.category.show', $id);
+    $trail->push('Редактировать', route('admin.catalog.category.edit', $id));
 });
-Breadcrumbs::for('admin.catalog.category.update', function (BreadcrumbTrail $trail, Category $category) {
+Breadcrumbs::for('admin.catalog.category.update', function (BreadcrumbTrail $trail, int|string $id) {
+    $categoryRepository = app(App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface::class);
+    $category = $categoryRepository->getById((int) $id);
     $trail->parent('admin.catalog.category.index');
-    $trail->push($category->name, route('admin.catalog.category.show', $category));
+    $trail->push($category->name, route('admin.catalog.category.show', $category->id));
 });
 
 //ATTRIBUTE

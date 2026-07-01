@@ -10,7 +10,7 @@
             <img v-if="category.icon_url" :src="category.icon_url" style="width: 40px; height: 40px;">
         </div>
         <div class="ml-4" style="width: 350px;">
-            <Link type="primary" :href="route('admin.catalog.category.show', {category: category.id})">{{ category.name }}</Link>
+            <Link type="primary" :href="route('admin.catalog.category.show', {id: category.id})">{{ category.name }}</Link>
         </div>
         <div class="ml-4" style="width: 350px;">
             <span class="text-cyan-800">/catalog/{{ category.slug }}</span>
@@ -117,7 +117,7 @@ function onToggle() {
 }
 
 function handleDeleteEntity() {
-    $delete_entity.show(route('admin.catalog.category.destroy', {category: props.category.id}), {name: 'category'});
+    $delete_entity.show(route('admin.catalog.category.destroy', {id: props.category.id}), {name: 'category'});
 }
 function handleChild() {
     router.post(route('admin.catalog.category.store', form))
