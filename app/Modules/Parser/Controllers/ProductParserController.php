@@ -30,11 +30,9 @@ class ProductParserController extends Controller
 
     public function index(Request $request): \Inertia\Response
     {
-        $categories = $this->categories->forFilters();
         $products = $this->repository->getIndex($request, $filters);
         return Inertia::render('Parser/Product/Index', [
             'products' => $products,
-            'categories' => $categories,
             'filters' => $filters,
 
         ]);

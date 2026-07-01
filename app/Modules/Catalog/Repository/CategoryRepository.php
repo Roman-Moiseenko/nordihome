@@ -113,17 +113,6 @@ class CategoryRepository
         return $query->take($take)->get();
     }
 
-    public function forFilters(): array
-    {
-        return array_map(function (Category $category) {
-            $_depth = str_repeat('-', $category->depth);
-            return [
-                'id' => $category->id,
-                'name' => trim($_depth . ' ' . $category->name),
-            ];
-        }, $this->withDepth());
-    }
-
     public function CategoryWith(Category $category): array
     {
         return array_merge($category->toArray(), [

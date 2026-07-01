@@ -62,7 +62,7 @@
                 </el-form-item>
                 <el-form-item label="Категория">
                     <el-select v-model="info.categories" filterable multiple>
-                        <el-option v-for="item in categories" :key="item.id" :value="item.id" :label="item.name"/>
+                        <el-option v-for="item in useCatalog.categoriesForFilters" :key="item.id" :value="item.id" :label="item.name"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Группа">
@@ -141,10 +141,12 @@ import UploadImageFile from '@Comp/UploadImageFile.vue'
 import Active from "@Comp/Elements/Active.vue";
 import VarianField from "./VarianField.vue";
 import HelpBlock from "@Comp/HelpBlock.vue";
+import {useCatalogStore} from "@Res/catalogStore.ts";
+
+const useCatalog = useCatalogStore()
 
 const props = defineProps({
     attribute: Object,
-    categories: Array,
     groups: Array,
     types: Array,
     variant: Number,

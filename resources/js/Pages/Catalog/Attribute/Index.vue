@@ -12,7 +12,7 @@
                 </template>
                 <el-input v-model="form.name" placeholder="Атрибут"/>
                 <el-select v-model="form.categories" placeholder="Категории" class="mt-1" filterable multiple>
-                    <el-option v-for="item in categories" :value="item.id" :label="item.name"/>
+                    <el-option v-for="item in useCatalog.categoriesForFilters" :value="item.id" :label="item.name"/>
                 </el-select>
                 <el-select v-model="form.group_id" placeholder="Группа" class="mt-1" filterable>
                     <el-option v-for="item in groups" :value="item.id" :label="item.name"/>
@@ -28,7 +28,7 @@
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-input v-model="filter.name" placeholder="Атрибут"/>
                 <el-select v-model="filter.category_id" placeholder="Категория" class="mt-1">
-                    <el-option v-for="item in categories" :key="item.id" :value="item.id" :label="item.name" />
+                    <el-option v-for="item in useCatalog.categoriesForFilters" :key="item.id" :value="item.id" :label="item.name" />
                 </el-select>
                 <el-select v-model="filter.group_id" placeholder="Группа" class="mt-1">
                     <el-option v-for="item in groups" :key="item.id" :value="item.id" :label="item.name" />
@@ -101,6 +101,9 @@ import TableFilter from '@Comp/TableFilter.vue'
 import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
+import {useCatalogStore} from "@Res/catalogStore.ts";
+
+const useCatalog = useCatalogStore()
 
 const props = defineProps({
     attributes: Object,
@@ -109,7 +112,6 @@ const props = defineProps({
         default: 'Атрибуты товаров',
     },
     filters: Array,
-    categories: Array,
     groups: Array,
     types: Array,
 })

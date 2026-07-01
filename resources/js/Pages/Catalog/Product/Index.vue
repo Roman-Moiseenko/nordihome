@@ -21,7 +21,7 @@
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-input v-model="filter.name" placeholder="Товар"/>
                 <el-select v-model="filter.room" placeholder="Выберите категорию" class="mt-1">
-                    <el-option v-for="item in categories" :key="item.id" :value="item.id" :label="item.name"/>
+                    <el-option v-for="item in useCatalog.categoriesForFilters" :key="item.id" :value="item.id" :label="item.name"/>
                 </el-select>
                 <el-select v-model="filter.show" placeholder="Показать" class="mt-1">
                     <el-option key="active" value="active" label="Опубликованные"/>
@@ -136,6 +136,9 @@ import {defineProps, inject, reactive, ref} from "vue";
 import {route} from "ziggy-js";
 import SelectActions from "./SelectActions.vue";
 import {ElLoading} from "element-plus";
+import {useCatalogStore} from "@Res/catalogStore.ts";
+
+const useCatalog = useCatalogStore()
 
 const props = defineProps({
     products: Object,
@@ -144,7 +147,6 @@ const props = defineProps({
         default: 'Список всех товаров',
     },
     filters: Array,
-    categories: Array,
     count: Array,
 })
 

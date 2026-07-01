@@ -37,12 +37,10 @@ class EquivalentController extends Controller
 
     public function index(Request $request)
     {
-        $categories = $this->categories->forFilters();
         $equivalents = $this->repository->getIndex($request, $filters);
         return Inertia::render('Catalog/Equivalent/Index', [
             'equivalents' => $equivalents,
             'filters' => $filters,
-            'categories' => $categories,
         ]);
     }
 

@@ -10,7 +10,7 @@
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
 
                 <el-select filterable v-model="filter.room" placeholder="Категория" class="mt-1">
-                    <el-option v-for="item in categories" :key="item.id" :label="item.name"
+                    <el-option v-for="item in useCatalog.categoriesForFilters" :key="item.id" :label="item.name"
                                :value="item.id"/>
                 </el-select>
                 <el-input v-model="filter.product" placeholder="Товар" class="mt-1"/>
@@ -62,6 +62,9 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import SearchAddProduct from '@Comp/Search/AddProduct.vue'
 import SearchAddProducts from '@Comp/Search/AddProducts.vue'
+import {useCatalogStore} from "@Res/catalogStore.ts";
+
+const useCatalog = useCatalogStore()
 
 const props = defineProps({
     products: Object,
@@ -70,7 +73,6 @@ const props = defineProps({
         default: 'Товары приоритетного показа',
     },
     filters: Array,
-    categories: Array,
 })
 const store = useStore();
 const $delete_entity = inject("$delete_entity")

@@ -43,13 +43,11 @@ class AttributeController extends Controller
 
     public function index(Request $request): Response
     {
-        $categories = $this->categories->forFilters();
         $groups = $this->groupRepository->get(order_by: 'name');
         $attributes = $this->repository->getIndex($request, $filters);
         return Inertia::render('Catalog/Attribute/Index', [
             'attributes' => $attributes,
             'filters' => $filters,
-            'categories' => $categories,
             'groups' => $groups,
             'types' => array_select(Attribute::ATTRIBUTES),
         ]);
@@ -73,11 +71,9 @@ class AttributeController extends Controller
 
     public function show(Attribute $attribute): Response
     {
-        $categories = $this->categories->forFilters();
         $groups = $this->groupRepository->get(order_by: 'name');
         return Inertia::render('Catalog/Attribute/Show', [
             'attribute' => $this->repository->AttributeWithToArray($attribute),
-            'categories' => $categories,
             'groups' => $groups,
             'types' => array_select(Attribute::ATTRIBUTES),
             'variant' => Attribute::TYPE_VARIANT,

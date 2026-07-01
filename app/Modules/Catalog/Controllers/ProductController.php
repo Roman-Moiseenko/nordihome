@@ -49,7 +49,6 @@ class ProductController extends Controller
 
     public function index(Request $request): Response
     {
-        $categories = $this->categories->forFilters();
         $count = [
             'all' => Product::count(),
             'active' => Product::where('published', true)->count(),
@@ -62,7 +61,6 @@ class ProductController extends Controller
         return Inertia::render('Catalog/Product/Index', [
             'products' => $products,
             'filters' => $filters,
-            'categories' => $categories,
             'count' => $count,
         ]);
     }
@@ -70,7 +68,6 @@ class ProductController extends Controller
     public function create(Request $request): Response
     {
         return Inertia::render('Catalog/Product/Create', [
-            'categories' => $this->categories->forFilters(),
             'brands' => Brand::orderBy('name')->getModels(),
             'tags' => Tag::orderBy('name')->getModels(),
             'series' => Series::orderBy('name')->getModels(),
@@ -124,7 +121,6 @@ class ProductController extends Controller
     {
         return Inertia::render('Catalog/Product/Edit', [
             'product' => $this->repository->ProductWithToArray($product),
-            'categories' => $this->categories->forFilters(),
             'brands' => Brand::orderBy('name')->getModels(),
             'tags' => Tag::orderBy('name')->getModels(),
             'series' => Series::orderBy('name')->getModels(),

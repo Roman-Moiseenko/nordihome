@@ -12,7 +12,7 @@
                 </template>
                 <el-input v-model="form.name" placeholder="Название"/>
                 <el-select v-model="form.category_id" placeholder="Категория" class="mt-1" filterable>
-                    <el-option v-for="item in categories" :value="item.id" :label="item.name" />
+                    <el-option v-for="item in useCatalog.categoriesForFilters" :value="item.id" :label="item.name" />
                 </el-select>
                 <div class="mt-2">
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
@@ -23,7 +23,7 @@
                 <el-input v-model="filter.product" placeholder="Товар" class="mt-1"/>
                 <el-input v-model="filter.name" placeholder="Группа" class="mt-1"/>
                 <el-select v-model="filter.room" placeholder="Категория" class="mt-1">
-                    <el-option v-for="item in categories" :value="item.id" :label="item.name" :key="item.id" />
+                    <el-option v-for="item in useCatalog.categoriesForFilters" :value="item.id" :label="item.name" :key="item.id" />
                 </el-select>
             </TableFilter>
         </div>
@@ -77,6 +77,9 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import EditField from "@Comp/Elements/EditField.vue";
 import {classes} from "@Res/className"
+import {useCatalogStore} from "@Res/catalogStore.ts";
+
+const useCatalog = useCatalogStore()
 
 const props = defineProps({
     equivalents: Object,
@@ -85,7 +88,6 @@ const props = defineProps({
         default: 'Группы аналогов',
     },
     filters: Array,
-    categories: Array,
 })
 const store = useStore();
 const visible_create = ref(false)

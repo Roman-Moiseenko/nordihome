@@ -44,13 +44,13 @@
                 <el-form label-width="auto">
                     <el-form-item label="Главная категория">
                         <el-select v-model="form.category_id" @change="onAutoSave" :disabled="isSaving" filterable>
-                            <el-option v-for="item in categories" :key="item.id" :value="item.id" :label="item.name"/>
+                            <el-option v-for="item in useCatalog.categoriesForFilters" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
                         <div v-if="errors.category_id" class="text-red-700">{{ errors.category_id }}</div>
                     </el-form-item>
                     <el-form-item label="Доп.категории">
                         <el-select v-model="form.categories" @change="onAutoSave" :disabled="isSaving" filterable multiple clearable>
-                            <el-option v-for="item in categories" :key="item.id" :value="item.id" :label="item.name"/>
+                            <el-option v-for="item in useCatalog.categoriesForFilters" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="Бренд">
@@ -103,11 +103,13 @@
 <script setup lang="ts">
 import {reactive, ref, defineProps } from "vue";
 import {router} from "@inertiajs/vue3";
+import {useCatalogStore} from "@Res/catalogStore.ts";
+
+const useCatalog = useCatalogStore()
 
 const props = defineProps({
     product: Object,
     errors: Object,
-    categories: Array,
     brands: Array,
     country: Array,
     vat: Array,

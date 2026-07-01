@@ -43,10 +43,8 @@ class CategoryParserController extends Controller
 
     public function show(CategoryParser $category_parser): Response
     {
-        $product_categories = $this->categoryRepository->forFilters();
         return Inertia::render('Parser/Category/Show', [
             'category' => $this->repository->CategoryWithToArray($category_parser),
-            'product_categories' => $product_categories,
         ]);
     }
     public function set_category(CategoryParser $category_parser, Request $request): RedirectResponse

@@ -30,13 +30,13 @@
                     <el-form label-width="auto">
                         <el-form-item label="Главная категория">
                             <el-select v-model="form.category_id" filterable>
-                                <el-option v-for="item in categories" :value="item.id" :label="item.name"/>
+                                <el-option v-for="item in useCatalog.categoriesForFilters" :value="item.id" :label="item.name"/>
                             </el-select>
                             <div v-if="errors.category_id" class="text-red-700">{{ errors.category_id }}</div>
                         </el-form-item>
                         <el-form-item label="Доп.категории">
                             <el-select v-model="form.categories" filterable multiple clearable>
-                                <el-option v-for="item in categories" :value="item.id" :label="item.name"/>
+                                <el-option v-for="item in useCatalog.categoriesForFilters" :value="item.id" :label="item.name"/>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="Бренд">
@@ -92,10 +92,10 @@
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {Head, router} from "@inertiajs/vue3";
 import {reactive} from "vue";
+import {useCatalogStore} from "@Res/catalogStore.ts";
 
 const props = defineProps({
     errors: Object,
-    categories: Array,
     brands: Array,
     country: Array,
     vat: Array,
@@ -108,6 +108,7 @@ const props = defineProps({
     },
     vat_trader: Number,
 })
+const useCatalog = useCatalogStore()
 console.log(props)
 const form = reactive({
     name: null,

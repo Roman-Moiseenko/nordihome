@@ -14,7 +14,6 @@
 
                 <PanelCommon :product="product"
                              :errors="errors"
-                             :categories="categories"
                              :brands="brands"
                              :country="country"
                              :vat="vat"
@@ -88,7 +87,6 @@ import PanelComposite from './Panels/Composite.vue'
 const props = defineProps({
     product: Object,
     errors: Object,
-    categories: Array,
     brands: Array,
     country: Array,
     vat: Array,

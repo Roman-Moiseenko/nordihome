@@ -25,12 +25,10 @@ class ParserController extends Controller
 
     public function index(Request $request): Response
     {
-        $categories = $this->categories->forFilters();
         $parsers = $this->repository->getFilter($request, $filters);
         return Inertia::render('Catalog/Parser/Index', [
             'parsers' => $parsers,
             'filters' => $filters,
-            'categories' => $categories,
         ]);
     }
 

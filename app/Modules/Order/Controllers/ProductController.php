@@ -25,13 +25,10 @@ class ProductController extends Controller
 
     public function index(Request $request): \Inertia\Response
     {
-        $categories = $this->categories->forFilters();
-
         $products = $this->products->getIndex($request, $filters);
         return Inertia::render('Order/Product/Index', [
             'products' => $products,
             'filters' => $filters,
-            'categories' => $categories,
 
         ]);
     }

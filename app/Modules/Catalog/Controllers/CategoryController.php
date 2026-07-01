@@ -5,10 +5,12 @@ namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Application\Actions\Category\DownCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\Category\IndexCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\RemoveCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\ToggleCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\TreeCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\UpCategoryUseCase;
+use App\Modules\Catalog\Application\DTOs\Category\CategoryIndexData;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryTreeData;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Repository\CategoryRepository;
@@ -26,6 +28,7 @@ class CategoryController extends Controller
     public function __construct(
         private readonly CategoryService $service,
         private readonly CategoryRepository $repository,
+        private readonly IndexCategoryUseCase $indexCategoryUseCase,
         private readonly TreeCategoryUseCase $treeCategoryUseCase,
         private readonly ToggleCategoryUseCase $toggleCategoryUseCase,
         private readonly UpCategoryUseCase $upCategoryUseCase,
@@ -36,21 +39,18 @@ class CategoryController extends Controller
     }
 
 
-    public function index(): Response
+    public function index(UserPermission $userPermission): Response
     {
-        $categories = $this->repository->getTree();
+        $categories = $this->indexCategoryUseCase->execute($userPermission);
         return Inertia::render('Catalog/Category/Index', [
-            'categories' => $categories,
+            'categories' => CategoryIndexData::collect($categories),
         ]);
     }
 
     public function show(Category $category): Response
     {
-
-    //    $categories = $this->repository->forFilters();
         return Inertia::render('Catalog/Category/Show', [
             'category' => $this->repository->CategoryWith($category),
-           // 'categories' => $categories,
         ]);
     }
 

@@ -23,7 +23,7 @@
                     <el-form label-width="auto">
                         <el-form-item label="Связанная категория">
                             <el-select v-model="category_id" >
-                                <el-option v-for="item in product_categories" :key="item.id" :value="item.id" :label="item.name" />
+                                <el-option v-for="item in useCatalog.categoriesForFilters" :key="item.id" :value="item.id" :label="item.name" />
                             </el-select>
                         </el-form-item>
                         <el-button type="info" size="small" @click="showEdit = false" style="margin-left: 4px">
@@ -56,10 +56,12 @@ import PanelAttributes from './Panels/Attributes.vue'
 import PanelProducts from  './Panels/Products.vue'
 import {ElLoading} from "element-plus";
 import axios from "axios";
+import {useCatalogStore} from "@Res/catalogStore.ts";
+
+const useCatalog = useCatalogStore()
 
 const props = defineProps({
     room: Object,
-    product_categories: Array,
     title: {
         type: String,
         default: 'Карточка категории',
