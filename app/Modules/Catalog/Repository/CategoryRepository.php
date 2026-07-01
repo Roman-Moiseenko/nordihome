@@ -4,9 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Repository;
 
 use App\Modules\Catalog\Entity\Attribute;
-use App\Modules\Catalog\Entity\Category;
 use App\Modules\Catalog\Entity\Product;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 
 class CategoryRepository
 {
@@ -15,7 +14,7 @@ class CategoryRepository
         return !is_null(Category::find($id));
     }
 
-    public function existAndGet(int $id): ?Category
+    private function existAndGet(int $id): ?Category
     {
         return Category::find($id);
     }
@@ -79,11 +78,6 @@ class CategoryRepository
     }
 
 
-    public function byName(string $name): Category
-    {
-        return Category::where('name', '=', $name)->first();
-    }
-
     //TODO Ускорить для Shop
     public function getTree(int $parent_id = null)
     {
@@ -98,36 +92,9 @@ class CategoryRepository
             $category->icon_url = $category->getIcon();
             return $category;
         })->toTree();
-        /*
-        if (is_null($parent_id)) {
-            $categories = Category::defaultOrder()->withDepth()->get()->toTree();
-        } else {
-            $categories = Category::defaultOrder()->withDepth()->descendantsOf($parent_id)->toTree();
-        } */
-        // $categories;
     }
 
-    //TODO Ускорить для Shop
-    public function getTreeForShop(int $parent_id = null)
-    {
 
-        return Category::defaultOrder()->where('parent_id', null)->get()->map(function (Category $category) {
-            return [
-                'id' => $category->id,
-                'name' => $category->name,
-                'slug' => $category->slug,
-                'image' => $category->getImage('catalog'),
-            ];
-        });
-
-        if (is_null($parent_id)) {
-            $categories = $query->get();
-        } else {
-            $categories = $query->descendantsOf($parent_id);
-        }
-        return $categories->toTree();
-
-    }
 
     /**
      * Возвращает все категории с учетом глубины

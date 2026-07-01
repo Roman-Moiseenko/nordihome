@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Repository;
 
 use App\Modules\Base\Helpers\CacheHelper;
+use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Page\Entity\News;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
@@ -11,8 +13,6 @@ use App\Modules\Page\Entity\Widgets\Template;
 use App\Modules\Page\Repository\MetaTemplateRepository;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;
-use App\Modules\Catalog\Entity\Category;
-use App\Modules\Catalog\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
 use App\Modules\Shop\Schema;

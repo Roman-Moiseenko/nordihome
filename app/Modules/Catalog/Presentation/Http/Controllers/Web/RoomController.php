@@ -2,17 +2,20 @@
 
 namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
-use App\Modules\Catalog\Application\Actions\CreateRoomUseCase;
-use App\Modules\Catalog\Application\Actions\IndexRoomUseCase;
-use App\Modules\Catalog\Application\Actions\RemoveRoomUseCase;
-use App\Modules\Catalog\Application\Actions\TreeRoomUseCase;
-use App\Modules\Catalog\Application\Actions\UpdateRoomUseCase;
-use App\Modules\Catalog\Application\Actions\ViewRoomUseCase;
-use App\Modules\Catalog\Application\DTOs\RoomCreateData;
-use App\Modules\Catalog\Application\DTOs\RoomIndexData;
-use App\Modules\Catalog\Application\DTOs\RoomTreeData;
-use App\Modules\Catalog\Application\DTOs\RoomViewData;
-use App\Modules\Catalog\Application\DTOs\UpdateRoomData;
+use App\Modules\Catalog\Application\Actions\Room\CreateRoomUseCase;
+use App\Modules\Catalog\Application\Actions\Room\DownRoomUseCase;
+use App\Modules\Catalog\Application\Actions\Room\IndexRoomUseCase;
+use App\Modules\Catalog\Application\Actions\Room\RemoveRoomUseCase;
+use App\Modules\Catalog\Application\Actions\Room\ToggleRoomUseCase;
+use App\Modules\Catalog\Application\Actions\Room\TreeRoomUseCase;
+use App\Modules\Catalog\Application\Actions\Room\UpRoomUseCase;
+use App\Modules\Catalog\Application\Actions\Room\UpdateRoomUseCase;
+use App\Modules\Catalog\Application\Actions\Room\ViewRoomUseCase;
+use App\Modules\Catalog\Application\DTOs\Room\RoomCreateData;
+use App\Modules\Catalog\Application\DTOs\Room\RoomIndexData;
+use App\Modules\Catalog\Application\DTOs\Room\RoomTreeData;
+use App\Modules\Catalog\Application\DTOs\Room\RoomUpdateData;
+use App\Modules\Catalog\Application\DTOs\Room\RoomViewData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -28,6 +31,9 @@ class RoomController
         public readonly UpdateRoomUseCase $updateRoomUseCase,
         public readonly RemoveRoomUseCase $removeRoomUseCase,
         public readonly TreeRoomUseCase $treeRoomUseCase,
+        public readonly UpRoomUseCase $upRoomUseCase,
+        public readonly DownRoomUseCase $downRoomUseCase,
+        public readonly ToggleRoomUseCase $toggleRoomUseCase,
     )
     {
     }
@@ -58,7 +64,7 @@ class RoomController
 
     public function update(int $id, Request $request, UserPermission $userPermission)
     {
-        $dto = UpdateRoomData::validateAndCreate($request->all());
+        $dto = RoomUpdateData::validateAndCreate($request->all());
 
         $roomDto = $this->updateRoomUseCase->execute($id, $dto, $userPermission);
         return redirect()->route('admin.catalog.room.show', $roomDto->id)->with('success', 'Сохранено');
@@ -70,12 +76,29 @@ class RoomController
         return redirect()->back()->with('success', 'Комната удалена');
     }
 
-    /*  api запросы справочники */
+    public function up(int $id, UserPermission $userPermission)
+    {
+        $this->upRoomUseCase->execute($id, $userPermission);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
 
+    public function down(int $id, UserPermission $userPermission)
+    {
+        $this->downRoomUseCase->execute($id, $userPermission);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function toggle(int $id, UserPermission $userPermission)
+    {
+        $this->toggleRoomUseCase->execute($id, $userPermission);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    /*  api запросы справочники */
     public function tree()
     {
         $rooms = $this->treeRoomUseCase->execute();
-        return response()->json(RoomTreeData::collect($rooms), Response::HTTP_OK);
+        return response()->json(RoomTreeData::fromEntityArray($rooms), Response::HTTP_OK);
 
     }
 }

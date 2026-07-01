@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Application\Actions;
+namespace App\Modules\Catalog\Application\Actions\Room;
 
-use App\Modules\Catalog\Application\DTOs\UpdateRoomData;
+use App\Modules\Catalog\Application\DTOs\Room\RoomUpdateData;
 use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
-
+use Illuminate\Support\Str;
 readonly class UpdateRoomUseCase
 {
     public function __construct(
@@ -19,10 +19,10 @@ readonly class UpdateRoomUseCase
     {
     }
 
-    public function execute(int $id, UpdateRoomData $dto, UserPermission $userPermission): RoomEntity
+    public function execute(int $id, RoomUpdateData $dto, UserPermission $userPermission): RoomEntity
     {
         // Проверка прав доступа
-        if (!$userPermission->can('catalog.category.update')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.category.edit')) throw new \DomainException('Доступ запрещён');
 
 
         $room = $this->roomRepository->getById($id);
@@ -32,8 +32,16 @@ readonly class UpdateRoomUseCase
             $room->name = $dto->name;
         }
 
-        if ($dto->slug !== null) {
-            $slug = new Slug($dto->slug);
+        // Обновляем slug
+        // Проверяем и null, и пустую строку — Spatie Data может конвертировать '' в null
+        $slugValue = $dto->slug;
+        if ($slugValue !== null || $dto->name !== null) {
+            $slugString = $slugValue !== null ? trim($slugValue) : '';
+            if ($slugString === '') {
+                // Если slug пустой — генерируем из названия
+                $slugString = Str::slug($room->name);
+            }
+            $slug = new Slug($slugString);
             if ($this->roomRepository->existsSlug((string)$slug, $id)) {
                 $slug = new Slug((string)$slug . '-' . uniqid());
             }

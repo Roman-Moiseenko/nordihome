@@ -3,16 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Category;
 use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Catalog\Repository\ParserRepository;
-use App\Modules\Shop\Parser\ParserService;
 use App\Modules\Shop\Parser\ProductParser;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 use Inertia\Response;
 

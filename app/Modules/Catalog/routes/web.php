@@ -57,11 +57,13 @@ Route::group([
         'prefix' => 'category',
         'as' => 'category.',
     ], function () {
-        Route::post('/up/{category}', [CategoryController::class, 'up'])->name('up');
-        Route::post('/down/{category}', [CategoryController::class, 'down'])->name('down');
-        Route::get('/child/{category}', [CategoryController::class, 'child'])->name('child');
+        Route::post('/up/{id}', [CategoryController::class, 'up'])->name('up');
+        Route::post('/down/{id}', [CategoryController::class, 'down'])->name('down');
+        //Route::get('/child/{category}', [CategoryController::class, 'child'])->name('child');
         Route::post('/list', [CategoryController::class, 'list'])->name('list');
         Route::post('/set-info/{category}', [CategoryController::class, 'set_info'])->name('set-info');
+        Route::get('/tree', [CategoryController::class, 'tree'])->name('tree');
+        Route::post('/toggle/{id}', [CategoryController::class, 'toggle'])->name('toggle');
     });
     //ROOMS
     Route::group([
@@ -69,8 +71,9 @@ Route::group([
         'as' => 'room.',
     ], function () {
         Route::get('/tree', [RoomController::class, 'tree'])->name('tree');
-        Route::post('/up/{id}', [CategoryController::class, 'up'])->name('up');
-        Route::post('/down/{id}', [CategoryController::class, 'down'])->name('down');
+        Route::post('/up/{id}', [RoomController::class, 'up'])->name('up');
+        Route::post('/down/{id}', [RoomController::class, 'down'])->name('down');
+        Route::post('/toggle/{id}', [RoomController::class, 'toggle'])->name('toggle');
 
     });
     Route::resource('room', RoomController::class)->except(['create', 'edit']); //CRUD

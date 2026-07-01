@@ -40,6 +40,7 @@ app/Modules/{ModuleName}/
 - Конструктор принимает ТОЛЬКО обязательные для создания поля
 - Методы состояния (`publish()`, `unpublish()`, `isPublished()`) — тут
 - `children`, связанные сущности — массив, заполняется репозиторием
+- Именование - к названию сщности добавляем `Entity`, например сущность Товар - `ProductEntity`
 
 **Пример:**
 
@@ -178,7 +179,7 @@ interface RoomRepositoryInterface
 
 **Назначение:** Объекты передачи данных с валидацией.
 
-**Где лежит:** `app/Modules/{ModuleName}/Application/DTOs/`
+**Где лежит:** `app/Modules/{ModuleName}/Application/DTOs/{ModelName}/`
 
 **Наследование:** Все DTO наследуются от `Spatie\LaravelData\Data`
 
@@ -188,6 +189,15 @@ interface RoomRepositoryInterface
 - `validateAndCreate()` — встроенный статический метод от `Data`, валидирует данные и создаёт DTO
 - `from(array $data)` — без валидации (если нужна ручная)
 - Для маппинга Entity → DTO пишем статический метод `fromEntity()`
+- Валидация используется только для тех DTO которые вносят изменения, для передачи данных на фронтенд, валидация не используется
+- Для всех DTO которые передают данные на фронтенд обязательно поле `id` Модели
+
+**Наименование DTO:**
+- Начинается с название Модели {ModuleName}
+- Далее идет действие или action, например для показа данный используем View, для index(), также Index, для списков List или Tree, создание/обновление - Create/Update
+- Заканичваются Data
+- Например, иерархический список категорий CategoryTreeData
+
 
 **Пример DTO для создания:**
 
@@ -262,7 +272,7 @@ class RoomViewData extends Data
 
 **Назначение:** Один сценарий использования (один публичный метод `execute()`).
 
-**Где лежит:** `app/Modules/{ModuleName}/Application/Actions/`
+**Где лежит:** `app/Modules/{ModuleName}/Application/Actions/{ModelName}/`
 
 **Правила:**
 - Класс `readonly`
@@ -271,6 +281,7 @@ class RoomViewData extends Data
   - Принимает DTO (если нужно) и `UserPermission`
   - Возвращает Entity или void
 - Проверка прав доступа — **первым делом** внутри `execute()`
+- Права доступа определяются так `{ModuleName}.{ModelName}.{Action}`, пример ниже
 - Никакой логики работы с БД — только вызов репозитория и бизнес-логика Entity
 
 **Пример:**
@@ -284,7 +295,7 @@ readonly class CreateRoomUseCase
 
     public function execute(RoomCreateData $dto, UserPermission $userPermission): RoomEntity
     {
-        if (!$userPermission->can('room.create')) {
+        if (!$userPermission->can('catalog.room.create')) {
             throw new \DomainException('Доступ запрещён');
         }
 
@@ -324,7 +335,7 @@ readonly class CreateRoomUseCase
 **Где лежит:** `app/Modules/{ModuleName}/Infrastructure/Models/`
 
 **Правила:**
-- Именование: `{Entity}Model` (например, `RoomModel`)
+- Именование: `{Entity}` (например, `Room`)
 - `$timestamps = false` если в таблице нет `created_at`/`updated_at`
 - Используем трейты: `NodeTrait` для NestedSet, `ImageField`, `IconField` для фото
 - `$casts` — касты для json-полей

@@ -4,18 +4,15 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Controllers;
 
 use App\Events\ThrowableHasAppeared;
-use App\Modules\Catalog\Entity\Category;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Shop\Repository\CacheRepository;
 use App\Modules\Shop\Repository\ShopRepository;
-use App\Modules\Shop\Repository\SlugRepository;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 
 class CatalogController extends ShopController
 {

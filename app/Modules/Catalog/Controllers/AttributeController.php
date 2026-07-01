@@ -3,21 +3,16 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\AttributeGroup;
-use App\Modules\Catalog\Entity\AttributeVariant;
-use App\Modules\Catalog\Entity\Category;
 use App\Modules\Catalog\Repository\AttributeGroupRepository;
 use App\Modules\Catalog\Repository\AttributeRepository;
 use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Catalog\Service\AttributeGroupService;
 use App\Modules\Catalog\Service\AttributeService;
-
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 use Inertia\Response;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Catalog\Application\DTOs;
+namespace App\Modules\Catalog\Application\DTOs\Room;
 
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Nullable;

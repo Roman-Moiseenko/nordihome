@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
-use App\Modules\Catalog\Entity\Category;
-use App\Modules\Catalog\Entity\Product;
-use App\Http\Controllers\Controller;
 
 class SitemapXmlController extends Controller
 {

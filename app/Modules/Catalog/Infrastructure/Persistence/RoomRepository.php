@@ -10,6 +10,8 @@ use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Shared\Domain\ValueObjects\Image;
 use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class RoomRepository implements RoomRepositoryInterface
 {
     /**
@@ -17,8 +19,8 @@ class RoomRepository implements RoomRepositoryInterface
      */
     public function getAll(): array
     {
-        $models = Room::get();
-        return $models->map(fn(Room $model) => $this->hydrate($model))->toArray();
+        $models = Room::defaultOrder()->withDepth()->get()->toTree();
+        return $models->map(fn(Room $model) => $this->hydrateWithChildren($model))->values()->toArray();
     }
 
     public function getById(int $id): RoomEntity
@@ -63,8 +65,10 @@ class RoomRepository implements RoomRepositoryInterface
     public function getTree(): array
     {
         $roots = Room::with(['image', 'icon'])
-            ->whereNull('parent_id')
-            ->get();
+            ->defaultOrder()
+            ->withDepth()
+            ->get()
+            ->toTree();
 
         return $roots->map(fn(Room $model) => $this->hydrateWithChildren($model))->toArray();
     }
@@ -76,6 +80,37 @@ class RoomRepository implements RoomRepositoryInterface
             $query->where('id', '!=', $excludeId);
         }
         return $query->exists();
+    }
+
+    public function moveUp(int $id): void
+    {
+        $model = Room::findOrFail($id);
+        $model->up();
+    }
+
+    public function moveDown(int $id): void
+    {
+        $model = Room::findOrFail($id);
+        $model->down();
+    }
+    /**
+     * @return int[]
+     */
+    public function getDescendantIds(int $id): array
+    {
+        $model = Room::findOrFail($id);
+        return Room::where('_lft', '>', $model->_lft)
+            ->where('_rgt', '<', $model->_rgt)
+            ->pluck('id')
+            ->toArray();
+    }
+
+    public function bulkTogglePublished(array $ids, bool $published): void
+    {
+        if (empty($ids)) {
+            return;
+        }
+        Room::whereIn('id', $ids)->update(['published' => $published]);
     }
 
     /**
@@ -94,7 +129,6 @@ class RoomRepository implements RoomRepositoryInterface
 
         $entity->svgIcon = $model->svg;
         $entity->published = $model->published;
-
         // Meta
         $metaData = is_array($model->meta) ? $model->meta : [];
         $entity->meta = new Meta(
@@ -116,7 +150,7 @@ class RoomRepository implements RoomRepositoryInterface
     {
         $entity = $this->hydrate($model);
 
-        if ($model->relationLoaded('children')) {
+        if ($model->children !== null && $model->children->isNotEmpty()) {
             $entity->children = array_map(
                 fn(Room $child) => $this->hydrateWithChildren($child),
                 $model->children->all()

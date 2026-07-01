@@ -1,5 +1,8 @@
 <template>
     <div class="bg-white rounded-md flex items-center mb-1 p-2 border border-slate-200">
+        <div>
+            <i v-if="room.published" class="fa-light fa-lock"></i>
+        </div>
         <div class="w-11" style="height: 40px;">
             <img v-if="room.image_url" :src="room.image_url" style="width: 40px; height: 40px;">
         </div>
@@ -48,6 +51,13 @@
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="handleChild" type="primary">Создать</el-button>
                 </div>
             </el-popover>
+
+            <el-button size="small"
+                       :type="!room.published ? 'warning' : 'success'"
+                       @click.stop="onToggle()"
+            >
+                <i class="fa-light" :class="!room.published ? 'fa-lock' : 'fa-lock-open'"></i>
+            </el-button>
             <el-button size="small"
                        type="danger"
                        @click.stop="handleDeleteEntity"
@@ -70,11 +80,12 @@ import RoomChildren from "@Comp/Room/Children.vue";
 const props = defineProps({
     room: Object,
 })
+
 const $emit = defineEmits(['delete:room'])
 const visible_create = ref(false)
 const form = reactive({
     name: null,
-    parent_id: props.room.id,
+    parentId: props.room.id,
 })
 const checkChildren = ref(false)
 const isChildren = ref(props.room.children.length > 0)
@@ -85,21 +96,28 @@ const showChildren = computed(() => {
 })
 
 function onUp() {
-    router.visit(route('admin.catalog.room.up', {room: props.room.id}), {
+    router.visit(route('admin.catalog.room.up', {id: props.room.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function onDown() {
-    router.visit(route('admin.catalog.room.down', {room: props.room.id}), {
+    router.visit(route('admin.catalog.room.down', {id: props.room.id}), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: false,
+    })
+}
+function onToggle() {
+    router.visit(route('admin.catalog.room.toggle', {id: props.room.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function handleDeleteEntity() {
-    $delete_entity.show(route('admin.catalog.room.destroy', {room: props.room.id}), {name: 'room'});
+    $delete_entity.show(route('admin.catalog.room.destroy', {id: props.room.id}), {name: 'room'});
 
 }
 function handleChild() {

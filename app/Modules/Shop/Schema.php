@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Shop;
 
 use App\Modules\Accounting\Entity\Trader;
-use App\Modules\Catalog\Entity\Category;
 use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 
 //TODO Автоматизировать и брать данные из Таблиц и настроек
 

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-use App\Modules\Catalog\Domain\Entities\RoomEntity;
+use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\Brand;
 use App\Modules\Catalog\Entity\CategorySize;
 use App\Modules\Catalog\Entity\Equivalent;
@@ -9,11 +9,10 @@ use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Entity\Modification;
 use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Entity\Series;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Shop\Parser\ProductParser;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
-use App\Modules\Catalog\Entity\Category;
-use App\Modules\Catalog\Entity\Attribute;
 
 Breadcrumbs::for('admin.catalog.product.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');

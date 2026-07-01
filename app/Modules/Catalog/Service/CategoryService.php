@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Service;
 
 use App\Modules\Base\Helpers\CacheHelper;
-use App\Modules\Catalog\Entity\Category;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
@@ -35,8 +35,11 @@ class CategoryService
         if ($request->has('parent_id')) {
             $category->parent_id = (int)$request['parent_id'] == 0 ? null : (int)$request['parent_id'];
         }
-        $category->description = $request->string('description')->trim()->value();
-        $category->title = $request->string('title')->trim()->value();
+        $meta = [
+            'title' => $request->string('title')->trim()->value(),
+            'description' => $request->string('description')->trim()->value(),
+        ];
+        $category->meta = $meta;
         $new_slug = $request->string('slug')->trim()->value();
 
         if ($category->slug != $new_slug) {
@@ -53,10 +56,6 @@ class CategoryService
             $category->slug = $new_slug;
         }
 
-        $category->top_title = $request->string('top_title')->trim()->value();
-        $category->top_description = $request->string('top_description')->trim()->value();
-        $category->bottom_text = $request->string('bottom_text')->trim()->value();
-        $category->data = $request->string('data')->trim()->value();
         $category->svg = $request->string('svg')->trim()->value();
 
         $category->save();

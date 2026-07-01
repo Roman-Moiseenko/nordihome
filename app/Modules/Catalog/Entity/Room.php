@@ -6,6 +6,7 @@ use App\Modules\Base\Casts\MetaCast;
 use App\Modules\Base\Entity\Meta;
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;

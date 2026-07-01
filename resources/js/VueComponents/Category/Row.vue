@@ -1,5 +1,8 @@
 <template>
     <div class="bg-white rounded-md flex items-center mb-1 p-2 border border-slate-200">
+        <div>
+            <i v-if="!category.published" class="fa-light fa-lock"></i>
+        </div>
         <div class="w-11" style="height: 40px;">
             <img v-if="category.image_url" :src="category.image_url" style="width: 40px; height: 40px;">
         </div>
@@ -49,6 +52,12 @@
                 </div>
             </el-popover>
             <el-button size="small"
+                       :type="category.published ? 'warning' : 'success'"
+                       @click.stop="onToggle()"
+            >
+                <i class="fa-light" :class="category.published ? 'fa-lock' : 'fa-lock-open'"></i>
+            </el-button>
+            <el-button size="small"
                        type="danger"
                        @click.stop="handleDeleteEntity"
             >
@@ -70,6 +79,7 @@ import CategoryChildren from "@Comp/Category/Children.vue";
 const props = defineProps({
     category: Object,
 })
+
 const $emit = defineEmits(['delete:category'])
 const visible_create = ref(false)
 const form = reactive({
@@ -85,25 +95,31 @@ const showChildren = computed(() => {
 })
 
 function onUp() {
-    router.visit(route('admin.catalog.category.up', {category: props.category.id}), {
+    router.visit(route('admin.catalog.category.up', {id: props.category.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function onDown() {
-    router.visit(route('admin.catalog.category.down', {category: props.category.id}), {
+    router.visit(route('admin.catalog.category.down', {id: props.category.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
+function onToggle() {
+    router.visit(route('admin.catalog.category.toggle', {id: props.category.id}), {
+        method: "post",
+        preserveScroll: true,
+        preserveState: false,
+    })
+}
+
 function handleDeleteEntity() {
     $delete_entity.show(route('admin.catalog.category.destroy', {category: props.category.id}), {name: 'category'});
-
 }
 function handleChild() {
-    //console.log(form)
     router.post(route('admin.catalog.category.store', form))
 }
 

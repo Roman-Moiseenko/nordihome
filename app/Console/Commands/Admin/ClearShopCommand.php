@@ -2,15 +2,13 @@
 
 namespace App\Console\Commands\Admin;
 
-use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Order\Entity\Reserve;
 use App\Modules\Catalog\Entity\Attribute;
-use App\Modules\Catalog\Entity\Category;
-use App\Modules\Catalog\Entity\Equivalent;
-use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Entity\Series;
 use App\Modules\Catalog\Entity\Tag;
+use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Order\Entity\Reserve;
 use App\Modules\User\Entity\CartCookie;
 use App\Modules\User\Entity\CartStorage;
 use Illuminate\Console\Command;

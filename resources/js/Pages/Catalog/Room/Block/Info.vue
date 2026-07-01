@@ -1,46 +1,20 @@
-айл<template>
+<template>
     <el-row :gutter="10" v-if="!showEdit">
-        <el-col :span="6">
+        <el-col :span="4">
             <el-tooltip content="Изображение для каталога" placement="top-start" effect="dark">
                 <PhotoDTO model-type="catalog.room" :entity-id="room.id" type="image" />
-
             </el-tooltip>
             <el-tooltip content="Иконка для меню" placement="top-start" effect="dark">
                 <PhotoDTO model-type="catalog.room" :entity-id="room.id" type="icon" />
             </el-tooltip>
         </el-col>
-        <el-col :span="12">
-            <el-descriptions :column="1" border class="mb-5">
-                <el-descriptions-item label="Комната">
-                    {{ room.name }}
-                </el-descriptions-item>
-                <el-descriptions-item label="Ссылка">
-                    {{ room.slug }}
-                </el-descriptions-item>
-                <el-descriptions-item label="SVG">
-                    <span v-html="room.svg" class="svg-category"></span>
-                </el-descriptions-item>
-                <el-descriptions-item label="Meta-Title">
-                    {{ room.title }}
-                </el-descriptions-item>
-                <el-descriptions-item label="Meta-Description">
-                    {{ room.description }}
-                </el-descriptions-item>
-            </el-descriptions>
-        </el-col>
-
-    </el-row>
-
-    <el-button v-if="!showEdit" class="ml-2" type="warning" @click="showEdit = true">
-        <i class="fa-light fa-pen-to-square"></i>&nbsp;Редактировать
-    </el-button>
-
-    <el-row :gutter="10" v-if="showEdit">
-        <el-col :span="8">
+        <el-col :span="9">
             <el-form label-width="auto">
                 <el-form-item label="Родительская комната">
                     <el-select v-model="info.parentId">
-                        <el-option v-for="item in categories" :key="item.id" :value="item.id" :label="item.name" />
+                        <template v-for="item in useCatalog.roomsForFilters" :key="item.id">
+                            <el-option  v-if="item.id !== room.id" :value="item.id" :label="item.name" />
+                        </template>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Название категории">
@@ -59,26 +33,15 @@
                     <el-input v-model="info.description" type="textarea" :rows="5"/>
                 </el-form-item>
 
-                <el-button type="info" @click="showEdit = false" style="margin-left: 4px">
+                <el-button v-if="hasChanges" type="info" @click="onCancel" style="margin-left: 4px">
                     Отмена
                 </el-button>
-                <el-button type="success" @click="onSetInfo">
+                <el-button v-if="hasChanges" type="success" @click="onSetInfo">
                     Сохранить
                 </el-button>
             </el-form>
         </el-col>
-        <el-col :span="8">
-            <UploadImageFile
-                label="Изображение для каталога"
-                v-model:image="room.image"
-                @selectImageFile="onSelectImage"
-            />
-            <UploadImageFile
-                label="Иконка для меню"
-                v-model:image="room.icon"
-                @selectImageFile="onSelectIcon"
-            />
-        </el-col>
+        <el-col :span="1"></el-col>
         <el-col :span="8">
             <HelpBlock>
                 <p><b>Название комнаты</b> является обязательным полем.</p>
@@ -90,42 +53,61 @@
         </el-col>
     </el-row>
 
+
 </template>
 
 <script setup>
-import {reactive, ref} from "vue";
+import {computed, reactive, ref, watch} from "vue";
 import {router} from "@inertiajs/vue3";
-import UploadImageFile from '@Comp/UploadImageFile.vue'
 import HelpBlock from "@Comp/HelpBlock.vue";
 import PhotoDTO from "@Comp/PhotoDTO.vue";
+import {useCatalogStore} from "@Res/catalogStore.ts";
 
 
 const props = defineProps({
     room: Object,
-    categories: Array,
 })
+const useCatalog = useCatalogStore()
 const iSavingInfo = ref(false)
-const info = reactive({
-    name: props.room.name,
-    title: props.room.title,
-    description: props.room.description,
-    slug: props.room.slug,
-    parentId: props.room.parentId,
-    svg: props.room.svg,
 
+// --- Исходные данные из пропсов (эталон для отмены) ---
+const initialInfo = {
+    name: props.room?.name ?? '',
+    title: props.room?.title ?? '',
+    description: props.room?.description ?? '',
+    slug: props.room?.slug ?? '',
+    parentId: props.room?.parentId ?? null,
+    svg: props.room?.svg ?? '',
+}
 
+const info = reactive({...initialInfo})
 
-
+// --- Отслеживание изменений ---
+const hasChanges = computed(() => {
+    for (const key of Object.keys(initialInfo)) {
+        const a = JSON.stringify(info[key])
+        const b = JSON.stringify(initialInfo[key])
+        if (a !== b) return true
+    }
+    return false
 })
-const showEdit = ref(false)
+function onCancel() {
+    Object.assign(info, {...initialInfo})
+}
 
 function onSetInfo() {
+    iSavingInfo.value = true;
     router.visit(
         route('admin.catalog.room.update', {room: props.room.id}), {
-            method: "post",
+            method: "put",
             data: info,
+            preserveScroll: true,
+            preserveState: false,
             onSuccess: page => {
-                showEdit.value = false;
+                iSavingInfo.value = false;
+            },
+            onError: errors => {
+                iSavingInfo.value = false;
             }
         }
     );

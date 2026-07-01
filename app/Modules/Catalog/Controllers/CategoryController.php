@@ -3,29 +3,38 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Category;
+use App\Modules\Catalog\Application\Actions\Category\DownCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\Category\RemoveCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\Category\ToggleCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\Category\TreeCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\Category\UpCategoryUseCase;
+use App\Modules\Catalog\Application\DTOs\Category\CategoryTreeData;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Catalog\Service\CategoryService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use JetBrains\PhpStorm\Deprecated;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class CategoryController extends Controller
 {
-
-    private CategoryService $service;
-    private CategoryRepository $repository;
-
-    public function __construct(CategoryService $service, CategoryRepository $repository)
+    public function __construct(
+        private readonly CategoryService $service,
+        private readonly CategoryRepository $repository,
+        private readonly TreeCategoryUseCase $treeCategoryUseCase,
+        private readonly ToggleCategoryUseCase $toggleCategoryUseCase,
+        private readonly UpCategoryUseCase $upCategoryUseCase,
+        private readonly DownCategoryUseCase $downCategoryUseCase,
+        private readonly RemoveCategoryUseCase $removeCategoryUseCase,
+    )
     {
-        $this->service = $service;
-        $this->repository = $repository;
     }
+
 
     public function index(): Response
     {
@@ -38,10 +47,10 @@ class CategoryController extends Controller
     public function show(Category $category): Response
     {
 
-        $categories = $this->repository->forFilters();
+    //    $categories = $this->repository->forFilters();
         return Inertia::render('Catalog/Category/Show', [
             'category' => $this->repository->CategoryWith($category),
-            'categories' => $categories,
+           // 'categories' => $categories,
         ]);
     }
 
@@ -51,28 +60,18 @@ class CategoryController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function up(Category $category): RedirectResponse
+    public function up(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $category->up();
+        $this->upCategoryUseCase->execute($id, $userPermission);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function down(Category $category): RedirectResponse
+    public function down(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $category->down();
+        $this->downCategoryUseCase->execute($id, $userPermission);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function create(Request $request)
-    {
-        $parents = $this->repository->withDepth();
-        return view('admin.catalog.category.create', compact('parents'));
-    }
-
-    public function child(Category $category)
-    {
-        return view('admin.catalog.category.child', compact('category'));
-    }
 
     public function store(Request $request)
     {
@@ -85,22 +84,10 @@ class CategoryController extends Controller
     }
 
 
-    public function edit(Category $category)
+    public function destroy(int $id, UserPermission $userPermission)
     {
-        $categories = $this->repository->withDepth();
-        return view('admin.catalog.category.edit', compact('category', 'categories'));
-    }
-
-    public function update(Request $request, Category $category)
-    {
-        $category = $this->service->update($request, $category);
-        return redirect(route('admin.catalog.category.show', $category));
-    }
-
-    public function destroy(Category $category)
-    {
-        $this->service->delete($category);
-        return redirect()->back();
+        $this->removeCategoryUseCase->execute($id, $userPermission);
+        return redirect()->back()->with('success', 'Категория удалена');
     }
 
     public function list(): JsonResponse
@@ -115,6 +102,18 @@ class CategoryController extends Controller
         }, $this->repository->withDepth());
 
         return response()->json($categories);
+    }
+
+    public function tree(): JsonResponse
+    {
+        $categories = $this->treeCategoryUseCase->execute();
+        return response()->json(CategoryTreeData::fromEntityArray($categories), SymfonyResponse::HTTP_OK);
+    }
+
+    public function toggle(int $id, UserPermission $userPermission): RedirectResponse
+    {
+        $this->toggleCategoryUseCase->execute($id, $userPermission);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
 }

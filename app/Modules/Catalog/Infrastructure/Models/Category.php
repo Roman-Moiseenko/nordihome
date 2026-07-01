@@ -1,10 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Entity;
+namespace App\Modules\Catalog\Infrastructure\Models;
 
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
+use App\Modules\Catalog\Entity\Attribute;
+use App\Modules\Catalog\Entity\Product;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -17,38 +19,31 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property int $parent_id
  * @property string $name
  * @property string $slug
- * @property string $title
- * @property string $description
+ * @property array $meta
+ * @property string|null $svg
  * @property Category $parent
  * @property Category[] $children
  * @property Attribute[] $prod_attributes
  * @property Product[] $products
- * @property string $svg
  * @property int $_lft
  * @property int $_rgt
  * @property bool $published
  *
- * @property string $top_title
- * @property string $top_description
- * @property string $bottom_text
- * @property string $data
  */
 class Category extends Model
 {
     use NodeTrait, HasFactory, ImageField, IconField;
 
     const string NO_PARSE = 'no_parse';
-    protected $attributes = [
-        'top_title' => '',
-        'top_description' => '',
-        'bottom_text' => '',
-        'data' => '',
 
+    protected $casts = [
+        'meta' => 'array',
+        'published' => 'boolean',
     ];
-
 
     protected $fillable = [
         'name', 'parent_id', 'slug', 'title', 'description',
+        'svg', 'meta',
         'published',
     ];
     public $timestamps = false;
@@ -58,7 +53,7 @@ class Category extends Model
         'prod_attributes',
         'image',
         'icon',
-        ];
+    ];
 
     //TODO убрать $title = '', $description = '' заменить на Meta
     public static function register($name, $parent_id = null, $slug = '', $title = '', $description = ''): self
@@ -82,23 +77,6 @@ class Category extends Model
         ]);
     }
 
-    public function isId(int $id): bool
-    {
-        return $this->id == $id;
-    }
-
-    public function equalParent(Category $category): bool
-    {
-        if ($category->parent->id == null) return false;
-        if ($this->parent->id == null) return false;
-        return $category->parent->id == $this->parent->id;
-    }
-
-    public function isParent(Category $category): bool
-    {
-        if ($this->parent_id == null) return false;
-        return $this->parent_id == $category->id;
-    }
 
     public static function noParseCategory(): self
     {
@@ -153,7 +131,7 @@ class Category extends Model
                 $query->where('_lft', '>=', $this->_lft)->where('_rgt', '<=', $this->_rgt);
             });
         })->where(function ($query) { //Либо не содержит модификаций, либо Является базовым товаром для модификации
-            $query->doesntHave('modification')->orWhere(function ($query){
+            $query->doesntHave('modification')->orWhere(function ($query) {
                 $query->has('main_modification')->whereHas('main_modification', function ($query) {
                     $query->where('not_sale', false);
                 });
@@ -161,54 +139,6 @@ class Category extends Model
         });
 
         return $query->get();
-
-
-
-        //TODO Связанные таблицы ......
-        $subCategories = []; //Получаем все подкатегории всех уровней вложенности
-        //Ищем товары, у которых category_id IN $subCategories
-        //Ищем по вторичным категориям в таблице CategoryAssignment
-        //Возвращаем
-        //if $pagination == null -> все товары
-        // иначе через пагинацию
-
-        return null;
-    }
-
-    //META
-
-    public function getTitle(): string
-    {
-        if (empty($this->title)){
-            //TODO Генерация автоматического заголовка
-            // при рефакторинге вынести в репозиторий для фронтенда
-            return '';
-        } else {
-            return $this->title;
-        }
-    }
-
-    public function getDescription(): string
-    {
-        if (empty($this->description)){
-            //TODO Генерация автоматического описания
-            // при рефакторинге вынести в репозиторий для фронтенда
-            return '';
-        } else {
-            return $this->description;
-        }
-    }
-
-    public function getSlug()
-    {
-        return '/catalog/' . $this->slug;
-        /*
-        if (isset($this->parent)) {
-            $slug = $this->parent->getSlug();
-        } else {
-            $slug = '/categories';
-        }
-        return $slug . '/' . $this->slug;*/
     }
 
     public function getParentNames(): string

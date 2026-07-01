@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands\NB;
 
-use App\Modules\Catalog\Entity\Category;
 use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use Illuminate\Console\Command;
 
 class MeasureCommand extends Command

@@ -3,17 +3,15 @@ declare(strict_types=1);
 
 namespace App\Modules\Page\Service;
 
+use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Job\JobCacheCategory;
 use App\Modules\Page\Job\JobCacheProduct;
 use App\Modules\Page\Repository\MetaTemplateRepository;
-use App\Modules\Catalog\Entity\Category;
-use App\Modules\Catalog\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
-use App\Modules\Shop\Repository\CacheRepository;
 use App\Modules\Shop\Repository\ShopRepository;
-use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Support\Facades\Cache;
 
 class CacheService

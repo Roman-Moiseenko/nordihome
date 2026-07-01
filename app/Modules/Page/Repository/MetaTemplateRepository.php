@@ -3,6 +3,9 @@
 namespace App\Modules\Page\Repository;
 
 use App\Modules\Base\Entity\Meta;
+use App\Modules\Catalog\Entity\Group;
+use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\MetaTemplate;
 use App\Modules\Page\Entity\Page;
@@ -10,9 +13,6 @@ use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;
-use App\Modules\Catalog\Entity\Category;
-use App\Modules\Catalog\Entity\Group;
-use App\Modules\Catalog\Entity\Product;
 use App\Modules\Setting\Entity\Settings;
 use Illuminate\Http\Request;
 

@@ -3,7 +3,7 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Категория {{ category.name }}</h1>
         <div class="p-5 bg-white rounded-md">
-            <CategoryInfo :category="category" :categories="categories" />
+            <CategoryInfo :category="category" />
         </div>
         <el-tabs>
             <PanelChildren :category="category" />
@@ -26,7 +26,6 @@ import PanelProducts from  './Panels/Products.vue'
 
 const props = defineProps({
     category: Object,
-    categories: Array,
     title: {
         type: String,
         default: 'Карточка категории',

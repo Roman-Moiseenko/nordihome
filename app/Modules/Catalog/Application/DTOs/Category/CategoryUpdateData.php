@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Application\DTOs;
+namespace App\Modules\Catalog\Application\DTOs\Category;
 
 use Spatie\LaravelData\Attributes\Validation\BooleanType;
 use Spatie\LaravelData\Attributes\Validation\Max;
@@ -11,7 +11,7 @@ use Spatie\LaravelData\Attributes\Validation\Numeric;
 use Spatie\LaravelData\Attributes\Validation\StringType;
 use Spatie\LaravelData\Data;
 
-class UpdateRoomData extends Data
+class CategoryUpdateData extends Data
 {
     public function __construct(
         #[Nullable, StringType, Max(255)]

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Entity;
 
 use App\Modules\Base\Traits\ImageField;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 

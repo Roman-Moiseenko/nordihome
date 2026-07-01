@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Catalog\Application\DTOs;
+namespace App\Modules\Catalog\Application\DTOs\Room;
 
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use Spatie\LaravelData\Attributes\Validation\Numeric;
@@ -14,6 +14,8 @@ class RoomIndexData extends Data
         public readonly int $id,
         public readonly string $name,
         public readonly string $slug,
+        public readonly int $depth,
+        public readonly bool $published,
         public readonly ?string $image_url,
         public readonly ?string $icon_url,
         /** @var RoomIndexData[] */
@@ -28,6 +30,8 @@ class RoomIndexData extends Data
             id: $room->id,
             name: $room->name,
             slug: (string) $room->slug,
+            depth: $room->depth,
+            published: $room->isPublished(),
             image_url: $room->image_url,
             icon_url: $room->icon_url,
             children: array_map(

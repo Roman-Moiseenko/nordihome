@@ -2,15 +2,15 @@
 
 namespace App\Modules\Page\Repository;
 
+use App\Modules\Catalog\Entity\Group;
+use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Repository\CategoryRepository;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Menu;
 use App\Modules\Page\Entity\MenuItem;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
-use App\Modules\Catalog\Entity\Category;
-use App\Modules\Catalog\Entity\Group;
-use App\Modules\Catalog\Repository\CategoryRepository;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 

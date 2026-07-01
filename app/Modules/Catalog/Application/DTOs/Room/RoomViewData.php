@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Application\DTOs;
+namespace App\Modules\Catalog\Application\DTOs\Room;
 
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use Spatie\LaravelData\Data;

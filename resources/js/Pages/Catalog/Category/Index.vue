@@ -12,7 +12,7 @@
                 </template>
                 <el-input v-model="form.name" placeholder="Название"/>
                 <el-select v-model="form.parentId" placeholder="Родительская категория" class="mt-1" filterable clearable>
-                    <el-option v-for="item in categories" :value="item.id" :label="item.name" />
+                    <el-option v-for="item in useCatalog.categories" :value="item.id" :label="item.name" />
                 </el-select>
                 <div class="mt-2">
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
@@ -30,6 +30,7 @@ import {Head, router} from "@inertiajs/vue3";
 import {inject, reactive, ref} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
 import CategoryChildren from "@Comp/Category/Children.vue";
+import {useCatalogStore} from "@Res/catalogStore";
 
 const props = defineProps({
     categories: Object,
@@ -41,8 +42,7 @@ const props = defineProps({
 
 const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
-console.log(props.categories)
-
+const useCatalog = useCatalogStore()
 const form = reactive({
     name: null,
     parent_id: null,

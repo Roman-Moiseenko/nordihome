@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Application\Actions;
+namespace App\Modules\Catalog\Application\Actions\Room;
 
-use App\Modules\Catalog\Application\DTOs\RoomCreateData;
+use App\Modules\Catalog\Application\DTOs\Room\RoomCreateData;
 use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Shared\Domain\Entities\UserPermission;

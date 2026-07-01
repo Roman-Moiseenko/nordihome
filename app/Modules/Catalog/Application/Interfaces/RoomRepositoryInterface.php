@@ -20,4 +20,13 @@ interface RoomRepositoryInterface
     public function getTree(): array;
 
     public function existsSlug(string $slug, ?int $excludeId = null): bool;
+
+    public function moveUp(int $id): void;
+
+    public function moveDown(int $id): void;
+
+    /** @return int[] */
+    public function getDescendantIds(int $id): array;
+
+    public function bulkTogglePublished(array $ids, bool $published): void;
 }
