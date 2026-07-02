@@ -79,6 +79,7 @@ class ProductService
             $product = $parser->findProduct($code);
         } catch (\Throwable $e) {
             Log::info("ERROR " . $e->getMessage() . " / " . $e->getFile() . " / " . $e->getLine());
+            return null;
         }
         /** @var ParserAbstract $parser */
 
@@ -91,6 +92,9 @@ class ProductService
 
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function create(Request $request): Product
     {
         if ($request->boolean('parser')) {
@@ -142,11 +146,6 @@ class ProductService
                 $request->string('slug')->trim()->value(),
                 $arguments);
             $product->brand_id = $request->integer('brand_id');
-            if (!empty($request['categories'])) {
-                foreach ($request['categories'] as $category_id) {
-                    $product->categories()->attach((int)$category_id);
-                }
-            }
             $product->push();
             $product->name_print = $request->string('name_print')->trim()->value();
             $product->comment = $request->string('comment')->trim()->value();
@@ -160,9 +159,7 @@ class ProductService
                 $distributor->addProduct($product, 0);
             }
             $product->save();
-
             $this->storageService->add_product($product);
-
         });
 
         return $product;

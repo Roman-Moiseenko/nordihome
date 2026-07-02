@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Controllers;
 use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Currency;
+use App\Modules\Catalog\Application\Actions\Brand\ListBrandUseCase;
 use App\Modules\Parser\Service\ParserAbstract;
 use App\Modules\Catalog\Entity\Brand;
 use App\Modules\Catalog\Repository\BrandRepository;
@@ -19,14 +20,12 @@ use Inertia\Inertia;
 
 class BrandController extends Controller
 {
-    private BrandService $service;
-    private BrandRepository $repository;
 
-
-    public function __construct(BrandService $service, BrandRepository $repository)
+    public function __construct(
+        private readonly BrandService     $service,
+        private readonly BrandRepository  $repository,
+        private readonly ListBrandUseCase $listBrandUseCase)
     {
-        $this->service = $service;
-        $this->repository = $repository;
     }
 
     public function index(Request $request): \Inertia\Response
@@ -82,13 +81,7 @@ class BrandController extends Controller
 
     public function list(): JsonResponse
     {
-        $list = Brand::orderBy('name')->get()->map(function (Brand $brand) {
-            return [
-                'id' => $brand->id,
-                'name' => $brand->name,
-                'parser' => $brand->parser_class,
-            ];
-        });
+        $list = $this->listBrandUseCase->execute();
         return response()->json($list);
     }
 }

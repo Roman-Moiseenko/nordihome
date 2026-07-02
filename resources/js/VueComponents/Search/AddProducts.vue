@@ -12,7 +12,7 @@
         <el-form label-width="auto">
             <el-select v-model="formCreate.brand_id" filterable @change="selectBrand" clearable class="my-3"
                        placeholder="Бренд">
-                <el-option v-for="item in brands" :value="item.id" :label="item.name"/>
+                <el-option v-for="item in useCatalog.brands" :value="item.id" :label="item.name"/>
             </el-select>
             <el-upload
                 class="upload-demo"
@@ -41,6 +41,7 @@ import {router} from "@inertiajs/vue3";
 import {ElLoading, ElMessage, type UploadProps} from "element-plus";
 import axios from "axios";
 import HelpBlock from "@Comp/HelpBlock.vue";
+import {useCatalogStore} from "@Res/catalogStore";
 
 const props = defineProps({
     route: String,
@@ -54,7 +55,7 @@ interface ISelect {
     id: Number,
     name: String,
 }
-
+const useCatalog = useCatalogStore()
 interface IProduct {
     product_id: Number,
     quantity: Number,
@@ -62,7 +63,7 @@ interface IProduct {
 }
 
 const products = ref([])
-const brands = ref<ISelect[]>([]);
+
 const formCreate = reactive({
     brand_id: null,
 })
@@ -83,23 +84,8 @@ function selectBrand() {
     route_upload.value = route('admin.catalog.product.upload', {brand_id: formCreate.brand_id});
 }
 function openDialog() {
-    //Загружаем список брендов и категорий в диалог
-    if (brands.value.length === 0) {
-        const loading = ElLoading.service({
-            lock: false,
-            text: 'Загружаем бренды',
-            background: 'rgba(0, 0, 0, 0.7)',
-        })
-        route_upload.value = route('admin.catalog.product.upload');
-        axios.post(route('admin.catalog.brand.list')).then(response => {
-            brands.value = [...response.data]
-            loading.close()
-            uploadDialog.value = true
-        });
-    } else {
-        uploadDialog.value = true
-    }
-
+    route_upload.value = route('admin.catalog.product.upload');
+    uploadDialog.value = true
 }
 const handleSuccess: UploadProps['onSuccess'] = (response, uploadFile, uploadFiles) => {
     let _products = [...response.products]
@@ -146,11 +132,7 @@ function findProducts(data) {
             }).catch(resolve => {
                 console.log('resolve', resolve)
             })
-
         }, i * 100);
-
-
-
     });
 
 
@@ -177,16 +159,6 @@ function onUpload() {
             loading.close()
         }
     })
-
-    /*
-    ElMessage({
-        message: 'В разработке',
-        type: 'warning',
-        plain: true,
-        showClose: true,
-        duration: 5000,
-        center: true,
-    }); */
 }
 
 </script>

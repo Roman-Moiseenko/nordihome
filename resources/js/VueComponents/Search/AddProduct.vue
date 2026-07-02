@@ -45,7 +45,7 @@
             </el-form-item>
             <el-form-item label="Бренд">
                 <el-select v-model="formCreate.brand_id" filterable @change="selectBrand">
-                    <el-option v-for="item in brands" :value="item.id" :label="item.name"/>
+                    <el-option v-for="item in useCatalog.brands" :value="item.id" :label="item.name"/>
                 </el-select>
             </el-form-item>
             <el-form-item v-if="showParser" label="Спарсить товар">
@@ -164,8 +164,6 @@ const form = reactive({
     quantity: 1,
     preorder: null,
 })
-
-
 const useCatalog = useCatalogStore()
 function onSelect() {
     if (props.quantity) {
@@ -180,7 +178,6 @@ function onQuantity() {
 }
 function onAdd() {
     if (form.product_id === null) return;
-
     router.visit(props.route, {
         method: "post",
         data: {...form, ...props.params},
@@ -209,30 +206,12 @@ interface ISelect {
     id: Number,
     name: String,
 }
-const brands = ref<ISelect[]>([]);
 
 
 
 
 function createProduct() {
-    //Загружаем список брендов и категорий в диалог
-
-    //MAINDO сделать через useCatalogStore().brands !!!
-    if (brands.value.length === 0) {
-        const loading = ElLoading.service({
-            lock: false,
-            text: 'Загружаем бренды',
-            background: 'rgba(0, 0, 0, 0.7)',
-        })
-
-        axios.post(route('admin.catalog.brand.list')).then(response => {
-            brands.value = [...response.data]
-            dialogCreate.value = true
-            loading.close()
-        });
-    } else {
-        dialogCreate.value = true
-    }
+    dialogCreate.value = true
 }
 function storeProduct() {
     const loading = ElLoading.service({
@@ -255,7 +234,7 @@ function storeProduct() {
 }
 function selectBrand(){
     showParser.value = false
-    brands.value.forEach(function (item) {
+    useCatalog.brands.forEach(function (item) {
         if (formCreate.brand_id === item.id && item.parser)
             showParser.value = true
     })

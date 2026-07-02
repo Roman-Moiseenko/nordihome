@@ -34,11 +34,6 @@
                             </el-select>
                             <div v-if="errors.category_id" class="text-red-700">{{ errors.category_id }}</div>
                         </el-form-item>
-                        <el-form-item label="Доп.категории">
-                            <el-select v-model="form.categories" filterable multiple clearable>
-                                <el-option v-for="item in useCatalog.categoriesForFilters" :value="item.id" :label="item.name"/>
-                            </el-select>
-                        </el-form-item>
                         <el-form-item label="Бренд">
                             <el-select v-model="form.brand_id" filterable>
                                 <el-option v-for="item in brands" :value="item.id" :label="item.name"/>
@@ -117,7 +112,6 @@ const form = reactive({
     code: null,
     comment: null,
     category_id: null,
-    categories: [],
     brand_id: null,
     country_id: null,
     distributor_id: null,

@@ -40,7 +40,6 @@ const props = defineProps({
     },
 })
 
-console.log(props.categories)
 const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
 const useCatalog = useCatalogStore()

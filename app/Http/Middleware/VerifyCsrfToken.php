@@ -28,18 +28,6 @@ class VerifyCsrfToken extends Middleware
             return $next($request);
         }
 
-        // Проверяем, почему не срабатывает except для admin/catalog/upload
-        if ($request->is('admin/*') && !$request->is('admin/test-except')) {
-            \Illuminate\Support\Facades\Log::warning('CSRF_ADMIN_EXCEPT_CHECK', [
-                'url' => $request->fullUrl(),
-                'method' => $request->method(),
-                'in_except' => $this->inExceptArray($request),
-                'is_reading' => $this->isReading($request),
-                'path' => $request->decodedPath(),
-                'except_list' => $this->getExcludedPaths(),
-            ]);
-        }
-
         return parent::handle($request, $next);
     }
 }

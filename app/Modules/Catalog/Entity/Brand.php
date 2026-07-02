@@ -35,6 +35,13 @@ class Brand extends Model
         'url',
     ];
 
+    protected $attributes = [
+        'sameas_json' => '[]',
+    ];
+    protected $casts = [
+        'sameas_json' => 'array',
+    ];
+
     protected $hidden = [
         'sameas_json',
     ];
@@ -69,17 +76,7 @@ class Brand extends Model
        return $this->hasMany(Product::class, 'brand_id', 'id');
     }
 
-    public static function boot(): void
-    {
-        parent::boot();
-        self::saving(function (Brand $object) {
-            $object->sameas_json = json_encode($object->sameAs);
-        });
 
-        self::retrieved(function (Brand $object) {
-            $object->sameAs = json_decode($object->sameas_json);
-        });
-    }
 
     public static function IkeaID(): int
     {

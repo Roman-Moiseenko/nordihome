@@ -76,6 +76,7 @@ import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import {classes} from "@Res/className"
+import {useCatalogStore} from "@Res/catalogStore";
 
 const props = defineProps({
     brands: Object,
@@ -100,6 +101,7 @@ function handleDeleteEntity(row) {
 }
 function createButton() {
     router.post(route('admin.catalog.brand.store', {name: new_brand.value}))
+    useCatalogStore().reload()
 }
 function routeClick(row) {
     router.get(route('admin.catalog.brand.show', {brand: row.id}))

@@ -50,7 +50,7 @@ Route::group([
         'prefix' => 'brand',
         'as' => 'brand.',
     ], function () {
-        Route::post('/list', [BrandController::class, 'list'])->name('list');
+        Route::get('/list', [BrandController::class, 'list'])->name('list');
         Route::post('/set-info/{brand}', [BrandController::class, 'set_info'])->name('set-info');
 
     });
