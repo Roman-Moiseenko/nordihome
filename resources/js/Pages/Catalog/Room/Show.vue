@@ -6,7 +6,8 @@
             <RoomInfo :room="room" />
         </div>
         <el-tabs>
-
+            <PanelChildren :room="room" />
+            <PanelProducts :room-id="room.id" />
         </el-tabs>
     </el-config-provider>
 </template>
@@ -16,19 +17,18 @@ import {inject, ref, defineProps, reactive} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {Head, router} from "@inertiajs/vue3";
 import RoomInfo from "./Block/Info.vue";
-
-
+import PanelChildren from "./Panels/Children.vue";
+import PanelProducts from "./Panels/Products.vue";
 
 
 const props = defineProps({
     room: Object,
-    rooms: Array,
     title: {
         type: String,
-        default: 'Карточка категории',
+        default: 'Карточка Комнаты',
     },
 })
-
+console.log(props.room)
 </script>
 
 <style scoped>

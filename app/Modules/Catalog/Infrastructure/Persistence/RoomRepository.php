@@ -26,7 +26,7 @@ class RoomRepository implements RoomRepositoryInterface
     public function getById(int $id): RoomEntity
     {
         $model = Room::findOrFail($id);
-        return $this->hydrate($model);
+        return $this->hydrateWithChildren($model);
     }
 
     public function save(RoomEntity $room): RoomEntity

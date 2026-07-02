@@ -24,7 +24,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function getById(int $id): CategoryEntity
     {
         $model = Category::findOrFail($id);
-        return $this->hydrate($model);
+        return $this->hydrateWithChildren($model);
     }
 
     public function save(CategoryEntity $category): CategoryEntity
