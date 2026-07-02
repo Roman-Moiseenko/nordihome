@@ -8,8 +8,8 @@ use App\Modules\Catalog\Application\Actions\Room\IndexRoomUseCase;
 use App\Modules\Catalog\Application\Actions\Room\RemoveRoomUseCase;
 use App\Modules\Catalog\Application\Actions\Room\ToggleRoomUseCase;
 use App\Modules\Catalog\Application\Actions\Room\TreeRoomUseCase;
-use App\Modules\Catalog\Application\Actions\Room\UpRoomUseCase;
 use App\Modules\Catalog\Application\Actions\Room\UpdateRoomUseCase;
+use App\Modules\Catalog\Application\Actions\Room\UpRoomUseCase;
 use App\Modules\Catalog\Application\Actions\Room\ViewRoomUseCase;
 use App\Modules\Catalog\Application\DTOs\Room\RoomCreateData;
 use App\Modules\Catalog\Application\DTOs\Room\RoomIndexData;
@@ -101,4 +101,5 @@ readonly class RoomController
         return response()->json(RoomTreeData::fromEntityArray($rooms), Response::HTTP_OK);
 
     }
+
 }

@@ -13,6 +13,8 @@ use App\Modules\Catalog\Controllers\ReducedController;
 use App\Modules\Catalog\Controllers\SeriesController;
 use App\Modules\Catalog\Controllers\TagController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryProductController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;
 use Illuminate\Support\Facades\Route;
 
@@ -63,6 +65,10 @@ Route::group([
         Route::post('/toggle/{id}', [CategoryController::class, 'toggle'])->name('toggle');
         Route::get('/products/{id}', [CategoryController::class, 'products'])->name('products');
         Route::get('/attributes/{id}', [CategoryController::class, 'attributes'])->name('attributes');
+        // Связь Category → Products (через pivot)
+        Route::post('/{id}/products/sync', [CategoryProductController::class, 'assignCategoryProducts'])->name('products.sync');
+        Route::post('/{id}/products/attach', [CategoryProductController::class, 'attachCategoryProducts'])->name('products.attach');
+        Route::delete('/{id}/products/detach', [CategoryProductController::class, 'detachCategoryProducts'])->name('products.detach');
     });
     Route::resource('category', CategoryController::class)->parameters(['category' => 'id']); //CRUD
     //ROOMS
@@ -74,7 +80,11 @@ Route::group([
         Route::post('/up/{id}', [RoomController::class, 'up'])->name('up');
         Route::post('/down/{id}', [RoomController::class, 'down'])->name('down');
         Route::post('/toggle/{id}', [RoomController::class, 'toggle'])->name('toggle');
-
+        // Связь Room → Products
+        Route::get('/{id}/products', [RoomProductController::class, 'roomProducts'])->name('products');
+        Route::post('/{id}/products/sync', [RoomProductController::class, 'assignRoomProducts'])->name('products.sync');
+        Route::post('/{id}/products/attach', [RoomProductController::class, 'attachRoomProducts'])->name('products.attach');
+        Route::delete('/{id}/products/detach', [RoomProductController::class, 'detachRoomProducts'])->name('products.detach');
     });
     Route::resource('room', RoomController::class)->except(['create', 'edit']); //CRUD
     //TAG
@@ -212,6 +222,12 @@ Route::group([
             Route::post('/set/{product}', [ProductController::class, 'set_image'])->name('set');
             Route::post('/move/{product}', [ProductController::class, 'move_image'])->name('move');
         });
+        // Связь Product → Rooms
+        Route::get('/{id}/rooms', [RoomProductController::class, 'productRooms'])->name('rooms');
+        Route::post('/{id}/rooms/sync', [RoomProductController::class, 'assignProductRooms'])->name('rooms.sync');
+        Route::post('/{id}/rooms/attach', [RoomProductController::class, 'attachProductRooms'])->name('rooms.attach');
+        Route::delete('/{id}/rooms/detach', [RoomProductController::class, 'detachProductRooms'])->name('rooms.detach');
+
         Route::group([
             'prefix' => 'edit',
             'as' => 'edit.'

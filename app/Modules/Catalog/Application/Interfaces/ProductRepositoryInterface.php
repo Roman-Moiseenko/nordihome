@@ -18,5 +18,18 @@ interface ProductRepositoryInterface
      * @param int $page
      * @return LengthAwarePaginator<ProductCategoryData>
      */
-    public function findByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
+    public function findByMainCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
+
+    /**
+     * Найти все товары категории (основная + привязанные через pivot).
+     * Объединённый список без дубликатов по ID товара.
+     * Исключаются модификации.
+     *
+     * @param int $categoryId
+     * @param int $perPage
+     * @param int $page
+     * @return LengthAwarePaginator<ProductCategoryData>
+     */
+    public function findAllByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
 }
+

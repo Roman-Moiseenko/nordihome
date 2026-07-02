@@ -1,15 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Catalog\Application\Actions\Product;
 
 use App\Modules\Catalog\Application\DTOs\Product\ProductCategoryData;
 use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class ListProductByCategoryUseCase
+readonly class ListAllProductByCategoryUseCase
 {
     public function __construct(
-        private readonly ProductRepositoryInterface $productRepository,
+        private ProductRepositoryInterface $productRepository,
     )
     {
     }
@@ -19,6 +21,6 @@ class ListProductByCategoryUseCase
      */
     public function execute(int $id, int $perPage = 15, int $page = 1): LengthAwarePaginator
     {
-        return $this->productRepository->findByMainCategoryId($id, $perPage, $page);
+        return $this->productRepository->findAllByCategoryId($id, $perPage, $page);
     }
 }

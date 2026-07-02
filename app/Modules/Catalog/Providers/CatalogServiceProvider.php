@@ -5,10 +5,14 @@ namespace App\Modules\Catalog\Providers;
 use App\Modules\Catalog\Application\Interfaces\AttributeRepositoryInterface;
 use App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
+use App\Modules\Catalog\Application\Interfaces\CategoryProductRepositoryInterface;
+use App\Modules\Catalog\Application\Interfaces\RoomProductRepositoryInterface;
 use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\CategoryProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\CategoryRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\ProductRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\RoomProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
@@ -109,6 +113,16 @@ class CatalogServiceProvider extends ServiceProvider
         $this->app->bind(
             AttributeRepositoryInterface::class,
             AttributeRepository::class
+        );
+
+        $this->app->bind(
+            RoomProductRepositoryInterface::class,
+            RoomProductRepository::class
+        );
+
+        $this->app->bind(
+            CategoryProductRepositoryInterface::class,
+            CategoryProductRepository::class
         );
     }
 

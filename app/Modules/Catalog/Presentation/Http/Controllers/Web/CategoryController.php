@@ -14,7 +14,7 @@ use App\Modules\Catalog\Application\Actions\Category\TreeCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\UpCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\UpdateCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\ViewCategoryUseCase;
-use App\Modules\Catalog\Application\Actions\Product\ListProductByCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\Product\ListAllProductByCategoryUseCase;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryCreateData;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryIndexData;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryTreeData;
@@ -41,7 +41,7 @@ class CategoryController extends Controller
         private readonly UpdateCategoryUseCase $updateCategoryUseCase,
         private readonly ViewCategoryUseCase $viewCategoryUseCase,
         private readonly ListAttributeByCategoryUseCase $listAttributeByCategoryUseCase,
-        private readonly ListProductByCategoryUseCase $listProductByCategoryUseCase,
+        private readonly ListAllProductByCategoryUseCase $listAllProductByCategoryUseCase,
     )
     {
     }
@@ -113,7 +113,7 @@ class CategoryController extends Controller
     {
         $page = $request->integer('page', 1);
         $perPage = $request->integer('per_page', 15);
-        $list = $this->listProductByCategoryUseCase->execute($id, $perPage, $page);
+        $list = $this->listAllProductByCategoryUseCase->execute($id, $perPage, $page);
 
         return response()->json($list, SymfonyResponse::HTTP_OK);
     }
