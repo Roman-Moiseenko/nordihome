@@ -14,14 +14,12 @@ export const useCatalogStore = defineStore('catalog', () => {
         const [
             roomsRes, categoriesRes
         ] = await Promise.all([
-            axios.get(route('admin.catalog.room.tree'), {withCredentials: true}),
-            axios.get(route('admin.catalog.category.tree'), {withCredentials: true}),
+            axios.get(route('admin.catalog.room.tree')),
+            axios.get(route('admin.catalog.category.tree')),
         ])
 
         rooms.value = roomsRes.data
         categories.value = categoriesRes.data
-        //console.log(rooms.value)
-        //console.log('1*',categories.value)
     }
 
     ;(async () => {

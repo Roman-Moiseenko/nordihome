@@ -67,13 +67,28 @@ readonly class CategoryProductController
      * Добавить товары к категории (attach — дополняет существующие).
      * POST /admin/catalog/category/{id}/products/attach
      */
-    public function attachCategoryProducts(int $id, Request $request, UserPermission $userPermission): JsonResponse
+    public function attachCategoryProducts(int $id, Request $request, UserPermission $userPermission)
     {
-        $productIds = $request->input('products', []);
 
-        $this->attachProductToCategoryUseCase->execute($id, $productIds, $userPermission);
+        if ($request->has('product_id')) {
+            $productIds[] = $request->integer('product_id');
+        } else {
+            $data = $request->input('products', []);
+            if (count($data) == 0) throw new \DomainException('Нет данных');
 
-        return response()->json(['message' => 'Товары добавлены'], Response::HTTP_OK);
+            if (is_array($data[0])) {
+                foreach ($data as $item) {
+                    $productIds[] =  $item['product_id'];
+                }
+            } else {
+                $productIds = $data;
+            }
+        }
+
+        $this->attachProductToCategoryUseCase->execute($id, $productIds ?? [], $userPermission);
+
+        //return response()->json(['message' => 'Товары добавлены'], Response::HTTP_OK);
+        return redirect()->back()->with('success', 'Товары добавлены');
     }
 
     /**

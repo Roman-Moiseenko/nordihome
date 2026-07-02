@@ -147,7 +147,6 @@ const loading = ref(false)
 const remoteMethod = (query: string) => {
     if (query) {
         loading.value = true
-        console.log(props.search)
         axios.post(props.search, {search: query}).then(response => {
             if (response.data.error !== undefined) console.log(response.data.error)
             form.product_id = response.data[0].id;

@@ -24,7 +24,7 @@ readonly class DetachProductFromCategoryUseCase
      */
     public function execute(int $categoryId, array $productIds, UserPermission $userPermission): void
     {
-        if (!$userPermission->can('catalog.category.update')) {
+        if (!$userPermission->can('catalog.category.edit')) {
             throw new \DomainException('Доступ запрещён');
         }
 

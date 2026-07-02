@@ -25,8 +25,8 @@ Route::group([
 ],    function () {
 
     Route::post('/action', [ProductController::class, 'action'])->name('action');
-    Route::post('/upload', [ProductController::class, 'upload'])->name('upload');
-    Route::post('/find-parser', [ProductController::class, 'find_parser'])->name('find-parser');
+    Route::post('/upload', [ProductController::class, 'upload'])->name('product.upload');
+    Route::post('/find-parser', [ProductController::class, 'find_parser'])->name('product.find-parser');
     //Атрибуты
     Route::group([
         'prefix' => 'attribute',
@@ -227,6 +227,14 @@ Route::group([
         Route::post('/{id}/rooms/sync', [RoomProductController::class, 'assignProductRooms'])->name('rooms.sync');
         Route::post('/{id}/rooms/attach', [RoomProductController::class, 'attachProductRooms'])->name('rooms.attach');
         Route::delete('/{id}/rooms/detach', [RoomProductController::class, 'detachProductRooms'])->name('rooms.detach');
+
+        // Связь Product → Category
+        Route::get('/{id}/category', [CategoryProductController::class, 'productCategories'])->name('categories');
+        Route::post('/{id}/category/sync', [CategoryProductController::class, 'assignProductCategories'])->name('categories.sync');
+        Route::post('/{id}/category/attach', [CategoryProductController::class, 'attachProductCategories'])->name('categories.attach');
+        Route::delete('/{id}/category/detach', [CategoryProductController::class, 'detachProductCategories'])->name('categories.detach');
+
+
 
         Route::group([
             'prefix' => 'edit',

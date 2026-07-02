@@ -50,6 +50,41 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
+        // Логируем все 419 ошибки для отладки
+        if ($e instanceof TokenMismatchException) {
+            Log::error('419_CSRF_MISMATCH', [
+                'url' => $request->fullUrl(),
+                'method' => $request->method(),
+                'ajax' => $request->ajax(),
+                'inertia' => $request->inertia(),
+                'expects_json' => $request->expectsJson(),
+                'has_session' => $request->hasSession(),
+                'session_token' => $request->hasSession() ? $request->session()->token() : 'no-session',
+                'header_xsrf' => $request->header('X-XSRF-TOKEN', 'missing'),
+                'header_csrf' => $request->header('X-CSRF-TOKEN', 'missing'),
+                'cookie_xsrf' => $request->cookie('XSRF-TOKEN', 'missing'),
+                'input_token' => $request->input('_token', 'missing'),
+                'is_admin' => $request->is('admin/*'),
+            ]);
+        }
+
+        // Логируем любой 419 статус
+        $statusCode = 0;
+        try {
+            $statusCode = parent::render($request, $e)->getStatusCode();
+        } catch (\Throwable $renderError) {
+            Log::error('419_RENDER_ERROR', ['error' => $renderError->getMessage()]);
+        }
+
+        if ($statusCode === 419 && !($e instanceof TokenMismatchException)) {
+            Log::error('419_NON_CSRF', [
+                'exception' => get_class($e),
+                'message' => $e->getMessage(),
+                'url' => $request->fullUrl(),
+                'status' => $statusCode,
+            ]);
+        }
+
         if ($e instanceof \DomainException || $e instanceof \InvalidArgumentException) {
             if ($request->inertia()) {
                 return redirect()->back()->with('error', $e->getMessage());

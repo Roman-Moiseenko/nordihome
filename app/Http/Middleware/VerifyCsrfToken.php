@@ -13,21 +13,31 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         'api/*',
+        'admin/*',
+        'admin',
+        'admin/',
         'api/telegram/web-hook/',
-        'admin/mail/system/attachment',
         'file-upload',
-        'admin/staff/photo/*',
-        'admin/accounting/bank/upload',
-        'admin/product/upload',
         'csrf-token',
         'product/search',
-        'admin/*',
     ];
 
     public function handle($request, \Closure $next)
     {
         if ($request->header('X-Inertia')) {
             return $next($request);
+        }
+
+        // Проверяем, почему не срабатывает except для admin/catalog/upload
+        if ($request->is('admin/*') && !$request->is('admin/test-except')) {
+            \Illuminate\Support\Facades\Log::warning('CSRF_ADMIN_EXCEPT_CHECK', [
+                'url' => $request->fullUrl(),
+                'method' => $request->method(),
+                'in_except' => $this->inExceptArray($request),
+                'is_reading' => $this->isReading($request),
+                'path' => $request->decodedPath(),
+                'except_list' => $this->getExcludedPaths(),
+            ]);
         }
 
         return parent::handle($request, $next);

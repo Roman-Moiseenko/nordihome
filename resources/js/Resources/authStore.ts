@@ -20,10 +20,10 @@ export const useAuthStore = defineStore('auth', () => {
         const [
             positionsRes, permissionsRes, rolesRes, staffsRes
         ] = await Promise.all([
-            axios.get(route('admin.staff.positions'), {withCredentials: true}),
-            axios.get(route('admin.role.permissions'), {withCredentials: true}),
-            axios.get(route('admin.role.roles'), {withCredentials: true}),
-            axios.get(route('admin.staff.groups'), {withCredentials: true}),
+            axios.get(route('admin.staff.positions')),
+            axios.get(route('admin.role.permissions')),
+            axios.get(route('admin.role.roles')),
+            axios.get(route('admin.staff.groups')),
         ])
 
         positions.value = positionsRes.data

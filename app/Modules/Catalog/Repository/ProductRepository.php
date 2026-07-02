@@ -10,6 +10,7 @@ use App\Modules\Catalog\Entity\Equivalent;
 use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Entity\Tag;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Shared\Infrastructure\Models\Photo;
 
 class ProductRepository
@@ -64,7 +65,8 @@ class ProductRepository
 
     public function ProductWithToArray(Product $product): array
     {
-        $_product = $product; $equivalent = null;
+        $_product = $product;
+        $equivalent = null;
         if (is_null($product->equivalent_product) && !is_null($product->modification) && is_null($product->main_modification)) {
             $_product = $product->modification->base_product;
         }
@@ -97,6 +99,12 @@ class ProductRepository
                     'name' => $category->name,
                 ];
             }),
+            'rooms' => $product->rooms()->get()->map(function (Room $room) {
+                return [
+                    'id' => $room->id,
+                    'name' => $room->name,
+                ];
+            }),
             'tags' => $product->tags()->get()->map(function (Tag $tag) {
                 return [
                     'id' => $tag->id,
@@ -104,7 +112,7 @@ class ProductRepository
                 ];
             }),
             'videos' => $product->videos,
-            'possible_attributes' => array_filter(array_map(function (Attribute $attribute) use($product) {
+            'possible_attributes' => array_filter(array_map(function (Attribute $attribute) use ($product) {
                 if (!is_null($product->Value($attribute->id))) return false;
                 return [
                     'id' => $attribute->id,
@@ -139,7 +147,7 @@ class ProductRepository
                 'id' => $product->modification->id,
                 'name' => $product->modification->name,
                 'base_product_id' => $product->modification->base_product_id,
-                'attributes' => array_map(function (Attribute $attribute){
+                'attributes' => array_map(function (Attribute $attribute) {
                     return [
                         'name' => $attribute->name,
                         'image' => $attribute->getImage(),
@@ -151,7 +159,7 @@ class ProductRepository
                         'name' => $product->name,
                         'code' => $product->code,
                         'image' => $product->miniImage(),
-                        'attributes' => array_map(function (Attribute $attribute) use ($product){
+                        'attributes' => array_map(function (Attribute $attribute) use ($product) {
                             return [
                                 'name' => $attribute->getVariant($product->Value($attribute->id))->name,
                             ];

@@ -24,7 +24,7 @@ readonly class AttachProductToRoomUseCase
      */
     public function execute(int $roomId, array $productIds, UserPermission $userPermission): void
     {
-        if (!$userPermission->can('catalog.room.edit')) {
+        if (!$userPermission->can('catalog.category.edit')) {
             throw new \DomainException('Доступ запрещён');
         }
 

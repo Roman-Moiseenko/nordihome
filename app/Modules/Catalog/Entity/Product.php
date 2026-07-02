@@ -14,6 +14,7 @@ use App\Modules\Base\Entity\Packages;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Base\Traits\GalleryField;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;
@@ -93,6 +94,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Tag[] $tags
  * @property Category $category
  * @property Category[] $categories
+ * @property Room[] $rooms
  * @property Attribute[] $prod_attributes
  *
  * @property Video[] $videos
@@ -815,6 +817,11 @@ class Product extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class, 'categories_products', 'product_id', 'category_id');
+    }
+
+    public function rooms(): BelongsToMany
+    {
+        return $this->belongsToMany(Room::class, 'rooms_products', 'product_id', 'room_id');
     }
 
     public function tags(): BelongsToMany

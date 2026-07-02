@@ -69,7 +69,7 @@ return Application::configure(basePath: dirname(__DIR__))
             StartSession::class,
             LoadUserPermission::class,
             ShareErrorsFromSession::class,
-//            VerifyCsrfToken::class,
+            VerifyCsrfToken::class,
             SubstituteBindings::class,
             HandleInertiaRequests::class,
         ]);

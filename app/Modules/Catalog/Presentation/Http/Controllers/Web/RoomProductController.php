@@ -58,6 +58,7 @@ readonly class RoomProductController
     {
         $productIds = $request->input('products', []);
 
+
         $this->assignProductsToRoomUseCase->execute($id, $productIds, $userPermission);
 
         return response()->json(['message' => 'Товары назначены'], Response::HTTP_OK);
@@ -67,13 +68,26 @@ readonly class RoomProductController
      * Добавить товары к комнате (attach — дополняет существующие).
      * POST /admin/catalog/room/{id}/products/attach
      */
-    public function attachRoomProducts(int $id, Request $request, UserPermission $userPermission): JsonResponse
+    public function attachRoomProducts(int $id, Request $request, UserPermission $userPermission)
     {
-        $productIds = $request->input('products', []);
+        if ($request->has('product_id')) {
+            $productIds[] = $request->integer('product_id');
+        } else {
+            $data = $request->input('products', []);
+            if (count($data) == 0) throw new \DomainException('Нет данных');
 
-        $this->attachProductToRoomUseCase->execute($id, $productIds, $userPermission);
+            if (is_array($data[0])) {
+                foreach ($data as $item) {
+                    $productIds[] =  $item['product_id'];
+                }
+            } else {
+                $productIds = $data;
+            }
+        }
 
-        return response()->json(['message' => 'Товары добавлены'], Response::HTTP_OK);
+        $this->attachProductToRoomUseCase->execute($id, $productIds ?? [], $userPermission);
+        return redirect()->back()->with('success', 'Товары добавлены');
+        //return response()->json(['message' => 'Товары добавлены'], Response::HTTP_OK);
     }
 
     /**

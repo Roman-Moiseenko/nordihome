@@ -97,7 +97,7 @@ class RouteServiceProvider extends ServiceProvider
             $routesPath = $modules_folder . DIRECTORY_SEPARATOR . $module . DIRECTORY_SEPARATOR . 'routes_admin.php';
             if (file_exists($routesPath)) {
                 Route::prefix('admin')
-                    ->middleware(['web', 'auth', 'role:admin|staff|chief', 'logger'])
+                    ->middleware(['web', 'auth', 'role:admin|staff', 'logger'])
                     ->as('admin.')
                     ->namespace("\\App\\Modules\\$module\\Controllers")
                     ->group($routesPath);

@@ -17,6 +17,7 @@
             <el-upload
                 class="upload-demo"
                 :action="route_upload"
+                :headers="uploadHeaders"
                 :on-success="handleSuccess"
                 :on-error="handleError"
 
@@ -69,6 +70,14 @@ const route_upload = ref(null)
 const disabledUnload = ref(true)
 const upload = ref<UploadInstance>()
 const textUpload = ref(null)
+
+// Получаем CSRF-токен для el-upload (через axios, ибо он уже настроен)
+const uploadHeaders = {
+    'X-CSRF-TOKEN': (typeof window !== 'undefined' && window.document)
+        ? (window.document.querySelector('meta[name=csrf-token]')?.getAttribute('content') ?? '')
+        : '',
+    'X-Requested-With': 'XMLHttpRequest',
+};
 
 function selectBrand() {
     route_upload.value = route('admin.catalog.product.upload', {brand_id: formCreate.brand_id});

@@ -49,8 +49,13 @@
                         <div v-if="errors.category_id" class="text-red-700">{{ errors.category_id }}</div>
                     </el-form-item>
                     <el-form-item label="Доп.категории">
-                        <el-select v-model="form.categories" @change="onAutoSave" :disabled="isSaving" filterable multiple clearable>
+                        <el-select v-model="categoriesForm" @change="onCategoriesSave" :disabled="isSaving" filterable multiple clearable>
                             <el-option v-for="item in useCatalog.categoriesForFilters" :key="item.id" :value="item.id" :label="item.name"/>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="Комнаты">
+                        <el-select v-model="roomsForm" @change="onRoomsSave" :disabled="isSaving" filterable multiple clearable>
+                            <el-option v-for="item in useCatalog.roomsForFilters" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="Бренд">
@@ -104,6 +109,8 @@
 import {reactive, ref, defineProps } from "vue";
 import {router} from "@inertiajs/vue3";
 import {useCatalogStore} from "@Res/catalogStore.ts";
+import api from "@Res/api";
+import {route} from "ziggy-js";
 
 const useCatalog = useCatalogStore()
 
@@ -118,6 +125,9 @@ const props = defineProps({
 })
 const autoSave = ref(true)
 const isSaving = ref(false)
+const categoriesForm = ref([...props.product.categories.map(item => item.id)])
+const roomsForm = ref([...props.product.rooms.map(item => item.id)])
+
 const form = reactive({
     id: props.product.id,
     name: props.product.name,
@@ -126,7 +136,8 @@ const form = reactive({
     code: props.product.code,
     comment: props.product.comment,
     category_id: props.product.main_category_id,
-    categories: [...props.product.categories.map(item => item.id)],
+    //categories: [...props.product.categories.map(item => item.id)],
+    //rooms: [], //[...props.product?.rooms?.map(item => item.id)],
     brand_id: props.product.brand_id,
     country_id: props.product.country_id,
     vat_id: props.product.vat_id,
@@ -135,9 +146,26 @@ const form = reactive({
     fractional: props.product.fractional,
     modification: props.product.modification,
 })
+
+
 function onAutoSave() {
     if (autoSave.value === false) return;
     onSave()
+}
+
+function onCategoriesSave(){
+    isSaving.value = true;
+    api.post(
+        route('admin.catalog.product.categories.sync', {id: props.product.id}),
+        {categories: categoriesForm.value}
+    ).finally(() => isSaving.value = false)
+}
+function onRoomsSave() {
+    isSaving.value = true;
+    api.post(
+        route('admin.catalog.product.rooms.sync', {id: props.product.id}),
+        {rooms: roomsForm.value}
+    ).finally(() => isSaving.value = false)
 }
 function onSave() {
     isSaving.value = true;

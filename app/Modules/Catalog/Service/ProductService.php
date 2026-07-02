@@ -44,13 +44,13 @@ class ProductService
 
 
     public function __construct(
-        TagRepository      $tags,
-        TagService         $tagService,
-        EquivalentService  $equivalentService,
-        SeriesService      $seriesService,
-        StorageService     $storageService,
-        Settings           $settings,
-        GroupService       $groupService,
+        TagRepository     $tags,
+        TagService        $tagService,
+        EquivalentService $equivalentService,
+        SeriesService     $seriesService,
+        StorageService    $storageService,
+        Settings          $settings,
+        GroupService      $groupService,
     )
     {
         //Конфигурация
@@ -466,30 +466,31 @@ class ProductService
             $product->main_category_id = $request->integer('category_id');
             $product->brand_id = $request->integer('brand_id');
             //Проверить изменения в списке категорий
-            $array_old = [];
-            $array_new = $request['categories'] ?? null;
+            /*           $array_old = [];
+                       $array_new = $request['categories'] ?? null;
 
-            foreach ($product->categories as $category) $array_old[] = $category->id;
-            foreach ($array_old as $key => $item) {
-                if (!is_null($array_new) && in_array($item, $array_new)) {
-                    $key_new = array_search($item, $array_new);
-                    unset($array_old[$key]);
-                    unset($array_new[$key_new]);
-                }
-            }
-            if (!empty($array_old)) { //Список категорий, которые надо удалить
-                $update_attributes = true;
-                foreach ($array_old as $item) {
-                    $product->categories()->detach((int)$item);
-                }
-            }
-            if (!is_null($array_new)) {//Список категорий, которые надо добавить
-                $update_attributes = true;
-                foreach ($array_new as $item) {
-                    $product->categories()->attach((int)$item);
-                }
-            }
 
+                       foreach ($product->categories as $category) $array_old[] = $category->id;
+                       foreach ($array_old as $key => $item) {
+                           if (!is_null($array_new) && in_array($item, $array_new)) {
+                               $key_new = array_search($item, $array_new);
+                               unset($array_old[$key]);
+                               unset($array_new[$key_new]);
+                           }
+                       }
+                       if (!empty($array_old)) { //Список категорий, которые надо удалить
+                           $update_attributes = true;
+                           foreach ($array_old as $item) {
+                               $product->categories()->detach((int)$item);
+                           }
+                       }
+                       if (!is_null($array_new)) {//Список категорий, которые надо добавить
+                           $update_attributes = true;
+                           foreach ($array_new as $item) {
+                               $product->categories()->attach((int)$item);
+                           }
+                       }
+           */
 
             $product->comment = $request->string('comment')->trim()->value();
             $product->country_id = $request->input('country_id');
@@ -616,7 +617,7 @@ class ProductService
             }
 
             JobCacheProduct::dispatch($products[0]->id);
-          //  $product->save();
+            //  $product->save();
         });
 
 
@@ -637,7 +638,7 @@ class ProductService
             } else {
                 $product->setForSale();
             }
-            $product->pre_order =$request->boolean('pre_order');
+            $product->pre_order = $request->boolean('pre_order');
             $product->priority = $request->boolean('priority');
             $product->hide_price = $request->boolean('hide_price');
             $product->frequency = $request->integer('frequency');
@@ -981,7 +982,7 @@ class ProductService
 
         try {
             $brand = Brand::find($brand_id); //is_null($brand_id) ? null :
-           // return $brand_id;
+            // return $brand_id;
             if (is_null($product = Product::whereCode($code)->first()) && !is_null($brand)) {
 
                 $parser_class = $brand->parser_class;

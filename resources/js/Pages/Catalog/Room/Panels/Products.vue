@@ -6,7 +6,16 @@
                 <span> Товары</span>
             </span>
         </template>
+        <div class="flex mt-5">
 
+            <SearchAddProduct
+                :route="route('admin.catalog.room.products.attach', {id: roomId})"
+            />
+            <SearchAddProducts
+                :route="route('admin.catalog.room.products.attach', {id: roomId})"
+                class="ml-3"/>
+
+        </div>
         <el-table
             :data="tableData"
             v-loading="loading"
@@ -98,6 +107,8 @@ import Active from "@Comp/Elements/Active.vue";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import axios from 'axios';
+import SearchAddProduct from "@Comp/Search/AddProduct.vue";
+import SearchAddProducts from "@Comp/Search/AddProducts.vue";
 
 const props = defineProps({
     roomId: Number,
