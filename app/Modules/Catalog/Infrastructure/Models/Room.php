@@ -12,6 +12,7 @@ use Kalnoy\Nestedset\NodeTrait;
 
 /**
  * @property int $id
+ * @property int $wp_id
  * @property string $name
  * @property string $slug
  * @property string|null $svg

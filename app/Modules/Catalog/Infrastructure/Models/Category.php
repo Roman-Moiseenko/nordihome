@@ -17,6 +17,7 @@ use Kalnoy\Nestedset\NodeTrait;
 /**
  * @property int $id
  * @property int $parent_id
+ * @property int $wp_id
  * @property string $name
  * @property string $slug
  * @property array $meta

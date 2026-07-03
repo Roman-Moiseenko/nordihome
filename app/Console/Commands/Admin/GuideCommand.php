@@ -15,12 +15,14 @@ use App\Modules\Order\Entity\Addition\PackingCalculate;
 use Illuminate\Console\Command;
 use NotificationChannels\Telegram\TelegramUpdates;
 
+//MAINDO Перенести в Seed
 class GuideCommand extends Command
 {
     protected $signature = 'guide:fill';
     protected $description = 'Первоначальное заполнение справочников';
     public function handle(): true
     {
+        //FIXME Проверка на существование
         $this->info('Справочник - guide_country');
         Country::create(['name' => 'Россия']);
         Country::create(['name' => 'Китай']);

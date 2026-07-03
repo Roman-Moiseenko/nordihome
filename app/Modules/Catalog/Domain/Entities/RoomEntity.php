@@ -68,6 +68,11 @@ final class RoomEntity
         set => $this->depth = $value;
     }
 
+    public ?int $wpId = null {
+        get => $this->wpId;
+        set => $this->wpId = $value;
+    }
+
     // ======================== Связи (заполняются репозиторием) ========================
 
     /* TODO Добавить в будущем

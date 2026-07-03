@@ -33,12 +33,12 @@ readonly class UploadPhotoUseCase
         $file = $dto->file;
         $fileName = $file ? $this->photoService->uploadFile(
             $dto->modelType,
-            (int) $dto->imageableId,
+            $dto->imageableId,
             $file,
         ) : '';
 
         $photo = new PhotoEntity(
-            imageableId: (int) $dto->imageableId,
+            imageableId: $dto->imageableId,
             imageableType: $fqcn,
             modelType: $dto->modelType,
             file: $fileName,

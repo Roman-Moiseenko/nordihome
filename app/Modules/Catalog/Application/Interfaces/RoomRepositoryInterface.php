@@ -20,6 +20,7 @@ interface RoomRepositoryInterface
     public function getTree(): array;
 
     public function existsSlug(string $slug, ?int $excludeId = null): bool;
+    public function existsByWpId(int $wpId): bool;
 
     public function moveUp(int $id): void;
 

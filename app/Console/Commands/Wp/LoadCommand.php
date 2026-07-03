@@ -10,6 +10,8 @@ use App\Modules\Accounting\Service\StorageService;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Base\Job\LoadingImageProduct;
+use App\Modules\Catalog\Application\Services\LoadCategoryWpService;
+use App\Modules\Catalog\Application\Services\LoadRoomWpService;
 use App\Modules\Catalog\Entity\Brand;
 use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Infrastructure\Models\Category;
@@ -24,6 +26,8 @@ use function public_path;
 class LoadCommand extends Command
 {
 
+    const int CATALOG_ID = 2725;
+    const int ROOM_ID = 2940;
     use ConfirmableTrait;
 
     private int $count_categories = 0;
@@ -38,7 +42,11 @@ class LoadCommand extends Command
     protected $description = 'Загрузка данных';
     private Common $common;
 
-    public function handle(ListStaffByPositionUseCase $positionUseCase): bool
+    public function handle(
+        ListStaffByPositionUseCase $positionUseCase,
+        LoadCategoryWpService $loadCategoryWpService,
+        LoadRoomWpService $loadRoomWpService,
+    ): bool
     {
         if (! $this->confirmToProceed()) {
             return false;
@@ -55,8 +63,26 @@ class LoadCommand extends Command
         $this->storageService = new StorageService();
 
         if ($type == 'catalog' || $type == null) {
-            $this->loadCatalog();
+
+            $this->warn('Начало загрузки каталога');
+            $filename = public_path() . '/temp/catalog.txt';
+            $f_c = fopen($filename, 'r');
+            $data = fread($f_c, filesize($filename));
+            fclose($f_c);
+            $categories = json_decode($data, true);
+
+            $cat_category = $categories[self::CATALOG_ID];
+            $cat_room = $categories[self::ROOM_ID];
+
+            $this->info('Загружаем категории');
+            $countCat = $loadCategoryWpService->load($cat_category);
+            $this->info('Загружено ' . $countCat);
+            $this->info('Загружаем комнаты');
+            $countRoom = $loadRoomWpService->load($cat_room);
+            $this->info('Загружено ' . $countRoom);
+            //$this->loadCatalog();
         }
+
         if ($type == 'product' || $type == null) {
 
             $pricingService = new PricingService();
@@ -69,21 +95,30 @@ class LoadCommand extends Command
         }
         return true;
     }
-
+/*
     private function loadCatalog(): void
     {
+
         $this->warn('Начало загрузки каталога');
         $filename = public_path() . '/temp/catalog.txt';
         $f_c = fopen($filename, 'r');
         $data = fread($f_c, filesize($filename));
         fclose($f_c);
         $categories = json_decode($data, true);
-        foreach ($categories as $category) {
-            $this->info($this->create_category($category));
-            $this->children($category['children']);
+
+        $cat_category = $categories[self::CATALOG_ID];
+        $cat_room = $categories[self::ROOM_ID];
+
+
+        foreach ($cat_category['children'] as $category) {
+            $new_id = $this->create_category($category);
+
+            if (!is_null($new_id)) $this->children($new_id, $category['children']);
         }
+
         $this->info('Каталоги загружены - ' . $this->count_categories);
     }
+*/
 
     private function loadProduct(): void
     {
@@ -105,6 +140,15 @@ class LoadCommand extends Command
 
     private function create_product($data, $brand_id): string
     {
+        //MAINDO Переделать загрузку
+        /**
+         * Ищем по wp_id в Category (затем для Room тоже самое)
+         * по полю wp_id из $data['categories'] если нашли, то проверяем дочерние, если дочерних нет,
+         * то добавляем в массив категорий,
+         * для Category 0 элемент - main_category_id, остальные дочерние
+         * для Room - все списком в attach
+         */
+
         $product_name = trim($data['name']);
         $product_code = trim($data['sku']);
         if (empty($product_code)) return '********************* ' . $product_name . ' **** нет артикула';
@@ -156,43 +200,39 @@ class LoadCommand extends Command
 
         return $product->name . ' (' . $product->code . ')';
     }
-
-    private function children($children, &$level = 0)
+/*
+    private function children(int $parent_id, $children): void
     {
-        $level++;
-        $pred = str_repeat('-', $level);
-        if (empty($children)) return false;
+        if (empty($children)) return;
         foreach ($children as $child) {
-            $this->info(' ' . $pred . ' ' . $this->create_category($child));
-            $this->children($child['children'], $level);
+            $new_id = $this->create_category($child, $parent_id);
+            if (!is_null($new_id)) $this->children($new_id, $child['children']);
         }
     }
-
-    private function create_category($category): string
+*/
+    /*
+    private function create_category($data, $parent_id = null):? int
     {
-        $name = $category['name'];
-        $parent = $category['parent'];
-        $file = $category['img'];
+        $wp_id = $data['id'];
+        $name = $data['name'];
+        $file = $data['img'];
 
-        if (!empty(Category::where('name', $name)->first())) return $name . ' * уже создана *';
+
+        if (!empty(Category::where('wp_id', $wp_id)->first())) return null;
         $this->count_categories++;
-        if (empty($parent) || is_array($parent)) {
-            $newCategory = Category::register($name);
-        } elseif(is_string($parent)) {
-            $cat_parent = Category::where('name', $parent)->first();
 
-            $newCategory = Category::register($name, $cat_parent->id);
-        } else {
-            return ' еrror - ' . json_encode($parent);
-        }
+        $newCategory = Category::register($name, $parent_id);
+        $newCategory->wp_id = $wp_id;
         //Загрузка изображения
+
+
         $newCategory->image()->save(Photo::uploadByUrl($file, 'image'));
-        $newCategory->description = $category['description'];
+
         $newCategory->refresh();
 
-        return $newCategory->slug;
+        return $newCategory->id;
     }
-
+*/
     private function add_pricing(int $product_id, float $retail): void
     {
         $this->pricing->pricingProducts()->save(

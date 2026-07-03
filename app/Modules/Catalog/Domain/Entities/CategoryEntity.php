@@ -22,6 +22,10 @@ final class CategoryEntity
         set => $this->slug = $value;
     }
 
+    public ?int $wpId = null {
+        get => $this->wpId;
+        set => $this->wpId = $value;
+    }
     public ?string $image_url = null {
         get => $this->image_url;
         set => $this->image_url = $value;
@@ -39,7 +43,6 @@ final class CategoryEntity
         get => $this->published;
         set => $this->published = $value;
     }
-
     public ?Meta $meta  = null {
         get => $this->meta;
         set => $this->meta = $value;
@@ -82,7 +85,7 @@ final class CategoryEntity
     public function __construct(
         string $name,
         Slug $slug,
-        ?int $parentId = null
+        ?int $parentId = null,
     ) {
         $this->name = $name;
         $this->slug = $slug;

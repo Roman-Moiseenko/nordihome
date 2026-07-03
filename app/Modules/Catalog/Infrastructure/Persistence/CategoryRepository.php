@@ -37,6 +37,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $model->slug = (string) $category->slug;
         $model->svg = $category->svgIcon;
         $model->published = $category->isPublished();
+        $model->wp_id = $category->wpId;
         $model->meta = $category->meta ? [
             'title' => $category->meta->getTitle(),
             'description' => $category->meta->getDescription(),
@@ -78,6 +79,11 @@ class CategoryRepository implements CategoryRepositoryInterface
             $query->where('id', '!=', $excludeId);
         }
         return $query->exists();
+    }
+
+    public function existsByWpId(int $wpId): bool
+    {
+        return Category::where('wp_id', $wpId)->exists();
     }
 
     public function moveUp(int $id): void
@@ -130,10 +136,9 @@ class CategoryRepository implements CategoryRepositoryInterface
         );
 
         $entity->id = $model->id;
-
+        $entity->wpId = $model->wp_id;
         $entity->svgIcon = $model->svg;
         $entity->published = $model->published;
-
         // Meta
         $metaData = is_array($model->meta) ? $model->meta : [];
         $entity->meta = new Meta(

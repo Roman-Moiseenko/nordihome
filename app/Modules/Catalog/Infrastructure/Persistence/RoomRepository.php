@@ -47,7 +47,7 @@ class RoomRepository implements RoomRepositoryInterface
         if ($room->parentId !== null) {
             $model->parent_id = $room->parentId;
         }
-
+        $model->wp_id = $room->wpId;
         $model->save();
 
         return $this->hydrate($model);
@@ -81,7 +81,10 @@ class RoomRepository implements RoomRepositoryInterface
         }
         return $query->exists();
     }
-
+    public function existsByWpId(int $wpId): bool
+    {
+        return Room::where('wp_id', $wpId)->exists();
+    }
     public function moveUp(int $id): void
     {
         $model = Room::findOrFail($id);
@@ -135,7 +138,7 @@ class RoomRepository implements RoomRepositoryInterface
             title: $metaData['title'] ?? '',
             description: $metaData['description'] ?? '',
         );
-
+        $entity->wpId = $model->wp_id;
         // Nested Set поля
         $entity->left = $model->_lft ?? 0;
         $entity->right = $model->_rgt ?? 0;
