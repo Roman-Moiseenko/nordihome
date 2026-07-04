@@ -21,6 +21,8 @@ interface CategoryRepositoryInterface
 
     public function existsSlug(string $slug, ?int $excludeId = null): bool;
 
+    public function findByWpId(int $wpId): ?CategoryEntity;
+
     public function existsByWpId(int $wpId): bool;
 
     public function moveUp(int $id): void;

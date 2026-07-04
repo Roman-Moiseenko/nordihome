@@ -81,6 +81,14 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $query->exists();
     }
 
+    public function findByWpId(int $wpId): ?CategoryEntity
+    {
+        $model = Category::where('wp_id', $wpId)->first();
+        if ($model === null) return null;
+
+        return $this->hydrate($model);
+    }
+
     public function existsByWpId(int $wpId): bool
     {
         return Category::where('wp_id', $wpId)->exists();

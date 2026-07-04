@@ -52,7 +52,6 @@ use JetBrains\PhpStorm\Pure;
  * @property string $comment Комментарий, для специалистов. Клиентам не видно
  *
  * @property int $main_category_id
- * @property int $main_room_id
  * @property int $frequency частота покупки
  * @property int $brand_id
  * @property int $series_id серия

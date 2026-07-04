@@ -11,6 +11,7 @@ use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Base\Job\LoadingImageProduct;
 use App\Modules\Catalog\Application\Services\LoadCategoryWpService;
+use App\Modules\Catalog\Application\Services\LoadProductWpService;
 use App\Modules\Catalog\Application\Services\LoadRoomWpService;
 use App\Modules\Catalog\Entity\Brand;
 use App\Modules\Catalog\Entity\Product;
@@ -46,6 +47,7 @@ class LoadCommand extends Command
         ListStaffByPositionUseCase $positionUseCase,
         LoadCategoryWpService $loadCategoryWpService,
         LoadRoomWpService $loadRoomWpService,
+        LoadProductWpService $loadProductWpService,
     ): bool
     {
         if (! $this->confirmToProceed()) {
@@ -84,14 +86,23 @@ class LoadCommand extends Command
         }
 
         if ($type == 'product' || $type == null) {
-
+            $this->warn('Начало загрузки товаров');
+            $filename = public_path() . '/temp/product.txt';
+            $f_c = fopen($filename, 'r');
+            $data = fread($f_c, filesize($filename));
+            fclose($f_c);
+            $products = json_decode($data, true);
+            $loadProductWpService->load($products);
+            /*
+            $this->loadProduct();
             $pricingService = new PricingService();
             $this->pricing = PricingDocument::register($staff->id);
-
+            $loadProductWpService->load();
             $this->loadProduct();
 
             $this->pricing->refresh();
             $pricingService->completed($this->pricing);
+            */
         }
         return true;
     }

@@ -5,10 +5,34 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Application\Interfaces;
 
 use App\Modules\Catalog\Application\DTOs\Product\ProductCategoryData;
+use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ProductRepositoryInterface
 {
+    /**
+     * Найти товар по артикулу (code)
+     *
+     * @param string $code
+     * @return ProductEntity|null
+     */
+    public function findByCode(string $code): ?ProductEntity;
+
+    /**
+     * Найти товар по ID
+     *
+     * @param int $id
+     * @return ProductEntity
+     */
+    public function getById(int $id): ProductEntity;
+
+    /**
+     * Сохранить товар (создать или обновить)
+     *
+     * @param ProductEntity $product
+     * @return ProductEntity
+     */
+    public function save(ProductEntity $product): ProductEntity;
     /**
      * Найти товары по ID категории (основной категории).
      * Исключаются модификации (через has('main_modification') / doesntHave('modification')).
@@ -32,4 +56,3 @@ interface ProductRepositoryInterface
      */
     public function findAllByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
 }
-

@@ -85,6 +85,14 @@ class RoomRepository implements RoomRepositoryInterface
     {
         return Room::where('wp_id', $wpId)->exists();
     }
+    public function findByWpId(int $wpId): ?RoomEntity
+    {
+        $model = Room::where('wp_id', $wpId)->first();
+        if ($model === null) return null;
+
+        return $this->hydrate($model);
+    }
+
     public function moveUp(int $id): void
     {
         $model = Room::findOrFail($id);
@@ -116,6 +124,10 @@ class RoomRepository implements RoomRepositoryInterface
         Room::whereIn('id', $ids)->update(['published' => $published]);
     }
 
+    public function hasChildren(int $id): bool
+    {
+        return Room::where('parent_id', $id)->exists();
+    }
     /**
      * Преобразует Eloquent модель в Domain Entity.
      * Ссылки на изображения формируются через полиморфные связи Photo (трейты ImageField/IconField).

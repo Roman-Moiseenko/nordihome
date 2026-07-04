@@ -20,6 +20,7 @@ interface RoomRepositoryInterface
     public function getTree(): array;
 
     public function existsSlug(string $slug, ?int $excludeId = null): bool;
+    public function findByWpId(int $wpId): ?RoomEntity;
     public function existsByWpId(int $wpId): bool;
 
     public function moveUp(int $id): void;
@@ -30,4 +31,6 @@ interface RoomRepositoryInterface
     public function getDescendantIds(int $id): array;
 
     public function bulkTogglePublished(array $ids, bool $published): void;
+
+    public function hasChildren(int $id): bool;
 }

@@ -73,6 +73,9 @@ return [
         'Infrastructure/Persistence',  // Data persistence implementations, repositories
         'Infrastructure/Services',      // External technical or integration services
         'Infrastructure/Exceptions',    // Custom exceptions for error handling
+        'Infrastructure/Jobs',
+        'Infrastructure/Events',
+        'Infrastructure/Listeners',
 
         // 🎨 PRESENTATION LAYER
         'Presentation/Mappers',         // Mappers for display-related transformations
