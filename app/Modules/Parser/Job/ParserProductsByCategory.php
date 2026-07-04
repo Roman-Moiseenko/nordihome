@@ -2,7 +2,7 @@
 
 namespace App\Modules\Parser\Job;
 
-use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Service\ParserIkea;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -18,9 +18,9 @@ class ParserProductsByCategory implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private CategoryParser $category;
+    private ParserCategory $category;
 
-    public function __construct(CategoryParser $category)
+    public function __construct(ParserCategory $category)
     {
         $this->category = $category;
     }
@@ -29,7 +29,7 @@ class ParserProductsByCategory implements ShouldQueue
     {
         Log::debug('ParserProductsByCategory: Начало');
 
-        $products = $parserIkea->getProductsByCategoryJob($this->category->url);
+        $products = $parserIkea->getProductsByCategoryJob($this->category->ikea_id);
         Log::debug('ParserProductsByCategory: Список товаров: ');
         foreach ($products as $product) {
             Log::debug($product['itemNoGlobal']);

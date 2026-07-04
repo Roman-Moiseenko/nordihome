@@ -2,7 +2,7 @@
 
 namespace App\Modules\Base\Job;
 
-use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -14,10 +14,10 @@ class LoadingImageCatalog implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private CategoryParser $category;
+    private ParserCategory $category;
     private string $image_url;
 
-    public function __construct(CategoryParser $category, string $image_url)
+    public function __construct(ParserCategory $category, string $image_url)
     {
         $this->category = $category;
         $this->image_url = $image_url;

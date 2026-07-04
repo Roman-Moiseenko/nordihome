@@ -25,7 +25,7 @@ const props = defineProps({
     },
    // brands: Array,
 })
-
+console.log(props.categories)
 const $delete_entity = inject("$delete_entity")
 
 /*

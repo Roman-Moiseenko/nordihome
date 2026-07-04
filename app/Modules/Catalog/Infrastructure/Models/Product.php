@@ -37,7 +37,7 @@ use App\Modules\Guide\Entity\Measuring;
 use App\Modules\Guide\Entity\VAT;
 use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\OrderReserve;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
 use App\Modules\User\Entity\CartCookie;
 use App\Modules\User\Entity\CartStorage;
 use App\Modules\User\Entity\Wish;
@@ -141,7 +141,7 @@ use JetBrains\PhpStorm\Pure;
  * @property OrderItem[] $orderItems
  * @property Review[] $reviews
  * @property Review[] $reviewsAll
- * @property ProductParser $parser
+ * @property ParserProduct $parser
  * @property Product[] $composites
  * @property BalanceProduct $balance - минимальный и макисмальный объемы для авто заказа
  */
@@ -825,7 +825,7 @@ class Product extends Model
 
     public function parser(): HasOne
     {
-        return $this->hasOne(ProductParser::class, 'product_id', 'id');
+        return $this->hasOne(ParserProduct::class, 'product_id', 'id');
     }
 
     public function composites(): BelongsToMany

@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Console\CreatesApplication;
-use App\Modules\Parser\Entity\CategoryParser;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Service\ParserIkea;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
@@ -18,7 +18,7 @@ class TestCommand extends Command
     public function handle(ParserIkea $service): void
     {
 
-        $categories = CategoryParser::where('slug', null)->getModels();
+        $categories = ParserCategory::where('slug', null)->getModels();
         $this->info('Найдено ' . count($categories));
         foreach ($categories as $i => $category) {
             $category->slug = Str::slug($category->name);

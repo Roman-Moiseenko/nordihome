@@ -6,8 +6,8 @@ use App\Modules\Base\Service\HttpPage;
 use App\Modules\Base\Service\TranslateService;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 
 abstract class ParserAbstract
 {
@@ -37,7 +37,7 @@ abstract class ParserAbstract
 
     abstract public function remainsProduct(string $code): float;
 
-    abstract public function parserCost(ProductParser $parser): float|bool;
+    abstract public function parserCost(ParserProduct $parser): float|bool;
 
     abstract public function availablePrice(string $code): bool;
 
@@ -47,16 +47,16 @@ abstract class ParserAbstract
     final public function getProductsByCategory(?int $category_id): array
     {
         if (is_null($category_id)) {
-            $categories = CategoryParser::where('active', true)->where('brand_id', $this->brand->id)->getModels();
+            $categories = ParserCategory::where('active', true)->where('brand_id', $this->brand->id)->getModels();
         } else {
-            $category = CategoryParser::find($category_id);
-            $categories = CategoryParser::where('active', true)
+            $category = ParserCategory::find($category_id);
+            $categories = ParserCategory::where('active', true)
                 ->where('brand_id', $this->brand->id)
                 ->where('_lft', '>=', $category->_lft)
                 ->where('_rgt', '<=', $category->_rgt)
                 ->getModels();
         }
-        /** @var CategoryParser $category */
+        /** @var ParserCategory $category */
         $products = [];
         foreach ($categories as $category) {
             if ($category->children()->count() == 0) //Парсим только дочерние
@@ -70,7 +70,7 @@ abstract class ParserAbstract
     /**
      * Функция поиска данных для товаров по категории парсера
      */
-    abstract protected function parserProductsByCategory(CategoryParser $categoryParser);
+    abstract protected function parserProductsByCategory(ParserCategory $categoryParser);
 
     //abstract protected function parserProductsByUrl(string $domain, string $url);
 

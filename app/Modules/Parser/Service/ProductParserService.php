@@ -2,12 +2,12 @@
 
 namespace App\Modules\Parser\Service;
 
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
 
 class ProductParserService
 {
 
-    public function parserProduct(ProductParser $product): float
+    public function parserProduct(ParserProduct $product): float
     {
         $brand = $product->product->brand;
         $parser_class = $brand->parser_class;
@@ -22,7 +22,7 @@ class ProductParserService
 //        foreach ()
     }
 
-    public function available(ProductParser $product): string
+    public function available(ParserProduct $product): string
     {
         $message = $product->availability ? 'Товар больше недоступен' : 'Товар доступен для заказа';
         $product->availability = !$product->availability;
@@ -30,7 +30,7 @@ class ProductParserService
         return $message;
     }
 
-    public function fragile(ProductParser $product): string
+    public function fragile(ParserProduct $product): string
     {
         $message = $product->fragile ? 'Товар не хрупкий' : 'Товар хрупкий';
         $product->fragile = !$product->fragile;
@@ -38,7 +38,7 @@ class ProductParserService
         return $message;
     }
 
-    public function sanctioned(ProductParser $product): string
+    public function sanctioned(ParserProduct $product): string
     {
         $message = $product->sanctioned ? 'Товар не санкционный' : 'Товар санкционный';
         $product->sanctioned = !$product->sanctioned;

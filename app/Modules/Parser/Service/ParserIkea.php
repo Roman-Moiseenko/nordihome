@@ -5,7 +5,6 @@ namespace App\Modules\Parser\Service;
 
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Base\Entity\Package;
-use App\Modules\Base\Job\LoadingImageCatalog;
 use App\Modules\Base\Job\LoadingImageProduct;
 use App\Modules\Base\Service\GoogleTranslateForFree;
 use App\Modules\Base\Service\TranslateService;
@@ -14,9 +13,9 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\Measuring;
 use App\Modules\Guide\Entity\VAT;
-use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ParserLogItem;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -24,8 +23,8 @@ class ParserIkea extends ParserAbstract
 {
 
     protected string $brand_name = 'Икеа';
-
-    const string API_URL_CATEGORIES = 'https://www.ikea.com/pl/pl/meta-data/navigation/catalog-products-slim.json?cb=2dy1g6t4pz';
+    const string API_URL_CATEGORIES = 'https://www.ikea.com/pl/pl/navigation/catalog-products-slim.json?cb=85p6e40iet';
+    //const string API_URL_CATEGORIES = 'https://www.ikea.com/pl/pl/meta-data/navigation/catalog-products-slim.json?cb=2dy1g6t4pz';
     const string API_URL_PRODUCTS = 'https://sik.search.blue.cdtapps.com/pl/pl/product-list-page/more-products?category=%s&start=%s&end=%s';
     const string API_URL_PRODUCT = 'https://sik.search.blue.cdtapps.com/pl/pl/search-result-page?q=%s';
 
@@ -38,18 +37,6 @@ class ParserIkea extends ParserAbstract
         parent::__construct($categoryParserService, $translate);
 
         $this->logService = $logService;
-    }
-
-    /**
-     * Процедура для Job - На Икеа получаем список всех корневых категорий для запуска Job по их созданию (addProduct)
-     * @return array
-     */
-    public function parserCategoriesJob(): array
-    {
-        set_time_limit(1000);
-        $data = $this->httpPage->getPage(self::API_URL_CATEGORIES);
-        set_time_limit(30);
-        return json_decode($data, true);
     }
 
 
@@ -162,9 +149,9 @@ class ParserIkea extends ParserAbstract
             //$product->setPublished();
         }
         //Создаем парсер товара
-        if (is_null($product_parser = ProductParser::where('maker_id', $maker_id)->first())) {
+        if (is_null($product_parser = ParserProduct::where('maker_id', $maker_id)->first())) {
             Log::debug('ParserIkea->createProductJob: Создаем Парсер товар - ' . $name);
-            $product_parser = ProductParser::register($url, $product->id);
+            $product_parser = ParserProduct::register($url, $product->id);
             $product_parser->maker_id = $maker_id;
             $product_parser->price_base = $price_base;
             $product_parser->price_sell = $price_sell;
@@ -187,9 +174,9 @@ class ParserIkea extends ParserAbstract
                 $code_categories = array_map(function ($item) {
                     return $item['key'];
                 }, $product_data['categoryPath']);
-                /** @var CategoryParser[] $parser_categories */
+                /** @var ParserCategory[] $parser_categories */
                 $parser_categories = array_filter(array_map(function ($item) {
-                    return CategoryParser::where('brand_id', $this->brand->id)->where('url', $item)->where('active', true)->first();
+                    return ParserCategory::where('brand_id', $this->brand->id)->where('ikea_id', $item)->where('active', true)->first();
                 }, $code_categories));
 
                 foreach ($parser_categories as $category) //Назначаем категории
@@ -206,44 +193,10 @@ class ParserIkea extends ParserAbstract
         return $product;
     }
 
-    public function parserCategories(): ?string
+
+    protected function parserProductsByCategory(ParserCategory $categoryParser): array
     {
-        set_time_limit(1000);
-        $data = $this->httpPage->getPage(self::API_URL_CATEGORIES);
-        $categories = json_decode($data, true);
-        foreach ($categories as $category) {
-            $this->addCategory($category);
-        }
-        set_time_limit(30);
-        return $data;
-    }
-
-    public function addCategory($category, $parent_parser = null): void
-    {
-        $url = $category['id'] ?? '';
-        if (is_null($cat_parser = CategoryParser::where('url', $url)->first())) {
-
-            $name = $this->translate->translate($category['name']);
-
-            $cat_parser = $this->categoryParserService->create($name, $url, $parent_parser);
-            $cat_parser->brand_id = $this->brand->id;
-            $cat_parser->save();
-
-            $cat_parser->save();
-            if (isset($category['im'])) {
-                LoadingImageCatalog::dispatch($cat_parser, $category['im']);
-            }
-        }
-        //Дочерние категории
-        if (isset($category['subs']))
-            foreach ($category['subs'] as $child) {
-                $this->addCategory($child, $cat_parser->id); //TODO Возможно сделать через JOB ParserCategory::dispatch($child, $cat_parser->id)
-            }
-    }
-
-    protected function parserProductsByCategory(CategoryParser $categoryParser): array
-    {
-        $code_category = $categoryParser->url;
+        $code_category = $categoryParser->ikea_id;
         $main_category_id = $categoryParser->category_id;
         $parser_category = $categoryParser->id;
         $products = [];
@@ -277,7 +230,7 @@ class ParserIkea extends ParserAbstract
         foreach ($products as $product) {
             //dd($product);
             //Ищем товар в базе по Id
-            $parser_product = ProductParser::where('maker_id', $product['id'])->first();
+            $parser_product = ParserProduct::where('maker_id', $product['id'])->first();
             //Если есть .... Надо проверить модификации (варианты) либо добавить, либо убрать из продажи
             if (!is_null($parser_product)) {
                 $this->updateVariants($product);
@@ -331,7 +284,7 @@ class ParserIkea extends ParserAbstract
                 $key = $categories[count($categories) - 1]['key'];
             }
 
-            $category_parser = CategoryParser::where('url', $key)->first();
+            $category_parser = ParserCategory::where('ikea_id', $key)->first();
             if (!is_null($category_parser)) $main_category_id = $category_parser->category_id;
 
         }
@@ -372,8 +325,8 @@ class ParserIkea extends ParserAbstract
             }
         }
         //Создаем парсер товара
-        if (is_null($product_parser = ProductParser::where('url', $url)->first())) {
-            $product_parser = ProductParser::register($url, $product->id);
+        if (is_null($product_parser = ParserProduct::where('url', $url)->first())) {
+            $product_parser = ParserProduct::register($url, $product->id);
             $product_parser->maker_id = $maker_id;
             $product_parser->price_base = $price_base;
             $product_parser->price_sell = $price_sell;
@@ -384,9 +337,9 @@ class ParserIkea extends ParserAbstract
                 $code_categories = array_map(function ($item) {
                     return $item['key'];
                 }, $product_data['categoryPath']);
-                /** @var CategoryParser[] $parser_categories */
+                /** @var ParserCategory[] $parser_categories */
                 $parser_categories = array_filter(array_map(function ($item) {
-                    return CategoryParser::where('brand_id', $this->brand->id)->where('url', $item)->where('active', true)->first();
+                    return ParserCategory::where('brand_id', $this->brand->id)->where('ikea_id', $item)->where('active', true)->first();
                 }, $code_categories));
 
                 foreach ($parser_categories as $category) //Назначаем категории
@@ -401,7 +354,7 @@ class ParserIkea extends ParserAbstract
 
     public function parserProductByData(array $product): void
     {
-        $parser_product = ProductParser::where('maker_id', $product['id'])->first();
+        $parser_product = ParserProduct::where('maker_id', $product['id'])->first();
         //Если есть .... Надо проверить модификации (варианты) либо добавить, либо убрать из продажи
         if (!is_null($parser_product)) {
             $this->updateVariants($product);
@@ -440,7 +393,7 @@ class ParserIkea extends ParserAbstract
         dd($_result);
     }
 
-    public function parserCost(ProductParser $parser): float|bool
+    public function parserCost(ParserProduct $parser): float|bool
     {
         $code = $parser->maker_id; //product->code;
 

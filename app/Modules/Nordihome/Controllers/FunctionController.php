@@ -47,19 +47,6 @@ class FunctionController extends Controller
         }
     }
 
-    /**
-     * Первоначальный парсинг всех категорий
-     */
-    public function categories(): JsonResponse
-    {
-        try {
-            $categories = $this->parserIkea->parserCategories();
-            return response()->json($categories);
-        } catch (\Throwable $e) {
-            return response()->json([$e->getMessage(), $e->getFile(), $e->getLine()]);
-        }
-    }
-
     public function furniture(): JsonResponse
     {
         $result = $this->service->furniture();

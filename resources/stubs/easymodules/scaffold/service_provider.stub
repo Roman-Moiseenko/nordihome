@@ -398,7 +398,7 @@ class {{ class }} extends ServiceProvider
      */
     protected function registerBreadcrumbs()
     {
-        $breadcrumbsPath = $this->getPath('{{ breadcrumbs }}/breadcrumbs.php');
+        $breadcrumbsPath = $this->getPath('{{ breadcrumbs_path }}/breadcrumbs.php');
 
         if (file_exists($breadcrumbsPath)) {
             require $breadcrumbsPath;

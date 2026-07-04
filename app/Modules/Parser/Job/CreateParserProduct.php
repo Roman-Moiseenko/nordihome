@@ -2,7 +2,6 @@
 
 namespace App\Modules\Parser\Job;
 
-use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Service\ParserIkea;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;

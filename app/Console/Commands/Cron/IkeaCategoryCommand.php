@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands\Cron;
 
-use App\Modules\Parser\Job\ParserCategory;
-use App\Modules\Parser\Service\ParserIkea;
+use App\Modules\Parser\Application\Services\LoadParserCategoryIkeaService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+
 use App\Console\CreatesApplication;
 
 /**
@@ -17,11 +16,8 @@ class IkeaCategoryCommand extends Command
     protected $signature = 'cron:parser-category';
     protected $description = 'Парсим категории Икеа';
 
-    public function handle(ParserIkea $parser): void
+    public function handle(LoadParserCategoryIkeaService $service): void
     {
-        $categories = $parser->parserCategoriesJob();
-        foreach ($categories as $category) {
-            ParserCategory::dispatch($category);
-        }
+        $service->load();
     }
 }

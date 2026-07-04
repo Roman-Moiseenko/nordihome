@@ -10,22 +10,22 @@ use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 
 class SlugRepository
 {
 
-    public function getProductParserBySlug($slug):? ProductParser
+    public function getProductParserBySlug($slug):? ParserProduct
     {
-        if (is_numeric($slug)) return ProductParser::find($slug);
-        return ProductParser::where('slug', $slug)->first();
+        if (is_numeric($slug)) return ParserProduct::find($slug);
+        return ParserProduct::where('slug', $slug)->first();
     }
 
-    public function CategoryParserBySlug($slug):? CategoryParser
+    public function CategoryParserBySlug($slug):? ParserCategory
     {
-        if (is_numeric($slug)) return CategoryParser::find($slug);
-        return CategoryParser::where('slug', $slug)->first();
+        if (is_numeric($slug)) return ParserCategory::find($slug);
+        return ParserCategory::where('slug', $slug)->first();
     }
 
     public function getProductBySlug($slug):? Product

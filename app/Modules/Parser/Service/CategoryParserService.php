@@ -2,19 +2,13 @@
 
 namespace App\Modules\Parser\Service;
 
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use Illuminate\Http\Request;
 
 class CategoryParserService
 {
-    #[\Deprecated]
-    public function create(string $name, string $url, int $parent_id = null): CategoryParser
-    {
-        return CategoryParser::register($name, $url, $parent_id);
-    }
-
-    public function parserProducts(CategoryParser $category): array
+    public function parserProducts(ParserCategory $category): array
     {
         $parser_class = $category->brand->parser_class;
         /** @var ParserAbstract $parser */
@@ -23,22 +17,10 @@ class CategoryParserService
         return $parser->getProductsByCategory($category->id);
     }
 
-    public function setCategory(CategoryParser $category, Request $request): void
-    {
-        $categories = CategoryParser::where('_lft', '>=', $category->_lft)->where('_rgt', '<=', $category->_rgt)->get();
-        foreach ($categories as $category) {
-            if (is_null($category->category_id)) {
-                $category->category_id = $request->input('category_id');
-                $category->save();
-            }
-        }
-        //$category->category_id = $request->input('category_id');
-        //$category->save();
-    }
 
 
 
-    public function parserProduct(CategoryParser $category, Request $request): void
+    public function parserProduct(ParserCategory $category, Request $request): void
     {
         $parser_class = $category->brand->parser_class;
         /** @var ParserAbstract $parser */
@@ -49,7 +31,7 @@ class CategoryParserService
 
     public function addCategory(Request $request): void
     {
-        $category = CategoryParser::register(
+        $category = ParserCategory::register(
             $request->string('name')->trim()->value(),
             $request->string('url')->trim()->value(),
             $request->input('parent_id'));
@@ -57,10 +39,10 @@ class CategoryParserService
         $category->save();
     }
 
-    public function toggle(CategoryParser $categoryParser): string
+    public function toggle(ParserCategory $categoryParser): string
     {
         $active = !$categoryParser->active; //Новое состояние
-        $categories = CategoryParser::where('_lft', '>=', $categoryParser->_lft)
+        $categories = ParserCategory::where('_lft', '>=', $categoryParser->_lft)
             ->where('_rgt', '<=', $categoryParser->_rgt)
             ->get();
 
@@ -69,7 +51,7 @@ class CategoryParserService
         foreach ($categories as $category) {
             $category->active = $active; //Меняем состояние для всех дочерних категорий и текущей
             $category->save();
-            $parser_products = ProductParser::whereHas('categories', function ($query) use ($category){
+            $parser_products = ParserProduct::whereHas('categories', function ($query) use ($category){
                 $query->where('id', $category->id);
             })->get();
 

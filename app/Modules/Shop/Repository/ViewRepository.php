@@ -11,8 +11,8 @@ use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
 use App\Modules\Page\Entity\Widgets\Template;
 use App\Modules\Page\Repository\MetaTemplateRepository;
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
 use App\Modules\Shop\Schema;
@@ -449,7 +449,7 @@ class ViewRepository
 
 
         $products = $products->withQueryString()
-            ->through(fn(ProductParser $product) => $this->parser_product_card_cache($product));
+            ->through(fn(ParserProduct $product) => $this->parser_product_card_cache($product));
 
 
         //  $end = now();
@@ -477,7 +477,7 @@ class ViewRepository
             compact('product', 'title', 'description'/*, 'schema'*/));
     }
 
-    private function parser_product_view_cache(ProductParser $product)
+    private function parser_product_view_cache(ParserProduct $product)
     {
         if ($this->web->is_cache) {
             return Cache::rememberForever(CacheHelper::PARSER_PRODUCT_CARD_VIEW . $product->id, function () use ($product) {
@@ -488,7 +488,7 @@ class ViewRepository
         }
     }
 
-    private function parser_category_children_cache(CategoryParser $category)
+    private function parser_category_children_cache(ParserCategory $category)
     {
         $callback = function () use ($category) {
             if ($category->children()->count() == 0) {
@@ -500,7 +500,7 @@ class ViewRepository
             if ($_category->children()->count() == 0) return [];
             $children = $_category->children()
                 ->where('active', true)->defaultOrder()
-                ->get()->map(function (CategoryParser $category) {
+                ->get()->map(function (ParserCategory $category) {
                     if ($category->allProducts()->count() == 0) return null;
                     return [
                         'id' => $category->id,
@@ -518,7 +518,7 @@ class ViewRepository
         }
     }
 
-    private function parser_category_products_cache(?CategoryParser $category)
+    private function parser_category_products_cache(?ParserCategory $category)
     {
         $slug = is_null($category) ? 'root' : $category->slug;
         $callback = function () use ($category) {
@@ -532,7 +532,7 @@ class ViewRepository
         }
     }
 
-    private function parser_product_card_cache(ProductParser $product)
+    private function parser_product_card_cache(ParserProduct $product)
     {
         if ($this->web->is_cache) {
             return Cache::rememberForever(CacheHelper::PARSER_PRODUCT_CARD . $product->id, function () use ($product) {

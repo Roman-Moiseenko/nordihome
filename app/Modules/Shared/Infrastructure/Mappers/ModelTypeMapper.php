@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Infrastructure\Mappers;
 
-
-
 /**
  * Маппинг model_type ({модуль}.{сущность}) в полное имя класса (FQCN) для imageable_type
  */
@@ -15,6 +13,7 @@ class ModelTypeMapper
         'catalog.room' => \App\Modules\Catalog\Infrastructure\Models\Room::class,
         'catalog.category' => \App\Modules\Catalog\Infrastructure\Models\Category::class,
         'catalog.product' => \App\Modules\Catalog\Infrastructure\Models\Product::class,
+        'parser.category' => \App\Modules\Parser\Infrastructure\Models\ParserCategory::class,
 
     ];
 

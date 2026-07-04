@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $status
  * @property ParserLog $log
  * @property array $data
- * @property ProductParser $parser
+ * @property ParserProduct $parser
  */
 class ParserLogItem extends Model
 {
@@ -49,6 +49,6 @@ class ParserLogItem extends Model
 
     public function parser()
     {
-        return $this->belongsTo(ProductParser::class, 'parser_id', 'id');
+        return $this->belongsTo(ParserProduct::class, 'parser_id', 'id');
     }
 }

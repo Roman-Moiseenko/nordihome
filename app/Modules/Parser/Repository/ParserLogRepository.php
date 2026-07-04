@@ -2,9 +2,9 @@
 
 namespace App\Modules\Parser\Repository;
 
-use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ParserLog;
 use App\Modules\Parser\Entity\ParserLogItem;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use Illuminate\Http\Request;
 
 class ParserLogRepository
@@ -54,7 +54,7 @@ class ParserLogRepository
             'product_id' => $item->parser->product_id,
             'code' => $item->parser->maker_id,
             'category' => $item->parser->product->category->getParentNames(),
-            'category_parser' => array_map(function (CategoryParser $category) {
+            'category_parser' => array_map(function (ParserCategory $category) {
                 return $category->getParentNames();
             }, $item->parser->categories()->getModels()),
 

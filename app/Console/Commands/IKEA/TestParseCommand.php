@@ -2,13 +2,10 @@
 
 namespace App\Console\Commands\IKEA;
 
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
-use App\Modules\Parser\Job\ParserProductsByCategory;
-use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 use App\Console\CreatesApplication;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
+use Illuminate\Console\Command;
+use Illuminate\Support\Str;
 
 class TestParseCommand extends Command
 {
@@ -42,12 +39,12 @@ class TestParseCommand extends Command
         */
     }
 
-    private function getSlug(CategoryParser $category): string
+    private function getSlug(ParserCategory $category): string
     {
         $name = $category->name;
         $slug = Str::slug($name);
-        if (!is_null(CategoryParser::where('slug', $slug)->first())) {
-            $slug .= '-' . $category->url;
+        if (!is_null(ParserCategory::where('slug', $slug)->first())) {
+            $slug .= '-' . $category->ikea_id;
         }
         return $slug;
     }

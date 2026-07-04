@@ -5,7 +5,7 @@ namespace App\Modules\Parser\Job;
 
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Page\Job\JobCacheProduct;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
 use App\Modules\Parser\Service\ParserAbstract;
 use App\Modules\Parser\Service\ParserIkea;
 use Illuminate\Bus\Queueable;
@@ -35,7 +35,7 @@ class ParserAvailablePriceProduct implements ShouldQueue
     public function handle(ParserIkea $parserIkea): void
     {
         try {
-            $product_parser = ProductParser::find($this->parser_product_id);
+            $product_parser = ParserProduct::find($this->parser_product_id);
 
             if ($parserIkea->parserCost($product_parser)) {
                 JobCacheProduct::dispatch($product_parser->product_id);

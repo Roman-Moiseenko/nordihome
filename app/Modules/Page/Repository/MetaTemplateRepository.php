@@ -11,8 +11,8 @@ use App\Modules\Page\Entity\MetaTemplate;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Setting\Entity\Settings;
 use Illuminate\Http\Request;
 
@@ -49,7 +49,7 @@ class MetaTemplateRepository
                 '{price}',
             ];
         }
-        if ($class == ProductParser::class) {
+        if ($class == ParserProduct::class) {
             return [
                 '{name}',
                 '{code}',
@@ -64,7 +64,7 @@ class MetaTemplateRepository
                 '{title}'
             ];
         }
-        if ($class == CategoryParser::class) {
+        if ($class == ParserCategory::class) {
             return [
                 '{name}',
              //   '{description}',
@@ -129,7 +129,7 @@ class MetaTemplateRepository
                 '{title}' => $object->title,
             };
         }
-        if ($object instanceof ProductParser) {
+        if ($object instanceof ParserProduct) {
             return match ($var) {
                 '{name}' => $object->product->name,
                 '{code}' => $object->product->code,
@@ -139,7 +139,7 @@ class MetaTemplateRepository
             };
         }
 
-        if ($object instanceof CategoryParser) {
+        if ($object instanceof ParserCategory) {
             return match ($var) {
                 '{name}' => $object->name,
                // '{description}' => $object->description,

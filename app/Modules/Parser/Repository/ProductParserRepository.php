@@ -2,20 +2,20 @@
 
 namespace App\Modules\Parser\Repository;
 
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 
 class ProductParserRepository
 {
 
     public function getIndex(\Illuminate\Http\Request $request, &$filters)
     {
-        $query = ProductParser::orderBy('maker_id');
+        $query = ParserProduct::orderBy('maker_id');
         $filters = [];
         if (($category_id = $request->integer('category')) > 0) {
             $filters['category'] = $category_id;
             //Получить все дочерние категории
-            $categories = CategoryParser::find($category_id)->getChildrenIdAll();
+            $categories = ParserCategory::find($category_id)->getChildrenIdAll();
 
             $query->whereHas('categories', function ($query) use ($categories) {
                 $query->whereIn('id', $categories);
@@ -39,10 +39,10 @@ class ProductParserRepository
         if (count($filters) > 0) $filters['count'] = count($filters);
         return $query->paginate($request->input('size', 20))
             ->withQueryString()
-            ->through(fn(ProductParser $product) => $this->ProductToArray($product));
+            ->through(fn(ParserProduct $product) => $this->ProductToArray($product));
     }
 
-    private function ProductToArray(ProductParser $parser): array
+    private function ProductToArray(ParserProduct $parser): array
     {
         return array_merge($parser->toArray(), [
             'product_id' => $parser->product_id,

@@ -61,7 +61,7 @@ import {useCatalogStore} from "@Res/catalogStore.ts";
 const useCatalog = useCatalogStore()
 
 const props = defineProps({
-    room: Object,
+    category: Object,
     title: {
         type: String,
         default: 'Карточка категории',
@@ -71,7 +71,7 @@ const showEdit = ref(false)
 const category_id = ref(props.room.category_id)
 function onSetCategory() {
     router.visit(
-        route('admin.parser.category.set-category', {room: props.room.id}), {
+        route('admin.parser.category.set-category', {room: props.category.id}), {
             method: "post",
             data: {category_id: category_id.value},
             onSuccess: page => {
@@ -93,7 +93,7 @@ function products() {
     })
 
     const count = ref(0);
-    axios.post(route('admin.parser.category.parser-products', {room: props.room.id})).then(response => {
+    axios.post(route('admin.parser.category.parser-products', {room: props.category.id})).then(response => {
         watch(() => count.value, (newValues, oldValues) => {
             if (newValues === response.data.length) loading.close();
         });
@@ -103,7 +103,7 @@ function products() {
 
          //   router.post(route('admin.parser.category.parser-product', {category: props.category.id}), {product: product});
 
-            axios.post(route('admin.parser.category.parser-product', {room: props.room.id}), {product: product}).then(response => {
+            axios.post(route('admin.parser.category.parser-product', {room: props.category.id}), {product: product}).then(response => {
                 console.log('response', response)
                 count.value++;
                 loading.text.value = text + ' Спарсено ' + count.value

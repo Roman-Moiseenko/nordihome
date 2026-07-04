@@ -16,8 +16,8 @@ use App\Modules\Catalog\Entity\Tag;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Coupon;
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
 use App\Modules\Shared\Infrastructure\Models\Photo;
@@ -262,16 +262,16 @@ class ShopRepository
 
     public function getChildrenParser(int $parent_id = null): Arrayable
     {
-        return CategoryParser::defaultOrder()->where('parent_id', $parent_id)
+        return ParserCategory::defaultOrder()->where('parent_id', $parent_id)
             ->where('active', true)
             ->get()
-            ->map(function (CategoryParser $category) {
+            ->map(function (ParserCategory $category) {
                 return [
                     'id' => $category->id,
                     'name' => $category->name,
                     'slug' => $category->slug,
                     'image' => $category->getImage(),
-                    'children' => $category->children()->get()->map(fn(CategoryParser $child) => [
+                    'children' => $category->children()->get()->map(fn(ParserCategory $child) => [
                         'id' => $child->id,
                         'name' => $child->name,
                         'slug' => $child->slug,
@@ -307,25 +307,25 @@ class ShopRepository
     }
     ///PARSER
 
-    public function ParserProductsByCategory(CategoryParser $category = null)
+    public function ParserProductsByCategory(ParserCategory $category = null)
     {
         if (is_null($category)) {
-            $lft = CategoryParser::get()->min('_lft');
-            $rgt = CategoryParser::get()->max('_rgt');
+            $lft = ParserCategory::get()->min('_lft');
+            $rgt = ParserCategory::get()->max('_rgt');
 
         } else {
             $lft = $category->_lft;
             $rgt = $category->_rgt;
         }
 
-        return ProductParser::where('availability', true) //Опубликован AND
+        return ParserProduct::where('availability', true) //Опубликован AND
         ->where(function ($query) use ($lft, $rgt) { //Категории входят в выбранную AND
             $query->whereHas('categories', function ($query) use ($lft, $rgt) {
                 $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
             });
         });
     }
-    public function ParserProductToArrayCard(ProductParser $product): array
+    public function ParserProductToArrayCard(ParserProduct $product): array
     {
         return array_merge($this->ParserProductToArray($product), [
             'images' => [
@@ -336,7 +336,7 @@ class ShopRepository
             ],
         ]);
     }
-    private function ParserProductToArray(ProductParser $product): array
+    private function ParserProductToArray(ParserProduct $product): array
     {
         return [
             'id' => $product->id,
@@ -352,7 +352,7 @@ class ShopRepository
         ];
     }
 
-    public function ParserProductToArrayView(ProductParser $product): array
+    public function ParserProductToArrayView(ParserProduct $product): array
     {
         return array_merge($this->ParserProductToArray($product), [
             'created_at' => $product->created_at,
@@ -369,7 +369,7 @@ class ShopRepository
                     'description' => $photo->description,
                 ];
             }),
-            'categories' => $product->categories()->get()->map(fn(CategoryParser $category) => [
+            'categories' => $product->categories()->get()->map(fn(ParserCategory $category) => [
                 'id' => $category->id,
                 'slug' => $category->slug,
                 'name' => $category->name,

@@ -2,40 +2,35 @@
 
 namespace App\Modules\Parser\Repository;
 
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 
 class CategoryParserRepository
 {
 
     public function getTree(int $parent_id = null)
     {
-        $query = CategoryParser::defaultOrder()->withDepth();
+        $query = ParserCategory::defaultOrder()->withDepth();
         if (is_null($parent_id)) {
             $categories = $query->get();
         } else {
             $categories = $query->descendantsOf($parent_id);
         }
-        return $categories->map(function (CategoryParser $category) {
-            $category->brand_name = $category->brand->name;
-            $category->category_name = is_null($category->category) ? null : $category->category->getParentNames();
-            return $category;
-        })->toTree();
-
+        return $categories->toTree();
     }
 
-    private function CategoryToArray(CategoryParser $category): array
+    private function CategoryToArray(ParserCategory $category): array
     {
         return $category->toArray();
     }
 
-    public function CategoryWithToArray(CategoryParser $category): array
+    public function CategoryWithToArray(ParserCategory $category): array
     {
         return array_merge($this->CategoryToArray($category), [
             'brand_name' => $category->brand->name,
             'category_name' => is_null($category->category) ? null : $category->category->getParentNames(),
             'children' => $this->getTree($category->id),
-            'products' => $category->products()->get()->map(function (ProductParser $product) {
+            'products' => $category->products()->get()->map(function (ParserProduct $product) {
               //  if (is_null($product->product)) dd($product->id);
                 return array_merge($product->toArray(), [
                     'name' => $product->product->name,
@@ -47,7 +42,7 @@ class CategoryParserRepository
 
     public function forFilters(): array
     {
-        return array_map(function (CategoryParser $category) {
+        return array_map(function (ParserCategory $category) {
             $_depth = str_repeat('-', $category->depth);
             return [
                 'id' => $category->id,
@@ -57,6 +52,6 @@ class CategoryParserRepository
     }
     public function withDepth(): array
     {
-        return CategoryParser::defaultOrder()->withDepth()->getModels();
+        return ParserCategory::defaultOrder()->withDepth()->getModels();
     }
 }

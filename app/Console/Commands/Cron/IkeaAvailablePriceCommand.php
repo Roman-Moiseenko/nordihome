@@ -3,7 +3,7 @@
 namespace App\Console\Commands\Cron;
 
 use App\Modules\Analytics\Entity\LoggerCron;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
 use App\Modules\Parser\Job\ParserAvailablePriceProduct;
 use Illuminate\Console\Command;
 use App\Console\CreatesApplication;
@@ -23,7 +23,7 @@ class IkeaAvailablePriceCommand extends Command
         $logger = LoggerCron::new($this->description);
         $this->info('Парсим цены и доступность товаров');
 
-        $parser_products = ProductParser::where('availability', true)->get();
+        $parser_products = ParserProduct::where('availability', true)->get();
 
         foreach ($parser_products as $parser_product) {
             ParserAvailablePriceProduct::dispatch($logger->id, $parser_product->id);

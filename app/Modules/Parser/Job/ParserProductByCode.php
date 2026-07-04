@@ -5,7 +5,7 @@ namespace App\Modules\Parser\Job;
 
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Page\Job\JobCacheProduct;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
 use App\Modules\Parser\Service\ParserAbstract;
 use App\Modules\Catalog\Service\ProductService;
 use Illuminate\Bus\Queueable;

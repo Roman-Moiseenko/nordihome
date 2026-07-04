@@ -1,10 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ParserLog;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
+use App\Modules\Parser\Entity\ParserLog;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 
 
 
@@ -18,7 +19,7 @@ Breadcrumbs::for('admin.parser.product.index', function (BreadcrumbTrail $trail)
     $trail->push('Товары Икеа', route('admin.parser.product.index'));
 });
 
-Breadcrumbs::for('admin.parser.category.show', function (BreadcrumbTrail $trail, CategoryParser $category_parser) {
+Breadcrumbs::for('admin.parser.category.show', function (BreadcrumbTrail $trail, ParserCategory $category_parser) {
     if ($category_parser->parent) {
         $trail->parent('admin.parser.category.show', $category_parser->parent);
     } else {

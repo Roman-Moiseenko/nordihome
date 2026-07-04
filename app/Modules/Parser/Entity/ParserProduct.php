@@ -4,6 +4,7 @@ namespace App\Modules\Parser\Entity;
 
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -31,9 +32,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property Carbon $updated_at
  *
  * @property Product $product
- * @property CategoryParser[] $categories
+ * @property ParserCategory[] $categories
  */
-class ProductParser extends Model
+class ParserProduct extends Model
 {
     public $timestamps = false;
     protected $table = 'parser_products';
@@ -63,7 +64,7 @@ class ProductParser extends Model
         ]);
     }
 
-    public function category():? CategoryParser
+    public function category():? ParserCategory
     {
         return $this->categories()->first();
     }
@@ -71,7 +72,7 @@ class ProductParser extends Model
     public function categories(): BelongsToMany
     {
         return $this->belongsToMany(
-            CategoryParser::class,
+            ParserCategory::class,
             'parser_categories_products',
             'product_id', 'category_id'
         );
@@ -84,7 +85,7 @@ class ProductParser extends Model
 
     public function currency(): Currency
     {
-        /** @var CategoryParser $category */
+        /** @var ParserCategory $category */
         $category = $this->categories()->first();
         return $category->brand->currency->first();
     }

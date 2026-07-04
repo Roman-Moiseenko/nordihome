@@ -6,8 +6,8 @@ use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
+use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -21,8 +21,8 @@ class MetaTemplate extends Model
     const array TEMPLATES = [
         Product::class => 'Товар',
         Category::class => 'Категория',
-        ProductParser::class => 'Товар Икеа',
-        CategoryParser::class => 'Категория Икеа',
+        ParserProduct::class => 'Товар Икеа',
+        ParserCategory::class => 'Категория Икеа',
         Page::class => 'Страница',
         Post::class => 'Запись',
         PostCategory::class => 'Рубрика',
