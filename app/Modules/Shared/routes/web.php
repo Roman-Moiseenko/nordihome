@@ -13,6 +13,8 @@ Route::group([
 
     Route::get('/get-by-entity', [PhotoController::class, 'getByEntity'])->name('get-by-entity');
 
+    Route::get('/get-by-ids', [PhotoController::class, 'getByIds'])->name('get-by-ids');
+
     Route::get('/thumb', [PhotoController::class, 'getThumb'])->name('thumb');
 
     Route::post('/save-data/{id}', [PhotoController::class, 'saveData'])->name('save-data');

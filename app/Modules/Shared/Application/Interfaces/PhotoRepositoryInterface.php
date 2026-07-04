@@ -16,6 +16,15 @@ interface PhotoRepositoryInterface
      */
     public function findByEntity(int $imageableId, string $modelType, PhotoType $type): ?PhotoEntity;
 
+    /**
+     * Найти фото для нескольких id сущностей.
+     * Для каждого imageableId возвращается первое фото (по sort), если тип gallery.
+     *
+     * @param array<int> $imageableIds
+     * @return array<int, string>  — массив пар imageableId => uploadUrl
+     */
+    public function findByEntities(array $imageableIds, string $modelType, PhotoType $type): array;
+
     public function save(PhotoEntity $photo): PhotoEntity;
 
     public function update(int $id, array $data): PhotoEntity;

@@ -6,6 +6,7 @@ namespace App\Modules\Shared\Presentation\Http\Controllers\Web;
 
 use App\Modules\Shared\Application\Actions\ViewPhotoUseCase;
 use App\Modules\Shared\Application\Actions\GetPhotoByEntityUseCase;
+use App\Modules\Shared\Application\Actions\GetPhotoByEntityListUseCase;
 use App\Modules\Shared\Application\Actions\SavePhotoDataUseCase;
 use App\Modules\Shared\Application\Actions\UploadPhotoUseCase;
 use App\Modules\Shared\Application\Actions\GetPhotoThumbUseCase;
@@ -13,6 +14,7 @@ use App\Modules\Shared\Application\Actions\SortPhotoUseCase;
 use App\Modules\Shared\Application\Actions\RemovePhotoUseCase;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoViewData;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoByEntityData;
+use App\Modules\Shared\Application\DTOs\Photo\PhotoByEntityListData;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoSaveData;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoUploadData;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoThumbData;
@@ -25,13 +27,14 @@ use Symfony\Component\HttpFoundation\Response;
 class PhotoController
 {
     public function __construct(
-        public readonly ViewPhotoUseCase        $viewPhotoUseCase,
-        public readonly GetPhotoByEntityUseCase $getPhotoByEntityUseCase,
-        public readonly SavePhotoDataUseCase    $savePhotoDataUseCase,
-        public readonly UploadPhotoUseCase      $uploadPhotoUseCase,
-        public readonly GetPhotoThumbUseCase    $getPhotoThumbUseCase,
-        public readonly SortPhotoUseCase        $sortPhotoUseCase,
-        public readonly RemovePhotoUseCase      $removePhotoUseCase,
+        public readonly ViewPhotoUseCase              $viewPhotoUseCase,
+        public readonly GetPhotoByEntityUseCase       $getPhotoByEntityUseCase,
+        public readonly GetPhotoByEntityListUseCase   $getPhotoByEntityListUseCase,
+        public readonly SavePhotoDataUseCase          $savePhotoDataUseCase,
+        public readonly UploadPhotoUseCase            $uploadPhotoUseCase,
+        public readonly GetPhotoThumbUseCase          $getPhotoThumbUseCase,
+        public readonly SortPhotoUseCase              $sortPhotoUseCase,
+        public readonly RemovePhotoUseCase            $removePhotoUseCase,
     )
     {
     }
@@ -88,6 +91,23 @@ class PhotoController
 
         return response()->json(
             PhotoViewData::fromEntity($photo),
+            Response::HTTP_OK
+        );
+    }
+
+    /**
+     * Получение списка url для массива id сущностей.
+     * Параметры: imageable_ids (массив int), model_type, type
+     * Для gallery возвращается первое фото (по sort).
+     * Возвращает: { imageableId: url, ... }
+     */
+    public function getByIds(Request $request, UserPermission $userPermission): JsonResponse
+    {
+        $dto = PhotoByEntityListData::validateAndCreate($request->all());
+        $items = $this->getPhotoByEntityListUseCase->execute($dto, $userPermission);
+
+        return response()->json(
+            $items,
             Response::HTTP_OK
         );
     }

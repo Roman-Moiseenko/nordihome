@@ -10,6 +10,7 @@ use App\Modules\Shared\Domain\ValueObjects\PhotoType;
 use App\Modules\Shared\Infrastructure\Models\Photo;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 
 class PhotoRepository implements PhotoRepositoryInterface
 {
@@ -37,6 +38,39 @@ class PhotoRepository implements PhotoRepositoryInterface
         }
 
         return $this->hydrate($model);
+    }
+
+    public function findByEntities(array $imageableIds, string $modelType, PhotoType $type): array
+    {
+        if (empty($imageableIds)) {
+            return [];
+        }
+
+        // Берём первую запись для каждого imageable_id (по sort ASC)
+        $ids = DB::table('photos as p')
+            ->select(DB::raw('MIN(p.id) as id'))
+            ->whereIn('p.imageable_id', $imageableIds)
+            ->where('p.model_type', $modelType)
+            ->where('p.type', $type->getValue())
+            ->groupBy('p.imageable_id')
+            ->pluck('id');
+
+        if ($ids->isEmpty()) {
+            return [];
+        }
+
+        $models = Photo::whereIn('id', $ids)->get();
+
+        $result = [];
+        foreach ($models as $model) {
+            $result[$model->imageable_id] = $this->photoService->getUploadUrl(
+                $model->model_type,
+                $model->imageable_id,
+                $model->file,
+            );
+        }
+
+        return $result;
     }
 
     public function save(PhotoEntity $photo): PhotoEntity
@@ -82,7 +116,7 @@ class PhotoRepository implements PhotoRepositoryInterface
         }
 
         return $this->hydrate($model->fresh());
-    }
+}
 
     public function update(int $id, array $data): PhotoEntity
     {
