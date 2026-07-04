@@ -38,7 +38,13 @@ class LoadProductWpService
         $this->userPermission = new UserPermission(
             null,
             ['admin'],
-            ['storage.photo.upload', 'catalog.category.create', 'catalog.category.edit', 'catalog.product.create']
+            [
+                'storage.photo.upload',
+                'catalog.category.create',
+                'catalog.category.edit',
+                'catalog.product.create',
+                'catalog.product.edit',
+            ]
         );
 
         foreach ($products as $product) {
@@ -49,14 +55,15 @@ class LoadProductWpService
                 //Создаем массив категорий и комнат
                 foreach ($product['categories'] as $categoryData) {
                     if (!is_null($category = $this->categoryByWpIdUseCase->execute($categoryData['id']))) {
-                        $categories[] = $category;
+                        $categories[] = $category->id;
                     }
                     if (!is_null($room = $this->roomByWpIdUseCase->execute($categoryData['id']))) {
-                        $rooms[] = $room;
+                        $rooms[] = $room->id;
                     }
                 }
                 //Из атрибутов вытаскиваем бренд, и ищем его, если нет, то создаем и возвращаем Entity
-                $brandName = $product['attributes']["pa_brend"] ?? BrandEntity::NONAME;
+                $brandName = $product['attributes']["pa_brend"][0] ?? BrandEntity::NONAME;
+
                 $brand = $this->findOrCreateBrandUseCase->execute($brandName);
 
                 //Создаем Товар
