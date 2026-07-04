@@ -109,7 +109,6 @@ const props = defineProps({
     errors: Object,
     frequencies: Array,
 })
-console.log(props.product)
 
 const autoSave = ref(true)
 const isSaving = ref(false)

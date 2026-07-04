@@ -28,7 +28,6 @@ const props = defineProps({
         default: 'Карточка Комнаты',
     },
 })
-console.log(props.room)
 </script>
 
 <style scoped>

@@ -72,7 +72,7 @@ function request<T = any>(
                 plain: true,
                 showClose: true,
                 duration: 3000,
-                center: true,
+                placement: "top"
             })
         }
 
@@ -90,7 +90,7 @@ function request<T = any>(
                 plain: true,
                 showClose: true,
                 duration: 7000,
-                center: true,
+                placement: "top"
             })
         }
 
