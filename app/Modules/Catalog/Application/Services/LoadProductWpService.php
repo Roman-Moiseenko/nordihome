@@ -6,13 +6,16 @@ use App\Modules\Catalog\Application\Actions\Brand\FindOrCreateBrandUseCase;
 use App\Modules\Catalog\Application\Actions\CategoryProduct\AttachCategoriesToProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\FastCreateProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\UpdateProductUseCase;
+use App\Modules\Catalog\Application\Actions\ProductPrice\SetProductPriceUseCase;
 use App\Modules\Catalog\Application\Actions\RoomProduct\AttachRoomsToProductUseCase;
 use App\Modules\Catalog\Application\Actions\Wp\GetCategoryByWpIdUseCase;
 use App\Modules\Catalog\Application\Actions\Wp\GetRoomByWpIdUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\ProductFastCreateData;
 use App\Modules\Catalog\Application\DTOs\Product\ProductUpdateData;
+use App\Modules\Catalog\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\BrandEntity;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
@@ -22,8 +25,6 @@ use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
  */
 readonly class LoadProductWpService
 {
-    //    private int $count = 0;
-
     public function __construct(
         private ProductRepositoryInterface       $productRepository,
         private GetCategoryByWpIdUseCase         $categoryByWpIdUseCase,
@@ -33,6 +34,7 @@ readonly class LoadProductWpService
         private AttachCategoriesToProductUseCase $attachCategoriesToProductUseCase,
         private AttachRoomsToProductUseCase      $attachRoomsToProductUseCase,
         private UpdateProductUseCase             $updateProductUseCase,
+        private SetProductPriceUseCase           $setProductPriceUseCase,
     )
     {
     }
@@ -53,15 +55,13 @@ readonly class LoadProductWpService
             ]
         );
 
-        // foreach ($products as $product) {
-        //dd($product['images']);
         //Проверяем по артикулу $product['sku'] в базе поле code на совпадение,
         if (!is_null($this->productRepository->findByCode($product['sku']))) return false;
 
-
+        //Создаем массив категорий и комнат
         $categories = [];
         $rooms = [];
-        //Создаем массив категорий и комнат
+
         foreach ($product['categories'] as $categoryData) {
             if (!is_null($category = $this->categoryByWpIdUseCase->execute($categoryData['id']))) {
                 $categories[] = $category->id;
@@ -70,9 +70,9 @@ readonly class LoadProductWpService
                 $rooms[] = $room->id;
             }
         }
+
         //Из атрибутов вытаскиваем бренд, и ищем его, если нет, то создаем и возвращаем Entity
         $brandName = $product['attributes']["pa_brend"][0] ?? BrandEntity::NONAME;
-
         $brand = $this->findOrCreateBrandUseCase->execute($brandName);
 
         //Создаем Товар
@@ -101,7 +101,7 @@ readonly class LoadProductWpService
         $this->attachCategoriesToProductUseCase->execute($productEntity->id, $categories, $userPermission);
         $this->attachRoomsToProductUseCase->execute($productEntity->id, $rooms, $userPermission);
 
-        // Привязываем изображения к товару. Нужно через запуск очереди
+        // Привязываем изображения к товару
         foreach ($product['images'] as $imageData) {
             $dtoImage = new JobPhotoLoadData(
                 imageableId: $productEntity->id,
@@ -113,25 +113,21 @@ readonly class LoadProductWpService
             LoadPhotoByUrlJob::dispatch($dtoImage, $userPermission);
         }
 
-
-        /// 8. Установить цену из \$product[\"price\"] - пока костылем через Product
-        /// Для этого есть поля
-        ///  ProductPriceCost[] \$pricesCost  - сюда значение \$product[\"price\"] / 2
-        ///  ProductPriceRetail[] \$pricesRetail - сюда значение \$product[\"price\"]
-        ///  ProductPriceBulk[] \$pricesBulk - сюда значение \$product[\"price\"]
-        ///  ProductPriceSpecial[] \$pricesSpecial - сюда значение \$product[\"price\"]
-        ///  ProductPriceMin[] \$pricesMin - сюда значение \$product[\"price\"] /2
-        ///  ProductPricePre[] \$pricesPre - сюда значение \$product[\"price\"]
-        /// внести так можно
-        ///                     \$product->pricesMin()->create([
-        //                        'value' => \$pricingProduct->price_min,
-        //                        'founded' => 'начальная загрузка',
-        //                    ]);
-        //$this->count++;
-
-
-        //   if ($this->count > 0) break;
-        //   }
+        //Установить цену из $product["price"], только розницу и минимальную (половина)
+        //Рыночная цена
+        $dtoPrice = new SetProductPriceData(
+            productId: $productEntity->id,
+            price: (float) $product['price'],
+            priceType: PriceType::RETAIL,
+        );
+        $this->setProductPriceUseCase->execute($dtoPrice, $userPermission);
+        //Минимальная
+        $dtoPrice = new SetProductPriceData(
+            productId: $productEntity->id,
+            price: (float) $product['price'] / 2,
+            priceType: PriceType::MINIMAL,
+        );
+        $this->setProductPriceUseCase->execute($dtoPrice, $userPermission);
 
         return true;
     }

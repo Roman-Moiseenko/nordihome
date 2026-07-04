@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('amount', 12, 2);           // или int для копеек
             $table->string('currency', 3)->default('RUB');
             $table->timestamp('set_at')->useCurrent();  // дата установки цены
+            $table->string('founded')->nullable();
             $table->text('comment')->nullable();
 
             // Внешний ключ

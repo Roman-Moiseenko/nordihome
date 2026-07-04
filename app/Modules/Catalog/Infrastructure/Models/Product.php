@@ -13,6 +13,8 @@ use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Packages;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Base\Traits\GalleryField;
+use App\Modules\Catalog\Domain\Entities\ProductPriceEntity;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\Equivalent;
 use App\Modules\Catalog\Entity\EquivalentProduct;
@@ -111,7 +113,7 @@ use JetBrains\PhpStorm\Pure;
  *
  * @property Video[] $videos
  *
- * @property ProductPriceRetail[] $prices
+
  * @property ProductPriceCost[] $pricesCost
  * @property ProductPriceRetail[] $pricesRetail
  * @property ProductPriceBulk[] $pricesBulk
@@ -129,6 +131,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Modification $main_modification
  * @property ModificationProduct $modification_product
  * @property Series $series
+ * @property ProductPrice $prices
  *
  * @property CartStorage[] $cartStorages
  * @property CartCookie[] $cartCookies
@@ -375,33 +378,7 @@ class Product extends Model
         $this->save();
     }
 
-    public function setSlug(string $slug): void
-    {
-        $this->slug = $slug;
-    }
 
-    public function setDescription(string $description): void
-    {
-        $this->description = $description;
-    }
-
-    public function setPriority(bool $priority): void
-    {
-        $this->priority = $priority;
-        $this->save();
-    }
-
-    public function setReduced(bool $price_reduced): void
-    {
-        $this->price_reduced = $price_reduced;
-        $this->save();
-    }
-
-    public function setOnOrder(bool $value): void
-    {
-        $this->only_on_order = $value;
-        $this->save();
-    }
 
     public function setPublished(): void
     {
@@ -416,11 +393,6 @@ class Product extends Model
         $this->save();
     }
 
-    public function setVAT(int $vat_id): void
-    {
-        $this->vat_id = $vat_id;
-        $this->save();
-    }
 
     //*** GET-....
 
@@ -449,10 +421,6 @@ class Product extends Model
         return ceil($volume * 10000) / 10000;
     }
 
-    public function getSlug(): string
-    {
-        return $this->slug;
-    }
 
     /**
      * Если есть модификация возвращает ее название, иначе название товара
@@ -513,57 +481,104 @@ class Product extends Model
         return $model->value;
     }
 
-    public function getPriceRetail(bool $previous = false): float
+    public function getPriceRetail(bool $previous = false):? float
     {
+        $query = $this->prices()
+            ->where('type', PriceType::RETAIL)
+            ->orderByDesc('set_at');
+
+        /** @var ProductPrice $model */
+        $model = $previous ? $query->skip(1)->first() : $query->first();
+
+        if (empty($model)) return null;
+        return $model->amount;
+        //TODO ТЕСТ
+        /*
         if ($this->pricesRetail()->count() == 0) return 0;
         if ($previous) {
-            /** @var ProductPriceRetail $model */
+
             $model = $this->pricesRetail()->skip(1)->first();
             if (empty($model)) return 0;
         } else {
             $model = $this->pricesRetail()->skip(0)->first();
         }
         return $model->value;
+
+        */
     }
 
-    public function getPriceBulk(bool $previous = false): float
+    public function getPriceBulk(bool $previous = false):? float
     {
+        $query = $this->prices()
+            ->where('type', PriceType::BULK)
+            ->orderByDesc('set_at');
+
+        $model = $previous ? $query->skip(1)->first() : $query->first();
+
+        // Если оптовая цена найдена — возвращаем её
+        if ($model !== null) return $model->amount;
+
+        return $this->getPriceRetail($previous);
+
+        /*
         if ($this->pricesBulk()->count() == 0) return 0;
         if ($previous) {
-            /** @var ProductPriceBulk $model */
             $model = $this->pricesBulk()->skip(1)->first();
             if (empty($model)) return 0;
         } else {
             $model = $this->pricesBulk()->skip(0)->first();
         }
-        return $model->value;
+        return $model->value;*/
     }
 
     public function getPriceSpecial(bool $previous = false): float
     {
+        $query = $this->prices()
+            ->where('type', PriceType::SPECIAL)
+            ->orderByDesc('set_at');
+
+        $model = $previous ? $query->skip(1)->first() : $query->first();
+
+        // Если оптовая цена найдена — возвращаем её
+        if ($model !== null) return $model->amount;
+
+        return $this->getPriceRetail($previous);
+
+        /*
         if ($this->pricesSpecial()->count() == 0) return 0;
         if ($previous) {
-            /** @var ProductPriceSpecial $model */
+
             $model = $this->pricesSpecial()->skip(1)->first();
             if (empty($model)) return 0;
         } else {
             $model = $this->pricesSpecial()->skip(0)->first();
         }
         return $model->value;
+        */
     }
 
     public function getPriceMin(bool $previous = false): float
     {
-        //Если минимальная не установлена, возвращается себестоимость
-        if ($this->pricesMin()->count() == 0) return 0;
+        $query = $this->prices()
+            ->where('type', PriceType::MINIMAL)
+            ->orderByDesc('set_at');
+
+        $model = $previous ? $query->skip(1)->first() : $query->first();
+
+        // Если оптовая цена найдена — возвращаем её
+        if ($model !== null) return $model->amount;
+
+        return $this->getPriceRetail($previous);
+
+      /*  if ($this->pricesMin()->count() == 0) return 0;
         if ($previous) {
-            /** @var ProductPriceMin $model */
             $model = $this->pricesMin()->skip(1)->first();
             if (empty($model)) return 0;
         } else {
             $model = $this->pricesMin()->skip(0)->first();
         }
         return $model->value;
+        */
     }
 
     public function getPriceParser(bool $previous = false): float
@@ -580,6 +595,17 @@ class Product extends Model
      */
     public function getPricePre(bool $previous = false): float
     {
+        $query = $this->prices()
+            ->where('type', PriceType::PREORDER)
+            ->orderByDesc('set_at');
+
+        $model = $previous ? $query->skip(1)->first() : $query->first();
+
+        // Если оптовая цена найдена — возвращаем её
+        if ($model !== null) return $model->amount;
+
+        return $this->getPriceRetail($previous);
+    /*
         if ($this->pricesPre()->count() == 0) return $this->getPriceParser($previous);
         if ($previous) {
             $model = $this->pricesPre()->skip(1)->first();
@@ -588,6 +614,7 @@ class Product extends Model
             $model = $this->pricesPre()->skip(0)->first();
         }
         return $model->value;
+        */
     }
 
     //*** КОЛ_ВО
@@ -1001,6 +1028,14 @@ class Product extends Model
             'count' => $this->getQuantitySell(),
             'stock' => $this->getQuantitySell() > 0,
         ];
+    }
+
+
+    /////////////////////
+
+    public function prices(): HasMany
+    {
+        return $this->hasMany(ProductPrice::class, 'product_id', 'id');
     }
 
 

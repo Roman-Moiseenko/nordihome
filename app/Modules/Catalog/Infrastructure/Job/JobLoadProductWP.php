@@ -2,7 +2,6 @@
 
 namespace App\Modules\Catalog\Infrastructure\Job;
 
-use App\Modules\Catalog\Application\Services\LoadCategoryWpService;
 use App\Modules\Catalog\Application\Services\LoadProductWpService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
