@@ -5,8 +5,8 @@ namespace App\Modules\Order\Entity\Addition;
 
 use App\Modules\Base\Entity\Package;
 use App\Modules\Base\Entity\Packages;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Catalog\Entity\Product;
 
 class PackingCalculate extends CalculateAddition
 {

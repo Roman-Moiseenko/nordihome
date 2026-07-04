@@ -6,7 +6,6 @@ namespace App\Modules\Order\Repository;
 
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Admin\Entity\Worker;
 use App\Modules\Base\Traits\FiltersRepository;
 use App\Modules\Delivery\Service\CalendarService;
@@ -17,17 +16,11 @@ use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Order\Entity\Order\OrderMovement;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Order\OrderStatus;
-use App\Modules\Order\Helpers\OrderHelper;
-use App\Modules\Catalog\Entity\Product;
-use App\Modules\User\Entity\User;
 use App\Modules\User\Repository\UserRepository;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
-use JetBrains\PhpStorm\ArrayShape;
-use JetBrains\PhpStorm\Deprecated;
 
 class OrderRepository
 {

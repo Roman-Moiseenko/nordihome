@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity;
 
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 
 interface ItemInterface
 {

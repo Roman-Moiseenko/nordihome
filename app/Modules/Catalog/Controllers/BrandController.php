@@ -3,19 +3,17 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Catalog\Application\Actions\Brand\ListBrandUseCase;
-use App\Modules\Parser\Service\ParserAbstract;
-use App\Modules\Catalog\Entity\Brand;
+use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Repository\BrandRepository;
 use App\Modules\Catalog\Service\BrandService;
+use App\Modules\Parser\Service\ParserAbstract;
 use App\UseCase\PaginationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 
 class BrandController extends Controller

@@ -5,7 +5,6 @@ namespace App\Modules\Accounting\Repository;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\DistributorProduct;
 use App\Modules\Accounting\Entity\SupplyDocument;
-use App\Modules\Catalog\Entity\Product;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 

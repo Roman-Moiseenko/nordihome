@@ -3,8 +3,8 @@
 namespace App\Modules\Page\Entity;
 
 use App\Modules\Catalog\Entity\Group;
-use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;

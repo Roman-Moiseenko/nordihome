@@ -4,9 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Page\Job;
 
 use App\Modules\Base\Helpers\CacheHelper;
-use App\Modules\Mail\Mailable\OutboxMail;
-use App\Modules\Catalog\Entity\Product;
-use App\Modules\Setting\Repository\SettingRepository;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\Repository\CacheRepository;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,7 +13,6 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
 
 class JobCacheProduct implements ShouldQueue
 {

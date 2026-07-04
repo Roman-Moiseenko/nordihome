@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Repository;
 
-use App\Modules\Catalog\Entity\Brand;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Brand;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 

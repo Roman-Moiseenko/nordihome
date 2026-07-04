@@ -18,7 +18,7 @@ interface RoomProductRepositoryInterface
      * @param int $page
      * @return LengthAwarePaginator<ProductRoomData>
      */
-    public function getProductsByRoomId(int $roomId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
+    public function getProductIdsByRoom(int $roomId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
 
     /**
      * Получить комнаты, привязанные к товару (простой массив).

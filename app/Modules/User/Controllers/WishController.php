@@ -3,12 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Product;
 use App\Modules\User\Repository\WishRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 
 class WishController extends Controller

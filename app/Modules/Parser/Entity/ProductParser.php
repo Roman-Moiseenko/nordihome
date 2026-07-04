@@ -3,7 +3,7 @@
 namespace App\Modules\Parser\Entity;
 
 use App\Modules\Accounting\Entity\Currency;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

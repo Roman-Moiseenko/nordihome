@@ -3,17 +3,14 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Service;
 
-use App\Events\MovementHasCompleted;
-use App\Events\ThrowableHasAppeared;
 use App\Modules\Accounting\Entity\AccountingDocument;
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\MovementProduct;
 use App\Modules\Accounting\Entity\StorageArrivalItem;
 use App\Modules\Accounting\Entity\StorageDepartureItem;
 use App\Modules\Auth\Infrastructure\Models\Staff;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Order\Service\OrderReserveService;
-use App\Modules\Catalog\Entity\Product;
-use App\Notifications\StaffMessage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

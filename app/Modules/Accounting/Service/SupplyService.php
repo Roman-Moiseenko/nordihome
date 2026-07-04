@@ -4,23 +4,19 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Service;
 
 use App\Events\SupplyHasCompleted;
-use App\Events\SupplyHasSent;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
-use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\PaymentDecryption;
 use App\Modules\Accounting\Entity\PaymentDocument;
-use App\Modules\Accounting\Entity\RefundProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Repository\StackRepository;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Catalog\Entity\Product;
-use App\Notifications\StaffMessage;
 use Illuminate\Support\Facades\DB;
 
 class SupplyService extends AccountingService

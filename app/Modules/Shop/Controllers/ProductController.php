@@ -3,12 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Controllers;
 
-use App\Modules\Catalog\Entity\Product;
-use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\Repository\CacheRepository;
 use App\Modules\Shop\Repository\ShopRepository;
-use App\Modules\Shop\Repository\SlugRepository;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
 

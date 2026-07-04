@@ -3,7 +3,7 @@
 namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Repository\OnOrderRepository;
 use App\Modules\Catalog\Service\OnOrderService;
 use Illuminate\Http\RedirectResponse;

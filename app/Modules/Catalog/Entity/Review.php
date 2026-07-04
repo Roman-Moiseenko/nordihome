@@ -5,6 +5,7 @@ namespace App\Modules\Catalog\Entity;
 
 use App\Modules\Base\Entity\Video;
 use App\Modules\Base\Traits\PhotoField;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\DiscountReview;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;

@@ -3,12 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Addition;
 
-use App\Modules\Admin\Entity\Setting;
+use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Catalog\Entity\Brand;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Repository\SettingRepository;
-use Illuminate\Support\Facades\Log;
 
 class DeliveryPolandCalculate extends CalculateAddition
 {

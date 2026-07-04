@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Cart\Storage;
 
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\Cart\CartItem;
 use App\Modules\User\Entity\CartStorage;
-
 use Illuminate\Support\Facades\Auth;
 
 class DBStorage implements StorageInterface

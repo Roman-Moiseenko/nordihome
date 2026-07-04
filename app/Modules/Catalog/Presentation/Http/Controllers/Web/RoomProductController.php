@@ -45,9 +45,9 @@ readonly class RoomProductController
         $page = $request->integer('page', 1);
         $perPage = $request->integer('per_page', 15);
 
-        $list = $this->listProductByRoomUseCase->execute($id, $perPage, $page);
+        $paginator = $this->listProductByRoomUseCase->execute($id, $perPage, $page);
 
-        return response()->json($list, Response::HTTP_OK);
+        return response()->json($paginator, Response::HTTP_OK);
     }
 
     /**

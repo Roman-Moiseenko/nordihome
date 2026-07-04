@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Catalog\Entity\Product;
-use Illuminate\Database\Eloquent\Model;
-
 /**
  * @property int $id
  * @property int $pricing_id

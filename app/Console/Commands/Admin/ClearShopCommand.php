@@ -3,10 +3,10 @@
 namespace App\Console\Commands\Admin;
 
 use App\Modules\Catalog\Entity\Attribute;
-use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Entity\Series;
 use App\Modules\Catalog\Entity\Tag;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\User\Entity\CartCookie;

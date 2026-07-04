@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Cart;
 
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\CartItemInterface;
 
 class CartItem implements CartItemInterface

@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Controllers\Cabinet;
 
-use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\WishService;

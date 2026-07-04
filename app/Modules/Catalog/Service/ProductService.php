@@ -13,10 +13,10 @@ use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\Bonus;
-use App\Modules\Catalog\Entity\Brand;
 use App\Modules\Catalog\Entity\Composite;
 use App\Modules\Catalog\Entity\Group;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Brand;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Repository\TagRepository;
 use App\Modules\Page\Job\JobCacheProduct;
 use App\Modules\Parser\Service\ParserAbstract;
@@ -29,7 +29,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use JetBrains\PhpStorm\Deprecated;
 
 class ProductService
 {

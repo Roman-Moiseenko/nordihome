@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Entity;
+namespace App\Modules\Catalog\Infrastructure\Models;
 
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Base\Traits\ImageField;

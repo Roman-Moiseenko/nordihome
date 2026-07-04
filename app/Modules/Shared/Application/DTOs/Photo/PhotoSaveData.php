@@ -14,9 +14,9 @@ class PhotoSaveData extends Data
         #[Required, StringType, Max(255)]
         public readonly string $alt,
         #[Nullable, StringType, Max(255)]
-        public readonly ?string $title,
+        public readonly ?string $title = null,
         #[Nullable, StringType, Max(255)]
-        public readonly ?string $description,
+        public readonly ?string $description = null,
     )
     {
     }

@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Admin;
 
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Console\Command;
-use NotificationChannels\Telegram\TelegramUpdates;
 
 class DraftCommand extends Command
 {

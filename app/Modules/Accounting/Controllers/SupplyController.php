@@ -13,11 +13,10 @@ use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Repository\SupplyRepository;
 use App\Modules\Accounting\Service\SupplyService;
+use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Catalog\Entity\Brand;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-
 use Inertia\Inertia;
 use Inertia\Response;
 

@@ -3,22 +3,15 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\DistributorProduct;
-use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Repository\DistributorRepository;
 use App\Modules\Accounting\Service\DistributorService;
-use App\Modules\Accounting\Service\SupplyService;
-use App\Modules\Catalog\Entity\Product;
 use App\UseCase\PaginationService;
-use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class DistributorController extends Controller

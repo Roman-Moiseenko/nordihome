@@ -3,15 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Product;
-use App\Modules\User\Entity\CartCookie;
-use App\Modules\User\Entity\CartStorage;
 use App\Modules\User\Repository\CartRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 

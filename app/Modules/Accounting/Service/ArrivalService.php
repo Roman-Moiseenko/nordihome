@@ -16,10 +16,9 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Auth\Infrastructure\Models\Staff;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Service\OrderReserveService;
-use App\Modules\Catalog\Entity\Product;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

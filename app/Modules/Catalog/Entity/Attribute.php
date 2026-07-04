@@ -5,6 +5,7 @@ namespace App\Modules\Catalog\Entity;
 
 use App\Modules\Base\Traits\ImageField;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 

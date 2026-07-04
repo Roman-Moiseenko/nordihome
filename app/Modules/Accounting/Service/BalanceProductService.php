@@ -3,7 +3,7 @@
 namespace App\Modules\Accounting\Service;
 
 use App\Modules\Accounting\Entity\BalanceProduct;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 
 class BalanceProductService
 {

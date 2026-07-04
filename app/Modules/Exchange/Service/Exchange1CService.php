@@ -2,7 +2,7 @@
 
 namespace App\Modules\Exchange\Service;
 
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

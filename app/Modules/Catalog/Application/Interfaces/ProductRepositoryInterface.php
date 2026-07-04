@@ -55,4 +55,6 @@ interface ProductRepositoryInterface
      * @return LengthAwarePaginator<ProductCategoryData>
      */
     public function findAllByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
+
+    public function findByIds(array $ids): array;
 }

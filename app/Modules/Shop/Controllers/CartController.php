@@ -3,12 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Controllers;
 
-use App\Events\ThrowableHasAppeared;
-use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\Cart\Cart;
 use Illuminate\Http\Request;
-
 
 
 class CartController extends ShopController

@@ -9,7 +9,7 @@ use App\Modules\Accounting\Entity\OrganizationHolding;
 use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Dadata\DadataClient;
 use Illuminate\Http\Request;
 

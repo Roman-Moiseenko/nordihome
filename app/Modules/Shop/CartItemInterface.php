@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop;
 
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 
 //TODO проработать все поля
 interface CartItemInterface

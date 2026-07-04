@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Repository;
 
 use App\Modules\Base\Helpers\CacheHelper;
-use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Page\Entity\News;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;

@@ -2,14 +2,13 @@
 declare(strict_types=1);
 
 use App\Modules\Catalog\Entity\Attribute;
-use App\Modules\Catalog\Entity\Brand;
 use App\Modules\Catalog\Entity\CategorySize;
 use App\Modules\Catalog\Entity\Equivalent;
 use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Entity\Modification;
-use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Entity\Series;
-use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Brand;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\Parser\ProductParser;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;

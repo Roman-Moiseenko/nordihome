@@ -5,10 +5,9 @@ namespace App\Modules\Catalog\Repository;
 
 use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\AttributeVariant;
-use App\Modules\Catalog\Entity\Brand;
 use App\Modules\Catalog\Entity\Modification;
 use App\Modules\Catalog\Entity\ModificationProduct;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 

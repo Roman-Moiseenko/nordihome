@@ -4,7 +4,6 @@ namespace App\Modules\Parser\Repository;
 
 use App\Modules\Parser\Entity\CategoryParser;
 use App\Modules\Parser\Entity\ProductParser;
-use App\Modules\Catalog\Entity\Product;
 
 class CategoryParserRepository
 {

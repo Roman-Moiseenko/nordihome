@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Service;
 
-use App\Modules\Catalog\Entity\Brand;
+use App\Modules\Catalog\Infrastructure\Models\Brand;
 use Illuminate\Http\Request;
 
 class BrandService

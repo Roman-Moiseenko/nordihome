@@ -3,17 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Controllers;
 
-use App\Events\ThrowableHasAppeared;
-use App\Modules\Parser\Entity\CategoryParser;
-use App\Modules\Parser\Entity\ProductParser;
-use App\Modules\Catalog\Entity\Product;
 use App\Modules\Shop\Parser\ParserCart;
 use App\Modules\Shop\Parser\ParserService;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Log;
 
 class ParserController extends ShopController

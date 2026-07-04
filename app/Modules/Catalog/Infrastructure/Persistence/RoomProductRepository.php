@@ -7,9 +7,9 @@ namespace App\Modules\Catalog\Infrastructure\Persistence;
 use App\Modules\Catalog\Application\DTOs\Product\ProductRoomData;
 use App\Modules\Catalog\Application\DTOs\Room\RoomProductData;
 use App\Modules\Catalog\Application\Interfaces\RoomProductRepositoryInterface;
-use App\Modules\Catalog\Entity\Product;
-use App\Modules\Catalog\Infrastructure\Models\RoomProduct;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
+use App\Modules\Catalog\Infrastructure\Models\RoomProduct;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class RoomProductRepository implements RoomProductRepositoryInterface
@@ -17,25 +17,11 @@ class RoomProductRepository implements RoomProductRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getProductsByRoomId(int $roomId, int $perPage = 15, int $page = 1): LengthAwarePaginator
+    public function getProductIdsByRoom(int $roomId, int $perPage = 15, int $page = 1): LengthAwarePaginator
     {
-        $productIds = RoomProduct::where('room_id', $roomId)
-            ->pluck('product_id');
-
-        return Product::orderBy('name')
-            ->whereIn('id', $productIds)
-            ->where(function ($query) {
-                $query->doesntHave('modification')->orHas('main_modification');
-            })
-            ->paginate($perPage, ['*'], 'page', $page)
-            ->through(fn(Product $product) => new ProductRoomData(
-                id: $product->id,
-                code: $product->code,
-                name: $product->name,
-                image: $product->miniImage(),
-                published: (bool) $product->published,
-                not_sale: (bool) $product->not_sale,
-            ));
+        return RoomProduct::where('room_id', $roomId)
+            ->select('product_id')
+            ->paginate($perPage);
     }
 
     /**

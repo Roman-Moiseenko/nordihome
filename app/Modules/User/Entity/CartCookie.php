@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Entity;
 
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+
 /**
  * @property int $id
  * @property string $user_ui

@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Application\Actions\Product;
 
 use App\Modules\Catalog\Application\DTOs\Product\ProductCategoryData;
 use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 readonly class ListAllProductByCategoryUseCase
@@ -21,6 +22,15 @@ readonly class ListAllProductByCategoryUseCase
      */
     public function execute(int $id, int $perPage = 15, int $page = 1): LengthAwarePaginator
     {
-        return $this->productRepository->findAllByCategoryId($id, $perPage, $page);
+        $paginator = $this->productRepository->findAllByCategoryId($id, $perPage, $page);
+
+        // Заменяем коллекцию сущностей на коллекцию DTO
+        $dto = $paginator->getCollection()->map(
+            fn(ProductEntity $product) => ProductCategoryData::fromEntity($product)
+        );
+
+        $paginator->setCollection($dto);
+
+        return $paginator;
     }
 }

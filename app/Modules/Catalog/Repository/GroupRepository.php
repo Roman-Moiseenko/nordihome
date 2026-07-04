@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Repository;
 
+use App\Modules\Catalog\Entity\Group;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Discount\Entity\PromotionGroup;
-use App\Modules\Catalog\Entity\Group;
-use App\Modules\Catalog\Entity\Product;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 

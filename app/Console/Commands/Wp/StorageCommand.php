@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Wp;
 
+use App\Console\CreatesApplication;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Service\ArrivalService;
 use App\Modules\Accounting\Service\StorageService;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
-use App\Console\CreatesApplication;
 
 
 class StorageCommand extends Command

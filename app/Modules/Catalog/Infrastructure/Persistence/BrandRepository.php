@@ -6,7 +6,7 @@ namespace App\Modules\Catalog\Infrastructure\Persistence;
 
 use App\Modules\Catalog\Application\Interfaces\BrandRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\BrandEntity;
-use App\Modules\Catalog\Entity\Brand;
+use App\Modules\Catalog\Infrastructure\Models\Brand;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class BrandRepository implements BrandRepositoryInterface

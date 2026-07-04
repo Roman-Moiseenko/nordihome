@@ -4,33 +4,16 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\Modules\Catalog\Application\DTOs\Product\ProductCategoryData;
 use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
-use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Infrastructure\Models\CategoryProduct;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    public function findByCode(string $code): ?ProductEntity
-    {
-        $model = Product::where('code', $code)->first();
-
-        if ($model === null) return null;
-
-        return $this->hydrate($model);
-    }
-
-    public function getById(int $id): ProductEntity
-    {
-        $model = Product::findOrFail($id);
-
-        return $this->hydrate($model);
-    }
-
     public function save(ProductEntity $product): ProductEntity
     {
         $model = $product->id
@@ -41,7 +24,7 @@ class ProductRepository implements ProductRepositoryInterface
         $model->name_print = $product->namePrint;
         $model->code = $product->code->getCode();
         $model->code_search = $product->code->getCodeSearch();
-        $model->slug = (string) $product->slug;
+        $model->slug = (string)$product->slug;
         $model->old_slug = $product->oldSlug;
         $model->main_category_id = $product->mainCategoryId;
         $model->brand_id = $product->brandId;
@@ -77,23 +60,29 @@ class ProductRepository implements ProductRepositoryInterface
         return $product;
     }
 
+    public function findByCode(string $code): ?ProductEntity
+    {
+        $model = Product::where('code', $code)->first();
+
+        if ($model === null) return null;
+
+        return $this->hydrate($model);
+    }
+
+    public function getById(int $id): ProductEntity
+    {
+        $model = Product::findOrFail($id);
+
+        return $this->hydrate($model);
+    }
+
+
     public function findByMainCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator
     {
-        $query = Product::orderBy('name')
-            ->where('main_category_id', $categoryId)
-            ->where(function ($query) {
-                $query->doesntHave('modification')->orHas('main_modification');
-            });
-
-        return $query->paginate($perPage, ['*'], 'page', $page)
-            ->through(fn(Product $product) => new ProductCategoryData(
-                id: $product->id,
-                code: $product->code,
-                name: $product->name,
-                image: $product->miniImage(),
-                published: (bool) $product->published,
-                not_sale: (bool) $product->not_sale,
-            ));
+        return Product::where('main_category_id', $categoryId)
+            ->orderBy('name')
+            ->paginate($perPage, ['*'], 'page', $page)
+            ->through(fn(Product $model) => $this->hydrate($model));
     }
 
     public function findAllByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator
@@ -103,7 +92,7 @@ class ProductRepository implements ProductRepositoryInterface
             ->pluck('product_id')
             ->toArray();
 
-        $query = Product::orderBy('name')
+        return Product::orderBy('name')
             ->where(function ($query) use ($categoryId, $pivotProductIds) {
                 // Основная категория
                 $query->where('main_category_id', $categoryId);
@@ -111,21 +100,21 @@ class ProductRepository implements ProductRepositoryInterface
                 // Или привязанные через pivot
                 if (!empty($pivotProductIds)) {
                     $query->orWhereIn('id', $pivotProductIds);
-}
+                }
             })
-            ->where(function ($query) {
-                $query->doesntHave('modification')->orHas('main_modification');
-            });
+            ->paginate($perPage, ['*'], 'page', $page)
+            ->through(fn(Product $model) => $this->hydrate($model));
+    }
 
-        return $query->paginate($perPage, ['*'], 'page', $page)
-            ->through(fn(Product $product) => new ProductCategoryData(
-                id: $product->id,
-                code: $product->code,
-                name: $product->name,
-                image: $product->miniImage(),
-                published: (bool) $product->published,
-                not_sale: (bool) $product->not_sale,
-            ));
+    public function findByIds(array $ids): array
+    {
+        if (empty($ids)) return [];
+
+        return Product::whereIn('id', $ids)
+            ->orderByRaw('FIELD(id, ' . implode(',', $ids) . ')') // сохраняем порядок
+            ->get()
+            ->map(fn($model) => $this->hydrate($model))
+            ->all();
     }
 
     private function hydrate(Product $model): ProductEntity
@@ -151,16 +140,16 @@ class ProductRepository implements ProductRepositoryInterface
         $entity->countryId = $model->country_id;
         $entity->measuringId = $model->measuring_id;
         $entity->markingTypeId = $model->marking_type_id;
-        $entity->published = (bool) $model->published;
-        $entity->preOrder = (bool) $model->pre_order;
-        $entity->delivery = (bool) $model->delivery;
-        $entity->local = (bool) $model->local;
-        $entity->priority = (bool) $model->priority;
-        $entity->notSale = (bool) $model->not_sale;
-        $entity->priceReduced = (bool) $model->price_reduced;
-        $entity->onlyOnOrder = (bool) $model->only_on_order;
-        $entity->fractional = (bool) $model->fractional;
-        $entity->hidePrice = (bool) $model->hide_price;
+        $entity->published = (bool)$model->published;
+        $entity->preOrder = (bool)$model->pre_order;
+        $entity->delivery = (bool)$model->delivery;
+        $entity->local = (bool)$model->local;
+        $entity->priority = (bool)$model->priority;
+        $entity->notSale = (bool)$model->not_sale;
+        $entity->priceReduced = (bool)$model->price_reduced;
+        $entity->onlyOnOrder = (bool)$model->only_on_order;
+        $entity->fractional = (bool)$model->fractional;
+        $entity->hidePrice = (bool)$model->hide_price;
 
         if ($model->published_at !== null) {
             $entity->publishedAt = \DateTimeImmutable::createFromInterface($model->published_at);

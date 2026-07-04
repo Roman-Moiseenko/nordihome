@@ -4,14 +4,11 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Service;
 
 use App\Events\PromotionHasMoved;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Catalog\Entity\Group;
-use App\Modules\Catalog\Entity\Product;
-use App\Modules\Catalog\Service\GroupService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class PromotionService

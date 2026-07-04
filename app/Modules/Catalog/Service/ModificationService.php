@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Service;
 
 use App\Modules\Catalog\Entity\Modification;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Repository\AttributeRepository;
 use Illuminate\Http\Request;
 

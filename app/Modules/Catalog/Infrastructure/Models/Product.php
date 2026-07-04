@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Entity;
+namespace App\Modules\Catalog\Infrastructure\Models;
 
 use App\Modules\Accounting\Entity\BalanceProduct;
 use App\Modules\Accounting\Entity\Storage;
@@ -13,8 +13,21 @@ use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Packages;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Base\Traits\GalleryField;
-use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Catalog\Infrastructure\Models\Room;
+use App\Modules\Catalog\Entity\Attribute;
+use App\Modules\Catalog\Entity\Equivalent;
+use App\Modules\Catalog\Entity\EquivalentProduct;
+use App\Modules\Catalog\Entity\Group;
+use App\Modules\Catalog\Entity\Modification;
+use App\Modules\Catalog\Entity\ModificationProduct;
+use App\Modules\Catalog\Entity\ProductPriceBulk;
+use App\Modules\Catalog\Entity\ProductPriceCost;
+use App\Modules\Catalog\Entity\ProductPriceMin;
+use App\Modules\Catalog\Entity\ProductPricePre;
+use App\Modules\Catalog\Entity\ProductPriceRetail;
+use App\Modules\Catalog\Entity\ProductPriceSpecial;
+use App\Modules\Catalog\Entity\Review;
+use App\Modules\Catalog\Entity\Series;
+use App\Modules\Catalog\Entity\Tag;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;

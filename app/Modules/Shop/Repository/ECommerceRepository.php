@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Repository;
 
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Http\Request;
 
 class ECommerceRepository

@@ -4,14 +4,12 @@ namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Entity\Group;
-use App\Modules\Catalog\Entity\Product;
 use App\Modules\Catalog\Repository\GroupRepository;
 use App\Modules\Catalog\Repository\ProductRepository;
 use App\Modules\Catalog\Service\GroupService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 use Inertia\Response;
 

@@ -7,9 +7,9 @@ namespace App\Modules\Catalog\Infrastructure\Persistence;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryProductData;
 use App\Modules\Catalog\Application\DTOs\Product\ProductCategoryData;
 use App\Modules\Catalog\Application\Interfaces\CategoryProductRepositoryInterface;
-use App\Modules\Catalog\Entity\Product;
-use App\Modules\Catalog\Infrastructure\Models\CategoryProduct;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\CategoryProduct;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class CategoryProductRepository implements CategoryProductRepositoryInterface

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\DTOs\Product;
 
+use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use Spatie\LaravelData\Data;
 
 /**
@@ -13,13 +14,27 @@ use Spatie\LaravelData\Data;
 class ProductRoomData extends Data
 {
     public function __construct(
-        public readonly int     $id,
-        public readonly string  $code,
-        public readonly string  $name,
+        public readonly int    $id,
+        public readonly string $code,
+        public readonly string $name,
+        public readonly string $slug,
         public readonly ?string $image,
-        public readonly bool    $published,
-        public readonly bool    $not_sale,
+        public readonly bool   $published,
+        public readonly bool   $not_sale,
     )
     {
+    }
+
+    public static function fromEntity(ProductEntity $product): self
+    {
+        return new self(
+            id: $product->id ?? 0,
+            code: (string) $product->code,
+            name: $product->name,
+            slug: (string) $product->slug,
+            image: null,
+            published: $product->isPublished(),
+            not_sale: $product->notSale,
+        );
     }
 }

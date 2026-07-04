@@ -4,7 +4,7 @@ namespace App\Listeners;
 
 use App\Events\ProductHasPublished;
 use App\Mail\ProductNew;
-use App\Modules\Catalog\Entity\Product;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\SubscriptionService;
 use Carbon\Carbon;

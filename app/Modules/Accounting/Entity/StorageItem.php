@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Order\Entity\OrderReserve;
-use App\Modules\Catalog\Entity\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
