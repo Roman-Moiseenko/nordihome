@@ -16,7 +16,8 @@
       "@/*": ["resources/js/*"],
       "@Page/*": ["resources/js/Pages/*"],
       "@Comp/*": ["resources/js/VueComponents/*"],
-      "@Res/*": ["resources/js/Resources/*"]
+      "@Res/*": ["resources/js/Resources/*"],
+      "ziggy-js": ["node_modules/ziggy-js"]
     }
   },
   "include": ["resources/js/**/*.ts", "resources/js/**/*.vue"]

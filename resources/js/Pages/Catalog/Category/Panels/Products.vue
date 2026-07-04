@@ -16,86 +16,8 @@
                 class="ml-3"/>
 
         </div>
-        <el-table
-            :data="tableData"
-            v-loading="loading"
-            header-cell-class-name="nordihome-header"
-            style="width: 100%;"
-        >
-            <el-table-column prop="image" label="IMG" width="80">
-                <template #default="scope">
-                    <img v-if="scope.row.image" :src="scope.row.image" style="width: 40px; height: 40px; ">
-                </template>
-            </el-table-column>
-            <el-table-column sortable prop="code" label="Артикул"  width="160"/>
-            <el-table-column prop="name" label="Товар" show-overflow-tooltip>
-                <template #default="scope">
-                    <div>
-                        {{ scope.row.name }}
-                        <el-tag v-if="!scope.row.published" type="info" class="ml-2">Черновик</el-tag>
-                        <el-tag v-if="scope.row.not_sale" type="warning" class="ml-1">Снят с продажи</el-tag>
-                    </div>
-                    <div>
-                        <div class="show-on-hover items-center">
-                            <template v-if="scope.row.trashed">
-                                <el-link type="success" :underline="false" @click="onRestore(scope.row)">
-                                    Восстановить
-                                </el-link>
-                                &nbsp;|&nbsp;
-                                <el-link type="danger" :underline="false" @click="onFullDelete(scope.row)">
-                                    Удалить окончательно
-                                </el-link>
-                            </template>
-                            <template v-else>
-                                <el-link type="primary" :underline="false" @click="onEdit(scope.row)">
-                                    Изменить
-                                </el-link>
-                                &nbsp;|&nbsp;
-                                <el-link type="primary" :underline="false" @click="onAnalitics(scope.row)">
-                                    Статистика
-                                </el-link>
-                                &nbsp;|&nbsp;
-                                <el-link type="info" :underline="false"
-                                         :href="scope.row.published
-                                             ? route('shop.product.view', {slug: scope.row.slug})
-                                             : route('shop.product.view-draft', {product: scope.row.id})"
-                                         target="_blank">
-                                    Просмотр
-                                </el-link>
-                                &nbsp;|&nbsp;
-                                <el-link type="warning" :underline="false" @click="onSaleToggle(scope.row)">
-                                    {{ scope.row.not_sale ? 'Вернуть в продажу' : 'Снять с продажи' }}
-                                </el-link>
-                                &nbsp;|&nbsp;
-                                <el-link type="success" :underline="false" @click="onPublishedToggle(scope.row)">
-                                    {{ scope.row.published ? 'В черновик' : 'Опубликовать' }}
-                                </el-link>
-                            </template>
-                        </div>
-                    </div>
-                </template>
-            </el-table-column>
-            <el-table-column sortable prop="published" label="Опубликован" width="140" align="center">
-                <template #default="scope">
-                    <Active :active="scope.row.published"/>
-                </template>
-            </el-table-column>
-            <el-table-column sortable prop="not_sale" label="В продаже" width="140" align="center">
-                <template #default="scope">
-                    <Active :active="!scope.row.not_sale"/>
-                </template>
-            </el-table-column>
-        </el-table>
+        <TableRelation entity="category" :id="categoryId" />
 
-        <div class="flex justify-center mt-4" v-if="pagination.last_page > 1">
-            <el-pagination
-                :current-page="pagination.current_page"
-                :page-size="pagination.per_page"
-                :total="pagination.total"
-                layout="prev, pager, next"
-                @current-change="onPageChange"
-            />
-        </div>
 
     </el-tab-pane>
     <DeleteEntityModal name_entity="Товар" name="product"/>
@@ -110,6 +32,7 @@ import axios from 'axios';
 import SearchAddProduct from "@Comp/Search/AddProduct.vue";
 import TableFilter from "@Comp/TableFilter.vue";
 import SearchAddProducts from "@Comp/Search/AddProducts.vue";
+import TableRelation from "@Comp/Product/TableRelation.vue";
 
 const props = defineProps({
     categoryId: Number,
