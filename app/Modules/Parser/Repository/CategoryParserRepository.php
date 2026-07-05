@@ -27,8 +27,8 @@ class CategoryParserRepository
     public function CategoryWithToArray(ParserCategory $category): array
     {
         return array_merge($this->CategoryToArray($category), [
-            'brand_name' => $category->brand->name,
-            'category_name' => is_null($category->category) ? null : $category->category->getParentNames(),
+
+            //'category_name' => is_null($category->category) ? null : $category->category->getParentNames(),
             'children' => $this->getTree($category->id),
             'products' => $category->products()->get()->map(function (ParserProduct $product) {
               //  if (is_null($product->product)) dd($product->id);

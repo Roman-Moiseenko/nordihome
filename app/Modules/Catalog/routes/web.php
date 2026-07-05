@@ -171,18 +171,6 @@ Route::group([
         Route::post('/add-product/{modification}', [ModificationController::class, 'add_product'])->name('add-product');
         Route::delete('/del-product/{modification}', [ModificationController::class, 'del_product'])->name('del-product');
     });
-    //PARSER
-    Route::group([
-        'prefix' => 'parser',
-        'as' => 'parser.',
-    ], function () {
-        Route::get('/', [ParserController::class, 'index'])->name('index');
-        //Route::get('/show/{parser}', [ParserController::class, 'show'])->name('show');
-        Route::post('/block/{parser}', [ParserController::class, 'block'])->name('block');
-        Route::post('/fragile/{parser}', [ParserController::class, 'fragile'])->name('fragile');
-        Route::post('/sanctioned/{parser}', [ParserController::class, 'sanctioned'])->name('sanctioned');
-    });
-
 
     //resource
     Route::resource('brand', BrandController::class); //CRUD

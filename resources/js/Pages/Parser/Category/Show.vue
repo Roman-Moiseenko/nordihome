@@ -67,8 +67,12 @@ const props = defineProps({
         default: 'Карточка категории',
     },
 })
+console.log(props.category)
+
+
+
 const showEdit = ref(false)
-const category_id = ref(props.room.category_id)
+const category_id = ref(props.category.category_id)
 function onSetCategory() {
     router.visit(
         route('admin.parser.category.set-category', {room: props.category.id}), {
@@ -93,7 +97,7 @@ function products() {
     })
 
     const count = ref(0);
-    axios.post(route('admin.parser.category.parser-products', {room: props.category.id})).then(response => {
+    axios.post(route('admin.parser.category.parser-products', {category: props.category.id})).then(response => {
         watch(() => count.value, (newValues, oldValues) => {
             if (newValues === response.data.length) loading.close();
         });
@@ -103,7 +107,7 @@ function products() {
 
          //   router.post(route('admin.parser.category.parser-product', {category: props.category.id}), {product: product});
 
-            axios.post(route('admin.parser.category.parser-product', {room: props.category.id}), {product: product}).then(response => {
+            axios.post(route('admin.parser.category.parser-product', {category: props.category.id}), {product: product}).then(response => {
                 console.log('response', response)
                 count.value++;
                 loading.text.value = text + ' Спарсено ' + count.value

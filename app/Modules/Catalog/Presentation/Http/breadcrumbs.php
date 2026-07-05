@@ -2,14 +2,12 @@
 declare(strict_types=1);
 
 use App\Modules\Catalog\Entity\Attribute;
-use App\Modules\Catalog\Entity\CategorySize;
 use App\Modules\Catalog\Entity\Equivalent;
 use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Entity\Modification;
 use App\Modules\Catalog\Entity\Series;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Shop\Parser\ProductParser;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -161,15 +159,6 @@ Breadcrumbs::for('admin.catalog.modification.edit', function (BreadcrumbTrail $t
     $trail->push('Редактировать', route('admin.catalog.modification.edit', $modification));
 });
 
-//PARSER PRODUCTS
-Breadcrumbs::for('admin.catalog.parser.index', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.catalog.product.index');
-    $trail->push('Спарсенные товары', route('admin.catalog.parser.index'));
-});
-Breadcrumbs::for('admin.catalog.parser.show', function (BreadcrumbTrail $trail, ProductParser $productParser) {
-    $trail->parent('admin.catalog.product.index');
-    $trail->push($productParser->product->name, route('admin.catalog.parser.show', $productParser));
-});
 
 //SERIES
 Breadcrumbs::for('admin.catalog.series.index', function (BreadcrumbTrail $trail) {
@@ -199,11 +188,6 @@ Breadcrumbs::for('admin.catalog.on-order.index', function (BreadcrumbTrail $trai
 Breadcrumbs::for('admin.catalog.size.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.catalog.product.index');
     $trail->push('Размеры', route('admin.catalog.size.index'));
-});
-
-Breadcrumbs::for('admin.catalog.size.show', function (BreadcrumbTrail $trail, CategorySize $category) {
-    $trail->parent('admin.catalog.size.index');
-    $trail->push($category->name, route('admin.catalog.size.show', $category));
 });
 
 //ROOMS

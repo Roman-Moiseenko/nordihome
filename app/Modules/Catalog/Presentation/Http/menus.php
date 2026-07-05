@@ -72,11 +72,6 @@ return [
                 'route_name' => 'admin.catalog.on-order.index', //
                 'font_awesome' => 'fa-light fa-truck-container',
             ],
-            'parser' => [
-                'title' => 'Парсер * (временно)',
-                'route_name' => 'admin.catalog.parser.index',
-                'font_awesome' => 'fa-light fa-folder-magnifying-glass',
-            ],
         ],
     ],
 ];

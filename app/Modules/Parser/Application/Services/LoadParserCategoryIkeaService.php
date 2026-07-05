@@ -33,16 +33,13 @@ readonly class LoadParserCategoryIkeaService
 
     public function load(): void
     {
-
         $data = $this->httpPage->getPage(self::API_URL_CATEGORIES);
 
         foreach (json_decode($data, true) as $categoryData) {
-            LoadCategoryIkeaJob::dispatch($categoryData, null);
-            //$this->addCategory($categoryData);
+            LoadCategoryIkeaJob::dispatch($categoryData, null); //$this->addCategory($categoryData);
         }
     }
 
-    //FIXME Сделать через очередь
     public function addCategory($categoryData, $parent_id = null): void
     {
         if (!is_null($this->parserCategoryRepository->getByIkeaId($categoryData['id']))) return;
@@ -65,8 +62,7 @@ readonly class LoadParserCategoryIkeaService
         }
         if (isset($categoryData['subs']))
             foreach ($categoryData['subs'] as $child) {
-                LoadCategoryIkeaJob::dispatch($child, $category->id);
-                //$this->addCategory($child, $category->id);
+                LoadCategoryIkeaJob::dispatch($child, $category->id); //$this->addCategory($child, $category->id);
             }
     }
 
