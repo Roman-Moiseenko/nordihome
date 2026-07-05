@@ -27,6 +27,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property bool $sanctioned - Санкционный, может влиять на стоимость доставки
  * @property bool $availability - Можно или нет возить под заказ
  *
+ * @property int $packs - Количество упаковок
+ *
  * @property array $composite список id товаров входящих в состав
  * @property array $quantity  Кол-во на складах
  * @property array $colors Цвета
@@ -47,6 +49,7 @@ class ParserProduct extends Model
         'quantity' => '{}',
         'colors' => '[]',
         'packages' => '[]',
+        'packs' => 1,
     ];
     protected $casts = [
         'colors' => 'json',
@@ -55,6 +58,7 @@ class ParserProduct extends Model
         'packages' => 'json',
         'price_base' => 'float',
         'price_sell' => 'float',
+        'packs' => 'integer',
     ];
 
     protected $fillable = [
@@ -73,6 +77,7 @@ class ParserProduct extends Model
         'composite',
         'colors',
         'packages',
+        'packs',
     ];
 
     public static function register(string $url, int $product_id): self

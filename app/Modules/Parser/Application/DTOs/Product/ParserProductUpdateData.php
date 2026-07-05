@@ -2,6 +2,7 @@
 
 namespace App\Modules\Parser\Application\DTOs\Product;
 
+use Illuminate\Http\Request;
 use Spatie\LaravelData\Data;
 
 class ParserProductUpdateData extends Data
@@ -25,6 +26,7 @@ class ParserProductUpdateData extends Data
         public readonly ?array $composite = null,
         /** @var string[]|null $colors */
         public readonly ?array $colors = null,
+        public readonly int $packs = 1,
     )
     {
     }

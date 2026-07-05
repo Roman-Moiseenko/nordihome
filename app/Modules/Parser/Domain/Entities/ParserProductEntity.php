@@ -72,6 +72,11 @@ final class ParserProductEntity
         set => $this->packages = $value;
     }
 
+    public int $packs = 1 {
+        get => $this->packs;
+        set => $this->packs = $value;
+    }
+
     public bool $fragile = false {
         get => $this->fragile;
         set => $this->fragile = $value;

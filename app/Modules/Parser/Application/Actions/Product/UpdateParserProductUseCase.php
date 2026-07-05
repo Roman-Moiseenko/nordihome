@@ -73,6 +73,9 @@ class UpdateParserProductUseCase
                 $dto->packages
             );
         }
+        if ($dto->packs !== null) {
+            $product->packs = $dto->packs;
+        }
         if ($dto->colors !== null) {
             $product->colors = $dto->colors;
         }

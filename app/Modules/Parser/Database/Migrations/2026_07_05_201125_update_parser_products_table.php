@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('description')->default('');
             $table->json('packages')->nullable();
             $table->json('colors')->nullable();
+            $table->integer('packs')->default(1);
         });
 
         Schema::table('parser_products', function (Blueprint $table) {
@@ -43,6 +44,7 @@ return new class extends Migration
             $table->dropColumn('description');
             $table->dropColumn('packages');
             $table->dropColumn('colors');
+            $table->dropColumn('packs');
         });
 
         Schema::table('parser_products', function (Blueprint $table) {

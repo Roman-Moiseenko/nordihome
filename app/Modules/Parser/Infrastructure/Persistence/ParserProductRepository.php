@@ -47,6 +47,7 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         $model->sanctioned = $product->sanctioned;
         $model->availability = $product->availability;
         $model->product_id = $product->productId;
+        $model->packs = $product->packs;
 
         // composite — массив Composite[]
         $model->composite = array_map(
@@ -93,6 +94,7 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         $entity->fragile = (bool) ($model->fragile ?? false);
         $entity->sanctioned = (bool) ($model->sanctioned ?? false);
         $entity->availability = (bool) ($model->availability ?? false);
+        $entity->packs = (int) ($model->packs ?? 1);
 
         // composite
         $compositeData = $model->composite ?? [];

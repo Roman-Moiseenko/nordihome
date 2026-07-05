@@ -7,7 +7,6 @@ use App\Modules\Parser\Application\Actions\Product\FindAndAttachToProductUseCase
 use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
 use App\Modules\Parser\Domain\ValueObjects\Package;
-use App\Modules\Base\Job\LoadingImageProduct;
 use App\Modules\Base\Service\HttpPage;
 use App\Modules\Base\Service\TranslateService;
 use App\Modules\Parser\Application\Actions\Product\CreateParserProductUseCase;
@@ -15,10 +14,11 @@ use App\Modules\Parser\Application\Actions\Product\UpdateParserProductUseCase;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductCreateData;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductUpdateData;
 use App\Modules\Parser\Application\Interfaces\ParserCategoryRepositoryInterface;
+use App\Modules\Parser\Infrastructure\Jobs\LoadProductIkeaJob;
+use App\Modules\Parser\Infrastructure\Jobs\LoadProductsIkeaJob;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
-use Illuminate\Support\Facades\Log;
 
 class LoadParserProductIkeaService
 {
@@ -55,12 +55,11 @@ class LoadParserProductIkeaService
         //Список всех категорий, которые active и нет дочерних
         $categories = $this->parserCategoryRepository->getActiveLeaves();
         foreach ($categories as $category) {
-            //FIXME JOB
-            $this->GetListProductsByCategory($category->ikeaId, $category->id);
+            LoadProductsIkeaJob::dispatch($category->ikeaId); //$this->GetListProductsByCategory($category->ikeaId);
         }
     }
 
-    public function GetListProductsByCategory(string $ikeaId, int $parentId): void
+    public function GetListProductsByCategory(string $ikeaId): void
     {
         $products = [];
         $start = 0;
@@ -80,18 +79,12 @@ class LoadParserProductIkeaService
         } while (count($list) == 1000);
 
         //Запускаем парсинг каждого товара
-        $count = 0;
         foreach ($products as $product) {
-            //FIXME JOB
-            $count++;
-            $entity = $this->CreateParserProduct($product, $parentId);
-            if ($count > 0) dd(json_encode($entity));
+            LoadProductIkeaJob::dispatch($product); //$entity = $this->CreateParserProduct($product);
         }
-
-
     }
 
-    public function CreateParserProduct(array $product, int $parentId): ?ParserProductEntity
+    public function CreateParserProduct(array $product): ?ParserProductEntity
     {
         $code = $product['itemNoGlobal'];
         if (!is_null($this->parserProductRepository->getByCode($code))) return null;
@@ -133,7 +126,7 @@ class LoadParserProductIkeaService
             packages: $data['packages'],
             composite: $data['composite'],
             colors: $colors,
-
+            packs: $data['packs'],
         );
         $productEntity = $this->updateParserProductUseCase->execute($dto);
 
@@ -163,7 +156,6 @@ class LoadParserProductIkeaService
         return $productEntity;
     }
 
-
     public function parsingDataByUrl(string $url): array|null
     {
         $pageProduct = $this->httpPage->getPage($url);
@@ -192,10 +184,10 @@ class LoadParserProductIkeaService
         $packaging = $dataProduct['packaging'];
 
         $pack = $packaging['numberOfPackages'];
-        $_packages = $packaging['packages'];
+        //$_packages = $packaging['packages'];
         $packages = [];
 
-        foreach ($_packages as $_package) {
+        foreach ($packaging['packages'] as $_package) {
             if (!empty($measurementGroups = $_package['measurementGroups'])) {
                 $_quantity = $_package['quantity']['value'];
                 foreach ($measurementGroups as $itemGroup) {
