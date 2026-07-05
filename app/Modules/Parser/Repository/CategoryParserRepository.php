@@ -2,8 +2,8 @@
 
 namespace App\Modules\Parser\Repository;
 
-use App\Modules\Parser\Entity\ParserProduct;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
+use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 
 class CategoryParserRepository
 {

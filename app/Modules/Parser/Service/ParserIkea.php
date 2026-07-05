@@ -14,8 +14,8 @@ use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\Measuring;
 use App\Modules\Guide\Entity\VAT;
 use App\Modules\Parser\Entity\ParserLogItem;
-use App\Modules\Parser\Entity\ParserProduct;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
+use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -109,7 +109,7 @@ class ParserIkea extends ParserAbstract
             $price_base = (float)(str_replace(' ', '', $product_data['salesPrice']['lowestPreviousSalesPrice']['wholeNumber']) . '.' . $product_data['salesPrice']['lowestPreviousSalesPrice']['decimals']);
             if ($price_base > (float)$price_sell) $price_sell = $price_base;
         }
-        $data = $this->parsingDataByUrl($url);
+        //$data = $this->parsingDataByUrl($url);
         //Создаем товар, если его нет в базе
         if (is_null($product = Product::whereCode($code)->first())) {
             Log::debug('ParserIkea->createProductJob: Создаем товар - ' . $name);

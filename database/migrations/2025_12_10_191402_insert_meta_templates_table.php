@@ -1,8 +1,8 @@
 <?php
 
 use App\Modules\Page\Entity\MetaTemplate;
-use App\Modules\Parser\Entity\ParserProduct;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
+use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use Illuminate\Database\Migrations\Migration;
 
 return new class extends Migration

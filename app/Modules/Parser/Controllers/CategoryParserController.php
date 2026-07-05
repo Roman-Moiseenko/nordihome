@@ -60,16 +60,4 @@ class CategoryParserController extends Controller
             return response()->json(true);
     }
 
-    public function add_category(Request $request): RedirectResponse
-    {
-        $this->service->addCategory($request);
-        return redirect()->back()->with('success', 'Добавлено');
-
-    }
-
-    public function destroy(ParserCategory $category_parser): RedirectResponse
-    {
-        $category_parser->delete();
-        return redirect()->back()->with('success', 'Удалено');
-    }
 }

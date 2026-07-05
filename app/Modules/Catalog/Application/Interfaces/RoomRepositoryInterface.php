@@ -16,6 +16,12 @@ interface RoomRepositoryInterface
 
     public function delete(int $id): void;
 
+    /**
+     * @param int[] $ids
+     * @return RoomEntity[]
+     */
+    public function findByIds(array $ids): array;
+
     /** @return RoomEntity[] */
     public function getTree(): array;
 

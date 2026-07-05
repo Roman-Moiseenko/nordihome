@@ -16,6 +16,12 @@ interface CategoryRepositoryInterface
 
     public function delete(int $id): void;
 
+    /**
+     * @param int[] $ids
+     * @return CategoryEntity[]
+     */
+    public function findByIds(array $ids): array;
+
     /** @return CategoryEntity[] */
     public function getTree(): array;
 

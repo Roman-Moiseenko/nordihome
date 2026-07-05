@@ -114,6 +114,17 @@ final class ProductEntity
         get => $this->publishedAt;
     }
 
+
+    public ?\DateTimeImmutable $createdAt = null {
+        get => $this->createdAt;
+        set => $this->createdAt = $value;
+    }
+
+    public ?\DateTimeImmutable $updatedAt = null {
+        get => $this->updatedAt;
+        set => $this->updatedAt = $value;
+    }
+
     public bool $preOrder = true {
         get => $this->preOrder;
         set => $this->preOrder = $value;

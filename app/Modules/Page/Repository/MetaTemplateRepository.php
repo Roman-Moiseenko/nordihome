@@ -11,8 +11,8 @@ use App\Modules\Page\Entity\MetaTemplate;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
-use App\Modules\Parser\Entity\ParserProduct;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
+use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Setting\Entity\Settings;
 use Illuminate\Http\Request;
 

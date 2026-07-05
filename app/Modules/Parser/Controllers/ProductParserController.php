@@ -3,7 +3,7 @@
 namespace App\Modules\Parser\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Parser\Repository\CategoryParserRepository;
 use App\Modules\Parser\Repository\ProductParserRepository;
 use App\Modules\Parser\Service\ProductParserService;

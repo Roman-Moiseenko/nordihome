@@ -72,6 +72,19 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $roots->map(fn(Category $model) => $this->hydrateWithChildren($model))->toArray();
     }
 
+    /**
+     * @param int[] $ids
+     * @return CategoryEntity[]
+     */
+    public function findByIds(array $ids): array
+    {
+        $models = Category::whereIn('id', $ids)
+            ->orderBy('name')
+            ->get();
+
+        return $models->map(fn(Category $model) => $this->hydrate($model))->toArray();
+    }
+
     public function existsSlug(string $slug, ?int $excludeId = null): bool
     {
         $query = Category::where('slug', $slug);

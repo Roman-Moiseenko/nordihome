@@ -19,6 +19,14 @@ interface ProductRepositoryInterface
     public function findByCode(string $code): ?ProductEntity;
 
     /**
+     * Найти товар по коду поиска (code_search)
+     *
+     * @param string $code
+     * @return ProductEntity|null
+     */
+    public function getByCode(string $code): ?ProductEntity;
+
+    /**
      * Найти товар по ID
      *
      * @param int $id

@@ -4,27 +4,25 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\Interfaces;
 
-use App\Modules\Catalog\Application\DTOs\Category\CategoryProductData;
-use App\Modules\Catalog\Application\DTOs\Product\ProductCategoryData;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 interface CategoryProductRepositoryInterface
 {
     /**
-     * Получить товары, привязанные к категории (с пагинацией).
+     * Получить ID товаров, привязанных к категории (с пагинацией).
      *
      * @param int $categoryId
      * @param int $perPage
      * @param int $page
-     * @return LengthAwarePaginator<ProductCategoryData>
+     * @return LengthAwarePaginator
      */
-    public function getProductsByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
+    public function getProductIdsByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
 
     /**
-     * Получить категории, привязанные к товару (простой массив).
+     * Получить ID категорий, привязанных к товару.
      *
      * @param int $productId
-     * @return CategoryProductData[]
+     * @return array<int> — массив ID категорий
      */
     public function getCategoriesByProductId(int $productId): array;
 

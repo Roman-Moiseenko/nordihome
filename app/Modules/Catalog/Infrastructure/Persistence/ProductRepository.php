@@ -69,6 +69,15 @@ class ProductRepository implements ProductRepositoryInterface
         return $this->hydrate($model);
     }
 
+    public function getByCode(string $code): ?ProductEntity
+    {
+        $model = Product::where('code_search', $code)->first();
+
+        if ($model === null) return null;
+
+        return $this->hydrate($model);
+    }
+
     public function getById(int $id): ProductEntity
     {
         $model = Product::findOrFail($id);

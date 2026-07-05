@@ -4,11 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\Modules\Catalog\Application\DTOs\Product\ProductRoomData;
-use App\Modules\Catalog\Application\DTOs\Room\RoomProductData;
 use App\Modules\Catalog\Application\Interfaces\RoomProductRepositoryInterface;
-use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Catalog\Infrastructure\Models\RoomProduct;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -29,17 +25,8 @@ class RoomProductRepository implements RoomProductRepositoryInterface
      */
     public function getRoomsByProductId(int $productId): array
     {
-        $roomIds = RoomProduct::where('product_id', $productId)
-            ->pluck('room_id');
-
-        return Room::whereIn('id', $roomIds)
-            ->orderBy('name')
-            ->get()
-            ->map(fn(Room $room) => new RoomProductData(
-                id: $room->id,
-                name: $room->name,
-                slug: $room->slug,
-            ))
+        return RoomProduct::where('product_id', $productId)
+            ->pluck('room_id')
             ->toArray();
     }
 

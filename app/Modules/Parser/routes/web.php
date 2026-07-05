@@ -17,11 +17,7 @@ Route::group([
         'as' => 'category.',
     ], function () {
         Route::post('/toggle/{category_parser}', [CategoryParserController::class, 'toggle'])->name('toggle');
-
-        Route::post('/add-category', [CategoryParserController::class, 'add_category'])->name('add-category');
-
         Route::get('/{category_parser}', [CategoryParserController::class, 'show'])->name('show');
-        Route::delete('/{category_parser}', [CategoryParserController::class, 'destroy'])->name('destroy');
         Route::post('/parser-products/{category_parser}', [CategoryParserController::class, 'parser_products'])->name('parser-products');
         Route::post('/parser-product/{category_parser}', [CategoryParserController::class, 'parser_product'])->name('parser-product');
         Route::get('/', [CategoryParserController::class, 'index'])->name('index');

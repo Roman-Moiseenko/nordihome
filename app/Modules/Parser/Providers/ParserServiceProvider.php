@@ -2,8 +2,12 @@
 
 namespace App\Modules\Parser\Providers;
 
+use App\Modules\Parser\Application\Interfaces\CategoryProductParserRepositoryInterface;
 use App\Modules\Parser\Application\Interfaces\ParserCategoryRepositoryInterface;
+use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
+use App\Modules\Parser\Infrastructure\Persistence\CategoryProductParserRepository;
 use App\Modules\Parser\Infrastructure\Persistence\ParserCategoryRepository;
+use App\Modules\Parser\Infrastructure\Persistence\ParserProductRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -89,6 +93,16 @@ class ParserServiceProvider extends ServiceProvider
         $this->app->bind(
             ParserCategoryRepositoryInterface::class,
             ParserCategoryRepository::class
+        );
+
+        $this->app->bind(
+            ParserProductRepositoryInterface::class,
+            ParserProductRepository::class
+        );
+
+        $this->app->bind(
+            CategoryProductParserRepositoryInterface::class,
+            CategoryProductParserRepository::class
         );
     }
 

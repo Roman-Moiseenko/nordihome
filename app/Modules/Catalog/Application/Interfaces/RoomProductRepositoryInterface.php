@@ -21,10 +21,10 @@ interface RoomProductRepositoryInterface
     public function getProductIdsByRoom(int $roomId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
 
     /**
-     * Получить комнаты, привязанные к товару (простой массив).
+     * Получить ID комнат, привязанных к товару.
      *
      * @param int $productId
-     * @return RoomProductData[]
+     * @return array<int> — массив ID комнат
      */
     public function getRoomsByProductId(int $productId): array;
 

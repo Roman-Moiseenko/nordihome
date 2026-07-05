@@ -2,8 +2,8 @@
 
 namespace App\Modules\Parser\Service;
 
-use App\Modules\Parser\Entity\ParserProduct;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
+use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use Illuminate\Http\Request;
 
 class CategoryParserService
@@ -27,16 +27,6 @@ class CategoryParserService
         $parser = app()->make($parser_class);
         //throw new \DomainException($request->input('product'));
         $parser->parserProductByData($request->input('product'));
-    }
-
-    public function addCategory(Request $request): void
-    {
-        $category = ParserCategory::register(
-            $request->string('name')->trim()->value(),
-            $request->string('url')->trim()->value(),
-            $request->input('parent_id'));
-        $category->brand_id = $request->integer('brand_id');
-        $category->save();
     }
 
     public function toggle(ParserCategory $categoryParser): string

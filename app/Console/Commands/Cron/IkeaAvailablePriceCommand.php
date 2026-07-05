@@ -2,11 +2,11 @@
 
 namespace App\Console\Commands\Cron;
 
+use App\Console\CreatesApplication;
 use App\Modules\Analytics\Entity\LoggerCron;
-use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Parser\Job\ParserAvailablePriceProduct;
 use Illuminate\Console\Command;
-use App\Console\CreatesApplication;
 
 /**
  * Проверяем на Икеа доступность товара и новую цену

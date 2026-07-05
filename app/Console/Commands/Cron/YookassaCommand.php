@@ -2,17 +2,13 @@
 
 namespace App\Console\Commands\Cron;
 
-use App\Modules\Analytics\Entity\LoggerCron;
+use App\Console\CreatesApplication;
 use App\Modules\Bank\Service\YookassaService;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Order\Service\OrderService;
-use App\Modules\Page\Service\CacheService;
-use App\Modules\Parser\Entity\ParserProduct;
-use App\Modules\Parser\Job\ParserAvailablePriceProduct;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
-use App\Console\CreatesApplication;
 
 class YookassaCommand extends Command
 {

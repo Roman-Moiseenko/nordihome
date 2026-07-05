@@ -2,12 +2,9 @@
 
 namespace App\Console\Commands\Cron;
 
-use App\Modules\Analytics\Entity\LoggerCron;
-use App\Modules\Page\Service\CacheService;
-use App\Modules\Parser\Entity\ParserProduct;
-use App\Modules\Parser\Job\ParserAvailablePriceProduct;
-use Illuminate\Console\Command;
 use App\Console\CreatesApplication;
+use App\Modules\Page\Service\CacheService;
+use Illuminate\Console\Command;
 
 class CacheCommand extends Command
 {

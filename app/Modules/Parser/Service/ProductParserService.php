@@ -2,7 +2,7 @@
 
 namespace App\Modules\Parser\Service;
 
-use App\Modules\Parser\Entity\ParserProduct;
+use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 
 class ProductParserService
 {

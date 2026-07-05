@@ -73,6 +73,19 @@ class RoomRepository implements RoomRepositoryInterface
         return $roots->map(fn(Room $model) => $this->hydrateWithChildren($model))->toArray();
     }
 
+    /**
+     * @param int[] $ids
+     * @return RoomEntity[]
+     */
+    public function findByIds(array $ids): array
+    {
+        $models = Room::whereIn('id', $ids)
+            ->orderBy('name')
+            ->get();
+
+        return $models->map(fn(Room $model) => $this->hydrate($model))->toArray();
+    }
+
     public function existsSlug(string $slug, ?int $excludeId = null): bool
     {
         $query = Room::where('slug', $slug);

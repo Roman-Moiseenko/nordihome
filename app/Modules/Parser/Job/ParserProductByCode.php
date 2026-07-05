@@ -3,18 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Parser\Job;
 
-use App\Modules\Analytics\Entity\LoggerCron;
-use App\Modules\Page\Job\JobCacheProduct;
-use App\Modules\Parser\Entity\ParserProduct;
-use App\Modules\Parser\Service\ParserAbstract;
 use App\Modules\Catalog\Service\ProductService;
 use Illuminate\Bus\Queueable;
-use Illuminate\Container\Attributes\Log;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Cache;
 
 /**
  * Спарисание товара по артикулу и бренду

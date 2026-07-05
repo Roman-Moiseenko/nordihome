@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\DTOs\Room;
 
+use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use Spatie\LaravelData\Data;
 
 /**
@@ -17,5 +18,14 @@ class RoomProductData extends Data
         public readonly string $slug,
     )
     {
+    }
+
+    public static function fromEntity(RoomEntity $room): self
+    {
+        return new self(
+            id: $room->id ?? 0,
+            name: $room->name,
+            slug: (string) $room->slug,
+        );
     }
 }

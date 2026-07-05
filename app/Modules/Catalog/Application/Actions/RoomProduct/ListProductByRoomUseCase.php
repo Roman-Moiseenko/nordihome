@@ -40,10 +40,5 @@ readonly class ListProductByRoomUseCase
             currentPage: $idPaginator->currentPage(),
             options: $idPaginator->getOptions()
         );
-
-
-
-
-        //return $this->roomProductRepository->getProductsByRoomId($roomId, $perPage, $page);
     }
 }
