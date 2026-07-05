@@ -6,6 +6,7 @@ use App\Modules\Base\Service\HttpPage;
 use App\Modules\Base\Service\TranslateService;
 use App\Modules\Parser\Application\Actions\Category\CreateParserCategoryUseCase;
 use App\Modules\Parser\Application\DTOs\Category\ParserCategoryCreateData;
+use App\Modules\Parser\Infrastructure\Jobs\LoadCategoryIkeaJob;
 use App\Modules\Parser\Infrastructure\Persistence\ParserCategoryRepository;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -23,25 +24,26 @@ readonly class LoadParserCategoryIkeaService
         private ParserCategoryRepository $parserCategoryRepository,
     )
     {
-    }
-
-    public function load(): void
-    {
         $this->userPermission = new UserPermission(
             null,
             ['admin'],
             ['storage.photo.upload', 'parser.category.create', 'parser.category.edit']
         );
+    }
+
+    public function load(): void
+    {
 
         $data = $this->httpPage->getPage(self::API_URL_CATEGORIES);
 
-
         foreach (json_decode($data, true) as $categoryData) {
-            $this->addCategory($categoryData);
+            LoadCategoryIkeaJob::dispatch($categoryData, null);
+            //$this->addCategory($categoryData);
         }
     }
 
-    private function addCategory($categoryData, $parent_id = null): void
+    //FIXME Сделать через очередь
+    public function addCategory($categoryData, $parent_id = null): void
     {
         if (!is_null($this->parserCategoryRepository->getByIkeaId($categoryData['id']))) return;
 
@@ -63,7 +65,8 @@ readonly class LoadParserCategoryIkeaService
         }
         if (isset($categoryData['subs']))
             foreach ($categoryData['subs'] as $child) {
-                $this->addCategory($child, $category->id);
+                LoadCategoryIkeaJob::dispatch($child, $category->id);
+                //$this->addCategory($child, $category->id);
             }
     }
 
