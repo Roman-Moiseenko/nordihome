@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Parser\Infrastructure\Persistence;
 
+use App\Modules\Parser\Application\DTOs\Product\ParserProductFilterData;
 use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
 use App\Modules\Parser\Domain\ValueObjects\Composite;
 use App\Modules\Parser\Domain\ValueObjects\Package;
-use App\Modules\Parser\Infrastructure\Models\CategoryProductParser;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -150,5 +150,32 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         $entity->colors = $model->colors ?? [];
 
         return $entity;
+    }
+
+    public function getFilteredPaginated(ParserProductFilterData $filter): LengthAwarePaginator
+    {
+        $query = ParserProduct::orderBy('name');
+
+        if ($filter->code !== null) {
+            $code = $filter->code;
+            $query->where(function ($q) use ($code) {
+                $q->whereRaw("LOWER(name) like LOWER('%$code%')")
+                    ->orWhere('code', 'like', "%$code%");
+            });
+        }
+
+        if ($filter->show !== null) {
+            match ($filter->show) {
+                'availability' => $query->where('availability', true),
+                'not_availability' => $query->where('availability', false),
+                'fragile' => $query->where('fragile', true),
+                'sanctioned' => $query->where('sanctioned', true),
+                default => null,
+            };
+        }
+
+        return $query->paginate($filter->perPage)
+            ->withQueryString()
+            ->through(fn(ParserProduct $model) => $this->hydrate($model));
     }
 }

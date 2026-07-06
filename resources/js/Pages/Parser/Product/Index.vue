@@ -5,10 +5,7 @@
         <div class="flex">
 
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
-                <el-input v-model="filter.name" placeholder="Товар"/>
-                <el-select v-model="filter.room" placeholder="Выберите категорию" class="mt-1">
-                    <el-option v-for="item in useCatalog.categoriesForFilters" :key="item.id" :value="item.id" :label="item.name"/>
-                </el-select>
+                <el-input v-model="filter.code" placeholder="Артикул"/>
                 <el-select v-model="filter.show" placeholder="Показать" class="mt-1">
                     <el-option key="availability" value="availability" label="Только доступные"/>
                     <el-option key="not_availability" value="not_sale" label="Недоступные"/>
@@ -114,10 +111,12 @@ const props = defineProps({
     filters: Array,
     count: Array,
 })
+console.log(props.products)
+
 const tableData = ref([...props.products.data])
 const filter = reactive({
-    name: props.filters.name,
-    room: props.filters.room,
+    code: props.filters.code,
+    category: props.filters.category,
     show: props.filters.show,
 })
 const store = useStore();

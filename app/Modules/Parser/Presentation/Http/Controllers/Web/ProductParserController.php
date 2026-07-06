@@ -3,9 +3,12 @@
 namespace App\Modules\Parser\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Parser\Application\Actions\Product\IndexParserProductUseCase;
+use App\Modules\Parser\Application\DTOs\Product\ParserProductFilterData;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Parser\Repository\ProductParserRepository;
 use App\Modules\Parser\Service\ProductParserService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -16,18 +19,20 @@ class ProductParserController extends Controller
 
     public function __construct(
         ProductParserService $service,
-        ProductParserRepository $repository
+        private readonly IndexParserProductUseCase $indexParserProductUseCase,
     )
     {
         $this->service = $service;
     }
 
-    public function index(Request $request): \Inertia\Response
+    public function index(Request $request, UserPermission $userPermission): \Inertia\Response
     {
+        $dto = ParserProductFilterData::validateAndCreate($request->all());
+        $products = $this->indexParserProductUseCase->execute($dto, $userPermission);
       //  $products = $this->repository->getIndex($request, $filters);
         return Inertia::render('Parser/Product/Index', [
-            'products' => [], //$products,
-            'filters' => [], //$filters,
+            'products' => $products,
+            'filters' => $dto,
 
         ]);
     }

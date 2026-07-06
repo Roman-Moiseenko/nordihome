@@ -41,7 +41,7 @@ class CategoryParserController extends Controller
     {
         $category = $this->viewParserCategoryUseCase->execute($category_parser->id, $userPermission);
         return Inertia::render('Parser/Category/Show', [
-            'category' => ParserCategoryIndexData::fromEntity($category), //$this->repository->CategoryWithToArray($category_parser),
+            'category' => ParserCategoryIndexData::fromEntity($category),
         ]);
     }
 
