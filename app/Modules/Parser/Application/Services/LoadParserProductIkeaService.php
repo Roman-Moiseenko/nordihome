@@ -19,6 +19,7 @@ use App\Modules\Parser\Infrastructure\Jobs\LoadProductsIkeaJob;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
+use function Laravel\Prompts\warning;
 
 class LoadParserProductIkeaService
 {
@@ -26,7 +27,7 @@ class LoadParserProductIkeaService
     const string API_URL_PRODUCT = 'https://sik.search.blue.cdtapps.com/pl/pl/search-result-page?q=%s';
 
     private UserPermission $userPermission;
-    private bool $isTest = true;
+    private bool $isTest = false;
 
     public function __construct(
         private readonly HttpPage                          $httpPage,
@@ -117,6 +118,7 @@ class LoadParserProductIkeaService
         );
         //UseCase - создать товар Parser
         $productEntity = $this->createParserProductUseCase->execute($dto);
+
         $price_sell = $product['salesPrice']['numeral'];
         $price_base = $price_sell;
         if (isset($product['salesPrice']['lowestPreviousSalesPrice'])) {
@@ -145,8 +147,8 @@ class LoadParserProductIkeaService
             colors: $colors,
             packs: $data['packs'],
         );
-        $productEntity = $this->updateParserProductUseCase->execute($dto);
 
+        $productEntity = $this->updateParserProductUseCase->execute($dto);
         //Назначаем категори
         $categories = array_map(function ($item) {
             return $this->parserCategoryRepository->getByIkeaId($item['key'])->id;

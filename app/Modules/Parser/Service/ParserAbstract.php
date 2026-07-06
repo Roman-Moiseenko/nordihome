@@ -12,28 +12,22 @@ use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 abstract class ParserAbstract
 {
     const array PARSERS = [
-        ParserNB::class => 'New Balance Польша',
         ParserIkea::class => 'Икеа Польша',
     ];
 
     protected HttpPage $httpPage;
-    protected CategoryParserService $categoryParserService;
-    protected Brand $brand;
-    protected string $brand_name;
+
     protected TranslateService $translate;
 
     public function __construct(
-        CategoryParserService $categoryParserService,
         TranslateService      $translate,
     )
     {
         $this->httpPage = new HttpPage(); //Без кеша
-        $this->categoryParserService = $categoryParserService;
-        $this->brand = Brand::where('name', $this->brand_name)->first();
         $this->translate = $translate;
     }
 
-    abstract public function findProduct(string $search):? Product;
+   // abstract public function findProduct(string $search):? Product;
 
     abstract public function remainsProduct(string $code): float;
 
@@ -51,7 +45,5 @@ abstract class ParserAbstract
 
     //abstract protected function parserProductsByUrl(string $domain, string $url);
 
-    //Функция распарсивания товара по найденным данным
-    abstract public function parserProductByData(array $product): void;
 }
 

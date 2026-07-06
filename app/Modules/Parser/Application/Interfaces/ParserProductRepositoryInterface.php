@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Parser\Application\Interfaces;
 
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 
 interface ParserProductRepositoryInterface
@@ -17,4 +18,10 @@ interface ParserProductRepositoryInterface
 
     public function delete(int $id): void;
 
+    /** @return ParserProductEntity[] */
+    public function getByCategoryIds(array $categoryIds): array;
+
+    public function bulkToggleAvailability(array $productIds, bool $availability): void;
+
+    public function findAllByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
 }

@@ -6,8 +6,6 @@ use App\Modules\Parser\Domain\ValueObjects\Composite;
 use App\Modules\Parser\Domain\ValueObjects\Package;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
-
-
 final class ParserProductEntity
 {
     // ======================== Идентификатор ========================
@@ -44,8 +42,8 @@ final class ParserProductEntity
     }
 
     public string $url = '' {
-        get => $this->name;
-        set => $this->name = $value;
+        get => $this->url;
+        set => $this->url = $value;
     }
     public float $priceSell = 0 {
         get => $this->priceSell;

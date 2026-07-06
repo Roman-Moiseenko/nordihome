@@ -4,11 +4,14 @@ namespace App\Modules\Parser\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Parser\Application\Actions\Category\IndexParserCategoryUseCase;
+use App\Modules\Parser\Application\Actions\Category\ViewParserCategoryUseCase;
+use App\Modules\Parser\Application\Actions\Product\ListAllProductByCategoryUseCase;
 use App\Modules\Parser\Application\DTOs\Category\ParserCategoryIndexData;
+use App\Modules\Parser\Application\Services\ToggleCategoryWithProductsService;
+use App\Modules\Parser\Infrastructure\Jobs\LoadProductsIkeaJob;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
-use App\Modules\Parser\Repository\CategoryParserRepository;
-use App\Modules\Parser\Service\CategoryParserService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -16,17 +19,14 @@ use Inertia\Response;
 
 class CategoryParserController extends Controller
 {
-    private CategoryParserRepository $repository;
-    private CategoryParserService $service;
 
     public function __construct(
-        CategoryParserRepository $repository,
-        CategoryParserService    $service,
         private readonly IndexParserCategoryUseCase $indexParserCategoryUseCase,
+        private readonly ToggleCategoryWithProductsService $toggleCategoryWithProductsService,
+        private readonly ViewParserCategoryUseCase $viewParserCategoryUseCase,
+        private readonly ListAllProductByCategoryUseCase $listAllProductByCategoryUseCase,
     )
     {
-        $this->repository = $repository;
-        $this->service = $service;
     }
 
     public function index(UserPermission $userPermission): Response
@@ -37,31 +37,34 @@ class CategoryParserController extends Controller
         ]);
     }
 
-    public function show(ParserCategory $category_parser): Response
+    public function show(ParserCategory $category_parser, UserPermission $userPermission): Response
     {
+        $category = $this->viewParserCategoryUseCase->execute($category_parser->id, $userPermission);
         return Inertia::render('Parser/Category/Show', [
-            'category' => $this->repository->CategoryWithToArray($category_parser),
+            'category' => ParserCategoryIndexData::fromEntity($category), //$this->repository->CategoryWithToArray($category_parser),
         ]);
     }
 
-    public function toggle(ParserCategory $category_parser): RedirectResponse
+    public function toggle(ParserCategory $category_parser, UserPermission $userPermission): RedirectResponse
     {
-        $message = $this->service->toggle($category_parser);
+        $message = $this->toggleCategoryWithProductsService->execute($category_parser->id, $userPermission);
 
         return redirect()->back()->with('success', $message);
     }
 
-    public function parser_products(ParserCategory $category_parser): \Illuminate\Http\JsonResponse
+    public function parser_products(ParserCategory $category_parser, UserPermission $userPermission): JsonResponse
     {
-        //MAINDO Запуск Job через UseCase
+        LoadProductsIkeaJob::dispatch($category_parser->ikea_id, $userPermission);
         return response()->json(['message' => 'Поставлено в очередь']);
     }
 
-
-    public function parser_product(ParserCategory $category_parser, Request $request): \Illuminate\Http\JsonResponse
+    public function products(int $id, Request $request): JsonResponse
     {
-            $this->service->parserProduct($category_parser, $request);
-            return response()->json(true);
+        $page = $request->integer('page', 1);
+        $perPage = $request->integer('per_page', 15);
+        $list = $this->listAllProductByCategoryUseCase->execute($id, $perPage, $page);
+
+        return response()->json($list, \Symfony\Component\HttpFoundation\Response::HTTP_OK);
     }
 
 }

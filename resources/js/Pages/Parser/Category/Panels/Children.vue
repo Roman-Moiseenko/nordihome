@@ -19,7 +19,7 @@ import {router} from "@inertiajs/vue3";
 import CategoryChildren from "./../Children.vue";
 
 const props = defineProps({
-    room: Object,
+    category: Object,
 })
 
 

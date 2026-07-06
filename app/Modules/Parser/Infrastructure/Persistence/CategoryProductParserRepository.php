@@ -13,19 +13,16 @@ class CategoryProductParserRepository implements CategoryProductParserRepository
 {
     public function getProductIdsByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator
     {
-        $category = ParserCategory::findOrFail($categoryId);
-
-        return $category->products()
-            ->select('parser_products.id')
+        return ParserProduct::select('parser_products.id')
+            ->whereHas('categories', fn($q) => $q->where('id', $categoryId))
             ->paginate($perPage, ['*'], 'page', $page);
     }
 
     public function getCategoriesByProductId(int $productId): array
     {
-        $product = ParserProduct::findOrFail($productId);
-
-        return $product->categories()
-            ->pluck('parser_categories.id')
+        return ParserCategory::select('parser_categories.id')
+            ->whereHas('products', fn($q) => $q->where('product_id', $productId))
+            ->pluck('id')
             ->toArray();
     }
 

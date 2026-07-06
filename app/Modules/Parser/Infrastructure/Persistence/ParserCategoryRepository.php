@@ -25,7 +25,7 @@ class ParserCategoryRepository implements ParserCategoryRepositoryInterface
     public function getById(int $id): ParserCategoryEntity
     {
         $model = ParserCategory::findOrFail($id);
-        return $this->hydrate($model);
+        return $this->hydrateWithChildren($model);
     }
 
     public function getByIkeaId(string $ikeaId):? ParserCategoryEntity

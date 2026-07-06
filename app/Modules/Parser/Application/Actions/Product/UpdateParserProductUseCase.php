@@ -79,7 +79,6 @@ class UpdateParserProductUseCase
         if ($dto->colors !== null) {
             $product->colors = $dto->colors;
         }
-
         return $this->productRepository->save($product);
     }
 }

@@ -4,7 +4,6 @@ namespace App\Modules\Parser\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
-use App\Modules\Parser\Repository\CategoryParserRepository;
 use App\Modules\Parser\Repository\ProductParserRepository;
 use App\Modules\Parser\Service\ProductParserService;
 use Illuminate\Http\Request;
@@ -14,26 +13,21 @@ class ProductParserController extends Controller
 {
 
     private ProductParserService $service;
-    private ProductParserRepository $repository;
-    private CategoryParserRepository $categories;
 
     public function __construct(
         ProductParserService $service,
-        ProductParserRepository $repository,
-        CategoryParserRepository $categories
+        ProductParserRepository $repository
     )
     {
         $this->service = $service;
-        $this->repository = $repository;
-        $this->categories = $categories;
     }
 
     public function index(Request $request): \Inertia\Response
     {
-        $products = $this->repository->getIndex($request, $filters);
+      //  $products = $this->repository->getIndex($request, $filters);
         return Inertia::render('Parser/Product/Index', [
-            'products' => $products,
-            'filters' => $filters,
+            'products' => [], //$products,
+            'filters' => [], //$filters,
 
         ]);
     }
@@ -41,7 +35,7 @@ class ProductParserController extends Controller
     public function show(ParserProduct $product_parser)
     {
         return Inertia::render('Parser/Product/Show', [
-            'products' => $this->repository->ProductWithToArray($product_parser),
+          //  'products' => $this->repository->ProductWithToArray($product_parser),
         ]);
     }
 

@@ -5,7 +5,7 @@
         </div>
         <div class="ml-4" style="width: 300px;">
             <Link type="primary" :href="route('admin.parser.category.show', {category_parser: category.id})">{{
-                    category.name
+                    category.name + ' (' + category.ikeaId + ')'
                 }}
             </Link>
         </div>
@@ -57,6 +57,7 @@ import {router, Link} from "@inertiajs/vue3";
 import {computed, inject, onActivated, reactive, ref} from "vue";
 import CategoryChildren from "./Children.vue";
 import Active from "@Comp/Elements/Active.vue";
+import {route} from "ziggy-js";
 
 const props = defineProps({
     category: Object,
@@ -77,7 +78,7 @@ const showChildren = computed(() => {
 const category_id = ref(null)
 
 function onToggle() {
-    router.visit(route('admin.parser.category.toggle', {category_parser: props.category.id}), {
+    router.visit(route('admin.parser.category.toggle', {id: props.category.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,

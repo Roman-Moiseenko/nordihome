@@ -8,8 +8,10 @@ use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
 use App\Modules\Parser\Domain\ValueObjects\Composite;
 use App\Modules\Parser\Domain\ValueObjects\Package;
+use App\Modules\Parser\Infrastructure\Models\CategoryProductParser;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class ParserProductRepository implements ParserProductRepositoryInterface
 {
@@ -73,6 +75,37 @@ class ParserProductRepository implements ParserProductRepositoryInterface
     {
         $model = ParserProduct::findOrFail($id);
         $model->delete();
+    }
+
+    /**
+     * @return ParserProductEntity[]
+     */
+    public function getByCategoryIds(array $categoryIds): array
+    {
+        return ParserProduct::whereHas('categories', function ($query) use ($categoryIds) {
+            $query->whereIn('id', $categoryIds);
+        })
+            ->get()
+            ->map(fn(ParserProduct $model) => $this->hydrate($model))
+            ->values()
+            ->toArray();
+    }
+
+    public function bulkToggleAvailability(array $productIds, bool $availability): void
+    {
+        if (empty($productIds)) {
+            return;
+        }
+
+        ParserProduct::whereIn('id', $productIds)->update(['availability' => $availability]);
+    }
+
+    public function findAllByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator
+    {
+        return ParserProduct::orderBy('name')
+            ->whereHas('categories', fn($query) => $query->where('id', $categoryId))
+            ->paginate($perPage, ['*'], 'page', $page)
+            ->through(fn(ParserProduct $model) => $this->hydrate($model));
     }
 
 

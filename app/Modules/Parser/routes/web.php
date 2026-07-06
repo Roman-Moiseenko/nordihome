@@ -16,11 +16,11 @@ Route::group([
         'prefix' => 'category',
         'as' => 'category.',
     ], function () {
-        Route::post('/toggle/{category_parser}', [CategoryParserController::class, 'toggle'])->name('toggle');
+        Route::post('/toggle/{id}', [CategoryParserController::class, 'toggle'])->name('toggle');
         Route::get('/{category_parser}', [CategoryParserController::class, 'show'])->name('show');
         Route::post('/parser-products/{category_parser}', [CategoryParserController::class, 'parser_products'])->name('parser-products');
-        Route::post('/parser-product/{category_parser}', [CategoryParserController::class, 'parser_product'])->name('parser-product');
         Route::get('/', [CategoryParserController::class, 'index'])->name('index');
+        Route::get('/products/{id}', [CategoryParserController::class, 'products'])->name('products');
     });
 
     Route::group([
