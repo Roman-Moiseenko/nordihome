@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
+use App\Modules\Parser\Infrastructure\Models\ParserLog;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
-use App\Modules\Parser\Entity\ParserLog;
-use App\Modules\Parser\Infrastructure\Models\ParserCategory;
-
 
 
 //CATEGORY

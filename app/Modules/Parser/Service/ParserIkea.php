@@ -13,8 +13,8 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\Measuring;
 use App\Modules\Guide\Entity\VAT;
-use App\Modules\Parser\Entity\ParserLogItem;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
+use App\Modules\Parser\Infrastructure\Models\ParserLogItem;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use Illuminate\Support\Facades\Log;
 use JetBrains\PhpStorm\Deprecated;
@@ -191,59 +191,6 @@ class ParserIkea extends ParserAbstract
 
         Log::debug('ParserIkea->createProductJob: Товар полностью создан ' . $name);
         return $product;
-    }
-
-
-    protected function parserProductsByCategory(ParserCategory $categoryParser): array
-    {
-        $code_category = $categoryParser->ikea_id;
-        $main_category_id = $categoryParser->category_id;
-        $parser_category = $categoryParser->id;
-        $products = [];
-        $start = 0;
-        $end = 1000;
-        do {
-            $_url = sprintf(self::API_URL_PRODUCTS, $code_category, $start, $end);
-            $json_product = $this->httpPage->getPage($_url);
-            if (!is_null($json_product)) {
-                $_array = json_decode($json_product, true);
-                $list = $_array['moreProducts']['productWindow'];
-            } else {
-                $list = [];
-            }
-            $products = array_merge($products, $list);
-            $start += 1000;
-            $end += 1000;
-        } while (count($list) == 1000);
-        /*
-                return array_map(function ($item) use ($main_category_id, $parser_category) {
-                    $item['main_category_id'] = $main_category_id;
-                    $item['parser_category_id'] = $parser_category;
-                    return $item;
-
-                }, $products);
-                */
-        // dd($products);
-        //TODO Убрать когда заработает через axios
-
-        set_time_limit(10000);
-        foreach ($products as $product) {
-            //dd($product);
-            //Ищем товар в базе по Id
-            $parser_product = ParserProduct::where('maker_id', $product['id'])->first();
-            //Если есть .... Надо проверить модификации (варианты) либо добавить, либо убрать из продажи
-            if (!is_null($parser_product)) {
-                $this->updateVariants($product);
-            } else {
-                $product['main_category_id'] = $main_category_id;
-                $product['parser_category_id'] = $parser_category;
-                \DB::transaction(function () use ($product) {
-                    $this->createProduct($product);
-                });
-            }
-        }
-        set_time_limit(30);
-        return $products;
     }
 
     #[Deprecated]
@@ -437,6 +384,7 @@ class ParserIkea extends ParserAbstract
     {
     }
 
+    #[Deprecated]
     public function findProduct(string $search): ?Product
     {
         $url = sprintf(self::API_URL_PRODUCT, $search); //API для поиска товара

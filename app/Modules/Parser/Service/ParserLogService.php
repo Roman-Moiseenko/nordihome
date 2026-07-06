@@ -2,8 +2,8 @@
 
 namespace App\Modules\Parser\Service;
 
-use App\Modules\Parser\Entity\ParserLog;
-use App\Modules\Parser\Entity\ParserLogItem;
+use App\Modules\Parser\Infrastructure\Models\ParserLog;
+use App\Modules\Parser\Infrastructure\Models\ParserLogItem;
 
 class ParserLogService
 {

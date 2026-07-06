@@ -14,7 +14,7 @@ class ModelTypeMapper
         'catalog.category' => \App\Modules\Catalog\Infrastructure\Models\Category::class,
         'catalog.product' => \App\Modules\Catalog\Infrastructure\Models\Product::class,
         'parser.category' => \App\Modules\Parser\Infrastructure\Models\ParserCategory::class,
-
+        'parser.product' => \App\Modules\Parser\Infrastructure\Models\ParserProduct::class,
     ];
 
     public static function toFqcn(string $modelType): string

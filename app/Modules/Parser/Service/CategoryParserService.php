@@ -8,18 +8,6 @@ use Illuminate\Http\Request;
 
 class CategoryParserService
 {
-    public function parserProducts(ParserCategory $category): array
-    {
-        $parser_class = $category->brand->parser_class;
-        /** @var ParserAbstract $parser */
-        $parser = app()->make($parser_class);
-
-        return $parser->getProductsByCategory($category->id);
-    }
-
-
-
-
     public function parserProduct(ParserCategory $category, Request $request): void
     {
         $parser_class = $category->brand->parser_class;

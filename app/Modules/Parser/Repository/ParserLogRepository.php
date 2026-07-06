@@ -2,9 +2,9 @@
 
 namespace App\Modules\Parser\Repository;
 
-use App\Modules\Parser\Entity\ParserLog;
-use App\Modules\Parser\Entity\ParserLogItem;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
+use App\Modules\Parser\Infrastructure\Models\ParserLog;
+use App\Modules\Parser\Infrastructure\Models\ParserLogItem;
 use Illuminate\Http\Request;
 
 class ParserLogRepository

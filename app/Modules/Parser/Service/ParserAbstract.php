@@ -44,33 +44,10 @@ abstract class ParserAbstract
     /**
      * Парсит товары по категории текущего бренда и добавляем товары в каталог
      */
-    final public function getProductsByCategory(?int $category_id): array
-    {
-        if (is_null($category_id)) {
-            $categories = ParserCategory::where('active', true)->where('brand_id', $this->brand->id)->getModels();
-        } else {
-            $category = ParserCategory::find($category_id);
-            $categories = ParserCategory::where('active', true)
-                ->where('brand_id', $this->brand->id)
-                ->where('_lft', '>=', $category->_lft)
-                ->where('_rgt', '<=', $category->_rgt)
-                ->getModels();
-        }
-        /** @var ParserCategory $category */
-        $products = [];
-        foreach ($categories as $category) {
-            if ($category->children()->count() == 0) //Парсим только дочерние
-                $products = array_merge($products,
-                    $this->parserProductsByCategory($category)
-                );
 
-        }
-        return $products;
-    }
     /**
      * Функция поиска данных для товаров по категории парсера
      */
-    abstract protected function parserProductsByCategory(ParserCategory $categoryParser);
 
     //abstract protected function parserProductsByUrl(string $domain, string $url);
 

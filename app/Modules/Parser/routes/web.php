@@ -1,8 +1,8 @@
 <?php
 
-use App\Modules\Parser\Controllers\CategoryParserController;
-use App\Modules\Parser\Controllers\ParserLogController;
-use App\Modules\Parser\Controllers\ProductParserController;
+use App\Modules\Parser\Presentation\Http\Controllers\Web\CategoryParserController;
+use App\Modules\Parser\Presentation\Http\Controllers\Web\ParserLogController;
+use App\Modules\Parser\Presentation\Http\Controllers\Web\ProductParserController;
 use Illuminate\Support\Facades\Route;
 
 

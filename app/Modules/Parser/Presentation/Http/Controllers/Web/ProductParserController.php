@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Parser\Controllers;
+namespace App\Modules\Parser\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;

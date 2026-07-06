@@ -3,7 +3,7 @@
 namespace App\Console\Commands\IKEA;
 
 
-use App\Modules\Parser\Service\ParserIkea;
+use App\Modules\Parser\Application\Services\LoadParserProductIkeaService;
 use Illuminate\Console\Command;
 use App\Console\CreatesApplication;
 
@@ -16,7 +16,7 @@ class ParserCommand extends Command
 
 
 
-    public function handle(ParserIkea $parserIkea): void
+    public function handle(LoadParserProductIkeaService $service): void
     {
 
         //$code = $this->ask('Артикул товара');
@@ -25,7 +25,7 @@ class ParserCommand extends Command
         //$code = '194.948.41'; // - составной
     //    $code = '40178888'; // - одинарный
 
-        $product = $parserIkea->findProduct($code);
+        $product = $service->FindByCode($code);
         $this->info(json_encode($product));
 
 

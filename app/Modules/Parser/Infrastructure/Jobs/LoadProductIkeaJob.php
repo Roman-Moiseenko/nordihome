@@ -2,7 +2,10 @@
 
 namespace App\Modules\Parser\Infrastructure\Jobs;
 
+use App\Modules\Parser\Application\Actions\ParserLog\CreateParserLogUseCase;
+use App\Modules\Parser\Application\DTOs\ParserLog\ParserLogCreateData;
 use App\Modules\Parser\Application\Services\LoadParserProductIkeaService;
+use App\Modules\Parser\Domain\ValueObjects\ParserStatus;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -17,9 +20,36 @@ class LoadProductIkeaJob implements ShouldQueue
     {
     }
 
-    public function handle(LoadParserProductIkeaService $service): void
+    public function handle(
+        LoadParserProductIkeaService $service,
+        CreateParserLogUseCase $createParserLogUseCase,
+    ): void
     {
-        $entity = $service->CreateParserProduct($this->productData);
-        //MAINDO Логи сделать ParserLog
+        //\Log::warning(json_encode($this->productData));
+        try {
+            $entity = $service->CreateParserProduct($this->productData);
+            if (is_null($entity)) return; //Товар уже был спарсен ранее
+            \Log::warning(json_encode($entity));
+            $dto = new ParserLogCreateData(
+                status: ParserStatus::new(),
+                parserId: $entity->id,
+            );
+
+        } catch (\Throwable $exception) {
+
+            $error = $this->productData['itemNoGlobal'] . ' ' .
+                $exception->getMessage() . ' ' .
+                $exception->getFile() . ' ' .
+                $exception->getLine();
+            \Log::warning(json_encode($error));
+
+            $dto  = new ParserLogCreateData(
+                status: ParserStatus::error(),
+                error: $error,
+            );
+        }
+        $createParserLogUseCase->execute($dto);
+
+
     }
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Parser\Controllers;
+namespace App\Modules\Parser\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Parser\Entity\ParserLog;
+use App\Modules\Parser\Infrastructure\Models\ParserLog;
 use App\Modules\Parser\Repository\ParserLogRepository;
 use App\Modules\Parser\Service\ParserLogService;
 use Illuminate\Http\RedirectResponse;

@@ -23,7 +23,10 @@ use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
 class LoadParserProductIkeaService
 {
     const string API_URL_PRODUCTS = 'https://sik.search.blue.cdtapps.com/pl/pl/product-list-page/more-products?category=%s&start=%s&end=%s';
+    const string API_URL_PRODUCT = 'https://sik.search.blue.cdtapps.com/pl/pl/search-result-page?q=%s';
+
     private UserPermission $userPermission;
+    private bool $isTest = true;
 
     public function __construct(
         private readonly HttpPage                          $httpPage,
@@ -56,9 +59,16 @@ class LoadParserProductIkeaService
         $categories = $this->parserCategoryRepository->getActiveLeaves();
         foreach ($categories as $category) {
             LoadProductsIkeaJob::dispatch($category->ikeaId); //$this->GetListProductsByCategory($category->ikeaId);
+            if ($this->isTest) break;
         }
     }
 
+    /**
+     * Парсит список товаров по категории Ikea и запускает очередь на спарсивание товаров
+     * Public - для запуска Job
+     * @param string $ikeaId
+     * @return void
+     */
     public function GetListProductsByCategory(string $ikeaId): void
     {
         $products = [];
@@ -81,9 +91,16 @@ class LoadParserProductIkeaService
         //Запускаем парсинг каждого товара
         foreach ($products as $product) {
             LoadProductIkeaJob::dispatch($product); //$entity = $this->CreateParserProduct($product);
+            if ($this->isTest) break;
         }
     }
 
+    /**
+     * Парсит полные данные о товаре, связывает с Catalog\Product
+     * Public - для запуска Job
+     * @param array $product
+     * @return ParserProductEntity|null
+     */
     public function CreateParserProduct(array $product): ?ParserProductEntity
     {
         $code = $product['itemNoGlobal'];
@@ -156,6 +173,27 @@ class LoadParserProductIkeaService
         return $productEntity;
     }
 
+    /**
+     * Парсит цену и наличие товара на складах, уже ранее спарсенного товара
+     * Public - для запуска Job
+     * @return void
+     */
+    public function UpdateParserProduct()
+    {
+        //MAINDO Спарсить цену и наличие, сделать в Job
+    }
+
+    public function FindByCode(string $code): ?ParserProductEntity
+    {
+        $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
+        if (is_null($jsonData = $this->httpPage->getPage($url))) return null;
+        $jsonData = json_decode($jsonData, true);
+        if (empty($jsonData['searchResultPage']['products']['main']['items'])) return null;
+
+        $productData = $jsonData['searchResultPage']['products']['main']['items'][0]['product'];
+        return $this->CreateParserProduct($productData);
+    }
+
     public function parsingDataByUrl(string $url): array|null
     {
         $pageProduct = $this->httpPage->getPage($url);
@@ -183,7 +221,7 @@ class LoadParserProductIkeaService
         //Пачки товара
         $packaging = $dataProduct['packaging'];
 
-        $pack = $packaging['numberOfPackages'];
+        $packs = $packaging['numberOfPackages'];
         //$_packages = $packaging['packages'];
         $packages = [];
 
@@ -211,31 +249,24 @@ class LoadParserProductIkeaService
         return [
             'description' => $description,
             'packages' => $packages,
-            'pack' => $pack, //
+            'packs' => $packs, //
             'composite' => $composite, //
         ];
     }
-
     private function toWeight(array $_measures)
     {
-        $weight = 0.0;
         foreach ($_measures as $_measure) {
-            if ($_measure['type'] == "weight") $weight = $_measure['value'];
+            if ($_measure['type'] == "weight") return $_measure['value'];
         }
-        return $weight;
+        return 0.0;
     }
-
     private function toHeight(array $_measures)
     {
-        $height = 0.0;
-
         foreach ($_measures as $_measure) {
-            if ($_measure['type'] == "height") $height = $_measure['value'];
+            if ($_measure['type'] == "height") return $_measure['value'];
         }
-        if ($height == 0.0) $height = $this->fromDiameter($_measures);
-        return $height;
+        return $this->fromDiameter($_measures);
     }
-
     private function fromDiameter(array $_measures)
     {
         foreach ($_measures as $_measure) {
@@ -243,30 +274,22 @@ class LoadParserProductIkeaService
         }
         return 0.0;
     }
-
     private function toLength(array $_measures)
     {
-        $length = 0.0;
         foreach ($_measures as $_measure) {
-            if ($_measure['type'] == "length") $length = $_measure['value'];
+            if ($_measure['type'] == "length") return $_measure['value'];
         }
-        if ($length == 0.0) $length = $this->fromDiameter($_measures);
+        return $this->fromDiameter($_measures);
 
-        return $length;
     }
-
     private function toWidth(array $_measures)
     {
-        $width = 0.0;
         foreach ($_measures as $_measure) {
-            if ($_measure['type'] == "width") $width = $_measure['value'];
+            if ($_measure['type'] == "width") return $_measure['value'];
         }
-        if ($width == 0.0) $width = $this->fromDiameter($_measures);
-
-        return $width;
+        return $this->fromDiameter($_measures);
     }
-
-    public function toCode(string $code): string
+    private function toCode(string $code): string
     {
         if (empty($code)) return '';
         $code = substr_replace($code, '.', 6, 0);
