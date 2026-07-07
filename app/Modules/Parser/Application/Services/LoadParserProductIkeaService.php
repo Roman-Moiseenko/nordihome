@@ -6,10 +6,9 @@ use App\Modules\Parser\Application\Actions\CategoryProduct\AttachCategoriesToPro
 use App\Modules\Parser\Application\Actions\Product\FindAndAttachToProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\NewSellPriceParserProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\ToggleProductAvailabilityUseCase;
+use App\Modules\Parser\Application\Interfaces\IkeaProductApiInterface;
 use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
-use App\Modules\Parser\Domain\ValueObjects\Package;
-use App\Modules\Base\Service\HttpPage;
 use App\Modules\Base\Service\TranslateService;
 use App\Modules\Parser\Application\Actions\Product\CreateParserProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\UpdateParserProductUseCase;
@@ -19,6 +18,7 @@ use App\Modules\Parser\Application\Interfaces\ParserCategoryRepositoryInterface;
 use App\Modules\Parser\Domain\ValueObjects\ParserStatus;
 use App\Modules\Parser\Infrastructure\Jobs\LoadProductIkeaJob;
 use App\Modules\Parser\Infrastructure\Jobs\LoadProductsIkeaJob;
+use App\Modules\Parser\Infrastructure\Services\IkeaProductDataMapper;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
@@ -26,15 +26,10 @@ use function Laravel\Prompts\warning;
 
 class LoadParserProductIkeaService
 {
-    const string API_URL_PRODUCTS = 'https://sik.search.blue.cdtapps.com/pl/pl/product-list-page/more-products?category=%s&start=%s&end=%s';
-    const string API_URL_PRODUCT = 'https://sik.search.blue.cdtapps.com/pl/pl/search-result-page?q=%s';
-    const string API_URL_QUANTITY = 'https://api.ingka.ikea.com/cia/availabilities/ru/pl?itemNos=%s&expand=StoresList,Restocks,SalesLocations,DisplayLocations,ChildItems,FoodAvailabilities';
-
     private UserPermission $userPermission;
     private bool $isTest = false;
 
     public function __construct(
-        private readonly HttpPage                          $httpPage,
         private readonly TranslateService                  $translate,
         private readonly CreateParserProductUseCase        $createParserProductUseCase,
         private readonly UpdateParserProductUseCase        $updateParserProductUseCase,
@@ -44,6 +39,8 @@ class LoadParserProductIkeaService
         private readonly FindAndAttachToProductUseCase     $findAndAttachToProductUseCase,
         private readonly ToggleProductAvailabilityUseCase  $toggleProductAvailabilityUseCase,
         private readonly NewSellPriceParserProductUseCase  $newSellPriceParserProductUseCase,
+        private readonly IkeaProductDataMapper             $ikeaDataMapper,
+        private readonly IkeaProductApiInterface           $ikeaProductApi,
     )
     {
         $this->userPermission = new UserPermission(
@@ -78,28 +75,12 @@ class LoadParserProductIkeaService
      */
     public function GetListProductsByCategory(string $ikeaId): void
     {
-        $products = [];
-        $start = 0;
-        $end = 1000;
-        do {
-            $_url = sprintf(self::API_URL_PRODUCTS, $ikeaId, $start, $end);
-            $json_product = $this->httpPage->getPage($_url);
-            if (!is_null($json_product)) {
-                $_array = json_decode($json_product, true);
-                $list = $_array['moreProducts']['productWindow'];
-            } else {
-                $list = [];
-            }
-            $products = array_merge($products, $list);
-            $start += 1000;
-            $end += 1000;
-        } while (count($list) == 1000);
-
+        $products = $this->ikeaProductApi->getProductsByCategory($ikeaId);
         //Запускаем парсинг каждого товара
-        foreach ($products as $product) {
-            LoadProductIkeaJob::dispatch($product); //$entity = $this->CreateParserProduct($product);
-            if ($this->isTest) break;
-        }
+        foreach($products as $product) {
+        LoadProductIkeaJob::dispatch($product); //$entity = $this->CreateParserProduct($product);
+        if ($this->isTest) break;
+    }
     }
 
     /**
@@ -136,7 +117,24 @@ class LoadParserProductIkeaService
             return $this->translate->translate($item['name']);
         }, $product['colors'] ?? []);
 
-        $data = $this->parsingDataByUrl($product['pipUrl']);
+        //$data = $this->parsingDataByUrl($product['pipUrl']);
+
+        $dataProduct = $this->ikeaProductApi->getProductPage($product['pipUrl']);
+        if (is_null($dataProduct))
+            throw new \DomainException('Ошибка получения данных по урлу ' . $product['pipUrl']);
+        //Составные товары
+        $composite = $this->ikeaDataMapper->mapComposite($dataProduct['subProducts'] ?? []);
+
+        //Пачки товара
+        $packaging = $dataProduct['packaging'];
+
+        $packs = $packaging['numberOfPackages'];
+
+        $packages = $this->ikeaDataMapper->mapPackages($packaging['packages']);
+
+        $description = $dataProduct['description'] .
+            (empty($dataProduct['itemMeasureReferenceText']) ? '' : ', ' . $dataProduct['itemMeasureReferenceText']);
+        $description = $this->translate->translate($description);
 
         //Заполняем остальные данные
         $dto = new ParserProductUpdateData(
@@ -144,14 +142,14 @@ class LoadParserProductIkeaService
             url: $product['pipUrl'],
             priceSell: $price_sell,
             priceBase: $price_base,
-            description: $data['description'],
+            description: $description,
             fragile: false,
             sanctioned: false,
             availability: true,
-            packages: $data['packages'],
-            composite: $data['composite'],
+            packages: $packages,
+            composite: $composite,
             colors: $colors,
-            packs: $data['packs'],
+            packs: $packs,
         );
 
         $productEntity = $this->updateParserProductUseCase->execute($dto);
@@ -190,21 +188,16 @@ class LoadParserProductIkeaService
     public function UpdateParserProduct(int $productId): ?ParserStatus
     {
         $productEntity = $this->parserProductRepository->getById($productId);
-
-        $url = sprintf(self::API_URL_PRODUCT, $productEntity->code); //API для поиска товара
-        $json_product = $this->httpPage->getPage($url);
-        $_array = json_decode($json_product, true);
-
-        //Товар теперь недоступен
-        if ($_array == null || empty($_array['searchResultPage']['products']['main']['items'])) {
+        $productData = $this->ikeaProductApi->getProductByCode($productEntity->code);
+        if (is_null($productData)) {
             $this->toggleProductAvailabilityUseCase->execute($productEntity->id, $this->userPermission);
             return ParserStatus::deleted();
         }
 
-        $item = $_array['searchResultPage']['products']['main']['items'][0]['product']['salesPrice'];
-        $price = $item['numeral'];
-        if (isset($item['previous'])) {
-            $_previous = (float)(str_replace(' ', '', $item['previous']['wholeNumber']) . '.' . $item['previous']['decimals']);
+        $itemPrice = $productData['salesPrice'];
+        $price = $itemPrice['numeral'];
+        if (isset($itemPrice['previous'])) {
+            $_previous = (float)(str_replace(' ', '', $itemPrice['previous']['wholeNumber']) . '.' . $itemPrice['previous']['decimals']);
             if ($_previous > (float)$price) $price = $_previous;
         }
         //Изменилась цена
@@ -222,27 +215,27 @@ class LoadParserProductIkeaService
      * @param int $productId
      * @return ParserStatus|null
      */
-    public function remainsProduct(int $productId):? ParserStatus
+    public function remainsProduct(int $productId): ?ParserStatus
     {
         $productEntity = $this->parserProductRepository->getById($productId);
 
-
+/*
         $url = sprintf(self::API_URL_QUANTITY, $productEntity->code);
         $json_product = $this->httpPage->getPage($url, '_cache');
 
         $_array = json_decode($json_product, true);
-        //dd($_array);
+*/
+        $availabilities = $this->ikeaProductApi->getAvailability($productEntity->code);
         $_result = [];
-        if ($_array == null) {
+        if ($availabilities == null) {
             //Товар не нашелся, удаляем из доступности
             $this->toggleProductAvailabilityUseCase->execute($productEntity->id, $this->userPermission);
             return ParserStatus::deleted();
         }
 
-        foreach ($_array['availabilities'] as $item) {
+        foreach ($availabilities as $item) {
             if (isset($item['availableForCashCarry'])) {
                 $_store = (int)$item['classUnitKey']['classUnitCode']; //Номер склада
-                //dd($item);
                 if (isset($item['buyingOption']['cashCarry']['availability'])) {
                     $_quantity = (int)$item['buyingOption']['cashCarry']['availability']['quantity']; //Кол-во на складе
                 } else {
@@ -257,120 +250,9 @@ class LoadParserProductIkeaService
 
     public function FindByCode(string $code): ?ParserProductEntity
     {
-        $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
-        if (is_null($jsonData = $this->httpPage->getPage($url))) return null;
-        $jsonData = json_decode($jsonData, true);
-        if (empty($jsonData['searchResultPage']['products']['main']['items'])) return null;
+        if (is_null($productData = $this->ikeaProductApi->getProductByCode($code))) return null;
 
-        $productData = $jsonData['searchResultPage']['products']['main']['items'][0]['product'];
         return $this->CreateParserProduct($productData);
     }
 
-    public function parsingDataByUrl(string $url): array|null
-    {
-        $pageProduct = $this->httpPage->getPage($url);
-        $old_pattern = '#<script type="text\/hydrate">(.+?)<\/script>#su';
-        preg_match_all($old_pattern, $pageProduct, $res);
-
-        $dataProduct = null;
-        foreach ($res[1] as $item_res) {
-            $_data = json_decode($item_res, true);
-            if (isset($_data["pageProps"])) {
-                $dataProduct = $_data["pageProps"]["product"];
-                break;
-            }
-        }
-        if ($dataProduct == null) throw new \DomainException("Что-то пошло не так");
-
-        //Составные товары
-        $composite = array_map(function ($subProduct) {
-            return [
-                'code' => $this->toCode($subProduct['itemNo']),
-                'quantity' => $subProduct['quantity'],
-            ];
-        }, $dataProduct['subProducts'] ?? []);
-
-        //Пачки товара
-        $packaging = $dataProduct['packaging'];
-
-        $packs = $packaging['numberOfPackages'];
-        //$_packages = $packaging['packages'];
-        $packages = [];
-
-        foreach ($packaging['packages'] as $_package) {
-            if (!empty($measurementGroups = $_package['measurementGroups'])) {
-                $_quantity = $_package['quantity']['value'];
-                foreach ($measurementGroups as $itemGroup) {
-                    $measurements = $itemGroup['measurements'];
-
-                    $packages[] = new Package(
-                        height: $this->toHeight($measurements),
-                        width: $this->toWidth($measurements),
-                        length: $this->toLength($measurements),
-                        weight: $this->toWeight($measurements),
-                        quantity: $_quantity,
-                    );
-                }
-            }
-        }
-
-        $description = $dataProduct['description'] .
-            (empty($dataProduct['itemMeasureReferenceText']) ? '' : ', ' . $dataProduct['itemMeasureReferenceText']);
-        $description = $this->translate->translate($description);
-
-        return [
-            'description' => $description,
-            'packages' => $packages,
-            'packs' => $packs, //
-            'composite' => $composite, //
-        ];
-    }
-
-    private function toWeight(array $_measures)
-    {
-        foreach ($_measures as $_measure) {
-            if ($_measure['type'] == "weight") return $_measure['value'];
-        }
-        return 0.0;
-    }
-
-    private function toHeight(array $_measures)
-    {
-        foreach ($_measures as $_measure) {
-            if ($_measure['type'] == "height") return $_measure['value'];
-        }
-        return $this->fromDiameter($_measures);
-    }
-
-    private function fromDiameter(array $_measures)
-    {
-        foreach ($_measures as $_measure) {
-            if ($_measure['type'] == "diameter") return $_measure['value'];
-        }
-        return 0.0;
-    }
-
-    private function toLength(array $_measures)
-    {
-        foreach ($_measures as $_measure) {
-            if ($_measure['type'] == "length") return $_measure['value'];
-        }
-        return $this->fromDiameter($_measures);
-
-    }
-
-    private function toWidth(array $_measures)
-    {
-        foreach ($_measures as $_measure) {
-            if ($_measure['type'] == "width") return $_measure['value'];
-        }
-        return $this->fromDiameter($_measures);
-    }
-
-    private function toCode(string $code): string
-    {
-        if (empty($code)) return '';
-        $code = substr_replace($code, '.', 6, 0);
-        return substr_replace($code, '.', 3, 0);
-    }
 }

@@ -54,7 +54,6 @@ use App\Listeners\NotificationSupplyCompleted;
 use App\Listeners\NotificationSupplySent;
 use App\Listeners\NotificationThrowable;
 use App\Listeners\NotificationUserCreated;
-use App\Listeners\ParsingImageProduct;
 use App\Listeners\WelcomeToShop;
 use App\Modules\Accounting\Events\CurrencyHasUpdateFixed;
 use App\Modules\Admin\Listeners\NewTaskStaff;
@@ -194,8 +193,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         ProductHasParsed::class => [
             NotificationProductParserNew::class,
-            ParsingImageProduct::class,
-
         ],
         ArrivalHasCompleted::class => [
             NotificationArrivalCompleted::class,

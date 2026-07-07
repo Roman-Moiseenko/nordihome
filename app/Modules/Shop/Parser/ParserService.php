@@ -143,46 +143,7 @@ class ParserService
         return $product;
     }
 
-    /**
-     * Функция для Cron - раз в сутки, парсим все цены товаров из ProductParsing
-     * Если товар не подлежит парсингу, возвращаем -1
-     * @param string $code
-     * @return float
-     */
-    public function parserCost(string $code): float
-    {
-        $url = sprintf(self::API_URL_PRODUCT, $code); //API для поиска товара
-        $json_product = $this->httpPage->getPage($url, '_cache');
-        $_array = json_decode($json_product, true);
 
-        if ($_array == null || empty($_array['searchResultPage']['products']['main']['items'])) return -1;
-
-        $item = $_array['searchResultPage']['products']['main']['items'][0]['product']['salesPrice'];
-        $price = $item['numeral'];
-        if (isset($item['previous'])) {
-            $_previous = (float)(str_replace(' ', '', $item['previous']['wholeNumber']) . '.' . $item['previous']['decimals']);
-            if ($_previous > (float)$price) $price = $_previous;
-        }
-
-        return $price;
-    }
-
-    public function parserImage(string $linkProduct): array
-    {
-        $result = [];
-        $pageProduct = $this->httpPage->getPage($linkProduct, '_cache');
-        preg_match_all('#data-hydration-props="(.+?)"#su', $pageProduct, $res);
-        $_res = $res[1][0];
-        $_res = str_replace('&quot;', '"', $_res);
-        $_data = json_decode($_res, true);
-
-        $_list_images = $_data['productGallery']['mediaList']; //$_data['mediaGrid']['fullMediaList']
-        foreach ($_list_images as $item) {
-            if ($item['type'] == 'image' && $item['content']['type'] != 'MAIN_PRODUCT_IMAGE')
-                $result[] = $item['content']['url'];
-        }
-        return $result;
-    }
 
     /** Добавить в Cron для парсинга кол-ва в базе */
     public function parsingQuantity(string $code): array

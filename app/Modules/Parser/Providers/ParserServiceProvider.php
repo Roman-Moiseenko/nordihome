@@ -3,6 +3,7 @@
 namespace App\Modules\Parser\Providers;
 
 use App\Modules\Parser\Application\Interfaces\CategoryProductParserRepositoryInterface;
+use App\Modules\Parser\Application\Interfaces\IkeaProductApiInterface;
 use App\Modules\Parser\Application\Interfaces\ParserCategoryRepositoryInterface;
 use App\Modules\Parser\Application\Interfaces\ParserLogRepositoryInterface;
 use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
@@ -10,6 +11,7 @@ use App\Modules\Parser\Infrastructure\Persistence\CategoryProductParserRepositor
 use App\Modules\Parser\Infrastructure\Persistence\ParserCategoryRepository;
 use App\Modules\Parser\Infrastructure\Persistence\ParserLogRepository;
 use App\Modules\Parser\Infrastructure\Persistence\ParserProductRepository;
+use App\Modules\Parser\Infrastructure\Services\IkeaProductApi;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -110,6 +112,11 @@ class ParserServiceProvider extends ServiceProvider
         $this->app->bind(
             ParserLogRepositoryInterface::class,
             ParserLogRepository::class
+        );
+
+        $this->app->bind(
+            IkeaProductApiInterface::class,
+            IkeaProductApi::class
         );
     }
 
