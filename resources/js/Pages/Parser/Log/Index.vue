@@ -17,7 +17,7 @@
             <el-table-column prop="del" label="Удаленные" width="120"/>
             <el-table-column label="Действия" align="right">
                 <template #default="scope">
-                    <el-button v-if="!scope.row.read"
+                    <el-button v-if="!scope.row.isRead"
                                size="small"
                                type="success"
                                @click.stop="onRead(scope.row)"
@@ -59,9 +59,9 @@ const props = defineProps({
 const tableData = ref([...props.logs.data])
 
 function rowClick(row) {
-    router.get(route('admin.parser.log.show', {parser_log: row.id}))
+    router.get(route('admin.parser.log.show', {id: row.id}))
 }
 function onRead(row) {
-    router.post(route('admin.parser.log.read', {parser_log: row.id}))
+    router.post(route('admin.parser.log.read', {id: row.id}))
 }
 </script>

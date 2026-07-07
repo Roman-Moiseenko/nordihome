@@ -40,7 +40,7 @@ class ParserLogRepository implements ParserLogRepositoryInterface
 
         $model->date = $log->date;
         $model->staff_id = $log->staffId;
-        $model->read_at = $log->readAt;
+        $model->read_at = $log->readAt?->format('Y-m-d H:i:s');
 
         $model->save();
 
@@ -81,16 +81,39 @@ class ParserLogRepository implements ParserLogRepositoryInterface
             ->through(fn(ParserLogItem $model) => $this->hydrateLogItem($model));
     }
 
-    public function markAsRead(int $logId, int $staffId): ParserLogEntity
+    public function getById(int $id): ParserLogEntity
     {
-        $model = ParserLog::findOrFail($logId);
+        $model = ParserLog::findOrFail($id);
 
-        $model->staff_id = $staffId;
-        $model->read_at = now();
+        return $this->hydrateLog($model);
+    }
 
-        $model->save();
+    public function getLogItemsByStatus(int $logId, string $status): array
+    {
+        $models = ParserLogItem::query()
+            ->where('log_id', $logId)
+            ->where('status', $status)
+            ->with(['parser.product.category', 'parser.categories'])
+            ->get();
 
-        return $this->hydrateLog($model->fresh());
+        return $models->map(fn(ParserLogItem $model) => $this->hydrateLogItem($model))->toArray();
+    }
+
+    public function getLogItemsCountsByStatus(int $logId): array
+    {
+        $counts = ParserLogItem::query()
+            ->selectRaw("status, COUNT(*) as count")
+            ->where('log_id', $logId)
+            ->groupBy('status')
+            ->pluck('count', 'status')
+            ->toArray();
+
+        return [
+            'new' => (int)($counts['new'] ?? 0),
+            'price_changed' => (int)($counts['price_changed'] ?? 0),
+            'deleted' => (int)($counts['deleted'] ?? 0),
+            'error' => (int)($counts['error'] ?? 0),
+        ];
     }
 
     private function hydrateLog(ParserLog $model): ParserLogEntity
@@ -101,9 +124,14 @@ class ParserLogRepository implements ParserLogRepositoryInterface
 
         $entity->id = $model->id;
         $entity->staffId = $model->staff_id;
-        $entity->readAt = $model->read_at instanceof \DateTimeInterface
-            ? \DateTimeImmutable::createFromMutable($model->read_at)
-            : $model->read_at;
+        $readAt = $model->read_at;
+        if ($readAt instanceof \DateTimeInterface) {
+            $entity->readAt = $readAt instanceof \DateTimeImmutable
+                ? $readAt
+                : \DateTimeImmutable::createFromMutable($readAt);
+        } elseif (is_string($readAt) && $readAt !== '') {
+            $entity->readAt = new \DateTimeImmutable($readAt);
+        }
 
         return $entity;
     }
@@ -119,6 +147,27 @@ class ParserLogRepository implements ParserLogRepositoryInterface
         );
 
         $entity->id = $model->id;
+
+        // Заполняем данные для отображения из связанных моделей
+        if ($model->relationLoaded('parser') && $model->parser) {
+            $entity->productId = $model->parser->product_id;
+            $entity->code = $model->parser->code;
+
+
+            if ($model->parser->relationLoaded('categories')) {
+                $entity->categoryParser = $model->parser->categories
+                    ->pluck('name')
+                    ->toArray();
+            }
+        }
+
+        // Заполняем данные о цене из payload
+        if ($model->payload && isset($model->payload['price_old'])) {
+            $entity->priceOld = (string)$model->payload['price_old'];
+        }
+        if ($model->payload && isset($model->payload['price_new'])) {
+            $entity->priceNew = (string)$model->payload['price_new'];
+        }
 
         return $entity;
     }

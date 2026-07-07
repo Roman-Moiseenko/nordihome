@@ -16,14 +16,11 @@ class ParserIkea extends ParserAbstract
     const string API_URL_PRODUCT = 'https://sik.search.blue.cdtapps.com/pl/pl/search-result-page?q=%s';
 
     const string API_URL_QUANTITY = 'https://api.ingka.ikea.com/cia/availabilities/ru/pl?itemNos=%s&expand=StoresList,Restocks,SalesLocations,DisplayLocations,ChildItems,FoodAvailabilities';
-    private ParserLogService $logService;
 
-    public function __construct(
-                                TranslateService      $translate, ParserLogService $logService)
+
+    public function __construct(TranslateService      $translate)
     {
         parent::__construct($translate);
-
-        $this->logService = $logService;
     }
 
 

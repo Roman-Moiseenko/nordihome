@@ -26,6 +26,6 @@ const props = defineProps({
 })
 
 function onRead() {
-    router.post(route('admin.parser.log.read', {parser_log: props.log.id}))
+    router.post(route('admin.parser.log.read', {id: props.log.id}))
 }
 </script>

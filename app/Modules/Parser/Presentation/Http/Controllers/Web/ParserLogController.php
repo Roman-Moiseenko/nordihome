@@ -3,9 +3,10 @@
 namespace App\Modules\Parser\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Parser\Infrastructure\Models\ParserLog;
-use App\Modules\Parser\Repository\ParserLogRepository;
-use App\Modules\Parser\Service\ParserLogService;
+use App\Modules\Parser\Application\Actions\ParserLog\IndexParserLogUseCase;
+use App\Modules\Parser\Application\Actions\ParserLog\ReadParserLogUseCase;
+use App\Modules\Parser\Application\Actions\ParserLog\ViewParserLogUseCase;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,37 +14,36 @@ use Inertia\Response;
 
 class ParserLogController extends Controller
 {
-    private ParserLogRepository $repository;
-    private ParserLogService $service;
-
     public function __construct(
-        ParserLogRepository $repository,
-        ParserLogService    $service,
-    )
-    {
-        $this->repository = $repository;
-        $this->service = $service;
-    }
+        private readonly IndexParserLogUseCase $indexParserLogUseCase,
+        private readonly ViewParserLogUseCase $viewParserLogUseCase,
+        private readonly ReadParserLogUseCase $readParserLogUseCase,
+    ) {}
 
-    public function index(Request $request): Response
+    public function index(Request $request, UserPermission $userPermission): Response
     {
-        $logs = $this->repository->getIndex($request, $filters);
+        $perPage = (int) $request->input('size', 20);
+        $logs = $this->indexParserLogUseCase->execute($userPermission, $perPage);
+
         return Inertia::render('Parser/Log/Index', [
             'logs' => $logs,
-            'filters' => $filters,
         ]);
     }
 
-    public function show(ParserLog $parser_log): Response
+    public function show(int $id, UserPermission $userPermission): Response
     {
+        $log = $this->viewParserLogUseCase->execute($id, $userPermission);
+
         return Inertia::render('Parser/Log/Show', [
-            'log' => $this->repository->LogWithToArray($parser_log),
+            'log' => $log,
         ]);
     }
 
-    public function read(ParserLog $parser_log): RedirectResponse
+    public function read(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->read($parser_log);
+        $staffId = auth()->user()->profileable->id;
+
+        $this->readParserLogUseCase->execute($id, $staffId, $userPermission);
 
         return redirect()->back()->with('success', 'Прочитано');
     }

@@ -31,7 +31,8 @@ Breadcrumbs::for('admin.parser.log.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('История Парсера', route('admin.parser.log.index'));
 });
-Breadcrumbs::for('admin.parser.log.show', function (BreadcrumbTrail $trail, ParserLog $parser_log) {
+Breadcrumbs::for('admin.parser.log.show', function (BreadcrumbTrail $trail, int $id) {
+    $parser_log = ParserLog::find($id);
     $trail->parent('admin.parser.log.index');
     $trail->push($parser_log->date, route('admin.parser.log.show', $parser_log));
 });

@@ -36,6 +36,33 @@ class ParserLogItemEntity
         set => $this->error = $value;
     }
 
+    // Данные для отображения (заполняются репозиторием)
+    public ?int $productId = null {
+        get => $this->productId;
+        set => $this->productId = $value;
+    }
+
+    public ?string $code = null {
+        get => $this->code;
+        set => $this->code = $value;
+    }
+
+    /** @var string[] */
+    public array $categoryParser = [] {
+        get => $this->categoryParser;
+        set => $this->categoryParser = $value;
+    }
+
+    public ?string $priceOld = null {
+        get => $this->priceOld;
+        set => $this->priceOld = $value;
+    }
+
+    public ?string $priceNew = null {
+        get => $this->priceNew;
+        set => $this->priceNew = $value;
+    }
+
     public function __construct(
         int                 $logId,
         ParserStatus        $status,

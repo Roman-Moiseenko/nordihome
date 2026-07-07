@@ -15,8 +15,16 @@
 
         >
             <el-table-column prop="code" label="Артикул" width="100" />
-            <el-table-column prop="category" label="Категория товара" width="300" />
-            <el-table-column prop="category_parser" label="Категории парсера"  width="280" show-overflow-tooltip/>
+            <el-table-column prop="productId" label="Связанный товар" width="300" >
+                <template #default="scope">
+                    <Active :active="scope.row.productId !== null" />
+                </template>
+            </el-table-column>
+            <el-table-column prop="categoryParser" label="Категории парсера" show-overflow-tooltip>
+                <template #default="scope">
+                    <el-tag v-for="category in scope.row.categoryParser">{{ category }}</el-tag>
+                </template>
+            </el-table-column>
 
             <el-table-column label="Действия" align="right">
                 <template #default="scope">
@@ -33,12 +41,14 @@
 <script setup lang="ts">
 import {inject, reactive, ref} from "vue";
 import {router} from "@inertiajs/vue3";
+import Active from "@Comp/Elements/Active.vue";
+import {route} from "ziggy-js";
 
 const props = defineProps({
     items: Array,
 })
-
+console.log(props.items)
 function routeClick(row) {
-    router.get(route('admin.catalog.product.edit', {product: row.product_id}))
+    if (row.productId !== null) router.get(route('admin.catalog.product.edit', {id: row.productId}))
 }
 </script>

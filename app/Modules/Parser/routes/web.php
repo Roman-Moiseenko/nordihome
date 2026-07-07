@@ -41,7 +41,7 @@ Route::group([
         'as' => 'log.',
     ], function (){
         Route::get('/', [ParserLogController::class, 'index'])->name('index');
-        Route::get('/{parser_log}', [ParserLogController::class, 'show'])->name('show');
-        Route::post('/read/{parser_log}', [ParserLogController::class, 'read'])->name('read');
+        Route::get('/{id}', [ParserLogController::class, 'show'])->name('show');
+        Route::post('/read/{id}', [ParserLogController::class, 'read'])->name('read');
     });
 });

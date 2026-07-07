@@ -45,7 +45,21 @@ interface ParserLogRepositoryInterface
     public function getLogItemsPaginated(int $logId, int $perPage = 20): LengthAwarePaginator;
 
     /**
-     * Установить прочтение для лога (staff_id, read_at)
+     * Получить лог по ID
      */
-    public function markAsRead(int $logId, int $staffId): ParserLogEntity;
+    public function getById(int $id): ParserLogEntity;
+
+    /**
+     * Получить записи лога по статусу с подгрузкой связанных данных
+     *
+     * @return ParserLogItemEntity[]
+     */
+    public function getLogItemsByStatus(int $logId, string $status): array;
+
+    /**
+     * Получить количество записей лога по статусам
+     *
+     * @return array{new: int, price_changed: int, deleted: int, error: int}
+     */
+    public function getLogItemsCountsByStatus(int $logId): array;
 }
