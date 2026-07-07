@@ -73,6 +73,7 @@ import Active from "@Comp/Elements/Active.vue";
 import {router} from "@inertiajs/vue3";
 import axios from "axios";
 import {route} from "ziggy-js";
+import api from "@Res/api";
 
 const props = defineProps({
     categoryId: Number,
@@ -106,10 +107,12 @@ const pagination = ref<Pagination>({
     total: 0,
     data: [],
 })
+const currentPage = ref(1);
 onMounted(() => {
     fetchProducts(1)
 })
 function fetchProducts(page: number = 1) {
+    currentPage.value = page
     loading.value = true
     axios.get(route(`admin.parser.category.products`, {id: props.categoryId, page}))
         .then(response => {
@@ -148,35 +151,39 @@ function routeClick(row: any) {
 }
 
 function onParser(row) {
-    //TODO ???
-    router.visit(route('admin.parser.product.parser', {product_parser: row.id}), {
-        method: "post",
-        preserveScroll: true,
-        preserveState: true,
-    })
+    api.post(route('admin.parser.product.parser', {id: row.id}))
 }
 
 function onAvailable(row) {
-    router.visit(route('admin.parser.product.available', {product_parser: row.id}), {
+    router.visit(route('admin.parser.product.available', {id: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,
+        onSuccess: page => {
+            fetchProducts(currentPage.value)
+        }
     })
 }
 
 function onFragile(row) {
-    router.visit(route('admin.parser.product.fragile', {product_parser: row.id}), {
+    router.visit(route('admin.parser.product.fragile', {id: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,
+        onSuccess: page => {
+            fetchProducts(currentPage.value)
+        }
     })
 }
 
 function onSanctioned(row) {
-    router.visit(route('admin.parser.product.sanctioned', {product_parser: row.id}), {
+    router.visit(route('admin.parser.product.sanctioned', {id: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,
+        onSuccess: page => {
+            fetchProducts(currentPage.value)
+        }
     })
 }
 

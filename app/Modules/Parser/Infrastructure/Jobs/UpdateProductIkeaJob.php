@@ -12,11 +12,12 @@ class UpdateProductIkeaJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public function __construct()
+    public function __construct(private int $productId)
     {
     }
 
     public function handle(): void
     {
+        //MAINDO - обновить кол-во и цену товара
     }
 }

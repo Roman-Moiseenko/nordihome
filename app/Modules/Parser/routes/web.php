@@ -28,12 +28,11 @@ Route::group([
         'as' => 'product.',
     ], function () {
         Route::get('/', [ProductParserController::class, 'index'])->name('index');
-        Route::get('/{product_parser}', [ProductParserController::class, 'show'])->name('show');
-        Route::post('/parser/{product_parser}', [ProductParserController::class, 'parser'])->name('parser');
-        Route::post('/available/{product_parser}', [ProductParserController::class, 'available'])->name('available');
-        Route::post('/fragile/{product_parser}', [ProductParserController::class, 'fragile'])->name('fragile');
-        Route::post('/sanctioned/{product_parser}', [ProductParserController::class, 'sanctioned'])->name('sanctioned');
-        Route::post('/by-list/', [ProductParserController::class, 'by_list'])->name('by-list');
+        Route::get('/{id}', [ProductParserController::class, 'show'])->name('show');
+        Route::post('/parser/{id}', [ProductParserController::class, 'parser'])->name('parser');
+        Route::post('/available/{id}', [ProductParserController::class, 'available'])->name('available');
+        Route::post('/fragile/{id}', [ProductParserController::class, 'fragile'])->name('fragile');
+        Route::post('/sanctioned/{id}', [ProductParserController::class, 'sanctioned'])->name('sanctioned');
 
     });
     //LOG

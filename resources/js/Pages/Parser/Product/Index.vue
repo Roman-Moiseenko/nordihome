@@ -122,7 +122,7 @@ const filter = reactive({
 const store = useStore();
 
 function onAvailable(row) {
-    router.visit(route('admin.parser.product.available', {product_parser: row.id}), {
+    router.visit(route('admin.parser.product.available', {id: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,
@@ -133,7 +133,7 @@ function onAvailable(row) {
 }
 
 function onFragile(row) {
-    router.visit(route('admin.parser.product.fragile', {product_parser: row.id}), {
+    router.visit(route('admin.parser.product.fragile', {id: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,
@@ -144,7 +144,7 @@ function onFragile(row) {
 }
 
 function onSanctioned(row) {
-    router.visit(route('admin.parser.product.sanctioned', {product_parser: row.id}), {
+    router.visit(route('admin.parser.product.sanctioned', {id: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,
@@ -154,6 +154,6 @@ function onSanctioned(row) {
     })
 }
 function onProduct(row) {
-    router.get(route('admin.catalog.product.edit', {product: row.product_id}))
+    router.get(route('admin.catalog.product.edit', {id: row.product_id}))
 }
 </script>

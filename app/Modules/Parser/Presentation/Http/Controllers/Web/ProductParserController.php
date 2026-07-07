@@ -4,32 +4,30 @@ namespace App\Modules\Parser\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Parser\Application\Actions\Product\IndexParserProductUseCase;
+use App\Modules\Parser\Application\Actions\Product\ToggleProductAvailabilityUseCase;
+use App\Modules\Parser\Application\Actions\Product\ToggleProductFragileUseCase;
+use App\Modules\Parser\Application\Actions\Product\ToggleProductSanctionedUseCase;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductFilterData;
-use App\Modules\Parser\Infrastructure\Models\ParserProduct;
-use App\Modules\Parser\Repository\ProductParserRepository;
-use App\Modules\Parser\Service\ProductParserService;
+use App\Modules\Parser\Infrastructure\Jobs\UpdateProductIkeaJob;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
 class ProductParserController extends Controller
 {
 
-    private ProductParserService $service;
-
     public function __construct(
-        ProductParserService $service,
         private readonly IndexParserProductUseCase $indexParserProductUseCase,
-    )
-    {
-        $this->service = $service;
-    }
+        private readonly ToggleProductAvailabilityUseCase $toggleProductAvailabilityUseCase,
+        private readonly ToggleProductFragileUseCase $toggleProductFragileUseCase,
+        private readonly ToggleProductSanctionedUseCase $toggleProductSanctionedUseCase,
+    ) {}
 
     public function index(Request $request, UserPermission $userPermission): \Inertia\Response
     {
         $dto = ParserProductFilterData::validateAndCreate($request->all());
         $products = $this->indexParserProductUseCase->execute($dto, $userPermission);
-      //  $products = $this->repository->getIndex($request, $filters);
         return Inertia::render('Parser/Product/Index', [
             'products' => $products,
             'filters' => $dto,
@@ -37,43 +35,36 @@ class ProductParserController extends Controller
         ]);
     }
 
-    public function show(ParserProduct $product_parser)
+    public function show(int $id)
     {
         return Inertia::render('Parser/Product/Show', [
           //  'products' => $this->repository->ProductWithToArray($product_parser),
         ]);
     }
 
-    public function available(ParserProduct $product_parser): \Illuminate\Http\RedirectResponse
+    public function available(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $message = $this->service->available($product_parser);
+        $message = $this->toggleProductAvailabilityUseCase->execute($id, $userPermission);
         return redirect()->back()->with('success', $message);
     }
 
-    public function fragile(ParserProduct $product_parser): \Illuminate\Http\RedirectResponse
+    public function fragile(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $message = $this->service->fragile($product_parser);
+        $message = $this->toggleProductFragileUseCase->execute($id, $userPermission);
         return redirect()->back()->with('success', $message);
     }
 
-    public function sanctioned(ParserProduct $product_parser): \Illuminate\Http\RedirectResponse
+    public function sanctioned(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $message = $this->service->sanctioned($product_parser);
+        $message = $this->toggleProductSanctionedUseCase->execute($id, $userPermission);
         return redirect()->back()->with('success', $message);
     }
 
-    public function parser(ParserProduct $product_parser): \Illuminate\Http\RedirectResponse
+    public function parser(int $id)
     {
-        $price = $this->service->parserProduct($product_parser);
-        return redirect()->back()->with('success', 'Товар спарсен: ' . $price);
+        UpdateProductIkeaJob::dispatch($id);
+        return response()->json(['message' => 'Товар в очереди на спарсивание']);
     }
 
-    public function by_list(Request $request): \Illuminate\Http\RedirectResponse
-    {
-        //dd($request);
-
-      //  $this->service->parserProducts($request);
-      //  return redirect()->back()->with('success', 'Товары добавлены в очередь на спарсивание');
-    }
 
 }
