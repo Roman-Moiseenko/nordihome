@@ -52,7 +52,6 @@ class BrandController extends Controller
     {
         return Inertia::render('Catalog/Brand/Show', [
             'brand' => $this->repository->BrandWithToArray($brand, $request),
-            'parsers' => array_select(ParserAbstract::PARSERS),
             'currencies' => Currency::getModels(),
         ]);
     }

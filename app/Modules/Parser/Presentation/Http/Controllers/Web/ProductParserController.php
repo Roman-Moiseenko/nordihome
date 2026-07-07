@@ -31,15 +31,12 @@ class ProductParserController extends Controller
         return Inertia::render('Parser/Product/Index', [
             'products' => $products,
             'filters' => $dto,
-
         ]);
     }
 
     public function show(int $id)
     {
-        return Inertia::render('Parser/Product/Show', [
-          //  'products' => $this->repository->ProductWithToArray($product_parser),
-        ]);
+        //TODO Возможно сделать страницу, чтоб показать все спарсенные атрибуты и остатки  remainsProduct
     }
 
     public function available(int $id, UserPermission $userPermission): RedirectResponse

@@ -22,9 +22,6 @@
                 <el-descriptions-item label="Ссылка на сайт">
                     {{ brand.url }}
                 </el-descriptions-item>
-                <el-descriptions-item label="Класс Парсера">
-                    {{ brand.parser_class }}
-                </el-descriptions-item>
                 <el-descriptions-item v-if="brand.currency" label="Валюта парсера">
                     {{ brand.currency.name }}
                 </el-descriptions-item>
@@ -42,11 +39,6 @@
 
                 <el-form-item label="Ссылка на сайт">
                     <el-input v-model="info.url"/>
-                </el-form-item>
-                <el-form-item label="Класс Парсера">
-                    <el-select v-model="info.parser_class">
-                        <el-option v-for="item in parsers" :key="item.value" :value="item.value" :label="item.label" />
-                    </el-select>
                 </el-form-item>
                 <el-form-item label="Валюта">
                     <el-select v-model="info.currency_id">
@@ -101,7 +93,6 @@ const info = reactive({
     name: props.brand.name,
     description: props.brand.description,
     url: props.brand.url,
-    parser_class: props.brand.parser_class,
     sameAs: props.brand.sameAs,
     currency_id: props.brand.currency_id,
     file: null,

@@ -4,6 +4,8 @@ namespace App\Modules\Parser\Application\Services;
 
 use App\Modules\Parser\Application\Actions\CategoryProduct\AttachCategoriesToProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\FindAndAttachToProductUseCase;
+use App\Modules\Parser\Application\Actions\Product\NewSellPriceParserProductUseCase;
+use App\Modules\Parser\Application\Actions\Product\ToggleProductAvailabilityUseCase;
 use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
 use App\Modules\Parser\Domain\ValueObjects\Package;
@@ -14,6 +16,7 @@ use App\Modules\Parser\Application\Actions\Product\UpdateParserProductUseCase;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductCreateData;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductUpdateData;
 use App\Modules\Parser\Application\Interfaces\ParserCategoryRepositoryInterface;
+use App\Modules\Parser\Domain\ValueObjects\ParserStatus;
 use App\Modules\Parser\Infrastructure\Jobs\LoadProductIkeaJob;
 use App\Modules\Parser\Infrastructure\Jobs\LoadProductsIkeaJob;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
@@ -25,6 +28,7 @@ class LoadParserProductIkeaService
 {
     const string API_URL_PRODUCTS = 'https://sik.search.blue.cdtapps.com/pl/pl/product-list-page/more-products?category=%s&start=%s&end=%s';
     const string API_URL_PRODUCT = 'https://sik.search.blue.cdtapps.com/pl/pl/search-result-page?q=%s';
+    const string API_URL_QUANTITY = 'https://api.ingka.ikea.com/cia/availabilities/ru/pl?itemNos=%s&expand=StoresList,Restocks,SalesLocations,DisplayLocations,ChildItems,FoodAvailabilities';
 
     private UserPermission $userPermission;
     private bool $isTest = false;
@@ -38,6 +42,8 @@ class LoadParserProductIkeaService
         private readonly AttachCategoriesToProductUseCase  $attachCategoriesToProductUseCase,
         private readonly ParserProductRepositoryInterface  $parserProductRepository,
         private readonly FindAndAttachToProductUseCase     $findAndAttachToProductUseCase,
+        private readonly ToggleProductAvailabilityUseCase  $toggleProductAvailabilityUseCase,
+        private readonly NewSellPriceParserProductUseCase  $newSellPriceParserProductUseCase,
     )
     {
         $this->userPermission = new UserPermission(
@@ -178,11 +184,75 @@ class LoadParserProductIkeaService
     /**
      * Парсит цену и наличие товара на складах, уже ранее спарсенного товара
      * Public - для запуска Job
-     * @return void
+     * @param int $productId
+     * @return ParserStatus|null
      */
-    public function UpdateParserProduct()
+    public function UpdateParserProduct(int $productId): ?ParserStatus
     {
-        //MAINDO Спарсить цену и наличие, сделать в Job
+        $productEntity = $this->parserProductRepository->getById($productId);
+
+        $url = sprintf(self::API_URL_PRODUCT, $productEntity->code); //API для поиска товара
+        $json_product = $this->httpPage->getPage($url);
+        $_array = json_decode($json_product, true);
+
+        //Товар теперь недоступен
+        if ($_array == null || empty($_array['searchResultPage']['products']['main']['items'])) {
+            $this->toggleProductAvailabilityUseCase->execute($productEntity->id, $this->userPermission);
+            return ParserStatus::deleted();
+        }
+
+        $item = $_array['searchResultPage']['products']['main']['items'][0]['product']['salesPrice'];
+        $price = $item['numeral'];
+        if (isset($item['previous'])) {
+            $_previous = (float)(str_replace(' ', '', $item['previous']['wholeNumber']) . '.' . $item['previous']['decimals']);
+            if ($_previous > (float)$price) $price = $_previous;
+        }
+        //Изменилась цена
+        if ($productEntity->priceSell != $price) {
+            $this->newSellPriceParserProductUseCase->execute($productEntity->id, $price, $this->userPermission);
+
+            return ParserStatus::priceChanged();
+        }
+        return null;
+    }
+
+    /**
+     * Парсим остатки товара, пока не используется.
+     * Public - для запуска Job. Можно использовать без очередей
+     * @param int $productId
+     * @return ParserStatus|null
+     */
+    public function remainsProduct(int $productId):? ParserStatus
+    {
+        $productEntity = $this->parserProductRepository->getById($productId);
+
+
+        $url = sprintf(self::API_URL_QUANTITY, $productEntity->code);
+        $json_product = $this->httpPage->getPage($url, '_cache');
+
+        $_array = json_decode($json_product, true);
+        //dd($_array);
+        $_result = [];
+        if ($_array == null) {
+            //Товар не нашелся, удаляем из доступности
+            $this->toggleProductAvailabilityUseCase->execute($productEntity->id, $this->userPermission);
+            return ParserStatus::deleted();
+        }
+
+        foreach ($_array['availabilities'] as $item) {
+            if (isset($item['availableForCashCarry'])) {
+                $_store = (int)$item['classUnitKey']['classUnitCode']; //Номер склада
+                //dd($item);
+                if (isset($item['buyingOption']['cashCarry']['availability'])) {
+                    $_quantity = (int)$item['buyingOption']['cashCarry']['availability']['quantity']; //Кол-во на складе
+                } else {
+                    $_quantity = 0;
+                }
+                if ($_store != 0) $_result[$_store] = $_quantity;
+            }
+        }
+
+        return null;
     }
 
     public function FindByCode(string $code): ?ParserProductEntity
@@ -255,6 +325,7 @@ class LoadParserProductIkeaService
             'composite' => $composite, //
         ];
     }
+
     private function toWeight(array $_measures)
     {
         foreach ($_measures as $_measure) {
@@ -262,6 +333,7 @@ class LoadParserProductIkeaService
         }
         return 0.0;
     }
+
     private function toHeight(array $_measures)
     {
         foreach ($_measures as $_measure) {
@@ -269,6 +341,7 @@ class LoadParserProductIkeaService
         }
         return $this->fromDiameter($_measures);
     }
+
     private function fromDiameter(array $_measures)
     {
         foreach ($_measures as $_measure) {
@@ -276,6 +349,7 @@ class LoadParserProductIkeaService
         }
         return 0.0;
     }
+
     private function toLength(array $_measures)
     {
         foreach ($_measures as $_measure) {
@@ -284,6 +358,7 @@ class LoadParserProductIkeaService
         return $this->fromDiameter($_measures);
 
     }
+
     private function toWidth(array $_measures)
     {
         foreach ($_measures as $_measure) {
@@ -291,6 +366,7 @@ class LoadParserProductIkeaService
         }
         return $this->fromDiameter($_measures);
     }
+
     private function toCode(string $code): string
     {
         if (empty($code)) return '';

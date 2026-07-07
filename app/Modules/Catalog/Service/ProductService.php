@@ -19,7 +19,6 @@ use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Repository\TagRepository;
 use App\Modules\Page\Job\JobCacheProduct;
-use App\Modules\Parser\Service\ParserAbstract;
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Settings;
@@ -67,6 +66,11 @@ class ProductService
 
     public function createByParser(int $brand_id, string $code, int $category_id = null): ?Product
     {
+        dd("Неверный запуск");
+
+        //FIXME Исправить или удалить
+
+        /*
 
         $brand = Brand::find($brand_id);
         $parser_class = $brand->parser_class;
@@ -80,7 +84,7 @@ class ProductService
             Log::info("ERROR " . $e->getMessage() . " / " . $e->getFile() . " / " . $e->getLine());
             return null;
         }
-        /** @var ParserAbstract $parser */
+
 
 
         if (!is_null($category_id)) {
@@ -88,7 +92,7 @@ class ProductService
             $product->save();
         }
         return $product;
-
+*/
     }
 
     /**

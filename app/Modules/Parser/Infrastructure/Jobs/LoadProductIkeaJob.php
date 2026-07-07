@@ -29,19 +29,16 @@ class LoadProductIkeaJob implements ShouldQueue
         try {
             $entity = $service->CreateParserProduct($this->productData);
             if (is_null($entity)) return; //Товар уже был спарсен ранее
-            \Log::warning(json_encode($entity));
             $dto = new ParserLogCreateData(
                 status: ParserStatus::new(),
                 parserId: $entity->id,
             );
 
         } catch (\Throwable $exception) {
-
             $error = $this->productData['itemNoGlobal'] . ' ' .
                 $exception->getMessage() . ' ' .
                 $exception->getFile() . ' ' .
                 $exception->getLine();
-            \Log::warning(json_encode($error));
 
             $dto  = new ParserLogCreateData(
                 status: ParserStatus::error(),
@@ -49,7 +46,5 @@ class LoadProductIkeaJob implements ShouldQueue
             );
         }
         $createParserLogUseCase->execute($dto);
-
-
     }
 }
