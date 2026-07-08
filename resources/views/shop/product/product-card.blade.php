@@ -26,7 +26,7 @@
                 </a>
             </div>
             <div>
-                @if(!is_null($user))
+                @if(!is_null($client))
                     <button class="{{ $product['is_wish'] ? 'is-wish' : 'to-wish' }}" type="button"
                             title="В Избранное">
                         <i class="{{ $product['is_wish'] ? 'fa-solid' : 'fa-light' }} fa-heart"></i>

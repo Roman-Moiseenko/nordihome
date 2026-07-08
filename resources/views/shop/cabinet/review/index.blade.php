@@ -9,7 +9,7 @@
 @section('h1', 'Отзывы')
 
 @section('subcontent')
-    @foreach($user->reviews as $review)
+    @foreach($client->reviews as $review)
         <div class="box-card d-flex review-item">
             <div class="product-img">
                 <a href="{{ route('shop.product.view', $review->product->slug) }}" target="_blank"><img

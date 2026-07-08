@@ -6,9 +6,9 @@ use Illuminate\Http\Request;
 
 class Meta
 {
-    public string $title;
-    public string $description;
-    public string $keywords;
+    public string $title = '';
+    public string $description = '';
+    public string $keywords = '';
 
     public function toArray(): array
     {

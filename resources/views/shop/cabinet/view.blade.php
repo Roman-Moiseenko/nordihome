@@ -10,25 +10,25 @@
         <div class="field mt-3">
             <span class="label">Фамилия Имя Отчество:</span>
             <span id="data-fullname" class="data"
-                  style="display: {{ $user->fullname->isEmpty() ? 'none' :' inherit' }};">{{ $user->fullname->getFullName() }}</span>
-            <div id="group-fullname" class="input-group" style="display: {{ !$user->fullname->isEmpty() ? 'none' :' inherit' }};">
+                  style="display: {{ $client->fullname->isEmpty() ? 'none' :' inherit' }};">{{ $client->fullname->getFullName() }}</span>
+            <div id="group-fullname" class="input-group" style="display: {{ !$client->fullname->isEmpty() ? 'none' :' inherit' }};">
                 <input type="text" class="form-control" id="input-fullname" aria-describedby="Фамилия получателя" placeholder="Фамилия Имя Отчество"
                        autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');">
                 <button id="save-fullname" class="btn btn-outline-secondary" type="button"
-                        data-route="{{ route('cabinet.fullname', $user) }}"
+                        data-route="{{ route('cabinet.fullname', $client) }}"
                 >Сохранить</button>
             </div>
             <button id="change-fullname" class="change btn btn-outline-primary"
-                    style="display: {{ $user->fullname->isEmpty() ? 'none' :' inherit' }};">Изменить</button>
+                    style="display: {{ $client->fullname->isEmpty() ? 'none' :' inherit' }};">Изменить</button>
         </div>
         <div class="field mt-3">
             <span class="label">Контактный телефон:</span>
             <span id="data-phone" class="data"
-                  style="display: {{ empty($user->phone) ? 'none' :' inherit' }};" >{{ $user->phone }}</span>
-            <div id="group-phone" class="input-group" style="display: {{ !empty($user->phone) ? 'none' :' inherit' }};">
+                  style="display: {{ empty($client->phone) ? 'none' :' inherit' }};" >{{ $client->phone }}</span>
+            <div id="group-phone" class="input-group" style="display: {{ !empty($client->phone) ? 'none' :' inherit' }};">
                 <input type="text" class="form-control" id="input-phone" aria-describedby="Телефон получателя" placeholder="Телефон" autocomplete="off">
                 <button id="save-phone" class="btn btn-outline-secondary" type="button"
-                        data-route="{{ route('cabinet.phone', $user) }}"
+                        data-route="{{ route('cabinet.phone', $client) }}"
                 >Сохранить</button>
             </div>
             <button id="change-phone" class="change btn btn-outline-primary"
@@ -40,14 +40,14 @@
     <div class="box-card view-option">
         <div class="field mt-3">
             <span class="label">Email для входа:</span>
-            <span id="data-email" class="data" style="display: {{ empty($user->email) ? 'none' :' inherit' }};" >{{ $user->email }}</span>
-            <div id="group-email" class="input-group" style="display: {{ !empty($user->email) ? 'none' :' inherit' }};">
+            <span id="data-email" class="data" style="display: {{ empty($client->email) ? 'none' :' inherit' }};" >{{ $client->email }}</span>
+            <div id="group-email" class="input-group" style="display: {{ !empty($client->email) ? 'none' :' inherit' }};">
                 <input type="text" class="form-control" id="input-email" aria-describedby="Email получателя" placeholder="Email" autocomplete="off">
                 <button id="save-email" class="btn btn-outline-secondary" type="button"
-                        data-route="{{ route('cabinet.email', $user) }}"
+                        data-route="{{ route('cabinet.email', $client) }}"
                 >Сохранить</button>
             </div>
-            <button id="change-email" class="change btn btn-outline-primary" style="display: {{ empty($user->email) ? 'none' :' inherit' }};">Изменить</button>
+            <button id="change-email" class="change btn btn-outline-primary" style="display: {{ empty($client->email) ? 'none' :' inherit' }};">Изменить</button>
         </div>
         <div class="inform mt-1 fs-87 text-danger">* После смены электронной почты кабинет будет недоступен, пока вы не подтвердите новую почту</div>
         <div class="password mt-3">
@@ -57,7 +57,7 @@
                        minlength="6" required autocomplete="on" aria-describedby="show-hide-password">
                 <button id="show-hide-password" class="btn btn-secondary" type="button" data-target-input="#input-password"><i class="fa-light fa-eye"></i></button>
                 <button id="save-password" class="btn btn-outline-secondary" type="button"
-                        data-route="{{ route('cabinet.password', $user) }}"
+                        data-route="{{ route('cabinet.password', $client) }}"
                 >Сохранить</button>
             </div>
         </div>

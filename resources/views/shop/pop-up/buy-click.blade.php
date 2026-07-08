@@ -15,12 +15,12 @@
                     <div class="card-body">
                         <div class="form-floating mb-3">
                             <input type="email" class="form-control mask-email" name="email" placeholder="Электронная почта" required
-                                   value="{{ is_null($user) ? '' : $user->email }}" autocomplete="off">
+                                   value="{{ is_null($client) ? '' : $client->email }}" autocomplete="off">
                             <label for="email">Электронная почта</label>
                         </div>
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control mask-phone" name="phone" placeholder="Телефон" required
-                                   value="{{ is_null($user) ? '' : $user->phone }}" autocomplete="off">
+                                   value="{{ is_null($client) ? '' : $client->phone }}" autocomplete="off">
                             <label for="phone">Телефон</label>
                         </div>
 

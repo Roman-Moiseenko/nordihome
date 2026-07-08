@@ -39,7 +39,7 @@ Route::group(
         Route::post('/csrf-token', function () {
             return csrf_token();
         });
-        Route::get('/shop/{old_slug}', [ProductController::class, 'old_slug']);
+       // Route::get('/shop/{old_slug}', [ProductController::class, 'old_slug']);
 
         Route::get('/page/news', [PageController::class, 'news'])->name('page.news');
         Route::get('/page/{slug}', [PageController::class, 'view'])->name('page.view');
@@ -52,7 +52,7 @@ Route::group(
 
         Route::group([
             'as' => 'product.',
-            'prefix' => 'product',
+            'prefix' => 'shop',
         ], function () {
 
             Route::post('/search', [ProductController::class, 'search'])->name('search');

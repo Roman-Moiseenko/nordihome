@@ -443,7 +443,7 @@ class Product extends Model
         if (!$this->isSale()) return $price;
         if (is_null($client)) {
             $user = auth()->user();
-            if ($user->profileable instanceof Client) $client = $user->profileable;
+            if (!is_null($user) && $user->profileable instanceof Client) $client = $user->profileable;
         }
 
         if (!is_null($client)) {
@@ -519,15 +519,6 @@ class Product extends Model
 
         return $this->getPriceRetail($previous);
 
-        /*
-        if ($this->pricesBulk()->count() == 0) return 0;
-        if ($previous) {
-            $model = $this->pricesBulk()->skip(1)->first();
-            if (empty($model)) return 0;
-        } else {
-            $model = $this->pricesBulk()->skip(0)->first();
-        }
-        return $model->value;*/
     }
 
     public function getPriceSpecial(bool $previous = false): float
@@ -542,18 +533,6 @@ class Product extends Model
         if ($model !== null) return $model->amount;
 
         return $this->getPriceRetail($previous);
-
-        /*
-        if ($this->pricesSpecial()->count() == 0) return 0;
-        if ($previous) {
-
-            $model = $this->pricesSpecial()->skip(1)->first();
-            if (empty($model)) return 0;
-        } else {
-            $model = $this->pricesSpecial()->skip(0)->first();
-        }
-        return $model->value;
-        */
     }
 
     public function getPriceMin(bool $previous = false): float
@@ -568,16 +547,6 @@ class Product extends Model
         if ($model !== null) return $model->amount;
 
         return $this->getPriceRetail($previous);
-
-      /*  if ($this->pricesMin()->count() == 0) return 0;
-        if ($previous) {
-            $model = $this->pricesMin()->skip(1)->first();
-            if (empty($model)) return 0;
-        } else {
-            $model = $this->pricesMin()->skip(0)->first();
-        }
-        return $model->value;
-        */
     }
 
     public function getPriceParser(bool $previous = false): float
@@ -604,16 +573,6 @@ class Product extends Model
         if ($model !== null) return $model->amount;
 
         return $this->getPriceRetail($previous);
-    /*
-        if ($this->pricesPre()->count() == 0) return $this->getPriceParser($previous);
-        if ($previous) {
-            $model = $this->pricesPre()->skip(1)->first();
-            if (empty($model)) return 0;
-        } else {
-            $model = $this->pricesPre()->skip(0)->first();
-        }
-        return $model->value;
-        */
     }
 
     //*** КОЛ_ВО

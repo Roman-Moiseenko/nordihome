@@ -1,6 +1,6 @@
 <div>
     @foreach($user->wishes as $wish)
-        <livewire:cabinet.wish.wish-item :wish="$wish" :key="$wish->id" :user="$user"/>
+        <livewire:cabinet.wish.wish-item :wish="$wish" :key="$wish->id" :user="$client"/>
     @endforeach
 
     @if($user->wishes()->count() == 0 )

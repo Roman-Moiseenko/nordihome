@@ -195,6 +195,7 @@ class MetaTemplateRepository
         if (is_null($meta)) $meta = new Meta();
         /** @var MetaTemplate $metaTemplate */
         $metaTemplate = MetaTemplate::where('class', get_class($object))->first();
+        if (is_null($metaTemplate)) return $meta;
         if (empty($meta->title)) $meta->title = $this->renderMeta($object, $metaTemplate->template_title);
         if (empty($meta->description)) $meta->description = $this->renderMeta($object, $metaTemplate->template_description);
         return $meta;

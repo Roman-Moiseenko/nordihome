@@ -151,11 +151,13 @@ class ViewRepository
 
         //TODO Schema для парсер категории
         //$schema = $this->schema_category_cache($category);
-
+/*
         if ($this->web->is_category && count($category->children) > 0) {
             $children = $this->repository->getChildren($category->id);
             return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description'));
         }
+*/
+        $children = $this->repository->getChildren($category->id);
 
         $minPrice = 10;
         $maxPrice = 999999999;
@@ -198,8 +200,7 @@ class ViewRepository
 
         //  $end = now();
         //     \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
-        return view(
-            $this->route('product.index'),
+        return view('shop.product.index',
             compact('category', 'products', 'prod_attributes', 'tags',
                 'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
                 'order', 'children', 'count_in_category'/*, 'schema'*/, 'page'));

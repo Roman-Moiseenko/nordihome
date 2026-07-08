@@ -6,6 +6,7 @@
 @section('description', $description)
 
 @section('content')
+
     <div class="title-page">
         <div class="products-page-title">
             <div class="title h1">
