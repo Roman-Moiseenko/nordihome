@@ -12,7 +12,7 @@ use Illuminate\Console\Command;
 class IkeaProductCommand extends Command
 {
     use CreatesApplication;
-    protected $signature = 'cron:parser-product';
+    protected $signature = 'ikea:products';
     protected $description = 'Парсим Товары Икеа';
 
     public function handle(LoadParserProductIkeaService $service): void

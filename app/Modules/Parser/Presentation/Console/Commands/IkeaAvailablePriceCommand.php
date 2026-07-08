@@ -15,7 +15,7 @@ class IkeaAvailablePriceCommand extends Command
 {
     use CreatesApplication;
 
-    protected $signature = 'cron:parser-update';
+    protected $signature = 'ikea:products-update';
     protected $description = 'Парсим цены и доступность товаров';
 
     public function handle(): void

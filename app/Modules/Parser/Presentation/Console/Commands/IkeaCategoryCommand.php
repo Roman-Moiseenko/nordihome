@@ -12,7 +12,7 @@ use Illuminate\Console\Command;
 class IkeaCategoryCommand extends Command
 {
     use CreatesApplication;
-    protected $signature = 'cron:parser-category';
+    protected $signature = 'ikea:categories';
     protected $description = 'Парсим категории Икеа';
 
     public function handle(LoadParserCategoryIkeaService $service): void
