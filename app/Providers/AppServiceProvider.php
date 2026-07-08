@@ -18,6 +18,23 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(Settings::class, function () {
             return new Settings();
         });
+
+        // Регистрируем seed.handler для модульных сидеров
+        $this->app->singleton('seed.handler', function () {
+            return new class {
+                private array $seeders = [];
+
+                public function register(array $classes): void
+                {
+                    $this->seeders = array_merge($this->seeders, $classes);
+                }
+
+                public function getSeeders(): array
+                {
+                    return $this->seeders;
+                }
+            };
+        });
   /*
         if (!Auth::guard('web')->check()) {
             $userId = null;
@@ -39,9 +56,6 @@ class AppServiceProvider extends ServiceProvider
                 });
         */
        // $options = new Options();
-
-
-
     }
 
     /**

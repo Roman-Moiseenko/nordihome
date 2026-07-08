@@ -2,7 +2,7 @@
     <div id="wish-header" class="dropdown" style="position: relative">
         <a class="nav-link d-flex flex-column text-center dropdown-toggle dropdown-hover"
            href="{{ route('cabinet.wish.index') }}" aria-expanded="false" id="dropdown-wish" aria-haspopup="true"
-           @if(is_null($user))
+           @if(is_null($client))
                data-bs-toggle="modal" data-bs-target="#login-popup"
             @endif
         >
@@ -11,7 +11,7 @@
             <span class="fs-7">Избранное</span>
         </a>
 
-        @if(!is_null($user))
+        @if(!is_null($client))
             <div id="wish-block" class="dropdown-menu menu-widget-popup {{ ($count == 0) ? 'hidden' : '' }}"
                  aria-labelledby="dropdown-wish">
                 <div class="wish-header">

@@ -19,10 +19,10 @@ abstract class ShopController extends BaseController
 
     public function __construct()
     {
-        $this->middleware(['guest', 'guest:user']);
-        if (auth()->check()) Auth::logout();
+        //$this->middleware(['guest', 'guest:user']);
+        //if (auth()->check()) Auth::logout();
 
-        if (Auth::guard('web')->check()) {
+        if (auth()->check() && auth()->user()->isClient()) {
             $this->client = auth()->user()->profileable;
         } else {
             $this->client = null;

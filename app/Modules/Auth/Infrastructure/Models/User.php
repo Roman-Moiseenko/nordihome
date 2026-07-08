@@ -50,4 +50,14 @@ class User extends Authenticatable
     {
         return $this->morphTo();
     }
+
+    public function isClient(): bool
+    {
+        return $this->profileable_type === Client::class;
+    }
+
+    public function isStaff(): bool
+    {
+        return $this->profileable_type === Staff::class;
+    }
 }

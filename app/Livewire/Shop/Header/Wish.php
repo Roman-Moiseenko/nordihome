@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Shop\Header;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\User\Entity\User;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -10,14 +11,14 @@ use Illuminate\Support\Facades\Auth;
 class Wish extends Component
 {
 
-    public ?User $user;
+    public ?Client $client;
     public int $count = 0;
     public array $items = [];
 
     public function mount()
     {
 
-        $this->user = (Auth::guard('web')->check()) ? Auth::guard('web')->user() : null;
+        $this->client = (auth()->check() && auth()->user()->isClient()) ? auth()->user()->profileable : null;
 
         $this->refresh_fields();
     }
@@ -25,7 +26,7 @@ class Wish extends Component
     #[ On('update-header-wish')]
     public function refresh_fields()
     {
-        if (!is_null($this->user))
+        if (!is_null($this->client))
         $this->items = array_map(function (\App\Modules\User\Entity\Wish $wish) {
             return [
                 'id' => $wish->id,
@@ -33,7 +34,7 @@ class Wish extends Component
                 'name' => $wish->product->name,
                 'url' => route('shop.product.view', $wish->product->slug),
             ];
-        },  $this->user->wishes()->getModels());
+        },  $this->client->wishes()->getModels());
 
         $this->count = count($this->items);
 
@@ -51,7 +52,7 @@ class Wish extends Component
     public function remove_all()
     {
 
-        foreach ($this->user->wishes as $wish) {
+        foreach ($this->client->wishes as $wish) {
             $wish->delete();
         }
         $this->items = [];

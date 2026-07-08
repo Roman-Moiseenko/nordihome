@@ -415,7 +415,7 @@ class ParserServiceProvider extends ServiceProvider
 
         $this->app->afterResolving('seed.handler', function ($handler) {
             $handler->register([
-                // Add seeder classes here
+                \App\Modules\Parser\Database\Seeders\ParserRoleSeeder::class,
             ]);
         });
     }
