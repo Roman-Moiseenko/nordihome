@@ -81,8 +81,8 @@ const useAuth = useAuthStore();
 const saving = ref(false)
 
 function shortPerm(perm: string): string {
-    const parts = perm.split('.')
-    return parts.length > 1 ? parts[parts.length - 1] : perm
+    const parts = perm.split('.');
+    return parts.length > 1 ? parts.slice(1).join('.') : perm;
 }
 
 // --- Исходные данные из пропсов (эталон для отмены) ---

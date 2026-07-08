@@ -10,19 +10,19 @@ use Illuminate\Support\Facades\Auth;
 
 class DBStorage implements StorageInterface
 {
-    private int|null $user_id;
+    private int|null $client_id;
 
     public function __construct()
     {
-        if (!Auth::guard('web')->check())
+        if (!auth()->check())
             throw new \DomainException('Неправильный вызов DBStorage, user == null');
-        $this->user_id = Auth::guard('web')->user()->id;
+        $this->client_id = auth()->user()->profileable_id;
     }
 
     /** @return CartItem[] */
     public function load(): array
     {
-        $items = CartStorage::where('user_id', $this->user_id)->get();
+        $items = CartStorage::where('client_id', $this->client_id)->get();
         $result = [];
         /** @var CartStorage $item */
         foreach ($items as $item) {
@@ -40,7 +40,7 @@ class DBStorage implements StorageInterface
     public function add(CartItem $item): void
     {
         $this->toStorage(
-            $this->user_id,
+            $this->client_id,
             $item->getProduct(),
             $item->getQuantity(),
             $item->options);
@@ -65,7 +65,7 @@ class DBStorage implements StorageInterface
 
     public function clear(): void
     {
-        $this->clearByUser($this->user_id);
+        $this->clearByUser($this->client_id);
     }
 
     public function check(CartItem $item): void
@@ -76,13 +76,13 @@ class DBStorage implements StorageInterface
 
     private function clearByUser($id)
     {
-        CartStorage::where('user_id', $id)->delete();
+        CartStorage::where('client_id', $id)->delete();
     }
 
-    private function toStorage(int $user_id, Product $product, float $quantity, array $options = [])
+    private function toStorage(int $client_id, Product $product, float $quantity, array $options = [])
     {
         CartStorage::register(
-            $user_id,
+            $client_id,
             $product->id,
             $quantity,
             $options

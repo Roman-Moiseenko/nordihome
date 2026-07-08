@@ -20,8 +20,18 @@ final class PhoneNumber
     /**
      * @throws InvalidArgumentException
      */
-    public function __construct(string $value, ?string $defaultRegion = 'RU')
+    public function __construct(?string $value, ?string $defaultRegion = 'RU')
     {
+        if (is_null($value) || trim($value) === '') {
+            $this->rawInput = '';
+            $this->e164 = '';
+            $this->national = '';
+            $this->international = '';
+            $this->countryCode = 0;
+            $this->nationalNumber = '';
+            return;
+        }
+
         $this->rawInput = trim($value);
         $phoneUtil = PhoneNumberUtil::getInstance();
 

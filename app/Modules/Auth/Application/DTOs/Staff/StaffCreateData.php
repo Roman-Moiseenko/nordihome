@@ -27,15 +27,22 @@ class StaffCreateData extends Data
         public readonly ?string $workPhone = null,
         #[Nullable, Email, Max(255)]
         public readonly ?string $workEmail = null,
+        #[Nullable, StringType, Max(255)]
+        public readonly ?string $password = null,
+        #[Nullable, StringType, Max(255)]
+        public readonly ?string $telegramChatId = null,
     ) {}
 
     public static function fromEntity(StaffEntity $staff): static
     {
         return new self(
-            $staff->fullName->getLastName(),
-            $staff->fullName->getFirstName(),
-            $staff->positions->toArrayOfStrings(),
-            $staff->fullName->getMiddleName(),
+            lastName: $staff->fullName->getLastName(),
+            firstName: $staff->fullName->getFirstName(),
+            positions: $staff->positions->toArrayOfStrings(),
+            middleName: $staff->fullName->getMiddleName(),
+            workPhone: $staff->workPhone->getValue(),
+            workEmail: $staff->workEmail->value,
+            telegramChatId: $staff->telegramChatId,
         );
     }
 

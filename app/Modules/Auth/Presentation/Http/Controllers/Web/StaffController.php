@@ -17,6 +17,7 @@ use App\Modules\Auth\Application\DTOs\Staff\StaffUpdateData;
 use App\Modules\Auth\Application\DTOs\Staff\StaffViewData;
 use App\Modules\Auth\Application\DTOs\User\UpdateUserData;
 use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
+use App\Modules\Auth\Application\Services\CreateAndAuthStaffUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
@@ -37,6 +38,7 @@ class StaffController extends Controller
         private readonly IndexStaffUseCase        $indexStaffUseCase,
         private readonly ViewStaffUseCase         $viewStaffUseCase,
         private readonly ListStaffGroupPositions  $listStaffGroupPositions,
+        private readonly CreateAndAuthStaffUseCase $createAndAuthStaffUseCase,
     )
     {
     }
@@ -69,13 +71,9 @@ class StaffController extends Controller
      */
     public function store(Request $request, UserPermission $userPermission)
     {
-        try {
-            $dto = StaffCreateData::validateAndCreate($request->all());
-        } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $dto = StaffCreateData::validateAndCreate($request->all());
 
-        $staffDTO = $this->createStaffUseCase->execute($dto, $userPermission);
+        $staffDTO = $this->createAndAuthStaffUseCase->execute($dto, $userPermission);
         return redirect()->route('admin.staff.show', $staffDTO->id);
     }
 

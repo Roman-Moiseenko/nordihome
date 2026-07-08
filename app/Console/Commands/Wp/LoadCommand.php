@@ -33,7 +33,7 @@ class LoadCommand extends Command
 
     protected $signature = 'wp:load
                 {--type= : catalog / product / "пусто"}';
-    protected $description = 'Загрузка данных';
+    protected $description = 'Загрузка данных {--type= : catalog / product / "пусто"}';
 
     public function handle(
         LoadCategoryWpService      $loadCategoryWpService,

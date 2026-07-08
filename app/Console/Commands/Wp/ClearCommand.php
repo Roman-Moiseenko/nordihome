@@ -22,7 +22,7 @@ class ClearCommand extends Command
      *
      * @var string
      */
-    protected $description = 'Очистка данных';
+    protected $description = 'Очистка данных {--catalog= : 1 / "Да" } {--product= : 1 / "Да" } {--room= : 1 / "Да" }';
 
     /**
      * Execute the console command.
