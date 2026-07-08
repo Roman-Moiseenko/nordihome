@@ -71,9 +71,14 @@ readonly class LoadProductWpService
             }
         }
 
+        if (empty($categories)) return false;
+
         //Из атрибутов вытаскиваем бренд, и ищем его, если нет, то создаем и возвращаем Entity
-        $brandName = $product['attributes']["pa_brend"][0] ?? BrandEntity::NONAME;
+        $brandName = (isset($product['attributes']["pa_brend"][0]))
+            ? $product['attributes']["pa_brend"][0]
+            : BrandEntity::NONAME;
         $brand = $this->findOrCreateBrandUseCase->execute($brandName);
+
 
         //Создаем Товар
         $dtoProduct = new ProductFastCreateData(

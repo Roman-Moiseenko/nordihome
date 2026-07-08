@@ -55,6 +55,9 @@ readonly class UploadPhotoByUrlUseCase
             if ($isProxy) {
                 $http = new HttpPage();
                 $content = $http->getPage($url);
+                if ($content === null) {
+                    throw new \RuntimeException('Получен пустой ответ от сервера');
+                }
                 $fp = fopen($fullFilename, 'x');
                 fwrite($fp, $content);
                 fclose($fp);

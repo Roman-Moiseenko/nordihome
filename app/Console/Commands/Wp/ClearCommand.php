@@ -6,6 +6,7 @@ namespace App\Console\Commands\Wp;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 
@@ -56,6 +57,7 @@ class ClearCommand extends Command
         }
         Category::where('id', '>', 0)->delete();
         $this->info('Очистка Завершена');
+        Photo::where('imageable_type', Category::class)->delete();
     }
 
 
@@ -82,7 +84,8 @@ class ClearCommand extends Command
                 $photo->delete();
             }
         }
-        Product::where('id', '>', 0)->delete();
+        Product::where('id', '>', 0)->forceDelete();
         $this->info('Очистка Завершена');
+        Photo::where('imageable_type', Product::class)->delete();
     }
 }
