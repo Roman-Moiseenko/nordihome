@@ -2,8 +2,11 @@
 
 namespace App\Providers;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Setting\Entity\Settings;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 
@@ -74,6 +77,10 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
         //Europe/Kaliningrad
+
+        Blade::if('client', function () {
+            return auth()->check() && auth()->user()->profileable instanceof Client;
+        });
     }
 
 }

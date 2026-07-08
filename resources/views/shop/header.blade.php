@@ -67,7 +67,7 @@
 
             <div class="menu-bottom-profile">
                 <ul class="navbar-nav ms-auto">
-                    @guest
+                    @client
                         @if (Route::has('login'))
                             <li class="nav-item">
                                 <a id="login" class="nav-link d-flex flex-column text-center" href="#" data-bs-toggle="modal" data-bs-target="#login-popup">
@@ -84,7 +84,7 @@
                                 <span class="fs-7">Кабинет</span>
                             </a>
                         </li>
-                    @endguest
+                    @endclient
 
                     <li class="nav-item">
                         <livewire:shop.header.wish />
@@ -92,9 +92,9 @@
 
                     <li class="nav-item">
                         <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.order.index') }}"
-                           @guest('user')
+                           @client
                            data-bs-toggle="modal" data-bs-target="#login-popup"
-                            @endguest
+                            @endclient
                         >
                             <i class="fa-sharp fa-light fa-box-open fs-4"></i>
                             <span class="fs-7">Заказы</span>
