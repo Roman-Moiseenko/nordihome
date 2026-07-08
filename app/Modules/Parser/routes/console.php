@@ -1,10 +1,4 @@
 <?php
 
-//use Illuminate\Support\Facades\Artisan;
-
-/*Artisan::command('inspire', function () {
-    $this->comment(Inspiring::quote());
-})->purpose('Display an inspiring quote');*/
-
-
-
+//Обновляем данные по товарам уже спарсенным
+Schedule::command('cron:parser-update')->dailyAt('01:01');//dailyAt('02:01');

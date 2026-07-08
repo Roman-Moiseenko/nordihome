@@ -7,6 +7,7 @@ use App\Modules\Catalog\Entity\Series;
 use App\Modules\Catalog\Entity\Tag;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Entity\Reserve;
 use App\Modules\User\Entity\CartCookie;
@@ -30,7 +31,7 @@ class ClearShopCommand extends Command
 
         //$this->clearItem(Group::get(), 'Группы удалены');
         $this->clearItem(Promotion::get(), 'Акции удалены');
-        $this->clearItem(Reserve::get(), 'Резерв очищен');
+        //$this->clearItem(Reserve::get(), 'Резерв очищен');
         $this->clearItem(CartStorage::get(), 'Корзина очищена');
         $this->clearItem(CartCookie::get(), 'Корзина очищена ');
         $this->clearItem(Product::get(), 'Товары удалены', true);
@@ -42,6 +43,7 @@ class ClearShopCommand extends Command
             $attribute->categories()->detach();
         $this->clearItem(Attribute::get(), 'Атрибуты удалены');
         $this->clearItem(Category::orderByDesc('_lft')->get(), 'Категории удалены');
+        $this->clearItem(Room::orderByDesc('_lft')->get(), 'Комнаты удалены');
 
 
         return true;

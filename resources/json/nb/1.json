@@ -1,361 +1,62 @@
 {
-    "data": {
-        "productsByIds": [
+    "message": "Undefined array key 0",
+    "file": "D:\\Server\\localhost\\nordihome\\app\\Modules\\Catalog\\Application\\Services\\LoadProductWpService.php",
+    "line": 85,
+    "product": {
+        "id": 42148,
+        "name": "\u0424\u0440\u0443\u043a\u0442\u043e\u0432\u043d\u0438\u0446\u0430, \u0411\u043b\u044e\u0434\u043e \u0441\u0435\u0440\u0432\u0438\u0440\u043e\u0432\u043e\u0447\u043d\u043e\u0435, \u043f\u043e\u0434\u0441\u0442\u0430\u0432\u043a\u0430,  \u043d\u0430 3 \u0442\u0430\u0440\u0435\u043b\u043a\u0438 KVITTERA - \u041a\u0412\u0418\u0422\u0422\u0415\u0420\u0410",
+        "slug": "kvittera",
+        "sku": "902.798.42",
+        "attributes": {
+            "pa_brend": [
+                "\u0418\u043a\u0435\u0430"
+            ],
+            "pa_czveta": [
+                "\u041f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u044b\u0439",
+                "\u0421\u0442\u0430\u043b\u044c"
+            ],
+            "pa_komnaty": [
+                "\u041a\u0443\u0445\u043d\u044f"
+            ],
+            "pa_vid-mebeli": [
+                "\u041a\u0443\u0445\u043e\u043d\u043d\u044b\u0435 \u043f\u0440\u0438\u043d\u0430\u0434\u043b\u0435\u0436\u043d\u043e\u0441\u0442\u0438"
+            ],
+            "pa_dlina": [
+                "31"
+            ],
+            "pa_shirina": [
+                "27"
+            ],
+            "pa_vysota": [
+                "34"
+            ]
+        },
+        "price": "2890",
+        "description": "<p>\u041f\u043e\u0434\u0430\u0432\u0430\u0439\u0442\u0435 \u0437\u0430\u043a\u0443\u0441\u043a\u0438, \u0434\u0435\u0441\u0435\u0440\u0442\u044b \u0438 \u0443\u0433\u043e\u0449\u0435\u043d\u0438\u044f \u043d\u0430 \u0441\u043e\u0432\u0440\u0435\u043c\u0435\u043d\u043d\u043e\u043c \u043f\u0435\u0440\u0435\u043e\u0441\u043c\u044b\u0441\u043b\u0435\u043d\u0438\u0438 \u043a\u043b\u0430\u0441\u0441\u0438\u0447\u0435\u0441\u043a\u043e\u0433\u043e \u0441\u0435\u0440\u0432\u0438\u0440\u043e\u0432\u043e\u0447\u043d\u043e\u0433\u043e \u0440\u0435\u0448\u0435\u043d\u0438\u044f \u2014 \u043b\u0435\u0433\u043a\u043e\u043c, \u0432\u0438\u0437\u0443\u0430\u043b\u044c\u043d\u043e \u0432\u044b\u0440\u0430\u0437\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u043c \u0438 \u044d\u043b\u0435\u0433\u0430\u043d\u0442\u043d\u043e\u043c \u0442\u0440\u0435\u0445\u044a\u044f\u0440\u0443\u0441\u043d\u043e\u043c \u043f\u043e\u0434\u043d\u043e\u0441\u0435 KVITTER, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u0433\u0430\u0440\u043c\u043e\u043d\u0438\u0447\u043d\u043e \u0441\u043e\u0447\u0435\u0442\u0430\u0435\u0442 \u044d\u0441\u0442\u0435\u0442\u0438\u0447\u043d\u043e\u0441\u0442\u044c \u0438 \u0444\u0443\u043d\u043a\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u043e\u0441\u0442\u044c. \u0422\u0430\u043a\u043e\u0435 \u043e\u0444\u043e\u0440\u043c\u043b\u0435\u043d\u0438\u0435 \u0441\u0442\u043e\u043b\u0430 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u0435\u0442 \u0441\u043e\u0437\u0434\u0430\u0442\u044c \u044d\u0444\u0444\u0435\u043a\u0442\u043d\u0443\u044e \u043f\u043e\u0434\u0430\u0447\u0443 \u0438 \u043f\u043e\u0434\u0447\u0435\u0440\u043a\u043d\u0443\u0442\u044c \u0430\u0442\u043c\u043e\u0441\u0444\u0435\u0440\u0443 \u043c\u0435\u0440\u043e\u043f\u0440\u0438\u044f\u0442\u0438\u044f.<\/p><p>\u041a\u043e\u043d\u0441\u0442\u0440\u0443\u043a\u0446\u0438\u044f \u0431\u043b\u044e\u0434\u0430 \u043f\u0440\u0435\u0434\u043f\u043e\u043b\u0430\u0433\u0430\u0435\u0442 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e\u0441\u0442\u044c \u0441\u043d\u044f\u0442\u0438\u044f \u043e\u0442\u0434\u0435\u043b\u044c\u043d\u044b\u0445 \u0442\u0430\u0440\u0435\u043b\u043e\u043a, \u0438\u0445 \u0441\u0432\u043e\u0431\u043e\u0434\u043d\u043e\u0439 \u043a\u043e\u043c\u0431\u0438\u043d\u0430\u0446\u0438\u0438 \u043c\u0435\u0436\u0434\u0443 \u0441\u043e\u0431\u043e\u0439, \u0430 \u0442\u0430\u043a\u0436\u0435 \u0440\u0435\u0433\u0443\u043b\u0438\u0440\u043e\u0432\u043a\u0438 \u0432\u044b\u0441\u043e\u0442\u044b, \u0447\u0442\u043e \u0434\u0430\u0435\u0442 \u043f\u0440\u043e\u0441\u0442\u043e\u0440 \u0434\u043b\u044f \u0438\u043d\u0434\u0438\u0432\u0438\u0434\u0443\u0430\u043b\u044c\u043d\u044b\u0445 \u0440\u0435\u0448\u0435\u043d\u0438\u0439 \u0438 \u043f\u043e\u0437\u0432\u043e\u043b\u044f\u0435\u0442 \u0430\u0434\u0430\u043f\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0441\u0435\u0440\u0432\u0438\u0440\u043e\u0432\u043a\u0443 \u043f\u043e\u0434 \u043a\u043e\u043d\u043a\u0440\u0435\u0442\u043d\u044b\u0435 \u0437\u0430\u0434\u0430\u0447\u0438 \u0438 \u0444\u043e\u0440\u043c\u0430\u0442 \u043f\u043e\u0434\u0430\u0447\u0438.<\/p><p>\u0413\u043b\u0443\u0431\u043e\u043a\u0438\u0435 \u0442\u0430\u0440\u0435\u043b\u043a\u0438 \u043e\u0431\u0435\u0441\u043f\u0435\u0447\u0438\u0432\u0430\u044e\u0442 \u043d\u0430\u0434\u0435\u0436\u043d\u0443\u044e \u0444\u0438\u043a\u0441\u0430\u0446\u0438\u044e \u0441\u043e\u0434\u0435\u0440\u0436\u0438\u043c\u043e\u0433\u043e, \u043f\u0440\u0435\u0434\u043e\u0442\u0432\u0440\u0430\u0449\u0430\u044f \u0435\u0433\u043e \u0441\u043c\u0435\u0449\u0435\u043d\u0438\u0435. \u041e\u043d\u0438 \u043f\u043e\u0434\u0445\u043e\u0434\u044f\u0442 \u0434\u043b\u044f \u0440\u0430\u0437\u043c\u0435\u0449\u0435\u043d\u0438\u044f \u0441\u0430\u043c\u044b\u0445 \u0440\u0430\u0437\u043d\u044b\u0445 \u0443\u0433\u043e\u0449\u0435\u043d\u0438\u0439 \u2014 \u043e\u0442 \u0441\u043b\u0430\u0434\u043e\u0441\u0442\u0435\u0439 \u0438 \u0441\u0432\u0435\u0436\u0438\u0445 \u0444\u0440\u0443\u043a\u0442\u043e\u0432 \u0434\u043e \u0437\u0430\u043a\u0443\u0441\u043e\u043a \u0438 \u043c\u043e\u0440\u0435\u043f\u0440\u043e\u0434\u0443\u043a\u0442\u043e\u0432, \u0441\u043e\u0445\u0440\u0430\u043d\u044f\u044f \u0430\u043a\u043a\u0443\u0440\u0430\u0442\u043d\u044b\u0439 \u0438 \u043e\u043f\u0440\u044f\u0442\u043d\u044b\u0439 \u0432\u043d\u0435\u0448\u043d\u0438\u0439 \u0432\u0438\u0434.<\/p><p>\u0422\u0430\u043a\u043e\u0435 \u0431\u043b\u044e\u0434\u043e \u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u0441\u044f \u043d\u0435 \u043f\u0440\u043e\u0441\u0442\u043e \u044d\u043b\u0435\u043c\u0435\u043d\u0442\u043e\u043c \u0441\u0435\u0440\u0432\u0438\u0440\u043e\u0432\u043a\u0438, \u0430 \u0432\u044b\u0440\u0430\u0437\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u043c \u0441\u043f\u043e\u0441\u043e\u0431\u043e\u043c \u0442\u043e\u0440\u0436\u0435\u0441\u0442\u0432\u0435\u043d\u043d\u043e\u0433\u043e \u043f\u0440\u0435\u0434\u0441\u0442\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u0432\u044b\u043f\u0435\u0447\u043a\u0438, \u0444\u0440\u0443\u043a\u0442\u043e\u0432 \u0438\u043b\u0438 \u0437\u0430\u043a\u0443\u0441\u043e\u043a, \u043f\u0440\u0438\u0434\u0430\u0432\u0430\u044f \u0441\u0442\u043e\u043b\u0443 \u0437\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u043d\u043e\u0441\u0442\u044c \u0438 \u043e\u0441\u043e\u0431\u044b\u0439 \u0445\u0430\u0440\u0430\u043a\u0442\u0435\u0440.<\/p><p>\u041f\u0435\u0440\u0435\u0434 \u043f\u0435\u0440\u0432\u044b\u043c \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435\u043c \u0431\u043b\u044e\u0434\u043e \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0443\u0435\u0442\u0441\u044f \u0442\u0449\u0430\u0442\u0435\u043b\u044c\u043d\u043e \u0432\u044b\u043c\u044b\u0442\u044c.<\/p><p>\u0414\u0438\u0437\u0430\u0439\u043d\u0435\u0440<br \/>Lovisa Wattman<\/p>",
+        "title": "\u0424\u0440\u0443\u043a\u0442\u043e\u0432\u043d\u0438\u0446\u0430, \u0411\u043b\u044e\u0434\u043e \u0441\u0435\u0440\u0432\u0438\u0440\u043e\u0432\u043e\u0447\u043d\u043e\u0435, \u043f\u043e\u0434\u0441\u0442\u0430\u0432\u043a\u0430,  \u043d\u0430 3 \u0442\u0430\u0440\u0435\u043b\u043a\u0438 KVITTERA - \u041a\u0412\u0418\u0422\u0422\u0415\u0420\u0410",
+        "short": "<p>\u043f\u0440\u043e\u0437\u0440\u0430\u0447\u043d\u043e\u0435 \u0441\u0442\u0435\u043a\u043b\u043e\/\u043d\u0435\u0440\u0436\u0430\u0432\u0435\u044e\u0449\u0430\u044f \u0441\u0442\u0430\u043b\u044c<\/p>",
+        "categories": [
             {
-                "id": "3213770",
-                "name": "Buty męskie New Balance MT410OK8 – czarne",
-                "niceUrl": "buty_meskie_new_balance_mt410ok8_czarne",
-                "picturesCategories": [
-                    {
-                        "slug": "comparer",
-                        "pictures": []
-                    },
-                    {
-                        "slug": "newbalance",
-                        "pictures": []
-                    }
-                ],
-                "flags": [
-                    {
-                        "id": "2",
-                        "name": "Nowość",
-                        "symbol": "new"
-                    }
-                ],
-                "prices": {
-                    "sellPrice": {
-                        "gross": 349.99,
-                        "nett": 284.54,
-                        "currency": "PLN",
-                        "vat": null,
-                        "vatValue": 23
-                    },
-                    "listPrice": null,
-                    "basePrice": {
-                        "gross": 349.99,
-                        "nett": 284.54,
-                        "currency": "PLN",
-                        "vat": null,
-                        "vatValue": 23
-                    },
-                    "omnibusPrice": null
-                },
-                "producer": {
-                    "id": 911,
-                    "name": "New Balance",
-                    "description": null
-                },
-                "categoryPath": [
-                    {
-                        "id": "13026",
-                        "name": "Męskie",
-                        "niceUrl": "meskie"
-                    },
-                    {
-                        "id": "13031",
-                        "name": "Obuwie",
-                        "niceUrl": "meskie/obuwie"
-                    },
-                    {
-                        "id": "13033",
-                        "name": "Biegowe",
-                        "niceUrl": "meskie/obuwie/biegowe"
-                    },
-                    {
-                        "id": "13161",
-                        "name": "BIEGI W TERENIE",
-                        "niceUrl": "meskie/obuwie/biegowe/biegi_w_terenie"
-                    }
-                ],
-                "reviewStats": {
-                    "scoreCount": 0,
-                    "totalScore": 0,
-                    "averageScore": 0,
-                    "percentageScore": 0
-                },
-                "categories": [
-                    {
-                        "id": "13161",
-                        "name": "BIEGI W TERENIE",
-                        "niceUrl": "meskie/obuwie/biegowe/biegi_w_terenie"
-                    },
-                    {
-                        "id": "13513",
-                        "name": "Męskie",
-                        "niceUrl": "sport/bieganie/obuwie/meskie"
-                    },
-                    {
-                        "id": "14103",
-                        "name": "Buty do biegania w terenie",
-                        "niceUrl": "bieganie/aktywnosc/buty_do_biegania_w_terenie"
-                    },
-                    {
-                        "id": "14105",
-                        "name": "Wszystkie buty biegowe",
-                        "niceUrl": "bieganie/buty_biegowe/wszystkie_buty_biegowe"
-                    },
-                    {
-                        "id": "13157",
-                        "name": "NEUTRALNE / SUPINACJA",
-                        "niceUrl": "meskie/obuwie/biegowe/neutralne_supinacja"
-                    }
-                ],
-                "properties": [
-                    {
-                        "name": "Model",
-                        "value": {
-                            "type": "text_line",
-                            "dataList": [
-                                "MT410OK8 "
-                            ]
-                        }
-                    },
-                    {
-                        "name": "Dla kogo",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": [
-                                "Dla niego"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "Płeć",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": []
-                        }
-                    },
-                    {
-                        "name": "Kategoria",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": [
-                                "Obuwie"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "Drop",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": [
-                                "8 mm"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "Szerokość",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": []
-                        }
-                    },
-                    {
-                        "name": "Kolor",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": [
-                                "Czarny"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "Produkt ocieplany",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": []
-                        }
-                    },
-                    {
-                        "name": "Rodzaj zapięcia",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": []
-                        }
-                    }
-                ]
+                "id": 641,
+                "name": "\u041a\u0443\u0445\u043e\u043d\u043d\u044b\u0439 \u0438\u043d\u0432\u0435\u043d\u0442\u0430\u0440\u044c"
             },
             {
-                "id": "3212449",
-                "name": "Buty unisex New Balance MR530RB – białe",
-                "niceUrl": "buty_unisex_new_balance_mr530rb_biale",
-                "picturesCategories": [
-                    {
-                        "slug": "newbalance",
-                        "pictures": []
-                    },
-                    {
-                        "slug": "comparer",
-                        "pictures": []
-                    }
-                ],
-                "flags": [
-                    {
-                        "id": "1",
-                        "name": "Promocja",
-                        "symbol": "promotion"
-                    }
-                ],
-                "prices": {
-                    "sellPrice": {
-                        "gross": 269.99,
-                        "nett": 219.5,
-                        "currency": "PLN",
-                        "vat": null,
-                        "vatValue": 23
-                    },
-                    "listPrice": null,
-                    "basePrice": {
-                        "gross": 549.99,
-                        "nett": 447.15,
-                        "currency": "PLN",
-                        "vat": null,
-                        "vatValue": 23
-                    },
-                    "omnibusPrice": {
-                        "gross": 379.99,
-                        "nett": 308.93,
-                        "currency": "PLN",
-                        "vat": null,
-                        "vatValue": 23
-                    }
-                },
-                "producer": {
-                    "id": 911,
-                    "name": "New Balance",
-                    "description": null
-                },
-                "categoryPath": [
-                    {
-                        "id": "13026",
-                        "name": "Męskie",
-                        "niceUrl": "meskie"
-                    },
-                    {
-                        "id": "13031",
-                        "name": "Obuwie",
-                        "niceUrl": "meskie/obuwie"
-                    },
-                    {
-                        "id": "13043",
-                        "name": "Klasyczne",
-                        "niceUrl": "meskie/obuwie/klasyczne"
-                    },
-                    {
-                        "id": "13261",
-                        "name": "Seria 530",
-                        "niceUrl": "meskie/obuwie/klasyczne/seria_530"
-                    }
-                ],
-                "reviewStats": {
-                    "scoreCount": 0,
-                    "totalScore": 0,
-                    "averageScore": 0,
-                    "percentageScore": 0
-                },
-                "categories": [
-                    {
-                        "id": "13261",
-                        "name": "Seria 530",
-                        "niceUrl": "meskie/obuwie/klasyczne/seria_530"
-                    },
-                    {
-                        "id": "13035",
-                        "name": "Treningowe",
-                        "niceUrl": "meskie/obuwie/treningowe"
-                    },
-                    {
-                        "id": "13262",
-                        "name": "Seria 530",
-                        "niceUrl": "damskie/obuwie/klasyczne/seria_530"
-                    },
-                    {
-                        "id": "13072",
-                        "name": "Treningowe",
-                        "niceUrl": "damskie/obuwie/treningowe"
-                    },
-                    {
-                        "id": "14101",
-                        "name": "Buty treningowe",
-                        "niceUrl": "bieganie/aktywnosc/buty_treningowe"
-                    }
-                ],
-                "properties": [
-                    {
-                        "name": "Model",
-                        "value": {
-                            "type": "text_line",
-                            "dataList": [
-                                "MR530RB"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "Dla kogo",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": [
-                                "Dla niej",
-                                "Dla niego",
-                                "Dla każdego"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "Płeć",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": []
-                        }
-                    },
-                    {
-                        "name": "Kategoria",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": [
-                                "Obuwie"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "Drop",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": []
-                        }
-                    },
-                    {
-                        "name": "Szerokość",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": []
-                        }
-                    },
-                    {
-                        "name": "Kolor",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": [
-                                "Biały"
-                            ]
-                        }
-                    },
-                    {
-                        "name": "Produkt ocieplany",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": []
-                        }
-                    },
-                    {
-                        "name": "Rodzaj zapięcia",
-                        "value": {
-                            "type": "multiple_choice",
-                            "dataList": []
-                        }
-                    }
-                ]
+                "id": 639,
+                "name": "\u041f\u043e\u0441\u0443\u0434\u0430 \u0438 \u043a\u0443\u0445\u043e\u043d\u043d\u044b\u0435 \u043f\u0440\u0438\u043d\u0430\u0434\u043b\u0435\u0436\u043d\u043e\u0441\u0442\u0438"
+            }
+        ],
+        "images": [
+            {
+                "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/iw-backup\/2025\/12\/imgi_264_kvittera-patera-3-talerze-szklo-bezbarwne-stal-nierdz__0899151_pe609004_s5.jpg",
+                "alt": "KVITTERA"
+            },
+            {
+                "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/iw-backup\/2025\/12\/imgi_265_kvittera-patera-3-talerze-szklo-bezbarwne-stal-nierdz__0269542_pe366413_s5.jpg",
+                "alt": "KVITTERA"
+            },
+            {
+                "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/iw-backup\/2025\/12\/imgi_266_kvittera-patera-3-talerze-szklo-bezbarwne-stal-nierdz__0269543_pe322556_s5.jpg",
+                "alt": "KVITTERA"
             }
         ]
     }

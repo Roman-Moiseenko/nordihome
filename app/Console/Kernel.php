@@ -13,6 +13,7 @@ class Kernel extends ConsoleKernel
 
     protected function schedule(Schedule $schedule): void
     {
+        /*
        // $logger = LoggerCron::new('Запущен Schedule');
         //Проверка акций
         $schedule->command('cron:promotion')->dailyAt('00:01');
@@ -35,17 +36,7 @@ class Kernel extends ConsoleKernel
         $schedule->command('cron:delivery')->everySixHours();
         //Проверка оплаты ЮКассы
         $schedule->command('cron:yookassa')->everyFiveMinutes();
-
-        //Команды для ИКЕА
-        if (env('SHOP_THEME') == 'nordihome') {
-          //  $schedule->command('furniture')->dailyAt('00:05');
-            //$schedule->command('cron:parser-category')->dailyAt('01:00');
-
-        }
-        //Команды для NB
-        if (env('SHOP_THEME') == 'nbrussia') {
-            //
-        }
+*/
     }
 
     protected function commands(): void

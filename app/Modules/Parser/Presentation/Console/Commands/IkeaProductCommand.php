@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands\Cron;
+namespace App\Modules\Parser\Presentation\Console\Commands;
 
 use App\Console\CreatesApplication;
 use App\Modules\Parser\Application\Services\LoadParserProductIkeaService;

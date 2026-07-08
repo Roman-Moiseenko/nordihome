@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Console\Commands\Cron;
-
-use App\Modules\Parser\Application\Services\LoadParserCategoryIkeaService;
-use Illuminate\Console\Command;
+namespace App\Modules\Parser\Presentation\Console\Commands;
 
 use App\Console\CreatesApplication;
+use App\Modules\Parser\Application\Services\LoadParserCategoryIkeaService;
+use Illuminate\Console\Command;
 
 /**
  * Парсим новые каталоги и подкаталоги Икеа

@@ -123,16 +123,17 @@ return Application::configure(basePath: dirname(__DIR__))
         });
     })
     ->withSchedule(function (Schedule $schedule) {
+        /*
         $schedule->command('cron:promotion')->dailyAt('00:01');
         $schedule->command('cron:reserve')->everyFiveMinutes();
         $schedule->command('cron:reserve-before')->everyFiveMinutes();
-        $schedule->command('cron:parser-price')->dailyAt('01:01');
+        $schedule->command('cron:parser-update')->dailyAt('01:01');
         $schedule->command('cron:cache')->dailyAt('04:01');
         $schedule->command('auth:clear-resets')->everyFifteenMinutes();
         $schedule->command('cron:product-new')->weeklyOn(3, '1:00');
         $schedule->command('cron:currency')->dailyAt('00:02');
         $schedule->command('cron:delivery')->everySixHours();
         $schedule->command('cron:yookassa')->everyFiveMinutes();
-
+*/
     })
     ->create();

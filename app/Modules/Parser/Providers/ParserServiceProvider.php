@@ -12,6 +12,9 @@ use App\Modules\Parser\Infrastructure\Persistence\ParserCategoryRepository;
 use App\Modules\Parser\Infrastructure\Persistence\ParserLogRepository;
 use App\Modules\Parser\Infrastructure\Persistence\ParserProductRepository;
 use App\Modules\Parser\Infrastructure\Services\IkeaProductApi;
+use App\Modules\Parser\Presentation\Console\Commands\IkeaAvailablePriceCommand;
+use App\Modules\Parser\Presentation\Console\Commands\IkeaCategoryCommand;
+use App\Modules\Parser\Presentation\Console\Commands\IkeaProductCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -132,7 +135,9 @@ class ParserServiceProvider extends ServiceProvider
     protected function registerCommands()
     {
         $this->commands([
-            // Add command classes here
+            IkeaAvailablePriceCommand::class,
+            IkeaCategoryCommand::class,
+            IkeaProductCommand::class,
         ]);
     }
 
