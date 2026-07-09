@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Shop\Products;
+namespace App\Livewire\Products;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\User\Entity\User;

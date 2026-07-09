@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Shop\Popup;
+namespace App\Livewire\Popup;
 
 use App\Modules\User\Entity\User;
 use Livewire\Attributes\On;

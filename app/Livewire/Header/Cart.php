@@ -1,13 +1,11 @@
 <?php
 
-namespace App\Livewire\Shop\Header;
+namespace App\Livewire\Header;
 
-use App\Modules\Shop\Cart\CartItem;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use Livewire\Component;
-use Livewire\Attributes\On;
 use App\Modules\Shop\Cart\Cart as CartEntity;
+use App\Modules\Shop\Cart\CartItem;
+use Livewire\Attributes\On;
+use Livewire\Component;
 
 class Cart extends Component
 {

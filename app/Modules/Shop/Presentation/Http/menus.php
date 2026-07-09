@@ -21,14 +21,4 @@ declare(strict_types=1);
 |
 */
 
-return [
-    '{{ name_plural }}' => [
-        'sort'         => 10,
-        'icon'         => 'users',
-        'title'        => 'Shop',
-        'route_name'   => 'admin.shop.index',
-        'can'          => 'Shop',
-        'vue'          => true,
-        'font_awesome' => 'fa-light fa-users',
-    ],
-];
+return [];

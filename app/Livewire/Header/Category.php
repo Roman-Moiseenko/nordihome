@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Nordihome\Header;
+namespace App\Livewire\Header;
 
 use App\Modules\Base\Helpers\CacheHelper;
 use App\Modules\Shop\Repository\ShopRepository;
@@ -33,6 +33,6 @@ class Category extends Component
 
     public function render()
     {
-        return view('livewire.nordihome.header.category');
+        return view('livewire.header.category');
     }
 }

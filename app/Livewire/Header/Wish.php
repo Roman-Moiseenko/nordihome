@@ -1,12 +1,10 @@
 <?php
 
-namespace App\Livewire\Shop\Header;
+namespace App\Livewire\Header;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
-use App\Modules\User\Entity\User;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
 
 class Wish extends Component
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Shop\Widget;
+namespace App\Livewire\Widget;
 
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;

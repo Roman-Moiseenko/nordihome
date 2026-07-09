@@ -45,7 +45,9 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="/images/nordihome/logo-nordi-home-2.svg" alt="Nordi Home" class="img-fluid img-logo">
                 </a>
-                <livewire:nordihome.header.category />
+                <livewire:header.category />
+                <!--- TODO  Каталог виджет --->
+                <!--- TODO  Комнаты виджет --->
 
             </div>
             <div class="menu-bottom-search flex-grow-1">
@@ -87,7 +89,7 @@
                     @endclient
 
                     <li class="nav-item">
-                        <livewire:shop.header.wish />
+                        <livewire:header.wish />
                     </li>
 
                     <li class="nav-item">
@@ -102,7 +104,7 @@
                     </li>
 
                     <li class="nav-item">
-                        <livewire:shop.header.cart />
+                        <livewire:header.cart />
                     </li>
                 </ul>
             </div>
