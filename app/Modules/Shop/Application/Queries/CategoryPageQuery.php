@@ -1,12 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Shop\Application\Queries;
 
 use App\Modules\Page\Repository\MetaTemplateRepository;
 use App\Modules\Shop\Application\DTOs\CategoryPageData;
 use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;
 use App\Modules\Shop\Application\DTOs\Parts\FilterData;
-use App\Modules\Shop\Application\DTOs\Parts\ProductCardPage;
+use App\Modules\Shop\Application\DTOs\Parts\PaginatorData;
+use App\Modules\Shop\Application\DTOs\Parts\ProductCard;
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
@@ -36,19 +39,66 @@ class CategoryPageQuery
 
         $children = $this->getCachedChildren($category->id);
 
-        $productIdsResult = $this->repository->getProductIds(
-            $params, $category->id, (int)($params['page'] ?? 1), 20
+        $perPage = 20;
+        $page = (int)($params['page'] ?? 1);
+
+        // Получаем ID товаров с пагинацией — репозиторий возвращает LengthAwarePaginator
+        $idPaginator = $this->repository->getProductIds(
+            $params, $category->id, $page, $perPage
         );
 
-        $productCards = $this->repository->loadProductCards($productIdsResult['ids']);
+        // Загружаем карточки товаров для текущей страницы
+        $productIds = $idPaginator->items();
+        $productCardsRaw = $this->repository->loadProductCards($productIds);
 
+        // Маппим в DTO
+        $productCards = array_map(
+            fn(array $item) => new ProductCard(
+                id: $item['id'],
+                name: $item['name'],
+                slug: $item['slug'],
+                code: $item['code'],
+                price: $item['price'],
+                rating: $item['rating'],
+                brand: $item['brand'],
+                image: $item['image'],
+                priority: $item['priority'],
+                is_new: $item['is_new'],
+                reduced: $item['reduced'],
+                only_on_order: $item['only_on_order'],
+            ),
+            $productCardsRaw
+        );
+
+        // Собираем данные пагинации в плоский DTO
+        $lastPage = (int)ceil($idPaginator->total() / max($perPage, 1));
+
+        $elements = [];
+        for ($i = 1; $i <= $lastPage; $i++) {
+            $elements[$i] = url(request()->path()) . '?' . http_build_query(array_merge(request()->query(), ['page' => $i]));
+        }
+
+        $paginator = new PaginatorData(
+            total: $idPaginator->total(),
+            perPage: $perPage,
+            currentPage: $page,
+                lastPage: $lastPage,
+                hasPages: $lastPage > 1,
+                onFirstPage: $page <= 1,
+                hasMorePages: $page < $lastPage,
+                elements: $elements,
+                urls: $elements,
+                previousPageUrl: $page > 1 ? $elements[$page - 1] : null,
+                nextPageUrl: $page < $lastPage ? $elements[$page + 1] : null,
+        );
         $filters = $this->getCachedFilters($category->id);
         $meta = $this->seoService->seo($category);
 
         return new CategoryPageData(
             category: $categoryInfo,
             children: $children,
-            products: new ProductCardPage($productCards, $productIdsResult['total']),
+            products: $productCards,
+            paginator: $paginator,
             filters: $filters,
             meta: new SeoData($meta->title, $meta->description),
         );

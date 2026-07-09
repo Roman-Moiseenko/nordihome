@@ -49,6 +49,8 @@ class CatalogController extends ShopController
         $data = $this->categoryPageQuery->execute($slug, $request->all());
         dd($data);
         return $this->views->category($request->all(), $slug);
+
+        return view('shop.product.index', ['data' => $data]);
     }
 
     public function search(Request $request): JsonResponse

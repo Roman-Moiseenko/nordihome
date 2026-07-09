@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
 class CategoryPageQueryRepository
@@ -24,7 +25,7 @@ class CategoryPageQueryRepository
             ->first();
     }
 
-    public function getProductIds(array $filters, int $categoryId, int $page, int $perPage): array
+    public function getProductIds(array $filters, int $categoryId, int $page, int $perPage): LengthAwarePaginator
     {
         $cat = DB::table('categories')
             ->where('id', $categoryId)
@@ -32,7 +33,13 @@ class CategoryPageQueryRepository
             ->first();
 
         if (!$cat) {
-            return ['ids' => [], 'total' => 0];
+            return new LengthAwarePaginator(
+                items: collect([]),
+                total: 0,
+                perPage: $perPage,
+                currentPage: $page,
+                options: ['path' => request()->url(), 'query' => request()->query()],
+            );
         }
 
         $productIdsInCategory = DB::table('products')
@@ -46,24 +53,28 @@ class CategoryPageQueryRepository
                         ->where('categories._lft', '>=', $cat->_lft)
                         ->where('categories._rgt', '<=', $cat->_rgt);
                 })
-                ->orWhereExists(function ($sq) use ($cat) {
-                    $sq->select(DB::raw(1))
-                        ->from('categories_products')
-                        ->whereColumn('categories_products.product_id', 'products.id')
-                        ->join('categories', 'categories.id', '=', 'categories_products.category_id')
-                        ->where('categories._lft', '>=', $cat->_lft)
-                        ->where('categories._rgt', '<=', $cat->_rgt);
-                });
+                    ->orWhereExists(function ($sq) use ($cat) {
+                        $sq->select(DB::raw(1))
+                            ->from('categories_products')
+                            ->whereColumn('categories_products.product_id', 'products.id')
+                            ->join('categories', 'categories.id', '=', 'categories_products.category_id')
+                            ->where('categories._lft', '>=', $cat->_lft)
+                            ->where('categories._rgt', '<=', $cat->_rgt);
+                    });
             })
             ->pluck('products.id');
 
         if ($productIdsInCategory->isEmpty()) {
-            return ['ids' => [], 'total' => 0];
+            return new LengthAwarePaginator(
+                items: collect([]),
+                total: 0,
+                perPage: $perPage,
+                currentPage: $page,
+                options: ['path' => request()->url(), 'query' => request()->query()],
+            );
         }
 
         $allIds = $productIdsInCategory->toArray();
-
-        $order = $filters['order'] ?? 'name';
 
         $query = Product::whereIn('id', $allIds)
             ->where('published', true)
@@ -71,14 +82,22 @@ class CategoryPageQueryRepository
 
         $this->applyFilters($query, $filters);
 
-        $filteredIds = $query->pluck('id')->toArray();
-        $total = count($filteredIds);
+        // Пагинируем через Eloquent
+        $paginator = $query->paginate($perPage, ['id'], 'page', $page);
 
-        $page = max(1, $page);
-        $offset = ($page - 1) * $perPage;
-        $pageIds = array_slice($filteredIds, $offset, $perPage);
+        // Возвращаем пагинатор только с ID товаров
+        $ids = $paginator->getCollection()->pluck('id')->toArray();
 
-        return ['ids' => $pageIds, 'total' => $total];
+        return new LengthAwarePaginator(
+            items: collect($ids),
+            total: $paginator->total(),
+            perPage: $perPage,
+            currentPage: $page,
+            options: [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ],
+        );
     }
 
     public function loadProductCards(array $ids): array

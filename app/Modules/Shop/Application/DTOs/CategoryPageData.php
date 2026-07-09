@@ -4,18 +4,20 @@ namespace App\Modules\Shop\Application\DTOs;
 
 use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;
 use App\Modules\Shop\Application\DTOs\Parts\FilterData;
-use App\Modules\Shop\Application\DTOs\Parts\ProductCardPage;
+use App\Modules\Shop\Application\DTOs\Parts\PaginatorData;
+use App\Modules\Shop\Application\DTOs\Parts\ProductCard;
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
 
 class CategoryPageData
 {
     public function __construct(
-        public CategoryInfo $category,         // id, name, slug, breadcrumbs
+        public CategoryInfo $category,
         /** @var CategoryInfo[] */
-        public array $children,                // массив CategoryInfo
-        public ProductCardPage $products,      // пагинированный список товаров
-        public FilterData $filters,            // атрибуты, бренды, мин/макс цена, теги
+        public array $children,
+        /** @var ProductCard[] */
+        public array $products,
+        public PaginatorData $paginator,
+        public FilterData $filters,
         public SeoData $meta,
-        // ...
     ) {}
 }

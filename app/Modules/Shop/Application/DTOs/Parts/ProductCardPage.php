@@ -6,8 +6,9 @@ class ProductCardPage
 {
     public function __construct(
         /** @var array[] */
-        public readonly array $items,
-        public readonly int $total,
+        public readonly array $products,
+        /** @var PaginatorData */
+        public readonly PaginatorData $paginator,
     )
     {
     }
