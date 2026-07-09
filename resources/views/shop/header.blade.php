@@ -49,6 +49,7 @@
                 <!--- TODO  Каталог виджет --->
                 <!--- TODO  Комнаты виджет --->
 
+
             </div>
             <div class="menu-bottom-search flex-grow-1">
                 <div class="presearch" data-route="{{ route('shop.product.search') }}">
