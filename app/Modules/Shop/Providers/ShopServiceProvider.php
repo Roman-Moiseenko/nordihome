@@ -4,10 +4,13 @@ namespace App\Modules\Shop\Providers;
 
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Room;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Shop\Infrastructure\Observers\CategoryCacheObserver;
+use App\Modules\Shop\Infrastructure\Observers\IkeaCategoryCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\RoomCacheObserver;
 use App\Modules\Shop\Presentation\Http\ViewComposers\CategoryComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\ClientComposer;
+use App\Modules\Shop\Presentation\Http\ViewComposers\IkeaComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\RoomComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\WebComposer;
 use Illuminate\Support\Facades\Blade;
@@ -87,10 +90,12 @@ class ShopServiceProvider extends ServiceProvider
         View::composer('*', CategoryComposer::class);
         View::composer('*', ClientComposer::class); //shop.*
         View::composer('*', RoomComposer::class);
-        View::composer('*', WebComposer::class);
+        View::composer('shop.*', WebComposer::class);
+        View::composer('shop.ikea.*', IkeaComposer::class);
 
         Category::observe(CategoryCacheObserver::class);
         Room::observe(RoomCacheObserver::class);
+        ParserCategory::observe(IkeaCategoryCacheObserver::class);
     }
 
     /**

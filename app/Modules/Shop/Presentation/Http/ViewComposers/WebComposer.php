@@ -9,6 +9,7 @@ class WebComposer
     public function compose(View $view): void
     {
         $view->with('url_page', request()->url());
+        $view->with('page', request()->integer('page', 1));
         $view->with('config', config('shop.frontend'));
     }
 }

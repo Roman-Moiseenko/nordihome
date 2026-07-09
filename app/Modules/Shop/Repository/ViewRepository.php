@@ -76,12 +76,13 @@ class ViewRepository
             compact('product', 'title', 'description', 'productAttributes', 'schema'/*, 'url_page'*/));
     }
 
+    #[\Deprecated]
     public function root(array $request)
     {
         $url_page = route('shop.category.index');
         $title = $this->web->categories_title;
         $description = $this->web->categories_desc;
-        $page = $request['page'] ?? 1;
+
         $schema = '';
         if ($this->web->is_category) {
             $categories = $this->repository->getChildren();
@@ -134,7 +135,7 @@ class ViewRepository
             $this->route('product.index'),
             compact('products', 'prod_attributes', 'tags',
                 'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
-                'order', 'children', 'count_in_category', 'schema', 'url_page', 'page'));
+                'order', 'children', 'count_in_category', 'schema'));
     }
 
     public function category(array $request, string $slug)
@@ -157,7 +158,6 @@ class ViewRepository
             return view($this->route('subcatalog'), compact('category', 'children', 'title', 'description'));
         }
 */
-        $children = $this->repository->getChildren($category->id);
 
         $minPrice = 10;
         $maxPrice = 999999999;

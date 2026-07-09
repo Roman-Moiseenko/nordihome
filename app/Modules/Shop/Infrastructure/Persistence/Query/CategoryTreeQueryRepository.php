@@ -29,6 +29,7 @@ class CategoryTreeQueryRepository
                 'categories.id',
                 'categories.name',
                 'categories.slug',
+                'categories.svg',
                 'categories.parent_id',
                 'photos.id as photo_id',
                 'photos.file as photo_file',
@@ -50,7 +51,7 @@ class CategoryTreeQueryRepository
                     id: $item->id,
                     name: $item->name,
                     slug: $item->slug,
-                    svg: '',
+                    svg: $item->svg ?? '',
                     image: $this->buildImageUrl($item),
                     children: $children
                 );
@@ -73,5 +74,44 @@ class CategoryTreeQueryRepository
             thumb: 'catalog',
             isThumbEnabled: (bool) $item->photo_thumb,
         );
+    }
+
+    /**
+     * Получить непосредственных детей категории.
+     * @return CategoryTreeClientData[]
+     */
+    public function getChildren(int $parentId): array
+    {
+        // Используем индекс _lft или parent_id – зависит от вашей схемы.
+        // Предположим, что у категорий есть parent_id и порядок сортировки _lft (для nested set)
+        // или просто order.
+        $rows = DB::table('categories')
+            ->leftJoin('photos', function ($join) {
+                $join->on('categories.id', '=', 'photos.imageable_id')
+                    ->where('photos.model_type', '=', self::MODEL_TYPE)
+                    ->where('photos.type', '=', 'image');
+            })
+            ->where('categories.parent_id', $parentId)
+            ->select(
+                'categories.id',
+                'categories.name',
+                'categories.slug',
+                'categories.svg',
+                'categories.parent_id',
+                'photos.id as photo_id',
+                'photos.file as photo_file',
+                'photos.thumb as photo_thumb',
+            )
+            ->orderBy('categories._lft')   // или order по полю сортировки
+            ->get();
+
+        return $rows->map(fn($row) => new CategoryTreeClientData(
+            id: $row->id,
+            name: $row->name,
+            slug: $row->slug,
+            svg: $row->svg ?? '',
+            image: $this->buildImageUrl($row),
+            children: []                   // без вложенных детей
+        ))->all();
     }
 }

@@ -26,11 +26,6 @@ class CacheRepository
         });*/
     }
 
-    public function root(array $request): View
-    {
-        return $this->views->root($request);
-    }
-
     public function category(array $request, string $slug): View
     {
         return $this->views->category($request, $slug);

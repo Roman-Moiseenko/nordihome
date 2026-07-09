@@ -2,8 +2,8 @@
 
 @section('body', 'products')
 @section('main', 'container-xl products-page')
-@section('title', $title)
-@section('description', $description)
+@section('title', $title ?? '')
+@section('description', $description ?? '')
 
 @section('content')
 

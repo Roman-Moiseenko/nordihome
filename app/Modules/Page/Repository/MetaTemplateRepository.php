@@ -190,7 +190,7 @@ class MetaTemplateRepository
     /**
      * Подстановка переменных в meta
      */
-    public function seo($object, Meta $meta = null): Meta
+    public function seo($object, ?Meta $meta = null): Meta
     {
         if (is_null($meta)) $meta = new Meta();
         /** @var MetaTemplate $metaTemplate */

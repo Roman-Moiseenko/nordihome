@@ -45,6 +45,18 @@ Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) 
     }
 });
 
+// ПО КОМНАТАМ
+Breadcrumbs::for('shop.room.index', function (BreadcrumbTrail $trail) { //Без указания главной - home
+    $trail->parent('shop.home');
+    $trail->push('По комнатам', route('shop.room.index'));
+});
+
+// ИКЕА КАТАЛОГ
+Breadcrumbs::for('shop.ikea.index', function (BreadcrumbTrail $trail) { //Без указания главной - home
+    $trail->parent('shop.home');
+    $trail->push('Каталог Икеа', route('shop.ikea.index'));
+});
+
 //Для товара собираем из предыдущих
 Breadcrumbs::for('shop.product.view', function (BreadcrumbTrail $trail, $slug) {
     $product = (new SlugRepository())->getProductBySlug($slug);

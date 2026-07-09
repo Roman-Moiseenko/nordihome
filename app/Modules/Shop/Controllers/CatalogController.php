@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Controllers;
 
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Shop\Application\Queries\CategoryPageQuery;
 use App\Modules\Shop\Repository\CacheRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\ViewRepository;
@@ -24,6 +25,7 @@ class CatalogController extends ShopController
         ShopRepository $repository,
         CacheRepository $caches,
         ViewRepository $views,
+        private readonly CategoryPageQuery $categoryPageQuery,
     )
     {
         parent::__construct();
@@ -34,24 +36,19 @@ class CatalogController extends ShopController
 
     public function index(Request $request): Factory|View|Application|null
     {
-        return $this->views->root($request->all());
-/*
-        $url_page = $this->route('shop.category.index');
         $title = $this->web->categories_title;
         $description = $this->web->categories_desc;
         $categories = $this->repository->getChildren();
-        return view($this->route('catalog'), compact( 'title', 'description', 'categories', 'url_page'));*/
+        return view('shop.catalog', compact('title', 'description', 'categories'));
     }
 
     public function view(Request $request, $slug)
     {
         $page = $request->has('page');
 
-        if ((empty($request->all()) || (count($request->all()) == 1 && $page)) && $this->web->is_cache) {
-            return $this->caches->category($request->all(), $slug);
-        } else {
-            return $this->views->category($request->all(), $slug);
-        }
+        $data = $this->categoryPageQuery->execute($slug, $request->all());
+        //dd($data);
+        return $this->views->category($request->all(), $slug);
     }
 
     public function search(Request $request): JsonResponse

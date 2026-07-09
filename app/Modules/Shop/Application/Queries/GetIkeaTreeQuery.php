@@ -2,24 +2,23 @@
 
 namespace App\Modules\Shop\Application\Queries;
 
-use App\Modules\Shop\Application\DTOs\CategoryTreeClientData;
-use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
-use Illuminate\Contracts\Cache\LockTimeoutException;
+use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaTreeQueryRepository;
 use Illuminate\Support\Facades\Cache;
-class GetCategoryTreeQuery
+
+class GetIkeaTreeQuery
 {
-    private const CACHE_KEY = 'client_category_tree';
+    private const CACHE_KEY = 'client_ikea_tree';
 
     public function __construct(
-        private CategoryTreeQueryRepository $repository
+        private IkeaTreeQueryRepository $repository
     ) {}
 
-    /** @return CategoryTreeClientData[]
-     * @throws LockTimeoutException
+    /**
+     * @return array
+     * @throws \Illuminate\Contracts\Cache\LockTimeoutException
      */
     public function execute(): array
     {
-
         // Попытка прочитать из кеша
         if ($cached = Cache::get(self::CACHE_KEY)) {
             return $cached;
