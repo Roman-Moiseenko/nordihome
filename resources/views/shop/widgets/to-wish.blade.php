@@ -1,4 +1,4 @@
-@if(!is_null($user))
+@if(!is_null($client))
     <a class="product-wish-toggle
                 {{ $product['is_wish'] ? 'is-wish' : 'to-wish' }}" data-product="{{ $product['id'] }}"
        type="button" title="В Избранное"><i

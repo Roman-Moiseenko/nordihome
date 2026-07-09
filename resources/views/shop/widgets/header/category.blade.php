@@ -1,3 +1,8 @@
+@php
+    /** @var \App\Modules\Shop\Application\DTOs\CategoryTreeClientData[] $categoryTree */
+    /** @var \App\Modules\Shop\Application\DTOs\RoomTreeClientData[] $roomTree */
+@endphp
+
 <div class="btn-group" role="group">
     <button type="button" class="btn btn-dark fs-5 ls-1 dropdown-toggle lh-sm" data-bs-toggle="dropdown"
             aria-expanded="false">Каталог&nbsp;
@@ -5,11 +10,11 @@
     <div class="dropdown-menu">
         <div class="catalog" data-route="{{ route('shop.category.search') }}">
             <div class="catalog-rootmenu">
-                @foreach($categories as $category)
+                @foreach($categoryTree as $category)
                     <li>
-                        <a class="dropdown-item" href="{{ route('shop.category.view', $category['slug']) }}" data-id="{{ $category['id'] }}">
+                        <a class="dropdown-item" href="{{ route('shop.category.view', $category->slug) }}" data-id="{{ $category->id }}">
 
-                            {{ $category['name'] }}
+                            {{ $category->name }}
                         </a>
                     </li>
                 @endforeach
@@ -19,4 +24,12 @@
             </div>
         </div>
     </div>
+
+
+    ****
+
+    ///mobile
+
+    ****
+
 </div>

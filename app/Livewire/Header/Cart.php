@@ -81,6 +81,6 @@ class Cart extends Component
 
     public function render()
     {
-        return view('livewire.shop.header.cart');
+        return view('livewire.header.cart');
     }
 }

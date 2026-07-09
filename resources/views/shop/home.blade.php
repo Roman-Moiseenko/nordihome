@@ -20,7 +20,7 @@
     @include('shop.old_widget.otzivi')
     @include('shop.old_widget.voprosi')
     @include('shop.old_widget.nalich-i-zakaz2')
-    <livewire:shop.widget.feedback />
+    <livewire:widget.feedback />
 
 
     <div class="mt-3">

@@ -60,7 +60,7 @@ class Wish extends Component
 
     public function render()
     {
-        return view('livewire.shop.header.wish');
+        return view('livewire.header.wish');
 
     }
 }

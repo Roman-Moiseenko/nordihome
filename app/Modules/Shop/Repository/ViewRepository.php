@@ -54,7 +54,7 @@ class ViewRepository
 
         $productAttributes = $this->repository->getProdAttributes($product);
         $product = $this->product_view_cache($product);
-        $schema = $this->schema_category_product($product);
+        $schema = ''; //$this->schema_category_product($product);
         return view($this->route('product.view'),
             compact('product', 'title', 'description', 'productAttributes', 'schema'/*, 'url_page'*/));
     }

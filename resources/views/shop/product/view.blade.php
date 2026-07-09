@@ -137,5 +137,6 @@
     @include('shop.product._equivalent', ['equivalents' => $product['equivalents']])
     @include('shop.product._reviews', ['reviews' => $product['reviews']])
 
+
     {!! $schema !!}
 @endsection

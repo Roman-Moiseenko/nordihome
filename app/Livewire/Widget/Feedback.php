@@ -28,6 +28,6 @@ class Feedback extends Component
 
     public function render()
     {
-        return view('livewire.shop.widget.feedback');
+        return view('livewire.widget.feedback');
     }
 }
