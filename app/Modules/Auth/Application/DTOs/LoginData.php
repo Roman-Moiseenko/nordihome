@@ -14,7 +14,7 @@ class LoginData extends Data
     public function __construct(
         #[Required, Email]
         public readonly string $email,
-        #[Required, Password(min: 8)]
+        #[Required, Password(min: 6)]
         public readonly string $password,
         #[Nullable, BooleanType]
         public readonly bool $remember = false
