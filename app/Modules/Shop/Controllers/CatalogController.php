@@ -47,7 +47,7 @@ class CatalogController extends ShopController
         $page = $request->has('page');
 
         $data = $this->categoryPageQuery->execute($slug, $request->all());
-        //dd($data);
+        dd($data);
         return $this->views->category($request->all(), $slug);
     }
 

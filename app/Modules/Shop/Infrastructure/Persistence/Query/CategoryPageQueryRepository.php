@@ -115,7 +115,6 @@ class CategoryPageQueryRepository
                 'products.only_on_order',
                 'products.pre_order',
                 'brands.name as brand_name',
-                'brands.slug as brand_slug',
                 'product_prices.amount as price',
                 'photos.id as photo_id',
                 'photos.file as photo_file',
@@ -132,10 +131,7 @@ class CategoryPageQueryRepository
                 'code' => $item->code,
                 'price' => (float)($item->price ?? 0),
                 'rating' => (float)$item->current_rating,
-                'brand' => [
-                    'name' => $item->brand_name,
-                    'slug' => $item->brand_slug,
-                ],
+                'brand' => $item->brand_name,
                 'image' => $this->buildProductImage($item),
                 'priority' => (bool)$item->priority,
                 'is_new' => $item->published_at && \Carbon\Carbon::parse($item->published_at)->gte(now()->subMonths(2)),
@@ -184,7 +180,7 @@ class CategoryPageQueryRepository
             })
             ->pluck('id')->toArray();
 
-        $attrIdsFromCat = DB::table('attribute_category')
+        $attrIdsFromCat = DB::table('attributes_categories')
             ->whereIn('category_id', $categoryIds)
             ->pluck('attribute_id')->unique()->toArray();
 
@@ -279,7 +275,7 @@ class CategoryPageQueryRepository
         $brands = DB::table('products')
             ->join('brands', 'products.brand_id', '=', 'brands.id')
             ->whereIn('products.id', $productIds)->where('products.published', true)
-            ->select('brands.id', 'brands.name', 'brands.slug')->distinct()->orderBy('brands.name')
+            ->select('brands.id', 'brands.name')->distinct()->orderBy('brands.name')
             ->get()->toArray();
 
         $tags = DB::table('tags_products')
