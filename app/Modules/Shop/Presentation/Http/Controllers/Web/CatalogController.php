@@ -1,32 +1,24 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Shop\Controllers;
+namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
-use App\Events\ThrowableHasAppeared;
-use App\Modules\Catalog\Infrastructure\Models\Category;
+
 use App\Modules\Shop\Application\Queries\CategoryIndexQuery;
 use App\Modules\Shop\Application\Queries\CategoryPageQuery;
-use App\Modules\Shop\Repository\ShopRepository;
-use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Controller as BaseController;
 
-class CatalogController extends ShopController
+class CatalogController extends BaseController
 {
-    private ViewRepository $views;
-
     public function __construct(
-        ShopRepository $repository,
-        ViewRepository $views,
         private readonly CategoryPageQuery $categoryPageQuery,
         private readonly CategoryIndexQuery $categoryIndexQuery,
     )
     {
-        parent::__construct();
-        $this->views = $views;
     }
 
     public function index(Request $request): Factory|View|Application|null
@@ -40,11 +32,7 @@ class CatalogController extends ShopController
 
     public function view(Request $request, $slug): View|Factory|\Illuminate\View\View
     {
-        //$start = microtime(true);
-
         $data = $this->categoryPageQuery->execute($slug, $request->all());
-        //$time = (microtime(true) - $start);
-        //\Log::info("CategoryPageQuery::execute время: " . number_format($time, 3, '.', '') . " сек");
 
         return view('shop.product.index', [
             'pageData' => $data,
@@ -52,9 +40,14 @@ class CatalogController extends ShopController
         ]);
     }
 
-    public function novelty(Request $request)
+    public function novelty(Request $request): View|Factory|\Illuminate\View\View
     {
-        return $this->views->novelty($request->all());
+        $data = $this->categoryPageQuery->executeNew($request->all());
+
+        return view('shop.product.novelty', [
+            'pageData' => $data,
+            'request' => $request->all(),
+        ]);
     }
 
 

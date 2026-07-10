@@ -103,6 +103,30 @@ class CategoryPageQueryRepository
         );
     }
 
+    public function getNewProductIds(array $filters, int $page, int $perPage): LengthAwarePaginator
+    {
+        $query = Product::where('published', true)
+            ->where('not_sale', false)
+            ->where('published_at', '>', now()->subMonths(2));
+
+        $this->applySorting($query, $filters['order'] ?? '');
+
+        $paginator = $query->paginate($perPage, ['id'], 'page', $page);
+
+        $ids = $paginator->getCollection()->pluck('id')->toArray();
+
+        return new LengthAwarePaginator(
+            items: collect($ids),
+            total: $paginator->total(),
+            perPage: $perPage,
+            currentPage: $page,
+            options: [
+                'path' => request()->url(),
+                'query' => request()->query(),
+            ],
+        );
+    }
+
     public function loadProductCards(array $ids): array
     {
         if (empty($ids)) {

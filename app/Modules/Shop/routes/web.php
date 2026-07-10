@@ -1,7 +1,6 @@
 <?php
 
 use App\Modules\Shop\Controllers\CartController;
-use App\Modules\Shop\Controllers\CatalogController;
 use App\Modules\Shop\Controllers\ECommerceController;
 use App\Modules\Shop\Controllers\FeedXMLController;
 use App\Modules\Shop\Controllers\GroupController;
@@ -12,6 +11,7 @@ use App\Modules\Shop\Controllers\PostController;
 use App\Modules\Shop\Controllers\ProductController;
 use App\Modules\Shop\Controllers\PromotionController;
 use App\Modules\Shop\Controllers\SitemapXmlController;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\CatalogController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\IkeaController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\RoomController;
 use Illuminate\Support\Facades\Route;
