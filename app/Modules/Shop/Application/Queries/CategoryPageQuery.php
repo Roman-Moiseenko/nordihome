@@ -87,19 +87,6 @@ class CategoryPageQuery
 
         $productCardsRaw = $this->repository->loadProductCards($productIds);
 
-        // Сортируем карточки по порядку ID из пагинатора
-        $sortedCards = [];
-        $cardsById = [];
-        foreach ($productCardsRaw as $card) {
-            $cardsById[$card['id']] = $card;
-        }
-        foreach ($productIds as $id) {
-            if (isset($cardsById[$id])) {
-                $sortedCards[] = $cardsById[$id];
-            }
-        }
-        $productCardsRaw = $sortedCards;
-
         $productCards = array_map(
             fn(array $item) => new ProductCardData(
                 id: $item['id'],

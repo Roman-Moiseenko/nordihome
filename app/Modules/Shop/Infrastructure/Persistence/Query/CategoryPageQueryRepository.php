@@ -128,9 +128,10 @@ class CategoryPageQueryRepository
         if (empty($ids)) {
             return [];
         }
-
+        $orderedIds = implode(',', array_map('intval', $ids));
         $products = DB::table('products')
             ->whereIn('products.id', $ids)
+            ->orderByRaw("FIELD(products.id, $orderedIds)")
             ->join('brands', 'products.brand_id', '=', 'brands.id')
             ->leftJoin('product_prices', function ($join) {
                 $join->on('products.id', '=', 'product_prices.product_id')
@@ -263,7 +264,6 @@ class CategoryPageQueryRepository
      */
     public function getRoomsByProductIds(array $productIds, array $filters): array
     {
-       // if (empty($productIds)) return [];
 
         $query = Product::whereIn('id', $productIds);
 
