@@ -33,7 +33,6 @@ class CatalogController extends BaseController
     public function view(Request $request, $slug): View|Factory|\Illuminate\View\View
     {
         $data = $this->categoryPageQuery->execute($slug, $request->all());
-
         return view('shop.product.index', [
             'pageData' => $data,
             'request' => $request->all(),

@@ -68,6 +68,7 @@
             @include('shop.product.filter',
                      ['children' => $pageData->category->children, 'filters' => $pageData->filters,
                      'back' => $pageData->back,
+                     'rooms' => $pageData->rooms,
                      ])
             <div class="list">
                 @if(count($pageData->filters->tags) > 0)

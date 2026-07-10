@@ -35,8 +35,19 @@ class CategoryPageQuery
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
 
-        $idPaginator = $this->repository->getProductIds(
-            $params, $category->id, $page, $perPage
+        // Все ID товаров категории после фиьтрации
+        $allProductIds = $this->repository->getProductIdsInCategory($category->id);
+        $rooms = [];
+        if ($allProductIds) {
+            $roomsRaw = $this->repository->getRoomsByProductIds($allProductIds, $params);
+            $rooms = array_map(
+                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug),
+                $roomsRaw,
+            );
+        }
+
+        $idPaginator = $this->repository->getPaginationProducts(
+            $params, $allProductIds, $page, $perPage
         );
 
         if ($category->parent_id === null) {
@@ -173,6 +184,7 @@ class CategoryPageQuery
 
         return new CategoryPageData(
             category: $categoryInfo,
+            rooms: $rooms,
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,

@@ -29,24 +29,16 @@ class CategoryPageQueryRepository
             ->first();
     }
 
-    public function getProductIds(array $filters, int $categoryId, int $page, int $perPage): LengthAwarePaginator
+    public function getProductIdsInCategory(int $categoryId)
     {
         $cat = DB::table('categories')
             ->where('id', $categoryId)
             ->select(['_lft', '_rgt'])
             ->first();
 
-        if (!$cat) {
-            return new LengthAwarePaginator(
-                items: collect([]),
-                total: 0,
-                perPage: $perPage,
-                currentPage: $page,
-                options: ['path' => request()->url(), 'query' => request()->query()],
-            );
-        }
+        if (!$cat) return null;
 
-        $productIdsInCategory = DB::table('products')
+        return DB::table('products')
             ->where('products.published', true)
             ->where('products.not_sale', false)
             ->where(function ($q) use ($cat) {
@@ -66,9 +58,13 @@ class CategoryPageQueryRepository
                             ->where('categories._rgt', '<=', $cat->_rgt);
                     });
             })
-            ->pluck('products.id');
+            ->pluck('products.id')->toArray();
+    }
+    public function getPaginationProducts(array $filters, $allIds, int $page, int $perPage): LengthAwarePaginator
+    {
+        //$productIdsInCategory = $this->getProductIdsInCategory($categoryId);
 
-        if ($productIdsInCategory->isEmpty()) {
+        if (empty($allIds)) {
             return new LengthAwarePaginator(
                 items: collect([]),
                 total: 0,
@@ -78,12 +74,12 @@ class CategoryPageQueryRepository
             );
         }
 
-        $allIds = $productIdsInCategory->toArray();
-
         $query = Product::whereIn('id', $allIds);
 
-        $this->applySorting($query, $filters['order'] ?? '');
         $this->applyFilters($query, $filters);
+
+        $this->applySorting($query, $filters['order'] ?? '');
+
 
         // Пагинируем через Eloquent
         $paginator = $query->paginate($perPage, ['id'], 'page', $page);
@@ -261,6 +257,36 @@ class CategoryPageQueryRepository
         return $result;
     }
 
+    /**
+     * @param int[] $productIds
+     * @return \stdClass[]
+     */
+    public function getRoomsByProductIds(array $productIds, array $filters): array
+    {
+       // if (empty($productIds)) return [];
+
+        $query = Product::whereIn('id', $productIds);
+
+        $this->applyFilters($query, $filters);
+        $productIds = $query->pluck('products.id')->toArray();
+
+        if (empty($productIds)) return [];
+
+        return DB::table('rooms_products')
+            ->join('rooms as child_rooms', 'rooms_products.room_id', '=', 'child_rooms.id')
+            ->join('rooms as root_rooms', function ($join) {
+                $join->whereNull('root_rooms.parent_id')
+                    ->whereColumn('root_rooms._lft', '<=', 'child_rooms._lft')
+                    ->whereColumn('root_rooms._rgt', '>=', 'child_rooms._rgt');
+            })
+            ->whereIn('rooms_products.product_id', $productIds)
+            ->select('root_rooms.id', 'root_rooms.name', 'root_rooms.slug')
+            ->distinct()
+            ->orderBy('root_rooms.name')
+            ->get()
+            ->toArray();
+    }
+
     public function getAttributesForCategory(int $categoryId): array
     {
         $cat = DB::table('categories')
@@ -270,24 +296,7 @@ class CategoryPageQueryRepository
 
         if (!$cat) return [];
 
-        $productIds = DB::table('products')
-            ->where('published', true)->where('not_sale', false)
-            ->where(function ($q) use ($cat) {
-                $q->whereExists(function ($sq) use ($cat) {
-                    $sq->select(DB::raw(1))->from('categories')
-                        ->whereColumn('categories.id', 'products.main_category_id')
-                        ->where('categories._lft', '>=', $cat->_lft)
-                        ->where('categories._rgt', '<=', $cat->_rgt);
-                })
-                    ->orWhereExists(function ($sq) use ($cat) {
-                        $sq->select(DB::raw(1))->from('categories_products')
-                            ->whereColumn('categories_products.product_id', 'products.id')
-                            ->join('categories', 'categories.id', '=', 'categories_products.category_id')
-                            ->where('categories._lft', '>=', $cat->_lft)
-                            ->where('categories._rgt', '<=', $cat->_rgt);
-                    });
-            })
-            ->pluck('id')->toArray();
+        $productIds = $this->getProductIdsInCategory($categoryId);
 
         if (empty($productIds)) return [];
 
@@ -368,21 +377,7 @@ class CategoryPageQueryRepository
             return (object)['min_price' => 0, 'max_price' => 0, 'brands' => [], 'tags' => []];
         }
 
-        $productIds = DB::table('products')
-            ->where('published', true)->where('not_sale', false)
-            ->where(function ($q) use ($cat) {
-                $q->whereExists(function ($sq) use ($cat) {
-                    $sq->select(DB::raw(1))->from('categories')
-                        ->whereColumn('categories.id', 'products.main_category_id')
-                        ->where('categories._lft', '>=', $cat->_lft)->where('categories._rgt', '<=', $cat->_rgt);
-                })->orWhereExists(function ($sq) use ($cat) {
-                    $sq->select(DB::raw(1))->from('categories_products')
-                        ->whereColumn('categories_products.product_id', 'products.id')
-                        ->join('categories', 'categories.id', '=', 'categories_products.category_id')
-                        ->where('categories._lft', '>=', $cat->_lft)->where('categories._rgt', '<=', $cat->_rgt);
-                });
-            })
-            ->pluck('id')->toArray();
+        $productIds = $this->getProductIdsInCategory($categoryId);
 
         if (empty($productIds)) {
             return (object)['min_price' => 0, 'max_price' => 0, 'brands' => [], 'tags' => []];
@@ -453,16 +448,17 @@ class CategoryPageQueryRepository
 
     private function applySorting($query, string $order): void
     {
+
         match ($order) {
-            'price-down' => $query
+            'price-down' => $query->reorder()
                 ->orderByRaw('COALESCE((SELECT amount FROM product_prices WHERE product_id = products.id AND type = \'' . PriceType::RETAIL . '\' ORDER BY id DESC LIMIT 1), 0) DESC')
                 ->orderBy('id'),
-            'price-up' => $query
+            'price-up' => $query->reorder()
                 ->orderByRaw('COALESCE((SELECT amount FROM product_prices WHERE product_id = products.id AND type = \'' . PriceType::RETAIL . '\' ORDER BY id DESC LIMIT 1), 0) ASC')
                 ->orderBy('id'),
-            'name' => $query->orderBy('name')->orderBy('id'),
-            'rating' => $query->orderBy('current_rating', 'desc')->orderBy('id'),
-            default => $query->orderBy('priority', 'desc')->orderBy('published_at', 'desc')->orderBy('id'),
+            'name' => $query->reorder()->orderBy('name')->orderBy('id'),
+            'rating' => $query->reorder()->orderBy('current_rating', 'desc')->orderBy('id'),
+            default => $query->reorder()->orderBy('priority', 'desc')->orderBy('published_at', 'desc')->orderBy('id'),
         };
     }
 
