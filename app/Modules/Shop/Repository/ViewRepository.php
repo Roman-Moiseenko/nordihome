@@ -19,6 +19,7 @@ use App\Modules\Shop\Schema;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use JetBrains\PhpStorm\Deprecated;
 
 class ViewRepository
 {
@@ -138,6 +139,7 @@ class ViewRepository
                 'order', 'children', 'count_in_category', 'schema'));
     }
 
+    #[Deprecated]
     public function category(array $request, string $slug)
     {
         // $begin = now();

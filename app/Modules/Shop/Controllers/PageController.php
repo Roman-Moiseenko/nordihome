@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Controllers;
 
 use App\Modules\Page\Entity\Page;
-use App\Modules\Shop\Repository\CacheRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
@@ -15,17 +14,14 @@ class PageController extends ShopController
 {
 
     private ShopRepository $repository;
-    private CacheRepository $caches;
     private ViewRepository $views;
 
     public function __construct(ShopRepository $repository,
-                                CacheRepository $caches,
                                 ViewRepository $views,
     )
     {
         parent::__construct();
         $this->repository = $repository;
-        $this->caches = $caches;
         $this->views = $views;
     }
 
@@ -41,31 +37,20 @@ class PageController extends ShopController
         //return $this->caches->page('home');
         return $callback();
 
-        //TODO Настройка использовать кеширование
-        if ($this->web->is_cache) {
-            return Cache::rememberForever('home', $callback);
-        } else {
-            return $callback();
-        }
     }
 
     public function view($slug)
     {
-        //return $this->views->page($slug);
-        if ($this->web->is_cache) {
-            return $this->caches->page($slug);
-        } else {
+
             return $this->views->page($slug);
-        }
+
     }
 
     public function news(Request $request)
     {
-        if ($this->web->is_cache) {
-            return $this->caches->news($request);
-        } else {
+
             return $this->views->news($request);
-        }
+
     }
 
     public function map_data(Request $request)

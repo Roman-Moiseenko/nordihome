@@ -1,18 +1,19 @@
 @php
-    use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;use App\Modules\Shop\Application\DTOs\Parts\FilterData;
-        /** @var FilterData  $filters*/
-        /** @var CategoryInfo[]  $children*/
+    use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;
+    use App\Modules\Shop\Application\DTOs\Parts\FilterData;
+    use App\Modules\Shop\Application\DTOs\Parts\UrlData;
+    /** @var FilterData  $filters*/
+    /** @var CategoryInfo[]  $children*/
+    /** @var UrlData $back */
 @endphp
 <div class="filters">
     <div class="mobile-close"><i class="fa-light fa-xmark"></i></div>
     <div class="base-filter">
         <div class="children">
+            <a href="{{ $back->url }}">{{ $back->name }}</a>
             @foreach($children as $child)
                 <div>
-                    <a
-                        href="{{ route('shop.category.view', $child->id) }}"
-                        class="{{ ''; //isset($category) ? ($child->id == $category->id ? 'active' : '') : '' }}"
-                    >{{ $child->name }}</a>
+                    <a href="{{ route('shop.category.view', $child->slug) }}">{{ $child->name }}</a>
                 </div>
             @endforeach
         </div>
@@ -27,7 +28,7 @@
         <x-widget.check name="discount" class="mt-3" checked="{{ isset($request['discount']) }}">Акция</x-widget.check>
     </div>
     <div class="attribute-filter">
-        @foreach($prod_attributes as $attribute)
+        @foreach($filters->attributes as $attribute)
             <div>
                 @if(isset($attribute['isBool']))
                     <x-widget.check name="a_{{ $attribute['id'] }}" class="mt-2" value="{{ $attribute['id'] }}"

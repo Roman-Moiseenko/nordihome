@@ -3,7 +3,6 @@
 namespace App\Console\Commands\Cron;
 
 use App\Console\CreatesApplication;
-use App\Modules\Page\Service\CacheService;
 use Illuminate\Console\Command;
 
 class CacheCommand extends Command
@@ -13,11 +12,10 @@ class CacheCommand extends Command
     protected $signature = 'cron:cache';
     protected $description = 'Кешируем данные и страницы';
 
-    public function handle(CacheService $service): void
+    public function handle(): void
     {
-        $this->info('Кешируем данные');
+        //MAINDO Пересобрать кэш
 
-        $service->rebuildCache();
     }
 
 }

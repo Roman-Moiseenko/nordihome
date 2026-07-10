@@ -18,7 +18,6 @@ use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Repository\TagRepository;
-use App\Modules\Page\Job\JobCacheProduct;
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Settings;
@@ -356,7 +355,6 @@ class ProductService
             }
         }
 
-        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editDescription(Product $product, Request $request): void
@@ -371,7 +369,6 @@ class ProductService
             $this->series($request, $product);
             $product->save();
         }
-        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editDimensions(Product $product, Request $request): void
@@ -389,7 +386,6 @@ class ProductService
             $product->packages->complexity = $request->integer('complexity');
             $product->save();
         }
-        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editVideo(Product $product, Request $request): void
@@ -405,7 +401,6 @@ class ProductService
                 $product->save();
             }
         }
-        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editAttribute(Product $product, Request $request): void
@@ -457,8 +452,6 @@ class ProductService
                 }
             }
 
-            JobCacheProduct::dispatch($products[0]->id);
-            //  $product->save();
         });
 
 
@@ -498,7 +491,6 @@ class ProductService
                 $storageItem->save();
             }
         }
-        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editEquivalent(Product $product, Request $request): void
@@ -520,7 +512,6 @@ class ProductService
             }
         }
         $product->save();
-        JobCacheProduct::dispatch($product->id);
     }
 
     public function editRelated(Product $product, Request $request): void
@@ -536,7 +527,6 @@ class ProductService
             }
             $product->save();
         }
-        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editBonus(Product $product, Request $request): void
@@ -562,7 +552,6 @@ class ProductService
                 }
             }
         }
-        JobCacheProduct::dispatch($products[0]->id);
     }
 
     public function editComposite(Product $product, Request $request): void
@@ -588,7 +577,6 @@ class ProductService
                 $product->composites()->updateExistingPivot($item['id'], ['quantity' => $item['quantity']]);
             }
         }
-        JobCacheProduct::dispatch($product->id);
     }
 
     private function tags($tags, Product &$product): void
@@ -620,14 +608,12 @@ class ProductService
     public function addPhoto(Request $request, Product $product): Photo
     {
         $photo = $product->addImage($request->file('file'));
-        JobCacheProduct::dispatch($product->id);
         return $photo;
     }
 
     public function delPhoto(Request $request, Product $product): void
     {
         $product->delImage($request->integer('photo_id'));
-        JobCacheProduct::dispatch($product->id);
     }
 
     public function movePhoto(Request $request, Product $product): void
@@ -639,7 +625,6 @@ class ProductService
             $photo->sort = $i;
             $photo->save();
         }
-        JobCacheProduct::dispatch($product->id);
     }
 
     public function setPhoto(Request $request, Product $product): void
@@ -650,7 +635,6 @@ class ProductService
             title: $request->string('title')->trim()->value(),
             description: $request->string('description')->trim()->value(),
         );
-        JobCacheProduct::dispatch($product->id);
     }
 
     public function published(Product $product): void

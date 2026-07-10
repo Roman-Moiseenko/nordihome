@@ -15,6 +15,7 @@ use App\Modules\Shop\Application\DTOs\Parts\PaginatorData;
 use App\Modules\Shop\Application\DTOs\Parts\ProductCardData;
 use App\Modules\Shop\Application\DTOs\Parts\PromotionProductData;
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
+use App\Modules\Shop\Application\DTOs\Parts\UrlData;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
 use Illuminate\Support\Facades\Cache;
@@ -32,14 +33,35 @@ class CategoryPageQuery
         $category = $this->repository->getCategory($slug);
         if (!$category) return null;
 
+
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
 
-        // Получаем ID товаров с пагинацией — репозиторий возвращает LengthAwarePaginator
         $idPaginator = $this->repository->getProductIds(
             $params, $category->id, $page, $perPage
         );
 
+        if ($category->parent_id === null) {
+            $urlBack = new UrlData(
+                url: route('shop.category.index'),
+                name: 'Каталог',
+            );
+        } else {
+            $urlBack = new UrlData(
+                url: route('shop.category.view', $category->parent->slug),
+                name: $category->parent->name,
+            );
+        }
+
+        // Маппим дочерние категории из $category->children
+        $children = [];
+        foreach ($category->children ?? [] as $child) {
+            $children[] = new ChildrenData(
+                id: $child->id,
+                name: $child->name,
+                slug: $child->slug,
+            );
+        }
         $categoryInfo = new CategoryInfo(
             id: $category->id,
             name: $category->name,
@@ -48,15 +70,27 @@ class CategoryPageQuery
             depth: $category->depth ?? 0,
             parentId: $category->parent_id,
             totalProducts: $idPaginator->total(),
+            children: $children,
         );
 
-        $children = $this->getCachedChildren($category->id);
+        //$children = $this->getCachedChildren($category->id);
         $productIds = $idPaginator->items();
 
         $productCardsRaw = $this->repository->loadProductCards($productIds);
 
+        // Сортируем карточки по порядку ID из пагинатора
+        $sortedCards = [];
+        $cardsById = [];
+        foreach ($productCardsRaw as $card) {
+            $cardsById[$card['id']] = $card;
+        }
+        foreach ($productIds as $id) {
+            if (isset($cardsById[$id])) {
+                $sortedCards[] = $cardsById[$id];
+            }
+        }
+        $productCardsRaw = $sortedCards;
 
-        // Маппим в DTO
         $productCards = array_map(
             fn(array $item) => new ProductCardData(
                 id: $item['id'],
@@ -81,7 +115,6 @@ class CategoryPageQuery
             $productCardsRaw
         );
 
-        // Собираем данные пагинации в плоский DTO
         $lastPage = (int)ceil($idPaginator->total() / max($perPage, 1));
 
         $urls = [];
@@ -89,25 +122,20 @@ class CategoryPageQuery
             $urls[$i] = url(request()->path()) . '?' . http_build_query(array_merge(request()->query(), ['page' => $i]));
         }
 
-        // Формируем elements в формате Laravel: [string|array]
-        // array — [page => url] для отображения, string — троеточие
         $elements = [];
 
         if ($lastPage <= 9) {
-            // Показываем все страницы
             $elements[] = array_slice($urls, 0, null, true);
         } else {
             $window = 2;
             $sliderStart = max(2, $page - $window);
             $sliderEnd = min($lastPage - 1, $page + $window);
 
-            // Первая страница
             $elements[] = [1 => $urls[1]];
             if ($sliderStart > 2) {
                 $elements[] = '...';
             }
 
-            // Диапазон вокруг текущей
             $range = [];
             for ($i = $sliderStart; $i <= $sliderEnd; $i++) {
                 $range[$i] = $urls[$i];
@@ -117,7 +145,6 @@ class CategoryPageQuery
             if ($sliderEnd < $lastPage - 1) {
                 $elements[] = '...';
             }
-            // Последняя страница
             $elements[] = [$lastPage => $urls[$lastPage]];
         }
 
@@ -125,17 +152,16 @@ class CategoryPageQuery
             total: $idPaginator->total(),
             perPage: $perPage,
             currentPage: $page,
-                lastPage: $lastPage,
-                hasPages: $lastPage > 1,
-                onFirstPage: $page <= 1,
-                hasMorePages: $page < $lastPage,
-                elements: $elements,
-                urls: $urls,
-                previousPageUrl: $page > 1 ? $urls[$page - 1] : null,
-                nextPageUrl: $page < $lastPage ? $urls[$page + 1] : null,
+            lastPage: $lastPage,
+            hasPages: $lastPage > 1,
+            onFirstPage: $page <= 1,
+            hasMorePages: $page < $lastPage,
+            elements: $elements,
+            urls: $urls,
+            previousPageUrl: $page > 1 ? $urls[$page - 1] : null,
+            nextPageUrl: $page < $lastPage ? $urls[$page + 1] : null,
         );
         $filters = $this->getCachedFilters($category->id);
-        // sortOrder не кешируется, т.к. зависит от текущего запроса
         $filtersWithOrder = new FilterData(
             minPrice: $filters->minPrice,
             maxPrice: $filters->maxPrice,
@@ -147,13 +173,16 @@ class CategoryPageQuery
         );
         $meta = $this->seoService->seo($category);
 
+
+
         return new CategoryPageData(
             category: $categoryInfo,
-            children: $children,
+            //children: $children,
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
             meta: new SeoData($meta->title, $meta->description),
+            back: $urlBack,
         );
     }
 

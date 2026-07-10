@@ -66,7 +66,9 @@
         </div>
         <div class="products-page-content d-flex position-relative">
             @include('shop.product.filter',
-                     ['children' => $pageData->children, 'filters' => $pageData->filters,])
+                     ['children' => $pageData->category->children, 'filters' => $pageData->filters,
+                     'back' => $pageData->back,
+                     ])
             <div class="list">
                 @if(count($pageData->filters->tags) > 0)
                     <div class="box-card top-tags">

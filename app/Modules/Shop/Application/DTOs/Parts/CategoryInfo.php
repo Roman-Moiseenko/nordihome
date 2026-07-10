@@ -11,6 +11,8 @@ class CategoryInfo
         public readonly int $depth,
         public readonly ?int $parentId = null,
         public readonly int $totalProducts = 0,
+        /** @var ChildrenData[] $children */
+        public readonly array $children,
     )
     {
     }

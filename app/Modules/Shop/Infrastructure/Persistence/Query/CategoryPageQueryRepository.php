@@ -21,9 +21,10 @@ class CategoryPageQueryRepository
     {
     }
 
-    public function getCategory(string $slug): ?Category
+    public function getCategory(string $slug): ?object
     {
-        return Category::where('slug', $slug)
+        return Category::with(['parent:id,name,slug', 'children:id,name,slug,parent_id'])
+            ->where('slug', $slug)
             ->select(['id', 'name', 'slug', 'svg', 'meta', 'parent_id', '_lft', '_rgt'])
             ->first();
     }
@@ -79,9 +80,7 @@ class CategoryPageQueryRepository
 
         $allIds = $productIdsInCategory->toArray();
 
-        $query = Product::whereIn('id', $allIds)
-            ->where('published', true)
-            ->where('not_sale', false);
+        $query = Product::whereIn('id', $allIds);
 
         $this->applySorting($query, $filters['order'] ?? '');
         $this->applyFilters($query, $filters);
@@ -110,16 +109,15 @@ class CategoryPageQueryRepository
             return [];
         }
 
-        // 1. Основные данные товаров + первое фото (sort = 0) + второе фото (sort = 1) через подзапросы
         $products = DB::table('products')
             ->whereIn('products.id', $ids)
             ->join('brands', 'products.brand_id', '=', 'brands.id')
             ->leftJoin('product_prices', function ($join) {
                 $join->on('products.id', '=', 'product_prices.product_id')
-                    ->where('product_prices.type', '=', 'retail')
+                    ->where('product_prices.type', '=', PriceType::RETAIL)
                     ->whereRaw('product_prices.id = (
                         SELECT MAX(pp2.id) FROM product_prices pp2
-                        WHERE pp2.product_id = products.id AND pp2.type = \'retail\'
+                        WHERE pp2.product_id = products.id AND pp2.type = \'' . PriceType::RETAIL . '\'
                     )');
             })
             ->select(
@@ -150,9 +148,7 @@ class CategoryPageQueryRepository
                 DB::raw("(SELECT description FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_description"),
             )
             ->get();
-        //dd($products);
 
-        // 3. Количество отзывов
         $reviewsCount = DB::table('product_reviews')
             ->whereIn('product_reviews.product_id', $ids)
             ->where('product_reviews.status', \App\Modules\Catalog\Entity\Review::STATUS_PUBLISHED)
@@ -161,7 +157,6 @@ class CategoryPageQueryRepository
             ->get()
             ->keyBy('product_id');
 
-        // 4. Акции
         $now = now();
         $promotions = DB::table('promotions_products')
             ->join('promotions', 'promotions_products.promotion_id', '=', 'promotions.id')
@@ -177,7 +172,6 @@ class CategoryPageQueryRepository
             ->get()
             ->keyBy('product_id');
 
-        // 5. Количество на складах (quantity)
         $quantities = DB::table('storage_items')
             ->whereIn('storage_items.product_id', $ids)
             ->selectRaw('product_id, SUM(quantity * 1) as total')
@@ -185,12 +179,9 @@ class CategoryPageQueryRepository
             ->get()
             ->keyBy('product_id');
 
-        //TODO Сделать проверка на наличия Client и цену грузить если Client->price вместо  \'retail\'
-
-        // 6. Предыдущая розничная цена (вторая по свежести)
         $previousPrices = DB::table('product_prices')
             ->whereIn('product_id', $ids)
-            ->where('type', 'retail')
+            ->where('type', PriceType::RETAIL)
             ->whereRaw('product_prices.id IN (
                 SELECT MAX(pp2.id) FROM product_prices pp2
                 WHERE pp2.product_id = product_prices.product_id
@@ -374,7 +365,7 @@ class CategoryPageQueryRepository
         }
 
         $priceData = DB::table('product_prices')
-            ->whereIn('product_id', $productIds)->where('type', 'retail')
+            ->whereIn('product_id', $productIds)->where('type', PriceType::RETAIL)
             ->selectRaw('MIN(amount) as min_price, MAX(amount) as max_price')->first();
 
         $brands = DB::table('products')
@@ -406,6 +397,18 @@ class CategoryPageQueryRepository
 
     private function applyFilters($query, array $filters): void
     {
+        if (!empty($filters['price'])) {
+            $min = (float)($filters['price'][0] ?? 0);
+            $max = (float)($filters['price'][1] ?? 0);
+            if ($min > 0 || $max > 0) {
+                $query->whereHas('prices', function ($q) use ($min, $max) {
+                    $q->where('type', PriceType::RETAIL);
+                    if ($min > 0) $q->where('amount', '>=', $min);
+                    if ($max > 0) $q->where('amount', '<=', $max);
+                });
+            }
+        }
+
         if (!empty($filters['brands'])) {
             $query->whereIn('brand_id', $filters['brands']);
         }
@@ -427,15 +430,15 @@ class CategoryPageQueryRepository
     private function applySorting($query, string $order): void
     {
         match ($order) {
-            'price-down' => $query->reorder()
-                ->orderByRaw('COALESCE((SELECT amount FROM product_prices WHERE product_id = products.id AND type = \'retail\' ORDER BY id DESC LIMIT 1), 0) DESC')
+            'price-down' => $query
+                ->orderByRaw('COALESCE((SELECT amount FROM product_prices WHERE product_id = products.id AND type = \'' . PriceType::RETAIL . '\' ORDER BY id DESC LIMIT 1), 0) DESC')
                 ->orderBy('id'),
-            'price-up' => $query->reorder()
-                ->orderByRaw('COALESCE((SELECT amount FROM product_prices WHERE product_id = products.id AND type = \'retail\' ORDER BY id DESC LIMIT 1), 0) ASC')
+            'price-up' => $query
+                ->orderByRaw('COALESCE((SELECT amount FROM product_prices WHERE product_id = products.id AND type = \'' . PriceType::RETAIL . '\' ORDER BY id DESC LIMIT 1), 0) ASC')
                 ->orderBy('id'),
-            'name' => $query->reorder()->orderBy('name')->orderBy('id'),
-            'rating' => $query->reorder()->orderBy('current_rating', 'desc')->orderBy('id'),
-            default => $query->reorder()->orderBy('priority', 'desc')->orderBy('published_at', 'desc')->orderBy('id'),
+            'name' => $query->orderBy('name')->orderBy('id'),
+            'rating' => $query->orderBy('current_rating', 'desc')->orderBy('id'),
+            default => $query->orderBy('priority', 'desc')->orderBy('published_at', 'desc')->orderBy('id'),
         };
     }
 

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Controllers;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Shop\Repository\CacheRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
@@ -12,29 +11,22 @@ use Illuminate\Http\Request;
 class ProductController extends ShopController
 {
     private ShopRepository $repository;
-    private CacheRepository $caches;
     private ViewRepository $views;
 
     public function __construct(
         ShopRepository $repository,
-        CacheRepository $caches,
         ViewRepository $views,
     )
     {
         $this->middleware(['auth:admin'])->only(['view_draft']);
         parent::__construct();
         $this->repository = $repository;
-        $this->caches = $caches;
         $this->views = $views;
     }
 
     public function view($slug)
     {
-        if ($this->web->is_cache) {
-            return $this->caches->product($slug);
-        } else {
-            return $this->views->product($slug);
-        }
+        return $this->views->product($slug);
     }
 
     public function view_draft(Product $product)
