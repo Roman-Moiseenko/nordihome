@@ -8,6 +8,8 @@ use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
+use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;
+use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -21,12 +23,28 @@ class CategoryPageQueryRepository
     {
     }
 
-    public function getCategory(string $slug): ?object
+    public function getCategory(string $slug): ?CategoryInfo
     {
-        return Category::with(['parent:id,name,slug', 'children:id,name,slug,parent_id'])
-            ->where('slug', $slug)
-            ->select(['id', 'name', 'slug', 'svg', 'meta', 'parent_id', '_lft', '_rgt'])
+        $row = DB::table('categories')
+            ->leftJoin('categories as parent', 'parent.id', '=', 'categories.parent_id')
+            ->where('categories.slug', $slug)
+            ->select('categories.id', 'categories.name', 'categories.slug', 'categories.meta', 'categories.parent_id',
+                'parent.name as parent_name', 'parent.slug as parent_slug')
             ->first();
+        if (!$row) return null;
+
+        $childrenRows = DB::table('categories')->where('parent_id', $row->id)->get(['id', 'name', 'slug']);
+        $children = $childrenRows->map(fn($c) => new ChildrenData($c->id, $c->name, $c->slug))->all();
+
+        return new CategoryInfo(
+            id: $row->id,
+            name: $row->name,
+            slug: $row->slug,
+            image: '',
+            totalProducts: 0,
+            children: $children,
+            parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug) : null
+        );
     }
 
     public function getProductIdsInCategory(int $categoryId)

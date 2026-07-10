@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\Queries;
 
+use App\Modules\Base\Entity\Meta;
 use App\Modules\Page\Repository\MetaTemplateRepository;
 use App\Modules\Shop\Application\DTOs\CategoryPageData;
 use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;
@@ -16,6 +17,7 @@ use App\Modules\Shop\Application\DTOs\Parts\ProductCardData;
 use App\Modules\Shop\Application\DTOs\Parts\PromotionProductData;
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
 use App\Modules\Shop\Application\DTOs\Parts\UrlData;
+use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepository;
 use Illuminate\Support\Facades\Cache;
 
@@ -24,19 +26,20 @@ class CategoryPageQuery
     public function __construct(
         private readonly CategoryPageQueryRepository $repository,
         private readonly MetaTemplateRepository      $seoService,
+        private readonly PaginatorBuilder $paginatorBuilder,
     ) {}
 
     public function execute(string $slug, array $params): ?CategoryPageData
     {
-        $category = $this->repository->getCategory($slug);
-        if (!$category) return null;
+        $categoryInfo = $this->repository->getCategory($slug);
+
 
 
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
 
         // Все ID товаров категории после фиьтрации
-        $allProductIds = $this->repository->getProductIdsInCategory($category->id);
+        $allProductIds = $this->repository->getProductIdsInCategory($categoryInfo->id);
         $rooms = [];
         if ($allProductIds) {
             $roomsRaw = $this->repository->getRoomsByProductIds($allProductIds, $params);
@@ -50,37 +53,20 @@ class CategoryPageQuery
             $params, $allProductIds, $page, $perPage
         );
 
-        if ($category->parent_id === null) {
+        if ($categoryInfo->parent === null) {
             $urlBack = new UrlData(
                 url: route('shop.category.index'),
                 name: 'Каталог',
             );
         } else {
             $urlBack = new UrlData(
-                url: route('shop.category.view', $category->parent->slug),
-                name: $category->parent->name,
+                url: route('shop.category.view', $categoryInfo->slug),
+                name: $categoryInfo->name,
             );
         }
 
-        // Маппим дочерние категории из $category->children
-        $children = [];
-        foreach ($category->children ?? [] as $child) {
-            $children[] = new ChildrenData(
-                id: $child->id,
-                name: $child->name,
-                slug: $child->slug,
-            );
-        }
-        $categoryInfo = new CategoryInfo(
-            id: $category->id,
-            name: $category->name,
-            slug: $category->slug,
-            image: $category->getImage('catalog') ?? '',
-            depth: $category->depth ?? 0,
-            parentId: $category->parent_id,
-            totalProducts: $idPaginator->total(),
-            children: $children,
-        );
+
+        $categoryInfo->totalProducts = $idPaginator->total();
 
         //$children = $this->getCachedChildren($category->id);
         $productIds = $idPaginator->items();
@@ -111,53 +97,17 @@ class CategoryPageQuery
             $productCardsRaw
         );
 
-        $lastPage = (int)ceil($idPaginator->total() / max($perPage, 1));
-
-        $urls = [];
-        for ($i = 1; $i <= $lastPage; $i++) {
-            $urls[$i] = url(request()->path()) . '?' . http_build_query(array_merge(request()->query(), ['page' => $i]));
-        }
-
-        $elements = [];
-
-        if ($lastPage <= 9) {
-            $elements[] = array_slice($urls, 0, null, true);
-        } else {
-            $window = 2;
-            $sliderStart = max(2, $page - $window);
-            $sliderEnd = min($lastPage - 1, $page + $window);
-
-            $elements[] = [1 => $urls[1]];
-            if ($sliderStart > 2) {
-                $elements[] = '...';
-            }
-
-            $range = [];
-            for ($i = $sliderStart; $i <= $sliderEnd; $i++) {
-                $range[$i] = $urls[$i];
-            }
-            $elements[] = $range;
-
-            if ($sliderEnd < $lastPage - 1) {
-                $elements[] = '...';
-            }
-            $elements[] = [$lastPage => $urls[$lastPage]];
-        }
-
-        $paginator = new PaginatorData(
+        $paginator = $this->paginatorBuilder->build(
             total: $idPaginator->total(),
             perPage: $perPage,
             currentPage: $page,
-            lastPage: $lastPage,
-            hasPages: $lastPage > 1,
-            onFirstPage: $page <= 1,
-            hasMorePages: $page < $lastPage,
-            elements: $elements,
-            url: $urls,
-            previousPageUrl: $page > 1 ? $urls[$page - 1] : null,
-            nextPageUrl: $page < $lastPage ? $urls[$page + 1] : null,
+            options: [
+                'path' => request()->path(),
+                'query' => array_diff_key(request()->query(), ['page' => null]),
+            ]
         );
-        $filters = $this->getCachedFilters($category->id);
+
+        $filters = $this->getCachedFilters($categoryInfo->id);
         $filtersWithOrder = new FilterData(
             minPrice: $filters->minPrice,
             maxPrice: $filters->maxPrice,
@@ -167,7 +117,9 @@ class CategoryPageQuery
             sortOrder: $params['order'] ?? '',
             tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
         );
-        $meta = $this->seoService->seo($category);
+
+        //MAINDO !!!!!!!!!!!!!!!!!
+        $meta = new Meta(); //$this->seoService->seo($category);
 
         return new CategoryPageData(
             category: $categoryInfo,
@@ -228,51 +180,14 @@ class CategoryPageQuery
             $productCardsRaw
         );
 
-        $lastPage = (int)ceil($idPaginator->total() / max($perPage, 1));
-
-        $urls = [];
-        for ($i = 1; $i <= $lastPage; $i++) {
-            $urls[$i] = url(request()->path()) . '?' . http_build_query(array_merge(request()->query(), ['page' => $i]));
-        }
-
-        $elements = [];
-
-        if ($lastPage <= 9) {
-            $elements[] = array_slice($urls, 0, null, true);
-        } else {
-            $window = 2;
-            $sliderStart = max(2, $page - $window);
-            $sliderEnd = min($lastPage - 1, $page + $window);
-
-            $elements[] = [1 => $urls[1]];
-            if ($sliderStart > 2) {
-                $elements[] = '...';
-            }
-
-            $range = [];
-            for ($i = $sliderStart; $i <= $sliderEnd; $i++) {
-                $range[$i] = $urls[$i];
-            }
-            $elements[] = $range;
-
-            if ($sliderEnd < $lastPage - 1) {
-                $elements[] = '...';
-            }
-            $elements[] = [$lastPage => $urls[$lastPage]];
-        }
-
-        $paginator = new PaginatorData(
+        $paginator = $this->paginatorBuilder->build(
             total: $idPaginator->total(),
             perPage: $perPage,
             currentPage: $page,
-            lastPage: $lastPage,
-            hasPages: $lastPage > 1,
-            onFirstPage: $page <= 1,
-            hasMorePages: $page < $lastPage,
-            elements: $elements,
-            url: $urls,
-            previousPageUrl: $page > 1 ? $urls[$page - 1] : null,
-            nextPageUrl: $page < $lastPage ? $urls[$page + 1] : null,
+            options: [
+                'path' => request()->path(),
+                'query' => array_diff_key(request()->query(), ['page' => null]),
+            ]
         );
 
         $filtersWithOrder = new FilterData(
@@ -290,14 +205,14 @@ class CategoryPageQuery
             name: 'Новинки',
             slug: 'novelty',
             image: '',
-            depth: 0,
-            parentId: null,
             totalProducts: $idPaginator->total(),
             children: [],
+            parent: null,
         );
 
         return new CategoryPageData(
             category: $categoryInfo,
+            rooms: [],
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
