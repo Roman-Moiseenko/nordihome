@@ -13,8 +13,6 @@ class CategoryPageData
 {
     public function __construct(
         public CategoryInfo $category,
-
-        //public array $children,
         /** @var ProductCardData[] */
         public array $products,
         public PaginatorData $paginator,

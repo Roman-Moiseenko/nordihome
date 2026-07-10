@@ -70,7 +70,6 @@ Route::group(
             'as' => 'category.',
             'prefix' => 'catalog',
         ], function () {
-            Route::post('/search', [CatalogController::class, 'search'])->name('search');
             Route::get('/{slug}', [CatalogController::class, 'view'])->name('view');
             Route::get('/', [CatalogController::class, 'index'])->name('index');
         });

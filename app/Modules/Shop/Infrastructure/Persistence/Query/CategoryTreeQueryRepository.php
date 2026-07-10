@@ -77,21 +77,17 @@ class CategoryTreeQueryRepository
     }
 
     /**
-     * Получить непосредственных детей категории.
+     * Получить детей категории. Если $parentId = null — корневые категории.
      * @return CategoryTreeClientData[]
      */
-    public function getChildren(int $parentId): array
+    public function getChildren(?int $parentId = null): array
     {
-        // Используем индекс _lft или parent_id – зависит от вашей схемы.
-        // Предположим, что у категорий есть parent_id и порядок сортировки _lft (для nested set)
-        // или просто order.
-        $rows = DB::table('categories')
+        $query = DB::table('categories')
             ->leftJoin('photos', function ($join) {
                 $join->on('categories.id', '=', 'photos.imageable_id')
                     ->where('photos.model_type', '=', self::MODEL_TYPE)
                     ->where('photos.type', '=', 'image');
             })
-            ->where('categories.parent_id', $parentId)
             ->select(
                 'categories.id',
                 'categories.name',
@@ -102,8 +98,16 @@ class CategoryTreeQueryRepository
                 'photos.file as photo_file',
                 'photos.thumb as photo_thumb',
             )
-            ->orderBy('categories._lft')   // или order по полю сортировки
-            ->get();
+            ->orderBy('categories._lft');
+
+        if ($parentId === null) {
+            $query->whereNull('categories.parent_id')
+                ->where('categories.slug', '<>', 'no_parse');
+        } else {
+            $query->where('categories.parent_id', $parentId);
+        }
+
+        $rows = $query->get();
 
         return $rows->map(fn($row) => new CategoryTreeClientData(
             id: $row->id,
@@ -111,7 +115,7 @@ class CategoryTreeQueryRepository
             slug: $row->slug,
             svg: $row->svg ?? '',
             image: $this->buildImageUrl($row),
-            children: []                   // без вложенных детей
+            children: [],
         ))->all();
     }
 }

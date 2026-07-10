@@ -8,7 +8,7 @@
             aria-expanded="false">Каталог&nbsp;
     </button>
     <div class="dropdown-menu">
-        <div class="catalog" data-route="{{ route('shop.category.search') }}">
+        <div class="catalog">
             <div class="catalog-rootmenu">
                 @foreach($categoryTree as $category)
                     <li>

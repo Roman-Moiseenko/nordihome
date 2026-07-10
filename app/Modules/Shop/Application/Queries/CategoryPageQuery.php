@@ -17,15 +17,13 @@ use App\Modules\Shop\Application\DTOs\Parts\PromotionProductData;
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
 use App\Modules\Shop\Application\DTOs\Parts\UrlData;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepository;
-use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
 use Illuminate\Support\Facades\Cache;
 
 class CategoryPageQuery
 {
     public function __construct(
-        private CategoryPageQueryRepository $repository,
-        private CategoryTreeQueryRepository $treeRepo,
-        private MetaTemplateRepository $seoService,
+        private readonly CategoryPageQueryRepository $repository,
+        private readonly MetaTemplateRepository      $seoService,
     ) {}
 
     public function execute(string $slug, array $params): ?CategoryPageData
@@ -157,7 +155,7 @@ class CategoryPageQuery
             onFirstPage: $page <= 1,
             hasMorePages: $page < $lastPage,
             elements: $elements,
-            urls: $urls,
+            url: $urls,
             previousPageUrl: $page > 1 ? $urls[$page - 1] : null,
             nextPageUrl: $page < $lastPage ? $urls[$page + 1] : null,
         );
@@ -173,11 +171,8 @@ class CategoryPageQuery
         );
         $meta = $this->seoService->seo($category);
 
-
-
         return new CategoryPageData(
             category: $categoryInfo,
-            //children: $children,
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
@@ -186,14 +181,6 @@ class CategoryPageQuery
         );
     }
 
-    private function getCachedChildren(int $parentId): array
-    {
-        return Cache::remember(
-            "category_children_{$parentId}",
-            now()->addDay(),
-            fn() => $this->treeRepo->getChildren($parentId)
-        );
-    }
 
     private function getCachedFilters(int $categoryId): FilterData
     {
