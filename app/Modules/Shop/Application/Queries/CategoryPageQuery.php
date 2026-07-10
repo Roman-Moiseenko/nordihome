@@ -7,9 +7,13 @@ namespace App\Modules\Shop\Application\Queries;
 use App\Modules\Page\Repository\MetaTemplateRepository;
 use App\Modules\Shop\Application\DTOs\CategoryPageData;
 use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;
+use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Parts\FilterData;
+use App\Modules\Shop\Application\DTOs\Parts\IdNameData;
+use App\Modules\Shop\Application\DTOs\Parts\ImageInfoData;
 use App\Modules\Shop\Application\DTOs\Parts\PaginatorData;
-use App\Modules\Shop\Application\DTOs\Parts\ProductCard;
+use App\Modules\Shop\Application\DTOs\Parts\ProductCardData;
+use App\Modules\Shop\Application\DTOs\Parts\PromotionProductData;
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
@@ -28,17 +32,6 @@ class CategoryPageQuery
         $category = $this->repository->getCategory($slug);
         if (!$category) return null;
 
-        $categoryInfo = new CategoryInfo(
-            id: $category->id,
-            name: $category->name,
-            slug: $category->slug,
-            image: $category->getImage('catalog') ?? '',
-            depth: $category->depth ?? 0,
-            parentId: $category->parent_id,
-        );
-
-        $children = $this->getCachedChildren($category->id);
-
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
 
@@ -47,13 +40,25 @@ class CategoryPageQuery
             $params, $category->id, $page, $perPage
         );
 
-        // Загружаем карточки товаров для текущей страницы
+        $categoryInfo = new CategoryInfo(
+            id: $category->id,
+            name: $category->name,
+            slug: $category->slug,
+            image: $category->getImage('catalog') ?? '',
+            depth: $category->depth ?? 0,
+            parentId: $category->parent_id,
+            totalProducts: $idPaginator->total(),
+        );
+
+        $children = $this->getCachedChildren($category->id);
         $productIds = $idPaginator->items();
+
         $productCardsRaw = $this->repository->loadProductCards($productIds);
+
 
         // Маппим в DTO
         $productCards = array_map(
-            fn(array $item) => new ProductCard(
+            fn(array $item) => new ProductCardData(
                 id: $item['id'],
                 name: $item['name'],
                 slug: $item['slug'],
@@ -61,11 +66,17 @@ class CategoryPageQuery
                 price: $item['price'],
                 rating: $item['rating'],
                 brand: $item['brand'],
-                image: $item['image'],
                 priority: $item['priority'],
                 is_new: $item['is_new'],
                 reduced: $item['reduced'],
                 only_on_order: $item['only_on_order'],
+                is_sale: $item['is_sale'],
+                count_reviews: $item['count_reviews'],
+                price_previous: $item['price_previous'] ?? 0.0,
+                quantity: $item['quantity'] ?? 0.0,
+                image: ImageInfoData::fromArray($item['images']),
+                image_next: ImageInfoData::fromArray($item['images_next']),
+                promotion: PromotionProductData::fromArray($item['promotion']),
             ),
             $productCardsRaw
         );
@@ -73,9 +84,41 @@ class CategoryPageQuery
         // Собираем данные пагинации в плоский DTO
         $lastPage = (int)ceil($idPaginator->total() / max($perPage, 1));
 
-        $elements = [];
+        $urls = [];
         for ($i = 1; $i <= $lastPage; $i++) {
-            $elements[$i] = url(request()->path()) . '?' . http_build_query(array_merge(request()->query(), ['page' => $i]));
+            $urls[$i] = url(request()->path()) . '?' . http_build_query(array_merge(request()->query(), ['page' => $i]));
+        }
+
+        // Формируем elements в формате Laravel: [string|array]
+        // array — [page => url] для отображения, string — троеточие
+        $elements = [];
+
+        if ($lastPage <= 9) {
+            // Показываем все страницы
+            $elements[] = array_slice($urls, 0, null, true);
+        } else {
+            $window = 2;
+            $sliderStart = max(2, $page - $window);
+            $sliderEnd = min($lastPage - 1, $page + $window);
+
+            // Первая страница
+            $elements[] = [1 => $urls[1]];
+            if ($sliderStart > 2) {
+                $elements[] = '...';
+            }
+
+            // Диапазон вокруг текущей
+            $range = [];
+            for ($i = $sliderStart; $i <= $sliderEnd; $i++) {
+                $range[$i] = $urls[$i];
+            }
+            $elements[] = $range;
+
+            if ($sliderEnd < $lastPage - 1) {
+                $elements[] = '...';
+            }
+            // Последняя страница
+            $elements[] = [$lastPage => $urls[$lastPage]];
         }
 
         $paginator = new PaginatorData(
@@ -87,11 +130,21 @@ class CategoryPageQuery
                 onFirstPage: $page <= 1,
                 hasMorePages: $page < $lastPage,
                 elements: $elements,
-                urls: $elements,
-                previousPageUrl: $page > 1 ? $elements[$page - 1] : null,
-                nextPageUrl: $page < $lastPage ? $elements[$page + 1] : null,
+                urls: $urls,
+                previousPageUrl: $page > 1 ? $urls[$page - 1] : null,
+                nextPageUrl: $page < $lastPage ? $urls[$page + 1] : null,
         );
         $filters = $this->getCachedFilters($category->id);
+        // sortOrder не кешируется, т.к. зависит от текущего запроса
+        $filtersWithOrder = new FilterData(
+            minPrice: $filters->minPrice,
+            maxPrice: $filters->maxPrice,
+            attributes: $filters->attributes,
+            brands: $filters->brands,
+            tags: $filters->tags,
+            sortOrder: $params['order'] ?? '',
+            tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
+        );
         $meta = $this->seoService->seo($category);
 
         return new CategoryPageData(
@@ -99,7 +152,7 @@ class CategoryPageQuery
             children: $children,
             products: $productCards,
             paginator: $paginator,
-            filters: $filters,
+            filters: $filtersWithOrder,
             meta: new SeoData($meta->title, $meta->description),
         );
     }
@@ -120,12 +173,23 @@ class CategoryPageQuery
             now()->addHours(3),
             function () use ($categoryId) {
                 $aggr = $this->repository->getFilterAggregates($categoryId);
+
+                $brands = array_map(
+                    fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),
+                    $aggr->brands ?? []
+                );
+
+                $tags = array_map(
+                    fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),
+                    $aggr->tags ?? []
+                );
+
                 return new FilterData(
                     minPrice: $aggr->min_price ?? 0,
                     maxPrice: $aggr->max_price ?? 0,
                     attributes: $aggr->attributes ?? [],
-                    brands: $aggr->brands ?? [],
-                    tags: $aggr->tags ?? [],
+                    brands: $brands,
+                    tags: $tags,
                 );
             }
         );

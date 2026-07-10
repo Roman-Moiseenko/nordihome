@@ -1,3 +1,8 @@
+@php
+    use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;use App\Modules\Shop\Application\DTOs\Parts\FilterData;
+        /** @var FilterData  $filters*/
+        /** @var CategoryInfo[]  $children*/
+@endphp
 <div class="filters">
     <div class="mobile-close"><i class="fa-light fa-xmark"></i></div>
     <div class="base-filter">
@@ -5,21 +10,21 @@
             @foreach($children as $child)
                 <div>
                     <a
-                        href="{{ route('shop.category.view', $child['slug']) }}"
-                        class="{{ isset($category) ? ($child['id'] == $category->id ? 'active' : '') : '' }}"
-                    >{{ $child['name'] }}</a>
+                        href="{{ route('shop.category.view', $child->id) }}"
+                        class="{{ ''; //isset($category) ? ($child->id == $category->id ? 'active' : '') : '' }}"
+                    >{{ $child->name }}</a>
                 </div>
             @endforeach
         </div>
 
-        <x-widget.numeric name="price" min-value="{{ $minPrice }}" max-value="{{ $maxPrice }}"
+        <x-widget.numeric name="price" min-value="{{ $filters->minPrice }}" max-value="{{ $filters->maxPrice }}"
                           current-min="{{ isset($request['price']) ? $request['price'][0] : '' }}"
                           current-max="{{ isset($request['price']) ? $request['price'][1] : '' }}"
                           class="mt-3">
             Цена
         </x-widget.numeric>
 
-        <x-widget.check name="discount" class="mt-3" checked="{{ isset($request['discount']) }}" >Акция</x-widget.check>
+        <x-widget.check name="discount" class="mt-3" checked="{{ isset($request['discount']) }}">Акция</x-widget.check>
     </div>
     <div class="attribute-filter">
         @foreach($prod_attributes as $attribute)
@@ -31,13 +36,14 @@
                     <hr/>
                 @endif
                 @if(isset($attribute['isNumeric']))
-                    <x-widget.numeric name="a_{{ $attribute['id'] }}" min-value="{{ $attribute['min'] }}" max-value="{{ $attribute['max'] }}"
+                    <x-widget.numeric name="a_{{ $attribute['id'] }}" min-value="{{ $attribute['min'] }}"
+                                      max-value="{{ $attribute['max'] }}"
                                       current-min="{{ isset($request['a_' . $attribute['id']]) ? $request['a_' . $attribute['id']][0] : '' }}"
                                       current-max="{{ isset($request['a_' . $attribute['id']]) ? $request['a_' . $attribute['id']][1] : '' }}"
                                       class="mt-3">
                         {{ $attribute['name'] }}
                     </x-widget.numeric>
-                        <hr/>
+                    <hr/>
                 @endif
                 @if(isset($attribute['isVariant']))
                     <x-widget.variant class="mt-3" caption="{{ $attribute['name'] }}" id="{{ $attribute['id'] }}">
@@ -50,7 +56,7 @@
                             />
                         @endforeach
                     </x-widget.variant>
-                        <hr/>
+                    <hr/>
                 @endif
 
             </div>

@@ -1,28 +1,33 @@
-<div>
-    <div class="product-card e-impressions" data-product="{{ $product['id'] }}">
-        <div class="product-card-image">
-            <a class="e-click" data-product="{{ $product['id'] }}" href="{{ route('shop.product.view', $product['slug']) }}">
-                <img class="product-card-image-main"
-                     src="{{ $product['images']['catalog']['src'] }}"
-                     alt="{{ $product['images']['catalog']['alt'] }}">
-                <img class="product-card-image-hover"
-                     src="{{ $product['images-next']['catalog']['src'] }}"
-                     alt="{{ $product['images-next']['catalog']['alt'] }}">
+@php use App\Modules\Shop\Application\DTOs\Parts\ProductCardData; @endphp
+@php
+ /** @var ProductCardData $product */
+@endphp
 
-                @if($product['promotion']['has'])
+<div>
+    <div class="product-card e-impressions" data-product="{{ $product->id }}">
+        <div class="product-card-image">
+            <a class="e-click" data-product="{{ $product->id }}" href="{{ route('shop.product.view', $product->slug) }}">
+                <img class="product-card-image-main"
+                     src="{{ $product->image->src }}"
+                     alt="{{ $product->image->alt }}">
+                <img class="product-card-image-hover"
+                     src="{{ $product->image_next->src }}"
+                     alt="{{ $product->image_next->alt }}">
+
+                @if($product->promotion->has)
                     <div class="product-label promotion"><span>Акция</span></div>
                 @endif
-                @if($product['is_new'])
+                @if($product->is_new)
                     <div class="product-label new"><span>Новинка</span></div>
                 @endif
             </a>
         </div>
         <div class="product-card-review">
             <div>
-                <a class="e-click" data-product="{{ $product['id'] }}" href="{{ route('shop.product.view', $product['slug']) }}/#review"
-                   title="Отзывы реальных покупателей на {{ $product['name'] }}">
-                    <i class="fa-solid fa-star"></i>{{ $product['rating'] }} <span
-                        class="">{{ $product['count_reviews'] }}</span>
+                <a class="e-click" data-product="{{ $product->id }}" href="{{ route('shop.product.view', $product->slug) }}/#review"
+                   title="Отзывы реальных покупателей на {{ $product->name }}">
+                    <i class="fa-solid fa-star"></i>{{ $product->rating }} <span
+                        class="">{{ $product->count_reviews }}</span>
                 </a>
             </div>
             <div>
@@ -41,19 +46,19 @@
             </div>
         </div>
         <div class="product-card-name fs-6">
-            <a class="product-trunc e-click" data-product="{{ $product['id'] }}" href="{{ route('shop.product.view', $product['slug']) }}"
-               title="{{ $product['name'] }}">{{ $product['name'] }}</a>
+            <a class="product-trunc e-click" data-product="{{ $product->id }}" href="{{ route('shop.product.view', $product->slug) }}"
+               title="{{ $product->name }}">{{ $product->name }}</a>
         </div>
         <div class="product-card-info">
-            @if($product['is_sale'])
-                @if(!$product['promotion']['has'])
-                    {{ price($product['price']) }}
+            @if($product->is_sale)
+                @if(!$product->promotion->has)
+                    {{ price($product->price) }}
                 @else
-                    <span class="discount-price">{{ price($product['promotion']['price']) }}</span><span
-                        class="base-price">{{ price($product['price']) }}</span>
+                    <span class="discount-price">{{ price($product->promotion->price) }}</span><span
+                        class="base-price">{{ price($product->price) }}</span>
                 @endif
             @else
-                {{ price($product['price']) }}
+                {{ price($product->price) }}
             @endif
         </div>
 

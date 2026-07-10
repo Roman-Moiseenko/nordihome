@@ -4,6 +4,22 @@ namespace App\Modules\Shop\Application\DTOs\Parts;
 
 class PaginatorData
 {
+    /**
+     * @param int $total
+     * @param int $perPage
+     * @param int $currentPage
+     * @param int $lastPage
+     * @param bool $hasPages
+     * @param bool $onFirstPage
+     * @param bool $hasMorePages
+     * @param array $elements Формат как у LengthAwarePaginator:
+     *                       каждый элемент — string (троеточие) или array [page => url]
+     * @param array<int, string> $urls map page=>url
+     * @param string|null $previousPageUrl
+     * @param string|null $nextPageUrl
+     * @param int|null $firstPage
+     * @param int|null $lastPage
+     */
     public function __construct(
         public readonly int $total,
         public readonly int $perPage,

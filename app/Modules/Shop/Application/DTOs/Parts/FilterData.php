@@ -2,17 +2,19 @@
 
 namespace App\Modules\Shop\Application\DTOs\Parts;
 
-class FilterData
+readonly class FilterData
 {
     public function __construct(
-        public readonly float $minPrice,
-        public readonly float $maxPrice,
+        public float  $minPrice,
+        public float  $maxPrice,
         /** @var array[] */
-        public readonly array $attributes,
-        /** @var array[] */
-        public readonly array $brands,
-        /** @var array[] */
-        public readonly array $tags,
+        public array  $attributes,
+        /** @var IdNameData[] */
+        public array  $brands,
+        /** @var IdNameData[] */
+        public array  $tags,
+        public string $sortOrder = '',
+        public ?int $tagId = null
     )
     {
     }

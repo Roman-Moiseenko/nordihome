@@ -7,7 +7,6 @@
 
 
 @section('content')
-    {{ $url_page  }}
 <div class="title-page">
     <h1>Каталог товаров NORDIHOME</h1>
 </div>

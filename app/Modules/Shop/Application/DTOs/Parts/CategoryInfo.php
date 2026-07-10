@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Modules\Shop\Application\DTOs\Parts;
-
 class CategoryInfo
 {
     public function __construct(
@@ -11,7 +10,9 @@ class CategoryInfo
         public readonly string $image,
         public readonly int $depth,
         public readonly ?int $parentId = null,
+        public readonly int $totalProducts = 0,
     )
     {
     }
 }
+

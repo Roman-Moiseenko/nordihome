@@ -44,13 +44,16 @@ class CatalogController extends ShopController
 
     public function view(Request $request, $slug)
     {
-        $page = $request->has('page');
+        $start = microtime(true);
 
         $data = $this->categoryPageQuery->execute($slug, $request->all());
-        dd($data);
-        return $this->views->category($request->all(), $slug);
 
-        return view('shop.product.index', ['data' => $data]);
+        $time = (microtime(true) - $start);
+        \Illuminate\Support\Facades\Log::info("CategoryPageQuery::execute время: " . number_format($time, 3, '.', '') . " сек");
+
+        //return $this->views->category($request->all(), $slug);
+
+        return view('shop.product.index', ['pageData' => $data]);
     }
 
     public function search(Request $request): JsonResponse
@@ -72,13 +75,7 @@ class CatalogController extends ShopController
 
     public function novelty(Request $request)
     {
-        $page = $request->has('page');
-
-        if ((empty($request->all()) || (count($request->all()) == 1 && $page)) && $this->web->is_cache) {
-            return $this->caches->novelty($request->all());
-        } else {
-            return $this->views->novelty($request->all());
-        }
+        return $this->views->novelty($request->all());
     }
 
 
