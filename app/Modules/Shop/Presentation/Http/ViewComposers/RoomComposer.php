@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Presentation\Http\ViewComposers;
 
-use App\Modules\Shop\Application\Queries\GetRoomTreeQuery;
+use App\Modules\Shop\Application\Queries\Room\GetRoomTreeQuery;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\View\View;
 

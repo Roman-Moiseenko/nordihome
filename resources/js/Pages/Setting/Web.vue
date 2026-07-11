@@ -43,6 +43,14 @@
                     <el-form-item label="meta-Description для списка категорий" label-position="top">
                         <el-input v-model="form.categories_desc"   style="width: 300px;" type="textarea" :rows="3"/>
                     </el-form-item>
+
+                    <el-form-item label="meta-Title для списка комнат" label-position="top">
+                        <el-input v-model="form.rooms_title"   style="width: 300px;"/>
+                    </el-form-item>
+                    <el-form-item label="meta-Description для списка комнат" label-position="top">
+                        <el-input v-model="form.rooms_desc"   style="width: 300px;" type="textarea" :rows="3"/>
+                    </el-form-item>
+
                     <el-form-item label="meta-Title Контактные данные" label-position="top">
                         <el-input v-model="form.title_contact"   style="width: 300px;"/>
                     </el-form-item>
@@ -80,6 +88,8 @@ const form = reactive({
 
     categories_title: props.web.categories_title,
     categories_desc: props.web.categories_desc,
+    rooms_title: props.web.rooms_title,
+    rooms_desc: props.web.rooms_desc,
     title_contact: props.web.title_contact,
     title_city: props.web.title_city,
     is_cache: props.web.is_cache,

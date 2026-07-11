@@ -1,26 +1,28 @@
 <?php
 
-namespace App\Modules\Shop\Application\Queries;
+declare(strict_types=1);
 
-use App\Modules\Shop\Application\DTOs\CategoryTreeClientData;
+namespace App\Modules\Shop\Application\Queries\Room;
+
+use App\Modules\Shop\Application\DTOs\RoomTreeClientData;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
-use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
+use App\Modules\Shop\Infrastructure\Persistence\Query\RoomTreeQueryRepository;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
-class GetCategoryTreeQuery
+
+class GetRoomTreeQuery
 {
-    private const string CACHE_KEY = CacheInvalidationRegistry::CATEGORY_INDEX_PAGE;
+    private const CACHE_KEY = CacheInvalidationRegistry::ROOM_TREE;
 
     public function __construct(
-        private CategoryTreeQueryRepository $repository
+        private RoomTreeQueryRepository $repository
     ) {}
 
-    /** @return CategoryTreeClientData[]
+    /** @return RoomTreeClientData[]
      * @throws LockTimeoutException
      */
     public function execute(): array
     {
-
         // Попытка прочитать из кеша
         if ($cached = Cache::get(self::CACHE_KEY)) {
             return $cached;

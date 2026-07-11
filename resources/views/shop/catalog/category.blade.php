@@ -1,6 +1,6 @@
 @php
-    use App\Modules\Shop\Application\DTOs\CategoryIndexPageData;
-    /** @var CategoryIndexPageData $pageData */
+    use App\Modules\Shop\Application\DTOs\CategoryRoomIndexPageData;
+    /** @var CategoryRoomIndexPageData $pageData */
 @endphp
 
 @extends('shop.layouts.main')
@@ -17,7 +17,7 @@
     </div>
     <div class="row">
         @foreach($pageData->categories as $category)
-            @include('shop.catalog.card-category', ['category' => $category])
+            @include('shop.catalog.card', ['item' => $category])
         @endforeach
     </div>
 

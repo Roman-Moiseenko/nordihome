@@ -1,18 +1,23 @@
+@php
+    use App\Modules\Shop\Application\DTOs\CategoryRoomIndexPageData;
+    /** @var CategoryRoomIndexPageData $pageData */
+@endphp
+
 @extends('shop.layouts.main')
 
 @section('body', 'room')
 @section('main', 'container-xl rooms-page')
-@section('title', $title ?? '')
-@section('description', $description ?? '')
+@section('title', $pageData->meta->title)
+@section('description', $pageData->meta->description)
 
 
 @section('content')
     <div class="title-page">
-        <h1>Каталог товаров NORDIHOME</h1>
+        <h1>Каталог товаров по комнатам</h1>
     </div>
     <div class="row">
-        @foreach($rooms as $room)
-            @include('shop.catalog.card-room', ['room' => $room])
+        @foreach($pageData->categories as $room)
+            @include('shop.catalog.card', ['item' => $room])
         @endforeach
     </div>
 

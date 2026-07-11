@@ -1,25 +1,27 @@
 <?php
 
-namespace App\Modules\Shop\Application\Queries;
+namespace App\Modules\Shop\Application\Queries\Category;
 
+use App\Modules\Shop\Application\DTOs\CategoryTreeClientData;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
-use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaTreeQueryRepository;
+use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
+use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
 
-class GetIkeaTreeQuery
+class GetCategoryTreeQuery
 {
-    private const CACHE_KEY = CacheInvalidationRegistry::IKEA_CATEGORY_INDEX_PAGE;
+    private const string CACHE_KEY = CacheInvalidationRegistry::CATEGORY_INDEX_PAGE;
 
     public function __construct(
-        private IkeaTreeQueryRepository $repository
+        private CategoryTreeQueryRepository $repository
     ) {}
 
-    /**
-     * @return array
-     * @throws \Illuminate\Contracts\Cache\LockTimeoutException
+    /** @return CategoryTreeClientData[]
+     * @throws LockTimeoutException
      */
     public function execute(): array
     {
+
         // Попытка прочитать из кеша
         if ($cached = Cache::get(self::CACHE_KEY)) {
             return $cached;

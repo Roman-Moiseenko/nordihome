@@ -1,32 +1,30 @@
 <?php
 
-declare(strict_types=1);
-
-namespace App\Modules\Shop\Application\Queries;
+namespace App\Modules\Shop\Application\Queries\Room;
 
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Shop\Application\DTOs\CategoryIndexPageData;
+use App\Modules\Shop\Application\DTOs\CategoryRoomIndexPageData;
 use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomData;
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
-use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
+use App\Modules\Shop\Infrastructure\Persistence\Query\RoomTreeQueryRepository;
 use Illuminate\Support\Facades\Cache;
 
-readonly class CategoryIndexQuery
+class RoomIndexQuery
 {
     public function __construct(
-        private CategoryTreeQueryRepository $treeRepo,
+        private RoomTreeQueryRepository $treeRepo,
         private Settings                    $settings,
     )
     {
     }
 
-    public function execute(): CategoryIndexPageData
+    public function execute(): CategoryRoomIndexPageData
     {
         $web = $this->settings->web;
 
         $categories = Cache::remember(
-            CacheInvalidationRegistry::CATEGORY_INDEX_PAGE,
+            CacheInvalidationRegistry::ROOM_INDEX_PAGE,
             now()->addDay(),
             fn() => array_map(
                 fn($item) => new CategoryRoomData(
@@ -39,10 +37,10 @@ readonly class CategoryIndexQuery
             ),
         );
 
-        return new CategoryIndexPageData(
+        return new CategoryRoomIndexPageData(
             meta: new SeoData(
-                title: $web->categories_title,
-                description: $web->categories_desc,
+                title: $web->rooms_title,
+                description: $web->rooms_desc,
             ),
             categories: $categories,
         );

@@ -2,10 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Shop\Application\Queries;
+namespace App\Modules\Shop\Application\Queries\Category;
 
 use App\Modules\Shop\Application\DTOs\CategoryViewPageData;
-use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomData;
 use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomFilterData;
 use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Parts\FilterData;

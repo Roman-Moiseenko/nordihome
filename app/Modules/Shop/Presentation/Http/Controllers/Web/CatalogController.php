@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
 
-use App\Modules\Shop\Application\Queries\CategoryIndexQuery;
-use App\Modules\Shop\Application\Queries\CategoryPageQuery;
+use App\Modules\Shop\Application\Queries\Category\CategoryIndexQuery;
+use App\Modules\Shop\Application\Queries\Category\CategoryPageQuery;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Foundation\Application;
@@ -32,12 +32,12 @@ class CatalogController extends BaseController
 
     public function view(Request $request, $slug): View|Factory|\Illuminate\View\View
     {
-        $start = microtime(true);
+        //$start = microtime(true);
 
         $data = $this->categoryPageQuery->execute($slug, $request->all());
 
-        $time = (microtime(true) - $start);
-        \Log::info("CategoryPageQuery::execute время: " . number_format($time, 3, '.', '') . " сек");
+       // $time = (microtime(true) - $start);
+   //     \Log::info("CategoryPageQuery::execute время: " . number_format($time, 3, '.', '') . " сек");
 
         return view('shop.product.index', [
             'pageData' => $data,

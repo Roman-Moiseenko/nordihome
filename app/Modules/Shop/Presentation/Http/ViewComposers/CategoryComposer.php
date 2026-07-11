@@ -2,9 +2,10 @@
 
 namespace App\Modules\Shop\Presentation\Http\ViewComposers;
 
-use App\Modules\Shop\Application\Queries\GetCategoryTreeQuery;
+use App\Modules\Shop\Application\Queries\Category\GetCategoryTreeQuery;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\View\View;
+
 class CategoryComposer
 {
     public function __construct(

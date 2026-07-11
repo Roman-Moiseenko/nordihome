@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Presentation\Http\ViewComposers;
 
-use App\Modules\Shop\Application\Queries\GetIkeaTreeQuery;
+use App\Modules\Shop\Application\Queries\Ikea\GetIkeaTreeQuery;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\View\View;
 

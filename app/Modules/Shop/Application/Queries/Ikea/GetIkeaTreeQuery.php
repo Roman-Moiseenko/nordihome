@@ -1,25 +1,22 @@
 <?php
 
-declare(strict_types=1);
+namespace App\Modules\Shop\Application\Queries\Ikea;
 
-namespace App\Modules\Shop\Application\Queries;
-
-use App\Modules\Shop\Application\DTOs\RoomTreeClientData;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
-use App\Modules\Shop\Infrastructure\Persistence\Query\RoomTreeQueryRepository;
-use Illuminate\Contracts\Cache\LockTimeoutException;
+use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaTreeQueryRepository;
 use Illuminate\Support\Facades\Cache;
 
-class GetRoomTreeQuery
+class GetIkeaTreeQuery
 {
-    private const CACHE_KEY = CacheInvalidationRegistry::ROOM_TREE;
+    private const CACHE_KEY = CacheInvalidationRegistry::IKEA_CATEGORY_INDEX_PAGE;
 
     public function __construct(
-        private RoomTreeQueryRepository $repository
+        private IkeaTreeQueryRepository $repository
     ) {}
 
-    /** @return RoomTreeClientData[]
-     * @throws LockTimeoutException
+    /**
+     * @return array
+     * @throws \Illuminate\Contracts\Cache\LockTimeoutException
      */
     public function execute(): array
     {

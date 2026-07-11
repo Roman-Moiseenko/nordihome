@@ -77,4 +77,48 @@ class RoomTreeQueryRepository
             isThumbEnabled: (bool) $item->photo_thumb,
         );
     }
+
+
+    /**
+     * Получить детей категории. Если $parentId = null — корневые категории.
+     * @return RoomTreeClientData[]
+     */
+    public function getChildren(?int $parentId = null): array
+    {
+        $query = DB::table('rooms')
+            ->leftJoin('photos', function ($join) {
+                $join->on('rooms.id', '=', 'photos.imageable_id')
+                    ->where('photos.model_type', '=', self::MODEL_TYPE)
+                    ->where('photos.type', '=', 'image');
+            })
+            ->select(
+                'rooms.id',
+                'rooms.name',
+                'rooms.slug',
+                'rooms.svg',
+                'rooms.parent_id',
+                'photos.id as photo_id',
+                'photos.file as photo_file',
+                'photos.thumb as photo_thumb',
+            )
+            ->orderBy('rooms._lft');
+
+        if ($parentId === null) {
+            $query->whereNull('rooms.parent_id')
+                ->where('rooms.slug', '<>', 'no_parse');
+        } else {
+            $query->where('rooms.parent_id', $parentId);
+        }
+
+        $rows = $query->get();
+
+        return $rows->map(fn($row) => new RoomTreeClientData(
+            id: $row->id,
+            name: $row->name,
+            slug: $row->slug,
+            svg: $row->svg ?? '',
+            image: $this->buildImageUrl($row),
+            children: [],
+        ))->all();
+    }
 }
