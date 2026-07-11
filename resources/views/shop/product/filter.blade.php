@@ -1,30 +1,35 @@
 @php
-    use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomFilterData;
+    use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomMainData;
+    use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomSecondData;
     use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
     use App\Modules\Shop\Application\DTOs\Parts\FilterData;
     use App\Modules\Shop\Application\DTOs\Parts\UrlData;
     /** @var FilterData  $filters*/
-    /** @var CategoryRoomFilterData[]  $children*/
+    /** @var CategoryRoomSecondData $secondInfo */
+    /** @var CategoryRoomMainData $mainInfo */
     /** @var UrlData $back */
-    /** @var ChildrenData[] $rooms */
+
 @endphp
 <div class="filters">
     <div class="mobile-close"><i class="fa-light fa-xmark"></i></div>
     <div class="base-filter">
         <div class="children">
-            <a href="{{ $back->url }}">{{ $back->name }}</a>
-            @foreach($children as $child)
+            <a href="{{ $mainInfo->back->url }}">{{ $mainInfo->back->name }}</a>
+            <div>
+                <b>{{ $mainInfo->name }}</b>
+            </div>
+            @foreach($mainInfo->children as $child)
                 <div>
-                    <a href="{{ route('shop.category.view', $child->slug) }}">{{ $child->name }}</a>
+                    <a href="{{ route('shop.' . $mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
                 </div>
             @endforeach
         </div>
         <br>
-        <a href="{{ route('shop.room.index')}}">Комнаты</a>
+        <a href="{{ $secondInfo->back->url}}">{{ $secondInfo->back->name }}</a>
         <div class="children">
-            @foreach($rooms as $room)
+            @foreach($secondInfo->children as $child)
                 <div>
-                    <a href="{{ route('shop.room.view', $room->slug) }}">{{ $room->name }}</a>
+                    <a href="{{ route('shop.' . $secondInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
                 </div>
             @endforeach
         </div>

@@ -1,6 +1,6 @@
-@php use App\Modules\Shop\Application\DTOs\CategoryViewPageData; @endphp
+@php use App\Modules\Shop\Application\DTOs\ProductIndexPageData; @endphp
 @php
-    /** @var CategoryViewPageData $pageData */
+    /** @var ProductIndexPageData $pageData */
 @endphp
 @extends('shop.layouts.main')
 
@@ -13,8 +13,8 @@
     <div class="title-page">
         <div class="products-page-title">
             <div class="title h1">
-                <h1>{{ $pageData->category->name }}</h1>
-                <span>&nbsp;{{ count_product($pageData->category->totalProducts) }} </span>
+                <h1>{{ $pageData->mainInfo->name }}</h1>
+                <span>&nbsp;{{ count_product($pageData->mainInfo->totalProducts) }} </span>
             </div>
             <div class="order btn-group">
                 <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -63,8 +63,16 @@
                 </div>
             </div>
             <div class="filter-open"><i class="fa-sharp fa-light fa-filter-list"></i> Фильтры</div>
+
+
         </div>
         <div class="products-page-content d-flex position-relative">
+            @include('shop.product.filter',
+                     [
+                         'mainInfo' => $pageData->mainInfo,
+                         'secondInfo' => $pageData->secondInfo,
+                         'filters' => $pageData->filters,
+                     ])
             <div class="list">
                 <div class="products">
                     <div class="row">

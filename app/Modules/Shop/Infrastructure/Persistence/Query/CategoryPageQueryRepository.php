@@ -6,10 +6,9 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Entity\Attribute;
-use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
-use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomFilterData;
+use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomMainData;
 use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +23,7 @@ class CategoryPageQueryRepository
     {
     }
 
-    public function getCategory(string $slug): ?CategoryRoomFilterData
+    public function getCategory(string $slug): ?CategoryRoomMainData
     {
         $row = DB::table('categories')
             ->leftJoin('categories as parent', 'parent.id', '=', 'categories.parent_id')
@@ -37,13 +36,14 @@ class CategoryPageQueryRepository
         $childrenRows = DB::table('categories')->where('parent_id', $row->id)->get(['id', 'name', 'slug']);
         $children = $childrenRows->map(fn($c) => new ChildrenData($c->id, $c->name, $c->slug))->all();
 
-        return new CategoryRoomFilterData(
+        return new CategoryRoomMainData(
             id: $row->id,
             name: $row->name,
             slug: $row->slug,
             totalProducts: 0,
             children: $children,
-            parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug) : null
+            parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug) : null,
+            entity: 'category',
         );
     }
 

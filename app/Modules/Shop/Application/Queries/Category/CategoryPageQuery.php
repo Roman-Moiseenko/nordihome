@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\Queries\Category;
 
-use App\Modules\Shop\Application\DTOs\CategoryViewPageData;
-use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomFilterData;
+use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomSecondData;
+use App\Modules\Shop\Application\DTOs\ProductIndexPageData;
+use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomMainData;
 use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Parts\FilterData;
 use App\Modules\Shop\Application\DTOs\Parts\IdNameData;
@@ -28,7 +29,7 @@ readonly class CategoryPageQuery
     {
     }
 
-    public function execute(string $slug, array $params): ?CategoryViewPageData
+    public function execute(string $slug, array $params): ?ProductIndexPageData
     {
         $categoryInfo = $this->repository->getCategory($slug);
 
@@ -56,6 +57,11 @@ readonly class CategoryPageQuery
                 $roomsRaw,
             );
         }
+        $roomInfo = new CategoryRoomSecondData(
+            children: $rooms,
+            back: new UrlData(url: route('shop.room.index'), name: 'По комнатам'),
+            entity: 'room',
+        );
 
         $idPaginator = $this->repository->getPaginationProducts(
             $params, $allProductIds, $page, $perPage
@@ -68,6 +74,7 @@ readonly class CategoryPageQuery
             )
             : new UrlData(url: route('shop.category.index'), name: 'Каталог');
 
+        $categoryInfo->back = $urlBack;
         $categoryInfo->totalProducts = $idPaginator->total();
 
         $productIds = $idPaginator->items();
@@ -102,18 +109,19 @@ readonly class CategoryPageQuery
 
         $meta = $this->seoAdapter->getSeoFromCategoryInfo($categoryInfo);
 
-        return new CategoryViewPageData(
-            category: $categoryInfo,
-            rooms: $rooms,
+
+
+        return new ProductIndexPageData(
+            mainInfo: $categoryInfo,
+            secondInfo: $roomInfo,
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
             meta: new SeoData($meta->title, $meta->description),
-            back: $urlBack,
         );
     }
 
-    public function executeNew(array $params): CategoryViewPageData
+    public function executeNew(array $params): ProductIndexPageData
     {
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
@@ -147,26 +155,41 @@ readonly class CategoryPageQuery
             tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
         );
 
-        $categoryInfo = new CategoryRoomFilterData(
+        $categoryInfo = new CategoryRoomMainData(
             id: 0,
             name: 'Новинки',
             slug: 'novelty',
-            totalProducts: $idPaginator->total(),
             children: [],
-            parent: null,
-        );
-
-        return new CategoryViewPageData(
-            category: $categoryInfo,
-            rooms: [],
-            products: $productCards,
-            paginator: $paginator,
-            filters: $filtersWithOrder,
-            meta: new SeoData('Новинки', 'Новинки Икеа оригинал из Европы с доставкой по всей России. IKEA доступные цены! В наличии в интернет магазине NORDI HOME'),
+            entity: 'category',
             back: new UrlData(
                 url: route('shop.category.index'),
                 name: 'Каталог',
             ),
+            parent: null,
+            totalProducts: $idPaginator->total(),
+        );
+
+        $rooms = [];
+        if ($productIds) {
+            $roomsRaw = $this->repository->getRoomsByProductIds($productIds, $params);
+            $rooms = array_map(
+                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug),
+                $roomsRaw,
+            );
+        }
+        $roomInfo = new CategoryRoomSecondData(
+            children: $rooms,
+            back: new UrlData(url: route('shop.room.index'), name: 'По комнатам'),
+            entity: 'room',
+        );
+
+        return new ProductIndexPageData(
+            mainInfo: $categoryInfo,
+            secondInfo: $roomInfo,
+            products: $productCards,
+            paginator: $paginator,
+            filters: $filtersWithOrder,
+            meta: new SeoData('Новинки', 'Новинки Икеа оригинал из Европы с доставкой по всей России. IKEA доступные цены! В наличии в интернет магазине NORDI HOME'),
         );
     }
 

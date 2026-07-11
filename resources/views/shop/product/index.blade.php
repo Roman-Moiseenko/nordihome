@@ -1,6 +1,6 @@
 @php
-    use App\Modules\Shop\Application\DTOs\CategoryViewPageData;
-    /** @var CategoryViewPageData $pageData */
+    use App\Modules\Shop\Application\DTOs\ProductIndexPageData;
+    /** @var ProductIndexPageData $pageData */
 @endphp
 @extends('shop.layouts.main')
 @section('body', 'products')
@@ -13,8 +13,8 @@
     <div class="title-page">
         <div class="products-page-title">
             <div class="title h1">
-                <h1>{{ $pageData->category->name }} </h1>
-                <span>&nbsp;{{ count_product($pageData->category->totalProducts) }} </span>
+                <h1>{{ $pageData->mainInfo->name }} </h1>
+                <span>&nbsp;{{ count_product($pageData->mainInfo->totalProducts) }} </span>
             </div>
             <div class="order btn-group">
                 <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
@@ -66,19 +66,20 @@
         </div>
         <div class="products-page-content d-flex position-relative">
             @include('shop.product.filter',
-                     ['children' => $pageData->category->children, 'filters' => $pageData->filters,
-                     'back' => $pageData->back,
-                     'rooms' => $pageData->rooms,
+                     [
+                         'mainInfo' => $pageData->mainInfo,
+                         'secondInfo' => $pageData->secondInfo,
+                         'filters' => $pageData->filters,
                      ])
             <div class="list">
                 @if(count($pageData->filters->tags) > 0)
                     <div class="box-card top-tags">
                         @foreach($pageData->filters->tags as $tag)
                             @if($pageData->filters->tagId == $tag->id)
-                                <a href="{{ route('shop.category.view', [$pageData->category->slug]) }}"
+                                <a href="{{ route('shop.category.view', [$pageData->mainInfo->slug]) }}"
                                    class="tag-filter active" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
                             @else
-                                <a href="{{ route('shop.category.view', [$pageData->category->slug, 'tag_id' => $tag->id]) }}"
+                                <a href="{{ route('shop.category.view', [$pageData->mainInfo->slug, 'tag_id' => $tag->id]) }}"
                                    class="tag-filter" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
                             @endif
                         @endforeach
