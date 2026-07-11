@@ -12,28 +12,28 @@ use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Parts\FilterData;
 use App\Modules\Shop\Application\DTOs\Parts\IdNameData;
 use App\Modules\Shop\Application\DTOs\Parts\ImageInfoData;
-use App\Modules\Shop\Application\DTOs\Parts\PaginatorData;
 use App\Modules\Shop\Application\DTOs\Parts\ProductCardData;
 use App\Modules\Shop\Application\DTOs\Parts\PromotionProductData;
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
 use App\Modules\Shop\Application\DTOs\Parts\UrlData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepository;
+use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
 use Illuminate\Support\Facades\Cache;
 
 class CategoryPageQuery
 {
     public function __construct(
         private readonly CategoryPageQueryRepository $repository,
-        private readonly MetaTemplateRepository      $seoService,
-        private readonly PaginatorBuilder $paginatorBuilder,
-    ) {}
+        private readonly PaginatorBuilder            $paginatorBuilder,
+        private readonly SeoAdapter                  $seoAdapter,
+    )
+    {
+    }
 
     public function execute(string $slug, array $params): ?CategoryPageData
     {
         $categoryInfo = $this->repository->getCategory($slug);
-
-
 
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
@@ -53,47 +53,21 @@ class CategoryPageQuery
             $params, $allProductIds, $page, $perPage
         );
 
-        if ($categoryInfo->parent === null) {
-            $urlBack = new UrlData(
-                url: route('shop.category.index'),
-                name: 'Каталог',
-            );
-        } else {
-            $urlBack = new UrlData(
-                url: route('shop.category.view', $categoryInfo->slug),
-                name: $categoryInfo->name,
-            );
-        }
-
+        $urlBack = $categoryInfo->parent
+            ? new UrlData(
+                url: route('shop.category.view', $categoryInfo->parent->slug),
+                name: $categoryInfo->parent->name,
+            )
+            : new UrlData(url: route('shop.category.index'), name: 'Каталог');
 
         $categoryInfo->totalProducts = $idPaginator->total();
 
-        //$children = $this->getCachedChildren($category->id);
         $productIds = $idPaginator->items();
 
         $productCardsRaw = $this->repository->loadProductCards($productIds);
 
         $productCards = array_map(
-            fn(array $item) => new ProductCardData(
-                id: $item['id'],
-                name: $item['name'],
-                slug: $item['slug'],
-                code: $item['code'],
-                price: $item['price'],
-                rating: $item['rating'],
-                brand: $item['brand'],
-                priority: $item['priority'],
-                is_new: $item['is_new'],
-                reduced: $item['reduced'],
-                only_on_order: $item['only_on_order'],
-                is_sale: $item['is_sale'],
-                count_reviews: $item['count_reviews'],
-                price_previous: $item['price_previous'] ?? 0.0,
-                quantity: $item['quantity'] ?? 0.0,
-                image: ImageInfoData::fromArray($item['images']),
-                image_next: ImageInfoData::fromArray($item['images_next']),
-                promotion: PromotionProductData::fromArray($item['promotion']),
-            ),
+            fn(array $item) => ProductCardData::fromArray($item),
             $productCardsRaw
         );
 
@@ -118,8 +92,7 @@ class CategoryPageQuery
             tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
         );
 
-        //MAINDO !!!!!!!!!!!!!!!!!
-        $meta = new Meta(); //$this->seoService->seo($category);
+        $meta = $this->seoAdapter->getSeoFromCategoryInfo($categoryInfo);
 
         return new CategoryPageData(
             category: $categoryInfo,
@@ -138,45 +111,11 @@ class CategoryPageQuery
         $page = (int)($params['page'] ?? 1);
 
         $idPaginator = $this->repository->getNewProductIds($params, $page, $perPage);
-
         $productIds = $idPaginator->items();
-
         $productCardsRaw = $this->repository->loadProductCards($productIds);
 
-        // Сортируем карточки по порядку ID из пагинатора
-        $sortedCards = [];
-        $cardsById = [];
-        foreach ($productCardsRaw as $card) {
-            $cardsById[$card['id']] = $card;
-        }
-        foreach ($productIds as $id) {
-            if (isset($cardsById[$id])) {
-                $sortedCards[] = $cardsById[$id];
-            }
-        }
-        $productCardsRaw = $sortedCards;
-
         $productCards = array_map(
-            fn(array $item) => new ProductCardData(
-                id: $item['id'],
-                name: $item['name'],
-                slug: $item['slug'],
-                code: $item['code'],
-                price: $item['price'],
-                rating: $item['rating'],
-                brand: $item['brand'],
-                priority: $item['priority'],
-                is_new: $item['is_new'],
-                reduced: $item['reduced'],
-                only_on_order: $item['only_on_order'],
-                is_sale: $item['is_sale'],
-                count_reviews: $item['count_reviews'],
-                price_previous: $item['price_previous'] ?? 0.0,
-                quantity: $item['quantity'] ?? 0.0,
-                image: ImageInfoData::fromArray($item['images']),
-                image_next: ImageInfoData::fromArray($item['images_next']),
-                promotion: PromotionProductData::fromArray($item['promotion']),
-            ),
+            fn(array $item) => ProductCardData::fromArray($item),
             $productCardsRaw
         );
 

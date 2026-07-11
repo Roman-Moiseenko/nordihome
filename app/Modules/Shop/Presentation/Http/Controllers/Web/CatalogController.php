@@ -32,7 +32,13 @@ class CatalogController extends BaseController
 
     public function view(Request $request, $slug): View|Factory|\Illuminate\View\View
     {
+        $start = microtime(true);
+
         $data = $this->categoryPageQuery->execute($slug, $request->all());
+
+        $time = (microtime(true) - $start);
+        \Log::info("CategoryPageQuery::execute время: " . number_format($time, 3, '.', '') . " сек");
+
         return view('shop.product.index', [
             'pageData' => $data,
             'request' => $request->all(),

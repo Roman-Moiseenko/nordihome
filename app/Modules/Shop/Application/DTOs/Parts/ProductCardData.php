@@ -28,4 +28,28 @@ readonly class ProductCardData
     )
     {
     }
+
+    public static function fromArray(array $item): self
+    {
+        return new self(
+            id: $item['id'],
+            name: $item['name'],
+            slug: $item['slug'],
+            code: $item['code'],
+            price: $item['price'],
+            rating: $item['rating'],
+            brand: $item['brand'],
+            priority: $item['priority'],
+            is_new: $item['is_new'],
+            reduced: $item['reduced'],
+            only_on_order: $item['only_on_order'],
+            is_sale: $item['is_sale'],
+            count_reviews: $item['count_reviews'],
+            price_previous: $item['price_previous'] ?? 0.0,
+            quantity: $item['quantity'] ?? 0.0,
+            image: ImageInfoData::fromArray($item['images']),
+            image_next: ImageInfoData::fromArray($item['images_next']),
+            promotion: PromotionProductData::fromArray($item['promotion']),
+        );
+    }
 }

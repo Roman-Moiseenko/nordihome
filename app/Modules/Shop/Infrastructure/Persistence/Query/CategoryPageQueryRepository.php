@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
@@ -47,7 +48,7 @@ class CategoryPageQueryRepository
         );
     }
 
-    public function getProductIdsInCategory(int $categoryId)
+    public function getProductIdsInCategory(int $categoryId): ?array
     {
         $cat = DB::table('categories')
             ->where('id', $categoryId)
@@ -78,6 +79,7 @@ class CategoryPageQueryRepository
             })
             ->pluck('products.id')->toArray();
     }
+
     public function getPaginationProducts(array $filters, $allIds, int $page, int $perPage): LengthAwarePaginator
     {
         //$productIdsInCategory = $this->getProductIdsInCategory($categoryId);
@@ -452,16 +454,82 @@ class CategoryPageQueryRepository
         if (!empty($filters['tag_id'])) {
             $query->whereHas('tags', fn($q) => $q->where('id', $filters['tag_id']));
         }
+
+        $attrIds = [];
         foreach ($filters as $key => $value) {
             if (str_starts_with($key, 'a_')) {
-                $attrId = (int)substr($key, 2);
-                $attr = \App\Modules\Catalog\Entity\Attribute::find($attrId);
-                if (!$attr) continue;
-                if ($attr->isBool()) {
-                    $query->whereHas('prod_attributes', fn($q) => $q->where('attribute_id', $attrId));
-                }
+                $attrIds[] = (int)substr($key, 2);
             }
         }
+        $attrTypes = $this->getAttributeTypes($attrIds); // возвращает [id => type]
+
+
+        foreach ($filters as $key => $value) {
+            if (!str_starts_with($key, 'a_')) continue;
+            $attrId = (int)substr($key, 2);
+            $type = $attrTypes[$attrId] ?? null;
+            if (!$type) continue;
+
+            switch ($type) {
+                case Attribute::TYPE_BOOL:
+                    $query->whereHas('prod_attributes', fn($q) => $q->where('attribute_id', $attrId));
+                    break;
+
+                case Attribute::TYPE_INTEGER:
+                case Attribute::TYPE_FLOAT:
+                    $min = $value[0] ?? null;
+                    $max = $value[1] ?? null;
+                    if (!is_null($min) || !is_null($max)) {
+                        $query->whereHas('prod_attributes', function ($q) use ($attrId, $min, $max) {
+                            $q->where('attribute_id', $attrId);
+                            if (!is_null($min)) {
+                                $q->whereRaw('CAST(JSON_UNQUOTE(value) AS DECIMAL(10,2)) >= ?', [$min]);
+                            }
+                            if (!is_null($max)) {
+                                $q->whereRaw('CAST(JSON_UNQUOTE(value) AS DECIMAL(10,2)) <= ?', [$max]);
+                            }
+                        });
+                    }
+                    break;
+
+                case Attribute::TYPE_VARIANT:
+                    $variantIds = (array) $value; // массив ID вариантов
+                    if (!empty($variantIds)) {
+                        $query->where(function ($q) use ($attrId, $variantIds) {
+                            // Товары без модификаций
+                            $q->where(function ($sub) use ($attrId, $variantIds) {
+                                $sub->doesntHave('modification')
+                                    ->whereHas('prod_attributes', fn($attr) => $attr
+                                        ->where('attribute_id', $attrId)
+                                        ->whereIn('value', array_map(fn($v) => json_encode($v), $variantIds))
+                                    );
+                            });
+                            // Товары с модификациями, у которых хотя бы одна вариация подходит
+                            $q->orWhere(function ($sub) use ($attrId, $variantIds) {
+                                $sub->whereHas('modification', function ($mod) use ($attrId, $variantIds) {
+                                    $mod->whereHas('products', function ($prod) use ($attrId, $variantIds) {
+                                        $prod->where('not_sale', false)
+                                            ->whereHas('prod_attributes', fn($attr) => $attr
+                                                ->where('attribute_id', $attrId)
+                                                ->whereIn('value', array_map(fn($v) => json_encode($v), $variantIds))
+                                            );
+                                    });
+                                });
+                            });
+                        });
+                    }
+                    break;
+            }
+        }
+    }
+
+    private function getAttributeTypes(array $ids): array
+    {
+        if (empty($ids)) return [];
+        return DB::table('attributes')
+            ->whereIn('id', $ids)
+            ->pluck('type', 'id')
+            ->toArray();
     }
 
     private function applySorting($query, string $order): void
