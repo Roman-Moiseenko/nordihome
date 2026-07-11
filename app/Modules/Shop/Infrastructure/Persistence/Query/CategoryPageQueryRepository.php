@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
-use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomMainData;
@@ -19,6 +18,7 @@ class CategoryPageQueryRepository
 
     public function __construct(
         private readonly PhotoService $photoService,
+        private readonly AttributeQueryRepository $attributeQueryRepository,
     )
     {
     }
@@ -95,9 +95,9 @@ class CategoryPageQueryRepository
 
         $query = Product::whereIn('id', $allIds);
 
-        $this->applyFilters($query, $filters);
+        $this->attributeQueryRepository->applyFilters($query, $filters);
 
-        $this->applySorting($query, $filters['order'] ?? '');
+        $this->attributeQueryRepository->applySorting($query, $filters['order'] ?? '');
 
 
         // Пагинируем через Eloquent
@@ -124,7 +124,7 @@ class CategoryPageQueryRepository
             ->where('not_sale', false)
             ->where('published_at', '>', now()->subMonths(2));
 
-        $this->applySorting($query, $filters['order'] ?? '');
+        $this->attributeQueryRepository->applySorting($query, $filters['order'] ?? '');
 
         $paginator = $query->paginate($perPage, ['id'], 'page', $page);
 
@@ -285,7 +285,7 @@ class CategoryPageQueryRepository
 
         $query = Product::whereIn('id', $productIds);
 
-        $this->applyFilters($query, $filters);
+        $this->attributeQueryRepository->applyFilters($query, $filters);
         $productIds = $query->pluck('products.id')->toArray();
 
         if (empty($productIds)) return [];
@@ -325,225 +325,57 @@ class CategoryPageQueryRepository
             })
             ->pluck('id')->toArray();
 
-        $attrIdsFromCat = DB::table('attributes_categories')
-            ->whereIn('category_id', $categoryIds)
-            ->pluck('attribute_id')->unique()->toArray();
-
-        $attrIdsFromProd = DB::table('attributes_products')
-            ->whereIn('product_id', $productIds)
-            ->pluck('attribute_id')->unique()->toArray();
-
-        $attrIds = array_intersect($attrIdsFromCat, $attrIdsFromProd);
-        if (empty($attrIds)) return [];
-
-        $attributes = DB::table('attributes')
-            ->whereIn('id', $attrIds)->where('filter', true)
-            ->orderBy('group_id')->get();
-
-        $result = [];
-        foreach ($attributes as $attr) {
-            $item = ['id' => $attr->id, 'name' => $attr->name, 'type' => $attr->type];
-
-            if ($attr->type == 1) {
-                $values = DB::table('attributes_products')
-                    ->where('attribute_id', $attr->id)->whereIn('product_id', $productIds)
-                    ->pluck('value');
-                $decoded = [];
-                foreach ($values as $v) {
-                    $decoded[] = (int)json_decode($v);
-                }
-                if (!empty($decoded)) {
-                    $item['isNumeric'] = true;
-                    $item['min'] = min($decoded);
-                    $item['max'] = max($decoded);
-                }
-            } elseif ($attr->type == 3) {
-                $values = DB::table('attributes_products')
-                    ->where('attribute_id', $attr->id)->whereIn('product_id', $productIds)
-                    ->pluck('value');
-                $variantIds = [];
-                foreach ($values as $v) {
-                    $d = json_decode($v);
-                    if (is_array($d)) $variantIds = array_merge($variantIds, $d);
-                    else $variantIds[] = $d;
-                }
-                $variantIds = array_unique($variantIds);
-                if (!empty($variantIds)) {
-                    $variants = DB::table('attribute_variants')
-                        ->whereIn('id', $variantIds)->select(['id', 'name'])->orderBy('name')->get();
-                    $item['isVariant'] = true;
-                    $item['variants'] = $variants->map(fn($v) => ['id' => $v->id, 'name' => $v->name])->toArray();
-                }
-            } elseif ($attr->type == 2) {
-                $item['isBool'] = true;
-            }
-
-            if (isset($item['isNumeric']) || isset($item['isVariant']) || isset($item['isBool'])) {
-                $result[] = $item;
-            }
-        }
-
-        return $result;
+        return $this->attributeQueryRepository->getAttributesByCategoryIds($categoryIds, $productIds);
     }
 
     public function getAggregates(int $categoryId): object
     {
+        $productIds = $this->getProductIdsInCategory($categoryId);
+
+        return $this->attributeQueryRepository->getAggregatesByProductIds($productIds);
+    }
+
+    public function getFilterAggregates(int $categoryId): object
+    {
         $cat = DB::table('categories')
-            ->where('id', $categoryId)->select(['_lft', '_rgt'])->first();
+            ->where('id', $categoryId)
+            ->select(['_lft', '_rgt'])
+            ->first();
 
         if (!$cat) {
-            return (object)['min_price' => 0, 'max_price' => 0, 'brands' => [], 'tags' => []];
+            return (object)[
+                'min_price' => 0,
+                'max_price' => 0,
+                'brands' => [],
+                'tags' => [],
+                'attributes' => [],
+            ];
         }
 
         $productIds = $this->getProductIdsInCategory($categoryId);
 
         if (empty($productIds)) {
-            return (object)['min_price' => 0, 'max_price' => 0, 'brands' => [], 'tags' => []];
+            return (object)[
+                'min_price' => 0,
+                'max_price' => 0,
+                'brands' => [],
+                'tags' => [],
+                'attributes' => [],
+            ];
         }
 
-        $priceData = DB::table('product_prices')
-            ->whereIn('product_id', $productIds)->where('type', PriceType::RETAIL)
-            ->selectRaw('MIN(amount) as min_price, MAX(amount) as max_price')->first();
-
-        $brands = DB::table('products')
-            ->join('brands', 'products.brand_id', '=', 'brands.id')
-            ->whereIn('products.id', $productIds)->where('products.published', true)
-            ->select('brands.id', 'brands.name')->distinct()->orderBy('brands.name')
-            ->get()->toArray();
-
-        $tags = DB::table('tags_products')
-            ->join('tags', 'tags_products.tag_id', '=', 'tags.id')
-            ->whereIn('tags_products.product_id', $productIds)
-            ->select('tags.id', 'tags.name', 'tags.slug')->distinct()->orderBy('tags.name')
-            ->get()->toArray();
-
-        return (object)[
-            'min_price' => (float)($priceData->min_price ?? 0),
-            'max_price' => (float)($priceData->max_price ?? 0),
-            'brands' => $brands,
-            'tags' => $tags,
-        ];
-    }
-
-    public function getFilterAggregates(int $categoryId): object
-    {
-        $aggregates = $this->getAggregates($categoryId);
-        $aggregates->attributes = $this->getAttributesForCategory($categoryId);
-        return $aggregates;
-    }
-
-    private function applyFilters($query, array $filters): void
-    {
-        if (!empty($filters['price'])) {
-            $min = (float)($filters['price'][0] ?? 0);
-            $max = (float)($filters['price'][1] ?? 0);
-            if ($min > 0 || $max > 0) {
-                $query->whereHas('prices', function ($q) use ($min, $max) {
-                    $q->where('type', PriceType::RETAIL);
-                    if ($min > 0) $q->where('amount', '>=', $min);
-                    if ($max > 0) $q->where('amount', '<=', $max);
-                });
-            }
-        }
-
-        if (!empty($filters['brands'])) {
-            $query->whereIn('brand_id', $filters['brands']);
-        }
-        if (!empty($filters['tag_id'])) {
-            $query->whereHas('tags', fn($q) => $q->where('id', $filters['tag_id']));
-        }
-
-        $attrIds = [];
-        foreach ($filters as $key => $value) {
-            if (str_starts_with($key, 'a_')) {
-                $attrIds[] = (int)substr($key, 2);
-            }
-        }
-        $attrTypes = $this->getAttributeTypes($attrIds); // возвращает [id => type]
-
-
-        foreach ($filters as $key => $value) {
-            if (!str_starts_with($key, 'a_')) continue;
-            $attrId = (int)substr($key, 2);
-            $type = $attrTypes[$attrId] ?? null;
-            if (!$type) continue;
-
-            switch ($type) {
-                case Attribute::TYPE_BOOL:
-                    $query->whereHas('prod_attributes', fn($q) => $q->where('attribute_id', $attrId));
-                    break;
-
-                case Attribute::TYPE_INTEGER:
-                case Attribute::TYPE_FLOAT:
-                    $min = $value[0] ?? null;
-                    $max = $value[1] ?? null;
-                    if (!is_null($min) || !is_null($max)) {
-                        $query->whereHas('prod_attributes', function ($q) use ($attrId, $min, $max) {
-                            $q->where('attribute_id', $attrId);
-                            if (!is_null($min)) {
-                                $q->whereRaw('CAST(JSON_UNQUOTE(value) AS DECIMAL(10,2)) >= ?', [$min]);
-                            }
-                            if (!is_null($max)) {
-                                $q->whereRaw('CAST(JSON_UNQUOTE(value) AS DECIMAL(10,2)) <= ?', [$max]);
-                            }
-                        });
-                    }
-                    break;
-
-                case Attribute::TYPE_VARIANT:
-                    $variantIds = (array) $value; // массив ID вариантов
-                    if (!empty($variantIds)) {
-                        $query->where(function ($q) use ($attrId, $variantIds) {
-                            // Товары без модификаций
-                            $q->where(function ($sub) use ($attrId, $variantIds) {
-                                $sub->doesntHave('modification')
-                                    ->whereHas('prod_attributes', fn($attr) => $attr
-                                        ->where('attribute_id', $attrId)
-                                        ->whereIn('value', array_map(fn($v) => json_encode($v), $variantIds))
-                                    );
-                            });
-                            // Товары с модификациями, у которых хотя бы одна вариация подходит
-                            $q->orWhere(function ($sub) use ($attrId, $variantIds) {
-                                $sub->whereHas('modification', function ($mod) use ($attrId, $variantIds) {
-                                    $mod->whereHas('products', function ($prod) use ($attrId, $variantIds) {
-                                        $prod->where('not_sale', false)
-                                            ->whereHas('prod_attributes', fn($attr) => $attr
-                                                ->where('attribute_id', $attrId)
-                                                ->whereIn('value', array_map(fn($v) => json_encode($v), $variantIds))
-                                            );
-                                    });
-                                });
-                            });
-                        });
-                    }
-                    break;
-            }
-        }
-    }
-
-    private function getAttributeTypes(array $ids): array
-    {
-        if (empty($ids)) return [];
-        return DB::table('attributes')
-            ->whereIn('id', $ids)
-            ->pluck('type', 'id')
+        $categoryIds = DB::table('categories')
+            ->where('_lft', '<=', $cat->_lft)->where('_rgt', '>=', $cat->_rgt)
+            ->orWhere(function ($q) use ($cat) {
+                $q->where('_lft', '>=', $cat->_lft)->where('_rgt', '<=', $cat->_rgt);
+            })
+            ->pluck('id')
             ->toArray();
-    }
 
-    private function applySorting($query, string $order): void
-    {
-
-        match ($order) {
-            'price-down' => $query->reorder()
-                ->orderByRaw('COALESCE((SELECT amount FROM product_prices WHERE product_id = products.id AND type = \'' . PriceType::RETAIL . '\' ORDER BY id DESC LIMIT 1), 0) DESC')
-                ->orderBy('id'),
-            'price-up' => $query->reorder()
-                ->orderByRaw('COALESCE((SELECT amount FROM product_prices WHERE product_id = products.id AND type = \'' . PriceType::RETAIL . '\' ORDER BY id DESC LIMIT 1), 0) ASC')
-                ->orderBy('id'),
-            'name' => $query->reorder()->orderBy('name')->orderBy('id'),
-            'rating' => $query->reorder()->orderBy('current_rating', 'desc')->orderBy('id'),
-            default => $query->reorder()->orderBy('priority', 'desc')->orderBy('published_at', 'desc')->orderBy('id'),
-        };
+        return $this->attributeQueryRepository->getFilterAggregatesByCategoryIdsAndProductIds(
+            $categoryIds,
+            $productIds
+        );
     }
 
     private function buildImageDataFromRow(\stdClass $row, string $suffix = '1'): array
