@@ -11,7 +11,7 @@
     </div>
     <div class="row">
         @foreach($children as $category)
-            @include('shop.cards.catalog', ['category' => $category])
+            @include('shop.cards.card.category', ['category' => $category])
         @endforeach
     </div>
 

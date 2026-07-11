@@ -25,7 +25,7 @@ class CatalogController extends BaseController
     {
         $data = $this->categoryIndexQuery->execute();
 
-        return view('shop.catalog', [
+        return view('shop.catalog.category', [
             'pageData' => $data,
         ]);
     }

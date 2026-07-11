@@ -9,12 +9,12 @@ class RoomController extends Controller
 {
     public function index()
     {
-        return view('shop.room', ['rooms' => []]);
+        return view('shop.catalog.room', ['rooms' => []]);
     }
 
     public function view(Request $request, string $slug)
     {
         $page = $request->has('page');
-        return view('shop.room', ['room' => []]);
+        return view('shop.catalog.room', ['room' => []]);
     }
 }
