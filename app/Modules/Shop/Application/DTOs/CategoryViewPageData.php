@@ -10,7 +10,7 @@ use App\Modules\Shop\Application\DTOs\Parts\ProductCardData;
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
 use App\Modules\Shop\Application\DTOs\Parts\UrlData;
 
-class CategoryPageData
+class CategoryViewPageData
 {
     public function __construct(
         public CategoryInfo $category,

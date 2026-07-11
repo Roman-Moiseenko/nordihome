@@ -1,6 +1,6 @@
 @php
-    use App\Modules\Shop\Application\DTOs\CategoryPageData;
-    /** @var CategoryPageData $pageData */
+    use App\Modules\Shop\Application\DTOs\CategoryViewPageData;
+    /** @var CategoryViewPageData $pageData */
 @endphp
 @extends('shop.layouts.main')
 @section('body', 'products')
@@ -96,10 +96,10 @@
 
                 <div class="products-page-list--bottom">
                     @include('shop.widgets.paginator', ['paginator' => $pageData->paginator])
-            </div>
+                </div>
 
+            </div>
         </div>
-    </div>
     </form>
     <div class="recommendation-block">
 
@@ -111,7 +111,5 @@
             window.location.href = window.location.href.split("?")[0];
         });
     </script>
-
-
 
 @endsection

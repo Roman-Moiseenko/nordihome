@@ -12,13 +12,13 @@ readonly class ProductCardData
         public string               $slug,
         public string               $code,
         public float                $price,
-        public float                $rating,
+        public float                $rating, //рейтинг товара
         public string               $brand,
-        public bool                 $priority,
-        public bool                 $is_new,
-        public bool                 $reduced,
-        public bool                 $only_on_order,
-        public bool                 $is_sale = true,
+        public bool                 $priority, //приоритетный показ
+        public bool                 $is_new, // новый
+        public bool                 $reduced, //цена снижена
+        public bool                 $only_on_order, //только под заказ
+        public bool                 $is_sale = true,  //удалить .....
         public string               $count_reviews = '0 отзывов',
         public float                $price_previous = 0.0,
         public float                $quantity = 0.0,

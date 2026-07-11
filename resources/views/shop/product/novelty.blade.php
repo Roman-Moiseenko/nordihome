@@ -1,6 +1,6 @@
-@php use App\Modules\Shop\Application\DTOs\CategoryPageData; @endphp
+@php use App\Modules\Shop\Application\DTOs\CategoryViewPageData; @endphp
 @php
-    /** @var CategoryPageData $pageData */
+    /** @var CategoryViewPageData $pageData */
 @endphp
 @extends('shop.layouts.main')
 

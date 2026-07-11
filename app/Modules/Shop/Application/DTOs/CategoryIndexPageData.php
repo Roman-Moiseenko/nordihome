@@ -6,7 +6,7 @@ namespace App\Modules\Shop\Application\DTOs;
 
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
 
-readonly class CategoryIndexData
+readonly class CategoryIndexPageData
 {
 
     public function __construct(

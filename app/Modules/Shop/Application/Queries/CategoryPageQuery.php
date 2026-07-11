@@ -6,7 +6,7 @@ namespace App\Modules\Shop\Application\Queries;
 
 use App\Modules\Base\Entity\Meta;
 use App\Modules\Page\Repository\MetaTemplateRepository;
-use App\Modules\Shop\Application\DTOs\CategoryPageData;
+use App\Modules\Shop\Application\DTOs\CategoryViewPageData;
 use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;
 use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Parts\FilterData;
@@ -31,7 +31,7 @@ class CategoryPageQuery
     {
     }
 
-    public function execute(string $slug, array $params): ?CategoryPageData
+    public function execute(string $slug, array $params): ?CategoryViewPageData
     {
         $categoryInfo = $this->repository->getCategory($slug);
 
@@ -94,7 +94,7 @@ class CategoryPageQuery
 
         $meta = $this->seoAdapter->getSeoFromCategoryInfo($categoryInfo);
 
-        return new CategoryPageData(
+        return new CategoryViewPageData(
             category: $categoryInfo,
             rooms: $rooms,
             products: $productCards,
@@ -105,7 +105,7 @@ class CategoryPageQuery
         );
     }
 
-    public function executeNew(array $params): CategoryPageData
+    public function executeNew(array $params): CategoryViewPageData
     {
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
@@ -149,7 +149,7 @@ class CategoryPageQuery
             parent: null,
         );
 
-        return new CategoryPageData(
+        return new CategoryViewPageData(
             category: $categoryInfo,
             rooms: [],
             products: $productCards,
