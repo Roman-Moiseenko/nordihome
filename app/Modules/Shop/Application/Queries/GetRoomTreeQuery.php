@@ -5,13 +5,14 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Application\Queries;
 
 use App\Modules\Shop\Application\DTOs\RoomTreeClientData;
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomTreeQueryRepository;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
 
 class GetRoomTreeQuery
 {
-    private const CACHE_KEY = 'client_room_tree';
+    private const CACHE_KEY = CacheInvalidationRegistry::ROOM_TREE;
 
     public function __construct(
         private RoomTreeQueryRepository $repository

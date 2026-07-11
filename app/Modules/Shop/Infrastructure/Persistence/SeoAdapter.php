@@ -5,7 +5,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence;
 use App\Modules\Base\Entity\Meta;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Page\Repository\MetaTemplateRepository;
-use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;
+use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomFilterData;
 
 readonly class SeoAdapter
 {
@@ -16,7 +16,7 @@ readonly class SeoAdapter
     /**
      * Получить SEO-данные для категории, используя CategoryInfo (DTO).
      */
-    public function getSeoFromCategoryInfo(CategoryInfo $categoryInfo): Meta
+    public function getSeoFromCategoryInfo(CategoryRoomFilterData $categoryInfo): Meta
     {
         // Создаём временную модель, которая никогда не будет сохранена в БД
         $fakeModel = new Category();

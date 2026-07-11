@@ -3,12 +3,13 @@
 namespace App\Modules\Shop\Application\Queries;
 
 use App\Modules\Shop\Application\DTOs\CategoryTreeClientData;
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
 class GetCategoryTreeQuery
 {
-    private const CACHE_KEY = 'client_category_tree';
+    private const string CACHE_KEY = CacheInvalidationRegistry::CATEGORY_INDEX_PAGE;
 
     public function __construct(
         private CategoryTreeQueryRepository $repository

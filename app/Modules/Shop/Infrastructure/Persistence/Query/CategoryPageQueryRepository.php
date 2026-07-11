@@ -9,7 +9,7 @@ use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
-use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;
+use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomFilterData;
 use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +24,7 @@ class CategoryPageQueryRepository
     {
     }
 
-    public function getCategory(string $slug): ?CategoryInfo
+    public function getCategory(string $slug): ?CategoryRoomFilterData
     {
         $row = DB::table('categories')
             ->leftJoin('categories as parent', 'parent.id', '=', 'categories.parent_id')
@@ -37,11 +37,10 @@ class CategoryPageQueryRepository
         $childrenRows = DB::table('categories')->where('parent_id', $row->id)->get(['id', 'name', 'slug']);
         $children = $childrenRows->map(fn($c) => new ChildrenData($c->id, $c->name, $c->slug))->all();
 
-        return new CategoryInfo(
+        return new CategoryRoomFilterData(
             id: $row->id,
             name: $row->name,
             slug: $row->slug,
-            image: '',
             totalProducts: 0,
             children: $children,
             parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug) : null
@@ -260,15 +259,14 @@ class CategoryPageQueryRepository
                 'quantity' => (float)$qty,
                 'rating' => (float)$item->current_rating,
                 'brand' => $item->brand_name,
-                'image' => $this->buildProductImage($item),
                 'priority' => (bool)$item->priority,
                 'is_new' => $item->published_at && \Carbon\Carbon::parse($item->published_at)->gte(now()->subMonths(2)),
                 'reduced' => (bool)$item->price_reduced,
                 'only_on_order' => (bool)$item->only_on_order,
                 'is_sale' => !(bool)$item->not_sale,
                 'count_reviews' => $this->formatReviewCount($reviewTotal),
-                'images' => $imageData,
-                'images_next' => $imageNextData,
+                'image' => $imageData,
+                'image_next' => $imageNextData,
                 'promotion' => $promo
                     ? ['has' => true, 'price' => (float)$promo->price, 'title' => $promo->title]
                     : ['has' => false, 'price' => 0.0, 'title' => ''],

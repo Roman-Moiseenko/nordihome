@@ -6,15 +6,17 @@ namespace App\Modules\Shop\Application\Queries;
 
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Application\DTOs\CategoryIndexPageData;
+use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomData;
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
 use Illuminate\Support\Facades\Cache;
 
-class CategoryIndexQuery
+readonly class CategoryIndexQuery
 {
     public function __construct(
-        private readonly CategoryTreeQueryRepository $treeRepo,
-        private readonly Settings $settings,
+        private CategoryTreeQueryRepository $treeRepo,
+        private Settings                    $settings,
     )
     {
     }
@@ -24,9 +26,17 @@ class CategoryIndexQuery
         $web = $this->settings->web;
 
         $categories = Cache::remember(
-            'category_root_list',
+            CacheInvalidationRegistry::CATEGORY_INDEX_PAGE,
             now()->addDay(),
-            fn() => $this->treeRepo->getChildren(),
+            fn() => array_map(
+                fn($item) => new CategoryRoomData(
+                    id: $item->id,
+                    name: $item->name,
+                    slug: $item->slug,
+                    image: $item->image,
+                ),
+                $this->treeRepo->getChildren(),
+            ),
         );
 
         return new CategoryIndexPageData(

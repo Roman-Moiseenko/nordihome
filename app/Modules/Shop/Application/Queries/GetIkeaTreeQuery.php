@@ -2,12 +2,13 @@
 
 namespace App\Modules\Shop\Application\Queries;
 
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaTreeQueryRepository;
 use Illuminate\Support\Facades\Cache;
 
 class GetIkeaTreeQuery
 {
-    private const CACHE_KEY = 'client_ikea_tree';
+    private const CACHE_KEY = CacheInvalidationRegistry::IKEA_CATEGORY_INDEX_PAGE;
 
     public function __construct(
         private IkeaTreeQueryRepository $repository

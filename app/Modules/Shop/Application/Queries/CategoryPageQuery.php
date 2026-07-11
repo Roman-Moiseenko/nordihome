@@ -4,29 +4,27 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\Queries;
 
-use App\Modules\Base\Entity\Meta;
-use App\Modules\Page\Repository\MetaTemplateRepository;
 use App\Modules\Shop\Application\DTOs\CategoryViewPageData;
-use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;
+use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomData;
+use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomFilterData;
 use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Parts\FilterData;
 use App\Modules\Shop\Application\DTOs\Parts\IdNameData;
-use App\Modules\Shop\Application\DTOs\Parts\ImageInfoData;
 use App\Modules\Shop\Application\DTOs\Parts\ProductCardData;
-use App\Modules\Shop\Application\DTOs\Parts\PromotionProductData;
 use App\Modules\Shop\Application\DTOs\Parts\SeoData;
 use App\Modules\Shop\Application\DTOs\Parts\UrlData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
 use Illuminate\Support\Facades\Cache;
 
-class CategoryPageQuery
+readonly class CategoryPageQuery
 {
     public function __construct(
-        private readonly CategoryPageQueryRepository $repository,
-        private readonly PaginatorBuilder            $paginatorBuilder,
-        private readonly SeoAdapter                  $seoAdapter,
+        private CategoryPageQueryRepository $repository,
+        private PaginatorBuilder            $paginatorBuilder,
+        private SeoAdapter                  $seoAdapter,
     )
     {
     }
@@ -35,11 +33,22 @@ class CategoryPageQuery
     {
         $categoryInfo = $this->repository->getCategory($slug);
 
+        $key_cache = str_replace('{id}', (string)$categoryInfo->id, CacheInvalidationRegistry::CATEGORY_PRODUCTS_ID);
+
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
 
+
         // Все ID товаров категории после фиьтрации
-        $allProductIds = $this->repository->getProductIdsInCategory($categoryInfo->id);
+        //$allProductIds = $this->repository->getProductIdsInCategory($categoryInfo->id);
+
+        $allProductIds = Cache::remember(
+            $key_cache,
+            now()->addDay(),
+            fn() => $this->repository->getProductIdsInCategory($categoryInfo->id),
+        );
+
+
         $rooms = [];
         if ($allProductIds) {
             $roomsRaw = $this->repository->getRoomsByProductIds($allProductIds, $params);
@@ -139,11 +148,10 @@ class CategoryPageQuery
             tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
         );
 
-        $categoryInfo = new CategoryInfo(
+        $categoryInfo = new CategoryRoomFilterData(
             id: 0,
             name: 'Новинки',
             slug: 'novelty',
-            image: '',
             totalProducts: $idPaginator->total(),
             children: [],
             parent: null,

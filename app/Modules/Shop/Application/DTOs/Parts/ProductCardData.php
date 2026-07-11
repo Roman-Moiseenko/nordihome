@@ -47,8 +47,8 @@ readonly class ProductCardData
             count_reviews: $item['count_reviews'],
             price_previous: $item['price_previous'] ?? 0.0,
             quantity: $item['quantity'] ?? 0.0,
-            image: ImageInfoData::fromArray($item['images']),
-            image_next: ImageInfoData::fromArray($item['images_next']),
+            image: ImageInfoData::fromArray($item['image']),
+            image_next: ImageInfoData::fromArray($item['image_next']),
             promotion: PromotionProductData::fromArray($item['promotion']),
         );
     }

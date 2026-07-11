@@ -1,10 +1,10 @@
 @php
-    use App\Modules\Shop\Application\DTOs\Parts\CategoryInfo;
+    use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomFilterData;
     use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
     use App\Modules\Shop\Application\DTOs\Parts\FilterData;
     use App\Modules\Shop\Application\DTOs\Parts\UrlData;
     /** @var FilterData  $filters*/
-    /** @var CategoryInfo[]  $children*/
+    /** @var CategoryRoomFilterData[]  $children*/
     /** @var UrlData $back */
     /** @var ChildrenData[] $rooms */
 @endphp
@@ -12,7 +12,7 @@
     <div class="mobile-close"><i class="fa-light fa-xmark"></i></div>
     <div class="base-filter">
         <div class="children">
-            <a href="{{ $back->url }}" >{{ $back->name }}</a>
+            <a href="{{ $back->url }}">{{ $back->name }}</a>
             @foreach($children as $child)
                 <div>
                     <a href="{{ route('shop.category.view', $child->slug) }}">{{ $child->name }}</a>
@@ -20,7 +20,7 @@
             @endforeach
         </div>
         <br>
-        <a href="{{ route('shop.room.index')}}" >Комнаты</a>
+        <a href="{{ route('shop.room.index')}}">Комнаты</a>
         <div class="children">
             @foreach($rooms as $room)
                 <div>

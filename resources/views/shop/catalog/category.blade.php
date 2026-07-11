@@ -1,6 +1,6 @@
-@php use App\Modules\Catalog\Application\DTOs\Category\CategoryIndexData; @endphp
 @php
-    /** @var CategoryIndexData $pageData */
+    use App\Modules\Shop\Application\DTOs\CategoryIndexPageData;
+    /** @var CategoryIndexPageData $pageData */
 @endphp
 
 @extends('shop.layouts.main')
