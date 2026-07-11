@@ -95,7 +95,7 @@ readonly class CategoryPageQuery
             perPage: $perPage,
             currentPage: $page,
             options: [
-                'path' => request()->path(),
+                'path' => '/' . request()->path(),
                 'query' => array_diff_key(request()->query(), ['page' => null]),
             ]
         );
@@ -145,7 +145,7 @@ readonly class CategoryPageQuery
             perPage: $perPage,
             currentPage: $page,
             options: [
-                'path' => request()->path(),
+                'path' => '/' . request()->path(),
                 'query' => array_diff_key(request()->query(), ['page' => null]),
             ]
         );

@@ -86,6 +86,7 @@ Route::group(
             'as' => 'room.',
             'prefix' => 'room',
         ], function () {
+
             Route::get('/', [RoomController::class, 'index'])->name('index');
             Route::get('/{slug}', [RoomController::class, 'view'])->name('view');
 
