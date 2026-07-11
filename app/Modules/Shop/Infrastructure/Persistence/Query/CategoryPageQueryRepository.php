@@ -40,10 +40,10 @@ class CategoryPageQueryRepository
             id: $row->id,
             name: $row->name,
             slug: $row->slug,
-            totalProducts: 0,
             children: $children,
-            parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug) : null,
             entity: 'category',
+            parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug) : null,
+            totalProducts: 0,
         );
     }
 

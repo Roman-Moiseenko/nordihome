@@ -31,9 +31,9 @@ readonly class CategoryPageQuery
 
     public function execute(string $slug, array $params): ?ProductIndexPageData
     {
-        $categoryInfo = $this->repository->getCategory($slug);
+        $mainInfo = $this->repository->getCategory($slug);
 
-        $key_cache = str_replace('{id}', (string)$categoryInfo->id, CacheInvalidationRegistry::CATEGORY_PRODUCTS_ID);
+        $key_cache = str_replace('{id}', (string)$mainInfo->id, CacheInvalidationRegistry::CATEGORY_PRODUCTS_ID);
 
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
@@ -45,7 +45,7 @@ readonly class CategoryPageQuery
         $allProductIds = Cache::remember(
             $key_cache,
             now()->addDay(),
-            fn() => $this->repository->getProductIdsInCategory($categoryInfo->id),
+            fn() => $this->repository->getProductIdsInCategory($mainInfo->id),
         );
 
 
@@ -57,7 +57,7 @@ readonly class CategoryPageQuery
                 $roomsRaw,
             );
         }
-        $roomInfo = new CategoryRoomSecondData(
+        $secondInfo = new CategoryRoomSecondData(
             children: $rooms,
             back: new UrlData(url: route('shop.room.index'), name: 'По комнатам'),
             entity: 'room',
@@ -67,15 +67,15 @@ readonly class CategoryPageQuery
             $params, $allProductIds, $page, $perPage
         );
 
-        $urlBack = $categoryInfo->parent
+        $urlBack = $mainInfo->parent
             ? new UrlData(
-                url: route('shop.category.view', $categoryInfo->parent->slug),
-                name: $categoryInfo->parent->name,
+                url: route('shop.category.view', $mainInfo->parent->slug),
+                name: $mainInfo->parent->name,
             )
             : new UrlData(url: route('shop.category.index'), name: 'Каталог');
 
-        $categoryInfo->back = $urlBack;
-        $categoryInfo->totalProducts = $idPaginator->total();
+        $mainInfo->back = $urlBack;
+        $mainInfo->totalProducts = $idPaginator->total();
 
         $productIds = $idPaginator->items();
 
@@ -96,7 +96,7 @@ readonly class CategoryPageQuery
             ]
         );
 
-        $filters = $this->getCachedFilters($categoryInfo->id);
+        $filters = $this->getCachedFilters($mainInfo->id);
         $filtersWithOrder = new FilterData(
             minPrice: $filters->minPrice,
             maxPrice: $filters->maxPrice,
@@ -107,13 +107,13 @@ readonly class CategoryPageQuery
             tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
         );
 
-        $meta = $this->seoAdapter->getSeoFromCategoryInfo($categoryInfo);
+        $meta = $this->seoAdapter->getSeoFromCategoryInfo($mainInfo);
 
 
 
         return new ProductIndexPageData(
-            mainInfo: $categoryInfo,
-            secondInfo: $roomInfo,
+            mainInfo: $mainInfo,
+            secondInfo: $secondInfo,
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
@@ -155,7 +155,7 @@ readonly class CategoryPageQuery
             tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
         );
 
-        $categoryInfo = new CategoryRoomMainData(
+        $mainInfo = new CategoryRoomMainData(
             id: 0,
             name: 'Новинки',
             slug: 'novelty',
@@ -177,15 +177,15 @@ readonly class CategoryPageQuery
                 $roomsRaw,
             );
         }
-        $roomInfo = new CategoryRoomSecondData(
+        $secondInfo = new CategoryRoomSecondData(
             children: $rooms,
             back: new UrlData(url: route('shop.room.index'), name: 'По комнатам'),
             entity: 'room',
         );
 
         return new ProductIndexPageData(
-            mainInfo: $categoryInfo,
-            secondInfo: $roomInfo,
+            mainInfo: $mainInfo,
+            secondInfo: $secondInfo,
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
