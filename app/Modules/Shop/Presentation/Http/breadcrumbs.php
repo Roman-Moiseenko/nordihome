@@ -29,17 +29,12 @@ Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) 
     // \Log::info('shop.category.view ' .$slug);
     $category = (new SlugRepository())->CategoryBySlug($slug);
     if (is_null($category)) {
-        if ($settings->web->is_category) $trail->parent('shop.category.index');
-        $trail->push('Категория не найдена');
+        $trail->parent('shop.category.index');
     } else {
         if ($category->parent) {
             $trail->parent('shop.category.view', $category->parent_id);
         } else {
-            if ($settings->web->is_category) {
-                $trail->parent('shop.category.index');
-            } else {
-                $trail->parent('shop.home');
-            }
+            $trail->parent('shop.category.index');
         }
         $trail->push($category->name, route('shop.category.view', $category->slug));
     }
@@ -50,6 +45,23 @@ Breadcrumbs::for('shop.room.index', function (BreadcrumbTrail $trail) { //Без
     $trail->parent('shop.home');
     $trail->push('По комнатам', route('shop.room.index'));
 });
+
+Breadcrumbs::for('shop.room.view', function (BreadcrumbTrail $trail, $slug) use ($settings) { //Без указания главной - home
+    // \Log::info('shop.category.view ' .$slug);
+    $room = (new SlugRepository())->RoomBySlug($slug);
+    if (is_null($room)) {
+        $trail->parent('shop.room.index');
+
+    } else {
+        if (!is_null($room->parent_id)) {
+            $trail->parent('shop.room.view', $room->parent_id);
+        } else {
+            $trail->parent('shop.room.index');
+        }
+        $trail->push($room->name, route('shop.room.view', $room->slug));
+    }
+});
+
 
 // ИКЕА КАТАЛОГ
 Breadcrumbs::for('shop.ikea.index', function (BreadcrumbTrail $trail) { //Без указания главной - home

@@ -184,6 +184,49 @@ class AttributeQueryRepository
         ];
     }
 
+
+    public function getFilterAggregates(array $categoryIds, array $productIds): object
+    {
+        $cat = DB::table('categories')
+            ->whereIn('id', $categoryIds)
+            ->select(['_lft', '_rgt'])
+            ->first();
+
+        if (!$cat) {
+            return (object)[
+                'min_price' => 0,
+                'max_price' => 0,
+                'brands' => [],
+                'tags' => [],
+                'attributes' => [],
+            ];
+        }
+
+        if (empty($productIds)) {
+            return (object)[
+                'min_price' => 0,
+                'max_price' => 0,
+                'brands' => [],
+                'tags' => [],
+                'attributes' => [],
+            ];
+        }
+
+        $categoryIds = DB::table('categories')
+            ->where('_lft', '<=', $cat->_lft)->where('_rgt', '>=', $cat->_rgt)
+            ->orWhere(function ($q) use ($cat) {
+                $q->where('_lft', '>=', $cat->_lft)->where('_rgt', '<=', $cat->_rgt);
+            })
+            ->pluck('id')
+            ->toArray();
+
+        return $this->getFilterAggregatesByCategoryIdsAndProductIds(
+            $categoryIds,
+            $productIds
+        );
+    }
+
+
     /**
      * Получить полные данные для фильтров (агрегаты + атрибуты).
      *

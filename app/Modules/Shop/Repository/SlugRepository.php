@@ -6,6 +6,7 @@ namespace App\Modules\Shop\Repository;
 use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
@@ -42,6 +43,16 @@ class SlugRepository
             $category = Category::where('slug', '=', $slug)->first();
         }
         return $category;
+    }
+
+    public function RoomBySlug($slug):? Room
+    {
+        if (is_numeric($slug)) {
+            $room = Room::find($slug);
+        } else {
+            $room = Room::where('slug', '=', $slug)->first();
+        }
+        return $room;
     }
 
     public function PageBySlug(string $slug): Page

@@ -29,7 +29,7 @@ class RoomController extends Controller
     public function view(Request $request, string $slug)
     {
         $data = $this->roomPageQuery->execute($slug, $request->all());
-        return view('shop.catalog.room', [
+        return view('shop.product.index', [
             'pageData' => $data,
             'request' => $request->all(),
         ]);

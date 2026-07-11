@@ -59,7 +59,7 @@ class RoomPageQueryRepository
                     $sq->select(DB::raw(1))
                         ->from('rooms_products')
                         ->whereColumn('rooms_products.product_id', 'products.id')
-                        ->join('rooms', 'rooms.id', '=', 'rooms_products.category_id')
+                        ->join('rooms', 'rooms.id', '=', 'rooms_products.room_id')
                         ->where('rooms._lft', '>=', $room->_lft)
                         ->where('rooms._rgt', '<=', $room->_rgt);
                 });
@@ -124,4 +124,46 @@ class RoomPageQueryRepository
             ->get()
             ->toArray();
     }
+
+    public function getFilterAggregates(array $categoryIds, array $productIds)
+    {
+        $cat = DB::table('categories')
+            ->whereIn('id', $categoryIds)
+            ->select(['_lft', '_rgt'])
+            ->first();
+
+        if (!$cat) {
+            return (object)[
+                'min_price' => 0,
+                'max_price' => 0,
+                'brands' => [],
+                'tags' => [],
+                'attributes' => [],
+            ];
+        }
+
+        if (empty($productIds)) {
+            return (object)[
+                'min_price' => 0,
+                'max_price' => 0,
+                'brands' => [],
+                'tags' => [],
+                'attributes' => [],
+            ];
+        }
+
+        $categoryIds = DB::table('categories')
+            ->where('_lft', '<=', $cat->_lft)->where('_rgt', '>=', $cat->_rgt)
+            ->orWhere(function ($q) use ($cat) {
+                $q->where('_lft', '>=', $cat->_lft)->where('_rgt', '<=', $cat->_rgt);
+            })
+            ->pluck('id')
+            ->toArray();
+
+        return $this->attributeQueryRepository->getFilterAggregatesByCategoryIdsAndProductIds(
+            $categoryIds,
+            $productIds
+        );
+    }
+
 }

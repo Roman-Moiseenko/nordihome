@@ -2,6 +2,8 @@
 
 namespace App\Modules\Shop\Application\Queries\Room;
 
+use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomSecondData;
+use App\Modules\Shop\Application\DTOs\Parts\IdNameData;
 use App\Modules\Shop\Application\DTOs\ProductIndexPageData;
 use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Parts\FilterData;
@@ -10,16 +12,21 @@ use App\Modules\Shop\Application\DTOs\Parts\SeoData;
 use App\Modules\Shop\Application\DTOs\Parts\UrlData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
+use App\Modules\Shop\Infrastructure\Persistence\Query\AttributeQueryRepository;
+use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
 use Illuminate\Support\Facades\Cache;
 
-class RoomPageQuery
+readonly class RoomPageQuery
 {
     public function __construct(
         private RoomPageQueryRepository $repository,
         private PaginatorBuilder            $paginatorBuilder,
         private SeoAdapter                  $seoAdapter,
+        private ProductIndexQueryRepository $productIndexQueryRepository,
+        private AttributeQueryRepository     $attributeQueryRepository,
+
     )
     {
     }
@@ -34,6 +41,9 @@ class RoomPageQuery
         $page = (int)($params['page'] ?? 1);
 
 
+        /**
+         * $allProductIds - Список всех ID товаров без фильтрации
+         */
         $allProductIds = Cache::remember(
             $key_cache,
             now()->addDay(),
@@ -51,9 +61,7 @@ class RoomPageQuery
         }
 
 
-        $idPaginator = $this->repository->getPaginationProducts(
-            $params, $allProductIds, $page, $perPage
-        );
+        $idPaginator = $this->productIndexQueryRepository->getFilterSortPaginationProducts($params, $allProductIds, $page, $perPage);
 
         $urlBack = $mainInfo->parent
             ? new UrlData(
@@ -61,18 +69,26 @@ class RoomPageQuery
                 name: $mainInfo->parent->name,
             )
             : new UrlData(url: route('shop.room.index'), name: 'Комнаты');
-
+        $mainInfo->back = $urlBack;
         $mainInfo->totalProducts = $idPaginator->total();
 
+        /**
+         * $productIds - Список всех ID товаров уже с фильтрацией
+         */
         $productIds = $idPaginator->items();
 
-        $productCardsRaw = $this->repository->loadProductCards($productIds);
+        $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds);
 
         $productCards = array_map(
             fn(array $item) => ProductCardData::fromArray($item),
             $productCardsRaw
         );
 
+        $secondInfo = new CategoryRoomSecondData(
+            children: $categories,
+            back: new UrlData(url: route('shop.category.index'), name: 'По категориям'),
+            entity: 'category',
+        );
         $paginator = $this->paginatorBuilder->build(
             total: $idPaginator->total(),
             perPage: $perPage,
@@ -83,7 +99,10 @@ class RoomPageQuery
             ]
         );
 
-        $filters = $this->getCachedFilters($mainInfo->id);
+        $filters = $this->getCachedFilters($mainInfo->id,
+            array_map(fn(ChildrenData $cat) => $cat->id, $categories),
+            $allProductIds,
+        );
         $filtersWithOrder = new FilterData(
             minPrice: $filters->minPrice,
             maxPrice: $filters->maxPrice,
@@ -98,12 +117,40 @@ class RoomPageQuery
 
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
-            rooms: $categories,
+            secondInfo: $secondInfo,
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
             meta: new SeoData($meta->title, $meta->description),
-            back: $urlBack,
+        );
+    }
+
+    private function getCachedFilters(int $roomId, array $categoryIds, array $productIds): FilterData
+    {
+        return Cache::remember(
+            "room_filters_{$roomId}",
+            now()->addDay(),
+            function () use ($productIds, $categoryIds, $roomId) {
+                $aggr = $this->attributeQueryRepository->getFilterAggregates($categoryIds, $productIds);
+
+                $brands = array_map(
+                    fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),
+                    $aggr->brands ?? []
+                );
+
+                $tags = array_map(
+                    fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),
+                    $aggr->tags ?? []
+                );
+
+                return new FilterData(
+                    minPrice: $aggr->min_price ?? 0,
+                    maxPrice: $aggr->max_price ?? 0,
+                    attributes: $aggr->attributes ?? [],
+                    brands: $brands,
+                    tags: $tags,
+                );
+            }
         );
     }
 }
