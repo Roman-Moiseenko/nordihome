@@ -17,7 +17,7 @@ class IkeaProductQuery
     {
     }
 
-    public function execute(): IkeaProductPageData
+    public function execute(string $slug): IkeaProductPageData
     {
         $web = $this->settings->web;
 

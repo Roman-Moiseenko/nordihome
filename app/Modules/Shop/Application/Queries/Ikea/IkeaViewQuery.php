@@ -29,7 +29,7 @@ readonly class IkeaViewQuery
     {
     }
 
-    public function execute(string $slug): IkeaViewPageData
+    public function execute(string $slug, array $params): IkeaViewPageData
     {
         $web = $this->settings->web;
 
@@ -87,19 +87,10 @@ readonly class IkeaViewQuery
         );
     }
 
-    private function getIkeaProductData(ParserProduct $product)
+    private function getIkeaProductData(array $product)
     {
 
-        return new IkeaProductCardData(
-            id: $product->id,
-            name: $product->name,
-            slug: $product->slug,
-            code: $product->code,
-            price: $product->price_sell, //MAINDO - пересчитать в рубли
-            short: $product->short,
-            image: ImageInfoData::fromArray($item['image']),
-            image_next: ImageInfoData::fromArray($item['image_next']),
-        );
+        return IkeaProductCardData::fromArray($product);
     }
 
 

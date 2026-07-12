@@ -29,8 +29,6 @@ class IkeaController
     {
         $data = $this->ikeaViewQuery->execute($slug, $request->all());
 
-        dd($data);
-
         return view('shop.ikea.view', [
             'pageData' => $data,
             'request' => $request->all(),
@@ -39,6 +37,7 @@ class IkeaController
 
     public function product(Request $request, string $slug)
     {
+
         $data = $this->ikeaProductQuery->execute($slug);
 
         return view('shop.ikea.product', [

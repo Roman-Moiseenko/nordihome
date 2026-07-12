@@ -62,6 +62,22 @@ Breadcrumbs::for('shop.room.view', function (BreadcrumbTrail $trail, $slug) use 
     }
 });
 
+Breadcrumbs::for('shop.ikea.view', function (BreadcrumbTrail $trail, $slug) use ($settings) { //Без указания главной - home
+    // \Log::info('shop.category.view ' .$slug);
+    $ikeaBySlug = (new SlugRepository())->CategoryParserBySlug($slug);
+    if (is_null($ikeaBySlug)) {
+        $trail->parent('shop.ikea.index');
+
+    } else {
+        if (!is_null($ikeaBySlug->parent_id)) {
+            $trail->parent('shop.ikea.view', $ikeaBySlug->parent_id);
+        } else {
+            $trail->parent('shop.ikea.index');
+        }
+        $trail->push($ikeaBySlug->name, route('shop.ikea.view', $ikeaBySlug->slug));
+    }
+});
+
 
 // ИКЕА КАТАЛОГ
 Breadcrumbs::for('shop.ikea.index', function (BreadcrumbTrail $trail) { //Без указания главной - home
