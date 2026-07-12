@@ -111,14 +111,15 @@ class MetaTemplateRepository
     }
 
 
-    private function GetValue($object, string $var): string
+    private function GetValue($object, string $var):? string
     {
+
         if ($object instanceof Product) {
             return match ($var) {
                 '{name}' => $object->name,
                 '{code}' => $object->code,
                 '{category}' => $object->category->name,
-                '{price}' => price($object->getPrice()),
+                '{price}' => price($object->price),
             };
         }
 
