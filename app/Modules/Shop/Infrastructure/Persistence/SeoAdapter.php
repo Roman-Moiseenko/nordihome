@@ -5,7 +5,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence;
 use App\Modules\Base\Entity\Meta;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Page\Repository\MetaTemplateRepository;
-use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomMainData;
+use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
 
 readonly class SeoAdapter
 {

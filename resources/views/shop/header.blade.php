@@ -45,8 +45,9 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="/images/nordihome/logo-nordi-home-2.svg" alt="Nordi Home" class="img-fluid img-logo">
                 </a>
-
+                <a href="{{ route('shop.category.index') }}">Категории</a>
                 <!--- TODO  Каталог виджет --->
+                <a href="{{ route('shop.room.index') }}">Комнаты</a>
                 <!--- TODO  Комнаты виджет --->
 
 

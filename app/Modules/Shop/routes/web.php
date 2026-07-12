@@ -79,6 +79,8 @@ Route::group(
             'prefix' => 'ikea',
         ], function () {
             Route::get('/', [IkeaController::class, 'index'])->name('index');
+            Route::get('/category/{slug}', [IkeaController::class, 'view'])->name('view');
+            Route::get('/product/{slug}', [IkeaController::class, 'product'])->name('product');
 
         });
 

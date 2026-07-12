@@ -1,6 +1,9 @@
 <?php
 
-namespace App\Modules\Shop\Application\DTOs\Parts;
+namespace App\Modules\Shop\Application\DTOs\Entities;
+use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
+use App\Modules\Shop\Application\DTOs\Elements\UrlData;
+
 class CategoryRoomSecondData
 {
     public function __construct(

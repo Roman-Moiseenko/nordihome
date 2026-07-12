@@ -2,15 +2,17 @@
 
 namespace App\Modules\Shop\Application\Queries\Room;
 
-use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomSecondData;
-use App\Modules\Shop\Application\DTOs\Parts\IdNameData;
-use App\Modules\Shop\Application\DTOs\ProductIndexPageData;
-use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
-use App\Modules\Shop\Application\DTOs\Parts\FilterData;
-use App\Modules\Shop\Application\DTOs\Parts\ProductCardData;
-use App\Modules\Shop\Application\DTOs\Parts\SeoData;
-use App\Modules\Shop\Application\DTOs\Parts\UrlData;
+use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
+use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
+use App\Modules\Shop\Application\DTOs\Elements\UrlData;
+use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
+use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
+use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
+use App\Modules\Shop\Application\DTOs\PageElements\SchemaData;
+use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
+use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
+use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\AttributeQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
@@ -21,12 +23,12 @@ use Illuminate\Support\Facades\Cache;
 readonly class RoomPageQuery
 {
     public function __construct(
-        private RoomPageQueryRepository $repository,
+        private RoomPageQueryRepository     $repository,
         private PaginatorBuilder            $paginatorBuilder,
         private SeoAdapter                  $seoAdapter,
         private ProductIndexQueryRepository $productIndexQueryRepository,
-        private AttributeQueryRepository     $attributeQueryRepository,
-
+        private AttributeQueryRepository    $attributeQueryRepository,
+        private SchemaBuilder               $schemaBuilder,
     )
     {
     }
@@ -115,6 +117,8 @@ readonly class RoomPageQuery
 
         $meta = $this->seoAdapter->getSeoFromCategoryInfo($mainInfo);
 
+        //FIXME
+        $schema = $this->schemaBuilder->createSchema();
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,
@@ -122,6 +126,7 @@ readonly class RoomPageQuery
             paginator: $paginator,
             filters: $filtersWithOrder,
             meta: new SeoData($meta->title, $meta->description),
+            schema: $schema,
         );
     }
 

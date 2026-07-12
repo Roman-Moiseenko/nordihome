@@ -1,4 +1,4 @@
-@php use App\Modules\Shop\Application\DTOs\ProductIndexPageData; @endphp
+@php use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData; @endphp
 @php
     /** @var ProductIndexPageData $pageData */
 @endphp

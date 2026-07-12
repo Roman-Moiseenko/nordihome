@@ -1,5 +1,5 @@
 @php
-    use App\Modules\Shop\Application\DTOs\Parts\PaginatorData;
+    use App\Modules\Shop\Application\DTOs\PageElements\PaginatorData;
         /** @var PaginatorData $paginator */
 @endphp
 

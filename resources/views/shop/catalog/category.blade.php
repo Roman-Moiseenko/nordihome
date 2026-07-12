@@ -1,6 +1,6 @@
 @php
-    use App\Modules\Shop\Application\DTOs\CategoryRoomIndexPageData;
-    /** @var CategoryRoomIndexPageData $pageData */
+    use App\Modules\Shop\Application\DTOs\Pages\CatalogIndexPageData;
+    /** @var CatalogIndexPageData $pageData */
 @endphp
 
 @extends('shop.layouts.main')
@@ -23,6 +23,6 @@
 
 
     <script type="application/ld+json" class="schemantra.com">
-
+        {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
 @endsection

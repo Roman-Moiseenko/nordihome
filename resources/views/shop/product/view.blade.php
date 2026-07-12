@@ -138,5 +138,7 @@
     @include('shop.product._reviews', ['reviews' => $product['reviews']])
 
 
-    {!! $schema !!}
+    <script type="application/ld+json" class="schemantra.com">
+        {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
 @endsection

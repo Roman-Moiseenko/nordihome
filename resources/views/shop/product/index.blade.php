@@ -1,5 +1,5 @@
 @php
-    use App\Modules\Shop\Application\DTOs\ProductIndexPageData;
+    use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
     /** @var ProductIndexPageData $pageData */
 @endphp
 @extends('shop.layouts.main')
@@ -112,5 +112,7 @@
             window.location.href = window.location.href.split("?")[0];
         });
     </script>
-
+    <script type="application/ld+json" class="schemantra.com">
+        {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
 @endsection

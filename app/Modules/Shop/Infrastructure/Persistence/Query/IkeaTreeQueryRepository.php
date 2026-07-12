@@ -20,6 +20,7 @@ class IkeaTreeQueryRepository
     public function getFullTree(): array
     {
         $rows = DB::table('parser_categories')
+            ->where('parser_categories.active', true)
             ->leftJoin('photos', function ($join) {
                 $join->on('parser_categories.id', '=', 'photos.imageable_id')
                     ->where('photos.model_type', '=', self::MODEL_TYPE)

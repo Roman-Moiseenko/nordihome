@@ -23,11 +23,13 @@ class CacheInvalidationRegistry
         self::ROOM_INDEX_PAGE,
     ];
 
-    public const string IKEA_CATEGORY_INDEX_PAGE = 'category_ikea_tree';
+    public const string IKEA_CATEGORY_INDEX_PAGE = 'ikea_tree';
+    public const string IKEA_PRODUCTS_ID = 'ikea_products_{id}';
     private const array IKEA_CATEGORY_KEYS = [
         self::IKEA_CATEGORY_INDEX_PAGE,
-
+        self::IKEA_PRODUCTS_ID,
     ];
+
 
     /**
      * Сбросить все ключи, связанные с категорией (включая глобальные).

@@ -4,12 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
-use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomMainData;
-use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
+use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
 use Illuminate\Support\Facades\DB;
 
 class CategoryPageQueryRepository

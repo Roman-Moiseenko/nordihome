@@ -1,9 +1,5 @@
 @php
-    use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomMainData;
-    use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomSecondData;
-    use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
-    use App\Modules\Shop\Application\DTOs\Parts\FilterData;
-    use App\Modules\Shop\Application\DTOs\Parts\UrlData;
+    use App\Modules\Shop\Application\DTOs\Elements\UrlData;use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
     /** @var FilterData  $filters*/
     /** @var CategoryRoomSecondData $secondInfo */
     /** @var CategoryRoomMainData $mainInfo */

@@ -4,17 +4,17 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\Queries\Category;
 
-use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomSecondData;
-use App\Modules\Shop\Application\DTOs\ProductIndexPageData;
-use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomMainData;
-use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
-use App\Modules\Shop\Application\DTOs\Parts\FilterData;
-use App\Modules\Shop\Application\DTOs\Parts\IdNameData;
-use App\Modules\Shop\Application\DTOs\Parts\ProductCardData;
-use App\Modules\Shop\Application\DTOs\Parts\SeoData;
-use App\Modules\Shop\Application\DTOs\Parts\UrlData;
-use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginationProductsBuilder;
+use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
+use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
+use App\Modules\Shop\Application\DTOs\Elements\UrlData;
+use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
+use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
+use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
+use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
+use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
+use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
+use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\AttributeQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepository;
@@ -29,7 +29,8 @@ readonly class CategoryPageQuery
         private PaginatorBuilder            $paginatorBuilder,
         private SeoAdapter                  $seoAdapter,
         private ProductIndexQueryRepository $productIndexQueryRepository,
-        private AttributeQueryRepository     $attributeQueryRepository,
+        private AttributeQueryRepository    $attributeQueryRepository,
+        private SchemaBuilder               $schemaBuilder,
     )
     {
     }
@@ -113,7 +114,8 @@ readonly class CategoryPageQuery
 
         $meta = $this->seoAdapter->getSeoFromCategoryInfo($mainInfo);
 
-
+        //FIXME
+        $schema = $this->schemaBuilder->createSchema();
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,
@@ -121,6 +123,7 @@ readonly class CategoryPageQuery
             paginator: $paginator,
             filters: $filtersWithOrder,
             meta: new SeoData($meta->title, $meta->description),
+            schema: $schema,
         );
     }
 
@@ -188,6 +191,8 @@ readonly class CategoryPageQuery
             entity: 'room',
         );
 
+        //FIXME
+        $schema = $this->schemaBuilder->createSchema();
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,
@@ -195,6 +200,7 @@ readonly class CategoryPageQuery
             paginator: $paginator,
             filters: $filtersWithOrder,
             meta: new SeoData('Новинки', 'Новинки Икеа оригинал из Европы с доставкой по всей России. IKEA доступные цены! В наличии в интернет магазине NORDI HOME'),
+            schema: $schema,
         );
     }
 

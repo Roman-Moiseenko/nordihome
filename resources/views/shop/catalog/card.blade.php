@@ -1,5 +1,6 @@
 @php
-    /** @var \App\Modules\Shop\Application\DTOs\Parts\CategoryRoomData $item */
+    use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomData;
+    /** @var CategoryRoomData $item */
 @endphp
 <div class="col-6 col-sm-6 col-md-4 col-lg-3">
     <div class="catalog-card">

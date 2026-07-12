@@ -2,7 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Shop\Application\DTOs\Parts;
+namespace App\Modules\Shop\Application\DTOs\Entities;
+
+use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
+use App\Modules\Shop\Application\DTOs\Elements\PromotionProductData;
 
 readonly class ProductCardData
 {

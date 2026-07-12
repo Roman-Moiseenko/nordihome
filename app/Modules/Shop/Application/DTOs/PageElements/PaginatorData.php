@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Application\DTOs\Parts;
+namespace App\Modules\Shop\Application\DTOs\PageElements;
 
 class PaginatorData
 {

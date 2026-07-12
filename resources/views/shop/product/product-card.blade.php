@@ -1,5 +1,5 @@
 @php
-    use App\Modules\Shop\Application\DTOs\Parts\ProductCardData;
+    use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
      /** @var ProductCardData $product */
 @endphp
 

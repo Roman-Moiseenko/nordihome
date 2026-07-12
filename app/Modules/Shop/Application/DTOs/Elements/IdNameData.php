@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Application\DTOs\Parts;
+namespace App\Modules\Shop\Application\DTOs\Elements;
 
 final readonly class IdNameData
 {

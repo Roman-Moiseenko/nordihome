@@ -3,8 +3,8 @@
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
-use App\Modules\Shop\Application\DTOs\Parts\CategoryRoomMainData;
-use App\Modules\Shop\Application\DTOs\Parts\ChildrenData;
+use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
+use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
 use Illuminate\Support\Facades\DB;
 
 class RoomPageQueryRepository

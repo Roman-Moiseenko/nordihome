@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Infrastructure\Persistence\Builders;
 
-use App\Modules\Shop\Application\DTOs\Parts\PaginatorData;
+use App\Modules\Shop\Application\DTOs\PageElements\PaginatorData;
 
 class PaginatorBuilder
 {
