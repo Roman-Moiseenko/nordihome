@@ -1,9 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Shop\Controllers;
+namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Shop\Application\Queries\Product\ProductViewQuery;
+use App\Modules\Shop\Controllers\ShopController;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
@@ -16,6 +18,7 @@ class ProductController extends ShopController
     public function __construct(
         ShopRepository $repository,
         ViewRepository $views,
+        private ProductViewQuery $productViewQuery,
     )
     {
         $this->middleware(['auth:admin'])->only(['view_draft']);
@@ -24,8 +27,12 @@ class ProductController extends ShopController
         $this->views = $views;
     }
 
-    public function view($slug)
+    public function view(Request $request, $slug)
     {
+
+
+        $data = $this->productViewQuery->execute($slug, $this->client);
+
         return $this->views->product($slug);
     }
 

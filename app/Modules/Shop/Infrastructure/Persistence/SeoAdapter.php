@@ -4,8 +4,10 @@ namespace App\Modules\Shop\Infrastructure\Persistence;
 
 use App\Modules\Base\Entity\Meta;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Page\Repository\MetaTemplateRepository;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
+use App\Modules\Shop\Application\DTOs\Entities\ProductData;
 
 readonly class SeoAdapter
 {
@@ -35,6 +37,24 @@ readonly class SeoAdapter
 
         // Вызываем старый сервис – он определит класс модели, найдёт шаблон и отрендерит мета-теги
         return $this->seoService->seo($fakeModel);
+    }
 
+    public function getSeoFromProductInfo(ProductData $product): Meta
+    {
+        $fakeModel = new Product();
+        $fakeCategory = new \stdClass();
+        $fakeCategory->name = $product->categoryName;
+        $fakeModel->forceFill([
+            'id'          => $product->id,
+            'code'        => $product->code,
+            'description' => $product->description ?? '',
+            'title'       => $product->title ?? '',
+            'price'       => $product->price ?? 0,
+            'category'    => $fakeCategory
+        ]);
+
+        $fakeModel->exists = true;
+
+        return $this->seoService->seo($fakeModel);
     }
 }

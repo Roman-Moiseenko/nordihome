@@ -1,4 +1,4 @@
-@if(count($related) > 0)
+@if(!is_null($related))
     <div class="view-related">
         <h4>Аксессуары</h4>
         <div class="slider-images-product owl-carousel owl-theme" data-responsive="[2,3,4]">

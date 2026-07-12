@@ -6,11 +6,12 @@ class ImageInfoData
 {
 
     public function __construct(
-
         public string $src,
         public string $alt,
         public string $title = '',
-        public string $description = ''
+        public string $description = '',
+        public string $mini = '',
+
     )
     {
     }
@@ -21,7 +22,8 @@ class ImageInfoData
             src: $data['src'],
             alt: $data['alt'],
             title: $data['title'],
-            description: $data['description']
+            description: $data['description'],
+            mini: $data['mini'] ?? '',
         );
     }
 }

@@ -1,8 +1,8 @@
 @if(!is_null($client))
     <a class="product-wish-toggle
-                {{ $product['is_wish'] ? 'is-wish' : 'to-wish' }}" data-product="{{ $product['id'] }}"
+                {{ $product->is_wish ? 'is-wish' : 'to-wish' }}" data-product="{{ $product->id }}"
        type="button" title="В Избранное"><i
-            class="{{ $product['is_wish'] ? 'fa-solid' : 'fa-light' }} fa-heart"></i></a>
+            class="{{ $product->is_wish ? 'fa-solid' : 'fa-light' }} fa-heart"></i></a>
 @else
     <a class="to-wish" data-bs-toggle="modal" data-bs-target="#login-popup"
        onclick="event.preventDefault();"><i

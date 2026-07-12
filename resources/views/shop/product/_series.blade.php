@@ -1,4 +1,4 @@
-@if(!empty($series))
+@if(!is_null($series))
     <div class="box-card">
         <h3 id="series">Все товары серии {{ $series['name'] }}</h3>
         <div class="slider-images-product owl-carousel owl-theme" data-responsive="[3,6,9]" data-mouse-scroll="0">

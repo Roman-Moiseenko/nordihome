@@ -1,5 +1,6 @@
+@if(!is_null($modification))
 <div class="modification">
-    @foreach($product['modification'] as $attribute)
+    @foreach($modification as $attribute)
         @if(isset($attribute['products']))
             @foreach($attribute['products'] as $value => $_product_mod)
                 @if($product['is_sale'])
@@ -15,3 +16,4 @@
         @endif
     @endforeach
 </div>
+@endif

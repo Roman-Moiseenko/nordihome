@@ -1,3 +1,9 @@
+@php
+    use App\Modules\Shop\Application\DTOs\Elements\DimensionsData;
+
+    /** @var DimensionsData $dimensions */
+
+@endphp
 <div class="dimensions">
     <div class="sizes">
         <img src="/images/dimensions/sizes.png">
@@ -12,10 +18,10 @@
     <div class="delivery">
         <ul>
             <li><i class="fa-light fa-person-dolly"></i> <a href="{{ route('shop.page.view', 'contact') }}" target="_blank">Самовывоз</a></li>
-            @if($local)
+            @if($isRegion)
             <li><i class="fa-light fa-truck"></i> <a href="{{ route('shop.page.view', 'tariff') }}" target="_blank">Доставка по области</a></li>
             @endif
-            @if('region')
+            @if($isDelivery)
                 <li><i class="fa-light fa-plane-tail"></i> <a href="{{ route('shop.page.view', 'tariff') }}" target="_blank">Доставка по России</a></li>
             @endif
         </ul>
