@@ -104,10 +104,7 @@
                     </div>
 
                     @include('shop.product.__modification', ['modification' => $pageData->modification, 'current_id' => $product->id])
-
-
                     @include('shop.product.__related', ['related' => $pageData->related])
-
 
                     <div class="view-specifications">
                         @include('shop.widgets.dimensions',
@@ -131,18 +128,14 @@
     </div>
 
     @include('shop.product._bonus', ['bonus' => $pageData->bonus])
-
     @include('shop.product._series', ['series' => $pageData->series])
-
     <div class="box-card">
         <h3 id="description">Описание</h3>
         {!! $product->description !!}
     </div>
-
     @include('shop.product._attribute', ['productAttributes' => $pageData->attributes])
     @include('shop.product._equivalent', ['equivalents' => $pageData->equivalents])
     @include('shop.product._reviews', ['reviews' => $pageData->reviews])
-
 
     <script type="application/ld+json" class="schemantra.com">
         {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}

@@ -9,5 +9,7 @@ readonly class DimensionsData
         public float $width,
         public float $depth,
         public float $weight,
+        public float $volume,
+        public array $captions,
     ){}
 }

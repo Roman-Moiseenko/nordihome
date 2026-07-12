@@ -14,7 +14,7 @@ readonly class ProductViewQuery
 {
 
     public function __construct(
-        private ProductViewQueryRepository $productViewQueryRepository,
+        private ProductViewQueryRepository $repository,
         private SchemaBuilder               $schemaBuilder,
         private SeoAdapter                  $seoAdapter,
 
@@ -24,10 +24,12 @@ readonly class ProductViewQuery
     public function execute(string $slug, ?Client $client): ProductViewPageData
     {
 
+        $product = $this->repository->getProductBySlug($slug);
 
 
 
-        $product = new ProductData();
+
+
         $meta = $this->seoAdapter->getSeoFromProductInfo($product);
         //FIXME
         $schema = $this->schemaBuilder->createSchema();
