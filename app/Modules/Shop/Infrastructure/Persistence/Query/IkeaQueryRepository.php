@@ -165,4 +165,64 @@ class IkeaQueryRepository
             'description' => $description,
         ];
     }
+
+    public function getProductBySlug(string $slug): array
+    {
+        $row = DB::table('parser_products')
+            ->where('slug', $slug)
+            ->first();
+
+        if (!$row) {
+            return [];
+        }
+
+        $photos = DB::table('photos')
+            ->where('imageable_id', $row->id)
+            ->where('model_type', self::PHOTO_MODEL_TYPE)
+            ->where('type', 'gallery')
+            ->orderBy('sort')
+            ->get(['id', 'file', 'thumb', 'alt', 'title', 'description']);
+
+        $images = [];
+        foreach ($photos as $photo) {
+            $src = '/images/no-image.jpg';
+            if (!empty($photo->file) && $photo->id) {
+                $src = $this->photoService->getThumbUrl(
+                    photoId: (int)$photo->id,
+                    modelType: self::PHOTO_MODEL_TYPE,
+                    imageableId: (int)$row->id,
+                    fileName: $photo->file,
+                    thumb: 'catalog',
+                    isThumbEnabled: (bool)$photo->thumb,
+                );
+            }
+
+            $images[] = [
+                'src' => $src,
+                'alt' => $photo->alt ?? '',
+                'title' => $photo->title ?? '',
+                'description' => $photo->description ?? '',
+            ];
+        }
+
+        return [
+            'id' => $row->id,
+            'name' => $row->name,
+            'code' => $row->code,
+            'slug' => $row->slug,
+            'model' => $row->model ?? '',
+            'price' => (float)($row->price_sell ?? 0),
+            'short' => $row->short ?? '',
+            'description' => $row->description ?? '',
+            'fragile' => (bool)($row->fragile ?? false),
+            'sanctioned' => (bool)($row->sanctioned ?? false),
+            'availability' => (bool)($row->availability ?? false),
+            'packs' => (int)($row->packs ?? 1),
+            'composite' => isset($row->composite) ? json_decode($row->composite, true) : [],
+            'quantity' => isset($row->quantity) ? json_decode($row->quantity, true) : [],
+            'colors' => isset($row->colors) ? json_decode($row->colors, true) : [],
+            'packages' => isset($row->packages) ? json_decode($row->packages, true) : [],
+            'images' => $images,
+        ];
+    }
 }

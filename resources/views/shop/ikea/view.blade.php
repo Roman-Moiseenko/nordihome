@@ -12,25 +12,16 @@
 
 @section('content')
 
+    <h1>{{ $pageData->category->name }}. Товаров {{ $pageData->category->totalProducts }}</h1>
 
+    <!-- //TODO верстка левая панель -->
     <div>
-        <!-- //TODO Меню Категорий Сделать свернутым -->
-        @foreach($pageData->categories as $category)
-            <h2>{{ $category->name }}</h2>
-            <ul>
-                @foreach($category->children as $child)
-                    <li>
-                        <a href="{{ route('shop.ikea.view', $child->slug) }}">
-                            {{ $child->name }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
-
-        @endforeach
-
+        @include('shop.ikea.card-categories', [
+            'categories' => $pageData->categories,
+            'currentId' => $pageData->category->id
+            ])
     </div>
-
+    <!-- //TODO верстка правая панель -->
     <div>
         <!-- //TODO Список товаров -->
         <div class="products">

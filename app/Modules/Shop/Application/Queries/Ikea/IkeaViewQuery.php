@@ -51,6 +51,7 @@ readonly class IkeaViewQuery
             fn() => $this->repository->getProductIdsInCategory($category->id),
         );
 
+
         $idPaginator = $this->repository->getPaginationProducts($allProductIds, $page, $perPage);
 
         $productCardsRaw = $idPaginator->items();
@@ -60,6 +61,7 @@ readonly class IkeaViewQuery
             $productCardsRaw
         );
 
+        $category->totalProducts = $idPaginator->total();
         $paginator = $this->paginatorBuilder->build(
             total: $idPaginator->total(),
             perPage: $perPage,

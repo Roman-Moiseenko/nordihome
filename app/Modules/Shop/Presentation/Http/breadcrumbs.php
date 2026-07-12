@@ -62,6 +62,13 @@ Breadcrumbs::for('shop.room.view', function (BreadcrumbTrail $trail, $slug) use 
     }
 });
 
+
+// ИКЕА КАТАЛОГ
+Breadcrumbs::for('shop.ikea.index', function (BreadcrumbTrail $trail) { //Без указания главной - home
+    $trail->parent('shop.home');
+    $trail->push('Каталог Икеа', route('shop.ikea.index'));
+});
+
 Breadcrumbs::for('shop.ikea.view', function (BreadcrumbTrail $trail, $slug) use ($settings) { //Без указания главной - home
     // \Log::info('shop.category.view ' .$slug);
     $ikeaBySlug = (new SlugRepository())->CategoryParserBySlug($slug);
@@ -77,12 +84,13 @@ Breadcrumbs::for('shop.ikea.view', function (BreadcrumbTrail $trail, $slug) use 
         $trail->push($ikeaBySlug->name, route('shop.ikea.view', $ikeaBySlug->slug));
     }
 });
+Breadcrumbs::for('shop.ikea.product', function (BreadcrumbTrail $trail, $slug) {
+    $product = (new SlugRepository())->getProductParserBySlug($slug);
+    $trail->parent('shop.ikea.index');
+    //$trail->parent('shop', $product->shop); //Крошка - Home > Магазин xxx >
 
+    $trail->push($product->name, route('shop.ikea.product', $product->slug)); // Крошка - Товар
 
-// ИКЕА КАТАЛОГ
-Breadcrumbs::for('shop.ikea.index', function (BreadcrumbTrail $trail) { //Без указания главной - home
-    $trail->parent('shop.home');
-    $trail->push('Каталог Икеа', route('shop.ikea.index'));
 });
 
 //Для товара собираем из предыдущих

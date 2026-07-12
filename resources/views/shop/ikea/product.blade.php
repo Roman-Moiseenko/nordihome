@@ -12,9 +12,21 @@
 
 @section('content')
 
-<h1>Карточка товара</h1>
-
-
+    <h1>{{ $pageData->product->name }}</h1>
+    <!-- //TODO верстка левая панель -->
+    <div>
+        @include('shop.ikea.card-categories', [
+            'categories' => $pageData->categories,
+            'currentId' => $pageData->currentId
+            ])
+    </div>
+    <!-- //TODO верстка правая панель -->
+    <div>
+        <!-- //TODO Товар -->
+        <div class="product">
+            {{ json_encode($pageData->product)  }}
+        </div>
+    </div>
     <script type="application/ld+json" class="schemantra.com">
         {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>

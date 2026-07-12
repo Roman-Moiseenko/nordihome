@@ -32,5 +32,8 @@
             {{ price($product->price) }}
         </div>
 
+        <div>
+            <button class="parser-to-cart">В корзину</button>
+        </div>
     </div>
 </div>
