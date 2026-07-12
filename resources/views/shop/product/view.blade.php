@@ -26,7 +26,7 @@
                 </div>
 
                 <div class="slider-images-product owl-carousel owl-theme mt-3 p-3" data-responsive="[3,6,9]">
-                    @foreach($$product->images as $photo)
+                    @foreach($product->images as $photo)
                         <img src="{{ $photo->mini }}" data-image="{{ $photo->src }}"
                              class="slider-image-product" alt="{{ $photo->alt }}">
                     @endforeach
@@ -109,8 +109,8 @@
                     <div class="view-specifications">
                         @include('shop.widgets.dimensions',
                                 ['dimensions' => $product->dimensions,
-                                'local' => $product->isRegion,
-                                'region' => $product->isDelivery])
+                                'isRegion' => $product->isRegion,
+                                'isDelivery' => $product->isDelivery])
                     </div>
                     <div style="color: #ff5555">САЙТ В РАЗРАБОТКЕ! Оригинальный сайт по адресу <a
                             href="https://nordihome.ru/" style="color: #5555ff">https://nordihome.ru/</a></div>

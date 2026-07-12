@@ -3,6 +3,7 @@
 namespace App\Modules\Shop\Application\Queries\Product;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductViewPageData;
@@ -23,11 +24,12 @@ readonly class ProductViewQuery
     }
     public function execute(string $slug, ?Client $client): ProductViewPageData
     {
+        //TODO по клиенту $client получаем тип цены
+        $product = $this->repository->getProductBySlug($slug, PriceType::RETAIL);
 
-        $product = $this->repository->getProductBySlug($slug);
 
 
-
+        $attributes = $this->repository->getAttributes($product);
 
 
         $meta = $this->seoAdapter->getSeoFromProductInfo($product);
@@ -38,6 +40,7 @@ readonly class ProductViewQuery
             product: $product,
             meta: new SeoData($meta->title, $meta->description),
             schema: $schema,
+            attributes: $attributes,
         );
     }
 }

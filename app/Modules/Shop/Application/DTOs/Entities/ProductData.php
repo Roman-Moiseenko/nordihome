@@ -25,6 +25,7 @@ class ProductData
         public bool $is_sale,
         public PromotionProductData $promotion,
         public float $price,
+        public float $price_previous,
         public float $public,
 
         public string $brandLogo,
@@ -35,6 +36,7 @@ class ProductData
         public DimensionsData $dimensions,
         public bool $isRegion,
         public bool $isDelivery,
+        public int $quantity = 1,
 
     )
     {

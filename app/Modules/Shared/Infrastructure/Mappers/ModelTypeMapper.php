@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Infrastructure\Mappers;
 
+
 /**
  * Маппинг model_type ({модуль}.{сущность}) в полное имя класса (FQCN) для imageable_type
  */
@@ -15,6 +16,7 @@ class ModelTypeMapper
         'catalog.product' => \App\Modules\Catalog\Infrastructure\Models\Product::class,
         'parser.category' => \App\Modules\Parser\Infrastructure\Models\ParserCategory::class,
         'parser.product' => \App\Modules\Parser\Infrastructure\Models\ParserProduct::class,
+        'catalog.brand' => \App\Modules\Catalog\Infrastructure\Models\Brand::class,
     ];
 
     public static function toFqcn(string $modelType): string

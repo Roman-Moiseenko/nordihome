@@ -29,11 +29,12 @@ class ProductController extends ShopController
 
     public function view(Request $request, $slug)
     {
-
-
         $data = $this->productViewQuery->execute($slug, $this->client);
 
-        return $this->views->product($slug);
+        return view('shop.product.view', [
+            'pageData' => $data,
+        ]);
+        //return $this->views->product($slug);
     }
 
     public function view_draft(Product $product)
