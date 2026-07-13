@@ -112,7 +112,7 @@ readonly class CategoryPageQuery
             tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
         );
 
-        $meta = $this->seoAdapter->getSeoFromCategoryInfo($mainInfo);
+        $meta = $this->seoAdapter->getSeo('catalog.category', $mainInfo);
 
         //FIXME
         $schema = $this->schemaBuilder->createSchema();

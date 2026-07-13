@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Page\Entity\MetaTemplate;
+use App\Modules\Page\Infrastructure\Models\MetaTemplate;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use Illuminate\Database\Migrations\Migration;

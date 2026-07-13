@@ -15,6 +15,12 @@ readonly class SeoAdapter
         private MetaTemplateRepository $seoService
     ) {}
 
+
+    public function getSeo(string $entityKey, object $dto): Meta
+    {
+        return $this->seoService->generateSeo($entityKey, $dto);
+    }
+
     /**
      * Получить SEO-данные для категории, используя CategoryInfo (DTO).
      */
@@ -46,6 +52,7 @@ readonly class SeoAdapter
         $fakeCategory->name = $product->categoryName;
         $fakeModel->forceFill([
             'id'          => $product->id,
+            'name'        => $product->name,
             'code'        => $product->code,
             'description' => $product->description ?? '',
             'title'       => $product->title ?? '',

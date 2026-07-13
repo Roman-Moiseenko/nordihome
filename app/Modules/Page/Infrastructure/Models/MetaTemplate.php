@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Modules\Page\Entity;
+namespace App\Modules\Page\Infrastructure\Models;
 
 use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Page\Entity\Page;
+use App\Modules\Page\Entity\Post;
+use App\Modules\Page\Entity\PostCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use Illuminate\Database\Eloquent\Model;
@@ -13,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $class
+ * @property string $entity
  * @property string $template_title
  * @property string $template_description
  */
@@ -32,14 +36,16 @@ class MetaTemplate extends Model
 
     protected $fillable = [
         'class',
+        'entity',
     ];
     public $timestamps = false;
 
 
-    public static function register(string $class): self
+    public static function register(string $class, string $entity): self
     {
         return self::create([
             'class' => $class,
+            'entity' => $entity,
         ]);
     }
 

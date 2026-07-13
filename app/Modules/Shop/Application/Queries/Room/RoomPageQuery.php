@@ -115,7 +115,7 @@ readonly class RoomPageQuery
             tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
         );
 
-        $meta = $this->seoAdapter->getSeoFromCategoryInfo($mainInfo);
+        $meta = $this->seoAdapter->getSeo('catalog.room', $mainInfo);
 
         //FIXME
         $schema = $this->schemaBuilder->createSchema();

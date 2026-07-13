@@ -7,10 +7,10 @@ use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Page\Entity\MetaTemplate;
 use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
+use App\Modules\Page\Infrastructure\Models\MetaTemplate;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Setting\Entity\Settings;
@@ -228,5 +228,55 @@ class MetaTemplateRepository
         return $text;
     }
 
+    public function generateSeo(string $entityKey, object $dto): Meta
+    {
+        $template = MetaTemplate::where('entity', $entityKey)->first();
+        $title = $template?->template_title
+            ? $this->render($dto, $template->template_title)
+            : '';
+
+        $description = $template?->template_description
+            ? $this->render($dto, $template->template_description)
+            : '';
+
+        return new Meta($title, $description);
+    }
+
+    /**
+     * Заменяет все {переменные} в тексте на значения из DTO.
+     */
+    public function render(object $dto, string $template): string
+    {
+        return preg_replace_callback('/\{.+?}/', function ($matches) use ($dto) {
+            return $this->extract($dto, $matches[0]);
+        }, $template);
+    }
+
+    public function extract(object $dto, string $var): string
+    {
+        $propertyName = trim($var, '{}');
+
+        // 1. Публичное свойство
+        if (property_exists($dto, $propertyName)) {
+            return $this->valueToString($dto->{$propertyName});
+        }
+        return '';
+    }
+
+    /**
+     * Преобразует произвольное значение в строку.
+     */
+    private function valueToString(mixed $value): string
+    {
+        if ($value === null) return '';
+        if (is_scalar($value) || (is_object($value) && method_exists($value, '__toString'))) {
+            return (string) $value;
+        }
+        // Для объектов Money или других Value Object, реализующих __toString
+        if (is_object($value)) {
+            return (string) $value; // вызовет __toString, если есть
+        }
+        return '';
+    }
 
 }

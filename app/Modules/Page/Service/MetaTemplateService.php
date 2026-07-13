@@ -2,7 +2,7 @@
 
 namespace App\Modules\Page\Service;
 
-use App\Modules\Page\Entity\MetaTemplate;
+use App\Modules\Page\Infrastructure\Models\MetaTemplate;
 use Illuminate\Http\Request;
 
 class MetaTemplateService

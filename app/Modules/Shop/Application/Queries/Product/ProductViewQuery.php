@@ -32,7 +32,7 @@ readonly class ProductViewQuery
         $attributes = $this->repository->getAttributes($product);
 
 
-        $meta = $this->seoAdapter->getSeoFromProductInfo($product);
+        $meta = $this->seoAdapter->getSeo('catalog.product', $product);
         //FIXME
         $schema = $this->schemaBuilder->createSchema();
 
