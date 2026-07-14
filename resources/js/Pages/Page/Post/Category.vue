@@ -38,7 +38,7 @@ import PanelPosts from "./Panels/AllPosts.vue"
 const store = useStore();
 const notSave = ref(false)
 const props = defineProps({
-    room: Object,
+    category: Object,
     templates: Array<ISelectItem>,
     post_templates: Array<ISelectItem>,
     title: {
@@ -50,8 +50,8 @@ const props = defineProps({
 const visible_create = ref(false)
 const form = reactive({
     name: null,
-    category_id: props.room.id,
-    template: props.room.post_template,
+    category_id: props.category.id,
+    template: props.category.post_template,
 })
 
 function createButton() {

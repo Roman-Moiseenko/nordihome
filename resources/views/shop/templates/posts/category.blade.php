@@ -44,6 +44,6 @@ posts container-xl
     </div>
 @endforeach
 <div class="products-page-list--bottom">
-    {{ $posts->links('shop.widgets.paginator') }}
+    {{ $posts->links('shop.widgets.paginator-old') }}
 </div>
 @endsection

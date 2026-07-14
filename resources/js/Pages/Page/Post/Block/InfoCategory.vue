@@ -141,31 +141,31 @@ import HelpBlock from "@Comp/HelpBlock.vue";
 
 const editInfo = ref(false)
 const props = defineProps({
-    room: Object,
+    category: Object,
     templates: Array<ISelectItem>,
     post_templates: Array<ISelectItem>,
 })
 const info = reactive({
-    name: props.room.name,
-    template: props.room.template,
-    post_template: props.room.post_template,
-    title: props.room.title,
-    description: props.room.description,
-    slug: props.room.slug,
-    paginate: props.room.paginate,
+    name: props.category.name,
+    template: props.category.template,
+    post_template: props.category.post_template,
+    title: props.category.title,
+    description: props.category.description,
+    slug: props.category.slug,
+    paginate: props.category.paginate,
 
     image: null,
     clear_image: false,
     icon: null,
     clear_icon: false,
 
-    meta_title: props.room.meta.title,
-    meta_description: props.room.meta.description,
+    meta_title: props.category.meta.title,
+    meta_description: props.category.meta.description,
 })
 
 function onSetInfo() {
     router.visit(
-        route('admin.page.post-category.set-info', {room: props.room.id}), {
+        route('admin.page.post-category.set-info', {room: props.category.id}), {
             method: "post",
             data: info,
             onSuccess: page => {
