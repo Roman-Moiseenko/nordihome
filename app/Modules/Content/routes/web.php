@@ -29,8 +29,13 @@ Route::group(
 
         Route::group([
             'prefix' => 'widget',
-            'as' => 'widget.' //'CacheController@remove'
+            'as' => 'widget.'
         ], function () {
+            // API маршруты (должны быть до {id})
+            Route::get('/categories', [WidgetController::class, 'categories'])->name('categories');
+            Route::get('/widgets', [WidgetController::class, 'widgets'])->name('widgets');
+
+            // CRUD
             Route::get('/', [WidgetController::class, 'index'])->name('index');
             Route::post('/', [WidgetController::class, 'store'])->name('create');
             Route::get('/{id}', [WidgetController::class, 'show'])->name('show');

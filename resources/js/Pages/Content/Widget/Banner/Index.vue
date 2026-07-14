@@ -54,7 +54,7 @@
         <DeleteEntityModal name_entity="Баннер"/>
 
 
-        <el-dialog v-model="dialogCreate" title="Контакт" width="500">
+        <el-dialog v-model="dialogCreate" title="Баннер" width="500">
             <el-form label-width="auto">
                 <el-form-item label="Название" label-position="top" class="mt-3">
                     <el-input v-model="form.name"/>

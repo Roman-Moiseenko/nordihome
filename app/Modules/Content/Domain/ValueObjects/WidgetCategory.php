@@ -10,10 +10,17 @@ use InvalidArgumentException;
 final class WidgetCategory
 {
     public const string CONTENT = 'content';
+    public const string CONTAINER = 'container';
     public const string MEDIA = 'media';
     public const string COMMERCE = 'commerce';
     public const string CUSTOM = 'custom';
 
+    public const array CATEGORIES = [
+        self::CONTENT => 'Контент',
+        self::MEDIA => 'Медиа',
+        self::CONTAINER => 'Контейнеры',
+        self::CUSTOM => 'Собственный',
+    ];
     private const array ALLOWED = [self::CONTENT, self::MEDIA, self::COMMERCE, self::CUSTOM];
 
     private string $value;
