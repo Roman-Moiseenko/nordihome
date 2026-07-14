@@ -84,12 +84,12 @@ Breadcrumbs::for('shop.ikea.view', function (BreadcrumbTrail $trail, $slug) use 
         $trail->push($ikeaBySlug->name, route('shop.ikea.view', $ikeaBySlug->slug));
     }
 });
-Breadcrumbs::for('shop.ikea.product', function (BreadcrumbTrail $trail, $slug) {
-    $product = (new SlugRepository())->getProductParserBySlug($slug);
+Breadcrumbs::for('shop.ikea.product', function (BreadcrumbTrail $trail, $code) {
+    $product = (new SlugRepository())->getProductParserByCode($code);
     $trail->parent('shop.ikea.index');
     //$trail->parent('shop', $product->shop); //Крошка - Home > Магазин xxx >
 
-    $trail->push($product->name, route('shop.ikea.product', $product->slug)); // Крошка - Товар
+    $trail->push($product->name, route('shop.ikea.product', $product->code)); // Крошка - Товар
 
 });
 
@@ -159,7 +159,7 @@ Breadcrumbs::for('shop.parser.catalog', function (BreadcrumbTrail $trail, $slug)
 });
 //Для товара собираем из предыдущих
 Breadcrumbs::for('shop.parser.product', function (BreadcrumbTrail $trail, $slug) {
-    $product = (new SlugRepository())->getProductParserBySlug($slug);
+    $product = (new SlugRepository())->getProductParserByCode($slug);
     //$trail->parent('shop', $product->shop); //Крошка - Home > Магазин xxx >
     if (is_null($product)) {
         $trail->parent('shop.parser.view');

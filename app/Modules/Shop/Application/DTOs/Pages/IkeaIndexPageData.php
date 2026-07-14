@@ -3,8 +3,8 @@
 namespace App\Modules\Shop\Application\DTOs\Pages;
 
 use App\Modules\Shop\Application\DTOs\IkeaTreeClientData;
-use App\Modules\Shop\Application\DTOs\PageElements\SchemaData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
+use App\Modules\Shop\Domain\Schema\SchemaData;
 
 readonly class IkeaIndexPageData
 {

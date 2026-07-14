@@ -5,9 +5,11 @@ namespace App\Modules\Shop\Providers;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
+use App\Modules\Shop\Application\Interfaces\BreadcrumbProviderInterface;
 use App\Modules\Shop\Infrastructure\Observers\CategoryCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\IkeaCategoryCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\RoomCacheObserver;
+use App\Modules\Shop\Infrastructure\Services\BreadcrumbService;
 use App\Modules\Shop\Presentation\Http\ViewComposers\CategoryComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\ClientComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\IkeaComposer;
@@ -106,6 +108,10 @@ class ShopServiceProvider extends ServiceProvider
     public function register()
     {
         // Register module-specific services
+        $this->app->bind(
+            BreadcrumbProviderInterface::class,
+            BreadcrumbService::class
+        );
     }
 
     // =====================================================================

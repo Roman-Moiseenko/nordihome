@@ -35,10 +35,10 @@ class IkeaController
             ]);
     }
 
-    public function product(Request $request, string $slug)
+    public function product(Request $request, string $code)
     {
 
-        $data = $this->ikeaProductQuery->execute($slug);
+        $data = $this->ikeaProductQuery->execute($code);
 
         return view('shop.ikea.product', [
             'pageData' => $data,

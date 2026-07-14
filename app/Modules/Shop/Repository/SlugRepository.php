@@ -17,10 +17,10 @@ use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 class SlugRepository
 {
 
-    public function getProductParserBySlug($slug):? ParserProduct
+    public function getProductParserByCode($code):? ParserProduct
     {
-        if (is_numeric($slug)) return ParserProduct::find($slug);
-        return ParserProduct::where('slug', $slug)->first();
+        //if (is_numeric($slug)) return ParserProduct::find($slug);
+        return ParserProduct::where('code', $code)->first();
     }
 
     public function CategoryParserBySlug($slug):? ParserCategory

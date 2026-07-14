@@ -13,6 +13,7 @@ use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
+use App\Modules\Shop\Application\Interfaces\BreadcrumbProviderInterface;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
@@ -114,15 +115,14 @@ readonly class CategoryPageQuery
 
         $meta = $this->seoAdapter->getSeo('catalog.category', $mainInfo);
 
-        //FIXME
-        $schema = $this->schemaBuilder->createSchema();
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'category');
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
-            meta: new SeoData($meta->title, $meta->description),
+            meta: $meta,
             schema: $schema,
         );
     }

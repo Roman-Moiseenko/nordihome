@@ -34,12 +34,12 @@ class IkeaProductQuery
             fn() => $this->treeRepo->getFullTree(),
         );
 
-        $productRaw = $this->repository->getProductBySlug($slug);
+        $productRaw = $this->repository->getProductByCode($slug);
 
         $product = IkeaProductData::fromArray($productRaw);
 
         //FIXME
-        $schema = $this->schemaBuilder->createSchema();
+        $schema = $this->schemaBuilder->buildForIkeaProduct($product);
 
         return new IkeaProductPageData(
             categories: $categories,

@@ -172,10 +172,22 @@ class IkeaQueryRepository
             ->where('slug', $slug)
             ->first();
 
-        if (!$row) {
-            return [];
-        }
+        if (!$row) return [];
+       return $this->hydrate($row);
+    }
 
+    public function getProductByCode(string $code): array
+    {
+        $row = DB::table('parser_products')
+            ->where('code', $code)
+            ->first();
+
+        if (!$row) return [];
+        return $this->hydrate($row);
+    }
+
+    private function hydrate(\StdClass $row)
+    {
         $photos = DB::table('photos')
             ->where('imageable_id', $row->id)
             ->where('model_type', self::PHOTO_MODEL_TYPE)

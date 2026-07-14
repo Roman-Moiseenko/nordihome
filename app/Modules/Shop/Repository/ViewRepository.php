@@ -466,7 +466,7 @@ class ViewRepository
 
     public function productParser($slug)
     {
-        $product = $this->slugs->getProductParserBySlug($slug);
+        $product = $this->slugs->getProductParserByCode($slug);
         if (is_null($product) || !$product->availability) abort(404);
 
         $meta = $this->seo->seo($product);

@@ -57,7 +57,7 @@ readonly class IkeaViewQuery
         $productCardsRaw = $idPaginator->items();
 
         $productCards = array_map(
-            fn(array $item) => $this->getIkeaProductData($item),
+            fn(array $product) => IkeaProductCardData::fromArray($product),
             $productCardsRaw
         );
 
@@ -72,8 +72,7 @@ readonly class IkeaViewQuery
             ]
         );
 
-        //FIXME
-        $schema = $this->schemaBuilder->createSchema();
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $category->slug, 'ikea');
 
         return new IkeaViewPageData(
             category: $category,
@@ -88,12 +87,5 @@ readonly class IkeaViewQuery
 
         );
     }
-
-    private function getIkeaProductData(array $product)
-    {
-
-        return IkeaProductCardData::fromArray($product);
-    }
-
 
 }

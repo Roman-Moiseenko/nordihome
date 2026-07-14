@@ -40,8 +40,8 @@ readonly class CategoryIndexQuery
                 $this->treeRepo->getChildren(),
             ),
         );
-        //FIXME
-        $schema = $this->schemaBuilder->createSchema();
+
+        $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'category');
         return new CatalogIndexPageData(
             meta: new SeoData(
                 title: $web->categories_title,

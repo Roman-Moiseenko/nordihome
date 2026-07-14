@@ -6,8 +6,8 @@
 <div>
     <div class="product-card" data-product="{{ $product->id }}">
         <div class="product-card-image">
-            <a class="e-click" data-product="{{ $product->id }}"
-               href="{{ route('shop.ikea.product', $product->slug) }}">
+            <a class="" data-product="{{ $product->id }}"
+               href="{{ route('shop.ikea.product', $product->code) }}">
                 <img class="product-card-image-main"
                      src="{{ $product->image->src }}"
                      alt="{{ $product->image->alt }}">
@@ -19,7 +19,7 @@
 
         <div class="product-card-name fs-6">
             <a class="product-trunc" data-product="{{ $product->id }}"
-               href="{{ route('shop.ikea.product', $product->slug) }}"
+               href="{{ route('shop.ikea.product', $product->code) }}"
                title="{{ $product->name }}">{{ $product->name }}</a>
         </div>
         <div>

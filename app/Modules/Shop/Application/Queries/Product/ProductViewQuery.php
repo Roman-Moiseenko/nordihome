@@ -27,18 +27,14 @@ readonly class ProductViewQuery
         //TODO по клиенту $client получаем тип цены
         $product = $this->repository->getProductBySlug($slug, PriceType::RETAIL);
 
-
-
         $attributes = $this->repository->getAttributes($product);
 
-
         $meta = $this->seoAdapter->getSeo('catalog.product', $product);
-        //FIXME
-        $schema = $this->schemaBuilder->createSchema();
+        $schema = $this->schemaBuilder->buildForProduct($product);
 
         return new ProductViewPageData(
             product: $product,
-            meta: new SeoData($meta->title, $meta->description),
+            meta: $meta,
             schema: $schema,
             attributes: $attributes,
         );

@@ -8,8 +8,6 @@ use App\Modules\Shop\Application\DTOs\Elements\UrlData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
-use App\Modules\Shop\Application\DTOs\PageElements\SchemaData;
-use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
@@ -61,7 +59,6 @@ readonly class RoomPageQuery
                 $categoriesRaw,
             );
         }
-
 
         $idPaginator = $this->productIndexQueryRepository->getFilterSortPaginationProducts($params, $allProductIds, $page, $perPage);
 
@@ -117,15 +114,14 @@ readonly class RoomPageQuery
 
         $meta = $this->seoAdapter->getSeo('catalog.room', $mainInfo);
 
-        //FIXME
-        $schema = $this->schemaBuilder->createSchema();
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'room');
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
-            meta: new SeoData($meta->title, $meta->description),
+            meta: $meta,
             schema: $schema,
         );
     }

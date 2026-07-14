@@ -31,8 +31,7 @@ readonly class IkeaIndexQuery
             fn() => $this->treeRepo->getFullTree(),
         );
 
-        //FIXME
-        $schema = $this->schemaBuilder->createSchema();
+        $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'ikea');
 
         return new IkeaIndexPageData(
             meta: new SeoData(

@@ -14,6 +14,7 @@ use App\Modules\Page\Infrastructure\Models\MetaTemplate;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Setting\Entity\Settings;
+use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use Illuminate\Http\Request;
 
 class MetaTemplateRepository
@@ -228,7 +229,7 @@ class MetaTemplateRepository
         return $text;
     }
 
-    public function generateSeo(string $entityKey, object $dto): Meta
+    public function generateSeo(string $entityKey, object $dto): SeoData
     {
         $template = MetaTemplate::where('entity', $entityKey)->first();
         $title = $template?->template_title
@@ -239,7 +240,7 @@ class MetaTemplateRepository
             ? $this->render($dto, $template->template_description)
             : '';
 
-        return new Meta($title, $description);
+        return new SeoData($title, $description);
     }
 
     /**

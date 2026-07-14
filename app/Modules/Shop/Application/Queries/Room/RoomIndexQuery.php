@@ -39,8 +39,7 @@ readonly class RoomIndexQuery
             ),
         );
 
-        //FIXME
-        $schema = $this->schemaBuilder->createSchema();
+        $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'room');
         return new CatalogIndexPageData(
             meta: new SeoData(
                 title: $web->rooms_title,

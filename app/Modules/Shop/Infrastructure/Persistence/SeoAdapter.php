@@ -8,6 +8,7 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Page\Repository\MetaTemplateRepository;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
+use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 
 readonly class SeoAdapter
 {
@@ -16,7 +17,7 @@ readonly class SeoAdapter
     ) {}
 
 
-    public function getSeo(string $entityKey, object $dto): Meta
+    public function getSeo(string $entityKey, object $dto): SeoData
     {
         return $this->seoService->generateSeo($entityKey, $dto);
     }
