@@ -4,6 +4,7 @@ namespace App\Modules\Content\Domain\Entities;
 
 use App\Modules\Content\Domain\ValueObjects\WidgetCategory;
 use App\Modules\Content\Domain\ValueObjects\WidgetSchema;
+use DateTimeImmutable;
 
 final class WidgetEntity
 {

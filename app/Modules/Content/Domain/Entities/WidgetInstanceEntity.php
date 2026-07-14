@@ -2,7 +2,7 @@
 
 namespace App\Modules\Content\Domain\Entities;
 
-use Ramsey\Uuid\Uuid;
+use DateTimeImmutable;
 
 /**
  * WidgetInstanceEntity — настроенный экземпляр виджета с конкретными параметрами.

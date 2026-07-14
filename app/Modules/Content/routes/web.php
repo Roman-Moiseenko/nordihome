@@ -37,7 +37,7 @@ Route::group(
 
             // CRUD
             Route::get('/', [WidgetController::class, 'index'])->name('index');
-            Route::post('/', [WidgetController::class, 'store'])->name('create');
+            Route::post('/', [WidgetController::class, 'store'])->name('store');
             Route::get('/{id}', [WidgetController::class, 'show'])->name('show');
             Route::put('/{id}', [WidgetController::class, 'update'])->name('update');
             Route::delete('/{id}', [WidgetController::class, 'destroy'])->name('destroy');

@@ -18,10 +18,11 @@ final class WidgetCategory
     public const array CATEGORIES = [
         self::CONTENT => 'Контент',
         self::MEDIA => 'Медиа',
+        self::COMMERCE => 'Магазин',
         self::CONTAINER => 'Контейнеры',
         self::CUSTOM => 'Собственный',
     ];
-    private const array ALLOWED = [self::CONTENT, self::MEDIA, self::COMMERCE, self::CUSTOM];
+    private const array ALLOWED = [self::CONTENT, self::MEDIA, self::COMMERCE, self::CUSTOM, self::CONTAINER];
 
     private string $value;
 
