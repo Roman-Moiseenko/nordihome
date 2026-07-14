@@ -4,7 +4,7 @@ namespace App\Modules\Content\Providers;
 
 use App\Modules\Content\Application\Interfaces\MetaTemplateRepositoryInterface;
 use App\Modules\Content\Database\Seeders\MetaSeeder;
-use App\Modules\Content\Database\Seeders\PageRoleSeeder;
+use App\Modules\Content\Database\Seeders\ContentRoleSeeder;
 use App\Modules\Content\Infrastructure\Persistence\MetaTemplateRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
@@ -390,7 +390,7 @@ class ContentServiceProvider extends ServiceProvider
         $this->app->afterResolving('seed.handler', function ($handler) {
             $handler->register([
                 MetaSeeder::class,
-                PageRoleSeeder::class,
+                ContentRoleSeeder::class,
             ]);
         });
     }

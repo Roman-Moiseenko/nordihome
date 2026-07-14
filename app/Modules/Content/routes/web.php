@@ -14,6 +14,7 @@ use App\Modules\Content\Controllers\PostWidgetController;
 use App\Modules\Content\Controllers\ProductWidgetController;
 use App\Modules\Content\Controllers\PromotionWidgetController;
 use App\Modules\Content\Controllers\TextWidgetController;
+use App\Modules\Content\Presentation\Http\Controllers\Web\WidgetController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -24,6 +25,21 @@ Route::group(
         //    'namespace' => 'App\Modules\Content\Controllers',
     ],
     function () {
+
+
+        Route::group([
+            'prefix' => 'widget',
+            'as' => 'widget.' //'CacheController@remove'
+        ], function () {
+            Route::get('/', [WidgetController::class, 'index'])->name('index');
+            Route::post('/', [WidgetController::class, 'store'])->name('create');
+            Route::get('/{id}', [WidgetController::class, 'show'])->name('show');
+            Route::put('/{id}', [WidgetController::class, 'update'])->name('update');
+            Route::delete('/{id}', [WidgetController::class, 'destroy'])->name('destroy');
+        });
+
+
+
         Route::group([
             'prefix' => 'cache',
             'as' => 'cache.' //'CacheController@remove'

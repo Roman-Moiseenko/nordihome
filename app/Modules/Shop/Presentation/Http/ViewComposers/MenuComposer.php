@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Presentation\Http\ViewComposers;
 use App\Modules\Shop\Repository\MenuRepository;
 use Illuminate\View\View;
 
+
 readonly class MenuComposer
 {
     public function __construct(
