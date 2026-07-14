@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-
+use Illuminate\Support\Facades\View;
 /**
  * Service Provider for Page module
  *
@@ -84,6 +84,7 @@ class ContentServiceProvider extends ServiceProvider
         $this->registerMigrations();
         $this->registerFactories();
         $this->registerSeeders();
+        View::addNamespace('widgets', storage_path('app/views/widgets'));
     }
 
     /**

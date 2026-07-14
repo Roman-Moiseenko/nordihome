@@ -7,7 +7,8 @@ namespace App\Modules\Content\Application\Actions\Widget;
 use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Infrastructure\Services\WidgetFileService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
-readonly class RemoveWidgetUseCase
+
+readonly class GetWidgetTemplateUseCase
 {
     public function __construct(
         private WidgetRepositoryInterface $widgetRepository,
@@ -16,16 +17,16 @@ readonly class RemoveWidgetUseCase
     {
     }
 
-    public function execute(int $id, UserPermission $userPermission): void
+    public function execute(int $id, UserPermission $userPermission): string
     {
-        if (!$userPermission->can('content.widget.delete')) {
+        if (!$userPermission->can('content.widget.view')) {
             throw new \DomainException('Доступ запрещён');
         }
 
         $widget = $this->widgetRepository->getById($id);
-
-        $this->widgetRepository->delete($id);
-
-        $this->widgetFileService->deleteTemplateFile((string) $widget->category, $widget->slug);
+        return $this->widgetFileService->getContent(
+            (string) $widget->category,
+            $widget->slug,
+        );
     }
 }

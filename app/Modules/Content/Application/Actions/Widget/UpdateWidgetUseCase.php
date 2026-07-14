@@ -9,12 +9,13 @@ use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Domain\Entities\WidgetEntity;
 use App\Modules\Content\Domain\ValueObjects\WidgetCategory;
 use App\Modules\Content\Domain\ValueObjects\WidgetSchema;
+use App\Modules\Content\Infrastructure\Services\WidgetFileService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
-
 readonly class UpdateWidgetUseCase
 {
     public function __construct(
         private WidgetRepositoryInterface $widgetRepository,
+        private WidgetFileService $widgetFileService,
     )
     {
     }
@@ -27,19 +28,38 @@ readonly class UpdateWidgetUseCase
 
         $widget = $this->widgetRepository->getById($id);
 
-        $widget->name = $dto->name;
+        $oldCategory = (string) $widget->category;
+        $oldSlug = $widget->slug;
 
-        // Если slug изменился и занят — добавляем суффикс
-        if ($dto->slug !== $widget->slug && $this->widgetRepository->existsSlug($dto->slug, $id)) {
-            $widget->slug = $dto->slug . '-' . uniqid();
-        } else {
-            $widget->slug = $dto->slug;
+        // Проверяем уникальность пары [category, slug] если она изменилась
+        $categoryChanged = $dto->category !== $oldCategory;
+        $slugChanged = $dto->slug !== $oldSlug;
+
+        if ($categoryChanged || $slugChanged) {
+            if ($this->widgetRepository->existsByCategoryAndSlug($dto->category, $dto->slug, $id)) {
+                throw new \DomainException("Виджет с категорией '{$dto->category}' и slug '{$dto->slug}' уже существует");
+            }
         }
 
+        $widget->name = $dto->name;
+            $widget->slug = $dto->slug;
         $widget->category = new WidgetCategory($dto->category);
         $widget->schema = WidgetSchema::fromArray($dto->schema);
         $widget->description = $dto->description;
 
-        return $this->widgetRepository->save($widget);
+        $widget = $this->widgetRepository->save($widget);
+
+        // Управляем файлом шаблона
+        if ($categoryChanged || $slugChanged) {
+            if ($categoryChanged && $slugChanged) {
+                $this->widgetFileService->moveTemplateFile($oldCategory, $oldSlug, $dto->category, $dto->slug);
+            } elseif ($categoryChanged) {
+                $this->widgetFileService->moveTemplateFile($oldCategory, $oldSlug, $dto->category, $dto->slug);
+            } else {
+                $this->widgetFileService->renameTemplateFile($oldCategory, $oldSlug, $dto->slug);
     }
 }
+
+        return $widget;
+    }
+        }

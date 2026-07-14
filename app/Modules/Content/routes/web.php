@@ -34,6 +34,8 @@ Route::group(
             // API маршруты (должны быть до {id})
             Route::get('/categories', [WidgetController::class, 'categories'])->name('categories');
             Route::get('/widgets', [WidgetController::class, 'widgets'])->name('widgets');
+            Route::get('/{id}/template', [WidgetController::class, 'template'])->name('template');
+            Route::post('/{id}/template', [WidgetController::class, 'saveTemplate'])->name('save-template');
 
             // CRUD
             Route::get('/', [WidgetController::class, 'index'])->name('index');

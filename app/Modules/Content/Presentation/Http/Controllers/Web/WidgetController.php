@@ -4,11 +4,14 @@ namespace App\Modules\Content\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Content\Application\Actions\Widget\CreateWidgetUseCase;
+use App\Modules\Content\Application\Actions\Widget\GetWidgetTemplateUseCase;
 use App\Modules\Content\Application\Actions\Widget\IndexWidgetUseCase;
 use App\Modules\Content\Application\Actions\Widget\ListWidgetsGroupedUseCase;
 use App\Modules\Content\Application\Actions\Widget\RemoveWidgetUseCase;
+use App\Modules\Content\Application\Actions\Widget\SaveWidgetTemplateUseCase;
 use App\Modules\Content\Application\Actions\Widget\UpdateWidgetUseCase;
 use App\Modules\Content\Application\Actions\Widget\ViewWidgetUseCase;
+use App\Modules\Content\Application\DTOs\Widget\WidgetContentUpdateData;
 use App\Modules\Content\Application\DTOs\Widget\WidgetCreateData;
 use App\Modules\Content\Application\DTOs\Widget\WidgetIndexData;
 use App\Modules\Content\Application\DTOs\Widget\WidgetUpdateData;
@@ -22,12 +25,14 @@ use Inertia\Inertia;
 class WidgetController extends Controller
 {
     public function __construct(
-        private readonly CreateWidgetUseCase      $createWidgetUseCase,
-        private readonly UpdateWidgetUseCase      $updateWidgetUseCase,
-        private readonly RemoveWidgetUseCase      $removeWidgetUseCase,
-        private readonly IndexWidgetUseCase       $indexWidgetUseCase,
-        private readonly ViewWidgetUseCase        $viewWidgetUseCase,
+        private readonly CreateWidgetUseCase       $createWidgetUseCase,
+        private readonly UpdateWidgetUseCase       $updateWidgetUseCase,
+        private readonly RemoveWidgetUseCase       $removeWidgetUseCase,
+        private readonly IndexWidgetUseCase        $indexWidgetUseCase,
+        private readonly ViewWidgetUseCase         $viewWidgetUseCase,
         private readonly ListWidgetsGroupedUseCase $listWidgetsGroupedUseCase,
+        private readonly GetWidgetTemplateUseCase  $getWidgetTemplateUseCase,
+        private readonly SaveWidgetTemplateUseCase $saveWidgetTemplateUseCase,
     )
     {
     }
@@ -48,14 +53,18 @@ class WidgetController extends Controller
         return redirect()->route('admin.content.widget.show', $widgetDTO->id);
     }
 
+
     public function show(int $id, UserPermission $userPermission)
     {
         $widget = $this->viewWidgetUseCase->execute($id, $userPermission);
+        $templateContent = $this->getWidgetTemplateUseCase->execute($id, $userPermission);
 
         return Inertia::render('Content/Widget/Show', [
             'widget' => WidgetViewData::fromEntity($widget),
+            'template' => $templateContent,
         ]);
     }
+
 
     public function update(Request $request, int $id, UserPermission $userPermission)
     {
@@ -84,5 +93,16 @@ class WidgetController extends Controller
     {
         $grouped = $this->listWidgetsGroupedUseCase->execute($userPermission);
         return response()->json($grouped);
+    }
+
+
+
+    public function saveTemplate(int $id, Request $request, UserPermission $userPermission): JsonResponse
+    {
+        $dto = WidgetContentUpdateData::validateAndCreate($request->all());
+
+        $this->saveWidgetTemplateUseCase->execute($id, $dto, $userPermission);
+
+        return response()->json(['success' => true]);
     }
 }

@@ -59,6 +59,15 @@ class WidgetRepository implements WidgetRepositoryInterface
         return $query->exists();
     }
 
+    public function existsByCategoryAndSlug(string $category, string $slug, ?int $excludeId = null): bool
+    {
+        $query = Widget::where('category', $category)->where('slug', $slug);
+        if ($excludeId !== null) {
+            $query->where('id', '!=', $excludeId);
+        }
+        return $query->exists();
+    }
+
     private function hydrate(Widget $model): WidgetEntity
     {
         $entity = new WidgetEntity(
