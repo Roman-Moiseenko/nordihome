@@ -13,11 +13,22 @@ use App\Modules\Content\Entity\Widgets\PostWidget;
 use App\Modules\Content\Entity\Widgets\ProductWidget;
 use App\Modules\Content\Entity\Widgets\PromotionWidget;
 use App\Modules\Content\Entity\Widgets\TextWidget;
+use App\Modules\Content\Infrastructure\Models\Widget;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
 
 //////WIDGETS//////
+//WIDGETS
+Breadcrumbs::for('admin.content.widget.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Виджеты', route('admin.content.widget.index'));
+});
+Breadcrumbs::for('admin.content.widget.show', function (BreadcrumbTrail $trail, int $id) {
+    $widget = Widget::find($id);
+    $trail->parent('admin.content.widget.index');
+    $trail->push($widget->name, route('admin.content.widget.show', $widget));
+});
 
 //PRODUCT
 Breadcrumbs::for('admin.content.widget.product.index', function (BreadcrumbTrail $trail) {

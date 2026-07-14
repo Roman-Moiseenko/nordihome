@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('widget_id')->constrained('widgets')->cascadeOnDelete();
             $table->string('title')->nullable();
-            $table->json('params')->default('{}');
+            $table->json('params')->nullable();
             $table->timestamps();
         });
     }

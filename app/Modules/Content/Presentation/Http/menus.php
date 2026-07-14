@@ -120,6 +120,12 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-database',
             ],
+            'widget' => [
+                'title' => 'Виджеты',
+                'route_name' => 'admin.content.widget.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-database',
+            ],
         ],
     ],
 ];

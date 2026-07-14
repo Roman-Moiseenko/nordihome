@@ -3,6 +3,11 @@
 namespace App\Modules\Content\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Content\Application\Actions\Widget\CreateWidgetUseCase;
+use App\Modules\Content\Application\Actions\Widget\IndexWidgetUseCase;
+use App\Modules\Content\Application\Actions\Widget\RemoveWidgetUseCase;
+use App\Modules\Content\Application\Actions\Widget\UpdateWidgetUseCase;
+use App\Modules\Content\Application\Actions\Widget\ViewWidgetUseCase;
 use App\Modules\Content\Application\DTOs\Widget\WidgetCreateData;
 use App\Modules\Content\Application\DTOs\Widget\WidgetIndexData;
 use App\Modules\Content\Application\DTOs\Widget\WidgetUpdateData;
@@ -26,7 +31,7 @@ class WidgetController extends Controller
     public function index(Request $request, UserPermission $userPermission)
     {
         $widgets = $this->indexWidgetUseCase->execute($userPermission);
-        return Inertia::render('Auth/Staff/Index', [
+        return Inertia::render('Content/Widget/Index', [
             'widgets' => WidgetIndexData::collect($widgets),
         ]);
     }
@@ -43,7 +48,7 @@ class WidgetController extends Controller
     {
         $widget = $this->viewWidgetUseCase->execute($id, $userPermission);
 
-        return Inertia::render('Auth/Staff/Show', [
+        return Inertia::render('Content/Widget/Show', [
             'widget' => WidgetViewData::fromEntity($widget),
         ]);
     }

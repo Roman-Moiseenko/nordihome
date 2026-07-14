@@ -2,10 +2,16 @@
 
 namespace App\Modules\Content\Providers;
 
+use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
 use App\Modules\Content\Application\Interfaces\MetaTemplateRepositoryInterface;
+use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
+use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Database\Seeders\MetaSeeder;
 use App\Modules\Content\Database\Seeders\ContentRoleSeeder;
+use App\Modules\Content\Infrastructure\Persistence\ContentBlockRepository;
 use App\Modules\Content\Infrastructure\Persistence\MetaTemplateRepository;
+use App\Modules\Content\Infrastructure\Persistence\WidgetInstanceRepository;
+use App\Modules\Content\Infrastructure\Persistence\WidgetRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -87,10 +93,24 @@ class ContentServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register module-specific services
         $this->app->bind(
             MetaTemplateRepositoryInterface::class,
             MetaTemplateRepository::class,
+        );
+
+        $this->app->bind(
+            WidgetRepositoryInterface::class,
+            WidgetRepository::class,
+        );
+
+        $this->app->bind(
+            WidgetInstanceRepositoryInterface::class,
+            WidgetInstanceRepository::class,
+        );
+
+        $this->app->bind(
+            ContentBlockRepositoryInterface::class,
+            ContentBlockRepository::class,
         );
     }
 
