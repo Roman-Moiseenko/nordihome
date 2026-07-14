@@ -5,7 +5,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence;
 use App\Modules\Base\Entity\Meta;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Page\Repository\MetaTemplateRepository;
+use App\Modules\Content\Repository\MetaTemplateRepository;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;

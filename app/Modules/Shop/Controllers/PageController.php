@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Controllers;
 
-use App\Modules\Page\Entity\Page;
+use App\Modules\Content\Entity\Page;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;

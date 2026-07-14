@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Controllers;
 
-use App\Modules\Page\Repository\MetaTemplateRepository;
+use App\Modules\Content\Repository\MetaTemplateRepository;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\SlugRepository;
 

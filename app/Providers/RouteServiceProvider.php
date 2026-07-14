@@ -81,7 +81,7 @@ class RouteServiceProvider extends ServiceProvider
             return OrderExpenseRefund::find($value);
         });
         Route::bind('category', function ($value) {
-            if (str_contains(Route::currentRouteName(), 'admin.page.post-category'))
+            if (str_contains(Route::currentRouteName(), 'admin.content.post-category'))
                 return PostCategory::find($value);
             if (str_contains(Route::currentRouteName(), 'admin.catalog.category'))
             return Category::find($value);

@@ -68,7 +68,7 @@ const selectPhoto = function () {
 setPhoto(props.photo_id)
 
 function getGallery() {
-    axios.post(route('admin.page.gallery.get-tree'))
+    axios.post(route('admin.content.gallery.get-tree'))
         .then(response => {
             galleries.value = response.data;
             dialogVisible.value = true;
@@ -77,7 +77,7 @@ function getGallery() {
 
 function setPhoto(val) {
     if (props === null) return;
-    axios.post(route('admin.page.gallery.get-photo'), {photo_id: val})
+    axios.post(route('admin.content.gallery.get-photo'), {photo_id: val})
         .then(response => {
             selectedPhoto.value = response.data;
         });

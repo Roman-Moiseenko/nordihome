@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Nordihome\Helper;
 
-use App\Modules\Page\Entity\Contact;
-use App\Modules\Page\Entity\Page;
-use App\Modules\Page\Entity\PostCategory;
+use App\Modules\Content\Entity\Contact;
+use App\Modules\Content\Entity\Page;
+use App\Modules\Content\Entity\PostCategory;
 use JetBrains\PhpStorm\Deprecated;
 
 class MenuHelper

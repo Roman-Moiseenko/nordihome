@@ -33,8 +33,7 @@
         "spatie/laravel-data": "^4.23",
         "spatie/laravel-permission": "^8.0",
         "tightenco/ziggy": "^v2.4.1",
-        "webklex/laravel-imap": "^6.1",
-        "yoomoney/yookassa-sdk-php": "^3.8"
+        "webklex/laravel-imap": "^6.1"
     },
     "require-dev": {
         "barryvdh/laravel-debugbar": "^v3.14.7",

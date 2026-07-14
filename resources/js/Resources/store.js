@@ -34,7 +34,7 @@ const useStore = defineStore('table_data', () => {
     }
 
     function loadImageListTiny() {
-        axios.post(route('admin.page.gallery.images')).then(response => {
+        axios.post(route('admin.content.gallery.images')).then(response => {
             response.data.forEach(item => {
                 _tiny.image_list.push({
                     title: item.title,

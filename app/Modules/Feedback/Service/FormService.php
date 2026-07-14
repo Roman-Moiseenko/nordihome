@@ -3,7 +3,7 @@
 namespace App\Modules\Feedback\Service;
 
 use App\Modules\Feedback\Entity\FormBack;
-use App\Modules\Page\Entity\Widgets\FormWidget;
+use App\Modules\Content\Entity\Widgets\FormWidget;
 use App\Modules\User\Entity\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
