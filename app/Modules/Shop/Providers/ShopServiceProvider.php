@@ -13,6 +13,7 @@ use App\Modules\Shop\Infrastructure\Services\BreadcrumbService;
 use App\Modules\Shop\Presentation\Http\ViewComposers\CategoryComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\ClientComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\IkeaComposer;
+use App\Modules\Shop\Presentation\Http\ViewComposers\MenuComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\RoomComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\WebComposer;
 use App\Modules\Shop\Repository\MenuRepository;
@@ -95,7 +96,7 @@ class ShopServiceProvider extends ServiceProvider
         View::composer('*', RoomComposer::class);
         View::composer('shop.*', WebComposer::class);
         View::composer('shop.ikea.*', IkeaComposer::class);
-        View::composer('shop.*', MenuRepository::class);
+        View::composer('shop.*', MenuComposer::class);
 
         Category::observe(CategoryCacheObserver::class);
         Room::observe(RoomCacheObserver::class);

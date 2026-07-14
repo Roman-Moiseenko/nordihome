@@ -13,6 +13,8 @@ use App\Modules\Page\Entity\Page;
 use App\Modules\Page\Entity\Post;
 use App\Modules\Page\Entity\PostCategory;
 use App\Modules\Page\Infrastructure\Models\MetaTemplate;
+use App\Modules\Parser\Infrastructure\Models\ParserCategory;
+use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use Illuminate\Database\Seeder;
 
 class MetaSeeder extends Seeder
@@ -68,6 +70,17 @@ class MetaSeeder extends Seeder
         $dto = new MetaTemplateCreateData(
             class: Room::class,
             entity: 'catalog.room',
+        );
+        $this->useCase->execute($dto);
+        $dto = new MetaTemplateCreateData(
+            class: ParserProduct::class,
+            entity: 'parser.product',
+        );
+        $this->useCase->execute($dto);
+
+        $dto = new MetaTemplateCreateData(
+            class: ParserCategory::class,
+            entity: 'parser.category',
         );
         $this->useCase->execute($dto);
     }
