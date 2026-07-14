@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('widget_instances', function (Blueprint $table) {
             $table->id();
             $table->foreignId('widget_id')->constrained('widgets')->cascadeOnDelete();
-            $table->uuid('uuid')->unique();
             $table->string('title')->nullable();
             $table->json('params')->default('{}');
             $table->timestamps();

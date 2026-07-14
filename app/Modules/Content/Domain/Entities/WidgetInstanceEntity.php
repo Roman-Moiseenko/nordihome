@@ -14,10 +14,6 @@ final class WidgetInstanceEntity
         set => $this->id = $value;
     }
 
-    public string $uuid {
-        get => $this->uuid;
-    }
-
     public int $widgetId {
         get => $this->widgetId;
     }
@@ -57,7 +53,6 @@ final class WidgetInstanceEntity
         ?string $title = null,
     )
     {
-        $this->uuid = Uuid::uuid4()->toString();
         $this->widgetId = $widgetId;
         $this->params= $params;
         $this->title = $title;

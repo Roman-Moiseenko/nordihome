@@ -15,7 +15,6 @@ class WidgetInstanceIndexData extends Data
         public readonly string $widgetName,
         public readonly string $widgetSlug,
         public readonly ?string $title = null,
-        public readonly ?string $uuid = null,
     ) {}
 
 
@@ -26,7 +25,6 @@ class WidgetInstanceIndexData extends Data
             $instance->widgetName,
             $instance->widgetSlug,
             $instance->title,
-            $instance->uuid,
 
         );
     }

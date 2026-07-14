@@ -17,7 +17,6 @@ class WidgetInstanceViewData extends Data
         public readonly string $widgetSlug,
         public readonly array $params = [],
         public readonly ?string $title = null,
-        public readonly ?string $uuid = null,
         public readonly ?string $createdAt = null,
         public readonly ?string $updatedAt = null,
     ) {}
@@ -32,7 +31,6 @@ class WidgetInstanceViewData extends Data
             $instance->widgetSlug,
             $instance->params,
             $instance->title,
-            $instance->uuid,
             $instance->createdAt->format('c'),
             $instance->updatedAt->format('c'),
         );
