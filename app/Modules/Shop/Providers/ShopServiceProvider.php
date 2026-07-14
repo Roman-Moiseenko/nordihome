@@ -15,6 +15,7 @@ use App\Modules\Shop\Presentation\Http\ViewComposers\ClientComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\IkeaComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\RoomComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\WebComposer;
+use App\Modules\Shop\Repository\MenuRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -94,6 +95,7 @@ class ShopServiceProvider extends ServiceProvider
         View::composer('*', RoomComposer::class);
         View::composer('shop.*', WebComposer::class);
         View::composer('shop.ikea.*', IkeaComposer::class);
+        View::composer('shop.*', MenuRepository::class);
 
         Category::observe(CategoryCacheObserver::class);
         Room::observe(RoomCacheObserver::class);

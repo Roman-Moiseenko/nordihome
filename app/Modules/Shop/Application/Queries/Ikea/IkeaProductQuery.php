@@ -38,7 +38,6 @@ class IkeaProductQuery
 
         $product = IkeaProductData::fromArray($productRaw);
 
-        //FIXME
         $schema = $this->schemaBuilder->buildForIkeaProduct($product);
 
         return new IkeaProductPageData(
