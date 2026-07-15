@@ -12,13 +12,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property ?string $description
  * @property string $category
  * @property array $schema
- * @property bool $is_container
  * @property ?Carbon $created_at
  * @property ?Carbon $updated_at
  */
 class Widget extends Model
 {
-    protected $fillable = ['name', 'slug', 'description', 'category', 'schema', 'is_container'];
+    protected $fillable = ['name', 'slug', 'description', 'category', 'schema'];
     protected $casts = [
         'schema' => 'array',
         'is_container' => 'boolean',

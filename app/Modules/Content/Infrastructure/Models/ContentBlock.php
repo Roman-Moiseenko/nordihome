@@ -26,7 +26,6 @@ class ContentBlock extends Model
         'container_type',
         'container_id',
         'widget_instance_id',
-        'parent_block_id',
         'sort_order',
         'section',
         'caption',
@@ -41,16 +40,6 @@ class ContentBlock extends Model
     public function container(): MorphTo
     {
         return $this->morphTo('container', 'container_type', 'container_id');
-    }
-
-    public function parent(): BelongsTo
-    {
-        return $this->belongsTo(self::class, 'parent_block_id');
-    }
-
-    public function children(): HasMany
-    {
-        return $this->hasMany(self::class, 'parent_block_id')->orderBy('sort_order');
     }
 
 }

@@ -67,6 +67,7 @@
             <el-option label="Изображение (string + uuid)" value="uuid" />
             <el-option label="Ссылка (string + uri)" value="uri" />
             <el-option label="Число целое (integer)" value="integer" />
+            <el-option label="ID виджета (integer + widget)" value="widget" />
             <el-option label="Число дробное (number)" value="number" />
             <el-option label="Да/Нет (boolean)" value="boolean" />
             <el-option label="Объект (object)" value="object" />
@@ -84,12 +85,23 @@
         <el-form-item label="Обязательное поле">
           <el-switch v-model="newPropRequired" />
         </el-form-item>
-        <el-form-item v-if="newPropType === 'integer' || newPropType === 'number'" label="Минимум (minimum)">
-          <el-input-number v-model="newPropMin" :min="0" />
-        </el-form-item>
-        <el-form-item v-if="newPropType === 'integer' || newPropType === 'number'" label="Максимум (maximum)">
-          <el-input-number v-model="newPropMax" :min="0" />
-        </el-form-item>
+        <template v-if="newPropType === 'integer' || newPropType === 'number'">
+          <el-form-item>
+            <template #label>
+              <span class="flex items-center gap-1">
+                <el-switch v-model="newPropUseMinMax" size="small" />
+                Минимум / Максимум
+              </span>
+            </template>
+            <template v-if="newPropUseMinMax">
+              <div class="flex gap-2">
+                <el-input-number v-model="newPropMin" placeholder="min" class="flex-1" />
+                <el-input-number v-model="newPropMax" placeholder="max" class="flex-1" />
+              </div>
+            </template>
+            <span v-else class="text-gray-400 text-xs">Не ограничено</span>
+          </el-form-item>
+        </template>
       </el-form>
       <template #footer>
         <el-button @click="showAddDialog = false">Отмена</el-button>
@@ -141,6 +153,7 @@ const newPropType = ref('string')
 const newPropEnum = ref('')
 const newPropRequired = ref(false)
 const newPropDefault = ref('')
+const newPropUseMinMax = ref(false)
 const newPropMin = ref(0)
 const newPropMax = ref(100)
 
@@ -224,16 +237,24 @@ function addProperty() {
       propConfig.type = 'string'
       propConfig.format = 'uri'
       break
+    case 'widget':
+      propConfig.type = 'integer'
+      propConfig.format = 'widget'
+      break
     case 'integer':
       propConfig.type = 'integer'
-      propConfig.minimum = newPropMin.value
-      propConfig.maximum = newPropMax.value
+      if (newPropUseMinMax.value) {
+        propConfig.minimum = newPropMin.value
+        propConfig.maximum = newPropMax.value
+      }
       if (newPropDefault.value) propConfig.default = parseInt(newPropDefault.value, 10)
       break
     case 'number':
       propConfig.type = 'number'
-      propConfig.minimum = newPropMin.value
-      propConfig.maximum = newPropMax.value
+      if (newPropUseMinMax.value) {
+        propConfig.minimum = newPropMin.value
+        propConfig.maximum = newPropMax.value
+      }
       if (newPropDefault.value) propConfig.default = parseFloat(newPropDefault.value)
       break
     case 'boolean':
@@ -287,6 +308,7 @@ function addProperty() {
   newPropEnum.value = ''
   newPropRequired.value = false
   newPropDefault.value = ''
+  newPropUseMinMax.value = false
   newPropMin.value = 0
   newPropMax.value = 100
   showAddDialog.value = false

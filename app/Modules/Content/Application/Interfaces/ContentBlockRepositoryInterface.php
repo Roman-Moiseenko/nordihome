@@ -21,9 +21,4 @@ interface ContentBlockRepositoryInterface
      * @return ContentBlockEntity[]
      */
     public function getByContainer(string $containerType, int $containerId): array;
-
-    /**
-     * @return ContentBlockEntity[]
-     */
-    public function getTreeByContainer(string $containerType, int $containerId): array;
 }

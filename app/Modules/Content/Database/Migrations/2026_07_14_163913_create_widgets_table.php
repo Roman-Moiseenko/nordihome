@@ -18,7 +18,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('category', 50)->default('content'); // content, media, commerce, custom
             $table->json('schema');
-            $table->boolean('is_container')->default(false);
             $table->timestamps();
         });
     }

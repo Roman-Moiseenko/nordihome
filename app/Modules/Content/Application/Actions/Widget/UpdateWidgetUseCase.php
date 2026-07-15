@@ -46,7 +46,6 @@ readonly class UpdateWidgetUseCase
         $widget->category = new WidgetCategory($dto->category);
         $widget->schema = WidgetSchema::fromArray($dto->schema);
         $widget->description = $dto->description;
-        $widget->isContainer = $dto->isContainer ?? false;
 
         $widget = $this->widgetRepository->save($widget);
 

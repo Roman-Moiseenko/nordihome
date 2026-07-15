@@ -37,7 +37,6 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
         $model->container_type = (string) $contentBlock->containerType;
         $model->container_id = $contentBlock->containerId;
         $model->widget_instance_id = $contentBlock->widgetInstanceId;
-        $model->parent_block_id = $contentBlock->parentBlockId;
         $model->sort_order = $contentBlock->sort;
         $model->section = $contentBlock->section;
         $model->caption = $contentBlock->caption;
@@ -65,47 +64,9 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
             ->toArray();
     }
 
-    /** @return ContentBlockEntity[] */
-    public function getTreeByContainer(string $containerType, int $containerId): array
-    {
-        $models = ContentBlock::with(['widgetInstance.widget'])
-            ->where('container_type', $containerType)
-            ->where('container_id', $containerId)
-            ->whereNull('parent_block_id')
-            ->orderBy('sort_order')
-            ->get();
-
-        return $models
-            ->map(fn(ContentBlock $model) => $this->hydrateWithChildren($model))
-            ->toArray();
-    }
-
-    /**
-     * Гидратация с рекурсивной загрузкой дочерних блоков.
-     */
-    private function hydrateWithChildren(ContentBlock $model): ContentBlockEntity
-    {
-        $entity = $this->hydrate($model);
-
-        if ($model->relationLoaded('children') && $model->children !== null && $model->children->isNotEmpty()) {
-            $children = $model->children()
-                ->with(['widgetInstance.widget'])
-                ->orderBy('sort_order')
-                ->get();
-
-            $entity->setChildren(
-                array_map(
-                    fn(ContentBlock $child) => $this->hydrateWithChildren($child),
-                    $children->all()
-                )
-            );
-        }
-
-        return $entity;
-    }
-
     /**
      * Базовая гидратация одной сущности ContentBlock.
+     * @throws \DateMalformedStringException
      */
     private function hydrate(ContentBlock $model): ContentBlockEntity
     {
@@ -116,11 +77,9 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
             sort: $model->sort_order,
             section: $model->section,
             caption: $model->caption,
-            parentBlockId: $model->parent_block_id,
         );
 
         $entity->id = $model->id;
-        $entity->children = [];
 
         // Гидратация связанного WidgetInstance
         if ($model->relationLoaded('widgetInstance') && $model->widgetInstance !== null) {

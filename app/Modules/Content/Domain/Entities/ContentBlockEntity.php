@@ -26,15 +26,6 @@ final class ContentBlockEntity
     public int $widgetInstanceId {
         get => $this->widgetInstanceId;
     }
-    /** ID родительского блока (null для корневых блоков) */
-    public ?int $parentBlockId = null {
-        get => $this->parentBlockId;
-        set => $this->parentBlockId = $value;
-    }
-    /** @var ContentBlockEntity[] */
-    public array $children {
-        get => $this->children;
-    }
 
     public ?int $sort = null {
         get => $this->sort;
@@ -66,7 +57,6 @@ final class ContentBlockEntity
         ?int $sort = null,
         ?string $section = null,
         ?string $caption = null,
-        ?int $parentBlockId = null,
     ) {
         $this->containerType = $containerType;
         $this->containerId = $containerId;
@@ -74,12 +64,7 @@ final class ContentBlockEntity
         $this->sort = $sort;
         $this->section = $section;
         $this->caption = $caption;
-        $this->parentBlockId = $parentBlockId;
     }
 
-    public function setChildren(array $children): void
-    {
-        $this->children = $children;
-    }
 }
 

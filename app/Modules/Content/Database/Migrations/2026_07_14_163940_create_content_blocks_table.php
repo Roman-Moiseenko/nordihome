@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('container_type', 50);               // 'page' или 'post'
             $table->unsignedBigInteger('container_id');
             $table->foreignId('widget_instance_id')->constrained('widget_instances')->cascadeOnDelete();
-            $table->foreignId('parent_block_id')->nullable()->constrained('content_blocks')->cascadeOnDelete();
             $table->unsignedInteger('sort_order')->default(0);
             $table->string('section', 100)->nullable();         // 'header', 'body', 'sidebar' и т.п.
             $table->string('caption')->nullable();              // подпись блока для админки

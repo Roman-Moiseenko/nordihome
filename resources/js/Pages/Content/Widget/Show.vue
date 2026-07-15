@@ -22,19 +22,6 @@
                             <el-input v-model="form.slug" placeholder="url-slug"/>
                         </el-form-item>
 
-
-
-                        <el-form-item label="Контейнерный виджет">
-                            <el-switch
-                                v-model="form.isContainer"
-                                active-text="Да"
-                                inactive-text="Нет"
-                            />
-                            <p class="text-gray-400 text-xs mt-1">
-                                Контейнерный виджет может содержать внутри себя другие виджеты
-                            </p>
-                        </el-form-item>
-
                     </el-col>
                     <el-col :span="8">
                         <el-divider content-position="center">Продолжение</el-divider>
@@ -71,9 +58,6 @@
                             </el-descriptions-item>
                             <el-descriptions-item label="Обновлён">
                                 {{ widget.updatedAt ? formatDate(widget.updatedAt) : '—' }}
-                            </el-descriptions-item>
-                            <el-descriptions-item label="Контейнер">
-                                {{ widget.isContainer ? 'Да' : 'Нет' }}
                             </el-descriptions-item>
                         </el-descriptions>
 
@@ -150,7 +134,6 @@ const initialForm = {
     slug: props.widget?.slug ?? '',
     category: props.widget?.category ?? 'content',
     description: props.widget?.description ?? '',
-    isContainer: props.widget?.isContainer ?? false,
 }
 
 // ============== Состояние ==============

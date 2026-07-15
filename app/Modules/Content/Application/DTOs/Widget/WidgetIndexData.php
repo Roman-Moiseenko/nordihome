@@ -19,7 +19,6 @@ class WidgetIndexData extends Data
         public readonly string  $slug,
         public readonly ?string $description = null,
         public readonly string  $category,
-        public readonly bool  $isContainer,
 
     )
     {
@@ -33,7 +32,6 @@ class WidgetIndexData extends Data
             $widget->slug,
             $widget->description,
             $widget->category->getValue(),
-            $widget->isContainer,
         );
     }
 

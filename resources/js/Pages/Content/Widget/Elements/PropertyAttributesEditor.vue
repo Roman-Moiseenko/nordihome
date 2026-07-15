@@ -31,6 +31,7 @@
           <el-option label="uri (ссылка)" value="uri" />
           <el-option label="date" value="date" />
           <el-option label="date-time" value="date-time" />
+          <el-option label="widget (ID виджета)" value="widget" />
         </el-select>
       </el-form-item>
 
@@ -39,13 +40,22 @@
         <el-input v-model="defaultStr" :placeholder="stringDefaultHint" @input="onDefaultChange" />
       </el-form-item>
 
-      <!-- minimum / maximum -->
+      <!-- minimum / maximum (опционально) -->
       <template v-if="localConfig.type === 'integer' || localConfig.type === 'number'">
-        <el-form-item label="minimum">
-          <el-input-number v-model="localConfig.minimum" :min="0" @change="emitUpdate" class="w-full" />
-        </el-form-item>
-        <el-form-item label="maximum">
-          <el-input-number v-model="localConfig.maximum" :min="0" @change="emitUpdate" class="w-full" />
+        <el-form-item>
+          <template #label>
+            <span class="flex items-center gap-1">
+              <el-switch :model-value="useMinMax" size="small" @change="toggleMinMax" />
+              Min / Max
+            </span>
+          </template>
+          <template v-if="useMinMax">
+            <div class="flex gap-2">
+              <el-input-number v-model="localConfig.minimum" @change="emitUpdate" class="flex-1" placeholder="min" />
+              <el-input-number v-model="localConfig.maximum" @change="emitUpdate" class="flex-1" placeholder="max" />
+            </div>
+          </template>
+          <span v-else class="text-gray-400 text-xs">Не ограничено</span>
         </el-form-item>
       </template>
 
@@ -171,6 +181,21 @@ function onDefaultChange() {
   emitUpdate()
 }
 
+const useMinMax = computed(() => {
+  return localConfig.minimum !== undefined || localConfig.maximum !== undefined
+})
+
+function toggleMinMax(val: boolean) {
+  if (val) {
+    localConfig.minimum = 0
+    localConfig.maximum = 100
+  } else {
+    delete localConfig.minimum
+    delete localConfig.maximum
+  }
+  emitUpdate()
+}
+
 function onPropNameBlur() {
   if (editablePropName.value && editablePropName.value !== props.propName) {
     emit('update:propName', editablePropName.value)
@@ -223,8 +248,7 @@ function removeItemProperty(name: string) {
   emitUpdate()
 }
 
-function onSubKeyBlur(oldName: string) {
-  const newName = editableSubKeys[oldName]
+function onSubKeyBlur(oldName: string, newName: string) {
   if (!newName || newName === oldName) return
   if (localConfig.items.properties[newName]) return
   const newProps: Record<string, any> = {}
@@ -278,8 +302,7 @@ function removeObjectProperty(name: string) {
   emitUpdate()
 }
 
-function onObjectKeyBlur(oldName: string) {
-  const newName = objectEditableKeys[oldName]
+function onObjectKeyBlur(oldName: string, newName: string) {
   if (!newName || newName === oldName) return
   if (localConfig.properties[newName]) return
   const newProps: Record<string, any> = {}

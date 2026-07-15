@@ -22,9 +22,10 @@
           <el-form :label-width="80" size="small">
             <el-form-item label="Ключ">
               <el-input
-                :model-value="editableKeys[subName] ?? subName"
+                :model-value="localEditableKeys[subName] ?? subName"
                 size="small"
-                @blur="(e) => $emit('updateKey', subName)"
+                @input="(v) => onKeyInput(subName, v)"
+                @blur="() => onKeyBlur(subName)"
               />
             </el-form-item>
             <el-form-item label="title">
@@ -109,18 +110,35 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from 'vue'
+import { defineProps, defineEmits, ref, reactive, watch } from 'vue'
 import { Plus, Delete } from '@element-plus/icons-vue'
 
-defineProps({
+const props = defineProps({
   properties: { type: Object, required: true },
   editableKeys: { type: Object, default: () => ({}) },
 })
 
-defineEmits(['add', 'remove', 'updateKey', 'updateProp'])
+const emit = defineEmits(['add', 'remove', 'updateKey', 'updateProp'])
 
 // Все дочерние поля свернуты по умолчанию
 const expandedItems = ref<string[]>([])
+
+const localEditableKeys = reactive<Record<string, string>>({})
+
+watch(() => props.editableKeys, (val) => {
+  Object.assign(localEditableKeys, { ...val })
+}, { immediate: true, deep: true })
+
+function onKeyInput(subName: string, value: string) {
+  localEditableKeys[subName] = value
+}
+
+function onKeyBlur(subName: string) {
+  const newName = localEditableKeys[subName]?.trim()
+  if (newName && newName !== subName) {
+    emit('updateKey', subName, newName)
+  }
+}
 </script>
 
 <style scoped>
