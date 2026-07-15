@@ -83,7 +83,7 @@ class PostController extends Controller
     {
         $templates = $this->templates->getTemplates('post');
 
-        return Inertia::render('Page/Post/Post', [
+        return Inertia::render('Content/Post/Post', [
             'post' => Inertia::always($this->repository->PostWithToArray($post)),
             'templates' => $templates,
             'tiny_api' => config('shop.tinymce'),
