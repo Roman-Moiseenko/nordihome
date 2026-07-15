@@ -48,17 +48,24 @@ final class WidgetEntity
         set => $this->updatedAt = $value;
     }
 
+    public bool $isContainer = false {
+        get => $this->isContainer;
+        set => $this->isContainer = $value;
+    }
+
     public function __construct(
         string $name,
         string $slug,
         WidgetCategory $category,
         WidgetSchema $schema,
         ?string $description = null,
+        bool $isContainer = false,
     ) {
         $this->name = $name;
         $this->slug = $slug;
         $this->category = $category;
         $this->schema = $schema;
-        $this->description= $description;
+        $this->description = $description;
+        $this->isContainer = $isContainer;
     }
 }

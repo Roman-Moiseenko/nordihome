@@ -7,7 +7,7 @@
                 ref="formRef"
                 :model="form"
                 label-width="200px"
-                label-position="top"
+                label-position="left"
                 :disabled="saving"
             >
                 <el-row :gutter="10">
@@ -22,10 +22,27 @@
                             <el-input v-model="form.slug" placeholder="url-slug"/>
                         </el-form-item>
 
+
+
+                        <el-form-item label="Контейнерный виджет">
+                            <el-switch
+                                v-model="form.isContainer"
+                                active-text="Да"
+                                inactive-text="Нет"
+                            />
+                            <p class="text-gray-400 text-xs mt-1">
+                                Контейнерный виджет может содержать внутри себя другие виджеты
+                            </p>
+                        </el-form-item>
+
+                    </el-col>
+                    <el-col :span="8">
+                        <el-divider content-position="center">Продолжение</el-divider>
+
                         <el-form-item label="Категория" prop="category">
                             <el-select v-model="form.category" class="w-full">
                                 <el-option
-                                    v-for="(label, value) in categories"
+                                    v-for="(label, value) in contentStore.categories"
                                     :key="value"
                                     :value="value"
                                     :label="label"
@@ -41,7 +58,6 @@
                                 placeholder="Описание виджета (необязательно)"
                             />
                         </el-form-item>
-
                     </el-col>
                     <el-col :span="8">
                         <el-divider content-position="center">Служебная информация</el-divider>
@@ -55,6 +71,9 @@
                             </el-descriptions-item>
                             <el-descriptions-item label="Обновлён">
                                 {{ widget.updatedAt ? formatDate(widget.updatedAt) : '—' }}
+                            </el-descriptions-item>
+                            <el-descriptions-item label="Контейнер">
+                                {{ widget.isContainer ? 'Да' : 'Нет' }}
                             </el-descriptions-item>
                         </el-descriptions>
 
@@ -78,12 +97,9 @@
                     Blade-шаблон для отображения виджета на сайте.
                     Файл: <code class="bg-gray-100 px-1 rounded">widgets/{{ form.category }}/{{ form.slug }}.blade.php</code>
                 </p>
-                <el-input
+                <BladeEditor
                     v-model="templateContent"
-                    type="textarea"
-                    :rows="12"
-                    placeholder="@php /* Blade-шаблон виджета */ @endphp"
-                    class="font-mono text-sm"
+                    :height="400"
                 />
                 <div class="flex justify-end mt-2">
                     <el-button type="primary" @click="saveTemplate" :loading="savingTemplate">
@@ -110,9 +126,14 @@ import {Head, router} from "@inertiajs/vue3";
 import {computed, ref, watch} from 'vue'
 import {ElMessage} from 'element-plus'
 import {Check} from '@element-plus/icons-vue'
+
 import axios from 'axios'
 
 import SchemaEditor from './SchemaEditor.vue'
+import BladeEditor from './BladeEditor.vue'
+import {useContentStore} from "@Res/contentStore";
+
+const contentStore = useContentStore()
 
 const props = defineProps({
     widget: Object,
@@ -123,21 +144,13 @@ const props = defineProps({
     },
 })
 
-// ============== Константы ==============
-const categories: Record<string, string> = {
-    content: 'Контент',
-    media: 'Медиа',
-    commerce: 'Магазин',
-    container: 'Контейнеры',
-    custom: 'Собственный',
-}
-
 // ============== Исходные данные из пропсов (эталон для отмены) ==============
 const initialForm = {
     name: props.widget?.name ?? '',
     slug: props.widget?.slug ?? '',
     category: props.widget?.category ?? 'content',
     description: props.widget?.description ?? '',
+    isContainer: props.widget?.isContainer ?? false,
 }
 
 // ============== Состояние ==============
@@ -229,27 +242,25 @@ function onSaveInfo() {
         required: schemaConfig.value.required || [],
     }
 
-    axios.put(route('admin.content.widget.update', {id: props.widget.id}), {
-        name: form.value.name,
-        slug: form.value.slug,
-        category: form.value.category,
-        description: form.value.description || '',
-        schema: schemaPayload,
-    })
-        .then(() => {
+    router.visit(route('admin.content.widget.update', {id: props.widget.id}), {
+        method: 'put',
+        data: {
+            ...form.value,
+            schema: schemaPayload,
+        },
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: () => {
             saving.value = false
             changeInfo.value = false
             ElMessage.success('Виджет сохранён')
-            router.reload({preserveScroll: true, preserveState: false})
-        })
-        .catch((err) => {
+        },
+        onError: (errors) => {
             saving.value = false
-            if (err.response?.data?.message) {
-                ElMessage.error(err.response.data.message)
-            } else {
-                ElMessage.error('Ошибка при сохранении')
-            }
-        })
+            const firstError = Object.values(errors)[0]
+            ElMessage.error(typeof firstError === 'string' ? firstError : 'Ошибка при сохранении')
+        },
+    })
 }
 
 function onCancelInfo() {

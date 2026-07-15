@@ -38,6 +38,7 @@ class WidgetRepository implements WidgetRepositoryInterface
         $model->description = $widget->description;
         $model->category = (string) $widget->category;
         $model->schema = $widget->schema->toArray();
+        $model->is_container = $widget->isContainer;
 
         $model->save();
 
@@ -76,6 +77,7 @@ class WidgetRepository implements WidgetRepositoryInterface
             category: new WidgetCategory($model->category),
             schema: WidgetSchema::fromArray($model->schema ?? []),
             description: $model->description,
+            isContainer: $model->is_container ?? false,
         );
 
         $entity->id = $model->id;

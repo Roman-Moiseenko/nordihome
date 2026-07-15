@@ -46,20 +46,14 @@ readonly class UpdateWidgetUseCase
         $widget->category = new WidgetCategory($dto->category);
         $widget->schema = WidgetSchema::fromArray($dto->schema);
         $widget->description = $dto->description;
+        $widget->isContainer = $dto->isContainer ?? false;
 
         $widget = $this->widgetRepository->save($widget);
 
         // Управляем файлом шаблона
         if ($categoryChanged || $slugChanged) {
-            if ($categoryChanged && $slugChanged) {
                 $this->widgetFileService->moveTemplateFile($oldCategory, $oldSlug, $dto->category, $dto->slug);
-            } elseif ($categoryChanged) {
-                $this->widgetFileService->moveTemplateFile($oldCategory, $oldSlug, $dto->category, $dto->slug);
-            } else {
-                $this->widgetFileService->renameTemplateFile($oldCategory, $oldSlug, $dto->slug);
     }
-}
-
         return $widget;
     }
         }

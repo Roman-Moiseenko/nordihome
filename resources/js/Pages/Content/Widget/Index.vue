@@ -51,9 +51,9 @@ function routeClick(row) {
                 @row-click="routeClick"
             >
                 <el-table-column prop="name" label="Название" width="200" show-overflow-tooltip/>
-                <el-table-column prop="is_container" label="Контейнер" width="120" >
+                <el-table-column prop="isContainer" label="Контейнер" width="120" >
                     <template #default="scope">
-                        <Active :active="scope.row.is_container" />
+                        <Active :active="scope.row.isContainer" />
                     </template>
                 </el-table-column>
                 <el-table-column prop="slug" label="Ссылка на шаблон" width="120"/>

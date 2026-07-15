@@ -37,6 +37,7 @@ readonly class CreateWidgetUseCase
             category: new WidgetCategory($dto->category),
             schema: new WidgetSchema(['type' => 'object', 'properties' => []]),
             description: null,
+            isContainer: $dto->isContainer ?? false,
         );
 
         $widget = $this->widgetRepository->save($widget);

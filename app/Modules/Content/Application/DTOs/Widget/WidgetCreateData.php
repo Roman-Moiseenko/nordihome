@@ -17,6 +17,7 @@ class WidgetCreateData extends Data
         public readonly string $slug,
         #[Required, StringType, Max(50)]
         public readonly string $category,
-
+        #[Nullable, BooleanType]
+        public readonly ?bool $isContainer = false,
     ) {}
 }

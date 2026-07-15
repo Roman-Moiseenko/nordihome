@@ -5,36 +5,45 @@
     </p>
 
     <div v-if="localSchema?.properties && Object.keys(localSchema.properties).length > 0">
-      <div
-        v-for="(propConfig, propName) in localSchema.properties"
-        :key="propName"
-        class="schema-field mb-4 p-4 border rounded-lg bg-gray-50"
-      >
-        <!-- Заголовок поля схемы -->
-        <div class="flex items-center justify-between mb-2">
-          <label class="font-medium text-sm">
-            {{ propConfig.title || propName }}
-            <span v-if="isRequired(propName)" class="text-red-500 ml-1">*</span>
-          </label>
-          <div class="flex gap-1">
-            <el-button size="small" type="danger" plain @click="removeProperty(propName)" :disabled="isRequired(propName)">
-              <el-icon><Delete /></el-icon>
-            </el-button>
-          </div>
-        </div>
+      <el-collapse v-model="expandedFields" class="schema-collapse">
+        <el-collapse-item
+          v-for="(propConfig, propName) in localSchema.properties"
+          :key="propName"
+          :name="propName"
+          class="schema-field mb-2"
+        >
+          <template #title>
+            <div class="flex items-center justify-between w-full pr-2">
+              <span class="font-medium text-sm">
+                {{ propConfig.title || propName }}
+                <el-tag size="small" type="info" class="ml-2">{{ propConfig.type }}</el-tag>
+                <span v-if="isRequired(propName)" class="text-red-500 ml-1">*</span>
+              </span>
+              <el-button
+                size="small"
+                type="danger"
+                plain
+                @click.stop="removeProperty(propName)"
+                :disabled="isRequired(propName)"
+              >
+                <el-icon><Delete /></el-icon>
+              </el-button>
+            </div>
+          </template>
 
-        <!-- Редактор атрибутов поля схемы -->
-        <PropertyAttributesEditor
-          :prop-name="propName"
-          :prop-config="propConfig"
-          :required="isRequired(propName)"
-          @update:prop-config="(newConfig) => updatePropertyConfig(propName, newConfig)"
-          @update:required="(val) => toggleRequired(propName, val)"
-        />
-      </div>
+          <PropertyAttributesEditor
+            :prop-name="propName"
+            :prop-config="propConfig"
+            :required="isRequired(propName)"
+            :show-key-editor="true"
+            @update:prop-config="(newConfig) => updatePropertyConfig(propName, newConfig)"
+            @update:required="(val) => toggleRequired(propName, val)"
+            @update:prop-name="(newName) => renameProperty(propName, newName)"
+          />
+        </el-collapse-item>
+      </el-collapse>
     </div>
 
-    <!-- Кнопка добавить поле -->
     <div class="mt-4">
       <el-button type="primary" plain @click="showAddDialog = true">
         <el-icon><Plus /></el-icon>
@@ -42,7 +51,6 @@
       </el-button>
     </div>
 
-    <!-- Диалог добавления поля -->
     <el-dialog v-model="showAddDialog" title="Новое поле схемы" width="500px">
       <el-form label-position="top" size="small">
         <el-form-item label="Имя поля (ключ)" required>
@@ -60,6 +68,7 @@
             <el-option label="Число целое (integer)" value="integer" />
             <el-option label="Число дробное (number)" value="number" />
             <el-option label="Да/Нет (boolean)" value="boolean" />
+            <el-option label="Объект (object)" value="object" />
             <el-option label="Массив объектов (array + object)" value="array_objects" />
             <el-option label="Массив строк (array + string)" value="array_strings" />
             <el-option label="Массив чисел (array + integer)" value="array_integers" />
@@ -90,7 +99,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits, ref, watch, reactive, computed } from 'vue'
+import { defineProps, defineEmits, ref, watch, reactive } from 'vue'
 import { Delete, Plus } from '@element-plus/icons-vue'
 import PropertyAttributesEditor from './PropertyAttributesEditor.vue'
 
@@ -107,12 +116,14 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'update:schema'])
 
-// Локальная копия схемы
 const localSchema = reactive<Record<string, any>>({
   type: 'object',
   properties: {},
   required: [],
 })
+
+// Все поля свернуты по умолчанию
+const expandedFields = ref<string[]>([])
 
 watch(() => props.schema, (val) => {
   localSchema.type = val?.type || 'object'
@@ -120,7 +131,6 @@ watch(() => props.schema, (val) => {
   localSchema.required = val?.required ? [...val.required] : []
 }, { immediate: true, deep: true })
 
-// Состояние для диалога добавления
 const showAddDialog = ref(false)
 const newPropName = ref('')
 const newPropTitle = ref('')
@@ -146,6 +156,29 @@ function emitSchemaUpdate() {
 function removeProperty(name: string) {
   if (isRequired(name)) return
   delete localSchema.properties[name]
+  emitSchemaUpdate()
+}
+
+function renameProperty(oldName: string, newName: string) {
+  if (oldName === newName || !newName) return
+  if (localSchema.properties[newName]) return
+
+  const newProperties: Record<string, any> = {}
+  for (const key of Object.keys(localSchema.properties)) {
+    if (key === oldName) {
+      newProperties[newName] = localSchema.properties[oldName]
+    } else {
+      newProperties[key] = localSchema.properties[key]
+    }
+  }
+  localSchema.properties = newProperties
+
+  if (localSchema.required) {
+    const idx = localSchema.required.indexOf(oldName)
+    if (idx !== -1) {
+      localSchema.required[idx] = newName
+    }
+  }
   emitSchemaUpdate()
 }
 
@@ -204,6 +237,10 @@ function addProperty() {
       propConfig.type = 'boolean'
       if (newPropDefault.value) propConfig.default = newPropDefault.value === 'true' || newPropDefault.value === '1'
       break
+    case 'object':
+      propConfig.type = 'object'
+      propConfig.properties = {}
+      break
     case 'array_objects':
       propConfig.type = 'array'
       propConfig.items = {
@@ -222,7 +259,6 @@ function addProperty() {
       propConfig.items = { type: 'integer' }
       break
     default:
-      // string
       if (newPropEnum.value) {
         propConfig.enum = newPropEnum.value.split(',').map((s: string) => s.trim())
       }
@@ -232,6 +268,9 @@ function addProperty() {
 
   localSchema.properties[name] = propConfig
 
+  // Раскрываем новое поле
+  expandedFields.value.push(name)
+
   if (newPropRequired.value) {
     if (!localSchema.required) localSchema.required = []
     if (!localSchema.required.includes(name)) {
@@ -239,7 +278,6 @@ function addProperty() {
     }
   }
 
-  // Сброс
   newPropName.value = ''
   newPropTitle.value = ''
   newPropType.value = 'string'
@@ -254,10 +292,15 @@ function addProperty() {
 </script>
 
 <style scoped>
-.schema-field {
-  transition: all 0.2s;
+.schema-collapse :deep(.el-collapse-item__header) {
+  padding-left: 12px;
+  background: #f9fafb;
+  border-radius: 8px;
 }
-.schema-field:hover {
-  border-color: #409eff;
+.schema-collapse :deep(.el-collapse-item__wrap) {
+  border-radius: 0 0 8px 8px;
+}
+.schema-collapse :deep(.el-collapse-item__content) {
+  padding: 12px;
 }
 </style>

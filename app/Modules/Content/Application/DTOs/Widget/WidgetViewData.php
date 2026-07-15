@@ -22,7 +22,7 @@ class WidgetViewData extends Data
         public readonly ?array  $schema = null,
         public readonly ?string $createdAt = null,
         public readonly ?string $updatedAt = null,
-
+        public readonly bool    $isContainer = false,
     )
     {
     }
@@ -38,7 +38,9 @@ class WidgetViewData extends Data
             $widget->schema->toArray(),
             $widget->createdAt->format('c'),
             $widget->updatedAt->format('c'),
+            $widget->isContainer,
         );
     }
+
 
 }

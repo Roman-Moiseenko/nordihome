@@ -2,6 +2,7 @@
 
 namespace App\Modules\Content\Application\DTOs\Widget;
 use Spatie\LaravelData\Attributes\Validation\ArrayType;
+use Spatie\LaravelData\Attributes\Validation\BooleanType;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Nullable;
 use Spatie\LaravelData\Attributes\Validation\Required;
@@ -21,5 +22,7 @@ class WidgetUpdateData extends Data
         public readonly array $schema,
         #[Nullable, StringType, Max(255)]
         public readonly ?string $description = null,
+        #[Nullable, BooleanType]
+        public readonly ?bool $isContainer = false,
     ) {}
 }

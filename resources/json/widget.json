@@ -1,0 +1,23 @@
+{
+    "type": "object",
+    "required": [],
+    "properties": {
+        "items": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "title": "Заголовок"
+                    },
+                    "field_1784130311500": {
+                        "type": "string",
+                        "title": "Новое поле"
+                    }
+                }
+            },
+            "title": "Абзацы"
+        }
+    }
+}
