@@ -36,7 +36,7 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
 
         $model->container_type = (string) $contentBlock->containerType;
         $model->container_id = $contentBlock->containerId;
-        $model->widget_instance_id = $contentBlock->widgetInstanceId;
+        $model->widget_instance_id = $contentBlock->widgetInstanceId ?: null;
         $model->sort_order = $contentBlock->sort;
         $model->section = $contentBlock->section;
         $model->caption = $contentBlock->caption;
@@ -64,6 +64,43 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
             ->toArray();
     }
 
+    public function updateSortOrder(int $blockId, int $newSort): void
+    {
+        $block = ContentBlock::findOrFail($blockId);
+
+        $currentSort = $block->sort_order;
+
+        if ($currentSort === $newSort) {
+            return;
+        }
+
+        $containerType = $block->container_type;
+        $containerId = $block->container_id;
+
+        // Получаем все блоки контейнера, исключая текущий
+        $siblings = ContentBlock::where('container_type', $containerType)
+            ->where('container_id', $containerId)
+            ->where('id', '!=', $blockId)
+            ->orderBy('sort_order')
+            ->get();
+
+        $block->sort_order = $newSort;
+        $block->save();
+
+        // Собираем все блоки с их новыми позициями
+        $allBlocks = $siblings->toBase()->push($block->fresh())
+            ->sortBy('sort_order')
+            ->values();
+
+        // Перенумеровываем
+        foreach ($allBlocks as $index => $b) {
+            if ($b->sort_order !== $index + 1) {
+                ContentBlock::withoutTimestamps(function () use ($b, $index) {
+                    $b->update(['sort_order' => $index + 1]);
+                });
+            }
+        }
+    }
     /**
      * Базовая гидратация одной сущности ContentBlock.
      * @throws \DateMalformedStringException

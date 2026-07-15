@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Content\Application\Actions\ContentBlock;
+
+use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockCreateData;
+use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
+use App\Modules\Content\Domain\Entities\ContentBlockEntity;
+use App\Modules\Content\Domain\ValueObjects\ContainerType;
+
+final readonly class CreateContentBlockUseCase
+{
+    public function __construct(
+        private ContentBlockRepositoryInterface $contentBlockRepository,
+    ) {}
+
+    public function execute(ContentBlockCreateData $dto): ContentBlockEntity
+    {
+        $containerType = new ContainerType($dto->container_type);
+
+        $block = new ContentBlockEntity(
+            containerType: $containerType,
+            containerId: $dto->container_id,
+            section: $dto->section,
+            caption: $dto->caption,
+        );
+
+        return $this->contentBlockRepository->save($block);
+    }
+}

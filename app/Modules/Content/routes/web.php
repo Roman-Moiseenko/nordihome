@@ -14,7 +14,9 @@ use App\Modules\Content\Controllers\PostWidgetController;
 use App\Modules\Content\Controllers\ProductWidgetController;
 use App\Modules\Content\Controllers\PromotionWidgetController;
 use App\Modules\Content\Controllers\TextWidgetController;
+use App\Modules\Content\Presentation\Http\Controllers\Web\ContentBlockController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\WidgetController;
+use App\Modules\Content\Presentation\Http\Controllers\Web\WidgetInstanceController;
 use Illuminate\Support\Facades\Route;
 
 Route::group(
@@ -45,6 +47,28 @@ Route::group(
             Route::delete('/{id}', [WidgetController::class, 'destroy'])->name('destroy');
         });
 
+        // ContentBlock API
+        Route::group([
+            'prefix' => 'content-blocks',
+            'as' => 'content-blocks.'
+        ], function () {
+            Route::post('/sort', [ContentBlockController::class, 'sort'])->name('sort');
+            Route::get('/{id}', [ContentBlockController::class, 'show'])->name('show');
+            Route::post('/', [ContentBlockController::class, 'store'])->name('store');
+            Route::put('/{id}', [ContentBlockController::class, 'update'])->name('update');
+            Route::delete('/{id}', [ContentBlockController::class, 'destroy'])->name('destroy');
+        });
+
+        // WidgetInstance API
+        Route::group([
+            'prefix' => 'widget-instances',
+            'as' => 'widget-instances.'
+        ], function () {
+            Route::get('/{id}', [WidgetInstanceController::class, 'show'])->name('show');
+            Route::post('/', [WidgetInstanceController::class, 'store'])->name('store');
+            Route::put('/{id}', [WidgetInstanceController::class, 'update'])->name('update');
+            Route::delete('/{id}', [WidgetInstanceController::class, 'destroy'])->name('destroy');
+        });
 
 
         Route::group([
@@ -276,5 +300,7 @@ Route::group(
             Route::get('/', [MetaTemplateController::class, 'index'])->name('index');
             Route::post('/set-data', [MetaTemplateController::class, 'set_data'])->name('set-data');
         });
+
+
     }
 );

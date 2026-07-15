@@ -23,8 +23,9 @@ final class ContentBlockEntity
         get => $this->containerId;
     }
 
-    public int $widgetInstanceId {
+    public ?int $widgetInstanceId = null {
         get => $this->widgetInstanceId;
+        set => $this->widgetInstanceId = $value;
     }
 
     public ?int $sort = null {
@@ -53,7 +54,7 @@ final class ContentBlockEntity
     public function __construct(
         ContainerType $containerType,
         int $containerId,
-        int $widgetInstanceId,
+        ?int $widgetInstanceId = null,
         ?int $sort = null,
         ?string $section = null,
         ?string $caption = null,
@@ -67,4 +68,3 @@ final class ContentBlockEntity
     }
 
 }
-
