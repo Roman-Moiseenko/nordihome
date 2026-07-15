@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Content\Application\DTOs\Widget;
+namespace App\Modules\Content\Application\DTOs\WidgetInstance;
 
 use Spatie\LaravelData\Attributes\Validation\ArrayType;
 use Spatie\LaravelData\Attributes\Validation\IntegerType;

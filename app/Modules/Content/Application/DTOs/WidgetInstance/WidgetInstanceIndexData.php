@@ -1,24 +1,20 @@
 <?php
 
-namespace App\Modules\Content\Application\DTOs\Widget;
+namespace App\Modules\Content\Application\DTOs\WidgetInstance;
 
 use App\Modules\Content\Domain\Entities\WidgetInstanceEntity;
 use Spatie\LaravelData\Attributes\Validation\IntegerType;
 use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Data;
 
-class WidgetInstanceViewData extends Data
+class WidgetInstanceIndexData extends Data
 {
     public function __construct(
         #[Required, IntegerType]
         public readonly int $id,
-        public readonly int $widgetId,
         public readonly string $widgetName,
         public readonly string $widgetSlug,
-        public readonly array $params = [],
         public readonly ?string $title = null,
-        public readonly ?string $createdAt = null,
-        public readonly ?string $updatedAt = null,
     ) {}
 
 
@@ -26,13 +22,19 @@ class WidgetInstanceViewData extends Data
     {
         return new self(
             $instance->id,
-            $instance->widgetId,
             $instance->widgetName,
             $instance->widgetSlug,
-            $instance->params,
             $instance->title,
-            $instance->createdAt->format('c'),
-            $instance->updatedAt->format('c'),
+
         );
+    }
+
+    public static function from(mixed ...$payloads): static
+    {
+        if (count($payloads) === 1 && $payloads[0] instanceof WidgetInstanceEntity) {
+            return static::fromEntity($payloads[0]);
+        }
+
+        return parent::from(...$payloads);
     }
 }
