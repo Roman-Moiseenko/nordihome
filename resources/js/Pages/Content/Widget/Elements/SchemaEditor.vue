@@ -44,11 +44,12 @@
       </el-collapse>
     </div>
 
-    <div class="mt-4">
+    <div class="mt-4 flex items-center gap-2">
       <el-button type="primary" plain @click="showAddDialog = true">
         <el-icon><Plus /></el-icon>
         Добавить поле
       </el-button>
+      <slot name="actions" />
     </div>
 
     <el-dialog v-model="showAddDialog" title="Новое поле схемы" width="500px">
@@ -102,6 +103,8 @@
 import { defineProps, defineEmits, ref, watch, reactive } from 'vue'
 import { Delete, Plus } from '@element-plus/icons-vue'
 import PropertyAttributesEditor from './PropertyAttributesEditor.vue'
+
+import ItemPropertiesEditor from './ItemPropertiesEditor.vue'
 
 const props = defineProps({
   schema: {

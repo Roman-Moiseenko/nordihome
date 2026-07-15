@@ -89,7 +89,14 @@
                     :schema="schemaConfig"
                     :key="schemaEditorKey"
                     @update:schema="onSchemaUpdate"
-                />
+                >
+                    <template #actions>
+                        <el-button v-if="changeInfo" type="primary" :loading="saving" @click="onSaveInfo">
+                            Сохранить
+                        </el-button>
+                        <el-button v-if="changeInfo" @click="onCancelInfo">Отмена</el-button>
+                    </template>
+                </SchemaEditor>
 
                 <el-divider content-position="left">Шаблон отображения</el-divider>
 
@@ -108,13 +115,6 @@
                     </el-button>
                 </div>
 
-                <el-form-item v-if="changeInfo">
-                    <el-button type="primary" :loading="saving" @click="onSaveInfo">
-                        Сохранить
-                    </el-button>
-                    <el-button @click="onCancelInfo">Отмена</el-button>
-                </el-form-item>
-
             </el-form>
         </el-card>
     </el-config-provider>
@@ -129,8 +129,8 @@ import {Check} from '@element-plus/icons-vue'
 
 import axios from 'axios'
 
-import SchemaEditor from './SchemaEditor.vue'
-import BladeEditor from './BladeEditor.vue'
+import SchemaEditor from './Elements/SchemaEditor.vue'
+import BladeEditor from './Elements/BladeEditor.vue'
 import {useContentStore} from "@Res/contentStore";
 
 const contentStore = useContentStore()
@@ -265,6 +265,7 @@ function onSaveInfo() {
 
 function onCancelInfo() {
     form.value = {...initialForm}
+    initSchema()
     changeInfo.value = false
 }
 
