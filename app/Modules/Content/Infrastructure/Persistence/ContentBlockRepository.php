@@ -49,6 +49,7 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
         }
         $model->section = $contentBlock->section;
         $model->caption = $contentBlock->caption;
+        $model->active = $contentBlock->active;
 
         $model->save();
 

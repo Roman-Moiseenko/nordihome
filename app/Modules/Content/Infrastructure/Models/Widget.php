@@ -20,7 +20,6 @@ class Widget extends Model
     protected $fillable = ['name', 'slug', 'description', 'category', 'schema'];
     protected $casts = [
         'schema' => 'array',
-        'is_container' => 'boolean',
     ];
     public function instances()
     {

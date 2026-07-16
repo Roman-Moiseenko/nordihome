@@ -20,6 +20,7 @@
                 @delete="confirmDelete"
                 @add-widget="openWidgetSelector"
                 @remove-widget="confirmRemoveWidget"
+                @toggle-active="onToggleActive"
             />
         </div>
 
@@ -91,7 +92,7 @@ const props = defineProps<{
     containerType: string
 }>()
 
-const { loading, createBlock: apiCreateBlock, updateBlock: apiUpdateBlock, deleteBlock: apiDeleteBlock, sortBlock: apiSortBlock, createWidgetInstance, deleteWidgetInstance } = useContentBlock()
+const { loading, createBlock: apiCreateBlock, updateBlock: apiUpdateBlock, deleteBlock: apiDeleteBlock, sortBlock: apiSortBlock, toggleBlock: apiToggleBlock, createWidgetInstance, deleteWidgetInstance } = useContentBlock()
 const contentStore = useContentStore()
 
 const localBlocks = ref<ContentBlockData[]>([])
@@ -180,13 +181,25 @@ onMounted(() => {
     }
 })
 
+// --- Переключение active ---
+async function onToggleActive(blockId: number, active: boolean) {
+    const block = localBlocks.value.find(b => b.id === blockId)
+    if (!block) return
+
+    try {
+        const updated = await apiToggleBlock(blockId)
+        block.active = updated.active
+    } catch (e) {
+        console.error('Ошибка переключения active:', e)
+    }
+}
+
 // --- Сортировка и коллапс ---
 watch(() => props.blocks, (val) => {
     localBlocks.value = [...val]
 
-    if (val.length > 0) {
-        collapsedIds.value = new Set(val.slice(0, -1).map(b => b.id))
-    }
+    // Все блоки при загрузке — свернуты
+    collapsedIds.value = new Set(val.map(b => b.id))
 
     nextTick(initSortable)
 }, { immediate: true })

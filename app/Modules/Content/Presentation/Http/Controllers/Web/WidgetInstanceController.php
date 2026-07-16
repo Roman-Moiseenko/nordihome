@@ -6,12 +6,11 @@ namespace App\Modules\Content\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Content\Application\Actions\WidgetInstance\CreateWidgetInstanceUseCase;
+use App\Modules\Content\Application\Actions\WidgetInstance\GetWidgetInstanceFormUseCase;
 use App\Modules\Content\Application\Actions\WidgetInstance\RemoveWidgetInstanceUseCase;
 use App\Modules\Content\Application\Actions\WidgetInstance\UpdateWidgetInstanceUseCase;
-use App\Modules\Content\Application\Actions\WidgetInstance\ViewWidgetInstanceUseCase;
 use App\Modules\Content\Application\DTOs\WidgetInstance\WidgetInstanceCreateData;
 use App\Modules\Content\Application\DTOs\WidgetInstance\WidgetInstanceUpdateData;
-use App\Modules\Content\Application\DTOs\WidgetInstance\WidgetInstanceViewData;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -19,7 +18,7 @@ class WidgetInstanceController extends Controller
 {
     public function __construct(
         private readonly CreateWidgetInstanceUseCase $createWidgetInstanceUseCase,
-        private readonly ViewWidgetInstanceUseCase $viewWidgetInstanceUseCase,
+        private readonly GetWidgetInstanceFormUseCase $getWidgetInstanceFormUseCase,
         private readonly UpdateWidgetInstanceUseCase $updateWidgetInstanceUseCase,
         private readonly RemoveWidgetInstanceUseCase $removeWidgetInstanceUseCase,
     ) {}
@@ -35,23 +34,20 @@ class WidgetInstanceController extends Controller
 
         $instance = $this->createWidgetInstanceUseCase->execute($dto);
 
-        return response()->json(
-            WidgetInstanceViewData::fromEntity($instance),
-            201,
-        );
+        // Возвращаем форму с полями
+        $formData = $this->getWidgetInstanceFormUseCase->execute($instance->id);
+        return response()->json($formData, 201);
     }
 
     /**
-     * Получить WidgetInstance по ID.
+     * Получить WidgetInstance по ID с полями формы.
      * GET /admin/content/widget-instances/{id}
      */
     public function show(int $id): JsonResponse
     {
-        $instance = $this->viewWidgetInstanceUseCase->execute($id);
+        $formData = $this->getWidgetInstanceFormUseCase->execute($id);
 
-        return response()->json(
-            WidgetInstanceViewData::fromEntity($instance),
-        );
+        return response()->json($formData);
     }
 
     /**
@@ -64,9 +60,9 @@ class WidgetInstanceController extends Controller
 
         $instance = $this->updateWidgetInstanceUseCase->execute($id, $dto);
 
-        return response()->json(
-            WidgetInstanceViewData::fromEntity($instance),
-        );
+        // Возвращаем форму с обновлёнными полями
+        $formData = $this->getWidgetInstanceFormUseCase->execute($instance->id);
+        return response()->json($formData);
     }
 
     /**

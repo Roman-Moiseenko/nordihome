@@ -3,6 +3,18 @@ import api from '@Res/api'
 // @ts-ignore
 import { route } from 'ziggy-js'
 
+export interface WidgetFormFieldData {
+    name: string
+    type: string
+    label: string
+    value: any
+    default: any
+    required: boolean
+    format: string | null
+    options: string[] | null
+    nestedFields: WidgetFormFieldData[] | null
+}
+
 export interface WidgetInstanceData {
     id: number
     widgetId: number
@@ -10,6 +22,7 @@ export interface WidgetInstanceData {
     widgetSlug: string
     params: Record<string, any>
     title: string | null
+    fields: WidgetFormFieldData[]
     createdAt: string | null
     updatedAt: string | null
 }
@@ -22,6 +35,7 @@ export interface ContentBlockData {
     sort: number | null
     section: string | null
     caption: string | null
+    active: boolean
     widgetInstance: WidgetInstanceData | null
     createdAt: string | null
     updatedAt: string | null
@@ -111,6 +125,19 @@ export function useContentBlock() {
         }
     }
 
+    /** Переключить active у ContentBlock */
+    async function toggleBlock(id: number): Promise<ContentBlockData> {
+        loading.value = true
+        try {
+            const res = await api.post<ContentBlockData>(
+                route('admin.content.content-blocks.toggle', { id }),
+            )
+            return res
+        } finally {
+            loading.value = false
+        }
+    }
+
     // ---- WidgetInstance ----
 
     /** Создать WidgetInstance (опционально с привязкой к ContentBlock) */
@@ -133,7 +160,7 @@ export function useContentBlock() {
         }
     }
 
-    /** Получить WidgetInstance по ID */
+    /** Получить WidgetInstance по ID с полями формы */
     async function getWidgetInstance(id: number): Promise<WidgetInstanceData> {
         loading.value = true
         try {
@@ -146,7 +173,7 @@ export function useContentBlock() {
         }
     }
 
-    /** Обновить WidgetInstance */
+    /** Обновить WidgetInstance и получить поля формы */
     async function updateWidgetInstance(
         id: number,
         payload: { params?: Record<string, any>; title?: string | null },
@@ -185,6 +212,7 @@ export function useContentBlock() {
         updateBlock,
         sortBlock,
         deleteBlock,
+        toggleBlock,
         createWidgetInstance,
         getWidgetInstance,
         updateWidgetInstance,
