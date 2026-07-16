@@ -99,6 +99,7 @@
         "vite-plugin-full-reload": "^1.0.5",
         "vue": "^3.5.12",
         "vue-codemirror": "^6.1.1",
+        "vuedraggable": "^4.0.2",
         "xlsx": "^0.18.5",
         "zoom-vanilla.js": "^2.0.6"
     },

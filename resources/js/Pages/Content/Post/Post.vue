@@ -15,6 +15,14 @@
                 @change="saveText"
             />
         </div>
+        <!-- ContentBlock Editor -->
+        <div class="mt-3 p-3 bg-white rounded-lg ">
+            <ContentBlockEditor
+                :blocks="blocks || []"
+                :container-id="post.id"
+                container-type="post"
+            />
+        </div>
     </el-config-provider>
 </template>
 
@@ -23,6 +31,7 @@ import Editor from '@tinymce/tinymce-vue'
 import {defineProps, ref} from "vue";
 import {Head, router} from "@inertiajs/vue3";
 import InfoPost from "./Block/InfoPost.vue";
+import ContentBlockEditor from "../../../VueComponents/Content/ContentBlock/ContentBlockEditor.vue";
 import {useStore} from '@Res/store.js'
 import axios from "axios";
 import ru from 'element-plus/dist/locale/ru.mjs'

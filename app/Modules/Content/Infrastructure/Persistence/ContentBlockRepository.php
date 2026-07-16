@@ -37,7 +37,16 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
         $model->container_type = (string) $contentBlock->containerType;
         $model->container_id = $contentBlock->containerId;
         $model->widget_instance_id = $contentBlock->widgetInstanceId ?: null;
-        $model->sort_order = $contentBlock->sort;
+
+        // Если sort не задан — ставим следующий по порядку для этого контейнера
+        if ($contentBlock->sort === null) {
+            $maxSort = ContentBlock::where('container_type', $model->container_type)
+                ->where('container_id', $model->container_id)
+                ->max('sort_order');
+            $model->sort_order = ($maxSort ?? 0) + 1;
+        } else {
+            $model->sort_order = $contentBlock->sort;
+        }
         $model->section = $contentBlock->section;
         $model->caption = $contentBlock->caption;
 
