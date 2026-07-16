@@ -3,6 +3,9 @@
 namespace App\Modules\Content\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
+use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
+use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Content\Entity\Post;
 use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Repository\PostRepository;
@@ -25,6 +28,7 @@ class PostController extends Controller
         PostService        $service,
         TemplateRepository $templates,
         PostRepository     $repository,
+        private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
     )
     {
         $this->service = $service;
@@ -82,11 +86,13 @@ class PostController extends Controller
     public function post(Post $post): Response
     {
         $templates = $this->templates->getTemplates('post');
-
+        $dto = new ContentBlockContainerData($post->id, ContainerType::POST);
+        $blocks = $this->listContentBlockByContainerUseCase->execute($dto);
         return Inertia::render('Content/Post/Post', [
-            'post' => Inertia::always($this->repository->PostWithToArray($post)),
-            'templates' => $templates,
-            'tiny_api' => config('shop.tinymce'),
+            'post' => Inertia::always($this->repository->PostWithToArray($post)), //Заменить на useCase
+            'templates' => $templates, //Удалить
+            'tiny_api' => config('shop.tinymce'), //Удалить
+            'blocks' => $blocks,
         ]);
     }
 

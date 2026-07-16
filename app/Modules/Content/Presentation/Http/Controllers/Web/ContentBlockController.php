@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Content\Application\Actions\ContentBlock\CreateContentBlockUseCase;
 use App\Modules\Content\Application\Actions\ContentBlock\RemoveContentBlockUseCase;
 use App\Modules\Content\Application\Actions\ContentBlock\SortContentBlockUseCase;
+use App\Modules\Content\Application\Actions\ContentBlock\ToggleContentBlockUseCase;
 use App\Modules\Content\Application\Actions\ContentBlock\UpdateContentBlockUseCase;
 use App\Modules\Content\Application\Actions\ContentBlock\ViewContentBlockUseCase;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockCreateData;
@@ -25,6 +26,7 @@ class ContentBlockController extends Controller
         private readonly UpdateContentBlockUseCase $updateContentBlockUseCase,
         private readonly SortContentBlockUseCase $sortContentBlockUseCase,
         private readonly RemoveContentBlockUseCase $removeContentBlockUseCase,
+        private readonly ToggleContentBlockUseCase $toggleContentBlockUseCase,
     ) {}
 
     /**
@@ -82,6 +84,19 @@ class ContentBlockController extends Controller
         $this->sortContentBlockUseCase->execute($dto);
 
         return response()->json(['message' => 'Порядок сортировки обновлён']);
+    }
+
+    /**
+     * Переключить активность ContentBlock (active true/false).
+     * POST /admin/content/content-blocks/{id}/toggle
+     */
+    public function toggle(int $id): JsonResponse
+    {
+        $block = $this->toggleContentBlockUseCase->execute($id);
+
+        return response()->json(
+            ContentBlockViewData::fromEntity($block),
+        );
     }
 
     /**

@@ -53,6 +53,7 @@ Route::group(
             'as' => 'content-blocks.'
         ], function () {
             Route::post('/sort', [ContentBlockController::class, 'sort'])->name('sort');
+            Route::post('/{id}/toggle', [ContentBlockController::class, 'toggle'])->name('toggle');
             Route::get('/{id}', [ContentBlockController::class, 'show'])->name('show');
             Route::post('/', [ContentBlockController::class, 'store'])->name('store');
             Route::put('/{id}', [ContentBlockController::class, 'update'])->name('update');

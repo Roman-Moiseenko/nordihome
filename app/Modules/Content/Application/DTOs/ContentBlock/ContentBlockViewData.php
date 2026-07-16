@@ -21,6 +21,7 @@ class ContentBlockViewData extends Data
         public readonly ?int $sort,
         public readonly ?string $section,
         public readonly ?string $caption,
+        public readonly bool $active,
         public readonly ?WidgetInstanceViewData $widgetInstance = null,
         public readonly ?string $createdAt = null,
         public readonly ?string $updatedAt = null,
@@ -36,6 +37,7 @@ class ContentBlockViewData extends Data
             sort: $block->sort,
             section: $block->section,
             caption: $block->caption,
+            active: $block->active,
             widgetInstance: $block->widgetInstance !== null
                 ? WidgetInstanceViewData::fromEntity($block->widgetInstance)
                 : null,

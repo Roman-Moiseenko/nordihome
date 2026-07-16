@@ -115,7 +115,7 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
             section: $model->section,
             caption: $model->caption,
         );
-
+        $entity->active = (bool) $model->active;
         $entity->id = $model->id;
 
         // Гидратация связанного WidgetInstance

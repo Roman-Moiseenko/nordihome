@@ -38,6 +38,11 @@ final class ContentBlockEntity
         set => $this->section = $value;
     }
 
+    public bool $active = true {
+        get => $this->active;
+        set => $this->active = $value;
+    }
+
     public ?DateTimeImmutable $createdAt = null {
         get => $this->createdAt;
         set => $this->createdAt = $value;
@@ -47,6 +52,7 @@ final class ContentBlockEntity
         get => $this->updatedAt;
         set => $this->updatedAt = $value;
     }
+
     public ?WidgetInstanceEntity $widgetInstance = null {
         get => $this->widgetInstance;
         set => $this->widgetInstance = $value;

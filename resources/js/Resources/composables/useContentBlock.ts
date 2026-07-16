@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import api from '@Res/api'
+// @ts-ignore
 import { route } from 'ziggy-js'
 
 export interface WidgetInstanceData {

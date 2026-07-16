@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
  * @property int $sort
  * @property string $section
  * @property string $caption
+ * @property bool $active
  * @property ?DateTime $created_at
  * @property ?DateTime $updated_at
  * @property WidgetInstance $widgetInstance
@@ -29,9 +30,11 @@ class ContentBlock extends Model
         'sort_order',
         'section',
         'caption',
+        'active',
     ];
     protected $casts = [
         'sort_order' => 'integer',
+        'active' => 'boolean',
     ];
     public function widgetInstance(): BelongsTo
     {

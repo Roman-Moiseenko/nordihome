@@ -37,7 +37,9 @@ const props = defineProps({
     },
     templates: Array,
     tiny_api: String,
+    blocks: Array,
 })
+console.log(props.blocks);
 const text = ref(props.post.text)
 
 function saveText() {
