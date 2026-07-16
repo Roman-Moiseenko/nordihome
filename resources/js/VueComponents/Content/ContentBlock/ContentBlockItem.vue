@@ -30,21 +30,45 @@
             </el-tag>
 
             <div class="ml-auto flex gap-1" @click.stop>
+                <el-button size="small" type="primary" link @click="$emit('edit', block.id)">
+                    Изменить
+                </el-button>
                 <el-button size="small" type="danger" text @click="$emit('delete', block.id)">
-                    Удалить
+                    Удалить блок
                 </el-button>
             </div>
         </div>
 
         <!-- Контент блока (сворачивается) -->
         <div v-show="!collapsed" class="border-t px-3 py-3">
-            <!-- Заголовок внутри -->
-            <div class="text-base font-medium mb-1">
-                {{ block.caption || 'Без заголовка' }}
+            <!-- Есть виджет — показываем его компонент -->
+            <div v-if="block.widgetInstance" class="widget-container">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm text-gray-500">
+                        Виджет: <strong>{{ block.widgetInstance.widgetName }}</strong>
+                        (ID: {{ block.widgetInstance.id }})
+                    </span>
+                    <el-button
+                        size="small"
+                        type="danger"
+                        plain
+                        @click="$emit('removeWidget', block.id)"
+                    >
+                        Удалить виджет
+                </el-button>
+                </div>
             </div>
 
-            <!-- JSON данных блока (заглушка, потом заменим на виджет) -->
-            <pre class="text-xs bg-gray-50 p-2 rounded overflow-auto max-h-40 mt-2">{{ JSON.stringify(block, null, 2) }}</pre>
+            <!-- Нет виджета — показываем кнопку добавить -->
+            <div v-else class="flex items-center justify-center py-8 border-2 border-dashed border-gray-200 rounded-lg">
+                <el-button
+                    type="primary"
+                    size="default"
+                    @click="$emit('addWidget', block.id)"
+                >
+                    + Добавить Виджет
+                </el-button>
+    </div>
         </div>
     </div>
 </template>
@@ -59,6 +83,9 @@ defineProps<{
 defineEmits<{
     (e: 'toggle', id: number): void
     (e: 'delete', id: number): void
+    (e: 'addWidget', id: number): void
+    (e: 'removeWidget', id: number): void
+    (e: 'edit', id: number): void
 }>()
 </script>
 

@@ -8,9 +8,15 @@ export const useContentStore = defineStore('content', () => {
 
     const loaded = ref(false)
     const categories = ref<any[]>([])
-
     const widgets = ref<any[]>([])
 
+    /** Варианты секций для ContentBlock */
+    const sections = [
+        { label: 'header', value: 'header' },
+        { label: 'body', value: 'body' },
+        { label: 'sidebar', value: 'sidebar' },
+        { label: 'footer', value: 'footer' },
+    ]
 
     async function fetchData() {
         const [
@@ -23,7 +29,7 @@ export const useContentStore = defineStore('content', () => {
 
         categories.value = categoriesRes.data
         widgets.value = widgetsRes.data
-        console.log(categoriesRes.data)
+        //console.log(categoriesRes.data)
         console.log(widgetsRes.data)
     }
 
@@ -49,5 +55,6 @@ export const useContentStore = defineStore('content', () => {
         reload,
         widgets,
         categories,
+        sections,
     }
 })

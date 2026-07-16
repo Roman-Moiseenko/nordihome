@@ -27,4 +27,5 @@ interface ContentBlockRepositoryInterface
      * Пересчитывает sort_order для всех блоков в том же контейнере.
      */
     public function updateSortOrder(int $blockId, int $newSort): void;
+
 }

@@ -58,7 +58,18 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
     public function delete(int $id): void
     {
         $model = ContentBlock::findOrFail($id);
+
+        $containerType = $model->container_type;
+        $containerId = $model->container_id;
+        $deletedSort = $model->sort_order;
+
         $model->delete();
+
+        // Пересчитываем sort_order для блоков, которые были ниже удалённого
+        ContentBlock::where('container_type', $containerType)
+            ->where('container_id', $containerId)
+            ->where('sort_order', '>', $deletedSort)
+            ->decrement('sort_order');
     }
 
     /** @return ContentBlockEntity[] */
@@ -86,29 +97,25 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
         $containerType = $block->container_type;
         $containerId = $block->container_id;
 
-        // Получаем все блоки контейнера, исключая текущий
-        $siblings = ContentBlock::where('container_type', $containerType)
+        if ($newSort < $currentSort) {
+            // Блок перемещается вверх — сдвигаем блоки между newSort и currentSort вниз
+            ContentBlock::where('container_type', $containerType)
             ->where('container_id', $containerId)
             ->where('id', '!=', $blockId)
-            ->orderBy('sort_order')
-            ->get();
+                ->whereBetween('sort_order', [$newSort, $currentSort])
+                ->increment('sort_order');
+        } else {
+            // Блок перемещается вниз — сдвигаем блоки между currentSort и newSort вверх
+            ContentBlock::where('container_type', $containerType)
+                ->where('container_id', $containerId)
+                ->where('id', '!=', $blockId)
+                ->whereBetween('sort_order', [$currentSort, $newSort])
+                ->decrement('sort_order');
+        }
 
+        // Ставим блок на новую позицию
         $block->sort_order = $newSort;
         $block->save();
-
-        // Собираем все блоки с их новыми позициями
-        $allBlocks = $siblings->toBase()->push($block->fresh())
-            ->sortBy('sort_order')
-            ->values();
-
-        // Перенумеровываем
-        foreach ($allBlocks as $index => $b) {
-            if ($b->sort_order !== $index + 1) {
-                ContentBlock::withoutTimestamps(function () use ($b, $index) {
-                    $b->update(['sort_order' => $index + 1]);
-                });
-            }
-        }
     }
     /**
      * Базовая гидратация одной сущности ContentBlock.

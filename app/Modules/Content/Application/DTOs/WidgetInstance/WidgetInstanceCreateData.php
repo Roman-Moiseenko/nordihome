@@ -18,8 +18,8 @@ class WidgetInstanceCreateData extends Data
         #[Required, IntegerType]
         public readonly int $widget_id,
 
-        #[Required, ArrayType]
-        public readonly array $params = [],
+        #[Nullable, ArrayType]
+        public readonly ?array $params = null,
 
         #[Nullable, StringType, Max(255)]
         public readonly ?string $title = null,

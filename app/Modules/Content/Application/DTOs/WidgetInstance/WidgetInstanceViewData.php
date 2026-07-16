@@ -31,8 +31,8 @@ class WidgetInstanceViewData extends Data
             $instance->widgetSlug,
             $instance->params,
             $instance->title,
-            $instance->createdAt->format('c'),
-            $instance->updatedAt->format('c'),
+            $instance->createdAt?->format('c'),
+            $instance->updatedAt?->format('c'),
         );
     }
 }
