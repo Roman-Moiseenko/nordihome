@@ -2,9 +2,9 @@
 
 namespace App\Modules\Shop\Repository;
 
-use App\Modules\Page\Entity\Contact;
-use App\Modules\Page\Entity\Menu;
-use App\Modules\Page\Repository\MenuRepository as AdminMenuRepository;
+use App\Modules\Content\Entity\Contact;
+use App\Modules\Content\Entity\Menu;
+use App\Modules\Content\Repository\MenuRepository as AdminMenuRepository;
 
 class MenuRepository
 {

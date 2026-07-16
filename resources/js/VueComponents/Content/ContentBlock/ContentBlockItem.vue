@@ -87,6 +87,7 @@
                     ref="fieldRendererRef"
                     :fields="formFields"
                     :saving="saving"
+                    :showSaveButton="true"
                     @save="onSaveParams"
                 />
 
@@ -163,6 +164,8 @@ async function loadForm() {
 async function onSaveParams(params: Record<string, any>) {
     const instanceId = props.block.widgetInstance?.id
     if (!instanceId) return
+
+    console.debug('[WidgetFieldRenderer] saving params:', JSON.stringify(params))
 
     saving.value = true
     try {

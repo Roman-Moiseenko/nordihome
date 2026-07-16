@@ -3,199 +3,169 @@
         <el-form
             v-if="fields.length > 0"
             :model="formModel"
-            label-position="top"
             size="small"
+            label-position="top"
         >
-            <template v-for="field in fields" :key="field.name">
-                <!-- === ОБЫЧНЫЕ ПОЛЯ (примитивные типы) === -->
-
-                <!-- Поле с format === 'color' -->
-                <el-form-item
-                    v-if="field.format === 'color'"
-                    :label="field.label"
-                    :required="field.required"
-                    :prop="field.name"
-                >
-                    <el-color-picker
-                        v-model="formModel[field.name]"
-                        :disabled="disabled"
-                    />
-                </el-form-item>
-
-                <!-- Поле с format === 'html' (textarea с rich text) -->
-                <el-form-item
-                    v-else-if="field.format === 'html'"
-                    :label="field.label"
-                    :required="field.required"
-                    :prop="field.name"
-                >
-                    <el-input
-                        v-model="formModel[field.name]"
-                        type="textarea"
-                        :rows="4"
-                        :disabled="disabled"
-                        :placeholder="field.label"
-                    />
-                </el-form-item>
-
-                <!-- Поле с format === 'widget' (ссылка на другой экземпляр виджета) -->
-                <el-form-item
-                    v-else-if="field.format === 'widget'"
-                    :label="field.label"
-                    :required="field.required"
-                    :prop="field.name"
-                >
-                    <div class="nested-widget-field">
-                        <el-tag v-if="formModel[field.name]" type="success" closable @close="removeNestedWidget(field.name)">
-                            Виджет #{{ formModel[field.name] }}
-                        </el-tag>
-                        <el-button v-else size="small" @click="openNestedWidgetSelector(field.name)">
-                            Выбрать виджет
-                        </el-button>
-                    </div>
-                </el-form-item>
-
-                <!-- Поле с options (enum) -->
-                <el-form-item
-                    v-else-if="field.options && field.options.length > 0"
-                    :label="field.label"
-                    :required="field.required"
-                    :prop="field.name"
-                >
-                    <el-select
-                        v-model="formModel[field.name]"
-                        :disabled="disabled"
-                        :multiple="field.type === 'array'"
-                        clearable
-                        class="w-full"
+            <!-- Поля на всю ширину (string без формата, long text, html) -->
+            <div class="fullwidth-fields">
+                <template v-for="field in fullwidthFields" :key="field.name">
+                    <el-form-item
+                        :label="field.label"
+                        :required="field.required"
+                        :prop="field.name"
                     >
-                        <el-option
-                            v-for="opt in field.options"
-                            :key="opt"
-                            :label="opt"
-                            :value="opt"
+                        <!-- html -->
+                        <el-input
+                            v-if="field.format === 'html'"
+                            v-model="formModel[field.name]"
+                            type="textarea"
+                            :rows="4"
+                            :disabled="disabled"
+                            :placeholder="field.label"
                         />
-                    </el-select>
-                </el-form-item>
+                        <!-- textarea если длинное значение -->
+                        <el-input
+                            v-else-if="isLongText(field)"
+                            v-model="formModel[field.name]"
+                            type="textarea"
+                            :rows="4"
+                            :disabled="disabled"
+                            :placeholder="field.label"
+                        />
+                        <!-- обычное строковое поле -->
+                        <el-input
+                            v-else
+                            v-model="formModel[field.name]"
+                            :disabled="disabled"
+                            :placeholder="field.label"
+                            @input="onFieldChange(field.name, $event)"
+                        />
+                    </el-form-item>
+                </template>
+            </div>
+            <!-- Компактные поля в ряд (все остальные) -->
+            <div class="compact-fields">
+                <div class="compact-row" v-for="field in compactFields" :key="field.name">
+                    <el-form-item
+                        :label="field.label"
+                        :required="field.required"
+                        :prop="field.name"
+                    >
+                        <!-- color -->
+                        <el-color-picker
+                            v-if="field.format === 'color'"
+                            v-model="formModel[field.name]"
+                            :disabled="disabled"
+                        />
 
-                <!-- boolean (чекбокс) -->
-                <el-form-item
-                    v-else-if="field.type === 'boolean'"
-                    :label="field.label"
-                    :required="field.required"
-                    :prop="field.name"
-                >
-                    <el-switch
-                        v-model="formModel[field.name]"
-                        :disabled="disabled"
-                    />
-                </el-form-item>
+                        <!-- widget -->
+                        <div v-else-if="field.format === 'widget'" class="nested-widget-field">
+                            <el-tag v-if="formModel[field.name]" type="success" closable @close="removeNestedWidget(field.name)">
+                                Виджет #{{ formModel[field.name] }}
+                            </el-tag>
+                            <el-button v-else size="small" @click="openNestedWidgetSelector(field.name)">
+                                Выбрать виджет
+                            </el-button>
+                        </div>
 
-                <!-- number / integer -->
-                <el-form-item
-                    v-else-if="field.type === 'integer' || field.type === 'number'"
-                    :label="field.label"
-                    :required="field.required"
-                    :prop="field.name"
-                >
-                    <el-input-number
-                        v-model="formModel[field.name]"
-                        :disabled="disabled"
-                        :min="0"
-                        class="w-full"
-                    />
-                </el-form-item>
-
-                <!-- Текстовое поле — textarea если значение длинное -->
-                <el-form-item
-                    v-else-if="field.type === 'text' || (field.type === 'string' && isLongText(field))"
-                    :label="field.label"
-                    :required="field.required"
-                    :prop="field.name"
-                >
-                    <el-input
-                        v-model="formModel[field.name]"
-                        type="textarea"
-                        :rows="4"
-                        :disabled="disabled"
-                        :placeholder="field.label"
-                    />
-                </el-form-item>
-
-                <!-- type === 'array' с nestedFields (массив объектов) -->
-                <el-form-item
-                    v-else-if="field.type === 'array' && field.nestedFields"
-                    :label="field.label"
-                    :required="field.required"
-                    :prop="field.name"
-                >
-                    <div class="array-object-field">
-                        <div
-                            v-for="(item, itemIdx) in arrayItems(field.name)"
-                            :key="itemIdx"
-                            class="array-object-item border rounded p-3 mb-2"
+                        <!-- enum / select -->
+                        <el-select
+                            v-else-if="field.options && field.options.length > 0"
+                            v-model="formModel[field.name]"
+                            :disabled="disabled"
+                            :multiple="field.type === 'array'"
+                            clearable
                         >
-                            <div class="flex items-center justify-between mb-2">
-                                <span class="text-sm font-medium">Элемент #{{ itemIdx + 1 }}</span>
-                                <el-button
-                                    size="small"
-                                    type="danger"
-                                    text
-                                    @click="removeArrayItem(field.name, itemIdx)"
-                                >
-                                    Удалить
-                                </el-button>
+                            <el-option
+                                v-for="opt in field.options"
+                                :key="opt"
+                                :label="opt"
+                                :value="opt"
+                            />
+                        </el-select>
+
+                        <!-- boolean -->
+                        <el-switch
+                            v-else-if="field.type === 'boolean'"
+                            v-model="formModel[field.name]"
+                            :disabled="disabled"
+                        />
+
+                        <!-- number / integer -->
+                        <el-input-number
+                            v-else-if="field.type === 'integer' || field.type === 'number'"
+                            v-model="formModel[field.name]"
+                            :disabled="disabled"
+                            :min="0"
+                        />
+                    </el-form-item>
+                </div>
+            </div>
+
+            <!-- Составные поля: array с nestedFields, object с nestedFields -->
+            <div class="composite-fields">
+                <template v-for="field in compositeFields" :key="field.name">
+                    <!-- array с nestedFields (массив объектов) -->
+                    <el-form-item
+                        v-if="field.type === 'array' && field.nestedFields"
+                        :label="field.label"
+                        :required="field.required"
+                        :prop="field.name"
+                    >
+                        <div class="array-object-field">
+                            <div
+                                v-for="(item, itemIdx) in arrayItems(field.name)"
+                                :key="itemIdx"
+                                class="array-object-item border rounded p-3 mb-2"
+                            >
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm font-medium">Элемент #{{ itemIdx + 1 }}</span>
+                                    <el-button
+                                        size="small"
+                                        type="danger"
+                                        text
+                                        @click="removeArrayItem(field.name, itemIdx)"
+                                    >
+                                        Удалить
+                                    </el-button>
+                                </div>
+                                <WidgetFieldRenderer
+                                    :fields="nestedFieldInstances(field.nestedFields, field.name, itemIdx)"
+                                    :disabled="disabled"
+                                    :showSaveButton="false"
+                                    @save="(vals) => onArrayItemSave(field.name, itemIdx, vals)"
+                                />
                             </div>
+                            <el-button v-if="!disabled" size="small" type="primary" plain @click="addArrayItem(field.name, field.nestedFields!)">
+                                + Добавить элемент
+                            </el-button>
+                        </div>
+                    </el-form-item>
+
+                    <!-- object с nestedFields -->
+                    <el-form-item
+                        v-else-if="field.type === 'object' && field.nestedFields"
+                        :label="field.label"
+                        :required="field.required"
+                        :prop="field.name"
+                    >
+                        <div class="object-field border rounded p-3 bg-gray-50 w-full">
                             <WidgetFieldRenderer
-                                :fields="nestedFieldInstances(field.nestedFields, field.name, itemIdx)"
+                                :fields="nestedFieldInstances(field.nestedFields, field.name)"
                                 :disabled="disabled"
                                 :showSaveButton="false"
-                                @save="(vals) => onArrayItemSave(field.name, itemIdx, vals)"
+                                @save="(vals) => onObjectSave(field.name, vals)"
                             />
                         </div>
-                        <el-button v-if="!disabled" size="small" type="primary" plain @click="addArrayItem(field.name, field.nestedFields!)">
-                            + Добавить элемент
-                        </el-button>
-                    </div>
                 </el-form-item>
-
-                <!-- type === 'object' с nestedFields (вложенный объект) -->
-                <el-form-item
-                    v-else-if="field.type === 'object' && field.nestedFields"
-                    :label="field.label"
-                    :required="field.required"
-                    :prop="field.name"
-                >
-                    <div class="object-field border rounded p-3 bg-gray-50 w-full">
-                        <WidgetFieldRenderer
-                            :fields="nestedFieldInstances(field.nestedFields, field.name)"
-                            :disabled="disabled"
-                            :showSaveButton="false"
-                            @save="(vals) => onObjectSave(field.name, vals)"
-                        />
-                    </div>
-                </el-form-item>
-
-                <!-- default: string input -->
-                <el-form-item
-                    v-else
-                    :label="field.label"
-                    :required="field.required"
-                    :prop="field.name"
-                >
-                    <el-input
-                        v-model="formModel[field.name]"
-                        :disabled="disabled"
-                        :placeholder="field.label"
-                    />
-                </el-form-item>
-            </template>
+                </template>
+            </div>
 
             <el-button
                 v-if="!disabled && showSaveButton"
                 type="primary"
                 :loading="saving"
-                @click="$emit('save', formModel)"
+                @click="onSave"
             >
                 Сохранить
             </el-button>
@@ -206,7 +176,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { ref, reactive, watch, computed } from 'vue'
 import type { WidgetFormFieldData } from '@Res/composables/useContentBlock'
 
 const props = defineProps<{
@@ -221,77 +191,98 @@ const emit = defineEmits<{
     (e: 'select-nested-widget', fieldName: string): void
 }>()
 
-const formModel = ref<Record<string, any>>({})
+const formModel = reactive<Record<string, any>>({})
 
 // Инициализируем модель из полей
 watch(() => props.fields, (fields) => {
-    const model: Record<string, any> = {}
     for (const field of fields) {
         if (field.type === 'object' && field.nestedFields) {
-            // Для объектов оставляем текущее значение как объект (или пустой)
-            model[field.name] = field.value && typeof field.value === 'object' && !Array.isArray(field.value)
+            formModel[field.name] = field.value && typeof field.value === 'object' && !Array.isArray(field.value)
                 ? { ...field.value }
                 : {}
         } else if (field.type === 'array' && field.nestedFields) {
-            // Для массива объектов оставляем массив
-            model[field.name] = Array.isArray(field.value) ? [...field.value] : []
+            formModel[field.name] = Array.isArray(field.value) ? [...field.value] : []
         } else {
-            model[field.name] = field.value !== undefined && field.value !== null
+            formModel[field.name] = field.value !== undefined && field.value !== null
                 ? field.value
                 : field.default ?? null
         }
     }
-    formModel.value = model
 }, { immediate: true, deep: true })
 
 /**
- * Для массива объектов: получить элементы массива из formModel.
+ * Поля на всю ширину — string без форматов (кроме select/enum) и html
  */
+const fullwidthFields = computed(() => {
+    return props.fields.filter(f => {
+        // html — всегда на всю ширину
+        if (f.format === 'html') return true
+        // long text — на всю ширину
+        if (f.type === 'text' || (f.type === 'string' && f.value && typeof f.value === 'string' && f.value.length > 80)) return true
+        // обычный string без enum и без спецформатов — на всю ширину
+        if (f.type === 'string' && !f.options && !f.format) return true
+        return false
+    })
+})
+
+/**
+ * Компактные поля — всё остальное, что не fullwidth и не composite
+ */
+const compactFields = computed(() => {
+    return props.fields.filter(f => {
+        // Исключаем fullwidth
+        if (fullwidthFields.value.includes(f)) return false
+        // Исключаем составные (object/array с nestedFields)
+        if (f.nestedFields) return false
+        return true
+    })
+})
+
+/**
+ * Составные поля — object/array с nestedFields
+ */
+const compositeFields = computed(() => {
+    return props.fields.filter(f => f.nestedFields)
+})
+
+// --- Вспомогательные функции ---
+
 function arrayItems(fieldName: string): any[] {
-    const val = formModel.value[fieldName]
+    const val = formModel[fieldName]
     return Array.isArray(val) ? val : []
 }
 
-/**
- * Добавить элемент в массив объектов.
- */
 function addArrayItem(fieldName: string, nestedFields: WidgetFormFieldData[]) {
-    if (!Array.isArray(formModel.value[fieldName])) {
-        formModel.value[fieldName] = []
+    if (!Array.isArray(formModel[fieldName])) {
+        formModel[fieldName] = []
     }
     const newItem: Record<string, any> = {}
     for (const nf of nestedFields) {
         newItem[nf.name] = nf.default ?? null
     }
-    formModel.value[fieldName].push(newItem)
+    formModel[fieldName].push(newItem)
 }
 
-/**
- * Удалить элемент из массива объектов.
- */
 function removeArrayItem(fieldName: string, index: number) {
-    if (Array.isArray(formModel.value[fieldName])) {
-        formModel.value[fieldName].splice(index, 1)
+    if (Array.isArray(formModel[fieldName])) {
+        formModel[fieldName].splice(index, 1)
     }
 }
 
-/**
- * Создать экземпляры полей для вложенного объекта с подставленными значениями.
- */
 function nestedFieldInstances(
     nestedFields: WidgetFormFieldData[],
     parentName: string,
     itemIndex?: number,
 ): WidgetFormFieldData[] {
     if (itemIndex !== undefined) {
-        const arr = formModel.value[parentName]
+        const arr = formModel[parentName]
         const itemValue = (Array.isArray(arr) && arr[itemIndex]) ? arr[itemIndex] : {}
         return nestedFields.map(f => ({
             ...f,
             value: itemValue[f.name] !== undefined ? itemValue[f.name] : f.default ?? null,
         }))
     }
-    const objValue = formModel.value[parentName]
+    const objValue = formModel[parentName]
     const val = (objValue && typeof objValue === 'object' && !Array.isArray(objValue)) ? objValue : {}
     return nestedFields.map(f => ({
         ...f,
@@ -299,54 +290,121 @@ function nestedFieldInstances(
     }))
 }
 
-/**
- * Сохранить вложенный объект.
- */
 function onObjectSave(parentName: string, vals: Record<string, any>) {
-    formModel.value[parentName] = {
-        ...(formModel.value[parentName] || {}),
+    formModel[parentName] = {
+        ...(formModel[parentName] || {}),
         ...vals,
     }
 }
 
-/**
- * Сохранить элемент массива.
- */
 function onArrayItemSave(parentName: string, itemIndex: number, vals: Record<string, any>) {
-    if (!Array.isArray(formModel.value[parentName])) {
-        formModel.value[parentName] = []
+    if (!Array.isArray(formModel[parentName])) {
+        formModel[parentName] = []
     }
-    if (!formModel.value[parentName][itemIndex]) {
-        formModel.value[parentName][itemIndex] = {}
+    if (!formModel[parentName][itemIndex]) {
+        formModel[parentName][itemIndex] = {}
     }
-    formModel.value[parentName][itemIndex] = {
-        ...formModel.value[parentName][itemIndex],
+    formModel[parentName][itemIndex] = {
+        ...formModel[parentName][itemIndex],
         ...vals,
     }
 }
 
 function removeNestedWidget(fieldName: string) {
-    formModel.value[fieldName] = null
+    formModel[fieldName] = null
 }
 
 function openNestedWidgetSelector(fieldName: string) {
     emit('select-nested-widget', fieldName)
 }
 
-/**
- * Проверить, нужно ли для поля показывать textarea вместо input.
- * Если значение длиннее 80 символов — textarea.
- */
 function isLongText(field: WidgetFormFieldData): boolean {
-    const val = formModel.value[field.name]
+    const val = formModel[field.name]
     return typeof val === 'string' && val.length > 80
+}
+
+function onFieldChange(name: string, value: any) {
+    console.debug('[WidgetFieldRenderer] field changed:', name, '=', value)
+    formModel[name] = value
+}
+
+function onSave() {
+    const snapshot = JSON.parse(JSON.stringify(formModel))
+    console.debug('[WidgetFieldRenderer] emitting save:', snapshot)
+    emit('save', snapshot)
 }
 </script>
 
 <style scoped>
 .widget-field-renderer {
-    max-width: 500px;
+    max-width: 600px;
 }
+
+/* Поля на всю ширину — label сверху */
+.fullwidth-fields :deep(.el-form-item) {
+    display: block;
+    margin-bottom: 16px;
+}
+.fullwidth-fields :deep(.el-form-item__label) {
+    display: block;
+    text-align: left;
+    padding-bottom: 4px;
+}
+.fullwidth-fields :deep(.el-form-item__content) {
+    display: block;
+}
+.fullwidth-fields :deep(.el-form-item__content .el-input),
+.fullwidth-fields :deep(.el-form-item__content .el-textarea) {
+    width: 100%;
+}
+
+/* Компактные поля — в ряд, label слева */
+.compact-fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    margin-bottom: 16px;
+}
+.compact-row {
+    flex: 0 1 auto;
+    min-width: 180px;
+}
+.compact-fields :deep(.el-form-item) {
+    margin-bottom: 0;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 6px;
+}
+.compact-fields :deep(.el-form-item__label) {
+    white-space: nowrap;
+    padding: 0;
+    text-align: left;
+    float: none;
+    display: inline-block;
+    width: auto;
+    line-height: 28px;
+}
+.compact-fields :deep(.el-form-item__content) {
+    display: inline-flex;
+    flex: 0 1 auto;
+    width: auto;
+}
+
+/* Для boolean — switch без лишнего пространства */
+.compact-fields :deep(.el-form-item__content .el-switch) {
+    margin-top: 0;
+}
+
+/* Составные поля */
+.composite-fields {
+    margin-bottom: 16px;
+}
+.composite-fields :deep(.el-form-item) {
+    display: block;
+    margin-bottom: 16px;
+}
+
 .nested-widget-field {
     display: flex;
     align-items: center;

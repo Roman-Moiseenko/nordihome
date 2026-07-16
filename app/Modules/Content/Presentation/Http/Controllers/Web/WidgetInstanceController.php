@@ -56,8 +56,10 @@ class WidgetInstanceController extends Controller
      */
     public function update(int $id, Request $request): JsonResponse
     {
-        $dto = WidgetInstanceUpdateData::validateAndCreate($request->all());
 
+        \Log::info(json_encode($request->all()));
+        $dto = WidgetInstanceUpdateData::validateAndCreate($request->all());
+        \Log::info(json_encode($dto));
         $instance = $this->updateWidgetInstanceUseCase->execute($id, $dto);
 
         // Возвращаем форму с обновлёнными полями
