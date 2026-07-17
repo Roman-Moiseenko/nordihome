@@ -39,98 +39,128 @@
         </div>
         <div v-if="openItems[index]" class="p-3">
           <el-form label-position="top" size="small">
-            <div
-              v-for="(subProp, subName) in subProperties"
-              :key="subName"
-              class="mb-2"
-            >
-              <label class="text-xs text-gray-600 block mb-1">
-                {{ subProp.title || subName }}
-                <span v-if="isSubRequired(subName)" class="text-red-500">*</span>
-              </label>
+            <!-- Для массива изображений — компактный рендер -->
+            <template v-if="props.propConfig?.items?.format === 'image'">
+              <div class="image-object-field">
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-xs text-gray-500 w-12 shrink-0">ID:</label>
+                  <el-input v-model="item.id" size="small" disabled class="flex-1" />
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-xs text-gray-500 w-12 shrink-0">URL:</label>
+                  <el-input v-model="item.src" size="small" class="flex-1" @input="emitUpdate" />
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-xs text-gray-500 w-12 shrink-0">Alt:</label>
+                  <el-input v-model="item.alt" size="small" class="flex-1" @input="emitUpdate" />
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-xs text-gray-500 w-12 shrink-0">Title:</label>
+                  <el-input v-model="item.title" size="small" class="flex-1" @input="emitUpdate" />
+                </div>
+              </div>
+            </template>
 
-              <!-- String -->
-              <el-input
-                v-if="subProp.type === 'string' && subProp.format !== 'uuid' && subProp.format !== 'uri' && subProp.format !== 'html' && !subProp.enum"
-                v-model="item[subName]"
-                :placeholder="subProp.default?.toString() || ''"
-                size="small"
-                @input="emitUpdate"
-              />
+            <!-- Обычные поля -->
+            <template v-else>
+              <div
+                v-for="(subProp, subName) in subProperties"
+                :key="subName"
+                class="mb-2"
+              >
+                <label class="text-xs text-gray-600 block mb-1">
+                  {{ subProp.title || subName }}
+                  <span v-if="isSubRequired(subName)" class="text-red-500">*</span>
+                </label>
 
-              <!-- HTML -->
-              <el-input
-                v-else-if="subProp.type === 'string' && subProp.format === 'html'"
-                v-model="item[subName]"
-                type="textarea"
-                :rows="2"
-                size="small"
-                @input="emitUpdate"
-              />
-
-              <!-- UUID (изображение) -->
-              <div v-else-if="subProp.type === 'string' && subProp.format === 'uuid'" class="flex gap-1 items-center">
+                <!-- String -->
                 <el-input
+                  v-if="subProp.type === 'string' && subProp.format !== 'uuid' && subProp.format !== 'uri' && subProp.format !== 'html' && !subProp.enum"
+                  v-model="item[subName]"
+                  :placeholder="subProp.default?.toString() || ''"
+                  size="small"
+                  @input="emitUpdate"
+                />
+
+                <!-- HTML -->
+                <el-input
+                  v-else-if="subProp.type === 'string' && subProp.format === 'html'"
+                  v-model="item[subName]"
+                  type="textarea"
+                  :rows="2"
+                  size="small"
+                  @input="emitUpdate"
+                />
+
+                <!-- Image object (id, src, alt, title) -->
+                <div v-else-if="subProp.type === 'object' && subProp.format === 'image'" class="image-object-field border rounded p-2 bg-gray-50">
+                  <div class="flex items-center gap-2 mb-1">
+                    <label class="text-xs text-gray-500 w-8">ID:</label>
+                    <el-input v-model="item[subName].id" size="small" disabled class="flex-1" />
+                  </div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <label class="text-xs text-gray-500 w-8">URL:</label>
+                    <el-input v-model="item[subName].src" size="small" class="flex-1" @input="emitUpdate" />
+                  </div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <label class="text-xs text-gray-500 w-8">Alt:</label>
+                    <el-input v-model="item[subName].alt" size="small" class="flex-1" @input="emitUpdate" />
+                  </div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <label class="text-xs text-gray-500 w-8">Title:</label>
+                    <el-input v-model="item[subName].title" size="small" class="flex-1" @input="emitUpdate" />
+                  </div>
+                </div>
+
+                <!-- URI -->
+                <el-input
+                  v-else-if="subProp.type === 'string' && subProp.format === 'uri'"
                   v-model="item[subName]"
                   size="small"
-                  disabled
-                  class="flex-1"
+                  @input="emitUpdate"
                 />
-                <UploadImageFile
-                  :label="'img'"
-                  :mini="true"
-                  @selectImageFile="(val) => onSubImageUuid(item, subName, val)"
+
+                <!-- Enum -->
+                <el-select
+                  v-else-if="subProp.type === 'string' && subProp.enum"
+                  v-model="item[subName]"
+                  size="small"
+                  class="w-full"
+                  @change="emitUpdate"
+                >
+                  <el-option v-for="opt in subProp.enum" :key="opt" :value="opt" :label="opt" />
+                </el-select>
+
+                <!-- Integer -->
+                <el-input-number
+                  v-else-if="subProp.type === 'integer'"
+                  v-model="item[subName]"
+                  size="small"
+                  :min="subProp.minimum ?? 0"
+                  :max="subProp.maximum ?? 99999"
+                  @change="emitUpdate"
+                />
+
+                <!-- Number -->
+                <el-input-number
+                  v-else-if="subProp.type === 'number'"
+                  v-model="item[subName]"
+                  size="small"
+                  :min="subProp.minimum ?? 0"
+                  :max="subProp.maximum ?? 99999"
+                  :step="0.1"
+                  @change="emitUpdate"
+                />
+
+                <!-- Boolean -->
+                <el-switch
+                  v-else-if="subProp.type === 'boolean'"
+                  v-model="item[subName]"
+                  size="small"
+                  @change="emitUpdate"
                 />
               </div>
-
-              <!-- URI -->
-              <el-input
-                v-else-if="subProp.type === 'string' && subProp.format === 'uri'"
-                v-model="item[subName]"
-                size="small"
-                @input="emitUpdate"
-              />
-
-              <!-- Enum -->
-              <el-select
-                v-else-if="subProp.type === 'string' && subProp.enum"
-                v-model="item[subName]"
-                size="small"
-                class="w-full"
-                @change="emitUpdate"
-              >
-                <el-option v-for="opt in subProp.enum" :key="opt" :value="opt" :label="opt" />
-              </el-select>
-
-              <!-- Integer -->
-              <el-input-number
-                v-else-if="subProp.type === 'integer'"
-                v-model="item[subName]"
-                size="small"
-                :min="subProp.minimum ?? 0"
-                :max="subProp.maximum ?? 99999"
-                @change="emitUpdate"
-              />
-
-              <!-- Number -->
-              <el-input-number
-                v-else-if="subProp.type === 'number'"
-                v-model="item[subName]"
-                size="small"
-                :min="subProp.minimum ?? 0"
-                :max="subProp.maximum ?? 99999"
-                :step="0.1"
-                @change="emitUpdate"
-              />
-
-              <!-- Boolean -->
-              <el-switch
-                v-else-if="subProp.type === 'boolean'"
-                v-model="item[subName]"
-                size="small"
-                @change="emitUpdate"
-              />
-            </div>
+            </template>
           </el-form>
         </div>
       </div>
@@ -171,6 +201,10 @@ watch(() => props.modelValue, (val) => {
 }, { immediate: true, deep: true })
 
 function getItemTitle(item: any, index: number): string {
+  // Для массива изображений показываем src или alt
+  if (props.propConfig?.items?.format === 'image') {
+    return item?.src || item?.alt || `Изображение #${index + 1}`
+  }
   // Ищем первое строковое поле для заголовка
   for (const [key, cfg] of Object.entries(subProperties.value)) {
     const c = cfg as any
@@ -190,22 +224,32 @@ function toggleItem(index: number) {
 }
 
 function addItem() {
-  const newItem: Record<string, any> = {}
-  for (const [key, cfg] of Object.entries(subProperties.value)) {
-    const c = cfg as any
-    if (c.default !== undefined) {
-      newItem[key] = c.default
-    } else if (c.type === 'boolean') {
-      newItem[key] = false
-    } else if (c.type === 'array') {
-      newItem[key] = []
-    } else if (c.type === 'integer' || c.type === 'number') {
-      newItem[key] = 0
-    } else {
-      newItem[key] = ''
+  const isImageArray = props.propConfig?.items?.format === 'image'
+
+  if (isImageArray) {
+    // Для массива изображений — сразу объект с id, src, alt, title
+    items.value.push({ id: null, src: '', alt: '', title: '' })
+  } else {
+    const newItem: Record<string, any> = {}
+    for (const [key, cfg] of Object.entries(subProperties.value)) {
+      const c = cfg as any
+      if (c.type === 'object' && c.format === 'image') {
+        newItem[key] = { id: null, src: '', alt: '', title: '' }
+      } else if (c.default !== undefined) {
+        newItem[key] = c.default
+      } else if (c.type === 'boolean') {
+        newItem[key] = false
+      } else if (c.type === 'array') {
+        newItem[key] = []
+      } else if (c.type === 'integer' || c.type === 'number') {
+        newItem[key] = 0
+      } else {
+        newItem[key] = ''
+      }
     }
+    items.value.push(newItem)
   }
-  items.value.push(newItem)
+
   openItems.value[items.value.length - 1] = true
   emitUpdate()
 }

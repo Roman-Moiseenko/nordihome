@@ -64,7 +64,7 @@
           <el-select v-model="newPropType" class="w-full">
             <el-option label="Строка (string)" value="string" />
             <el-option label="Текст HTML (string + html)" value="html" />
-            <el-option label="Изображение (string + uuid)" value="uuid" />
+            <el-option label="Изображение (image)" value="image" />
             <el-option label="Ссылка (string + uri)" value="uri" />
             <el-option label="Число целое (integer)" value="integer" />
             <el-option label="ID виджета (integer + widget)" value="widget" />
@@ -72,6 +72,7 @@
             <el-option label="Да/Нет (boolean)" value="boolean" />
             <el-option label="Объект (object)" value="object" />
             <el-option label="Массив объектов (array + object)" value="array_objects" />
+            <el-option label="Массив изображений (array + image)" value="array_images" />
             <el-option label="Массив строк (array + string)" value="array_strings" />
             <el-option label="Массив чисел (array + integer)" value="array_integers" />
           </el-select>
@@ -229,9 +230,15 @@ function addProperty() {
       propConfig.format = 'html'
       if (newPropDefault.value) propConfig.default = newPropDefault.value
       break
-    case 'uuid':
-      propConfig.type = 'string'
-      propConfig.format = 'uuid'
+    case 'image':
+      propConfig.type = 'object'
+      propConfig.format = 'image'
+      propConfig.properties = {
+        id: { type: 'integer', title: 'ID изображения' },
+        src: { type: 'string', title: 'URL (src)' },
+        alt: { type: 'string', title: 'Alt текст' },
+        title: { type: 'string', title: 'Title текст' },
+      }
       break
     case 'uri':
       propConfig.type = 'string'
@@ -271,6 +278,19 @@ function addProperty() {
         type: 'object',
         properties: {
           title: { type: 'string', title: 'Заголовок' },
+        },
+      }
+      break
+    case 'array_images':
+      propConfig.type = 'array'
+      propConfig.items = {
+        type: 'object',
+        format: 'image',
+        properties: {
+          id: { type: 'integer', title: 'ID изображения' },
+          src: { type: 'string', title: 'URL (src)' },
+          alt: { type: 'string', title: 'Alt текст' },
+          title: { type: 'string', title: 'Title текст' },
         },
       }
       break

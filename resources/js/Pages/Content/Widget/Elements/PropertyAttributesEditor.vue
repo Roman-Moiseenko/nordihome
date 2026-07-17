@@ -27,7 +27,7 @@
         <el-select v-model="localConfig.format" class="w-full" clearable @change="emitUpdate">
           <el-option label="Без формата" value="" />
           <el-option label="html" value="html" />
-          <el-option label="uuid (изображение)" value="uuid" />
+          <el-option label="image (изображение)" value="image" />
           <el-option label="uri (ссылка)" value="uri" />
           <el-option label="date" value="date" />
           <el-option label="date-time" value="date-time" />
@@ -78,6 +78,7 @@
             <el-option label="Целое число (integer)" value="integer" />
             <el-option label="Дробное число (number)" value="number" />
             <el-option label="Объект (object)" value="object" />
+            <el-option label="Изображение (image)" value="image" />
           </el-select>
         </el-form-item>
 
@@ -209,7 +210,7 @@ const editableSubKeys = reactive<Record<string, string>>({})
 
 watch(() => props.propConfig?.items, (val) => {
   if (val) {
-    itemsType.value = val.type || 'string'
+    itemsType.value = val.format === 'image' ? 'image' : (val.type || 'string')
     const keys = Object.keys(itemProperties)
     for (const k of keys) { delete itemProperties[k]; delete editableSubKeys[k] }
     if (val.properties) {
@@ -223,11 +224,22 @@ watch(() => props.propConfig?.items, (val) => {
 
 function onItemsTypeChange() {
   if (!localConfig.items) localConfig.items = {}
-  localConfig.items.type = itemsType.value
-  if (itemsType.value === 'object') {
+  localConfig.items.type = 'object'
+  if (itemsType.value === 'image') {
+    localConfig.items.format = 'image'
+    localConfig.items.properties = {
+      id: { type: 'integer', title: 'ID изображения' },
+      src: { type: 'string', title: 'URL (src)' },
+      alt: { type: 'string', title: 'Alt текст' },
+      title: { type: 'string', title: 'Title текст' },
+    }
+  } else if (itemsType.value === 'object') {
+    delete localConfig.items.format
     if (!localConfig.items.properties) localConfig.items.properties = {}
   } else {
+    delete localConfig.items.format
     delete localConfig.items.properties
+    localConfig.items.type = itemsType.value
   }
   emitUpdate()
 }
@@ -274,8 +286,25 @@ function onItemPropUpdate(name: string, key: string, value: any) {
 const objectProperties = reactive<Record<string, any>>({})
 const objectEditableKeys = reactive<Record<string, string>>({})
 
-watch(() => localConfig.type, (type) => {
-  if (type === 'object') {
+watch(() => [localConfig.type, localConfig.format], () => {
+  if (localConfig.type === 'object') {
+    // Если format === 'image' — предзаполняем стандартные поля, если их ещё нет
+    const isImage = localConfig.format === 'image'
+    if (isImage) {
+      if (!localConfig.properties) localConfig.properties = {}
+      const defaults: Record<string, any> = {
+        id: { type: 'integer', title: 'ID изображения' },
+        src: { type: 'string', title: 'URL (src)' },
+        alt: { type: 'string', title: 'Alt текст' },
+        title: { type: 'string', title: 'Title текст' },
+      }
+      for (const [key, cfg] of Object.entries(defaults)) {
+        if (!localConfig.properties[key]) {
+          localConfig.properties[key] = cfg
+        }
+      }
+    }
+
     const propsData = props.propConfig?.properties || localConfig.properties || {}
     const keys = Object.keys(objectProperties)
     for (const k of keys) { delete objectProperties[k]; delete objectEditableKeys[k] }

@@ -129,14 +129,35 @@
                                         Удалить
                                     </el-button>
                                 </div>
+                                <!-- Для массива изображений — компактный рендер id, src, alt, title -->
+                                <div v-if="field.format === 'image'" class="image-object-field pl-2">
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <label class="text-xs text-gray-500 w-12 shrink-0">ID:</label>
+                                        <el-input :model-value="item.id" size="small" disabled class="flex-1" />
+                                    </div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <label class="text-xs text-gray-500 w-12 shrink-0">URL:</label>
+                                        <el-input :model-value="item.src" size="small" class="flex-1" @input="(v) => onArrayImageFieldChange(field.name, itemIdx, 'src', v)" />
+                                    </div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <label class="text-xs text-gray-500 w-12 shrink-0">Alt:</label>
+                                        <el-input :model-value="item.alt" size="small" class="flex-1" @input="(v) => onArrayImageFieldChange(field.name, itemIdx, 'alt', v)" />
+                                    </div>
+                                    <div class="flex items-center gap-2 mb-1">
+                                        <label class="text-xs text-gray-500 w-12 shrink-0">Title:</label>
+                                        <el-input :model-value="item.title" size="small" class="flex-1" @input="(v) => onArrayImageFieldChange(field.name, itemIdx, 'title', v)" />
+                                    </div>
+                                </div>
+                                <!-- Обычный массив объектов — через вложенный WidgetFieldRenderer -->
                                 <WidgetFieldRenderer
+                                    v-else
                                     :fields="nestedFieldInstances(field.nestedFields, field.name, itemIdx)"
                                     :disabled="disabled"
                                     :showSaveButton="false"
                                     @save="(vals) => onArrayItemSave(field.name, itemIdx, vals)"
                                 />
                             </div>
-                            <el-button v-if="!disabled" size="small" type="primary" plain @click="addArrayItem(field.name, field.nestedFields!)">
+                            <el-button v-if="!disabled" size="small" type="primary" plain @click="addArrayItem(field.name, field.nestedFields!, field.format)">
                                 + Добавить элемент
                             </el-button>
                         </div>
@@ -149,7 +170,47 @@
                         :required="field.required"
                         :prop="field.name"
                     >
-                        <div class="object-field border rounded p-3 bg-gray-50 w-full">
+                        <!-- Для image показываем компактную форму с id, src, alt, title -->
+                        <div v-if="field.format === 'image'" class="image-object-field border rounded p-3 bg-gray-50 w-full">
+                            <div class="flex items-center gap-2 mb-2">
+                                <label class="text-xs text-gray-500 w-12 shrink-0">ID:</label>
+                                <el-input
+                                    :model-value="formModel[field.name]?.id"
+                                    size="small"
+                                    disabled
+                                    class="flex-1"
+                                />
+                            </div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <label class="text-xs text-gray-500 w-12 shrink-0">URL:</label>
+                                <el-input
+                                    :model-value="formModel[field.name]?.src"
+                                    size="small"
+                                    class="flex-1"
+                                    @input="(v) => onImageFieldChange(field.name, 'src', v)"
+                                />
+                            </div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <label class="text-xs text-gray-500 w-12 shrink-0">Alt:</label>
+                                <el-input
+                                    :model-value="formModel[field.name]?.alt"
+                                    size="small"
+                                    class="flex-1"
+                                    @input="(v) => onImageFieldChange(field.name, 'alt', v)"
+                                />
+                            </div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <label class="text-xs text-gray-500 w-12 shrink-0">Title:</label>
+                                <el-input
+                                    :model-value="formModel[field.name]?.title"
+                                    size="small"
+                                    class="flex-1"
+                                    @input="(v) => onImageFieldChange(field.name, 'title', v)"
+                                />
+                            </div>
+                        </div>
+                        <!-- Обычный object — через вложенный WidgetFieldRenderer -->
+                        <div v-else class="object-field border rounded p-3 bg-gray-50 w-full">
                             <WidgetFieldRenderer
                                 :fields="nestedFieldInstances(field.nestedFields, field.name)"
                                 :disabled="disabled"
@@ -275,9 +336,14 @@ function arrayItems(fieldName: string): any[] {
     return Array.isArray(val) ? val : []
 }
 
-function addArrayItem(fieldName: string, nestedFields: WidgetFormFieldData[]) {
+function addArrayItem(fieldName: string, nestedFields: WidgetFormFieldData[], format?: string | null) {
     if (!Array.isArray(formModel[fieldName])) {
         formModel[fieldName] = []
+    }
+    // Для массива изображений — инициализируем объект с id, src, alt, title
+    if (format === 'image') {
+        formModel[fieldName].push({ id: null, src: '', alt: '', title: '' })
+        return
     }
     const newItem: Record<string, any> = {}
     for (const nf of nestedFields) {
@@ -361,6 +427,25 @@ watch(formModel, () => {
 function onFieldChange(name: string, value: any) {
     //console.debug('[WidgetFieldRenderer] field changed:', name, '=', value)
     formModel[name] = value
+}
+
+/** Обновить вложенное поле image-объекта */
+function onImageFieldChange(parentName: string, subKey: string, value: any) {
+    if (!formModel[parentName]) {
+        formModel[parentName] = { id: null, src: '', alt: '', title: '' }
+    }
+    formModel[parentName][subKey] = value
+}
+
+/** Обновить поле в элементе массива изображений */
+function onArrayImageFieldChange(parentName: string, itemIndex: number, subKey: string, value: any) {
+    if (!Array.isArray(formModel[parentName])) {
+        formModel[parentName] = []
+    }
+    if (!formModel[parentName][itemIndex]) {
+        formModel[parentName][itemIndex] = { id: null, src: '', alt: '', title: '' }
+    }
+    formModel[parentName][itemIndex][subKey] = value
 }
 
 function onSave() {

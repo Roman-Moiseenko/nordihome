@@ -61,6 +61,15 @@ final readonly class GetWidgetInstanceFormUseCase
             if (($prop['type'] ?? null) === 'object' && isset($prop['properties'])) {
                 $nestedRequired = $prop['required'] ?? [];
                 $nestedValue = is_array($currentValue) ? $currentValue : [];
+
+                // Для format: 'image' — гарантируем, что у объекта есть id, src, alt, title
+                if (($prop['format'] ?? null) === 'image') {
+                    $nestedValue['id'] ??= null;
+                    $nestedValue['src'] ??= null;
+                    $nestedValue['alt'] ??= null;
+                    $nestedValue['title'] ??= null;
+                }
+
                 $nestedFields = $this->buildFields(
                     $prop['properties'],
                     $nestedRequired,
@@ -77,10 +86,20 @@ final readonly class GetWidgetInstanceFormUseCase
             ) {
                 // Для массива объектов значение — это массив, а nestedFields будут описывать структуру одного элемента
                 $itemRequired = $prop['items']['required'] ?? [];
+                $sampleValue = is_array($currentValue) ? ($currentValue[0] ?? []) : [];
+
+                // Для массива изображений — гарантируем поля id, src, alt, title у каждого элемента
+                if (($prop['items']['format'] ?? null) === 'image') {
+                    $sampleValue['id'] ??= null;
+                    $sampleValue['src'] ??= null;
+                    $sampleValue['alt'] ??= null;
+                    $sampleValue['title'] ??= null;
+                }
+
                 $nestedFields = $this->buildFields(
                     $prop['items']['properties'],
                     $itemRequired,
-                    is_array($currentValue) ? ($currentValue[0] ?? []) : [],
+                    $sampleValue,
                 );
             }
 
