@@ -166,6 +166,8 @@ export function useContentBlock() {
         try {
             const res = await api.get<WidgetInstanceData>(
                 route('admin.content.widget-instances.show', { id }),
+                null,
+                { showSuccess: false },
             )
             return res
         } finally {

@@ -193,8 +193,31 @@ const emit = defineEmits<{
 
 const formModel = reactive<Record<string, any>>({})
 
-// Инициализируем модель из полей
+/**
+ * Храним сигнатуру полей (имена + значения на момент инициализации),
+ * чтобы отслеживать только полную смену набора полей (например, при открытии другого виджета),
+ * а не ререндеры или обновления после сохранения.
+ */
+const fieldsSignature = ref('')
+
+// Инициализируем модель из полей — только при реальном изменении набора полей
 watch(() => props.fields, (fields) => {
+    const newSignature = fields.map(f => f.name).sort().join(',')
+
+    // Если сигнатура не изменилась — не сбрасываем пользовательские изменения
+    if (newSignature === fieldsSignature.value) return
+
+    fieldsSignature.value = newSignature
+
+    // Очищаем старые ключи, которых больше нет
+    const currentNames = new Set(fields.map(f => f.name))
+    for (const key of Object.keys(formModel)) {
+        if (!currentNames.has(key)) {
+            delete formModel[key]
+        }
+    }
+
+    // Заполняем модель из новых полей
     for (const field of fields) {
         if (field.type === 'object' && field.nestedFields) {
             formModel[field.name] = field.value && typeof field.value === 'object' && !Array.isArray(field.value)
@@ -208,7 +231,7 @@ watch(() => props.fields, (fields) => {
                 : field.default ?? null
         }
     }
-}, { immediate: true, deep: true })
+}, { immediate: true, deep: false })
 
 /**
  * Поля на всю ширину — string без форматов (кроме select/enum) и html
@@ -323,14 +346,26 @@ function isLongText(field: WidgetFormFieldData): boolean {
     return typeof val === 'string' && val.length > 80
 }
 
+/**
+ * Если это вложенный рендерер (без кнопки сохранения), эмитим save при любом изменении модели,
+ * чтобы родительский компонент получил обновлённые вложенные данные.
+ */
+watch(formModel, () => {
+    if (!props.showSaveButton) {
+        const snapshot = JSON.parse(JSON.stringify(formModel))
+        //console.debug('[WidgetFieldRenderer] nested auto-save:', snapshot)
+        emit('save', snapshot)
+    }
+}, { deep: true })
+
 function onFieldChange(name: string, value: any) {
-    console.debug('[WidgetFieldRenderer] field changed:', name, '=', value)
+    //console.debug('[WidgetFieldRenderer] field changed:', name, '=', value)
     formModel[name] = value
 }
 
 function onSave() {
     const snapshot = JSON.parse(JSON.stringify(formModel))
-    console.debug('[WidgetFieldRenderer] emitting save:', snapshot)
+    //console.debug('[WidgetFieldRenderer] emitting save:', snapshot)
     emit('save', snapshot)
 }
 </script>
