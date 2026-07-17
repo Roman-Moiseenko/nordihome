@@ -39,6 +39,7 @@ readonly class CategoryPageQuery
     public function execute(string $slug, array $params): ?ProductIndexPageData
     {
         $mainInfo = $this->repository->getCategory($slug);
+        if (is_null($mainInfo)) throw new \DomainException("Не найдена категория $slug");
 
         $key_cache = str_replace('{id}', (string)$mainInfo->id, CacheInvalidationRegistry::CATEGORY_PRODUCTS_ID);
 

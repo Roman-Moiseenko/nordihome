@@ -52,6 +52,7 @@ class ProductViewQueryRepository
                 'products.slug',
                 'products.code',
                 'products.description',
+                'products.short',
                 'products.current_rating',
                 'products.not_sale',
                 'products.price_reduced',
@@ -194,6 +195,7 @@ class ProductViewQueryRepository
             dimensions: $dimensions,
             isRegion: (bool)$row->local,
             isDelivery: (bool)$row->delivery,
+            short: $row->short,
         );
     }
 

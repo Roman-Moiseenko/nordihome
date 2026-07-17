@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Application\DTOs\Pages;
 
+use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Domain\Schema\SchemaData;
@@ -21,12 +22,15 @@ class ProductViewPageData
         // public ...
 
         public ?array $bonus = null,
-        public ?array $series = null,
-        public ?array $equivalents = null,
+        /** @var ProductCardData[] $series */
+        public ?array $series = null, //Товары той же серии
+        /** @var ProductCardData[] $equivalents */
+        public ?array $equivalents = null, //Аналоги
         public ?array $reviews = null,
-        public ?array $attributes = null,
 
-        public ?array $related = null,
+        public ?array $attributes = null,
+        /** @var ProductCardData[] $related */
+        public ?array $related = null, //Связанные (акссесуары)
         public ?array $modification = null,
 
 

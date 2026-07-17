@@ -6,6 +6,7 @@
 @extends('shop.layouts.main')
 @section('body', 'product')
 @section('main', 'container-xl product-page')
+@section('bottom-class', '')
 @section('title', $pageData->meta->title)
 @section('description', $pageData->meta->description)
 
@@ -140,4 +141,8 @@
     <script type="application/ld+json" class="schemantra.com">
         {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
+@endsection
+
+@section('bottom-content')
+
 @endsection

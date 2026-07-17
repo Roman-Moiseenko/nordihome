@@ -84,6 +84,9 @@
     @yield('content')
 </main>
 
+<div class="@yield('bottom-class')">
+    @yield('bottom-content')
+</div>
 <!--POP-UP ОКНА-->
 @guest
     @include('shop.pop-up.login')
