@@ -424,6 +424,13 @@ function onSave() {
     display: inline-flex;
     flex: 0 1 auto;
     width: auto;
+    min-width: 120px;
+}
+
+/* Select внутри компактных полей — растягиваем на всю доступную ширину */
+.compact-fields :deep(.el-form-item__content .el-select) {
+    width: 100%;
+    min-width: 140px;
 }
 
 /* Для boolean — switch без лишнего пространства */
