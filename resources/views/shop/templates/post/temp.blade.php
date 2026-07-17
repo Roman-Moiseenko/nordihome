@@ -1,6 +1,6 @@
 <!--template:Запись тест-->
 @php
-    /** @var \App\Modules\Content\Entity\Post $post */
+    /** @var \App\Modules\Content\Infrastructure\Models\Post $post */
     $photo = photo_std('main_001', 'card');
 @endphp
 @extends('shop.layouts.main')
@@ -14,7 +14,7 @@
 
 @section('content')
     <h1 class="my-4">{{ $post->title }}</h1>
-    <img src="{{ $post->getImage('catalog') }}" />
+    <img src="{{ $post->getImage('catalog') }}"/>
     <div class="mt-4">
         {{ $post->description }}
     </div>

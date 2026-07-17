@@ -1,19 +1,19 @@
 <!--template:Записи базовый-->
 @php
- /**
- * $widget->name
- * $widget->url
- * $widget->caption
- * $widget->description
- * $widget->fields
- * $widget->lists
- * $widget->getPost(<кол-во последних записей>) - возвращает массив записей Post::class
- * $post->category - рубрика
- * остальные поля, например название рубрики $post->category->name и т.п.
- */
+    /**
+    * $widget->name
+    * $widget->url
+    * $widget->caption
+    * $widget->description
+    * $widget->fields
+    * $widget->lists
+    * $widget->getPost(<кол-во последних записей>) - возвращает массив записей Post::class
+    * $post->category - рубрика
+    * остальные поля, например название рубрики $post->category->name и т.п.
+    */
 
- /** @var App\Modules\Content\Entity\Widgets\PostWidget $widget  */
- /** @var \App\Modules\Content\Entity\Post $post */
+    /** @var App\Modules\Content\Entity\Widgets\PostWidget $widget  */
+    /** @var \App\Modules\Content\Infrastructure\Models\Post $post */
 @endphp
 <div class="text-center mt-5 py-4 widget-home-3-group">
     @foreach($widget->getPost() as $post)

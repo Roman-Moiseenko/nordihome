@@ -7,6 +7,7 @@ use App\Modules\Base\Entity\Meta;
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
 use App\Modules\Content\Entity\Widgets\Template;
+use App\Modules\Content\Infrastructure\Models\Post;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 

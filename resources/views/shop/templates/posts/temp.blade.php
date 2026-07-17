@@ -2,7 +2,7 @@
 @php
 
     /** @var \App\Modules\Content\Entity\PostCategory $category */
-    /** @var \App\Modules\Content\Entity\Post[] $posts */
+    /** @var \App\Modules\Content\Infrastructure\Models\Post[] $posts */
     /**
     * $category->getImage();
     * $category->getIcon();

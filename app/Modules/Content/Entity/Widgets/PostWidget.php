@@ -2,8 +2,8 @@
 
 namespace App\Modules\Content\Entity\Widgets;
 
-use App\Modules\Content\Entity\Post;
 use App\Modules\Content\Entity\PostCategory;
+use App\Modules\Content\Infrastructure\Models\Post;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**

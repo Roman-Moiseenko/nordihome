@@ -2,8 +2,8 @@
 
 namespace App\Modules\Content\Repository;
 
-use App\Modules\Content\Entity\Post;
 use App\Modules\Content\Entity\PostCategory;
+use App\Modules\Content\Infrastructure\Models\Post;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Entity\Widgets;
 
-use App\Modules\Content\Entity\Post;
 use App\Modules\Content\Entity\PostCategory;
+use App\Modules\Content\Infrastructure\Models\Post;
 
 class Template
 {
