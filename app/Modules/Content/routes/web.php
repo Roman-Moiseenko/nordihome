@@ -281,12 +281,15 @@ Route::group(
             'prefix' => 'gallery',
             'as' => 'gallery.'
         ], function () {
+            Route::post('/get-tree', [GalleryController::class, 'get_tree'])->name('get-tree');
             Route::post('/set-info/{gallery}', [GalleryController::class, 'set_info'])->name('set-info');
             Route::get('/{gallery}', [GalleryController::class, 'show'])->name('show');
-            Route::post('/image-del/{photo}', [GalleryController::class, 'image_del'])->name('image-del');
+            Route::delete('/image-del/{photo}', [GalleryController::class, 'image_del'])->name('image-del');
             Route::post('/image-set/{photo}', [GalleryController::class, 'image_set'])->name('image-set');
             Route::post('/image-add/{gallery}', [GalleryController::class, 'image_add'])->name('image-add');
             Route::post('/images', [GalleryController::class, 'all_images'])->name('images');
+            Route::post('/upload-to-widget', [GalleryController::class, 'upload_to_widget'])->name('upload-to-widget');
+            Route::post('/image-set-widget/{photo}', [GalleryController::class, 'image_set_widget'])->name('image-set-widget');
 
             Route::delete('/{gallery}', [GalleryController::class, 'destroy'])->name('destroy');
             Route::get('/', [GalleryController::class, 'index'])->name('index');

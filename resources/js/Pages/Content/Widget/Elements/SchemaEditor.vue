@@ -238,6 +238,7 @@ function addProperty() {
         src: { type: 'string', title: 'URL (src)' },
         alt: { type: 'string', title: 'Alt текст' },
         title: { type: 'string', title: 'Title текст' },
+        description: { type: 'string', title: 'Описание' },
       }
       break
     case 'uri':
@@ -291,6 +292,7 @@ function addProperty() {
           src: { type: 'string', title: 'URL (src)' },
           alt: { type: 'string', title: 'Alt текст' },
           title: { type: 'string', title: 'Title текст' },
+          description: { type: 'string', title: 'Описание' },
         },
       }
       break

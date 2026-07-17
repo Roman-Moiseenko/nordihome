@@ -89,4 +89,69 @@ class GalleryController extends Controller
         $images = $this->repository->AllImages($request);
         return \response()->json($images);
     }
+
+    /**
+     * Возвращает все галереи с изображениями для виджета выбора фото.
+     */
+    public function get_tree(): JsonResponse
+    {
+        $galleries = Gallery::orderBy('name')
+            ->with(['photos' => function ($query) {
+                $query->orderBy('sort');
+            }])
+            ->get()
+            ->map(fn(Gallery $gallery) => [
+                'id' => $gallery->id,
+                'name' => $gallery->name,
+                'slug' => $gallery->slug,
+                'images' => $gallery->photos->map(fn(Photo $photo) => [
+                    'id' => $photo->id,
+                    'url' => $photo->getUploadUrl(),
+                    'alt' => $photo->alt,
+                    'title' => $photo->title,
+                    'description' => $photo->description,
+                ]),
+            ]);
+
+        return response()->json($galleries);
+    }
+
+    /**
+     * Загрузить изображение в галерею "Виджет" (widget) и вернуть данные фото.
+     */
+    public function upload_to_widget(Request $request): JsonResponse
+    {
+        $file = $request->file('file');
+        if (is_null($file)) {
+            return response()->json(['message' => 'Нет файла'], 422);
+        }
+
+        $gallery = Gallery::firstOrCreate(
+            ['slug' => 'widget'],
+            ['name' => 'Виджет']
+        );
+
+        $photo = $this->service->addPhoto($gallery, $request);
+
+        return response()->json([
+            'id' => $photo->id,
+            'url' => $photo->getUploadUrl(),
+            'alt' => $photo->alt,
+            'title' => $photo->title,
+            'description' => $photo->description,
+        ]);
+    }
+
+    /**
+     * Установить alt/title/description для фото (из окна выбора изображения виджета).
+     */
+    public function image_set_widget(Photo $photo, Request $request): JsonResponse
+    {
+        $photo->alt = $request->string('alt')->trim()->value();
+        $photo->title = $request->string('title')->trim()->value();
+        $photo->description = $request->string('description')->trim()->value();
+        $photo->save();
+
+        return response()->json(['message' => 'Сохранено']);
+    }
 }

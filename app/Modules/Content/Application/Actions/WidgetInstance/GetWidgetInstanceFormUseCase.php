@@ -62,12 +62,13 @@ final readonly class GetWidgetInstanceFormUseCase
                 $nestedRequired = $prop['required'] ?? [];
                 $nestedValue = is_array($currentValue) ? $currentValue : [];
 
-                // Для format: 'image' — гарантируем, что у объекта есть id, src, alt, title
+                // Для format: 'image' — гарантируем, что у объекта есть id, src, alt, title, description
                 if (($prop['format'] ?? null) === 'image') {
                     $nestedValue['id'] ??= null;
                     $nestedValue['src'] ??= null;
                     $nestedValue['alt'] ??= null;
                     $nestedValue['title'] ??= null;
+                    $nestedValue['description'] ??= null;
                 }
 
                 $nestedFields = $this->buildFields(
@@ -88,12 +89,15 @@ final readonly class GetWidgetInstanceFormUseCase
                 $itemRequired = $prop['items']['required'] ?? [];
                 $sampleValue = is_array($currentValue) ? ($currentValue[0] ?? []) : [];
 
-                // Для массива изображений — гарантируем поля id, src, alt, title у каждого элемента
+                // Для массива изображений — гарантируем поля id, src, alt, title, description у каждого элемента
+                // И дублируем format на уровень самого поля, чтобы шаблон мог проверить field.format === 'image'
                 if (($prop['items']['format'] ?? null) === 'image') {
+                    $prop['format'] = 'image';
                     $sampleValue['id'] ??= null;
                     $sampleValue['src'] ??= null;
                     $sampleValue['alt'] ??= null;
                     $sampleValue['title'] ??= null;
+                    $sampleValue['description'] ??= null;
                 }
 
                 $nestedFields = $this->buildFields(

@@ -129,25 +129,13 @@
                                         Удалить
                                     </el-button>
                                 </div>
-                                <!-- Для массива изображений — компактный рендер id, src, alt, title -->
-                                <div v-if="field.format === 'image'" class="image-object-field pl-2">
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <label class="text-xs text-gray-500 w-12 shrink-0">ID:</label>
-                                        <el-input :model-value="item.id" size="small" disabled class="flex-1" />
+                                                                <!-- Для массива изображений — компонент выбора изображения -->
+                                    <div v-if="field.format === 'image'" class="image-object-field">
+                                        <ImagePicker
+                                            :model-value="item || null"
+                                            @update:model-value="(val) => onArrayImageFieldChange(field.name, itemIdx, val)"
+                                        />
                                     </div>
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <label class="text-xs text-gray-500 w-12 shrink-0">URL:</label>
-                                        <el-input :model-value="item.src" size="small" class="flex-1" @input="(v) => onArrayImageFieldChange(field.name, itemIdx, 'src', v)" />
-                                    </div>
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <label class="text-xs text-gray-500 w-12 shrink-0">Alt:</label>
-                                        <el-input :model-value="item.alt" size="small" class="flex-1" @input="(v) => onArrayImageFieldChange(field.name, itemIdx, 'alt', v)" />
-                                    </div>
-                                    <div class="flex items-center gap-2 mb-1">
-                                        <label class="text-xs text-gray-500 w-12 shrink-0">Title:</label>
-                                        <el-input :model-value="item.title" size="small" class="flex-1" @input="(v) => onArrayImageFieldChange(field.name, itemIdx, 'title', v)" />
-                                    </div>
-                                </div>
                                 <!-- Обычный массив объектов — через вложенный WidgetFieldRenderer -->
                                 <WidgetFieldRenderer
                                     v-else
@@ -170,44 +158,12 @@
                         :required="field.required"
                         :prop="field.name"
                     >
-                        <!-- Для image показываем компактную форму с id, src, alt, title -->
-                        <div v-if="field.format === 'image'" class="image-object-field border rounded p-3 bg-gray-50 w-full">
-                            <div class="flex items-center gap-2 mb-2">
-                                <label class="text-xs text-gray-500 w-12 shrink-0">ID:</label>
-                                <el-input
-                                    :model-value="formModel[field.name]?.id"
-                                    size="small"
-                                    disabled
-                                    class="flex-1"
-                                />
-                            </div>
-                            <div class="flex items-center gap-2 mb-2">
-                                <label class="text-xs text-gray-500 w-12 shrink-0">URL:</label>
-                                <el-input
-                                    :model-value="formModel[field.name]?.src"
-                                    size="small"
-                                    class="flex-1"
-                                    @input="(v) => onImageFieldChange(field.name, 'src', v)"
-                                />
-                            </div>
-                            <div class="flex items-center gap-2 mb-2">
-                                <label class="text-xs text-gray-500 w-12 shrink-0">Alt:</label>
-                                <el-input
-                                    :model-value="formModel[field.name]?.alt"
-                                    size="small"
-                                    class="flex-1"
-                                    @input="(v) => onImageFieldChange(field.name, 'alt', v)"
-                                />
-                            </div>
-                            <div class="flex items-center gap-2 mb-2">
-                                <label class="text-xs text-gray-500 w-12 shrink-0">Title:</label>
-                                <el-input
-                                    :model-value="formModel[field.name]?.title"
-                                    size="small"
-                                    class="flex-1"
-                                    @input="(v) => onImageFieldChange(field.name, 'title', v)"
-                                />
-                            </div>
+                        <!-- Для image показываем компонент выбора изображения -->
+                        <div v-if="field.format === 'image'" class="image-object-field w-full">
+                            <ImagePicker
+                                :model-value="formModel[field.name] || null"
+                                @update:model-value="(val) => onImageFieldChange(field.name, val)"
+                            />
                         </div>
                         <!-- Обычный object — через вложенный WidgetFieldRenderer -->
                         <div v-else class="object-field border rounded p-3 bg-gray-50 w-full">
@@ -239,6 +195,7 @@
 <script setup lang="ts">
 import { ref, reactive, watch, computed } from 'vue'
 import type { WidgetFormFieldData } from '@Res/composables/useContentBlock'
+import ImagePicker from './ImagePicker.vue'
 
 const props = defineProps<{
     fields: WidgetFormFieldData[]
@@ -340,9 +297,9 @@ function addArrayItem(fieldName: string, nestedFields: WidgetFormFieldData[], fo
     if (!Array.isArray(formModel[fieldName])) {
         formModel[fieldName] = []
     }
-    // Для массива изображений — инициализируем объект с id, src, alt, title
+    // Для массива изображений — инициализируем объект с id, src, alt, title, description
     if (format === 'image') {
-        formModel[fieldName].push({ id: null, src: '', alt: '', title: '' })
+        formModel[fieldName].push({ id: null, src: '', alt: '', title: '', description: '' })
         return
     }
     const newItem: Record<string, any> = {}
@@ -429,23 +386,25 @@ function onFieldChange(name: string, value: any) {
     formModel[name] = value
 }
 
-/** Обновить вложенное поле image-объекта */
-function onImageFieldChange(parentName: string, subKey: string, value: any) {
-    if (!formModel[parentName]) {
-        formModel[parentName] = { id: null, src: '', alt: '', title: '' }
+/** Обновить image-объект целиком (приходит из ImagePicker) */
+function onImageFieldChange(parentName: string, value: any) {
+    if (value === null) {
+        delete formModel[parentName]
+    } else {
+        formModel[parentName] = { ...value }
     }
-    formModel[parentName][subKey] = value
 }
 
-/** Обновить поле в элементе массива изображений */
-function onArrayImageFieldChange(parentName: string, itemIndex: number, subKey: string, value: any) {
+/** Обновить элемент массива изображений (приходит из ImagePicker) */
+function onArrayImageFieldChange(parentName: string, itemIndex: number, value: any) {
     if (!Array.isArray(formModel[parentName])) {
         formModel[parentName] = []
     }
-    if (!formModel[parentName][itemIndex]) {
-        formModel[parentName][itemIndex] = { id: null, src: '', alt: '', title: '' }
+    if (value === null) {
+        formModel[parentName].splice(itemIndex, 1)
+    } else {
+        formModel[parentName][itemIndex] = { ...value }
     }
-    formModel[parentName][itemIndex][subKey] = value
 }
 
 function onSave() {

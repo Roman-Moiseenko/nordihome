@@ -232,6 +232,7 @@ function onItemsTypeChange() {
       src: { type: 'string', title: 'URL (src)' },
       alt: { type: 'string', title: 'Alt текст' },
       title: { type: 'string', title: 'Title текст' },
+      description: { type: 'string', title: 'Описание' },
     }
   } else if (itemsType.value === 'object') {
     delete localConfig.items.format
@@ -297,6 +298,7 @@ watch(() => [localConfig.type, localConfig.format], () => {
         src: { type: 'string', title: 'URL (src)' },
         alt: { type: 'string', title: 'Alt текст' },
         title: { type: 'string', title: 'Title текст' },
+        description: { type: 'string', title: 'Описание' },
       }
       for (const [key, cfg] of Object.entries(defaults)) {
         if (!localConfig.properties[key]) {
