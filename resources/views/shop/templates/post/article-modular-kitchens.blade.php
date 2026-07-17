@@ -1,6 +1,6 @@
 <!--template:Статья - Одна система, тысячи возможностей — модульные кухни ИКЕА-->
 @php
-    /** @var \App\Modules\Page\Entity\Post $post */
+    /** @var \App\Modules\Content\Entity\Post $post */
     $photo = photo_std('main_001', 'card');
 @endphp
 @extends('shop.layouts.main')

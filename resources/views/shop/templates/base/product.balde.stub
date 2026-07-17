@@ -33,7 +33,7 @@
 
 */
 
-use App\Modules\Page\Entity\ProductWidget;
+use App\Modules\Content\Entity\ProductWidget;
 /** @var ProductWidget $widget  */
 @endphp
 <div>

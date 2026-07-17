@@ -14,7 +14,7 @@
 * $item->text - text (форматируемый текст)
 
 */
-/** @var \App\Modules\Page\Entity\TextWidget $widget */
+/** @var \App\Modules\Content\Entity\TextWidget $widget */
 @endphp
 <div>
 

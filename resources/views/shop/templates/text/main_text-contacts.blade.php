@@ -13,7 +13,7 @@
     * $item->description -
     * $item->text - text (форматируемый текст)
  */
-    /** @var \App\Modules\Page\Entity\Widgets\TextWidget $widget */
+    /** @var \App\Modules\Content\Entity\Widgets\TextWidget $widget */
 @endphp
 <div id="contacts-tab"></div>
 <div class="heading f-w_600 f-z_23 m-b_20">КОНТАКТЫ</div>

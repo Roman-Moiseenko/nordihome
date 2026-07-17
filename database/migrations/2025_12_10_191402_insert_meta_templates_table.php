@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Page\Infrastructure\Models\MetaTemplate;
+use App\Modules\Content\Infrastructure\Models\MetaTemplate;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use Illuminate\Database\Migrations\Migration;
@@ -12,8 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        MetaTemplate::register(ParserProduct::class);
-        MetaTemplate::register(ParserCategory::class);
+       // MetaTemplate::register(ParserProduct::class);
+      //  MetaTemplate::register(ParserCategory::class);
     }
 
     /**
@@ -21,7 +21,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        MetaTemplate::cancel(ParserProduct::class);
-        MetaTemplate::cancel(ParserCategory::class);
+     //   MetaTemplate::cancel(ParserProduct::class);
+      //  MetaTemplate::cancel(ParserCategory::class);
     }
 };

@@ -32,7 +32,7 @@
 
 */
 
-use App\Modules\Page\Entity\PromotionWidget;
+use App\Modules\Content\Entity\PromotionWidget;
 /** @var ProductWidget $widget  */
 @endphp
 <div>

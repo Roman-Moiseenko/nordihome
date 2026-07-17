@@ -13,7 +13,7 @@
     * $item->description -
     * $item->text - text (форматируемый текст)
  */
-    /** @var \App\Modules\Page\Entity\Widgets\TextWidget $widget */
+    /** @var \App\Modules\Content\Entity\Widgets\TextWidget $widget */
 @endphp
 <div class="main-order-stages p-t_50 p-b_50">
     <div class="container">

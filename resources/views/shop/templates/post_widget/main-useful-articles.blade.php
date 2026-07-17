@@ -12,8 +12,8 @@
     * остальные поля, например название рубрики $post->category->name и т.п.
     */
 
-    /** @var App\Modules\Page\Entity\Widgets\PostWidget $widget  */
-    /** @var \App\Modules\Page\Entity\Post $post */
+    /** @var App\Modules\Content\Entity\Widgets\PostWidget $widget  */
+    /** @var \App\Modules\Content\Entity\Post $post */
     @endphp
 <div class="main-articles p-t_50 p-b_50">
     <div class="container">

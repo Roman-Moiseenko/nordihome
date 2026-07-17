@@ -11,7 +11,7 @@
     * $item->caption - string
     * $item->description - string
     */
-    /** @var \App\Modules\Page\Entity\Widgets\BannerWidget $widget */
+    /** @var \App\Modules\Content\Entity\Widgets\BannerWidget $widget */
 @endphp
 <div id="main-slider-interesting" class="p-t_50 p-b_50">
     <div class="container">

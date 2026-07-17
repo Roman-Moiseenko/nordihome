@@ -1,8 +1,8 @@
 <!--template:Шаблон тестовый-->
 @php
 
-/** @var \App\Modules\Page\Entity\PostCategory $category */
-/** @var \App\Modules\Page\Entity\Post[] $posts */
+/** @var \App\Modules\Content\Entity\PostCategory $category */
+/** @var \App\Modules\Content\Entity\Post[] $posts */
     /**
     * $category->getImage();
     * $category->getIcon();

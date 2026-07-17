@@ -5,7 +5,7 @@ namespace App\Modules\Feedback\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Feedback\Repository\FormRepository;
 use App\Modules\Feedback\Service\FormService;
-use App\Modules\Page\Entity\Widgets\FormWidget;
+use App\Modules\Content\Entity\Widgets\FormWidget;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

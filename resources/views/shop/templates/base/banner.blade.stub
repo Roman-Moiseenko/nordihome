@@ -16,7 +16,7 @@
 * $item->slug - string
 * $item->marking - string Маркировка, проверять как @if(!empty($item->marking))
 */
-/** @var \App\Modules\Page\Entity\Banner $widget */
+/** @var \App\Modules\Content\Entity\Banner $widget */
 @endphp
 <div>
 

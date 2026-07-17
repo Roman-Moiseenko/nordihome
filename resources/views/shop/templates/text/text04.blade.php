@@ -13,7 +13,7 @@
     * $item->description -
     * $item->text - text (форматируемый текст)
  */
-    /** @var \App\Modules\Page\Entity\Widgets\TextWidget $widget */
+    /** @var \App\Modules\Content\Entity\Widgets\TextWidget $widget */
 @endphp
 <div class="p-t_50 p-b_50 bg-blue f-z_23 t-a_center t-t_uppercase f-w_600">
     @foreach($widget->items as $item)
