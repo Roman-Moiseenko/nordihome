@@ -8,9 +8,9 @@ use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Page\Entity\Page;
-use App\Modules\Page\Entity\Post;
-use App\Modules\Page\Entity\PostCategory;
+use App\Modules\Content\Entity\Page;
+use App\Modules\Content\Entity\Post;
+use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 

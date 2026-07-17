@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop;
 
-use App\Modules\Page\Entity\Contact;
-use App\Modules\Page\Entity\Page;
+use App\Modules\Content\Entity\Contact;
+use App\Modules\Content\Entity\Page;
 
 class MenuHelper
 {
