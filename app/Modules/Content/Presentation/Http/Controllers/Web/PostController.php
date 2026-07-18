@@ -1,16 +1,24 @@
 <?php
 
-namespace App\Modules\Content\Controllers;
+namespace App\Modules\Content\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
+use App\Modules\Content\Application\Actions\Post\CreatePostUseCase;
+use App\Modules\Content\Application\Actions\Post\IndexPostUseCase;
+use App\Modules\Content\Application\Actions\Post\RemovePostUseCase;
+use App\Modules\Content\Application\Actions\Post\UpdatePostUseCase;
+use App\Modules\Content\Application\Actions\Post\ViewPostUseCase;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
+use App\Modules\Content\Application\DTOs\Post\PostUpdateData;
+use App\Modules\Content\Application\DTOs\Post\PostViewData;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Infrastructure\Models\Post;
 use App\Modules\Content\Repository\PostRepository;
 use App\Modules\Content\Repository\TemplateRepository;
 use App\Modules\Content\Service\PostService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -29,6 +37,11 @@ class PostController extends Controller
         TemplateRepository $templates,
         PostRepository     $repository,
         private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
+        private readonly ViewPostUseCase $viewPostUseCase,
+        private readonly UpdatePostUseCase $updatePostUseCase,
+        private readonly IndexPostUseCase $postUseCase,
+        private readonly CreatePostUseCase $createPostUseCase,
+        private readonly RemovePostUseCase $removePostUseCase,
     )
     {
         $this->service = $service;
@@ -83,14 +96,18 @@ class PostController extends Controller
 
     }
 
-    public function post(Post $post): Response
+    public function post(int $id, UserPermission $userPermission): Response
     {
-        $templates = $this->templates->getTemplates('post');
+        //$templates = $this->templates->getTemplates('post');
+        $post = $this->viewPostUseCase->execute($id, $userPermission);
+
         $dto = new ContentBlockContainerData($post->id, ContainerType::POST);
         $blocks = $this->listContentBlockByContainerUseCase->execute($dto);
+
+
         return Inertia::render('Content/Post/Post', [
-            'post' => Inertia::always($this->repository->PostWithToArray($post)), //Заменить на useCase
-            'templates' => $templates, //Удалить
+            'post' => Inertia::always(PostViewData::fromEntity($post)), //Заменить на useCase $this->repository->PostWithToArray($post)
+            //'templates' => $templates, //Удалить
             'tiny_api' => config('shop.tinymce'), //Удалить
             'blocks' => $blocks,
         ]);
@@ -104,9 +121,11 @@ class PostController extends Controller
         return redirect()->route('admin.content.post.show', $post)->with('success', 'Запись создана');
     }
 
-    public function post_set_info(Post $post, Request $request): RedirectResponse
+    public function post_set_info(int $id, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->setInfoPost($post, $request);
+        $dto = PostUpdateData::validateAndCreate($request->all());
+        $this->updatePostUseCase->execute($id, $dto, $userPermission);
+        //$this->service->setInfoPost($post, $request);
         return redirect()->back()->with('success', 'Сохранено');
     }
 

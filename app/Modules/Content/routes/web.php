@@ -9,12 +9,12 @@ use App\Modules\Content\Controllers\MenuController;
 use App\Modules\Content\Controllers\MetaTemplateController;
 use App\Modules\Content\Controllers\NewsController;
 use App\Modules\Content\Controllers\PageController;
-use App\Modules\Content\Controllers\PostController;
 use App\Modules\Content\Controllers\PostWidgetController;
 use App\Modules\Content\Controllers\ProductWidgetController;
 use App\Modules\Content\Controllers\PromotionWidgetController;
 use App\Modules\Content\Controllers\TextWidgetController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\ContentBlockController;
+use App\Modules\Content\Presentation\Http\Controllers\Web\PostController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\WidgetController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\WidgetInstanceController;
 use Illuminate\Support\Facades\Route;
@@ -248,10 +248,10 @@ Route::group(
             'prefix' => 'post',
             'as' => 'post.'
         ], function () {
-            Route::post('/set-info/{post}', [PostController::class, 'post_set_info'])->name('set-info');
+            Route::post('/set-info/{id}', [PostController::class, 'post_set_info'])->name('set-info');
             Route::post('/toggle/{post}', [PostController::class, 'post_toggle'])->name('toggle');
-            Route::post('/set-text/{post}', [PostController::class, 'post_set_text'])->name('set-text');
-            Route::get('/{post}', [PostController::class, 'post'])->name('show');
+            //Route::post('/set-text/{post}', [PostController::class, 'post_set_text'])->name('set-text');
+            Route::get('/{id}', [PostController::class, 'post'])->name('show');
             Route::delete('/{post}', [PostController::class, 'post_destroy'])->name('destroy');
             Route::post('/', [PostController::class, 'post_create'])->name('store');
 

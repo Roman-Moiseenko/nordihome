@@ -151,7 +151,8 @@ Breadcrumbs::for('admin.content.post.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Записи', route('admin.content.post.index'));
 });
-Breadcrumbs::for('admin.content.post.show', function (BreadcrumbTrail $trail, Post $post) {
+Breadcrumbs::for('admin.content.post.show', function (BreadcrumbTrail $trail, int $id) {
+    $post = Post::find($id);
     $trail->parent('admin.content.post-category.show', $post->category);
     $trail->push($post->name, route('admin.content.post.show', $post));
 });

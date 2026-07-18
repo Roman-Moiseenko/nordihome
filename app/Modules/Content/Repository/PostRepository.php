@@ -36,8 +36,7 @@ class PostRepository
     {
         return array_merge($post->toArray(), [
             'image' => $post->getImage(),
-            'icon' => $post->getIcon(),
-            'meta' => $post->meta->toArray(),
+            'meta' => $post->meta,
         ]);
     }
 

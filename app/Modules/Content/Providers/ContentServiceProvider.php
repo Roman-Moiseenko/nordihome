@@ -12,6 +12,8 @@ use App\Modules\Content\Infrastructure\Persistence\ContentBlockRepository;
 use App\Modules\Content\Infrastructure\Persistence\MetaTemplateRepository;
 use App\Modules\Content\Infrastructure\Persistence\WidgetInstanceRepository;
 use App\Modules\Content\Infrastructure\Persistence\WidgetRepository;
+use App\Modules\Content\Application\Interfaces\PostRepositoryInterface;
+use App\Modules\Content\Infrastructure\Persistence\PostRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -112,6 +114,11 @@ class ContentServiceProvider extends ServiceProvider
         $this->app->bind(
             ContentBlockRepositoryInterface::class,
             ContentBlockRepository::class,
+        );
+
+        $this->app->bind(
+            PostRepositoryInterface::class,
+            PostRepository::class,
         );
     }
 
