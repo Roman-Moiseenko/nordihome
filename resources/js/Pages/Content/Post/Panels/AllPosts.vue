@@ -65,17 +65,16 @@ const props = defineProps({
 const tableData = ref([...props.posts]);
 const $delete_entity = inject("$delete_entity", "post")
 function routeClick(row) {
-    router.get(route('admin.content.post.show', {post: row.id}))
+    router.get(route('admin.content.post.show', {id: row.id}))
 }
 
 function onToggle(row) {
-    router.visit(route('admin.content.post.toggle', {post: row.id}), {
+    router.visit(route('admin.content.post.toggle', {id: row.id}), {
         method: "post",
         preserveState: true,
         preserveScroll: true,
         onSuccess: page => {
-            console.log(page.props.room.posts)
-            tableData.value = [...page.props.room.posts]
+            tableData.value = [...page.props.category.posts]
         }
     })
 }

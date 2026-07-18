@@ -7,6 +7,7 @@ use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByConta
 use App\Modules\Content\Application\Actions\Post\CreatePostUseCase;
 use App\Modules\Content\Application\Actions\Post\IndexPostUseCase;
 use App\Modules\Content\Application\Actions\Post\RemovePostUseCase;
+use App\Modules\Content\Application\Actions\Post\TogglePostUseCase;
 use App\Modules\Content\Application\Actions\Post\UpdatePostUseCase;
 use App\Modules\Content\Application\Actions\Post\ViewPostUseCase;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
@@ -42,6 +43,7 @@ class PostController extends Controller
         private readonly IndexPostUseCase $postUseCase,
         private readonly CreatePostUseCase $createPostUseCase,
         private readonly RemovePostUseCase $removePostUseCase,
+        private readonly TogglePostUseCase $togglePostUseCase,
     )
     {
         $this->service = $service;
@@ -135,9 +137,11 @@ class PostController extends Controller
         return redirect()->back()->with('success', 'Удалено');
     }
 
-    public function post_toggle(Post $post): RedirectResponse
+    public function post_toggle(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $message = $this->service->togglePost($post);
+        $message = $this->togglePostUseCase->execute($id, $userPermission);
+
+        //$message = $this->service->togglePost($post);
         return redirect()->back()->with('success', $message);
     }
 

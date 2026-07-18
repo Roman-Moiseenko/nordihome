@@ -249,7 +249,7 @@ Route::group(
             'as' => 'post.'
         ], function () {
             Route::post('/set-info/{id}', [PostController::class, 'post_set_info'])->name('set-info');
-            Route::post('/toggle/{post}', [PostController::class, 'post_toggle'])->name('toggle');
+            Route::post('/toggle/{id}', [PostController::class, 'post_toggle'])->name('toggle');
             //Route::post('/set-text/{post}', [PostController::class, 'post_set_text'])->name('set-text');
             Route::get('/{id}', [PostController::class, 'post'])->name('show');
             Route::delete('/{post}', [PostController::class, 'post_destroy'])->name('destroy');
