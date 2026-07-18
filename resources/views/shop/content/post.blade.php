@@ -10,9 +10,11 @@
 @section('description', $pageData->meta->description)
 
 @section('content')
-    <h1 class="my-4">{{ $pageData->title }}</h1>
+    <h1 class="my-4">{{ $pageData->post->caption }}</h1>
 
     @foreach($pageData->blocks as $block)
-        @include('widgets::' . $block->widget->category . '.' . $block->widget->slug, ['params' => $block->widget->params])
+        <div class="widget mt-4">
+            @include('widgets::' . $block->widget->category . '.' . $block->widget->slug, ['params' => $block->widget->params])
+        </div>
     @endforeach
 @endsection

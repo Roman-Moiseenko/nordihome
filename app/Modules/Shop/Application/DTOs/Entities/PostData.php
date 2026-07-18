@@ -10,6 +10,9 @@ class PostData
         public string $slug,
         public string $title,
         public string $description,
+        public string $caption,
+        public string $fragment,
+        public string $image,
     )
     {
     }

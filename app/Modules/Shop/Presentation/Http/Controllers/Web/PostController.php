@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Modules\Shop\Controllers;
+namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
 use App\Modules\Content\Repository\MetaTemplateRepository;
 use App\Modules\Shop\Application\Queries\Post\PostPageQuery;
+use App\Modules\Shop\Controllers\ShopController;
 use App\Modules\Shop\Repository\SlugRepository;
 use App\Modules\Shop\Repository\ViewRepository;
 
@@ -36,7 +37,7 @@ class PostController extends ShopController
     {
         $data = $this->postPageQuery->execute($slug);
 
-        return view('', [
+        return view('shop.content.post', [
             'pageData' => $data,
         ]);
 

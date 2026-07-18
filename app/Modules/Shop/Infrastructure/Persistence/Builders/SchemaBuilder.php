@@ -4,8 +4,10 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Builders;
 
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomData;
 use App\Modules\Shop\Application\DTOs\Entities\IkeaProductData;
+use App\Modules\Shop\Application\DTOs\Entities\PostData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
 use App\Modules\Shop\Application\DTOs\Pages\CatalogIndexPageData;
+use App\Modules\Shop\Application\DTOs\Pages\PostViewPageData;
 use App\Modules\Shop\Application\Interfaces\BreadcrumbProviderInterface;
 use App\Modules\Shop\Domain\Schema\BreadcrumbSchema;
 use App\Modules\Shop\Domain\Schema\ItemListSchema;
@@ -129,6 +131,21 @@ class SchemaBuilder
             description: $data->meta->description,
             url: url()->current()
         );
+        return new SchemaData($graph);
+    }
+
+    public function buildForPost(PostData $data): SchemaData
+    {
+        $graph = [];
+        $graph[] = $this->organization;
+        $breadcrumbs = $this->breadcrumbProvider->generate('shop.post.view', [$data->slug]);
+        $graph[] = new BreadcrumbSchema($breadcrumbs);
+        $graph[] = new WebPageSchema(
+            name: $data->caption,
+            description: $data->fragment,
+            url: url()->current()
+        );
+        //MAINDO Добавить FAQ
         return new SchemaData($graph);
     }
 

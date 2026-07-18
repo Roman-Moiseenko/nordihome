@@ -232,14 +232,22 @@ class MetaTemplateRepository
     public function generateSeo(string $entityKey, object $dto): SeoData
     {
         $template = MetaTemplate::where('entity', $entityKey)->first();
-        $title = $template?->template_title
-            ? $this->render($dto, $template->template_title)
-            : '';
+        if (property_exists($dto, 'title') && !empty($dto->title)) {
+            $title = $dto->title;
+        } else {
+            $title = $template?->template_title
+                ? $this->render($dto, $template->template_title)
+                : '';
+        }
 
-        $description = $template?->template_description
-            ? $this->render($dto, $template->template_description)
-            : '';
 
+        if (property_exists($dto, 'description') && !empty($dto->description)) {
+            $description = $dto->description;
+        } else{
+            $description = $template?->template_description
+                ? $this->render($dto, $template->template_description)
+                : '';
+        }
         return new SeoData($title, $description);
     }
 

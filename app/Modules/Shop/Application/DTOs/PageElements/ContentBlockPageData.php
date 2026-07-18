@@ -8,8 +8,7 @@ class ContentBlockPageData
 {
     public function __construct(
         public string $section,
-        /** @var WidgetPageData $widget */
-        public array $widget,
+        public WidgetPageData $widget,
     ) {
 
     }
