@@ -60,7 +60,7 @@ const props = defineProps({
     post: Object,
     //templates: Array<ISelectItem>,
 })
-console.log(props.post)
+//console.log(props.post)
 // --- Исходные данные из пропсов (эталон для отмены) ---
 const initialInfo = {
     name: props.post.name,

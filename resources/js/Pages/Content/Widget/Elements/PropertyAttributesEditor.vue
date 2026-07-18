@@ -31,6 +31,7 @@
           <el-option label="uri (ссылка)" value="uri" />
           <el-option label="date" value="date" />
           <el-option label="date-time" value="date-time" />
+          <el-option label="color (цвет)" value="color" />
           <el-option label="widget (ID виджета)" value="widget" />
         </el-select>
       </el-form-item>

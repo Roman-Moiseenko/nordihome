@@ -29,8 +29,6 @@ export const useContentStore = defineStore('content', () => {
 
         categories.value = categoriesRes.data
         widgets.value = widgetsRes.data
-        //console.log(categoriesRes.data)
-        console.log(widgetsRes.data)
     }
 
     ;(async () => {

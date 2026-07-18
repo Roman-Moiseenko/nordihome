@@ -65,7 +65,6 @@ const props = defineProps({
     tiny_api: String,
     blocks: Array,
 })
-console.log(props.blocks);
 const text = ref(props.post.text)
 
 const showHelp = ref(false);
