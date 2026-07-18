@@ -61,6 +61,42 @@
               </div>
             </template>
 
+            <!-- Для массива товаров — компактный рендер -->
+            <template v-else-if="props.propConfig?.items?.format === 'product'">
+              <div class="product-object-field">
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-xs text-gray-500 w-24 shrink-0">ID товара:</label>
+                  <el-input v-model="item.id" size="small" disabled class="flex-1" />
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-xs text-gray-500 w-24 shrink-0">Название:</label>
+                  <el-input v-model="item.name" size="small" class="flex-1" @input="emitUpdate" />
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-xs text-gray-500 w-24 shrink-0">Slug:</label>
+                  <el-input v-model="item.slug" size="small" class="flex-1" @input="emitUpdate" />
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-xs text-gray-500 w-24 shrink-0">Кратко:</label>
+                  <el-input v-model="item.short" size="small" class="flex-1" @input="emitUpdate" />
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-xs text-gray-500 w-24 shrink-0">Цена:</label>
+                  <el-input-number v-model="item.price" size="small" class="flex-1" :min="0" :step="0.01" @change="emitUpdate" />
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-xs text-gray-500 w-24 shrink-0">Изобр.:</label>
+                  <el-input v-model="item.image_src" size="small" class="flex-1" placeholder="URL" @input="emitUpdate" />
+                  <el-input v-model="item.image_alt" size="small" class="w-24" placeholder="Alt" @input="emitUpdate" />
+                </div>
+                <div class="flex items-center gap-2 mb-1">
+                  <label class="text-xs text-gray-500 w-24 shrink-0">Изобр. 2:</label>
+                  <el-input v-model="item.image_next_src" size="small" class="flex-1" placeholder="URL" @input="emitUpdate" />
+                  <el-input v-model="item.image_next_alt" size="small" class="w-24" placeholder="Alt" @input="emitUpdate" />
+                </div>
+              </div>
+            </template>
+
             <!-- Обычные поля -->
             <template v-else>
               <div
@@ -205,6 +241,10 @@ function getItemTitle(item: any, index: number): string {
   if (props.propConfig?.items?.format === 'image') {
     return item?.src || item?.alt || `Изображение #${index + 1}`
   }
+  // Для массива товаров показываем название
+  if (props.propConfig?.items?.format === 'product') {
+    return item?.name || `Товар #${index + 1}`
+  }
   // Ищем первое строковое поле для заголовка
   for (const [key, cfg] of Object.entries(subProperties.value)) {
     const c = cfg as any
@@ -224,11 +264,25 @@ function toggleItem(index: number) {
 }
 
 function addItem() {
+  const isProductArray = props.propConfig?.items?.format === 'product'
   const isImageArray = props.propConfig?.items?.format === 'image'
 
   if (isImageArray) {
     // Для массива изображений — сразу объект с id, src, alt, title
     items.value.push({ id: null, src: '', alt: '', title: '' })
+  } else if (isProductArray) {
+    // Для массива товаров — объект с полями товара
+    items.value.push({
+      id: null,
+      name: '',
+      slug: '',
+      short: '',
+      price: null,
+      image_src: '',
+      image_alt: '',
+      image_next_src: '',
+      image_next_alt: '',
+    })
   } else {
     const newItem: Record<string, any> = {}
     for (const [key, cfg] of Object.entries(subProperties.value)) {

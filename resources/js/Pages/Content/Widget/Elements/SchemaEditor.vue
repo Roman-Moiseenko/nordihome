@@ -65,6 +65,7 @@
             <el-option label="Строка (string)" value="string" />
             <el-option label="Текст HTML (string + html)" value="html" />
             <el-option label="Изображение (image)" value="image" />
+            <el-option label="Товар (product)" value="product" />
             <el-option label="Ссылка (string + uri)" value="uri" />
             <el-option label="Число целое (integer)" value="integer" />
             <el-option label="ID виджета (integer + widget)" value="widget" />
@@ -73,6 +74,7 @@
             <el-option label="Объект (object)" value="object" />
             <el-option label="Массив объектов (array + object)" value="array_objects" />
             <el-option label="Массив изображений (array + image)" value="array_images" />
+            <el-option label="Массив товаров (array + product)" value="array_products" />
             <el-option label="Массив строк (array + string)" value="array_strings" />
             <el-option label="Массив чисел (array + integer)" value="array_integers" />
           </el-select>
@@ -241,6 +243,21 @@ function addProperty() {
         description: { type: 'string', title: 'Описание' },
       }
       break
+    case 'product':
+      propConfig.type = 'object'
+      propConfig.format = 'product'
+      propConfig.properties = {
+        id: { type: 'integer', title: 'ID товара' },
+        name: { type: 'string', title: 'Название' },
+        slug: { type: 'string', title: 'Slug' },
+        short: { type: 'string', title: 'Краткое описание' },
+        price: { type: 'number', title: 'Цена' },
+        image_src: { type: 'string', title: 'URL изображения' },
+        image_alt: { type: 'string', title: 'Alt изображения' },
+        image_next_src: { type: 'string', title: 'URL второго изображения' },
+        image_next_alt: { type: 'string', title: 'Alt второго изображения' },
+      }
+      break
     case 'uri':
       propConfig.type = 'string'
       propConfig.format = 'uri'
@@ -293,6 +310,24 @@ function addProperty() {
           alt: { type: 'string', title: 'Alt текст' },
           title: { type: 'string', title: 'Title текст' },
           description: { type: 'string', title: 'Описание' },
+        },
+      }
+      break
+    case 'array_products':
+      propConfig.type = 'array'
+      propConfig.items = {
+        type: 'object',
+        format: 'product',
+        properties: {
+          id: { type: 'integer', title: 'ID товара' },
+          name: { type: 'string', title: 'Название' },
+          slug: { type: 'string', title: 'Slug' },
+          short: { type: 'string', title: 'Краткое описание' },
+          price: { type: 'number', title: 'Цена' },
+          image_src: { type: 'string', title: 'URL изображения' },
+          image_alt: { type: 'string', title: 'Alt изображения' },
+          image_next_src: { type: 'string', title: 'URL второго изображения' },
+          image_next_alt: { type: 'string', title: 'Alt второго изображения' },
         },
       }
       break

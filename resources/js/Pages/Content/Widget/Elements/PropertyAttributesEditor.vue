@@ -28,6 +28,7 @@
           <el-option label="Без формата" value="" />
           <el-option label="html" value="html" />
           <el-option label="image (изображение)" value="image" />
+          <el-option label="product (товар)" value="product" />
           <el-option label="uri (ссылка)" value="uri" />
           <el-option label="date" value="date" />
           <el-option label="date-time" value="date-time" />
@@ -80,6 +81,7 @@
             <el-option label="Дробное число (number)" value="number" />
             <el-option label="Объект (object)" value="object" />
             <el-option label="Изображение (image)" value="image" />
+            <el-option label="Товар (product)" value="product" />
           </el-select>
         </el-form-item>
 
@@ -211,7 +213,7 @@ const editableSubKeys = reactive<Record<string, string>>({})
 
 watch(() => props.propConfig?.items, (val) => {
   if (val) {
-    itemsType.value = val.format === 'image' ? 'image' : (val.type || 'string')
+    itemsType.value = val.format === 'image' ? 'image' : (val.format === 'product' ? 'product' : (val.type || 'string'))
     const keys = Object.keys(itemProperties)
     for (const k of keys) { delete itemProperties[k]; delete editableSubKeys[k] }
     if (val.properties) {
@@ -234,6 +236,19 @@ function onItemsTypeChange() {
       alt: { type: 'string', title: 'Alt текст' },
       title: { type: 'string', title: 'Title текст' },
       description: { type: 'string', title: 'Описание' },
+    }
+  } else if (itemsType.value === 'product') {
+    localConfig.items.format = 'product'
+    localConfig.items.properties = {
+      id: { type: 'integer', title: 'ID товара' },
+      name: { type: 'string', title: 'Название' },
+      slug: { type: 'string', title: 'Slug' },
+      short: { type: 'string', title: 'Краткое описание' },
+      price: { type: 'number', title: 'Цена' },
+      image_src: { type: 'string', title: 'URL изображения' },
+      image_alt: { type: 'string', title: 'Alt изображения' },
+      image_next_src: { type: 'string', title: 'URL второго изображения' },
+      image_next_alt: { type: 'string', title: 'Alt второго изображения' },
     }
   } else if (itemsType.value === 'object') {
     delete localConfig.items.format
@@ -300,6 +315,28 @@ watch(() => [localConfig.type, localConfig.format], () => {
         alt: { type: 'string', title: 'Alt текст' },
         title: { type: 'string', title: 'Title текст' },
         description: { type: 'string', title: 'Описание' },
+      }
+      for (const [key, cfg] of Object.entries(defaults)) {
+        if (!localConfig.properties[key]) {
+          localConfig.properties[key] = cfg
+        }
+      }
+    }
+
+    // Если format === 'product' — предзаполняем поля товара
+    const isProduct = localConfig.format === 'product'
+    if (isProduct) {
+      if (!localConfig.properties) localConfig.properties = {}
+      const defaults: Record<string, any> = {
+        id: { type: 'integer', title: 'ID товара' },
+        name: { type: 'string', title: 'Название' },
+        slug: { type: 'string', title: 'Slug' },
+        short: { type: 'string', title: 'Краткое описание' },
+        price: { type: 'number', title: 'Цена' },
+        image_src: { type: 'string', title: 'URL изображения' },
+        image_alt: { type: 'string', title: 'Alt изображения' },
+        image_next_src: { type: 'string', title: 'URL второго изображения' },
+        image_next_alt: { type: 'string', title: 'Alt второго изображения' },
       }
       for (const [key, cfg] of Object.entries(defaults)) {
         if (!localConfig.properties[key]) {
