@@ -40,8 +40,18 @@ class WidgetController extends Controller
     public function index(Request $request, UserPermission $userPermission)
     {
         $widgets = $this->indexWidgetUseCase->execute($userPermission);
+
+        $category = $request->get('category');
+        if ($category && array_key_exists($category, WidgetCategory::CATEGORIES)) {
+            $widgets = array_filter($widgets, fn($w) => (string) $w->category === $category);
+        }
+
         return Inertia::render('Content/Widget/Index', [
             'widgets' => WidgetIndexData::collect($widgets),
+            'categories' => WidgetCategory::CATEGORIES,
+            'countByCategory' => $this->indexWidgetUseCase->getCountByCategory(),
+            'totalCount' => $this->indexWidgetUseCase->getTotalCount(),
+            'currentCategory' => $category,
         ]);
     }
 
@@ -72,9 +82,7 @@ class WidgetController extends Controller
 
         $widgetDTO = $this->updateWidgetUseCase->execute($id, $dto, $userPermission);
         return redirect()->route('admin.content.widget.show', $widgetDTO->id);
-
     }
-
 
     public function destroy(int $id, UserPermission $userPermission)
     {
