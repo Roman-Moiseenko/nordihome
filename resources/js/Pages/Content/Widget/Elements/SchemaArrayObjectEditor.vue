@@ -73,8 +73,8 @@
                   <el-input v-model="item.name" size="small" class="flex-1" @input="emitUpdate" />
                 </div>
                 <div class="flex items-center gap-2 mb-1">
-                  <label class="text-xs text-gray-500 w-24 shrink-0">Slug:</label>
-                  <el-input v-model="item.slug" size="small" class="flex-1" @input="emitUpdate" />
+                  <label class="text-xs text-gray-500 w-24 shrink-0">URL:</label>
+                  <el-input v-model="item.url" size="small" class="flex-1" @input="emitUpdate" />
                 </div>
                 <div class="flex items-center gap-2 mb-1">
                   <label class="text-xs text-gray-500 w-24 shrink-0">Кратко:</label>
@@ -275,7 +275,7 @@ function addItem() {
     items.value.push({
       id: null,
       name: '',
-      slug: '',
+      url: '',
       short: '',
       price: null,
       image_src: '',

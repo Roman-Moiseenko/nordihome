@@ -86,7 +86,7 @@
         </el-form-item>
 
         <!-- items.object properties со сворачиванием -->
-        <template v-if="itemsType === 'object'">
+        <template v-if="itemsType === 'object' || itemsType === 'product' || itemsType === 'image'">
           <el-form-item label="Поля объекта">
             <ItemPropertiesEditor
               :properties="itemProperties"
@@ -242,7 +242,7 @@ function onItemsTypeChange() {
     localConfig.items.properties = {
       id: { type: 'integer', title: 'ID товара' },
       name: { type: 'string', title: 'Название' },
-      slug: { type: 'string', title: 'Slug' },
+      url: { type: 'string', title: 'URL' },
       short: { type: 'string', title: 'Краткое описание' },
       price: { type: 'number', title: 'Цена' },
       image_src: { type: 'string', title: 'URL изображения' },
@@ -330,7 +330,7 @@ watch(() => [localConfig.type, localConfig.format], () => {
       const defaults: Record<string, any> = {
         id: { type: 'integer', title: 'ID товара' },
         name: { type: 'string', title: 'Название' },
-        slug: { type: 'string', title: 'Slug' },
+        url: { type: 'string', title: 'URL' },
         short: { type: 'string', title: 'Краткое описание' },
         price: { type: 'number', title: 'Цена' },
         image_src: { type: 'string', title: 'URL изображения' },

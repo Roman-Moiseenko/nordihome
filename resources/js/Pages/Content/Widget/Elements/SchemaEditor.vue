@@ -249,7 +249,7 @@ function addProperty() {
       propConfig.properties = {
         id: { type: 'integer', title: 'ID товара' },
         name: { type: 'string', title: 'Название' },
-        slug: { type: 'string', title: 'Slug' },
+        url: { type: 'string', title: 'URL' },
         short: { type: 'string', title: 'Краткое описание' },
         price: { type: 'number', title: 'Цена' },
         image_src: { type: 'string', title: 'URL изображения' },
@@ -321,7 +321,7 @@ function addProperty() {
         properties: {
           id: { type: 'integer', title: 'ID товара' },
           name: { type: 'string', title: 'Название' },
-          slug: { type: 'string', title: 'Slug' },
+          url: { type: 'string', title: 'URL' },
           short: { type: 'string', title: 'Краткое описание' },
           price: { type: 'number', title: 'Цена' },
           image_src: { type: 'string', title: 'URL изображения' },
