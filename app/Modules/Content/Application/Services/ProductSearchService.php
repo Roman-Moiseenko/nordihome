@@ -44,6 +44,23 @@ final readonly class ProductSearchService
         );
     }
 
+    /**
+     * Получить товар по ID с подгрузкой изображений.
+     *
+     * @param int $id
+     * @return ProductSearchResultData|null
+     */
+    public function getById(int $id): ?ProductSearchResultData
+    {
+        try {
+            $product = $this->productRepository->getById($id);
+        } catch (\Throwable) {
+            return null;
+        }
+
+        $images = $this->loadImages([$product->id]);
+        return $this->toResultData($product, $images[$product->id] ?? []);
+    }
 
     /**
      * @param int[] $productIds
@@ -56,18 +73,16 @@ final readonly class ProductSearchService
         }
 
         $type = new PhotoType(self::PHOTO_TYPE);
-        $gallery = $this->photoRepository->findByEntities($productIds, self::MODEL_TYPE, $type);
+        // findByEntities возвращает array<int, string> — imageableId => uploadUrl первого фото
+        $firstPhotos = $this->photoRepository->findByEntities($productIds, self::MODEL_TYPE, $type);
+
         $result = [];
         foreach ($productIds as $id) {
-            $photos = $gallery[$id] ?? [];
-            $first = $photos[0] ?? null;
-            $second = $photos[1] ?? null;
-
             $result[$id] = [
-                'src' => $first?->uploadUrl,
-                'alt' => $first?->alt,
-                'next_src' => $second?->uploadUrl,
-                'next_alt' => $second?->alt,
+                'src' => $firstPhotos[$id] ?? null,
+                'alt' => null, // alt не возвращается findByEntities
+                'next_src' => null,
+                'next_alt' => null,
             ];
         }
 
@@ -81,7 +96,7 @@ final readonly class ProductSearchService
             name: $product->name,
             code: $product->code->getCode(),
             code_search: $product->code->getCodeSearch(),
-            url: route('admin.catalog.product.edit', $product->id),
+            url: route('shop.product.view', $product->slug, true),
             short: $product->short,
             price: null, // цена будет добавлена позже
             quantity: 1,

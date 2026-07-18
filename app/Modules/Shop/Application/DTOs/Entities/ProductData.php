@@ -36,8 +36,8 @@ class ProductData
         public DimensionsData $dimensions,
         public bool $isRegion,
         public bool $isDelivery,
-        public int $quantity = 1,
         public string $short,
+        public int $quantity = 1,
 
     )
     {

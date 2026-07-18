@@ -6,12 +6,14 @@ use App\Modules\Content\Application\DTOs\WidgetInstance\WidgetFormFieldData;
 use App\Modules\Content\Application\DTOs\WidgetInstance\WidgetInstanceFormData;
 use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
 use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
+use App\Modules\Content\Application\Services\ProductSearchService;
 
 final readonly class GetWidgetInstanceFormUseCase
 {
     public function __construct(
         private WidgetInstanceRepositoryInterface $instanceRepository,
         private WidgetRepositoryInterface $widgetRepository,
+        private ProductSearchService $productSearchService,
     ) {}
 
     public function execute(int $instanceId): WidgetInstanceFormData
@@ -71,6 +73,11 @@ final readonly class GetWidgetInstanceFormUseCase
                     $nestedValue['description'] ??= null;
                 }
 
+                // Для format: 'product' — подгружаем данные о товаре по ID
+                if (($prop['format'] ?? null) === 'product') {
+                    $nestedValue = $this->enrichProductValue($nestedValue);
+                }
+
                 $nestedFields = $this->buildFields(
                     $prop['properties'],
                     $nestedRequired,
@@ -100,6 +107,12 @@ final readonly class GetWidgetInstanceFormUseCase
                     $sampleValue['description'] ??= null;
                 }
 
+                // Для массива товаров — подгружаем данные о каждом товаре
+                if (($prop['items']['format'] ?? null) === 'product') {
+                    $prop['format'] = 'product';
+                    $sampleValue = $this->enrichProductValue($sampleValue);
+                }
+
                 $nestedFields = $this->buildFields(
                     $prop['items']['properties'],
                     $itemRequired,
@@ -121,6 +134,43 @@ final readonly class GetWidgetInstanceFormUseCase
         }
 
         return $fields;
+    }
+
+    /**
+     * Обогащает значение поля товара: если есть id, подгружает данные с сервера.
+     *
+     * @param array $value
+     * @return array
+     */
+    private function enrichProductValue(array $value): array
+    {
+        $productId = $value['id'] ?? null;
+        if ($productId) {
+            $productData = $this->productSearchService->getById((int) $productId);
+            if ($productData) {
+                $value['id'] = $productData->id;
+                $value['name'] = $productData->name;
+                $value['url'] = $productData->url;
+                $value['short'] = $productData->short;
+                $value['price'] = $productData->price;
+                $value['image_src'] = $productData->image_src;
+                $value['image_alt'] = $productData->image_alt;
+                $value['image_next_src'] = $productData->image_next_src;
+                $value['image_next_alt'] = $productData->image_next_alt;
+            }
+        }
+        // Гарантируем наличие полей даже если товар не найден
+        $value['id'] ??= null;
+        $value['name'] ??= null;
+        $value['url'] ??= null;
+        $value['short'] ??= null;
+        $value['price'] ??= null;
+        $value['image_src'] ??= null;
+        $value['image_alt'] ??= null;
+        $value['image_next_src'] ??= null;
+        $value['image_next_alt'] ??= null;
+
+        return $value;
     }
 
     /**

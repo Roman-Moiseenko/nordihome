@@ -136,6 +136,13 @@
                                             @update:model-value="(val) => onArrayImageFieldChange(field.name, itemIdx, val)"
                                         />
                                     </div>
+                                <!-- Для массива товаров — компонент выбора товара -->
+                                <div v-else-if="field.format === 'product'" class="product-object-field">
+                                    <ProductPicker
+                                        :model-value="item || null"
+                                        @update:model-value="(val) => onArrayProductFieldChange(field.name, itemIdx, val)"
+                                    />
+                                </div>
                                 <!-- Обычный массив объектов — через вложенный WidgetFieldRenderer -->
                                 <WidgetFieldRenderer
                                     v-else
@@ -163,6 +170,13 @@
                             <ImagePicker
                                 :model-value="formModel[field.name] || null"
                                 @update:model-value="(val) => onImageFieldChange(field.name, val)"
+                            />
+                        </div>
+                        <!-- Для product показываем компонент выбора товара -->
+                        <div v-else-if="field.format === 'product'" class="product-object-field w-full">
+                            <ProductPicker
+                                :model-value="formModel[field.name] || null"
+                                @update:model-value="(val) => onProductFieldChange(field.name, val)"
                             />
                         </div>
                         <!-- Обычный object — через вложенный WidgetFieldRenderer -->
@@ -196,6 +210,7 @@
 import { ref, reactive, watch, computed } from 'vue'
 import type { WidgetFormFieldData } from '@Res/composables/useContentBlock'
 import ImagePicker from './ImagePicker.vue'
+import ProductPicker from './ProductPicker.vue'
 
 const props = defineProps<{
     fields: WidgetFormFieldData[]
@@ -302,6 +317,11 @@ function addArrayItem(fieldName: string, nestedFields: WidgetFormFieldData[], fo
         formModel[fieldName].push({ id: null, src: '', alt: '', title: '', description: '' })
         return
     }
+    // Для массива товаров — инициализируем объект с полями товара
+    if (format === 'product') {
+        formModel[fieldName].push({ id: null, name: null, url: null, short: null, price: null, image_src: null, image_alt: null, image_next_src: null, image_next_alt: null })
+        return
+    }
     const newItem: Record<string, any> = {}
     for (const nf of nestedFields) {
         newItem[nf.name] = nf.default ?? null
@@ -397,6 +417,27 @@ function onImageFieldChange(parentName: string, value: any) {
 
 /** Обновить элемент массива изображений (приходит из ImagePicker) */
 function onArrayImageFieldChange(parentName: string, itemIndex: number, value: any) {
+    if (!Array.isArray(formModel[parentName])) {
+        formModel[parentName] = []
+    }
+    if (value === null) {
+        formModel[parentName].splice(itemIndex, 1)
+    } else {
+        formModel[parentName][itemIndex] = { ...value }
+    }
+}
+
+/** Обновить product-объект целиком (приходит из ProductPicker) */
+function onProductFieldChange(parentName: string, value: any) {
+    if (value === null) {
+        delete formModel[parentName]
+    } else {
+        formModel[parentName] = { ...value }
+    }
+}
+
+/** Обновить элемент массива товаров (приходит из ProductPicker) */
+function onArrayProductFieldChange(parentName: string, itemIndex: number, value: any) {
     if (!Array.isArray(formModel[parentName])) {
         formModel[parentName] = []
     }

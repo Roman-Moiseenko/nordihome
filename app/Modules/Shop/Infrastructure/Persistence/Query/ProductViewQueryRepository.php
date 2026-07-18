@@ -195,7 +195,7 @@ class ProductViewQueryRepository
             dimensions: $dimensions,
             isRegion: (bool)$row->local,
             isDelivery: (bool)$row->delivery,
-            short: $row->short,
+            short: $row->short, //TODO Кол-во товаров на складах
         );
     }
 
