@@ -126,6 +126,21 @@ class ProductRepository implements ProductRepositoryInterface
             ->all();
     }
 
+    public function search(string $query, int $limit = 10): array
+    {
+        $models = Product::orderBy('name')
+            ->whereNull('deleted_at')
+            ->where(function ($q) use ($query) {
+                $q->where('code_search', 'LIKE', "%{$query}%")
+                    ->orWhere('code', 'LIKE', "%{$query}%")
+                    ->orWhereRaw("LOWER(name) LIKE LOWER('%{$query}%')");
+            })
+            ->take($limit)
+            ->get();
+
+        return $models->map(fn(Product $model) => $this->hydrate($model))->all();
+    }
+
     private function hydrate(Product $model): ProductEntity
     {
         $entity = new ProductEntity(

@@ -21,6 +21,7 @@ use Illuminate\Support\ServiceProvider;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Illuminate\Support\Facades\View;
+
 /**
  * Service Provider for Page module
  *

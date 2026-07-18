@@ -25,6 +25,7 @@ interface PhotoRepositoryInterface
      */
     public function findByEntities(array $imageableIds, string $modelType, PhotoType $type): array;
 
+
     public function save(PhotoEntity $photo): PhotoEntity;
 
     public function update(int $id, array $data): PhotoEntity;

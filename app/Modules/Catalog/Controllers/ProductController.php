@@ -17,6 +17,7 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Repository\ProductRepository;
 use App\Modules\Catalog\Request\ProductCreateRequest;
 use App\Modules\Catalog\Service\ProductService;
+use App\Modules\Content\Application\Services\ProductSearchService;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;
 use App\Modules\Guide\Entity\Measuring;
@@ -36,6 +37,7 @@ class ProductController extends Controller
     public function __construct(
         ProductService     $service,
         ProductRepository  $repository,
+        private readonly ProductSearchService $productSearchService,
     )
     {
         $this->service = $service;
@@ -237,17 +239,12 @@ class ProductController extends Controller
 
     public function search_add(Request $request): JsonResponse
     {
-        $result = [];
-        $products = $this->repository->search($request['search']);
+       // $result = [];
+        //$products = $this->repository->search($request['search']);
 
         //Применить map()
-        /** @var Product $product */
-        foreach ($products as $product) {
-            if (!$request->has('published') || ($request->has('published') && $product->isPublished()))
-                $result[] = $product->toArrayForSearch();
-        }
-
-        return \response()->json($result);
+            $result = $this->productSearchService->search($request['search']);
+            return response()->json($result);
     }
 
     public function get_images(Product $product)

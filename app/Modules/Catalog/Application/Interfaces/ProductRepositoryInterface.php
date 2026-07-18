@@ -64,5 +64,20 @@ interface ProductRepositoryInterface
      */
     public function findAllByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
 
+    /**
+     * Найти товары по ID
+     *
+     * @param array $ids
+     * @return ProductEntity[]
+     */
     public function findByIds(array $ids): array;
+
+    /**
+     * Поиск товаров по строке (код, артикул, название).
+     *
+     * @param string $query Поисковый запрос
+     * @param int $limit Максимум результатов
+     * @return ProductEntity[]
+     */
+    public function search(string $query, int $limit = 10): array;
 }
