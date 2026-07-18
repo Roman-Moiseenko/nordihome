@@ -58,16 +58,6 @@
                             :disabled="disabled"
                         />
 
-                        <!-- widget -->
-                        <div v-else-if="field.format === 'widget'" class="nested-widget-field">
-                            <el-tag v-if="formModel[field.name]" type="success" closable @close="removeNestedWidget(field.name)">
-                                Виджет #{{ formModel[field.name] }}
-                            </el-tag>
-                            <el-button v-else size="small" @click="openNestedWidgetSelector(field.name)">
-                                Выбрать виджет
-                            </el-button>
-                        </div>
-
                         <!-- enum / select -->
                         <el-select
                             v-else-if="field.options && field.options.length > 0"
@@ -102,8 +92,8 @@
                 </div>
             </div>
 
-            <!-- Составные поля: array с nestedFields, object с nestedFields -->
-            <div class="composite-fields">
+            <!-- Составные поля: array с nestedFields, object с nestedFields, widget -->
+            <div class="composite-fields"       >
                 <template v-for="field in compositeFields" :key="field.name">
                     <!-- array с nestedFields (массив объектов) -->
                     <el-form-item
@@ -189,6 +179,52 @@
                             />
                         </div>
                 </el-form-item>
+
+                    <!-- widget — вложенный виджет -->
+                    <el-form-item
+                        v-else-if="field.format === 'widget'"
+                        :label="field.label"
+                        :required="field.required"
+                    >
+                        <div class="nested-widget-field w-full border rounded p-3 bg-gray-50">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-sm font-medium text-gray-700">
+                                    <template v-if="formModel[field.name]?.widgetName">
+                                        <el-tag size="small" type="success">{{ formModel[field.name].widgetName }}</el-tag>
+                                    </template>
+                                </span>
+                                <div class="flex items-center gap-2">
+                                    <el-button
+                                        v-if="!formModel[field.name]?.id"
+                                        size="small"
+                                        @click="openNestedWidgetSelector(field.name)"
+                                    >
+                                        + Выбрать
+                                    </el-button>
+                                    <template v-if="formModel[field.name]?.id">
+                                        <el-button size="small" @click="openNestedWidgetSelector(field.name)">
+                                            Заменить
+                                        </el-button>
+                                        <el-button size="small" type="danger" text @click="removeNestedWidgetInstance(field.name)">
+                                            Удалить
+                                        </el-button>
+                                    </template>
+                                </div>
+                            </div>
+
+                            <!-- Вложенная форма дочернего экземпляра -->
+                            <WidgetFieldRenderer
+                                v-if="formModel[field.name]?.fields?.length > 0"
+                                :fields="formModel[field.name].fields"
+                                :disabled="disabled"
+                                :showSaveButton="false"
+                                @save="(vals) => onNestedWidgetFormSave(field.name, vals)"
+                            />
+                            <div v-else-if="!formModel[field.name]?.id" class="text-gray-400 text-xs py-2">
+                                Выберите экземпляр виджета для настройки
+                            </div>
+                        </div>
+                    </el-form-item>
                 </template>
             </div>
 
@@ -224,7 +260,14 @@ const emit = defineEmits<{
     (e: 'select-nested-widget', fieldName: string): void
 }>()
 
+/** Программно установить значение поля (для внешних вызовов из диалогов) */
+function setFieldValue(name: string, value: any) {
+    formModel[name] = value
+}
+
 const formModel = reactive<Record<string, any>>({})
+
+defineExpose({ setFieldValue, formModel })
 
 /**
  * Храним сигнатуру полей (имена + значения на момент инициализации),
@@ -258,6 +301,11 @@ watch(() => props.fields, (fields) => {
                 : {}
         } else if (field.type === 'array' && field.nestedFields) {
             formModel[field.name] = Array.isArray(field.value) ? [...field.value] : []
+        } else if (field.format === 'widget') {
+            // Для поля виджета — value это объект {id, title, widgetName, widgetId, fields}
+            formModel[field.name] = field.value && typeof field.value === 'object' && field.value !== null
+                ? { ...field.value }
+                : { id: null, fields: [] }
         } else {
             formModel[field.name] = field.value !== undefined && field.value !== null
                 ? field.value
@@ -290,15 +338,17 @@ const compactFields = computed(() => {
         if (fullwidthFields.value.includes(f)) return false
         // Исключаем составные (object/array с nestedFields)
         if (f.nestedFields) return false
+        // Исключаем format='widget' — оно отображается отдельно как вложенная форма
+        if (f.format === 'widget') return false
         return true
     })
 })
 
 /**
- * Составные поля — object/array с nestedFields
+ * Составные поля — object/array с nestedFields или format='widget'
  */
 const compositeFields = computed(() => {
-    return props.fields.filter(f => f.nestedFields)
+    return props.fields.filter(f => f.nestedFields || f.format === 'widget')
 })
 
 // --- Вспомогательные функции ---
@@ -380,6 +430,11 @@ function removeNestedWidget(fieldName: string) {
     formModel[fieldName] = null
 }
 
+/** Удаление вложенного экземпляра виджета (когда value — объект с id) */
+function removeNestedWidgetInstance(fieldName: string) {
+    formModel[fieldName] = null
+}
+
 function openNestedWidgetSelector(fieldName: string) {
     emit('select-nested-widget', fieldName)
 }
@@ -427,6 +482,13 @@ function onArrayImageFieldChange(parentName: string, itemIndex: number, value: a
     }
 }
 
+/** Сохранить параметры вложенного дочернего экземпляра виджета */
+function onNestedWidgetFormSave(fieldName: string, vals: Record<string, any>) {
+    // Не обновляем formModel — вложенная форма автосохраняется через эмит
+    // при showSaveButton=false, но данные уже в formModel[fieldName].fields
+    // ничего делать не нужно, данные во вложенной форме уже синхронизированы
+}
+
 /** Обновить product-объект целиком (приходит из ProductPicker) */
 function onProductFieldChange(parentName: string, value: any) {
     if (value === null) {
@@ -450,7 +512,19 @@ function onArrayProductFieldChange(parentName: string, itemIndex: number, value:
 
 function onSave() {
     const snapshot = JSON.parse(JSON.stringify(formModel))
-    //console.debug('[WidgetFieldRenderer] emitting save:', snapshot)
+
+    // Преобразуем поля с format='widget' обратно в простые ID для сохранения
+    for (const field of props.fields) {
+        if (field.format === 'widget') {
+            const val = snapshot[field.name]
+            if (val && typeof val === 'object' && 'id' in val) {
+                snapshot[field.name] = val.id
+            } else {
+                snapshot[field.name] = null
+            }
+        }
+    }
+
     emit('save', snapshot)
 }
 </script>

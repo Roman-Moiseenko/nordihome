@@ -89,6 +89,7 @@
                     :saving="saving"
                     :showSaveButton="true"
                     @save="onSaveParams"
+                    @select-nested-widget="onSelectNestedWidget"
                 />
 
                 <el-empty v-else description="Нет полей для настройки" />
@@ -105,6 +106,13 @@
                 </el-button>
             </div>
         </div>
+
+        <!-- Диалог выбора экземпляра виджета для вложенного поля -->
+        <WidgetInstanceSelectorDialog
+            :visible="showInstanceSelector"
+            @close="showInstanceSelector = false"
+            @select="onNestedWidgetInstanceSelected"
+        />
     </div>
 </template>
 
@@ -112,6 +120,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useContentBlock, type WidgetFormFieldData } from '@Res/composables/useContentBlock'
 import WidgetFieldRenderer from './WidgetFieldRenderer.vue'
+import WidgetInstanceSelectorDialog from './WidgetInstanceSelectorDialog.vue'
 
 const props = defineProps<{
     block: any
@@ -135,6 +144,11 @@ const formLoading = ref(false)
 const formError = ref<string | null>(null)
 const saving = ref(false)
 const formLoaded = ref(false)
+
+// --- Вложенный экземпляр виджета ---
+const fieldRendererRef = ref<any>(null)
+const nestedWidgetFieldName = ref<string | null>(null)
+const showInstanceSelector = ref(false)
 
 /**
  * Загрузить поля формы для виджета.
@@ -173,6 +187,53 @@ async function onSaveParams(params: Record<string, any>) {
         console.error('Ошибка сохранения:', e)
     } finally {
         saving.value = false
+    }
+}
+
+/**
+ * Открыть диалог выбора экземпляра для вложенного поля виджета.
+ */
+function onSelectNestedWidget(fieldName: string) {
+    nestedWidgetFieldName.value = fieldName
+    showInstanceSelector.value = true
+}
+
+/**
+ * Получить выбранный экземпляр из диалога и установить в поле формы.
+ */
+async function onNestedWidgetInstanceSelected(instance: any) {
+    showInstanceSelector.value = false
+    if (nestedWidgetFieldName.value === null) return
+
+    // Устанавливаем значение в поле формы
+    fieldRendererRef.value?.setFieldValue(nestedWidgetFieldName.value, {
+        id: instance.id,
+        title: instance.title,
+        widgetName: instance.widgetName,
+        widgetId: instance.widgetId,
+    })
+
+    nestedWidgetFieldName.value = null
+
+    // Сохраняем родительскую форму, чтобы ID дочернего экземпляра попал в params
+    // Затем перезагружаем форму, чтобы бекенд вернул поля дочернего виджета
+    const instanceId = props.block.widgetInstance?.id
+    if (instanceId) {
+        saving.value = true
+        try {
+            // Получаем текущие params из формы
+            const params = fieldRendererRef.value?.formModel ? { ...fieldRendererRef.value.formModel } : {}
+            // Заменяем ссылку на ID
+            params[nestedWidgetFieldName.value] = instance.id
+
+            await updateWidgetInstance(instanceId, { params })
+            // Перезагружаем форму — бекенд вернёт поля дочернего виджета
+            await loadForm()
+        } catch (e) {
+            console.error('Ошибка сохранения при выборе вложенного виджета:', e)
+        } finally {
+            saving.value = false
+        }
     }
 }
 

@@ -88,6 +88,9 @@
                 @change="(v) => $emit('updateProp', subName, 'maximum', v)"
               />
             </el-form-item>
+            <el-form-item v-if="subProp.type === 'string'" label="enum">
+              <el-input v-model="enumInputs[subName]" placeholder="value1, value2, value3" @input="onSubEnumChange(subName)" />
+            </el-form-item>
             <el-button
               size="small"
               type="danger"
@@ -124,9 +127,21 @@ const emit = defineEmits(['add', 'remove', 'updateKey', 'updateProp'])
 const expandedItems = ref<string[]>([])
 
 const localEditableKeys = reactive<Record<string, string>>({})
+const enumInputs = reactive<Record<string, string>>({})
 
 watch(() => props.editableKeys, (val) => {
   Object.assign(localEditableKeys, { ...val })
+}, { immediate: true, deep: true })
+
+// Инициализируем enumInputs только один раз при первом монтировании
+const enumInitialized = ref(false)
+watch(() => props.properties, (val) => {
+  if (!enumInitialized.value) {
+    for (const [key, prop] of Object.entries(val as Record<string, any>)) {
+      enumInputs[key] = prop?.enum?.join(', ') || ''
+    }
+    enumInitialized.value = true
+  }
 }, { immediate: true, deep: true })
 
 function onKeyInput(subName: string, value: string) {
@@ -137,6 +152,15 @@ function onKeyBlur(subName: string) {
   const newName = localEditableKeys[subName]?.trim()
   if (newName && newName !== subName) {
     emit('updateKey', subName, newName)
+  }
+}
+
+function onSubEnumChange(subName: string) {
+  const value = enumInputs[subName]
+  if (value) {
+    emit('updateProp', subName, 'enum', value.split(',').map((s: string) => s.trim()).filter(Boolean))
+  } else {
+    emit('updateProp', subName, 'enum', undefined)
   }
 }
 </script>

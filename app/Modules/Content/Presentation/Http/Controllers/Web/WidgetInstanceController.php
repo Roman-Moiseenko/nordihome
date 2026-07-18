@@ -77,4 +77,14 @@ class WidgetInstanceController extends Controller
 
         return response()->json(['message' => 'Экземпляр виджета удалён']);
     }
+
+    /**
+     * Получить экземпляры Widget по widget_id.
+     * GET /admin/content/widget-instances/by-widget/{widgetId}
+     */
+    public function byWidget(int $widgetId): JsonResponse
+    {
+        $instances = $this->getWidgetInstanceFormUseCase->getInstancesByWidgetId($widgetId);
+        return response()->json($instances);
+    }
 }

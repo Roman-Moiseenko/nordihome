@@ -120,6 +120,11 @@ final readonly class GetWidgetInstanceFormUseCase
                 );
             }
 
+            // Для format: 'widget' — подгружаем данные дочернего экземпляра виджета
+            if (($prop['format'] ?? null) === 'widget') {
+                $currentValue = $this->enrichWidgetInstanceValue($currentValue);
+            }
+
             $fields[] = new WidgetFormFieldData(
                 name: $name,
                 type: $prop['type'] ?? 'string',
@@ -171,6 +176,80 @@ final readonly class GetWidgetInstanceFormUseCase
         $value['image_next_alt'] ??= null;
 
         return $value;
+    }
+
+    /**
+     * Обогащает значение поля виджета: если есть id дочернего экземпляра,
+     * рекурсивно подгружает его поля формы для редактирования.
+     * Защита от бесконечной рекурсии — через статический счётчик вложенности.
+     *
+     * @param mixed $value
+     * @return array|null
+     */
+    private function enrichWidgetInstanceValue(mixed $value): array|null
+    {
+        // Статический счётчик рекурсии — не более 3 уровней
+        static $depth = 0;
+        $depth++;
+
+        try {
+            if ($depth > 3) {
+                $depth--;
+                return null;
+            }
+
+            $instanceId = null;
+
+            if (is_int($value) || (is_string($value) && is_numeric($value))) {
+                $instanceId = (int) $value;
+            } elseif (is_array($value) && isset($value['id'])) {
+                $instanceId = (int) $value['id'];
+            }
+
+            if ($instanceId) {
+                $instance = $this->instanceRepository->getById($instanceId);
+
+                // Рекурсивно загружаем форму дочернего экземпляра
+                $childFormData = $this->execute($instanceId);
+
+                return [
+                    'id' => $instance->id,
+                    'title' => $instance->title,
+                    'widgetName' => $instance->widgetName,
+                    'widgetId' => $instance->widgetId,
+                    'fields' => $childFormData->fields,
+                ];
+            }
+
+        return null;
+        } catch (\Exception $e) {
+            \Log::warning('Не удалось загрузить дочерний экземпляр виджета: ' . $e->getMessage());
+            return [
+                'id' => $instanceId ?? null,
+                'title' => null,
+                'widgetName' => null,
+                'widgetId' => null,
+                'fields' => [],
+            ];
+        } finally {
+            $depth--;
+        }
+    }
+
+    /**
+     * Возвращает базовые данные о всех экземплярах виджета.
+     *
+     * @param int $widgetId
+     * @return array<int, array{id: int, title: ?string, widgetName: string}>
+     */
+    public function getInstancesByWidgetId(int $widgetId): array
+    {
+        $instances = $this->instanceRepository->getByWidgetId($widgetId);
+        return array_map(fn($inst) => [
+            'id' => $inst->id,
+            'title' => $inst->title,
+            'widgetName' => $inst->widgetName,
+        ], $instances);
     }
 
     /**

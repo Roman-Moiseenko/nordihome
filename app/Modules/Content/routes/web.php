@@ -65,6 +65,7 @@ Route::group(
             'prefix' => 'widget-instances',
             'as' => 'widget-instances.'
         ], function () {
+            Route::get('/by-widget/{widgetId}', [WidgetInstanceController::class, 'byWidget'])->name('by-widget');
             Route::get('/{id}', [WidgetInstanceController::class, 'show'])->name('show');
             Route::post('/', [WidgetInstanceController::class, 'store'])->name('store');
             Route::put('/{id}', [WidgetInstanceController::class, 'update'])->name('update');

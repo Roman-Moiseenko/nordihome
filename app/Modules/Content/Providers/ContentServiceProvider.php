@@ -12,6 +12,7 @@ use App\Modules\Content\Infrastructure\Persistence\ContentBlockRepository;
 use App\Modules\Content\Infrastructure\Persistence\MetaTemplateRepository;
 use App\Modules\Content\Infrastructure\Persistence\WidgetInstanceRepository;
 use App\Modules\Content\Infrastructure\Persistence\WidgetRepository;
+use App\Modules\Content\Application\Services\WidgetRendererService;
 use App\Modules\Content\Application\Interfaces\PostRepositoryInterface;
 use App\Modules\Content\Infrastructure\Persistence\PostRepository;
 use Illuminate\Support\Facades\Blade;
@@ -88,6 +89,11 @@ class ContentServiceProvider extends ServiceProvider
         $this->registerFactories();
         $this->registerSeeders();
         View::addNamespace('widgets', storage_path('app/views/widgets'));
+
+        // Blade-директива для рендера вложенного экземпляра виджета
+        Blade::directive('widgetInstance', function ($expression) {
+            return "<?php echo app('" . WidgetRendererService::class . "')->renderInstance($expression); ?>";
+        });
     }
 
     /**
@@ -121,6 +127,8 @@ class ContentServiceProvider extends ServiceProvider
             PostRepositoryInterface::class,
             PostRepository::class,
         );
+
+        $this->app->singleton(WidgetRendererService::class);
     }
 
     // =====================================================================
