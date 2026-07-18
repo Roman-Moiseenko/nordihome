@@ -236,6 +236,7 @@ function onSaveInfo() {
         onSuccess: () => {
             saving.value = false
             changeInfo.value = false
+            contentStore.reload()
             ElMessage.success('Виджет сохранён')
         },
         onError: (errors) => {

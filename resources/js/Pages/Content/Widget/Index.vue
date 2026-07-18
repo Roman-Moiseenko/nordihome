@@ -14,8 +14,9 @@
                         :href="route('admin.content.widget.index', {category: key})"
                     >{{ label }}
                     </Link>
-                    ({{ countByCategory?.[key] ?? 0 }})<template v-if="Object.keys(categories).indexOf(key) < Object.keys(categories).length - 1"> |</template>
-                    </template>
+                    ({{ countByCategory?.[key] ?? 0 }})
+                    <template v-if="Object.keys(categories).indexOf(key) < Object.keys(categories).length - 1"> |</template>
+                </template>
             </div>
         </div>
         <div class="mt-2 p-5 bg-white rounded-md">
@@ -42,7 +43,7 @@
                         >
                             Delete
                         </el-button>
-</template>
+                    </template>
                 </el-table-column>
             </el-table>
         </div>
@@ -57,8 +58,8 @@
                     <el-input v-model="form.slug"/>
                 </el-form-item>
                 <el-form-item label="Категория" label-position="top" class="mt-3">
-                    <el-select v-model="form.category" >
-                        <el-option v-for="(item, index) in contentStore.categories" :value="index" :label="item" />
+                    <el-select v-model="form.category">
+                        <el-option v-for="(item, index) in contentStore.categories" :value="index" :label="item"/>
                     </el-select>
                 </el-form-item>
             </el-form>
@@ -67,7 +68,7 @@
                     <el-button @click="dialogCreate = false">Отмена</el-button>
                     <el-button type="primary" @click="saveWidget">Сохранить</el-button>
                 </div>
-</template>
+            </template>
         </el-dialog>
     </el-config-provider>
 </template>
@@ -76,9 +77,19 @@
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {Head, Link, router} from "@inertiajs/vue3";
 import Active from "@Comp/Elements/Active.vue";
-import {defineProps, inject, reactive, ref, watch, computed} from "vue";
+import {defineProps, inject, reactive, ref, watch} from "vue";
 import {useContentStore} from "@Res/contentStore";
 import {route} from "ziggy-js";
+
+const contentStore = useContentStore()
+
+// Обновляем store после любого успешного запроса к виджетам
+router.on('success', (event) => {
+    const url = event.detail?.visit?.url?.href || ''
+    if (url.includes('/admin/content/widget')) {
+        contentStore.reload()
+    }
+})
 
 const props = defineProps({
     widgets: {
@@ -94,7 +105,7 @@ const props = defineProps({
     totalCount: Number,
     currentCategory: String,
 })
-const contentStore = useContentStore()
+
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([])
@@ -107,6 +118,7 @@ watch(() => props.widgets, (newVal) => {
         tableData.value = []
     }
 }, { immediate: true })
+
 const form = reactive({
     name: null,
     slug: null,
@@ -114,10 +126,11 @@ const form = reactive({
 })
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.content.widget.destroy', {id: row.id}));
+    $delete_entity.show(route('admin.content.widget.destroy', {id: row.id}))
 }
+
 function saveWidget() {
-    router.post(route('admin.content.widget.store' ), form)
+    router.post(route('admin.content.widget.store'), form)
 }
 
 function routeClick(row) {
@@ -125,6 +138,4 @@ function routeClick(row) {
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
