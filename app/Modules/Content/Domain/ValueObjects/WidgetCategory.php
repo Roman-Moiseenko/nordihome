@@ -13,6 +13,7 @@ final class WidgetCategory
     public const string CONTAINER = 'container';
     public const string MEDIA = 'media';
     public const string COMMERCE = 'commerce';
+    public const string FORM = 'form';
     public const string CUSTOM = 'custom';
 
     public const array CATEGORIES = [
@@ -20,18 +21,15 @@ final class WidgetCategory
         self::MEDIA => 'Медиа',
         self::COMMERCE => 'Магазин',
         self::CONTAINER => 'Контейнеры',
+        self::FORM => 'Формы',
         self::CUSTOM => 'Собственный',
     ];
-    private const array ALLOWED = [self::CONTENT, self::MEDIA, self::COMMERCE, self::CUSTOM, self::CONTAINER];
-
     private string $value;
 
     public function __construct(string $value)
     {
         $normalized = strtolower(trim($value));
-        if (!in_array($normalized, self::ALLOWED, true)) {
-            throw new InvalidArgumentException("Недопустимая категория виджета: {$value}");
-        }
+
         $this->value = $normalized;
     }
 

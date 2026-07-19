@@ -2,6 +2,7 @@
 
 namespace App\Modules\Feedback\Service;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Feedback\Entity\FormBack;
 use App\Modules\Content\Entity\Widgets\FormWidget;
 use App\Modules\User\Entity\User;
@@ -27,9 +28,9 @@ class FormService
             if ($request->has('email')) {
                 //TODO Влозможно перенести в сервис Lead
                 $email = $request->string('email')->trim()->value();
-                $user = User::where('email', $email)->first();
-                if (!is_null($user)) {
-                    $form->lead->client_id = $user->id;
+                $client = Client::where('email', $email)->first();
+                if (!is_null($client)) {
+                    $form->lead->client_id = $client->id;
                     $form->lead->save();
                 }
             }
@@ -44,6 +45,12 @@ class FormService
 
 
       //  event(new FormBackHasCreated($form));
+
+    }
+
+    public function createFeedback(Request $request)
+    {
+        //MAINDO Создать Запись ответов без учета widget_id
 
     }
 }

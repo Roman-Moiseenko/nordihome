@@ -122,7 +122,7 @@ class Lead extends Model
 
     public function getStatusName(): string
     {
-        return $this->status->getName();
+        return $this->status?->getName() ?? '';
     }
 
     public function isNew(): bool

@@ -5,6 +5,13 @@ use App\Modules\Feedback\Controllers\ReviewController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
+    'prefix' => 'feedback/form',
+    'as' => 'feedback.form',
+], function () {
+    Route::post('/feedback', [FormController::class, 'feedback'])->name('feedback');
+});
+
+Route::group([
     'middleware' => 'role:admin|staff',
     'prefix' => 'feedback',
     'as' => 'feedback.',
@@ -16,6 +23,7 @@ Route::group([
     ], function () {
         Route::get('/', [FormController::class, 'index'])->name('index');
         Route::post('/{widget}', [FormController::class, 'from_shop'])->name('from-shop');
+        Route::post('/feedback', [FormController::class, 'feedback'])->name('feedback');
         Route::post('/get/{widget}', [FormController::class, 'get_url']);
     });
 

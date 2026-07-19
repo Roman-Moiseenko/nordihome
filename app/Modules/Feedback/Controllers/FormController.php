@@ -48,6 +48,13 @@ class FormController extends Controller
    */
     }
 
+    public function feedback(Request $request)
+    {
+        $this->service->createFeedback($request);
+        //Log::info(json_encode($request->all()));
+        return \response()->json(true);
+    }
+
     public function get_url(FormWidget $widget): JsonResponse
     {
         return \response()->json(route('admin.feedback.form.from-shop', $widget));

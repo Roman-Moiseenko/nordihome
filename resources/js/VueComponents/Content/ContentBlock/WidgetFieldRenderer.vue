@@ -14,14 +14,14 @@
                         :required="field.required"
                         :prop="field.name"
                     >
-                        <!-- html -->
-                        <el-input
+                        <!-- html — редактор HTML-кода -->
+                        <HtmlEditor
                             v-if="field.format === 'html'"
-                            v-model="formModel[field.name]"
-                            type="textarea"
-                            :rows="4"
+                            :model-value="formModel[field.name] || ''"
+                            @update:model-value="(val) => formModel[field.name] = val"
                             :disabled="disabled"
                             :placeholder="field.label"
+                            :height="300"
                         />
                         <!-- textarea если длинное значение -->
                         <el-input
@@ -247,6 +247,7 @@ import { ref, reactive, watch, computed } from 'vue'
 import type { WidgetFormFieldData } from '@Res/composables/useContentBlock'
 import ImagePicker from './ImagePicker.vue'
 import ProductPicker from './ProductPicker.vue'
+import HtmlEditor from './HtmlEditor.vue'
 
 const props = defineProps<{
     fields: WidgetFormFieldData[]

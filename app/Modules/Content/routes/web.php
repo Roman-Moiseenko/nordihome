@@ -29,23 +29,6 @@ Route::group(
     function () {
 
 
-        Route::group([
-            'prefix' => 'widget',
-            'as' => 'widget.'
-        ], function () {
-            // API маршруты (должны быть до {id})
-            Route::get('/categories', [WidgetController::class, 'categories'])->name('categories');
-            Route::get('/widgets', [WidgetController::class, 'widgets'])->name('widgets');
-            Route::get('/{id}/template', [WidgetController::class, 'template'])->name('template');
-            Route::post('/{id}/template', [WidgetController::class, 'saveTemplate'])->name('save-template');
-
-            // CRUD
-            Route::get('/', [WidgetController::class, 'index'])->name('index');
-            Route::post('/', [WidgetController::class, 'store'])->name('store');
-            Route::get('/{id}', [WidgetController::class, 'show'])->name('show');
-            Route::put('/{id}', [WidgetController::class, 'update'])->name('update');
-            Route::delete('/{id}', [WidgetController::class, 'destroy'])->name('destroy');
-        });
 
         // ContentBlock API
         Route::group([
@@ -306,6 +289,25 @@ Route::group(
             Route::post('/set-data', [MetaTemplateController::class, 'set_data'])->name('set-data');
         });
 
+
+
+        Route::group([
+            'prefix' => 'widget',
+            'as' => 'widget.'
+        ], function () {
+            // API маршруты (должны быть до {id})
+            Route::get('/categories', [WidgetController::class, 'categories'])->name('categories');
+            Route::get('/widgets', [WidgetController::class, 'widgets'])->name('widgets');
+            Route::get('/{id}/template', [WidgetController::class, 'template'])->name('template');
+            Route::post('/{id}/template', [WidgetController::class, 'saveTemplate'])->name('save-template');
+
+            // CRUD
+            Route::get('/', [WidgetController::class, 'index'])->name('index');
+            Route::post('/', [WidgetController::class, 'store'])->name('store');
+            Route::get('/{id}', [WidgetController::class, 'show'])->name('show');
+            Route::put('/{id}', [WidgetController::class, 'update'])->name('update');
+            Route::delete('/{id}', [WidgetController::class, 'destroy'])->name('destroy');
+        });
 
     }
 );
