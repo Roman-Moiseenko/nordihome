@@ -22,7 +22,9 @@ class RoomPageQueryRepository
         $row = DB::table('rooms')
             ->leftJoin('rooms as parent', 'parent.id', '=', 'rooms.parent_id')
             ->where('rooms.slug', $slug)
-            ->select('rooms.id', 'rooms.name', 'rooms.slug', 'rooms.meta', 'rooms.parent_id',
+            ->select('rooms.id',
+                'rooms.name', 'rooms.slug',
+                'rooms.meta', 'rooms.parent_id',
                 'parent.name as parent_name', 'parent.slug as parent_slug')
             ->first();
         if (!$row) return null;
@@ -38,6 +40,8 @@ class RoomPageQueryRepository
             entity: 'room',
             parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug) : null,
             totalProducts: 0,
+            title: $meta['title'] ?? $row->name,
+            description: $meta['description'] ?? '',
         );
 
     }

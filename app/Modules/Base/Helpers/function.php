@@ -4,12 +4,13 @@ declare(strict_types=1);
 use App\Modules\Shared\Infrastructure\Models\Photo;
 
 if (!function_exists('price')) {
-    function price($value): string
+    function price($value, $code = '₽'): string
     {
         if (empty($value) || !is_numeric($value)) return '0 ₽';
-        return number_format($value, 0, ',', ' ') . ' ₽';
+        return number_format($value, 0, ',', ' ') . ' ' . $code;
     }
 }
+
 
 if (!function_exists('count_product')) {
     function count_product(int $count): string

@@ -26,8 +26,13 @@ class CategoryPageQueryRepository
         $row = DB::table('categories')
             ->leftJoin('categories as parent', 'parent.id', '=', 'categories.parent_id')
             ->where('categories.slug', $slug)
-            ->select('categories.id', 'categories.name', 'categories.slug', 'categories.meta', 'categories.parent_id',
-                'parent.name as parent_name', 'parent.slug as parent_slug')
+            ->select(
+                'categories.id',
+                'categories.name', 'categories.slug',
+                'categories.meta',
+                'categories.parent_id',
+                'parent.name as parent_name',
+                'parent.slug as parent_slug')
             ->first();
         if (!$row) return null;
 
@@ -42,6 +47,8 @@ class CategoryPageQueryRepository
             entity: 'category',
             parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug) : null,
             totalProducts: 0,
+            title: $meta['title'] ?? $row->name,
+            description: $meta['description'] ?? '',
         );
     }
 

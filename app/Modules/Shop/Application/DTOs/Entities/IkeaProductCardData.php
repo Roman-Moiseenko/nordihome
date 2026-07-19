@@ -7,17 +7,17 @@ namespace App\Modules\Shop\Application\DTOs\Entities;
 use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
 use App\Modules\Shop\Application\DTOs\Elements\PromotionProductData;
 
-readonly class IkeaProductCardData
+class IkeaProductCardData
 {
     public function __construct(
-        public int                  $id,
-        public string               $name,
-        public string               $slug,
-        public string               $code,
-        public float                $price,
-        public string               $short,
-        public ImageInfoData        $image,
-        public ImageInfoData        $image_next,
+        public readonly int           $id,
+        public readonly string        $name,
+        public readonly string        $slug,
+        public readonly string        $code,
+        public float                  $price,
+        public readonly string        $short,
+        public readonly ImageInfoData $image,
+        public readonly ImageInfoData $image_next,
 
     )
     {

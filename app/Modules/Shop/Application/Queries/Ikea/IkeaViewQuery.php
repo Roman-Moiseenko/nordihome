@@ -4,6 +4,7 @@ namespace App\Modules\Shop\Application\Queries\Ikea;
 
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Setting\Entity\Settings;
+use App\Modules\Shop\Application\Actions\SetRatioPriceUseCase;
 use App\Modules\Shop\Application\DTOs\Entities\IkeaProductCardData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
@@ -25,6 +26,7 @@ readonly class IkeaViewQuery
         private SchemaBuilder $schemaBuilder,
         private PaginatorBuilder            $paginatorBuilder,
         private IkeaQueryRepository $repository,
+        private SetRatioPriceUseCase $setRatioPriceUseCase,
     )
     {
     }
@@ -57,7 +59,11 @@ readonly class IkeaViewQuery
         $productCardsRaw = $idPaginator->items();
 
         $productCards = array_map(
-            fn(array $product) => IkeaProductCardData::fromArray($product),
+            function (array $product) {
+                $prodData = IkeaProductCardData::fromArray($product);
+                $prodData->price = $this->setRatioPriceUseCase->execute($product->price, 'ikea');
+                return $prodData;
+                },
             $productCardsRaw
         );
 

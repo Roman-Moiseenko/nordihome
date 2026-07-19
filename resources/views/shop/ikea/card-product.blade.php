@@ -29,7 +29,7 @@
             <span>{{ $product->short }}</span>
         </div>
         <div class="product-card-info">
-            {{ price($product->price) }}
+            {{ price($product->price, 'zł') }}
         </div>
 
         <div>

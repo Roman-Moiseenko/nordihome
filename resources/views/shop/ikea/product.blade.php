@@ -26,11 +26,16 @@
         <div class="product">
             {{ json_encode($pageData->product)  }}
         </div>
+        <h6>Цена</h6>
+        <div>
+            {{ price($product->price, 'zł') }}
+        </div>
         <div>
             <button class="parser-to-cart">В корзину</button>
         </div>
     </div>
-    <script type="application/ld+json" class="schemantra.com">
-        {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
-    </script>
+
+    <!--script type="application/ld+json" class="schemantra.com">
+        {!! ''; //json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script-->
 @endsection

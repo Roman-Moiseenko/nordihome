@@ -6,27 +6,27 @@ namespace App\Modules\Shop\Application\DTOs\Entities;
 
 use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
 
-readonly class IkeaProductData
+class IkeaProductData
 {
     /** @param ImageInfoData[] $images */
     public function __construct(
-        public int     $id,
-        public string  $name,
-        public string  $slug,
-        public string  $code,
-        public string  $model,
+        public readonly int     $id,
+        public readonly string  $name,
+        public readonly string  $slug,
+        public readonly string  $code,
+        public readonly string  $model,
         public float   $price,
-        public string  $short,
-        public string  $description,
-        public bool    $fragile,
-        public bool    $sanctioned,
-        public bool    $availability,
-        public int     $packs,
-        public array   $composite,
-        public array   $quantity,
-        public array   $colors,
-        public array   $packages,
-        public array   $images,
+        public readonly string  $short,
+        public readonly string  $description,
+        public readonly bool    $fragile,
+        public readonly bool    $sanctioned,
+        public readonly bool    $availability,
+        public readonly int     $packs,
+        public readonly array   $composite,
+        public readonly array   $quantity,
+        public readonly array   $colors,
+        public readonly array   $packages,
+        public readonly array   $images,
     )
     {
     }

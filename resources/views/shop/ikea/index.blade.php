@@ -21,7 +21,7 @@
     </div>
 
 
-    <script type="application/ld+json" class="schemantra.com">
-        {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
-    </script>
+    <!--script type="application/ld+json" class="schemantra.com">
+        {!! ''; //json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script-->
 @endsection
