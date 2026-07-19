@@ -214,11 +214,6 @@ readonly class CategoryPageQuery
                 $aggr = $this->attributeQueryRepository->getFilterAggregates([$categoryId], $allProductIds);
 
 
-                $brands = array_map(
-                    fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),
-                    $aggr->brands ?? []
-                );
-
                 $tags = array_map(
                     fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),
                     $aggr->tags ?? []
@@ -228,7 +223,7 @@ readonly class CategoryPageQuery
                     minPrice: $aggr->min_price ?? 0,
                     maxPrice: $aggr->max_price ?? 0,
                     attributes: $aggr->attributes ?? [],
-                    brands: $brands,
+                    brands: $aggr->brands ?? [],
                     tags: $tags,
                 );
             }

@@ -41,30 +41,30 @@
     <div class="attribute-filter">
         @foreach($filters->attributes as $attribute)
             <div>
-                @if(isset($attribute['isBool']))
-                    <x-widget.check name="a_{{ $attribute['id'] }}" class="mt-2" value="{{ $attribute['id'] }}"
-                                    checked="{{ isset($request['a_' . $attribute['id']]) }}">
-                        {{ $attribute['name'] }}</x-widget.check>
+                @if(isset($attribute->isBool))
+                    <x-widget.check name="a_{{ $attribute->id }}" class="mt-2" value="{{ $attribute->id }}"
+                                    checked="{{ isset($request['a_' . $attribute->id]) }}">
+                        {{ $attribute->name }}</x-widget.check>
                     <hr/>
                 @endif
-                @if(isset($attribute['isNumeric']))
-                    <x-widget.numeric name="a_{{ $attribute['id'] }}" min-value="{{ $attribute['min'] }}"
-                                      max-value="{{ $attribute['max'] }}"
-                                      current-min="{{ isset($request['a_' . $attribute['id']]) ? $request['a_' . $attribute['id']][0] : '' }}"
-                                      current-max="{{ isset($request['a_' . $attribute['id']]) ? $request['a_' . $attribute['id']][1] : '' }}"
+                @if(isset($attribute->isNumeric))
+                    <x-widget.numeric name="a_{{ $attribute->id }}" min-value="{{ $attribute->min }}"
+                                      max-value="{{ $attribute->max }}"
+                                      current-min="{{ isset($request['a_' . $attribute->id]) ? $request['a_' . $attribute->id][0] : '' }}"
+                                      current-max="{{ isset($request['a_' . $attribute->id]) ? $request['a_' . $attribute->id][1] : '' }}"
                                       class="mt-3">
-                        {{ $attribute['name'] }}
+                        {{ $attribute->name }}
                     </x-widget.numeric>
                     <hr/>
                 @endif
-                @if(isset($attribute['isVariant']))
-                    <x-widget.variant class="mt-3" caption="{{ $attribute['name'] }}" id="{{ $attribute['id'] }}">
-                        @foreach($attribute['variants'] as $variant)
-                            <x-widget.variant-item name="a_{{ $attribute['id'] }}[]" id="{{ $variant['id'] }}"
-                                                   caption="{{ $variant['name'] }}"
-                                                   image="{{ $variant['image'] }}"
-                                                   checked="{{ isset($request['a_' . $attribute['id']]) ? in_array($variant['id'], $request['a_' . $attribute['id']]) : false }}"
-                                                   alt="{{ $variant['name'] }}"
+                @if(isset($attribute->isVariant))
+                    <x-widget.variant class="mt-3" caption="{{ $attribute->name }}" id="{{ $attribute->id }}">
+                        @foreach($attribute->variants as $variant)
+                            <x-widget.variant-item name="a_{{ $attribute->id }}[]" id="{{ $variant->id }}"
+                                                   caption="{{ $variant->name }}"
+                                                   image="{{ $variant->image }}"
+                                                   checked="{{ isset($request['a_' . $attribute->id]) ? in_array($variant->id, $request['a_' . $attribute->id]) : false }}"
+                                                   alt="{{ $variant->name }}"
                             />
                         @endforeach
                     </x-widget.variant>

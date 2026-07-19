@@ -134,11 +134,6 @@ readonly class RoomPageQuery
             function () use ($productIds, $categoryIds, $roomId) {
                 $aggr = $this->attributeQueryRepository->getFilterAggregates($categoryIds, $productIds);
 
-                $brands = array_map(
-                    fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),
-                    $aggr->brands ?? []
-                );
-
                 $tags = array_map(
                     fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),
                     $aggr->tags ?? []
@@ -148,7 +143,7 @@ readonly class RoomPageQuery
                     minPrice: $aggr->min_price ?? 0,
                     maxPrice: $aggr->max_price ?? 0,
                     attributes: $aggr->attributes ?? [],
-                    brands: $brands,
+                    brands: $aggr->brands ?? [],
                     tags: $tags,
                 );
             }

@@ -61,7 +61,7 @@ readonly class IkeaViewQuery
         $productCards = array_map(
             function (array $product) {
                 $prodData = IkeaProductCardData::fromArray($product);
-                $prodData->price = $this->setRatioPriceUseCase->execute($product->price, 'ikea');
+                $prodData->price = $this->setRatioPriceUseCase->execute($prodData->price, 'ikea');
                 return $prodData;
                 },
             $productCardsRaw

@@ -6,16 +6,26 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Entity\Attribute;
+use App\Modules\Shop\Application\DTOs\Elements\IdNameImageData;
+use App\Modules\Shop\Application\DTOs\Entities\AttributeFilterData;
+use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Support\Facades\DB;
 
 class AttributeQueryRepository
 {
+    private const string BRAND_PHOTO_MODEL_TYPE = 'catalog.brand';
+
+    public function __construct(
+        private readonly PhotoService $photoService,
+    )
+    {
+    }
     /**
      * Получить атрибуты для фильтрации по списку ID категорий и ID товаров.
      *
      * @param int[] $categoryIds ID категорий (обычно рутовые)
      * @param int[] $productIds  ID товаров, входящих в эти категории
-     * @return array
+     * @return AttributeFilterData[]
      */
     public function getAttributesByCategoryIds(array $categoryIds, array $productIds): array
     {
@@ -76,9 +86,8 @@ class AttributeQueryRepository
 
         $result = [];
         foreach ($attributes as $attr) {
-            $item = ['id' => $attr->id, 'name' => $attr->name, 'type' => $attr->type];
-
             if ($attr->type == 1) {
+                // Numeric (Integer/Float)
                 $values = DB::table('attributes_products')
                     ->where('attribute_id', $attr->id)
                     ->whereIn('product_id', $productIds)
@@ -89,11 +98,16 @@ class AttributeQueryRepository
                     $decoded[] = (int)json_decode($v);
                 }
                 if (!empty($decoded)) {
-                    $item['isNumeric'] = true;
-                    $item['min'] = min($decoded);
-                    $item['max'] = max($decoded);
+                    $result[] = new AttributeFilterData(
+                        id: $attr->id,
+                        name: $attr->name,
+                        isNumeric: true,
+                        min: (float)min($decoded),
+                        max: (float)max($decoded),
+                    );
                 }
             } elseif ($attr->type == 3) {
+                // Variant
                 $values = DB::table('attributes_products')
                     ->where('attribute_id', $attr->id)
                     ->whereIn('product_id', $productIds)
@@ -117,17 +131,24 @@ class AttributeQueryRepository
                         ->orderBy('name')
                         ->get();
 
-                    $item['isVariant'] = true;
-                    $item['variants'] = $variants->map(
-                        fn($v) => ['id' => $v->id, 'name' => $v->name]
+                    $variantDtoList = $variants->map(
+                        fn($v) => new IdNameImageData(id: (int)$v->id, name: $v->name, image: '')
                     )->toArray();
+
+                    $result[] = new AttributeFilterData(
+                        id: $attr->id,
+                        name: $attr->name,
+                        isVariant: true,
+                        variants: $variantDtoList,
+                    );
                 }
             } elseif ($attr->type == 2) {
-                $item['isBool'] = true;
-            }
-
-            if (isset($item['isNumeric']) || isset($item['isVariant']) || isset($item['isBool'])) {
-                $result[] = $item;
+                // Bool
+                $result[] = new AttributeFilterData(
+                    id: $attr->id,
+                    name: $attr->name,
+                    isBool: true,
+                );
             }
         }
 
@@ -159,13 +180,46 @@ class AttributeQueryRepository
 
         $brands = DB::table('products')
             ->join('brands', 'products.brand_id', '=', 'brands.id')
+            ->leftJoin('photos', function ($join) {
+                $join->on('brands.id', '=', 'photos.imageable_id')
+                    ->where('photos.model_type', '=', self::BRAND_PHOTO_MODEL_TYPE)
+                    ->where('photos.type', '=', 'image');
+            })
             ->whereIn('products.id', $productIds)
             ->where('products.published', true)
-            ->select('brands.id', 'brands.name')
+            ->select(
+                'brands.id',
+                'brands.name',
+                'photos.id as photo_id',
+                'photos.file as photo_file',
+                'photos.thumb as photo_thumb',
+            )
             ->distinct()
             ->orderBy('brands.name')
             ->get()
             ->toArray();
+
+        // Формируем бренды — используем VariantData (id, name, image)
+        $brandDtos = [];
+        foreach ($brands as $item) {
+            $image = '';
+            if (!empty($item->photo_file) && !empty($item->photo_id)) {
+                $image = $this->photoService->getThumbUrl(
+                    photoId: (int)$item->photo_id,
+                    modelType: self::BRAND_PHOTO_MODEL_TYPE,
+                    imageableId: (int)$item->id,
+                    fileName: $item->photo_file,
+                    thumb: 'catalog',
+                    isThumbEnabled: (bool)($item->photo_thumb ?? false),
+                );
+            }
+
+            $brandDtos[] = new IdNameImageData(
+                id: (int)$item->id,
+                name: $item->name,
+                image: $image,
+            );
+        }
 
         $tags = DB::table('tags_products')
             ->join('tags', 'tags_products.tag_id', '=', 'tags.id')
@@ -179,7 +233,7 @@ class AttributeQueryRepository
         return (object)[
             'min_price' => (float)($priceData->min_price ?? 0),
             'max_price' => (float)($priceData->max_price ?? 0),
-            'brands' => $brands,
+            'brands' => $brandDtos,
             'tags' => $tags,
         ];
     }
