@@ -22,6 +22,8 @@ class PostViewData extends Data
         public readonly ?string $updatedAt,
         public readonly ?array $meta,
         public readonly ?int $categoryId,
+        public readonly ?string $text,
+        public readonly bool $oldRender = false,
     ) {}
 
     public static function fromEntity(PostEntity $post): self
@@ -42,6 +44,8 @@ class PostViewData extends Data
                 'description' => $post->meta->getDescription(),
             ] : null,
             categoryId: $post->categoryId,
+            text: $post->text,
+            oldRender: $post->oldRender,
         );
     }
 }

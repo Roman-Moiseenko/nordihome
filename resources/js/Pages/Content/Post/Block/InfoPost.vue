@@ -13,6 +13,9 @@
                     <el-date-picker v-model="info.publishedAt" type="datetime"/>
                 </el-form-item>
 
+                <el-form-item label="Старый рендер">
+                    <el-switch v-model="info.oldRender"/>
+                </el-form-item>
                 <el-button v-if="hasChanges" type="info" @click="onCancel" style="margin-left: 4px">
                     Отмена
                 </el-button>
@@ -26,7 +29,6 @@
                 </el-tooltip>
             </el-col>
             <el-col :span="7">
-
                 <el-form-item label="Статья">
                     <el-input v-model="info.caption"/>
                 </el-form-item>
@@ -71,6 +73,7 @@ const initialInfo = {
     publishedAt: props.post.publishedAt,
     metaTitle: props.post.meta.title,
     metaDescription: props.post.meta.description,
+    oldRender: props.post.oldRender,
 }
 
 const info = reactive({...initialInfo})
@@ -104,7 +107,6 @@ function onSetInfo() {
 
 
 </script>
-
 
 <style scoped>
 

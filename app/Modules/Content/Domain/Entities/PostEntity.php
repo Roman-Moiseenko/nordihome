@@ -30,6 +30,11 @@ final class PostEntity
         set => $this->caption = $value;
     }
 
+    public ?string $text = null {
+        get => $this->text;
+        set => $this->text = $value;
+    }
+
     public ?string $fragment = null {
         get => $this->fragment;
         set => $this->fragment = $value;
@@ -68,6 +73,11 @@ final class PostEntity
     public ?int $categoryId = null {
         get => $this->categoryId;
         set => $this->categoryId = $value;
+    }
+
+    public bool $oldRender = false {
+        get => $this->oldRender;
+        set => $this->oldRender = $value;
     }
 
     public function __construct(

@@ -54,7 +54,7 @@ abstract class RenderPage extends Model
     /**
      * @throws \Throwable
      */
-    public function view(callable $fn): string
+    public function view(?callable $fn = null): string
     {
 
         $this->field = empty($this->field) ? $this->getField() : $this->field;
@@ -65,9 +65,16 @@ abstract class RenderPage extends Model
         $url_page = route('shop.' . $this->field . '.view', $this->slug);
         if ($fn != null) $this->meta = $fn($this, $this->meta);
 
+        $title = is_array($this->meta) ? $this->meta['title'] : $this->meta->title;
+        $description = is_array($this->meta) ? $this->meta['description'] : $this->meta->description;
+
+
         return view(
             Template::blade($this->field) . $this->template,
-            [$this->field => $this, 'title' => $this->meta->title, 'description' => $this->meta->description, 'url_page' => $url_page])
+            [$this->field => $this,
+                'title' => $title,
+                'description' => $description,
+                'url_page' => $url_page])
             ->render();
     }
 

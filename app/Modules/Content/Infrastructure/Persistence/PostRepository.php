@@ -42,6 +42,7 @@ class PostRepository implements PostRepositoryInterface
         $model->fragment = $post->fragment;
         $model->published = $post->isPublished();
         $model->category_id = $post->categoryId;
+        $model->old_render = $post->oldRender;
         $model->meta = $post->meta ? [
             'title' => $post->meta->getTitle(),
             'description' => $post->meta->getDescription(),
@@ -83,7 +84,9 @@ class PostRepository implements PostRepositoryInterface
         $entity->id = $model->id;
         $entity->caption = $model->caption;
         $entity->fragment = $model->fragment;
-        $entity->published = (bool) $model->published;
+        $entity->published = $model->published;
+        $entity->oldRender = $model->old_render;
+        $entity->text = $model->text;
 
         if ($model->published_at !== null) {
             $entity->publishedAt = new DateTimeImmutable($model->published_at->toDateTimeString());

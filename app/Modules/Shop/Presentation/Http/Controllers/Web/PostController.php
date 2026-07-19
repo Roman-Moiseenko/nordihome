@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
+use App\Modules\Content\Infrastructure\Models\Post;
 use App\Modules\Content\Repository\MetaTemplateRepository;
 use App\Modules\Shop\Application\Queries\Post\PostPageQuery;
 use App\Modules\Shop\Controllers\ShopController;
@@ -35,6 +36,9 @@ class PostController extends ShopController
 
     public function post($slug)
     {
+        $post = Post::where('slug', $slug)->firstOrFail();
+        if ($post->old_render) return $post->view(null);
+
         $data = $this->postPageQuery->execute($slug);
 
         return view('shop.content.post', [

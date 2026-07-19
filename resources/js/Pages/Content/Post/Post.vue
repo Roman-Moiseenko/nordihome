@@ -25,11 +25,11 @@
 
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <!-- TinyMCE -->
-            <!--editor
+            <editor
                 :api-key="tiny_api" v-model="text"
                 :init="store.tiny"
                 @change="saveText"
-            /-->
+            />
         </div>
         <!-- ContentBlock Editor -->
         <div class="mt-3 p-3 bg-white rounded-lg ">

@@ -64,6 +64,10 @@ readonly class UpdatePostUseCase
             $dto->published ? $post->publish() : $post->unpublish();
         }
 
+        if ($dto->oldRender !== null) {
+            $post->oldRender = $dto->oldRender;
+        }
+
         // Meta
         if ($dto->metaTitle !== null || $dto->metaDescription !== null) {
             $currentMeta = $post->meta ?? Meta::default();
