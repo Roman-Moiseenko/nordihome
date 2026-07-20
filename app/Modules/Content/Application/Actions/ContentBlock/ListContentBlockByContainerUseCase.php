@@ -1,10 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Modules\Content\Application\Actions\ContentBlock;
 
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
+use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockViewData;
 use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
-use App\Modules\Content\Domain\Entities\ContentBlockEntity;
 
 readonly class ListContentBlockByContainerUseCase
 {
@@ -16,13 +18,18 @@ readonly class ListContentBlockByContainerUseCase
 
     /**
      * @param ContentBlockContainerData $dto
-     * @return ContentBlockEntity[]
+     * @return ContentBlockViewData[]
      */
     public function execute(ContentBlockContainerData $dto): array
     {
-        return $this->repository->getByContainer(
+        $blocks = $this->repository->getByContainer(
             containerType: $dto->containerType,
             containerId: $dto->containerId,
+        );
+
+        return array_map(
+            fn($block) => ContentBlockViewData::fromEntity($block),
+            $blocks,
         );
     }
 }

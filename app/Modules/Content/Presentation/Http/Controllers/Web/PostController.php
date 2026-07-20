@@ -11,6 +11,7 @@ use App\Modules\Content\Application\Actions\Post\TogglePostUseCase;
 use App\Modules\Content\Application\Actions\Post\UpdatePostUseCase;
 use App\Modules\Content\Application\Actions\Post\ViewPostUseCase;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
+use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockViewData;
 use App\Modules\Content\Application\DTOs\Post\PostUpdateData;
 use App\Modules\Content\Application\DTOs\Post\PostViewData;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
@@ -105,7 +106,6 @@ class PostController extends Controller
 
         $dto = new ContentBlockContainerData($post->id, ContainerType::POST);
         $blocks = $this->listContentBlockByContainerUseCase->execute($dto);
-
 
         return Inertia::render('Content/Post/Post', [
             'post' => Inertia::always(PostViewData::fromEntity($post)), //Заменить на useCase $this->repository->PostWithToArray($post)

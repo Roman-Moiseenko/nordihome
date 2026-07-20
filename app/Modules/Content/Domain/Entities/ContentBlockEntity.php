@@ -61,17 +61,11 @@ final class ContentBlockEntity
     public function __construct(
         ContainerType $containerType,
         int $containerId,
-        ?int $widgetInstanceId = null,
-        ?int $sort = null,
-        ?ContentSection $section = null,
-        ?string $caption = null,
     ) {
         $this->containerType = $containerType;
         $this->containerId = $containerId;
-        $this->widgetInstanceId = $widgetInstanceId;
-        $this->sort = $sort;
-        $this->section = $section ?? ContentSection::content();
-        $this->caption = $caption;
+        $this->widgetInstanceId = null;
+        $this->section = ContentSection::content();
     }
 
 }

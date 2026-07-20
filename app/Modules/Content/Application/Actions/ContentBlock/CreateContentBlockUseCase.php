@@ -23,9 +23,15 @@ final readonly class CreateContentBlockUseCase
         $block = new ContentBlockEntity(
             containerType: $containerType,
             containerId: $dto->container_id,
-            section: $dto->section !== null ? new ContentSection($dto->section) : null,
-            caption: $dto->caption,
         );
+
+        if ($dto->section !== null) {
+            $block->section = new ContentSection($dto->section);
+        }
+
+        if ($dto->caption !== null) {
+            $block->caption = $dto->caption;
+        }
 
         return $this->contentBlockRepository->save($block);
     }

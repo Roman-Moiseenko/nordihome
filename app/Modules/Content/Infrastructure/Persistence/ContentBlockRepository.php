@@ -128,13 +128,14 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
         $entity = new ContentBlockEntity(
             containerType: new ContainerType($model->container_type),
             containerId: $model->container_id,
-            widgetInstanceId: $model->widget_instance_id,
-            sort: $model->sort_order,
-            section: $model->section !== null ? new ContentSection($model->section) : null,
-            caption: $model->caption,
         );
-        $entity->active = (bool) $model->active;
+
         $entity->id = $model->id;
+        $entity->widgetInstanceId = $model->widget_instance_id;
+        $entity->sort = $model->sort_order;
+        $entity->section = $model->section !== null ? new ContentSection($model->section) : null;
+        $entity->caption = $model->caption;
+        $entity->active = (bool) $model->active;
 
         // Гидратация связанного WidgetInstance
         if ($model->relationLoaded('widgetInstance') && $model->widgetInstance !== null) {

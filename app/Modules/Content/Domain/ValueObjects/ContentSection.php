@@ -28,4 +28,6 @@ final class ContentSection
 
     public static function content(): self { return new self(self::CONTENT); }
     public static function bottomContent(): self { return new self(self::BOTTOM_CONTENT); }
+
+    public function jsonSerialize(): string { return $this->value; }
 }

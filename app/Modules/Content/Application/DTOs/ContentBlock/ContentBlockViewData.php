@@ -25,6 +25,7 @@ class ContentBlockViewData extends Data
         public readonly ?WidgetInstanceViewData $widgetInstance = null,
         public readonly ?string $createdAt = null,
         public readonly ?string $updatedAt = null,
+
     ) {}
 
     public static function fromEntity(ContentBlockEntity $block): self
@@ -35,7 +36,7 @@ class ContentBlockViewData extends Data
             containerId: $block->containerId,
             widgetInstanceId: $block->widgetInstanceId,
             sort: $block->sort,
-            section: $block->section !== null ? (string) $block->section : null,
+            section: $block->section->getValue(),
             caption: $block->caption,
             active: $block->active,
             widgetInstance: $block->widgetInstance !== null
@@ -43,6 +44,7 @@ class ContentBlockViewData extends Data
                 : null,
             createdAt: $block->createdAt?->format('c'),
             updatedAt: $block->updatedAt?->format('c'),
+
         );
     }
 }
