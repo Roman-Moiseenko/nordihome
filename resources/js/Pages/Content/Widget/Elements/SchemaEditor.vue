@@ -143,11 +143,16 @@ const localSchema = reactive<Record<string, any>>({
 // Все поля свернуты по умолчанию
 const expandedFields = ref<string[]>([])
 
-watch(() => props.schema, (val) => {
-  localSchema.type = val?.type || 'object'
-  localSchema.properties = val?.properties ? JSON.parse(JSON.stringify(val.properties)) : {}
-  localSchema.required = val?.required ? [...val.required] : []
-}, { immediate: true, deep: true })
+// Инициализируем localSchema из пропсов только один раз (при создании)
+// Не используем watch, чтобы избежать циклического сброса изменений,
+// когда SchemaEditor сам отправляет обновление через emit('update:schema'),
+// и Vue обновляет props.schema, что приводило бы к перезаписи localSchema
+function initFromProps() {
+  localSchema.type = props.schema?.type || 'object'
+  localSchema.properties = props.schema?.properties ? JSON.parse(JSON.stringify(props.schema.properties)) : {}
+  localSchema.required = props.schema?.required ? [...props.schema.required] : []
+}
+initFromProps()
 
 const showAddDialog = ref(false)
 const newPropName = ref('')
@@ -167,7 +172,7 @@ function isRequired(name: string): boolean {
 function emitSchemaUpdate() {
   emit('update:schema', {
     type: 'object',
-    properties: { ...localSchema.properties },
+    properties: JSON.parse(JSON.stringify(localSchema.properties)),
     required: [...(localSchema.required || [])],
   })
 }

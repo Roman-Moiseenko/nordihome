@@ -140,9 +140,12 @@ watch(() => props.propName, (val) => {
 
 const localConfig = reactive<Record<string, any>>({})
 
-watch(() => props.propConfig, (val) => {
-  Object.assign(localConfig, JSON.parse(JSON.stringify(val)))
-}, { immediate: true, deep: true })
+// Инициализируем localConfig из пропсов только один раз (при создании)
+// Не используем watch, чтобы избежать циклического сброса изменений
+function initLocalConfig() {
+  Object.assign(localConfig, JSON.parse(JSON.stringify(props.propConfig)))
+}
+initLocalConfig()
 
 const enumStr = ref('')
 const defaultStr = ref('')
@@ -154,14 +157,16 @@ const stringDefaultHint = computed(() => {
   return 'текст'
 })
 
-watch(() => props.propConfig, () => {
+// Инициализируем enumStr и defaultStr из пропсов только один раз (при создании)
+function initEnumAndDefault() {
   enumStr.value = props.propConfig?.enum?.join(', ') || ''
   if (props.propConfig?.default !== undefined) {
     defaultStr.value = String(props.propConfig.default)
   } else {
     defaultStr.value = ''
   }
-}, { immediate: true })
+}
+initEnumAndDefault()
 
 function onEnumChange() {
   if (enumStr.value) {
@@ -211,7 +216,9 @@ const itemsType = ref('string')
 const itemProperties = reactive<Record<string, any>>({})
 const editableSubKeys = reactive<Record<string, string>>({})
 
-watch(() => props.propConfig?.items, (val) => {
+// Инициализируем items из пропсов только один раз (при создании)
+function initItems() {
+  const val = props.propConfig?.items
   if (val) {
     itemsType.value = val.format === 'image' ? 'image' : (val.format === 'product' ? 'product' : (val.type || 'string'))
     const keys = Object.keys(itemProperties)
@@ -223,7 +230,8 @@ watch(() => props.propConfig?.items, (val) => {
       }
     }
   }
-}, { immediate: true, deep: true })
+}
+initItems()
 
 function onItemsTypeChange() {
   if (!localConfig.items) localConfig.items = {}
@@ -303,7 +311,8 @@ function onItemPropUpdate(name: string, key: string, value: any) {
 const objectProperties = reactive<Record<string, any>>({})
 const objectEditableKeys = reactive<Record<string, string>>({})
 
-watch(() => [localConfig.type, localConfig.format], () => {
+// Инициализируем объектные properties из пропсов только один раз (при создании)
+function initObjectProperties() {
   if (localConfig.type === 'object') {
     // Если format === 'image' — предзаполняем стандартные поля, если их ещё нет
     const isImage = localConfig.format === 'image'
@@ -353,7 +362,8 @@ watch(() => [localConfig.type, localConfig.format], () => {
       objectEditableKeys[key] = key
     }
   }
-}, { immediate: true })
+}
+initObjectProperties()
 
 function addObjectProperty() {
   const name = 'field_' + Date.now()
@@ -397,7 +407,15 @@ function emitUpdate() {
   if (localConfig.format === '' || localConfig.format === undefined) delete localConfig.format
   if (localConfig.minimum === undefined) delete localConfig.minimum
   if (localConfig.maximum === undefined) delete localConfig.maximum
-  emit('update:propConfig', { ...localConfig })
+  // При переключении type на 'object' — инициализируем properties, если их нет
+  if (localConfig.type === 'object' && !localConfig.properties) {
+    localConfig.properties = {}
+  }
+  // При переключении type на 'array' — инициализируем items, если их нет
+  if (localConfig.type === 'array' && !localConfig.items) {
+    localConfig.items = { type: 'string' }
+  }
+  emit('update:propConfig', JSON.parse(JSON.stringify(localConfig)))
 }
 </script>
 

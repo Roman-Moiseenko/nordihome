@@ -167,12 +167,13 @@ function checkChanges() {
         }
     }
     const origSchema = props.widget?.schema
-    if (origSchema) {
-        const a = JSON.stringify(schemaConfig.value)
+    const currentSchema = schemaConfig.value
+    if (origSchema || (currentSchema?.properties && Object.keys(currentSchema.properties).length > 0)) {
+        const a = JSON.stringify(currentSchema)
         const b = JSON.stringify({
-            type: origSchema.type || 'object',
-            properties: origSchema.properties || {},
-            required: origSchema.required || [],
+            type: origSchema?.type || 'object',
+            properties: origSchema?.properties || {},
+            required: origSchema?.required || [],
         })
         if (a !== b) {
             changeInfo.value = true
@@ -219,11 +220,11 @@ function onSchemaUpdate(newSchema: any) {
 function onSaveInfo() {
     saving.value = true
 
-    const schemaPayload = {
+    const schemaPayload = JSON.parse(JSON.stringify({
         type: 'object',
-        properties: {...schemaConfig.value.properties},
+        properties: schemaConfig.value.properties || {},
         required: schemaConfig.value.required || [],
-    }
+    }))
 
     router.visit(route('admin.content.widget.update', {id: props.widget.id}), {
         method: 'put',
