@@ -7,6 +7,7 @@ namespace App\Modules\Content\Application\Actions\ContentBlock;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockUpdateData;
 use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
 use App\Modules\Content\Domain\Entities\ContentBlockEntity;
+use App\Modules\Content\Domain\ValueObjects\ContentSection;
 
 final readonly class UpdateContentBlockUseCase
 {
@@ -23,7 +24,7 @@ final readonly class UpdateContentBlockUseCase
         }
 
         if ($dto->section !== null) {
-            $block->section = $dto->section;
+            $block->section = new ContentSection($dto->section);
         }
 
         return $this->contentBlockRepository->save($block);

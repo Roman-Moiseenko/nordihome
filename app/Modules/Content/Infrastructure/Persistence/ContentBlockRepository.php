@@ -7,6 +7,7 @@ namespace App\Modules\Content\Infrastructure\Persistence;
 use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
 use App\Modules\Content\Domain\Entities\ContentBlockEntity;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
+use App\Modules\Content\Domain\ValueObjects\ContentSection;
 use App\Modules\Content\Infrastructure\Models\ContentBlock;
 use DateTimeImmutable;
 
@@ -47,7 +48,7 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
         } else {
             $model->sort_order = $contentBlock->sort;
         }
-        $model->section = $contentBlock->section;
+        $model->section = (string) $contentBlock->section;
         $model->caption = $contentBlock->caption;
         $model->active = $contentBlock->active;
 
@@ -129,7 +130,7 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
             containerId: $model->container_id,
             widgetInstanceId: $model->widget_instance_id,
             sort: $model->sort_order,
-            section: $model->section,
+            section: $model->section !== null ? new ContentSection($model->section) : null,
             caption: $model->caption,
         );
         $entity->active = (bool) $model->active;

@@ -35,7 +35,7 @@ class ContentBlockViewData extends Data
             containerId: $block->containerId,
             widgetInstanceId: $block->widgetInstanceId,
             sort: $block->sort,
-            section: $block->section,
+            section: $block->section !== null ? (string) $block->section : null,
             caption: $block->caption,
             active: $block->active,
             widgetInstance: $block->widgetInstance !== null

@@ -35,6 +35,7 @@ Route::group(
             'prefix' => 'content-blocks',
             'as' => 'content-blocks.'
         ], function () {
+            Route::get('/sections', [ContentBlockController::class, 'sections'])->name('sections');
             Route::post('/sort', [ContentBlockController::class, 'sort'])->name('sort');
             Route::post('/{id}/toggle', [ContentBlockController::class, 'toggle'])->name('toggle');
             Route::get('/{id}', [ContentBlockController::class, 'show'])->name('show');

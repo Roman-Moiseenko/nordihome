@@ -8,6 +8,7 @@ use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockCreateData;
 use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
 use App\Modules\Content\Domain\Entities\ContentBlockEntity;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
+use App\Modules\Content\Domain\ValueObjects\ContentSection;
 
 final readonly class CreateContentBlockUseCase
 {
@@ -22,7 +23,7 @@ final readonly class CreateContentBlockUseCase
         $block = new ContentBlockEntity(
             containerType: $containerType,
             containerId: $dto->container_id,
-            section: $dto->section,
+            section: $dto->section !== null ? new ContentSection($dto->section) : null,
             caption: $dto->caption,
         );
 

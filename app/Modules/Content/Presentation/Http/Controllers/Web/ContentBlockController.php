@@ -18,6 +18,8 @@ use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockViewData;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
+use App\Modules\Content\Domain\ValueObjects\ContentSection;
+
 class ContentBlockController extends Controller
 {
     public function __construct(
@@ -30,13 +32,28 @@ class ContentBlockController extends Controller
     ) {}
 
     /**
+     * Получить список секций (ContentSection::SECTIONS).
+     * GET /admin/content/content-blocks/sections
+     */
+    public function sections(): JsonResponse
+    {
+        $result = [];
+        foreach (ContentSection::SECTIONS as $value => $label) {
+            $result[] = [
+                'value' => $value,
+                'label' => $label,
+            ];
+        }
+        return response()->json($result);
+    }
+
+    /**
      * Создать ContentBlock.
      * POST /admin/content/content-blocks
      */
     public function store(Request $request): JsonResponse
     {
         $dto = ContentBlockCreateData::validateAndCreate($request->all());
-
         $block = $this->createContentBlockUseCase->execute($dto);
 
         return response()->json(
@@ -80,7 +97,6 @@ class ContentBlockController extends Controller
     public function sort(Request $request): JsonResponse
     {
         $dto = ContentBlockSortData::validateAndCreate($request->all());
-
         $this->sortContentBlockUseCase->execute($dto);
 
         return response()->json(['message' => 'Порядок сортировки обновлён']);

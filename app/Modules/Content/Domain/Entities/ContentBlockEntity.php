@@ -3,6 +3,7 @@
 namespace App\Modules\Content\Domain\Entities;
 
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
+use App\Modules\Content\Domain\ValueObjects\ContentSection;
 use DateTimeImmutable;
 
 final class ContentBlockEntity
@@ -33,7 +34,7 @@ final class ContentBlockEntity
         set => $this->sort = $value;
     }
 
-    public ?string $section = null {
+    public ?ContentSection $section = null {
         get => $this->section;
         set => $this->section = $value;
     }
@@ -62,14 +63,14 @@ final class ContentBlockEntity
         int $containerId,
         ?int $widgetInstanceId = null,
         ?int $sort = null,
-        ?string $section = null,
+        ?ContentSection $section = null,
         ?string $caption = null,
     ) {
         $this->containerType = $containerType;
         $this->containerId = $containerId;
         $this->widgetInstanceId = $widgetInstanceId;
         $this->sort = $sort;
-        $this->section = $section;
+        $this->section = $section ?? ContentSection::content();
         $this->caption = $caption;
     }
 
