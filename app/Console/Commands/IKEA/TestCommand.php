@@ -39,7 +39,7 @@ class TestCommand extends Command
             }
         }
 
-*/
+
         $rows = $googleSheet->getFurnitureRows(self::GTV);
         $this->info('Строк - ' . count($rows));
         $this->info(json_encode($rows[0]['АРТИКУЛ']));
@@ -57,7 +57,7 @@ class TestCommand extends Command
             }
         }
 
-
+        */
 
     }
 

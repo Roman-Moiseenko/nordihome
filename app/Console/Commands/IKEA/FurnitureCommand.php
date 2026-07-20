@@ -2,9 +2,8 @@
 
 namespace App\Console\Commands\IKEA;
 
-use App\Modules\Nordihome\Service\FunctionService;
 use App\Modules\Nordihome\Service\GoogleSheetService;
-use App\Modules\Parser\Job\FurnitureParser;
+
 use Illuminate\Console\Command;
 use App\Console\CreatesApplication;
 
@@ -20,7 +19,7 @@ class FurnitureCommand extends Command
 
     public function handle(GoogleSheetService $googleSheet): void
     {
-
+/*
         $rows = $googleSheet->getFurnitureRows(self::BLUM);
         foreach ($rows as $number => $row) {
             if (!empty($code = $row['АРТИКУЛ'])) {
@@ -43,7 +42,7 @@ class FurnitureCommand extends Command
             }
         }
 
-
+*/
 
     }
 

@@ -4,8 +4,6 @@ namespace App\Modules\Nordihome\Service;
 
 use App\Modules\Base\Service\HttpPage;
 
-use DOMDocument;
-use Illuminate\Support\Facades\Log;
 
 class FurnitureService
 {
