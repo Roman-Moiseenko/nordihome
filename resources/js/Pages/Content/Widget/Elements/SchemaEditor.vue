@@ -143,16 +143,20 @@ const localSchema = reactive<Record<string, any>>({
 // Все поля свернуты по умолчанию
 const expandedFields = ref<string[]>([])
 
-// Инициализируем localSchema из пропсов только один раз (при создании)
-// Не используем watch, чтобы избежать циклического сброса изменений,
-// когда SchemaEditor сам отправляет обновление через emit('update:schema'),
-// и Vue обновляет props.schema, что приводило бы к перезаписи localSchema
-function initFromProps() {
-  localSchema.type = props.schema?.type || 'object'
-  localSchema.properties = props.schema?.properties ? JSON.parse(JSON.stringify(props.schema.properties)) : {}
-  localSchema.required = props.schema?.required ? [...props.schema.required] : []
-}
-initFromProps()
+// Инициализируем localSchema из пропсов только один раз при создании
+// Используем immediate, но не используем deep, чтобы не циклически сбрасывать
+const schemaInitialized = ref(false)
+
+watch(() => props.schema, (val) => {
+  if (!val) return
+  // При первой инициализации — загружаем данные из пропсов
+  if (!schemaInitialized.value) {
+    localSchema.type = val.type || 'object'
+    localSchema.properties = val.properties ? JSON.parse(JSON.stringify(val.properties)) : {}
+    localSchema.required = val.required ? [...val.required] : []
+    schemaInitialized.value = true
+  }
+}, { immediate: true, deep: false })
 
 const showAddDialog = ref(false)
 const newPropName = ref('')
@@ -170,16 +174,19 @@ function isRequired(name: string): boolean {
 }
 
 function emitSchemaUpdate() {
-  emit('update:schema', {
+  const payload = {
     type: 'object',
-    properties: JSON.parse(JSON.stringify(localSchema.properties)),
+    properties: JSON.parse(JSON.stringify(localSchema.properties || {})),
     required: [...(localSchema.required || [])],
-  })
+  }
+  emit('update:schema', payload)
 }
 
 function removeProperty(name: string) {
   if (isRequired(name)) return
-  delete localSchema.properties[name]
+  const newProps = { ...localSchema.properties }
+  delete newProps[name]
+  localSchema.properties = newProps
   emitSchemaUpdate()
 }
 
@@ -200,21 +207,24 @@ function renameProperty(oldName: string, newName: string) {
   if (localSchema.required) {
     const idx = localSchema.required.indexOf(oldName)
     if (idx !== -1) {
-      localSchema.required[idx] = newName
+      // Создаём новый массив для реактивности
+      const newRequired = [...localSchema.required]
+      newRequired[idx] = newName
+      localSchema.required = newRequired
     }
   }
   emitSchemaUpdate()
 }
 
 function updatePropertyConfig(propName: string, newConfig: any) {
-  localSchema.properties[propName] = newConfig
+  localSchema.properties = { ...localSchema.properties, [propName]: newConfig }
   emitSchemaUpdate()
 }
 
 function toggleRequired(propName: string, val: boolean) {
   if (!localSchema.required) localSchema.required = []
   if (val && !localSchema.required.includes(propName)) {
-    localSchema.required.push(propName)
+    localSchema.required = [...localSchema.required, propName]
   } else if (!val) {
     localSchema.required = localSchema.required.filter((n: string) => n !== propName)
   }
@@ -352,7 +362,7 @@ function addProperty() {
       break
   }
 
-  localSchema.properties[name] = propConfig
+  localSchema.properties = { ...localSchema.properties, [name]: propConfig }
 
   // Раскрываем новое поле
   expandedFields.value.push(name)
@@ -360,7 +370,7 @@ function addProperty() {
   if (newPropRequired.value) {
     if (!localSchema.required) localSchema.required = []
     if (!localSchema.required.includes(name)) {
-      localSchema.required.push(name)
+      localSchema.required = [...localSchema.required, name]
     }
   }
 
