@@ -532,7 +532,7 @@ function onSave() {
 
 <style scoped>
 .widget-field-renderer {
-    max-width: 600px;
+
 }
 
 /* Поля на всю ширину — label сверху */
