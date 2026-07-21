@@ -79,7 +79,10 @@ readonly class LoadProductWpService
             : BrandEntity::NONAME;
         $brand = $this->findOrCreateBrandUseCase->execute($brandName);
 
+        $tagsData = $product['tags'];
 
+        //MAINDO Перенести теги. 1) ищем в базе или создаем, и получеам id
+        // Attach tags To Product UseCase
         //Создаем Товар
         $dtoProduct = new ProductFastCreateData(
             name: $product['name'],
@@ -88,6 +91,9 @@ readonly class LoadProductWpService
             categoryId: $categories[0],
             slug: $product['slug'],
         );
+
+
+
         $productEntity = $this->fastCreateProductUseCase->execute($dtoProduct, $userPermission);
         unset($categories[0]); //Удаляем первую категорию, т.к. она теперь Main
 

@@ -1,23 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Console\Commands\Wp;
+namespace App\Modules\Catalog\Presentation\Console\Commands;
 
-use App\Modules\Accounting\Entity\PricingDocument;
-use App\Modules\Accounting\Entity\PricingProduct;
 use App\Modules\Accounting\Service\StorageService;
-use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
-use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
-use App\Modules\Base\Job\LoadingImageProduct;
 use App\Modules\Catalog\Application\Services\LoadCategoryWpService;
-use App\Modules\Catalog\Application\Services\LoadProductWpService;
 use App\Modules\Catalog\Application\Services\LoadRoomWpService;
 use App\Modules\Catalog\Infrastructure\Job\JobLoadProductWP;
-use App\Modules\Catalog\Infrastructure\Models\Brand;
-use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Setting\Entity\Common;
-use App\Modules\Setting\Entity\Settings;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 use function public_path;

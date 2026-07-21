@@ -18,6 +18,8 @@ use App\Modules\Catalog\Infrastructure\Persistence\ProductPriceRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\ProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomRepository;
+use App\Modules\Catalog\Presentation\Console\Commands\ClearCommand;
+use App\Modules\Catalog\Presentation\Console\Commands\LoadCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -149,10 +151,11 @@ class CatalogServiceProvider extends ServiceProvider
      *
      * Expected format: [CommandClass::class, AnotherCommand::class]
      */
-    protected function registerCommands()
+    protected function registerCommands(): void
     {
         $this->commands([
-            // Add command classes here
+            ClearCommand::class,
+            LoadCommand::class,
         ]);
     }
 

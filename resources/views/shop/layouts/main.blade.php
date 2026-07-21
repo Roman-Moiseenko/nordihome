@@ -96,9 +96,6 @@
 @include('shop.pop-up.buy-click')
 @include('shop.pop-up.notification')
 
-
-
-
 <!--FOOTER-->
 
 @include('shop.footer')

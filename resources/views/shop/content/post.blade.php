@@ -3,12 +3,11 @@
     /** @var PostViewPageData  $pageData */
 @endphp
 @extends('shop.layouts.main')
-
-@section('main', 'posts container-xl')
-
 @section('title', $pageData->meta->title)
 @section('description', $pageData->meta->description)
+@section('body', 'post')
 
+@section('main', 'container-xl')
 @section('content')
     @foreach($pageData->blocks as $block)
         @if($block->section == "content")
@@ -16,7 +15,7 @@
                 @include('widgets::' . $block->widget->category . '.' . $block->widget->slug,
                 [
                     'params' => $block->widget->params,
-                    'widget' => $block->widget->widget_id,
+                    'widget' => $block->widget->id,
                 ])
             </div>
         @endif
@@ -34,7 +33,7 @@
                 @include('widgets::' . $block->widget->category . '.' . $block->widget->slug,
                 [
                     'params' => $block->widget->params,
-                    'widget' => $block->widget->widget_id,
+                    'widget' => $block->widget->id,
                 ])
             </div>
         @endif
