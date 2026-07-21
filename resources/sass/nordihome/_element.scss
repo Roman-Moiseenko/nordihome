@@ -3,21 +3,21 @@
 
 /* ХЛЕБНЫЕ КРОШКИ */
 .breadcrumbs {
-    margin: 16px 0;
-    padding-left: 0;
+    margin: 15px 0;
+    padding: 0;
+    font-size: 11px;
+    color: black;
     >li {
         display: inline-block;
         list-style-type: none;
-        font-size: 1rem;
         &:before {
             margin: 0 4px;
         }
         >a {
-            text-decoration: none;
-            color: var(--bs-gray-700);
+            text-decoration: underline;
+            color: black;
             &:hover {
                 text-decoration: none;
-                color: var(--bs-gray-400);
             }
         }
         &.active {

@@ -45,11 +45,23 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="/images/nordihome/logo-nordi-home-2.svg" alt="Nordi Home" class="img-fluid img-logo">
                 </a>
-                <a href="{{ route('shop.category.index') }}">Категории</a>
-                <!--- TODO  Каталог виджет --->
-                <a href="{{ route('shop.room.index') }}">Комнаты</a>
-                <!--- TODO  Комнаты виджет --->
+                <!--- <a href="{{ route('shop.category.index') }}">Категории</a>
 
+                <a href="{{ route('shop.room.index') }}">Комнаты</a>
+                 --->
+                <div class="header-menu-buttons d-flex">
+                    <!-- Главные кнопки открываются по клику -->
+                    <button class="nav-link header-menu-buttons-item" type="button" data-target="catalogMenu">Каталог</button>
+                    <button class="nav-link header-menu-buttons-item" type="button" data-target="roomsMenu">Комнаты</button>
+                </div>
+                <div class="header-menu-mobile-btn">
+                    <button class="menu-toggle" id="menuToggle">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+            @include('shop.widgets.header.category')
 
             </div>
             <div class="menu-bottom-search flex-grow-1">

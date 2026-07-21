@@ -1,0 +1,14 @@
+.base-filter {
+    .children {
+        border: 1px solid black;
+        border-radius: 8px;
+        padding: 10px;
+        .heading {
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: inline-block;
+        }
+    }
+}

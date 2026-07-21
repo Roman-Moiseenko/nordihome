@@ -10,19 +10,20 @@
     <div class="mobile-close"><i class="fa-light fa-xmark"></i></div>
     <div class="base-filter">
         <div class="children">
-            <a href="{{ $mainInfo->back->url }}">{{ $mainInfo->back->name }}</a>
+            <a href="{{ $mainInfo->back->url }}" class="heading">{{ $mainInfo->back->name }}</a>
             <div>
                 <b>{{ $mainInfo->name }}</b>
             </div>
             @foreach($mainInfo->children as $child)
-                <div>
+                <div class="m-l_10">
                     <a href="{{ route('shop.' . $mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
                 </div>
             @endforeach
         </div>
         <br>
-        <a href="{{ $secondInfo->back->url}}">{{ $secondInfo->back->name }}</a>
+
         <div class="children">
+            <a href="{{ $secondInfo->back->url}}" class="heading">{{ $secondInfo->back->name }}</a>
             @foreach($secondInfo->children as $child)
                 <div>
                     <a href="{{ route('shop.' . $secondInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>

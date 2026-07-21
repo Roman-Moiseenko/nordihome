@@ -13,9 +13,7 @@
 @section('content')
     <span class="e-detail" data-product="{{ $product->id }}"></span>
 
-    <div class="title-page">
-        <h1>{{ $product->name }}</h1>
-    </div>
+
 
     <div class="box-card">
         <div class="row">
@@ -36,6 +34,7 @@
             </div>
             <div class="col-lg-6">
                 <div class="view-info-product">
+                    <h1>{{ $product->name }}</h1>
                     <div class="view-rating">
                         <div>
                             @include('shop.widgets.to-wish', ['product' => $product])
@@ -45,6 +44,22 @@
                                aria-label="Отзывы реальных покупателей">{{ $product->count_reviews }}</a>
                             @include('shop.widgets.stars', ['rating' => $product->rating, 'show_number' => true])
                         </div>
+                    </div>
+                    <div class="product-code">Артикул: <span>{{ $product->code }}</span></div>
+                    <div class="view-brand f-z_16 m-t_10">
+                        @if(empty($product->brandLogo))
+                            <span><b>Бренд:</b> {{ $product->brandName }}</span>
+                        @else
+                            <img src="{{ $product->brandLogo }}"
+                                 alt="{{ $product->brandName  }}" title="{{ $product->brandName }}">
+                        @endif
+
+                    </div>
+                    <div class="product-options-link">
+                        <a href="#характеристики">Характеристики</a>
+                        <a href="#описание">Описание</a>
+                        <a href="#с-этим-товаром-часто-покупают">Рекомендуем</a>
+                        <a href="#доставка-по-всей-россии">Доставка</a>
                     </div>
                     <div class="price-brand-block">
                         <div class="view-price">
@@ -76,23 +91,15 @@
                                 <span class="" style="color: red; font-weight: bold;">Товар не продается! Цена вымышленная!</span>
                             </div>
                         </div>
-                        <div class="view-brand">
-                            @if(empty($product->brandLogo))
-                                <span>{{ $product->brandName }}</span>
-                            @else
-                                <img src="{{ $product->brandLogo }}"
-                                     alt="{{ $product->brandName  }}" title="{{ $product->brandName }}">
-                            @endif
-
-                        </div>
+                        <div class="f-z_14 m-b_20">Уточняйте наличие товара на данный момент</div>
                     </div>
                     <div class="product-card-to-cart">
                         @if($product->is_sale)
-                            <button class="to-cart btn btn-dark e-add" data-product="{{ $product->id }}">В Корзину
+                            <button class="to-cart btn btn-black e-add" data-product="{{ $product->id }}">В Корзину
                             </button>
 
 
-                            <button class="one-click btn btn-outline-dark"
+                            <button class="one-click btn btn-orange"
                                     type="button" data-bs-toggle="modal"
                                     data-bs-target="#buy-click"
                                     onclick="document.getElementById('one-click-product-id').value={{$product->id}};
@@ -103,7 +110,26 @@
                             <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
                         @endif
                     </div>
-
+                    <h2 class="f-z_23 m-b_30 m-t_30" id="характеристики">Характеристики</h2>
+                    <div class="short-description">
+                        <p>береза, 58×70/93 см.(это краткое описание)</p>
+                    </div>
+                    <h3 class="m-b_10 f-w_700 f-z_18">Размеры:</h3>
+                    <ul>
+                        <li>Высота: 93 см</li>
+                        <li>Ширина/Диаметр: 58 см</li>
+                        <li>Длина/Глубина: 35 см</li>
+                    </ul>
+                    <div class="product-materials m-t_20 accordion accordion_1">
+                        <h3 class="m-b_10 f-w_700 f-z_18 accordion-heading">Материалы и уход <span></span></h3>
+                        <div class="accordion-text"><p>массив березы, клей</p>
+                            <p><strong>Уход<br>
+                                </strong>Протрите сухой тканью.</p>
+                            <p>Для лучшего качества затяните винты, если это необходимо.</p>
+                            <p>Для ухода рекомендуем масло для дерева VARDA.</p></div>
+                    </div>
+                    <h3 class="m-t_20 m-b_10 f-w_700 f-z_18">Цвета:</h3>
+                    <div>Натуральный</div>
                     @include('shop.product.__modification', ['modification' => $pageData->modification, 'current_id' => $product->id])
                     @include('shop.product.__related', ['related' => $pageData->related])
 
@@ -118,19 +144,13 @@
                 </div>
             </div>
         </div>
-        <div class="view-footer-product">
-            @if(!is_null($pageData->attributes))
-                <div class="anchor-menu"><a href="#specifications">Характеристики</a></div>
-            @endif
-            <div class="anchor-menu"><a href="#description">Описание товара</a></div>
-            <div class="product-code">Артикул <span>{{ $product->code }}</span></div>
 
-        </div>
     </div>
 
     @include('shop.product._bonus', ['bonus' => $pageData->bonus])
     @include('shop.product._series', ['series' => $pageData->series])
     <div class="box-card">
+        <div id="описание"></div>
         <h3 id="description">Описание</h3>
         {!! $product->description !!}
     </div>
@@ -138,6 +158,13 @@
     @include('shop.product._equivalent', ['equivalents' => $pageData->equivalents])
     @include('shop.product._reviews', ['reviews' => $pageData->reviews])
 
+    <section class="related-products">
+        <h2 id="с-этим-товаром-часто-покупают">С этим товаром часто покупают</h2>
+        <p>Тут карусель с похожими товарами, думаю, на новом сайте нужно продумать, по какому принципу тут выводить товары.</p>
+    </section>
+    @include('shop.product._delivery')
+    @include ('shop.product._block-more-products')
+    <div style="padding:30px 0;">Тут надо вывести карту</div>
     <script type="application/ld+json" class="schemantra.com">
         {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
@@ -146,3 +173,4 @@
 @section('bottom-content')
 
 @endsection
+

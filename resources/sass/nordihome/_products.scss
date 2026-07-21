@@ -7,6 +7,37 @@
     }
 
 }
+.view-info-product {
+    h1 {
+        font-size: 26px;
+        font-weight: 500;
+        margin-bottom: 10px;
+    }
+}
+.product-code {
+    color: $dark-gray;
+    font-weight: 300;
+    margin: 30px 0 0 0;
+}
+.product-options-link {
+    margin-top: 10px;
+    a {
+        border: 1px solid $light-gray;
+        text-decoration: none;
+        padding: 3px 5px;
+        font-size: 12px;
+        font-weight: 500;
+        border-radius: 8px;
+        display: inline-block;
+        margin-right: 3px;
+        color: $light-gray;
+        margin-bottom: 5px;
+        &:hover {
+            background: $light-gray;
+            color: white;
+        }
+    }
+}
 .products-page {
     .order {
         margin-top: auto;
@@ -327,11 +358,63 @@
 }
 
 //КАРТОЧКА ТОВАРА
+
+.accordion .accordion-item, .product-materials {position:relative;}
+.product-materials.accordion .accordion-heading {
+    font-size: 18px;
+    padding: 0;
+    margin-bottom: 0;
+}
+.product-materials.accordion .accordion-heading:after {
+    display:none;
+    overflow:hidden;
+}
+.product-materials.accordion .accordion-heading span:after {
+    content: '';
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    border-radius: 50%;
+    display: inline-block;
+    background: url(/wp-content/themes/euroikea/images/arrow-right.svg) center center / 15px no-repeat;
+    transform: rotate(90deg);
+    position: relative;
+    top: 3px;
+    margin-left: 7px;
+    transition: 0.5s;
+}
+.product-materials.accordion .accordion-heading span {
+    border: 1px solid $light-gray;
+    color: $light-gray;
+    border-radius: 8px;
+    padding: 4px 9px;
+    margin-left: 10px;
+    font-weight: 500;
+    font-size: 13px;
+}
+.product-materials.accordion .accordion-heading span:hover {
+    color:$black;
+    border: 1px solid $black;
+}
+.product-materials.accordion .accordion-heading span:before {
+    content: 'Развернуть';
+}
+.product-materials.accordion .accordion-heading.active span:before {
+    content: 'Свернуть';
+}
+.product-materials.accordion .accordion-heading.active span:after {
+    transform: rotate(-90deg);
+}
+.product-materials.accordion .accordion-text {
+    color: black;
+    display:none;
+}
+.product-materials.accordion .accordion-text.active {display:block;}
+
 .product-page {
     .box-card {
-        padding: 10px 20px;
         h3 {
-            padding-bottom: 20px;
+
         }
     }
 }
@@ -346,13 +429,9 @@
         font-size: 0.9rem;
     }
     .price-brand-block {
-        display: flex;
-        margin-top: 20px;
         .view-price {
-            //margin-top: 20px;
-            margin-bottom: 20px;
-            font-size: 2.5rem;
-            color: var(--bs-gray-900);
+            margin-top: 20px;
+            font-size: 21px;
 
             >.discount-price {
                 color: var(--bs-discount-color);
@@ -678,4 +757,9 @@
     .review-product-item {
         margin: 10px;
     }
+}
+.block-more-product {
+    background: black;
+    color: $orange;
+    padding: 25px 0;
 }
