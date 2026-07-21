@@ -33,6 +33,7 @@ class ContentBlockQueryRepository
                 'widgets.slug as widget_slug',
                 'widgets.category as widget_category',
                 'widget_instances.params',
+                'widgets.id as widget_id',
             )
             ->orderBy('content_blocks.sort_order')
             ->get();
@@ -42,6 +43,7 @@ class ContentBlockQueryRepository
             $blocks[] = new ContentBlockPageData(
                 section: $row->section ?? '',
                 widget: new WidgetPageData(
+                    id: $row->widget_id,
                     category: $row->widget_category ?? '',
                     slug: $row->widget_slug,
                     params: json_decode($row->params ?? '{}', true),

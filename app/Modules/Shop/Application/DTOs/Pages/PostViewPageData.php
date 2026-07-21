@@ -13,7 +13,7 @@ class PostViewPageData
     public function __construct(
 
         public PostData $post,
-        /** @var ContentBlockPageData $blocks */
+        /** @var ContentBlockPageData[] $blocks */
         public array $blocks,
 
         public SeoData     $meta,
