@@ -28,7 +28,7 @@
         </div>
         <h6>Цена</h6>
         <div>
-            {{ price($product->price, 'zł') }}
+            {{ price($pageData->product->price, 'zł') }}
         </div>
         <div>
             <button class="parser-to-cart">В корзину</button>
