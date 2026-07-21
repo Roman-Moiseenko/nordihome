@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Feedback\Classes;
+namespace App\Modules\Feedback\Application\DTOs;
 
 
 class DataFieldFeedback
@@ -24,8 +24,8 @@ class DataFieldFeedback
         foreach ($array as $item) {
             $result[] = DataFieldFeedback::create(
                 $item['slug'] ?? '',
-                    $item['name'] ?? '',
-                    $item['value'] ?? '',
+                $item['name'] ?? '',
+                $item['value'] ?? '',
             );
         }
         return $result;

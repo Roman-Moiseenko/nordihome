@@ -1,11 +1,15 @@
 <?php
 
-namespace App\Modules\Feedback\Controllers;
+namespace App\Modules\Feedback\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Content\Entity\Widgets\FormWidget;
+use App\Modules\Feedback\Application\Actions\FormBack\CreateFormBackUseCase;
+use App\Modules\Feedback\Application\Actions\FormBack\IndexFormBackUseCase;
+use App\Modules\Feedback\Application\DTOs\FormBack\FormBackCreateData;
 use App\Modules\Feedback\Repository\FormRepository;
 use App\Modules\Feedback\Service\FormService;
-use App\Modules\Content\Entity\Widgets\FormWidget;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,30 +17,35 @@ use Inertia\Inertia;
 class FormController extends Controller
 {
 
-    private FormService $service;
+
     private FormRepository $repository;
 
-    public function __construct(FormService $service, FormRepository $repository)
+    public function __construct(
+        FormRepository $repository,
+        public IndexFormBackUseCase  $indexFormBackUseCase,
+        public CreateFormBackUseCase $createFormBackUseCase,
+    )
     {
-        $this->service = $service;
+
         $this->repository = $repository;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, UserPermission $userPermission)
     {
-
-        $forms = $this->repository->getIndex($request, $filters);
+        $forms = $this->indexFormBackUseCase->execute($userPermission);
         return Inertia::render('Feedback/Form/Index',
             [
                 'forms' => $forms,
-                'filters' => $filters
             ]);
     }
 
     public function from_shop(FormWidget $widget, Request $request): JsonResponse
     {
-        //  try {
-        $this->service->createForm($widget, $request);
+        $dto = FormBackCreateData::validateAndCreate($request->all());
+        $this->createFormBackUseCase->execute($dto);
+
+
+        //$this->service->createForm($widget, $request);
         //Log::info(json_encode($request->all()));
         return \response()->json(true);
         /*   } catch (\Throwable $e) {
@@ -50,7 +59,8 @@ class FormController extends Controller
 
     public function feedback(Request $request)
     {
-        $this->service->createFeedback($request);
+        $dto = FormBackCreateData::validateAndCreate($request->all());
+        $this->createFormBackUseCase->execute($dto);
         //Log::info(json_encode($request->all()));
         return \response()->json(true);
     }

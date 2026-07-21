@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Modules\Lead\Controllers;
+namespace App\Modules\Lead\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Auth\Application\Actions\Client\CreateClientUseCase;
 use App\Modules\Auth\Application\DTOs\Client\ClientCreateData;
 use App\Modules\Lead\Entity\Lead;
-use App\Modules\Lead\Entity\LeadStatus;
 use App\Modules\Lead\Repository\LeadRepository;
 use App\Modules\Lead\Service\LeadService;
 use App\Modules\Shared\Domain\Entities\UserPermission;

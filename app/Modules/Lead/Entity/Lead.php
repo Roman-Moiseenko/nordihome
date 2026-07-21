@@ -3,11 +3,10 @@
 namespace App\Modules\Lead\Entity;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
+use App\Modules\Feedback\Application\DTOs\DataFieldFeedback;
 use App\Modules\Feedback\Casts\DataFieldFeedbackCasts;
-use App\Modules\Feedback\Classes\DataFieldFeedback;
-use App\Modules\Feedback\Entity\FormBack;
+use App\Modules\Feedback\Infrastructure\Models\FormBack;
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

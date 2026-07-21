@@ -2,8 +2,8 @@
 
 namespace App\Modules\Feedback\Service;
 
-use App\Modules\Feedback\Entity\Chat;
-use App\Modules\Feedback\Entity\Message;
+use App\Modules\Feedback\Infrastructure\Models\Chat;
+use App\Modules\Feedback\Infrastructure\Models\Message;
 
 class ChatService
 {

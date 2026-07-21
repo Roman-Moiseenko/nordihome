@@ -3,9 +3,8 @@
 namespace App\Modules\Feedback\Service;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
-use App\Modules\Feedback\Entity\FormBack;
 use App\Modules\Content\Entity\Widgets\FormWidget;
-use App\Modules\User\Entity\User;
+use App\Modules\Feedback\Infrastructure\Models\FormBack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 

@@ -13,10 +13,12 @@
             @foreach($category->children as $categorySecond)
                 <div class="col-md-4">
                     <div class="submenu-links">
-                        <div class="f-w_600 m-b_20">{{ $categorySecond->name }}</div>
+                        <div class="f-w_600 m-b_20">
+                            <a href="{{ route('shop.' . $entity . '.view', $categorySecond->slug) }}">{{ $categorySecond->name }}</a>
+                        </div>
                         <ul class="m-b_20">
                             @foreach($categorySecond->children as $categoryThird)
-                                <li><a href="{{ route('shop.category.view', $categoryThird->slug) }}">{{ $categoryThird->name }}</a></li>
+                                <li><a href="{{ route('shop.' . $entity . '.view', $categoryThird->slug) }}">{{ $categoryThird->name }}</a></li>
                             @endforeach
                         </ul>
                     </div>

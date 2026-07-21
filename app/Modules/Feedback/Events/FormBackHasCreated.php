@@ -2,7 +2,7 @@
 
 namespace App\Modules\Feedback\Events;
 
-use App\Modules\Feedback\Entity\FormBack;
+use App\Modules\Feedback\Infrastructure\Models\FormBack;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;

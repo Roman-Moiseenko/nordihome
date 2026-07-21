@@ -2,7 +2,7 @@
 
 namespace App\Modules\Feedback\Casts;
 
-use App\Modules\Feedback\Classes\DataFieldFeedback;
+use App\Modules\Feedback\Application\DTOs\DataFieldFeedback;
 use Illuminate\Contracts\Database\Eloquent\CastsAttributes;
 use Illuminate\Database\Eloquent\Model;
 

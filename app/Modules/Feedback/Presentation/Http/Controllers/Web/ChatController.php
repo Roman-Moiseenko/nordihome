@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Feedback\Controllers;
+namespace App\Modules\Feedback\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 

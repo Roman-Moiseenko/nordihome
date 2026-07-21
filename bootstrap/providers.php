@@ -1,11 +1,12 @@
 <?php
 
-
 return [
     App\Modules\Auth\Providers\AuthServiceProvider::class,
     App\Modules\Catalog\Providers\CatalogServiceProvider::class,
-    App\Modules\Mailing\Providers\MailingServiceProvider::class,
     App\Modules\Content\Providers\ContentServiceProvider::class,
+    App\Modules\Feedback\Providers\FeedbackServiceProvider::class,
+    App\Modules\Lead\Providers\LeadServiceProvider::class,
+    App\Modules\Mailing\Providers\MailingServiceProvider::class,
     App\Modules\Parser\Providers\ParserServiceProvider::class,
     App\Modules\Shared\Providers\SharedServiceProvider::class,
     App\Modules\Shop\Providers\ShopServiceProvider::class,

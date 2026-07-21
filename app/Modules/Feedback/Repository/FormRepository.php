@@ -2,7 +2,7 @@
 
 namespace App\Modules\Feedback\Repository;
 
-use App\Modules\Feedback\Entity\FormBack;
+use App\Modules\Feedback\Infrastructure\Models\FormBack;
 use Illuminate\Http\Request;
 
 class FormRepository

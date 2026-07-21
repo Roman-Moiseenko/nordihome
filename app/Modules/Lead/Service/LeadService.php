@@ -2,8 +2,7 @@
 
 namespace App\Modules\Lead\Service;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
-
-use App\Modules\Feedback\Entity\FormBack;
+use App\Modules\Feedback\Infrastructure\Models\FormBack;
 use App\Modules\Lead\Entity\Lead;
 use App\Modules\Lead\Entity\LeadItem;
 use App\Modules\Lead\Entity\LeadStatus;
