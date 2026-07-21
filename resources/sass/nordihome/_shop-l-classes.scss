@@ -253,8 +253,6 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
 
 //карточка тенью и закругл.углами
 .box-card {
-    box-shadow: $shadow-box;
-    border-radius: $radius-card;
     margin-bottom: 20px;
     padding: 10px;
 }
