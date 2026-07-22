@@ -3,9 +3,9 @@
 namespace App\Modules\Lead\Service;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
 use App\Modules\Feedback\Infrastructure\Models\FormBack;
-use App\Modules\Lead\Entity\Lead;
-use App\Modules\Lead\Entity\LeadItem;
-use App\Modules\Lead\Entity\LeadStatus;
+use App\Modules\Lead\Infrastructure\Models\Lead;
+use App\Modules\Lead\Infrastructure\Models\LeadItem;
+use App\Modules\Lead\Infrastructure\Models\LeadStatus;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderStatus;
@@ -46,7 +46,7 @@ class LeadService
         //Если есть менеджер ф-ция create_sales()
         if (!is_null($order->staff_id)) {
             $order->lead->staff_id = $order->staff_id;
-            $order->lead->setStatus(LeadStatus::STATUS_IN_WORK);
+            $order->lead->setStatus(LeadStatus::IN_WORK);
             $order->lead->save();
         }
 
@@ -71,7 +71,7 @@ class LeadService
             return true;
 
         } else {
-            if ($newStatus == LeadStatus::STATUS_NEW) {
+            if ($newStatus == LeadStatus::NEW_LEAD) {
                 $lead->staff_id = null;
                 foreach ($lead->statuses as $status) {
                     $status->delete();
@@ -86,7 +86,7 @@ class LeadService
 
     private function checkStatus(Lead $lead, int $status): bool
     {
-        if (is_null($lead->order_id) && $status > LeadStatus::STATUS_NOT_DECIDED) return false;
+        if (is_null($lead->order_id) && $status > LeadStatus::NOT_DECIDED) return false;
         //TODO Другие варианты
         return true;
     }
@@ -99,7 +99,7 @@ class LeadService
     public function canceled(Lead $lead, int $reason): void
     {
         $lead->canceled = $reason;
-        $lead->setStatus(LeadStatus::STATUS_CANCELED);
+        $lead->setStatus(LeadStatus::CANCELED);
         $lead->finished_at = null;
         $lead->save();
     }
@@ -110,7 +110,7 @@ class LeadService
     public function completed(Lead $lead): void
     {
         $lead->completed = true;
-        $lead->setStatus(LeadStatus::STATUS_COMPLETED);
+        $lead->setStatus(LeadStatus::COMPLETED);
         $lead->finished_at = null;
         $lead->save();
     }
@@ -120,7 +120,7 @@ class LeadService
      */
     public function awaiting(Lead $lead): void
     {
-        $lead->setStatus(LeadStatus::STATUS_INVOICE);
+        $lead->setStatus(LeadStatus::INVOICE);
         $lead->save();
     }
 
@@ -129,7 +129,7 @@ class LeadService
      */
     public function work(Lead $lead): void
     {
-        $lead->setStatus(LeadStatus::STATUS_IN_WORK);
+        $lead->setStatus(LeadStatus::IN_WORK);
         $staff = auth()->user()->profileable;
         if (!is_null($staff)) $lead->staff_id = $staff->id;
         $lead->save();
@@ -140,7 +140,7 @@ class LeadService
      */
     public function paid(Lead $lead): void
     {
-        $lead->setStatus(LeadStatus::STATUS_PAID);
+        $lead->setStatus(LeadStatus::PAID);
         $lead->save();
     }
     /**
@@ -167,7 +167,7 @@ class LeadService
     {
         $lead->assembly = true;
         if ($lead->order->getQuantityRemains() == 0) {
-            $lead->setStatus(LeadStatus::STATUS_ASSEMBLY);
+            $lead->setStatus(LeadStatus::ASSEMBLY);
             $lead->assembly = false;
         }
         $lead->save();
@@ -184,7 +184,7 @@ class LeadService
             if ($expense->status < OrderExpense::STATUS_DELIVERY) $result = false;
         }
         if ($lead->order->getQuantityRemains() == 0 && $result) {
-            $lead->setStatus(LeadStatus::STATUS_DELIVERY);
+            $lead->setStatus(LeadStatus::DELIVERY);
             $lead->assembly = false;
         }
         $lead->save();

@@ -11,7 +11,7 @@ use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
-use App\Modules\Lead\Entity\Lead;
+use App\Modules\Lead\Infrastructure\Models\Lead;
 use App\Modules\Lead\Traits\LeadField;
 use App\Modules\Mail\Entity\SystemMail;
 use App\Modules\Order\Entity\OrderReserve;

@@ -2,9 +2,7 @@
 
 namespace App\Modules\Lead\Listeners;
 
-use App\Modules\Lead\Entity\Lead;
 use App\Modules\Lead\Service\LeadService;
-use App\Modules\Order\Events\OrderHasCanceled;
 use App\Modules\Order\Events\OrderHasCompleted;
 
 /**

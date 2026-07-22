@@ -2,8 +2,8 @@
 
 namespace App\Modules\Lead\Repository;
 
-use App\Modules\Lead\Entity\Lead;
-use App\Modules\Lead\Entity\LeadStatus;
+use App\Modules\Lead\Infrastructure\Models\Lead;
+use App\Modules\Lead\Infrastructure\Models\LeadStatus;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderItem;
@@ -20,13 +20,13 @@ class LeadRepository
         $query_new = Lead::where('staff_id', null);
 
         return [
-            LeadStatus::STATUS_NEW => $this->getLeadsByStatus($query_new, LeadStatus::STATUS_NEW),
-            LeadStatus::STATUS_IN_WORK => $this->getLeadsByStatus($query, LeadStatus::STATUS_IN_WORK), //'in_work'
-            LeadStatus::STATUS_NOT_DECIDED => $this->getLeadsByStatus($query, LeadStatus::STATUS_NOT_DECIDED), //'not_decide'
-            LeadStatus::STATUS_INVOICE => $this->getLeadsByStatus($query, LeadStatus::STATUS_INVOICE), //'invoice'
-            LeadStatus::STATUS_PAID => $this->getLeadsByStatus($query, LeadStatus::STATUS_PAID), //'paid'
-            LeadStatus::STATUS_ASSEMBLY => $this->getLeadsByStatus($query, LeadStatus::STATUS_ASSEMBLY), //'assembly'
-            LeadStatus::STATUS_DELIVERY => $this->getLeadsByStatus($query, LeadStatus::STATUS_DELIVERY), //'delivery'
+            LeadStatus::NEW_LEAD => $this->getLeadsByStatus($query_new, LeadStatus::NEW_LEAD),
+            LeadStatus::IN_WORK => $this->getLeadsByStatus($query, LeadStatus::IN_WORK), //'in_work'
+            LeadStatus::NOT_DECIDED => $this->getLeadsByStatus($query, LeadStatus::NOT_DECIDED), //'not_decide'
+            LeadStatus::INVOICE => $this->getLeadsByStatus($query, LeadStatus::INVOICE), //'invoice'
+            LeadStatus::PAID => $this->getLeadsByStatus($query, LeadStatus::PAID), //'paid'
+            LeadStatus::ASSEMBLY => $this->getLeadsByStatus($query, LeadStatus::ASSEMBLY), //'assembly'
+            LeadStatus::DELIVERY => $this->getLeadsByStatus($query, LeadStatus::DELIVERY), //'delivery'
         ];
 
         //return Lead::get()->map(fn(Lead $lead) => $this->LeadToArray($lead))->toArray();
@@ -35,7 +35,7 @@ class LeadRepository
     public function getFreeLeads(): array
     {
         $leads = Lead::where('staff_id', null)->whereHas('status', function ($query) {
-            $query->where('value', LeadStatus::STATUS_NEW);
+            $query->where('value', LeadStatus::NEW_LEAD);
         });
 
         return $leads->get()->map(fn(Lead $lead) => $this->LeadToArray($lead))->toArray();
@@ -50,12 +50,12 @@ class LeadRepository
         $query = Lead::where('staff_id', $staff->id);
 
         return [
-            LeadStatus::STATUS_IN_WORK => $this->getLeadsByStatus($query, LeadStatus::STATUS_IN_WORK), //'in_work'
-            LeadStatus::STATUS_NOT_DECIDED => $this->getLeadsByStatus($query, LeadStatus::STATUS_NOT_DECIDED), //'not_decide'
-            LeadStatus::STATUS_INVOICE => $this->getLeadsByStatus($query, LeadStatus::STATUS_INVOICE), //'invoice'
-            LeadStatus::STATUS_PAID => $this->getLeadsByStatus($query, LeadStatus::STATUS_PAID), //'paid'
-            LeadStatus::STATUS_ASSEMBLY => $this->getLeadsByStatus($query, LeadStatus::STATUS_ASSEMBLY), //'assembly'
-            LeadStatus::STATUS_DELIVERY => $this->getLeadsByStatus($query, LeadStatus::STATUS_DELIVERY), //'delivery'
+            LeadStatus::IN_WORK => $this->getLeadsByStatus($query, LeadStatus::IN_WORK), //'in_work'
+            LeadStatus::NOT_DECIDED => $this->getLeadsByStatus($query, LeadStatus::NOT_DECIDED), //'not_decide'
+            LeadStatus::INVOICE => $this->getLeadsByStatus($query, LeadStatus::INVOICE), //'invoice'
+            LeadStatus::PAID => $this->getLeadsByStatus($query, LeadStatus::PAID), //'paid'
+            LeadStatus::ASSEMBLY => $this->getLeadsByStatus($query, LeadStatus::ASSEMBLY), //'assembly'
+            LeadStatus::DELIVERY => $this->getLeadsByStatus($query, LeadStatus::DELIVERY), //'delivery'
         ];
     }
     private function getLeadsByStatus($query, #[ExpectedValues(valuesFromClass: LeadStatus::class)] int $status)
@@ -108,7 +108,7 @@ class LeadRepository
         $result = [];
         foreach (LeadStatus::STATUSES as $key => $label)
         {
-            if ($key < LeadStatus::STATUS_CANCELED) {
+            if ($key < LeadStatus::CANCELED) {
                 $result[$key] = $label;
             }
         }

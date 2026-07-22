@@ -2,7 +2,7 @@
 
 namespace App\Modules\Lead\Listeners;
 
-use App\Modules\Lead\Entity\LeadStatus;
+use App\Modules\Lead\Infrastructure\Models\LeadStatus;
 use App\Modules\Lead\Service\LeadService;
 use App\Modules\Order\Events\OrderHasSetManager;
 
@@ -30,7 +30,7 @@ class LeadSetManager
         $lead->staff_id = $event->order->staff_id;
         $lead->save();
         if ($lead->isNew()) {
-            $lead->setStatus(LeadStatus::STATUS_IN_WORK);
+            $lead->setStatus(LeadStatus::IN_WORK);
         }
 
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Lead\Entity;
+namespace App\Modules\Lead\Infrastructure\Models;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Feedback\Application\DTOs\DataFieldFeedback;
@@ -26,7 +26,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property Carbon $updated_at
  * @property LeadStatus[] $statuses
  * @property LeadStatus $status
- * @property DataFieldFeedback[] $data
+ * @property array $data
  * @property Client $client
  * @property Order $order
  * @property string $comment
@@ -53,7 +53,7 @@ class Lead extends Model
         'completed' => false,
     ];
     protected $casts = [
-        'data' => DataFieldFeedbackCasts::class,
+        'data' => 'array',
     ];
 
     const array TYPES = [
@@ -126,7 +126,7 @@ class Lead extends Model
 
     public function isNew(): bool
     {
-        return $this->status->value == LeadStatus::STATUS_NEW && $this->staff_id == null;
+        return $this->status->value == LeadStatus::NEW_LEAD && $this->staff_id == null;
     }
 
 

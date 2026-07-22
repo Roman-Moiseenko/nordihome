@@ -2,8 +2,7 @@
 
 namespace App\Modules\Lead\Traits;
 
-use App\Modules\Lead\Entity\Lead;
-use App\Modules\Lead\Entity\LeadStatus;
+use App\Modules\Lead\Infrastructure\Models\Lead;
 
 /**
  * @property Lead $lead
