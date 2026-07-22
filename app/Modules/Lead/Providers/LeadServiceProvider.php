@@ -3,7 +3,9 @@
 namespace App\Modules\Lead\Providers;
 
 use App\Modules\Feedback\Database\Seeders\FeedbackRoleSeeder;
+use App\Modules\Lead\Application\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Infrastructure\Listeners\CreateLeadFromFormBack;
+use App\Modules\Lead\Infrastructure\Persistence\LeadRepository;
 use App\Modules\Shared\Infrastructure\Events\LeadCollected;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
@@ -86,7 +88,10 @@ class LeadServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register module-specific services
+        $this->app->bind(
+            LeadRepositoryInterface::class,
+            LeadRepository::class,
+        );
     }
 
     // =====================================================================

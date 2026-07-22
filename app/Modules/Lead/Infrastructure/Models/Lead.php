@@ -51,14 +51,15 @@ class Lead extends Model
         'data' => '[]',
         'canceled' => 0,
         'completed' => false,
+        'comment' => '',
     ];
     protected $casts = [
         'data' => 'array',
     ];
 
     const array TYPES = [
-        FormBack::class => 'form',
-        Order::class => 'order',
+        'feedback.form' => 'form',
+        'order.order' => 'order',
     ];
 
     public function getType(): string
@@ -128,7 +129,5 @@ class Lead extends Model
     {
         return $this->status->value == LeadStatus::NEW_LEAD && $this->staff_id == null;
     }
-
-
 
 }

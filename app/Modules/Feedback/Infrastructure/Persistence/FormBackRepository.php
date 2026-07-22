@@ -19,10 +19,12 @@ class FormBackRepository implements FormBackRepositoryInterface
 
         $model->url = $formBack->url;
         $model->form_name = $formBack->formName;
-        $model->data_form = $formBack->data;
+        $model->data = $formBack->data;
         $model->created_at = $formBack->createdAt?->format('Y-m-d H:i:s');
 
         $model->save();
+
+        $model->refresh();
 
         return $this->hydrate($model);
     }
@@ -45,13 +47,13 @@ class FormBackRepository implements FormBackRepositoryInterface
         $entity = new FormBackEntity(
             url: $model->url,
             formName: $model->form_name,
-            data: $model->data_form ?? [],
+            data: $model->data ?? [],
         );
 
         $entity->id = $model->id;
-
-        $entity->createdAt = \DateTimeImmutable::createFromInterface($model->created_at);
-
+        $entity->createdAt = $model->created_at instanceof \DateTimeInterface
+            ? \DateTimeImmutable::createFromInterface($model->created_at)
+            : null;
 
         return $entity;
     }

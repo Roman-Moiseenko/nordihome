@@ -13,6 +13,7 @@ interface ClientRepositoryInterface
     public function save(ClientEntity $client): ClientEntity;
     public function findById(int $id): ?ClientEntity;
     public function findByPhone(PhoneNumber $phone): ?ClientEntity;
+    public function findByEmail(Email $email): ?ClientEntity;
     public function findByUserId(int $userId): ?ClientEntity;
     public function emailExists(Email $email, ?int $excludeId = null): bool;
     public function phoneExists(PhoneNumber $phone, ?int $excludeId = null): bool;

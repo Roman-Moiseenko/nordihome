@@ -13,6 +13,7 @@
         "ext-simplexml": "*",
         "ext-zip": "*",
         "diglactic/laravel-breadcrumbs": "^10.0",
+        "giggsey/libphonenumber-for-php": "^9.0",
         "guzzlehttp/guzzle": "^7.2",
         "hflabs/dadata": "^24.4",
         "inertiajs/inertia-laravel": "^2.0",

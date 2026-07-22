@@ -58,7 +58,7 @@ class LeadRepository
             LeadStatus::DELIVERY => $this->getLeadsByStatus($query, LeadStatus::DELIVERY), //'delivery'
         ];
     }
-    private function getLeadsByStatus($query, #[ExpectedValues(valuesFromClass: LeadStatus::class)] int $status)
+    private function getLeadsByStatus($query, #[ExpectedValues(valuesFromClass: LeadStatus::class)] string $status)
     {
         $new_query = clone $query;
         return $new_query->whereHas('status', function ($query) use ($status) {
@@ -123,9 +123,9 @@ class LeadRepository
         $email = null;
         $phone = null;
 
-        foreach ($lead->data as $item) {
-            if ($item->slug == 'email') $email = $item->value;
-            if ($item->slug == 'phone') $phone = $item->value;
+        foreach ($lead->data as $key => $value) {
+            if ($key == 'email') $email = $value;
+            if ($key == 'phone') $phone = $value;
         }
         if (empty($email) && empty($phone)) return [];
 

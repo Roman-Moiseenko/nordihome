@@ -24,7 +24,7 @@ class FormBack extends Model
     protected $table = 'feedback_forms';
 
     protected $attributes = [
-        'data_form' => '{}',
+        'data' => '{}',
     ];
     protected $fillable = [
         'form_name',
@@ -33,10 +33,7 @@ class FormBack extends Model
         'data',
     ];
     protected $casts = [
-        'data_form' => 'json',
+        'data' => 'json',
+        'created_at' => 'datetime',
     ];
-
-
-
-
 }

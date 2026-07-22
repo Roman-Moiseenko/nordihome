@@ -50,43 +50,43 @@ window.$ = jQuery;
             });
         });
     }
+
     function feedbackNew(feedback) {
         let _id = feedback.attr('id');
-        const route = '/admin/feedback/form/feedback'
-        //$.post('/admin/feedback/form/get/' + _id, {}, function (data) {
-            //let route = data;
-            let hideBlock = $('#callback');
-            let button = feedback.find('button');
-            button.on('click', function () {
-                let fields = {
-                    //id: _id,
-                    url: window.location.href,
-                };
-                let res = true;
-                feedback.find('[name]').each(function () {
-                    if ($(this).is(':required') && $(this).val() === '') {
-                        if (res) alert('Не заполнены поля');
-                        res = false;
-                        return;
+        const route = '/feedback/form/feedback'
+
+        let hideBlock = $('#' + _id + '-callback');
+        let button = feedback.find('button');
+        button.on('click', function () {
+            let fields = {
+                url: window.location.href,
+                data: {},
+            };
+            let res = true;
+            feedback.find('[name]').each(function () {
+                if ($(this).is(':required') && $(this).val() === '') {
+                    if (res) alert('Не заполнены поля');
+                    res = false;
+                    return;
+                }
+                if ($(this).attr('type') === 'checkbox' || $(this).attr('type') === 'radiobutton') {
+                    if ($(this).is(':checked')) {
+                        fields.data[$(this).attr('name')] = $(this).val();
                     }
-                    if ($(this).attr('type') === 'checkbox' || $(this).attr('type') === 'radiobutton') {
-                        if ($(this).is(':checked')) {
-                            fields[$(this).attr('name')] = $(this).val();
-                        }
-                    } else {
-                        fields[$(this).attr('name')] = $(this).val();
-                    }
-                });
-                if (res === true) {
-                    $.post(route, fields, function () {
-                            hideBlock.show();
-                            if (!feedback.is('[not-hide]')) feedback.hide()
-                        }
-                    )
+                } else {
+                    fields.data[$(this).attr('name')] = $(this).val();
                 }
             });
-        //});
+            if (res === true) {
+                $.post(route, fields, function () {
+                        hideBlock.show();
+                        if (!feedback.is('[not-hide]')) feedback.hide()
+                    }
+                )
+            }
+        });
     }
+
     $(document).find('.feedback').each(function () {
         feedback($(this));
     });

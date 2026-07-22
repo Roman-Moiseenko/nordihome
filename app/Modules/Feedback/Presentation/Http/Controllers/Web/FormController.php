@@ -43,25 +43,13 @@ class FormController extends Controller
     {
         $dto = FormBackCreateData::validateAndCreate($request->all());
         $this->createFormBackUseCase->execute($dto);
-
-
-        //$this->service->createForm($widget, $request);
-        //Log::info(json_encode($request->all()));
         return \response()->json(true);
-        /*   } catch (\Throwable $e) {
-               Log::info($e->getMessage());
-               Log::info($e->getFile());
-               Log::info($e->getLine());
-               return \response()->json(false);
-           }
-   */
     }
 
     public function feedback(Request $request)
     {
         $dto = FormBackCreateData::validateAndCreate($request->all());
         $this->createFormBackUseCase->execute($dto);
-        //Log::info(json_encode($request->all()));
         return \response()->json(true);
     }
 

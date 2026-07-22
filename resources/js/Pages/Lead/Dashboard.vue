@@ -8,7 +8,8 @@
     </el-row>
 
     <el-splitter>
-        <el-splitter-panel v-for="(key, index) in boards"
+        <template v-for="(key, index) in boards">
+        <el-splitter-panel v-if="index != 'completed'"
                            @dragover.prevent="onDropOver(index)"
                            @drop="onDropList(index)"
                            :class="'shadow-sm ' + background[index]"
@@ -16,10 +17,11 @@
             <el-tag effect="dark" :type="button_color[index]" size="large">{{ key }}</el-tag>
             <template v-for="lead in leads[index]">
                 <LeadInfo :lead="lead"
-                          :draggable="index < 4" @dragstart="onDragStart(lead, index)"
+                          :draggable="true" @dragstart="onDragStart(lead, index)"
                           @create:user="onDialogUser" @create:order="onDialogOrder" @add:item="onDialogItem"/>
             </template>
         </el-splitter-panel>
+</template>
     </el-splitter>
     <el-dialog v-model="dialogUser" title="Добавить Клиента" width="400">
         <el-form label-width="auto">
@@ -109,22 +111,22 @@ const props = defineProps({
 })
 
 const background = {
-    1: 'bg-green-100',
-    2: 'bg-red-100',
-    3: 'bg-orange-100',
-    4: 'bg-cyan-100',
-    5: 'bg-lime-100',
-    6: 'bg-slate-100',
-    7: 'bg-stone-100',
+    new_lead: 'bg-green-100',
+    in_work: 'bg-red-100',
+    not_decide: 'bg-orange-100',
+    invoice: 'bg-cyan-100',
+    paid: 'bg-lime-100',
+    assembly: 'bg-slate-100',
+    delivery: 'bg-stone-100',
 }
 const button_color = {
-    1: 'success',
-    2: 'danger',
-    3: 'warning',
-    4: 'info',
-    5: 'info',
-    6: 'info',
-    7: 'info',
+    new_lead: 'success',
+    in_work: 'danger',
+    not_decide: 'warning',
+    invoice: 'info',
+    paid: 'info',
+    assembly: 'info',
+    delivery: 'info',
 }
 const dragItem = ref(null);
 const dragFrom = ref(null);

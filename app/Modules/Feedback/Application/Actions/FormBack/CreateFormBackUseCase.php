@@ -24,11 +24,13 @@ readonly class CreateFormBackUseCase
         // Определяем form_name из данных формы
         $formName = $dto->data['form'] ?? $dto->data['form_name'] ?? 'unknown';
 
+
         $formBack = new FormBackEntity(
             url: $dto->url,
             formName: $formName,
             data: $dto->data,
         );
+        $formBack->createdAt = new \DateTimeImmutable();
 
         $formBack = $this->formBackRepository->save($formBack);
 

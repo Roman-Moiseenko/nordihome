@@ -83,6 +83,12 @@ class ClientRepository implements ClientRepositoryInterface
         return $model ? $this->hydrate($model) : null;
     }
 
+    public function findByEmail(Email $email): ?ClientEntity
+    {
+        $model = Client::where('email', (string) $email)->first();
+        return $model ? $this->hydrate($model) : null;
+    }
+
     public function findByUserId(int $userId): ?ClientEntity
     {
         $user = User::find($userId);
