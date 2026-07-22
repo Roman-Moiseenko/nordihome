@@ -39,7 +39,8 @@ class FormBackRepository implements FormBackRepositoryInterface
     public function getAll(): LengthAwarePaginator
     {
         return FormBack::orderByDesc('created_at')
-            ->paginate(20);
+            ->paginate(20)
+            ->through(fn(FormBack $model) => $this->hydrate($model));
     }
 
     private function hydrate(FormBack $model): FormBackEntity

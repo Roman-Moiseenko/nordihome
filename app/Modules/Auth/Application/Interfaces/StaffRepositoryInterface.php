@@ -24,5 +24,5 @@ interface StaffRepositoryInterface
     public function findByPosition(StaffPosition|StaffPositions $position): array;
     public function findByUserId(int $userId): ?StaffEntity;
     public function delete(int $id): bool;
-    public function paginate(int $perPage = 15): LengthAwarePaginator;
+    public function paginate(int $perPage = 20): LengthAwarePaginator;
 }

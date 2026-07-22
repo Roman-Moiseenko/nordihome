@@ -61,7 +61,7 @@ class FreelanceRepository implements FreelanceRepositoryInterface
         }
         return $model->delete();
     }
-    public function paginate(int $perPage = 15): LengthAwarePaginator
+    public function paginate(int $perPage = 20): LengthAwarePaginator
     {
         return Freelance::with('user')
             ->paginate($perPage)

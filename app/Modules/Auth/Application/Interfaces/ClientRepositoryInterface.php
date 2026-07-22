@@ -18,5 +18,5 @@ interface ClientRepositoryInterface
     public function emailExists(Email $email, ?int $excludeId = null): bool;
     public function phoneExists(PhoneNumber $phone, ?int $excludeId = null): bool;
     public function delete(int $id): bool;
-    public function paginate(int $perPage = 15): LengthAwarePaginator;
+    public function paginate(int $perPage = 20): LengthAwarePaginator;
 }

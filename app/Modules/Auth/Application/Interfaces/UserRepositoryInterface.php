@@ -20,6 +20,6 @@ interface UserRepositoryInterface
     public function saveEmailVerification(int $userId, Email $newEmail, string $token, ?\DateTimeImmutable $expiresAt = null): void;
     public function findEmailVerificationByToken(string $token): ?object; // возвращает DTO/stdClass с полями user_id, new_email, expires_at
     public function deleteEmailVerification(string $token): void;
-    public function paginate(int $perPage = 15): LengthAwarePaginator;
+    public function paginate(int $perPage = 20): LengthAwarePaginator;
 
 }

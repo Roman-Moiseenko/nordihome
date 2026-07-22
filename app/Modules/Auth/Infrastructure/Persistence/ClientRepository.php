@@ -122,7 +122,7 @@ class ClientRepository implements ClientRepositoryInterface
         $model = Client::find($id);
         return $model ? $model->delete() : false;
     }
-    public function paginate(int $perPage = 15): LengthAwarePaginator
+    public function paginate(int $perPage = 20): LengthAwarePaginator
     {
         return Client::with('user')
             ->paginate($perPage)

@@ -76,7 +76,7 @@ class StaffRepository implements StaffRepositoryInterface
         }
         return $model->delete();
     }
-    public function paginate(int $perPage = 15): LengthAwarePaginator
+    public function paginate(int $perPage = 20): LengthAwarePaginator
     {
         return Staff::with('user')
             ->paginate($perPage)
