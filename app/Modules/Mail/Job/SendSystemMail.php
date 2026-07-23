@@ -33,7 +33,7 @@ class SendSystemMail implements ShouldQueue
     public function __construct(
         Client           $client,
         AbstractMailable $mail,
-        string           $systemable_type = null,
+        string|null          $systemable_type = null,
         int|null         $systemable_id = null,
         array            $emails = [])
     {

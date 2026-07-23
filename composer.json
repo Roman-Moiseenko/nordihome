@@ -12,6 +12,7 @@
         "ext-pdo": "*",
         "ext-simplexml": "*",
         "ext-zip": "*",
+        "alexwebprog/laravel-notification-channel-max": "^2.1",
         "diglactic/laravel-breadcrumbs": "^10.0",
         "giggsey/libphonenumber-for-php": "^9.0",
         "guzzlehttp/guzzle": "^7.2",

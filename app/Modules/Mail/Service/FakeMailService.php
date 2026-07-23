@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Modules\Mailing\Infrastructure\Services;
+namespace App\Modules\Mail\Service;
 
 use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;
 use App\Modules\Shared\Domain\Entities\Mail\Recipient;
+
 class FakeMailService implements MailServiceInterface
 {
     private static array $lastSent = [];

@@ -4,8 +4,72 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fee71a94ba8132d60b9f3b362c97f4d0",
+    "content-hash": "1776491f1917b0c33120265c75a6ce08",
     "packages": [
+        {
+            "name": "alexwebprog/laravel-notification-channel-max",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/AlexWebProg/laravel-notification-channel-max.git",
+                "reference": "9fb8a22a0c06f16af44f877fb6d9ea8e70f78da1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/AlexWebProg/laravel-notification-channel-max/zipball/9fb8a22a0c06f16af44f877fb6d9ea8e70f78da1",
+                "reference": "9fb8a22a0c06f16af44f877fb6d9ea8e70f78da1",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^7.5",
+                "illuminate/http": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/notifications": "^10.0|^11.0|^12.0|^13.0",
+                "illuminate/support": "^10.0|^11.0|^12.0|^13.0",
+                "php": "^8.2"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^8.0|^9.0|^10.0|^11.0",
+                "phpunit/phpunit": "^10.0|^11.0|^12.0|^13.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "NotificationChannels\\Max\\MaxServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "NotificationChannels\\Max\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alexey Povarov",
+                    "email": "povarovalexey@gmail.com",
+                    "homepage": "https://github.com/AlexWebProg/"
+                }
+            ],
+            "description": "MAX Messenger notification channel for Laravel",
+            "homepage": "https://github.com/AlexWebProg/laravel-notification-channel-max",
+            "keywords": [
+                "Messenger",
+                "laravel",
+                "max",
+                "max.ru",
+                "notifications"
+            ],
+            "support": {
+                "issues": "https://github.com/AlexWebProg/laravel-notification-channel-max/issues",
+                "source": "https://github.com/AlexWebProg/laravel-notification-channel-max"
+            },
+            "time": "2026-06-25T10:31:19+00:00"
+        },
         {
             "name": "brick/math",
             "version": "0.14.8",

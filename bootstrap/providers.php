@@ -6,7 +6,6 @@ return [
     App\Modules\Content\Providers\ContentServiceProvider::class,
     App\Modules\Feedback\Providers\FeedbackServiceProvider::class,
     App\Modules\Lead\Providers\LeadServiceProvider::class,
-    App\Modules\Mailing\Providers\MailingServiceProvider::class,
     App\Modules\Notification\Providers\NotificationServiceProvider::class,
     App\Modules\Parser\Providers\ParserServiceProvider::class,
     App\Modules\Shared\Providers\SharedServiceProvider::class,
