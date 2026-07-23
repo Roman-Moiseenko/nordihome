@@ -13,7 +13,7 @@ class RoomProductRepository implements RoomProductRepositoryInterface
     /**
      * @inheritDoc
      */
-    public function getProductIdsByRoom(int $roomId, int $perPage = 15, int $page = 1): LengthAwarePaginator
+    public function getProductIdsByRoom(int $roomId, int $perPage = 15): LengthAwarePaginator
     {
         return RoomProduct::where('room_id', $roomId)
             ->select('product_id')

@@ -6,9 +6,9 @@ namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Modules\Catalog\Application\Actions\RoomProduct\AssignProductsToRoomUseCase;
 use App\Modules\Catalog\Application\Actions\RoomProduct\AssignRoomsToProductUseCase;
-use App\Modules\Catalog\Application\Actions\RoomProduct\AttachProductToRoomUseCase;
+use App\Modules\Catalog\Application\Actions\RoomProduct\AttachProductsToRoomUseCase;
 use App\Modules\Catalog\Application\Actions\RoomProduct\AttachRoomsToProductUseCase;
-use App\Modules\Catalog\Application\Actions\RoomProduct\DetachProductFromRoomUseCase;
+use App\Modules\Catalog\Application\Actions\RoomProduct\DetachProductsFromRoomUseCase;
 use App\Modules\Catalog\Application\Actions\RoomProduct\DetachRoomsFromProductUseCase;
 use App\Modules\Catalog\Application\Actions\RoomProduct\ListProductByRoomUseCase;
 use App\Modules\Catalog\Application\Actions\RoomProduct\ListRoomByProductUseCase;
@@ -23,8 +23,8 @@ readonly class RoomProductController
         // Комната → Товары
         private ListProductByRoomUseCase      $listProductByRoomUseCase,
         private AssignProductsToRoomUseCase   $assignProductsToRoomUseCase,
-        private AttachProductToRoomUseCase    $attachProductToRoomUseCase,
-        private DetachProductFromRoomUseCase  $detachProductFromRoomUseCase,
+        private AttachProductsToRoomUseCase   $attachProductToRoomUseCase,
+        private DetachProductsFromRoomUseCase $detachProductFromRoomUseCase,
         // Товар → Комнаты
         private ListRoomByProductUseCase      $listRoomByProductUseCase,
         private AssignRoomsToProductUseCase   $assignRoomsToProductUseCase,
@@ -42,10 +42,10 @@ readonly class RoomProductController
      */
     public function roomProducts(int $id, Request $request): JsonResponse
     {
-        $page = $request->integer('page', 1);
+        //$page = $request->integer('page', 1);
         $perPage = $request->integer('per_page', 15);
 
-        $paginator = $this->listProductByRoomUseCase->execute($id, $perPage, $page);
+        $paginator = $this->listProductByRoomUseCase->execute($id, $perPage);
 
         return response()->json($paginator, Response::HTTP_OK);
     }

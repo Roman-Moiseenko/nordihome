@@ -3,7 +3,7 @@
 namespace App\Modules\Unload\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Tag;
+use App\Modules\Catalog\Infrastructure\Models\Tag;
 use App\Modules\Unload\Entity\Feed;
 use App\Modules\Unload\Repository\FeedRepository;
 use App\Modules\Unload\Service\FeedService;

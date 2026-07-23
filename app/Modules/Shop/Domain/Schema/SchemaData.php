@@ -9,8 +9,6 @@ class SchemaData implements JsonSerializable
     public string $context;
     /** @var SchemaElement[] */
     public array $graph;
-    //MAINDO Сделать схему для разных типов страниц
-    // Основной шаблон, и сущности в массив данных
     public function __construct(array $graph = [])
     {
         $this->context = 'https://schema.org';

@@ -1,32 +1,26 @@
 <?php
 
-declare(strict_types=1);
-
-namespace App\Modules\Catalog\Application\Actions\RoomProduct;
+namespace App\Modules\Catalog\Application\Actions\TagProduct;
 
 use App\Modules\Catalog\Application\DTOs\Product\ProductRoomData;
 use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\RoomProductRepositoryInterface;
-use App\Modules\Catalog\Domain\Entities\ProductEntity;
+use App\Modules\Catalog\Application\Interfaces\TagProductRepositoryInterface;
+use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-readonly class ListProductByRoomUseCase
+readonly class ListProductByTagUseCase
 {
     public function __construct(
-        private RoomProductRepositoryInterface $roomProductRepository,
+        private TagProductRepositoryInterface $tagProductRepository,
         private ProductRepositoryInterface $productRepository
     )
     {
     }
-
-    /**
-     * @return LengthAwarePaginator<ProductRoomData>
-     */
-    public function execute(int $roomId, int $perPage = 15): LengthAwarePaginator
+    public function execute(int $tagId, int $perPage = 15): LengthAwarePaginator
     {
 
 
-        $idPaginator = $this->roomProductRepository->getProductIdsByRoom($roomId, $perPage);
+        $idPaginator = $this->tagProductRepository->getProductIdsByTag($tagId, $perPage);
 
         $productIds = $idPaginator->getCollection()->pluck('product_id')->toArray();
 

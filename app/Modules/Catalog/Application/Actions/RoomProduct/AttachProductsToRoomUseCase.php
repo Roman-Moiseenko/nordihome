@@ -7,7 +7,7 @@ namespace App\Modules\Catalog\Application\Actions\RoomProduct;
 use App\Modules\Catalog\Application\Interfaces\RoomProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
-readonly class AttachProductToRoomUseCase
+readonly class AttachProductsToRoomUseCase
 {
     public function __construct(
         private RoomProductRepositoryInterface $roomProductRepository,

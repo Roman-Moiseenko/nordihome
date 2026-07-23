@@ -28,7 +28,6 @@ use App\Modules\Catalog\Entity\ProductPriceRetail;
 use App\Modules\Catalog\Entity\ProductPriceSpecial;
 use App\Modules\Catalog\Entity\Review;
 use App\Modules\Catalog\Entity\Series;
-use App\Modules\Catalog\Entity\Tag;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;

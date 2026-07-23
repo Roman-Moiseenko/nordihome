@@ -3,14 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Tag;
+use App\Modules\Catalog\Infrastructure\Models\Tag;
 use App\Modules\Catalog\Repository\TagRepository;
 use App\Modules\Catalog\Service\TagService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 
 class TagController extends Controller

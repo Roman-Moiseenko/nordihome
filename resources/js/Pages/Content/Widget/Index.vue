@@ -33,7 +33,7 @@
                         {{ categories?.[scope.row.category] ?? scope.row.category }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="description" label="Описание" width="280" show-overflow-tooltip/>
+                <el-table-column prop="description" label="Описание" show-overflow-tooltip/>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
                         <el-button

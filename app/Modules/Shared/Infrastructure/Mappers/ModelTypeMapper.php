@@ -15,9 +15,12 @@ class ModelTypeMapper
         'catalog.room' => \App\Modules\Catalog\Infrastructure\Models\Room::class,
         'catalog.category' => \App\Modules\Catalog\Infrastructure\Models\Category::class,
         'catalog.product' => \App\Modules\Catalog\Infrastructure\Models\Product::class,
+        'catalog.brand' => \App\Modules\Catalog\Infrastructure\Models\Brand::class,
+        'catalog.tag' => \App\Modules\Catalog\Infrastructure\Models\Tag::class,
+
         'parser.category' => \App\Modules\Parser\Infrastructure\Models\ParserCategory::class,
         'parser.product' => \App\Modules\Parser\Infrastructure\Models\ParserProduct::class,
-        'catalog.brand' => \App\Modules\Catalog\Infrastructure\Models\Brand::class,
+
         'content.post' => \App\Modules\Content\Infrastructure\Models\Post::class,
     ];
 

@@ -7,9 +7,9 @@ namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 use App\Modules\Catalog\Application\Actions\CategoryProduct\AssignCategoriesToProductUseCase;
 use App\Modules\Catalog\Application\Actions\CategoryProduct\AssignProductsToCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\CategoryProduct\AttachCategoriesToProductUseCase;
-use App\Modules\Catalog\Application\Actions\CategoryProduct\AttachProductToCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\CategoryProduct\AttachProductsToCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\CategoryProduct\DetachCategoriesFromProductUseCase;
-use App\Modules\Catalog\Application\Actions\CategoryProduct\DetachProductFromCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\CategoryProduct\DetachProductsFromCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\CategoryProduct\ListCategoryByProductUseCase;
 use App\Modules\Catalog\Application\Actions\CategoryProduct\ListProductByCategoryUseCase;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -23,8 +23,8 @@ readonly class CategoryProductController
         // Категория → Товары
         private ListProductByCategoryUseCase       $listProductByCategoryUseCase,
         private AssignProductsToCategoryUseCase    $assignProductsToCategoryUseCase,
-        private AttachProductToCategoryUseCase     $attachProductToCategoryUseCase,
-        private DetachProductFromCategoryUseCase   $detachProductFromCategoryUseCase,
+        private AttachProductsToCategoryUseCase    $attachProductToCategoryUseCase,
+        private DetachProductsFromCategoryUseCase  $detachProductFromCategoryUseCase,
         // Товар → Категории
         private ListCategoryByProductUseCase       $listCategoryByProductUseCase,
         private AssignCategoriesToProductUseCase   $assignCategoriesToProductUseCase,

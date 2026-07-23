@@ -7,7 +7,7 @@ namespace App\Modules\Catalog\Application\Actions\RoomProduct;
 use App\Modules\Catalog\Application\Interfaces\RoomProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
-readonly class DetachProductFromRoomUseCase
+readonly class DetachProductsFromRoomUseCase
 {
     public function __construct(
         private RoomProductRepositoryInterface $roomProductRepository,

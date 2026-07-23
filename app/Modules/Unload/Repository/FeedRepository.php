@@ -2,9 +2,9 @@
 
 namespace App\Modules\Unload\Repository;
 
-use App\Modules\Catalog\Entity\Tag;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Catalog\Infrastructure\Models\Tag;
 use App\Modules\Shared\Infrastructure\Models\Photo;
 use App\Modules\Unload\Entity\Feed;
 use Illuminate\Http\Request;

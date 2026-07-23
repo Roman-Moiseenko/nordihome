@@ -14,6 +14,7 @@ window.$ = jQuery;
         }
     });
 
+    //TODO Удалить
     function feedback(feedback) {
         let _id = feedback.attr('id');
         $.post('/admin/feedback/form/get/' + _id, {}, function (data) {
@@ -88,7 +89,7 @@ window.$ = jQuery;
     }
 
     $(document).find('.feedback').each(function () {
-        feedback($(this));
+        feedbackNew($(this));
     });
 
     $(document).find('.feedback-form').each(function () {

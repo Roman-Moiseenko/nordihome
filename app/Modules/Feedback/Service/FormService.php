@@ -7,16 +7,14 @@ use App\Modules\Content\Entity\Widgets\FormWidget;
 use App\Modules\Feedback\Infrastructure\Models\FormBack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class FormService
 {
-
     public function createForm(FormWidget $widget, Request $request): void
     {
-
         try {
-
-
             $form = FormBack::register($widget->id, $request->string('url')->trim()->value());
             $form->data_form = $request->all();
             $form->save();
@@ -47,9 +45,4 @@ class FormService
 
     }
 
-    public function createFeedback(Request $request)
-    {
-        //MAINDO Создать Запись ответов без учета widget_id
-
-    }
 }

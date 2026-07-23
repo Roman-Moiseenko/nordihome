@@ -7,7 +7,7 @@ namespace App\Modules\Catalog\Application\Actions\CategoryProduct;
 use App\Modules\Catalog\Application\Interfaces\CategoryProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
-readonly class AttachProductToCategoryUseCase
+readonly class AttachProductsToCategoryUseCase
 {
     public function __construct(
         private CategoryProductRepositoryInterface $categoryProductRepository,

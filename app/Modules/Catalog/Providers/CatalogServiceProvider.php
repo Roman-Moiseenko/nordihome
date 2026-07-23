@@ -10,6 +10,8 @@ use App\Modules\Catalog\Application\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Application\Interfaces\RoomProductRepositoryInterface;
 use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
+use App\Modules\Catalog\Application\Interfaces\TagProductRepositoryInterface;
+use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\BrandRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\CategoryProductRepository;
@@ -18,6 +20,8 @@ use App\Modules\Catalog\Infrastructure\Persistence\ProductPriceRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\ProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\TagProductRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\TagRepository;
 use App\Modules\Catalog\Presentation\Console\Commands\ClearCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\LoadCommand;
 use Illuminate\Support\Facades\Blade;
@@ -140,6 +144,16 @@ class CatalogServiceProvider extends ServiceProvider
             ProductPriceRepositoryInterface::class,
             ProductPriceRepository::class
         );
+        $this->app->bind(
+            TagRepository::class,
+            TagRepositoryInterface::class
+        );
+
+        $this->app->bind(
+            TagProductRepository::class,
+            TagProductRepositoryInterface::class
+        );
+
     }
 
     // =====================================================================
