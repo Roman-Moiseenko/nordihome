@@ -90,6 +90,7 @@
                     :showSaveButton="true"
                     @save="onSaveParams"
                     @select-nested-widget="onSelectNestedWidget"
+                    @cascading-save="onCascadingSave"
                 />
 
                 <el-empty v-else description="Нет полей для настройки" />
@@ -173,18 +174,45 @@ async function loadForm() {
 }
 
 /**
- * Сохранить параметры виджета.
+ * Сохранить параметры виджета (только родитель).
  */
 async function onSaveParams(params: Record<string, any>) {
     const instanceId = props.block.widgetInstance?.id
     if (!instanceId) return
-    //console.debug('[WidgetFieldRenderer] saving params:', JSON.stringify(params))
     saving.value = true
     try {
         const data = await updateWidgetInstance(instanceId, { params })
         formFields.value = data.fields || []
     } catch (e: any) {
         console.error('Ошибка сохранения:', e)
+    } finally {
+        saving.value = false
+    }
+}
+
+/**
+ * === Вариант 2 (каскадное сохранение): сначала дети, потом родитель ===
+ * Вызывается из WidgetFieldRenderer по кнопке "Сохранить всё".
+ */
+async function onCascadingSave(
+    parentParams: Record<string, any>,
+    childInstances: Array<{ id: number; params: Record<string, any> }>,
+) {
+    const instanceId = props.block.widgetInstance?.id
+    if (!instanceId) return
+
+    saving.value = true
+    try {
+        // 1. Сначала сохраняем всех детей
+        for (const child of childInstances) {
+            await updateWidgetInstance(child.id, { params: child.params })
+        }
+
+        // 2. Затем сохраняем родителя
+        const data = await updateWidgetInstance(instanceId, { params: parentParams })
+        formFields.value = data.fields || []
+    } catch (e: any) {
+        console.error('Ошибка каскадного сохранения:', e)
     } finally {
         saving.value = false
     }
