@@ -38,8 +38,12 @@ readonly class PostPageQuery
         // 4. SEO
         $meta = $this->seoAdapter->getSeo('content.post', $post);
 
+        $faq[] = [
+            'question' => '',
+            'answer' => '',
+        ];
         // 5. Schema
-        $schema = $this->schemaBuilder->buildForPost($post);
+        $schema = $this->schemaBuilder->buildForPost($post, $faq);
 
         return new PostViewPageData(
             post: $post,

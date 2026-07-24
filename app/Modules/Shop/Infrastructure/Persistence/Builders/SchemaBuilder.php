@@ -4,12 +4,15 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Builders;
 
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomData;
 use App\Modules\Shop\Application\DTOs\Entities\IkeaProductData;
+use App\Modules\Shop\Application\DTOs\Entities\PostCardData;
+use App\Modules\Shop\Application\DTOs\Entities\PostCategoryData;
 use App\Modules\Shop\Application\DTOs\Entities\PostData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
 use App\Modules\Shop\Application\DTOs\Pages\CatalogIndexPageData;
 use App\Modules\Shop\Application\DTOs\Pages\PostViewPageData;
 use App\Modules\Shop\Application\Interfaces\BreadcrumbProviderInterface;
 use App\Modules\Shop\Domain\Schema\BreadcrumbSchema;
+use App\Modules\Shop\Domain\Schema\FAQSchema;
 use App\Modules\Shop\Domain\Schema\ItemListSchema;
 use App\Modules\Shop\Domain\Schema\OfferSchema;
 use App\Modules\Shop\Domain\Schema\OrganizationSchema;
@@ -134,7 +137,7 @@ class SchemaBuilder
         return new SchemaData($graph);
     }
 
-    public function buildForPost(PostData $data): SchemaData
+    public function buildForPost(PostData $data, array $faq): SchemaData
     {
         $graph = [];
         $graph[] = $this->organization;
@@ -145,12 +148,36 @@ class SchemaBuilder
             description: $data->fragment,
             url: url()->current()
         );
-        //MAINDO Добавить FAQ
+        if (!empty($faq)) $graph[] = new FAQSchema($faq);
+
         return new SchemaData($graph);
     }
 
     public function createSchema(): SchemaData
     {
         return new SchemaData();
+    }
+
+    /**
+     *
+     * @param PostCategoryData $category
+     * @param PostCardData[] $posts
+     * @return SchemaData
+     */
+    public function buildForPosts(PostCategoryData $category, array $posts): SchemaData
+    {
+        $graph = [];
+        $graph[] = $this->organization;
+        $breadcrumbs = $this->breadcrumbProvider->generate('shop.posts.view', [$category->slug]);
+        $graph[] = new BreadcrumbSchema($breadcrumbs);
+        $items = array_map(
+            fn(PostCardData $post) => [
+                'name' => $post->caption,
+                'url' => route('shop.post.view', $post->slug),
+            ],
+            $posts
+        );
+        $graph[] = new ItemListSchema($items);
+        return new SchemaData($graph);
     }
 }

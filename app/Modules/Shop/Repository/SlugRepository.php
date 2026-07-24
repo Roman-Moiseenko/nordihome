@@ -70,7 +70,7 @@ class SlugRepository
         return Group::where('slug', $slug)->firstOrFail();
     }
 
-    public function PostCategoryBySlug($slug)
+    public function PostCategoryBySlug($slug): PostCategory
     {
         return PostCategory::where('slug', $slug)->first();
     }

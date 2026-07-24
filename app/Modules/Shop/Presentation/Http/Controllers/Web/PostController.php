@@ -2,40 +2,33 @@
 
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
+use App\Http\Controllers\Controller;
 use App\Modules\Content\Infrastructure\Models\Post;
-use App\Modules\Content\Repository\MetaTemplateRepository;
+use App\Modules\Shop\Application\Queries\Post\PostIndexQuery;
 use App\Modules\Shop\Application\Queries\Post\PostPageQuery;
-use App\Modules\Shop\Controllers\ShopController;
-use App\Modules\Shop\Repository\SlugRepository;
-use App\Modules\Shop\Repository\ViewRepository;
 
-class PostController extends ShopController
+class PostController extends Controller
 {
-    private ViewRepository $views;
 
     public function __construct(
-        ViewRepository $views,
-        private SlugRepository $slugs,
-        private MetaTemplateRepository $seo,
         private readonly PostPageQuery $postPageQuery,
+        private readonly PostIndexQuery $postIndexQuery,
     )
     {
-        parent::__construct();
-        $this->views = $views;
     }
 
     public function posts($slug)
     {
+        $data = $this->postIndexQuery->execute($slug);
 
-        $posts = $this->slugs->PostCategoryBySlug($slug);
-
-        return $posts->view($this->seo->seoFn());
-
-        //return $this->views->posts($slug);
+        return view('shop.content.posts', [
+            'pageData' => $data,
+        ]);
     }
 
     public function post($slug)
     {
+        //FIXME после переноса на виджеты удалить
         $post = Post::where('slug', $slug)->firstOrFail();
         if ($post->old_render) return $post->view(null);
 
@@ -45,6 +38,5 @@ class PostController extends ShopController
             'pageData' => $data,
         ]);
 
-        //return $this->views->post($slug);
     }
 }

@@ -2,12 +2,13 @@
 
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
+use App\Http\Controllers\Controller;
 use App\Modules\Shop\Application\Queries\Ikea\IkeaIndexQuery;
 use App\Modules\Shop\Application\Queries\Ikea\IkeaProductQuery;
 use App\Modules\Shop\Application\Queries\Ikea\IkeaViewQuery;
 use Illuminate\Http\Request;
 
-class IkeaController
+class IkeaController extends Controller
 {
 
     public function __construct(
