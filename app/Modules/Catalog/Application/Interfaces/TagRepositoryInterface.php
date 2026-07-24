@@ -11,11 +11,13 @@ interface TagRepositoryInterface
     public function paginate(int $perPage = 15): LengthAwarePaginator;
     public function save(TagEntity $tag): TagEntity;
 
-    public function existsSlug(string $slug): bool;
+    public function existsSlug(string $slug, int $tagId): bool;
 
     public function findByName(string $name);
 
     public function delete(int $tagId);
 
-    public function getById(int $tagId);
+    public function getById(int $tagId): TagEntity;
+
+    public function findByIds(array $tagIds): array;
 }

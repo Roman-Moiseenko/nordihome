@@ -18,7 +18,7 @@ readonly class IndexTagUseCase
     {
     }
 
-    public function execute(UserPermission $userPermission, int $perPage = 15): LengthAwarePaginator
+    public function execute(UserPermission $userPermission, int $perPage = 20): LengthAwarePaginator
     {
         if (!$userPermission->can('catalog.product.view')) throw new \DomainException('Доступ запрещён');
 

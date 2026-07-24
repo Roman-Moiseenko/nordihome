@@ -93,9 +93,10 @@ Route::group([
         'as' => 'tag.',
     ], function () {
         Route::get('/', [TagController::class, 'index'])->name('index');
+        Route::get('/{id}', [TagController::class, 'show'])->name('show');
         Route::post('/store', [TagController::class, 'store'])->name('store');
-        Route::post('/rename/{tag}', [TagController::class, 'rename'])->name('rename');
-        Route::delete('/destroy/{tag}', [TagController::class, 'destroy'])->name('destroy');
+        Route::post('/update/{id}', [TagController::class, 'update'])->name('update');
+        Route::delete('/destroy/{id}', [TagController::class, 'destroy'])->name('destroy');
     });
     //EQUIVALENT
     Route::group([

@@ -13,15 +13,15 @@ class FindOrCreateTagUseCase
     )
     {}
 
-    public function execute(string $name): TagEntity
+    public function execute(string $name, string $slug = ''): TagEntity
     {
         if (is_null($tag = $this->repository->findByName($name))) {
-            $slug = new Slug($name);
-            if ($this->repository->existsSlug((string)$slug)) $slug = new Slug((string)$slug . '-' . uniqid());
+            $slugVO = new Slug(empty($slug) ? $name : $slug);
+            if ($this->repository->existsSlug((string)$slugVO)) $slugVO = new Slug((string)$slugVO . '-' . uniqid());
 
             $tag = new TagEntity(
                 name: $name,
-                slug: $slug,
+                slug: $slugVO,
             );
             $tag = $this->repository->save($tag);
         }

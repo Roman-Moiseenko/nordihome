@@ -145,13 +145,13 @@ class CatalogServiceProvider extends ServiceProvider
             ProductPriceRepository::class
         );
         $this->app->bind(
-            TagRepository::class,
-            TagRepositoryInterface::class
+            TagRepositoryInterface::class,
+            TagRepository::class
         );
 
         $this->app->bind(
-            TagProductRepository::class,
-            TagProductRepositoryInterface::class
+            TagProductRepositoryInterface::class,
+            TagProductRepository::class
         );
 
     }

@@ -11,11 +11,19 @@ use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 class TagRepository implements TagRepositoryInterface
 {
 
+
+    public function findByIds(array $tagIds): array
+    {
+        $tags = Tag::whereIn('id', $tagIds)->get();
+        return $tags->map(fn(Tag $model) => $this->hydrate($model))->toArray();
+    }
+
     public function getById(int $tagId): TagEntity
     {
         $tag = Tag::findOrFail($tagId);
         return $this->hydrate($tag);
     }
+
     public function save(TagEntity $tag): TagEntity
     {
         $model = $tag->id
@@ -24,15 +32,17 @@ class TagRepository implements TagRepositoryInterface
 
         $model->name = $tag->name;
         $model->slug = $tag->slug->getValue();
-
+        $model->is_main = $tag->isMain;
         $model->save();
 
         return $this->hydrate($model->fresh());
     }
 
-    public function existsSlug(string $slug): bool
+    public function existsSlug(string $slug, int $tagId): bool
     {
-        return Tag::where('slug', $slug)->exists();
+        return Tag::where('slug', $slug)
+            ->where('id', '!=', $tagId)
+            ->exists();
     }
 
     public function paginate(int $perPage = 15): LengthAwarePaginator
@@ -42,7 +52,7 @@ class TagRepository implements TagRepositoryInterface
             ->through(fn(Tag $model) => $this->hydrate($model));
     }
 
-    public function findByName(string $name):? TagEntity
+    public function findByName(string $name): ?TagEntity
     {
         $model = Tag::where('name', $name)->first();
         if (is_null($model)) return null;
@@ -62,10 +72,10 @@ class TagRepository implements TagRepositoryInterface
             slug: new Slug($model->slug),
         );
         $tag->id = $model->id;
-        $tag->image_url = $model->getImage();
+        $tag->image_url = $model->getImage() ?? '';
+        $tag->isMain = $model->is_main;
 
         return $tag;
     }
-
 
 }

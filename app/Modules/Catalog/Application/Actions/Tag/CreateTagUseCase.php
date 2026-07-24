@@ -8,11 +8,11 @@ use App\Modules\Catalog\Domain\Entities\TagEntity;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
-class CreateTagUseCase
+readonly class CreateTagUseCase
 {
 
     public function __construct(
-        private readonly TagRepositoryInterface $repository,
+        private TagRepositoryInterface $repository,
     )
     {}
     public function execute(TagCreateData $dto, UserPermission $userPermission): TagEntity
@@ -26,6 +26,8 @@ class CreateTagUseCase
             name: $dto->name,
             slug: $slug,
         );
+        $tag->isMain = $dto->isMain ?? false;
+
         return $this->repository->save($tag);
 
     }

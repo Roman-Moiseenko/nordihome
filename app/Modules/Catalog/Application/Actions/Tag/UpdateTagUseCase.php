@@ -35,12 +35,12 @@ class UpdateTagUseCase
             if ($slugString === '') $slugString = Str::slug($tag->name);
 
             $slug = new Slug($slugString);
-            if ($this->repository->existsSlug((string)$slug)) $slug = new Slug((string)$slug . '-' . uniqid());
+            if ($this->repository->existsSlug((string)$slug, $tagId)) $slug = new Slug((string)$slug . '-' . uniqid());
 
             $tag->slug = $slug;
         }
         if ($dto->isMain !== null) {
-            $tag->name = $dto->name;
+            $tag->isMain = $dto->isMain;
         }
 
         return $this->repository->save($tag);

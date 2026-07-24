@@ -119,6 +119,13 @@ Breadcrumbs::for('admin.catalog.tag.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.catalog.product.index');
     $trail->push('Метки (Теги)', route('admin.catalog.tag.index'));
 });
+Breadcrumbs::for('admin.catalog.tag.show', function (BreadcrumbTrail $trail, int $id) {
+    $tagRepository = app(\App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface::class);
+    $tag = $tagRepository->getById((int) $id);
+    $trail->parent('admin.catalog.tag.index');
+    $trail->push($tag->name, route('admin.catalog.tag.show', $tag->id));
+});
+
 
 //EQUIVALENT
 Breadcrumbs::for('admin.catalog.equivalent.index', function (BreadcrumbTrail $trail) {

@@ -2,7 +2,6 @@
 
 namespace App\Modules\Catalog\Application\Actions\Tag;
 
-use App\Modules\Catalog\Application\DTOs\Tag\TagCreateData;
 use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\TagEntity;
 use App\Modules\Shared\Domain\Entities\UserPermission;

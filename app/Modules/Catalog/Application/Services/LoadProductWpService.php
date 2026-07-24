@@ -8,6 +8,8 @@ use App\Modules\Catalog\Application\Actions\Product\FastCreateProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\UpdateProductUseCase;
 use App\Modules\Catalog\Application\Actions\ProductPrice\SetProductPriceUseCase;
 use App\Modules\Catalog\Application\Actions\RoomProduct\AttachRoomsToProductUseCase;
+use App\Modules\Catalog\Application\Actions\Tag\FindOrCreateTagUseCase;
+use App\Modules\Catalog\Application\Actions\TagProduct\AttachTagsToProductUseCase;
 use App\Modules\Catalog\Application\Actions\Wp\GetCategoryByWpIdUseCase;
 use App\Modules\Catalog\Application\Actions\Wp\GetRoomByWpIdUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\ProductFastCreateData;
@@ -35,6 +37,8 @@ readonly class LoadProductWpService
         private AttachRoomsToProductUseCase      $attachRoomsToProductUseCase,
         private UpdateProductUseCase             $updateProductUseCase,
         private SetProductPriceUseCase           $setProductPriceUseCase,
+        private FindOrCreateTagUseCase           $findOrCreateTagUseCase,
+        private AttachTagsToProductUseCase       $attachTagsToProductUseCase
     )
     {
     }
@@ -79,10 +83,14 @@ readonly class LoadProductWpService
             : BrandEntity::NONAME;
         $brand = $this->findOrCreateBrandUseCase->execute($brandName);
 
-        $tagsData = $product['tags'];
+        //Ищем или создаем теги
+        $tags = [];
+        foreach ($product['tags'] as $tagData) {
+            $tagEntity = $this->findOrCreateTagUseCase->execute($tagData['name'], $tagData['slug']);
+            $tags[] = $tagEntity->id;
+        }
 
-        //MAINDO Перенести теги. 1) ищем в базе или создаем, и получеам id
-        // Attach tags To Product UseCase
+
         //Создаем Товар
         $dtoProduct = new ProductFastCreateData(
             name: $product['name'],
@@ -91,10 +99,11 @@ readonly class LoadProductWpService
             categoryId: $categories[0],
             slug: $product['slug'],
         );
-
-
-
         $productEntity = $this->fastCreateProductUseCase->execute($dtoProduct, $userPermission);
+        //назначаем теги на товар
+
+        if (!empty($tags))$this->attachTagsToProductUseCase->execute($productEntity->id, $tags, $userPermission);
+
         unset($categories[0]); //Удаляем первую категорию, т.к. она теперь Main
 
         //Обновляем оставшиеся поля
@@ -128,14 +137,14 @@ readonly class LoadProductWpService
         //Рыночная цена
         $dtoPrice = new SetProductPriceData(
             productId: $productEntity->id,
-            price: (float) $product['price'],
+            price: (float)$product['price'],
             priceType: PriceType::RETAIL,
         );
         $this->setProductPriceUseCase->execute($dtoPrice, $userPermission);
         //Минимальная
         $dtoPrice = new SetProductPriceData(
             productId: $productEntity->id,
-            price: (float) $product['price'] / 2,
+            price: (float)$product['price'] / 2,
             priceType: PriceType::MINIMAL,
         );
         $this->setProductPriceUseCase->execute($dtoPrice, $userPermission);
