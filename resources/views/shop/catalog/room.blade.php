@@ -25,3 +25,7 @@
         {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
 @endsection
+
+@section('bottom-content')
+
+@endsection

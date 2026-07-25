@@ -8,8 +8,16 @@ final class ContainerType
 {
     public const string PAGE = 'page';
     public const string POST = 'post';
+    public const string CATEGORY = 'category';
+    public const string ROOM = 'room';
+    //public const string PRODUCT = 'product';
 
-    private const array ALLOWED = [self::PAGE, self::POST];
+    private const array ALLOWED = [
+        self::PAGE,
+        self::POST,
+        self::CATEGORY,
+        self::ROOM,
+        ];
 
     private string $value;
 

@@ -38,10 +38,14 @@ readonly class PostPageQuery
         // 4. SEO
         $meta = $this->seoAdapter->getSeo('content.post', $post);
 
-        $faq[] = [
-            'question' => '',
-            'answer' => '',
-        ];
+        // вытаскиваем FAQ из блоков, если есть
+        $faq = [];
+        foreach ($blocks as $block) {
+            if ($block->widget->slug == 'faq') {
+                $faq = $block->widget->params['faqs'];
+                break;
+            }
+        }
         // 5. Schema
         $schema = $this->schemaBuilder->buildForPost($post, $faq);
 

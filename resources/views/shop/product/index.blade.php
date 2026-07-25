@@ -106,12 +106,28 @@
 
     </div>
 
+
+
     <script>
         let clearFilter = document.getElementById('clear-filter');
         clearFilter.addEventListener('click', function () {
             window.location.href = window.location.href.split("?")[0];
         });
     </script>
+
+    <!-- Content Blocks (Widget) -->
+    @foreach($pageData->blocks as $block)
+        @if($block->section == "content")
+            <div class="widget mt-4">
+                @include('widgets::' . $block->widget->category . '.' . $block->widget->slug,
+                [
+                    'params' => $block->widget->params,
+                    'widget' => $block->widget->id,
+                ])
+            </div>
+        @endif
+    @endforeach
+
     <script type="application/ld+json" class="schemantra.com">
         {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>

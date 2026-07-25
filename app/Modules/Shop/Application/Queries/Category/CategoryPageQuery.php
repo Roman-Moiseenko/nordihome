@@ -19,6 +19,7 @@ use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\AttributeQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepository;
+use App\Modules\Shop\Infrastructure\Persistence\Query\ContentBlockQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
 use Illuminate\Support\Facades\Cache;
@@ -32,6 +33,7 @@ readonly class CategoryPageQuery
         private ProductIndexQueryRepository $productIndexQueryRepository,
         private AttributeQueryRepository    $attributeQueryRepository,
         private SchemaBuilder               $schemaBuilder,
+        private ContentBlockQueryRepository   $blockRepository,
     )
     {
     }
@@ -114,12 +116,25 @@ readonly class CategoryPageQuery
             tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
         );
 
+        //Контент блоки
+        $blocks = $this->blockRepository->getBlocksByContainer('category', $mainInfo->id);
+        // вытаскиваем FAQ из блоков, если есть
+        $faq = [];
+        foreach ($blocks as $block) {
+            if ($block->widget->slug == 'faq') {
+                $faq = $block->widget->params['faqs'];
+                break;
+            }
+        }
+
         $meta = $this->seoAdapter->getSeo('catalog.category', $mainInfo);
 
-        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'category');
+
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'category', $faq);
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,
+            blocks: $blocks,
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,

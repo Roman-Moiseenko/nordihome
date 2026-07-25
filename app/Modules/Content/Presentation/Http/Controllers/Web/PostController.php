@@ -109,7 +109,7 @@ class PostController extends Controller
 
         return Inertia::render('Content/Post/Post', [
             'post' => Inertia::always(PostViewData::fromEntity($post)), //Заменить на useCase $this->repository->PostWithToArray($post)
-            //'templates' => $templates, //Удалить
+
             'tiny_api' => config('shop.tinymce'), //Удалить
             'blocks' => $blocks,
         ]);

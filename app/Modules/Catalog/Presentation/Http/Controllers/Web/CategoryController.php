@@ -20,6 +20,9 @@ use App\Modules\Catalog\Application\DTOs\Category\CategoryIndexData;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryTreeData;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryUpdateData;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryViewData;
+use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
+use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
+use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -42,6 +45,7 @@ class CategoryController extends Controller
         private readonly ViewCategoryUseCase $viewCategoryUseCase,
         private readonly ListAttributeByCategoryUseCase $listAttributeByCategoryUseCase,
         private readonly ListAllProductByCategoryUseCase $listAllProductByCategoryUseCase,
+        private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
     )
     {
     }
@@ -58,8 +62,12 @@ class CategoryController extends Controller
     public function show(int $id, UserPermission $userPermission): Response
     {
         $category = $this->viewCategoryUseCase->execute($id, $userPermission);
+        $dto = new ContentBlockContainerData($category->id, ContainerType::CATEGORY);
+        $blocks = $this->listContentBlockByContainerUseCase->execute($dto);
+
         return Inertia::render('Catalog/Category/Show', [
             'category' => CategoryViewData::fromEntity($category),
+            'blocks' => $blocks,
         ]);
     }
 

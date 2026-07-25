@@ -13,6 +13,7 @@ use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\AttributeQueryRepository;
+use App\Modules\Shop\Infrastructure\Persistence\Query\ContentBlockQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
@@ -27,6 +28,7 @@ readonly class RoomPageQuery
         private ProductIndexQueryRepository $productIndexQueryRepository,
         private AttributeQueryRepository    $attributeQueryRepository,
         private SchemaBuilder               $schemaBuilder,
+        private ContentBlockQueryRepository   $blockRepository,
     )
     {
     }
@@ -111,13 +113,22 @@ readonly class RoomPageQuery
             sortOrder: $params['order'] ?? '',
             tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
         );
-
+        $blocks = $this->blockRepository->getBlocksByContainer('room', $mainInfo->id);
+        // вытаскиваем FAQ из блоков, если есть
+        $faq = [];
+        foreach ($blocks as $block) {
+            if ($block->widget->slug == 'faq') {
+                $faq = $block->widget->params['faqs'];
+                break;
+            }
+        }
         $meta = $this->seoAdapter->getSeo('catalog.room', $mainInfo);
 
-        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'room');
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'room', $faq);
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,
+            blocks: $blocks,
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,

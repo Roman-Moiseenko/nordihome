@@ -10,6 +10,14 @@
             <PanelAttributes :category-id="category.id" />
             <PanelProducts :category-id="category.id" />
         </el-tabs>
+        <!-- ContentBlock Editor -->
+        <div class="mt-3 p-3 bg-white rounded-lg ">
+            <ContentBlockEditor
+                :blocks="blocks || []"
+                :container-id="category.id"
+                container-type="category"
+            />
+        </div>
     </el-config-provider>
 </template>
 
@@ -23,6 +31,7 @@ import CategoryInfo from "./Block/Info.vue";
 import PanelChildren from './Panels/Children.vue'
 import PanelAttributes from './Panels/Attributes.vue'
 import PanelProducts from  './Panels/Products.vue'
+import ContentBlockEditor from "@Comp/Content/ContentBlock/ContentBlockEditor.vue";
 
 const props = defineProps({
     category: Object,
@@ -30,6 +39,7 @@ const props = defineProps({
         type: String,
         default: 'Карточка категории',
     },
+    blocks: Array,
 })
 
 </script>

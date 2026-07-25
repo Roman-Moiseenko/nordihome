@@ -9,6 +9,15 @@
             <PanelChildren :room="room" />
             <PanelProducts :room-id="room.id" />
         </el-tabs>
+
+        <!-- ContentBlock Editor -->
+        <div class="mt-3 p-3 bg-white rounded-lg ">
+            <ContentBlockEditor
+                :blocks="blocks || []"
+                :container-id="category.id"
+                container-type="category"
+            />
+        </div>
     </el-config-provider>
 </template>
 
@@ -19,6 +28,7 @@ import {Head, router} from "@inertiajs/vue3";
 import RoomInfo from "./Block/Info.vue";
 import PanelChildren from "./Panels/Children.vue";
 import PanelProducts from "./Panels/Products.vue";
+import ContentBlockEditor from "@Comp/Content/ContentBlock/ContentBlockEditor.vue";
 
 
 const props = defineProps({
@@ -27,6 +37,7 @@ const props = defineProps({
         type: String,
         default: 'Карточка Комнаты',
     },
+    blocks: Array,
 })
 </script>
 

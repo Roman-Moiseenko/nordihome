@@ -104,7 +104,7 @@ class SchemaBuilder
         return new SchemaData($graph);
     }
 
-    public function buildForProductIndex(array $products, string $slug, string $entity): SchemaData
+    public function buildForProductIndex(array $products, string $slug, string $entity, array $faq): SchemaData
     {
         $graph = [];
         $graph[] = $this->organization;
@@ -120,6 +120,7 @@ class SchemaBuilder
             $products
         );
         $graph[] = new ItemListSchema($items);
+        if (!empty($faq)) $graph[] = new FAQSchema($faq);
         return new SchemaData($graph);
     }
 

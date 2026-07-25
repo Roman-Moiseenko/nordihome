@@ -16,6 +16,9 @@ use App\Modules\Catalog\Application\DTOs\Room\RoomIndexData;
 use App\Modules\Catalog\Application\DTOs\Room\RoomTreeData;
 use App\Modules\Catalog\Application\DTOs\Room\RoomUpdateData;
 use App\Modules\Catalog\Application\DTOs\Room\RoomViewData;
+use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
+use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
+use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -34,6 +37,7 @@ readonly class RoomController
         public UpRoomUseCase     $upRoomUseCase,
         public DownRoomUseCase   $downRoomUseCase,
         public ToggleRoomUseCase $toggleRoomUseCase,
+        private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
     )
     {
     }
@@ -57,8 +61,12 @@ readonly class RoomController
     public function show(int $id, UserPermission $userPermission)
     {
         $room = $this->viewRoomUseCase->execute($id, $userPermission);
+        $dto = new ContentBlockContainerData($room->id, ContainerType::ROOM);
+        $blocks = $this->listContentBlockByContainerUseCase->execute($dto);
+
         return Inertia::render('Catalog/Room/Show', [
            'room' => RoomViewData::fromEntity($room),
+            'blocks' => $blocks,
         ]);
     }
 
