@@ -118,7 +118,7 @@ readonly class RoomPageQuery
         $faq = [];
         foreach ($blocks as $block) {
             if ($block->widget->slug == 'faq') {
-                $faq = $block->widget->params['faqs'];
+                $faq = $block->widget->params['items'];
                 break;
             }
         }
