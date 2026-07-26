@@ -4,7 +4,7 @@ window.$ = jQuery;
 
 (function () {
     "use strict";
-
+    console.log("Slider")
     //Карусели
     let optionsSliderBase = {
         rtl: false,
@@ -26,6 +26,48 @@ window.$ = jQuery;
         mouseDrag: true,
 
     };
+
+    if (document.querySelectorAll('.widget-slider-common') !== null) {
+
+        let optionsSliderWidget = optionsSliderBase;
+        let slidersWidget= $('.widget-slider-common');
+        slidersWidget.each(function (element) {
+            let sliderWidget = $(this);
+            console.log("widget-slider-common")
+            let mouseScroll = sliderWidget.data('mouse-scroll');
+
+            let autoSpeed  = sliderWidget.data('auto-speed');
+            let items  = sliderWidget.data('items');
+            let autoplay  = sliderWidget.data('autoplay');
+            let dots  = sliderWidget.data('dots');
+            let nav  = sliderWidget.data('nav');
+            let touchDrag  = sliderWidget.data('touch-drag');
+            let mouseDrag  = sliderWidget.data('mouse-drag');
+
+            optionsSliderWidget.autoplayTimeout = autoSpeed;
+            optionsSliderWidget.items = items;
+            optionsSliderWidget.autoplay = autoplay;
+            optionsSliderWidget.dots = dots;
+            optionsSliderWidget.nav = nav;
+            optionsSliderWidget.touchDrag = touchDrag;
+            optionsSliderWidget.mouseDrag = mouseDrag;
+
+            console.log(mouseScroll);
+
+            sliderWidget.owlCarousel(optionsSliderWidget);
+            if (mouseScroll === 1) {
+                sliderWidget.on('mousewheel', '.owl-stage', function (e) {
+                    if (e.originalEvent.deltaY > 0) {
+                        sliderWidget.trigger('next.owl');
+                    } else {
+                        sliderWidget.trigger('prev.owl');
+                    }
+                    e.preventDefault();
+                });
+            }
+        });
+    }
+
     if (document.getElementById('slider-payment') !== null) {
         let sliderPayment = $('#slider-payment');
         let optionsSliderPayment = {...optionsSliderBase};
@@ -106,6 +148,8 @@ window.$ = jQuery;
         optionsOldReviews.responsive = { 0: {items: 1}, 576: {items: 2}, 768: {items: 3}, 991: {items: 4}, 1200: {items: 5}, 1400: {items: 6}};
         sliderOldReviews.owlCarousel(optionsOldReviews);
     }
+
+
     if (document.querySelectorAll('.article-slider01') !== null) {
         let product_optionsSliderBase = optionsSliderBase;
         let slidersImagesProduct = $('.article-slider01');
@@ -125,6 +169,7 @@ window.$ = jQuery;
             }
         });
     }
+
     if (document.querySelectorAll('.slider-images-product') !== null) {
         let product_optionsSliderBase = optionsSliderBase;
         let slidersImagesProduct = $('.slider-images-product');
