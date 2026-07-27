@@ -40,12 +40,14 @@
                 :model-value="subProp.type"
                 size="small"
                 class="w-full"
-                @change="(v) => $emit('updateProp', subName, 'type', v)"
+                @change="(v) => onTypeChange(subName, v)"
               >
                 <el-option label="string" value="string" />
                 <el-option label="integer" value="integer" />
                 <el-option label="number" value="number" />
                 <el-option label="boolean" value="boolean" />
+                <el-option label="object" value="object" />
+                <el-option label="array" value="array" />
               </el-select>
             </el-form-item>
             <el-form-item label="format">
@@ -54,13 +56,17 @@
                 size="small"
                 class="w-full"
                 clearable
-                @change="(v) => $emit('updateProp', subName, 'format', v)"
+                @change="(v) => onFormatChange(subName, v)"
               >
                 <el-option label="—" value="" />
                 <el-option label="html" value="html" />
                 <el-option label="uuid" value="uuid" />
                 <el-option label="uri" value="uri" />
                 <el-option label="color" value="color" />
+                <el-option label="image (изображение)" value="image" />
+                <el-option label="product (товар)" value="product" />
+                <el-option label="date" value="date" />
+                <el-option label="date-time" value="date-time" />
               </el-select>
             </el-form-item>
             <el-form-item label="default">
@@ -161,6 +167,41 @@ function onSubEnumChange(subName: string) {
     emit('updateProp', subName, 'enum', value.split(',').map((s: string) => s.trim()).filter(Boolean))
   } else {
     emit('updateProp', subName, 'enum', undefined)
+  }
+}
+
+function onTypeChange(subName: string, newType: string) {
+  emit('updateProp', subName, 'type', newType)
+  if (newType === 'object' || newType === 'array') {
+    emit('updateProp', subName, 'format', undefined)
+  }
+}
+
+function onFormatChange(subName: string, newFormat: string) {
+  emit('updateProp', subName, 'format', newFormat)
+
+  if (newFormat === 'image') {
+    emit('updateProp', subName, 'type', 'object')
+    emit('updateProp', subName, 'properties', {
+      id: { type: 'integer', title: 'ID изображения' },
+      src: { type: 'string', title: 'URL (src)' },
+      alt: { type: 'string', title: 'Alt текст' },
+      title: { type: 'string', title: 'Title текст' },
+      description: { type: 'string', title: 'Описание' },
+    })
+  } else if (newFormat === 'product') {
+    emit('updateProp', subName, 'type', 'object')
+    emit('updateProp', subName, 'properties', {
+      id: { type: 'integer', title: 'ID товара' },
+      name: { type: 'string', title: 'Название' },
+      url: { type: 'string', title: 'URL' },
+      short: { type: 'string', title: 'Краткое описание' },
+      price: { type: 'number', title: 'Цена' },
+      image_src: { type: 'string', title: 'URL изображения' },
+      image_alt: { type: 'string', title: 'Alt изображения' },
+      image_next_src: { type: 'string', title: 'URL второго изображения' },
+      image_next_alt: { type: 'string', title: 'Alt второго изображения' },
+    })
   }
 }
 </script>
