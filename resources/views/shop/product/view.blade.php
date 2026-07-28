@@ -163,14 +163,13 @@
         <p>Тут карусель с похожими товарами, думаю, на новом сайте нужно продумать, по какому принципу тут выводить товары.</p>
     </section>
     @include('shop.product._delivery')
-    @include ('shop.product._block-more-products')
-    <div style="padding:30px 0;">Тут надо вывести карту</div>
     <script type="application/ld+json" class="schemantra.com">
         {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
 @endsection
 
 @section('bottom-content')
-
+    @include ('shop.product._block-more-products')
+    <div style="padding:30px 0;">Тут надо вывести карту</div>
 @endsection
 

@@ -8,13 +8,13 @@
     <div class="mega-menu-panel" id="catalogMenu">
         <div class="container p-0">
             <div class="row g-0">
-                <div class="col-3 border-end py-3">
+                <div class="col-3 border-end py-3 overflow-auto vh-100">
                     <div class="nav flex-column nav-pills nav-pills-custom" role="tablist">
                         <!-- Пункты переключаются при наведении -->
                         @include('shop.widgets.header._left-menu', ['categories' => $categoryTree, 'entity' => 'category'])
                     </div>
                 </div>
-                <div class="col-9 p-4">
+                <div class="col-9 p-4 overflow-auto vh-100">
                     <div class="tab-content">
                         @include('shop.widgets.header._right-menu', ['categories' => $categoryTree, 'entity' => 'category'])
                     </div>
@@ -27,13 +27,13 @@
     <div class="mega-menu-panel" id="roomsMenu">
         <div class="container p-0">
             <div class="row g-0">
-                <div class="col-3 border-end py-3">
+                <div class="col-3 border-end py-3 overflow-auto vh-100">
                     <div class="nav flex-column nav-pills nav-pills-custom" role="tablist">
                         <!-- Пункты переключаются при наведении -->
                         @include('shop.widgets.header._left-menu', ['categories' => $roomTree, 'entity' => 'room'])
                     </div>
                 </div>
-                <div class="col-9 p-4">
+                <div class="col-9 p-4 overflow-auto vh-100">
                     <div class="tab-content">
                         @include('shop.widgets.header._right-menu', ['categories' => $roomTree, 'entity' => 'room'])
                     </div>

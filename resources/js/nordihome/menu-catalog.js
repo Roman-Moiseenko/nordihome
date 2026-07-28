@@ -2,14 +2,16 @@
 
     const panels = document.querySelectorAll('.mega-menu-panel');
     const buttons = document.querySelectorAll('.header-menu-buttons-item');
+    const body = document.body; // Ссылка на элемент body
 
-    // Функция закрытия всех выпадающих меню
+// Функция закрытия всех выпадающих меню
     function closeAll() {
         panels.forEach(p => p.classList.remove('show'));
         buttons.forEach(b => b.classList.remove('active'));
+        body.classList.remove('no-scroll'); // Всегда убираем класс скролла при общем закрытии
     }
 
-    // Логика главных кнопок (Каталог / Комнаты) строго по КЛИКУ
+// Логика главных кнопок (Каталог / Комнаты) строго по КЛИКУ
     buttons.forEach(btn => {
         btn.addEventListener('click', (e) => {
             const targetId = btn.getAttribute('data-target');
@@ -23,6 +25,7 @@
             if (!isAlreadyOpen) {
                 btn.classList.add('active');
                 targetPanel.classList.add('show');
+                body.classList.add('no-scroll'); // Добавляем класс блокировки скролла
             }
 
             // Останавливаем всплытие события, чтобы клик по кнопке не засчитывался как клик вне области
@@ -30,7 +33,7 @@
         });
     });
 
-    // Логика внутренних вкладок  при НАВЕДЕНИИ
+// Логика внутренних вкладок при НАВЕДЕНИИ
     panels.forEach(panel => {
         const tabs = panel.querySelectorAll('.nav-pills-custom .nav-link');
         tabs.forEach(tab => {
@@ -57,12 +60,12 @@
         });
     });
 
-    // Глобальный обработчик: закрытие при клике в любое свободное место страницы вне меню
+// Глобальный обработчик: закрытие при клике в любое свободное место страницы вне меню
     document.addEventListener('click', () => {
         closeAll();
     });
 
-    // Дополнительное закрытие по кнопке Escape
+// Дополнительное закрытие по кнопке Escape
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') closeAll();
     });
@@ -88,7 +91,30 @@
             body.classList.toggle('no-scroll');
         });
 
+        // ОСТАНОВКА ЗАКРЫТИЯ И СБРОСА ПРИ КЛИКЕ ВНУТРИ МЕНЮ
+        mobileMenu.addEventListener('click', (event) => {
+            // Останавливаем всплытие любого клика внутри меню (включая ссылки).
+            // Это не даст глобальным обработчикам (из скрипта мега-меню) поймать клик и сбросить стили.
+            event.stopPropagation();
 
+            const anchorLink = event.target.closest('a');
+            if (anchorLink) {
+                const href = anchorLink.getAttribute('href');
+
+                // Если ссылка ведет на якорь текущей страницы (начинается с #)
+                if (href && href.startsWith('#')) {
+                    // Отменяем стандартный переход браузера, который может вызвать баги прокрутки при overflow:hidden
+                    event.preventDefault();
+
+                    // Находим нужный элемент на странице
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        // Прокручиваем к элементу (даже при активном no-scroll на body)
+                        targetElement.scrollIntoView({ behavior: 'smooth' });
+                    }
+                }
+            }
+        });
 
         // Закрытие при клике вне области меню и кнопки
         document.addEventListener('click', (event) => {

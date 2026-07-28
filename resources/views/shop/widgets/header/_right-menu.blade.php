@@ -9,9 +9,9 @@
 @foreach($categories as $category)
     <div class="tab-pane fade" id="{{ $category->slug }}" role="tabpanel">
         <div class="f-w_600 f-z_21 m-b_30">{{ $category->name }}</div>
-        <div class="row">
+        <div class="row-menu-catalog">
             @foreach($category->children as $categorySecond)
-                <div class="col-md-4">
+                <div class="d-inline-block w-100">
                     <div class="submenu-links">
                         <div class="f-w_600 m-b_20">
                             <a href="{{ route('shop.' . $entity . '.view', $categorySecond->slug) }}">{{ $categorySecond->name }}</a>
