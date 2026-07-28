@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Application\DTOs\Pages;
 
+use App\Modules\Shop\Application\DTOs\Elements\TableContent;
 use App\Modules\Shop\Application\DTOs\Entities\PostData;
 use App\Modules\Shop\Application\DTOs\PageElements\ContentBlockPageData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
@@ -11,13 +12,13 @@ class PostViewPageData
 {
 
     public function __construct(
-
         public PostData $post,
         /** @var ContentBlockPageData[] $blocks */
         public array $blocks,
-
         public SeoData     $meta,
         public SchemaData  $schema,
+        /** @var TableContent[] $tableContents */
+        public array $tableContents = [],
 
     )
     {

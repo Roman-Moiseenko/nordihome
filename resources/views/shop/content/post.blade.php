@@ -9,6 +9,9 @@
 
 @section('main', 'container-xl')
 @section('content')
+    <h1>{{ $pageData->post->caption }}</h1>
+    <!-- Виджет содержания -->
+    @include('shop.content._table_contents', ['items' => $pageData->tableContents])
     @foreach($pageData->blocks as $block)
         @if($block->section == "content")
             <div class="widget mt-4">

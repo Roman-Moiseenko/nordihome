@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\Queries\Post;
 
+use App\Modules\Shop\Application\DTOs\Elements\TableContent;
 use App\Modules\Shop\Application\DTOs\Pages\PostViewPageData;
 use App\Modules\Shop\Application\Services\WidgetDataEnricherService;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ContentBlockQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\PostViewQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
+use Illuminate\Support\Str;
 
 readonly class PostPageQuery
 {
@@ -46,6 +48,21 @@ readonly class PostPageQuery
                 break;
             }
         }
+        // вытаскиваем содержание из блоков
+        $tableContents = [];
+        foreach ($blocks as $block) {
+            if ($block->widget->slug == 'heading') {
+                if ($block->widget->params['tag'] == 'h2') {
+                    $text = trim($block->widget->params["part1"]["text"] . ' ' . $block->widget->params["part2"]["text"]);
+                    $tableContents[] = new TableContent(
+                        id: Str::slug($text),
+                        title: $text,
+                    );
+                }
+                break;
+            }
+        }
+
         // 5. Schema
         $schema = $this->schemaBuilder->buildForPost($post, $faq);
 
@@ -54,6 +71,7 @@ readonly class PostPageQuery
             blocks: $blocks,
             meta: $meta,
             schema: $schema,
+            tableContents: $tableContents,
         );
     }
 }
