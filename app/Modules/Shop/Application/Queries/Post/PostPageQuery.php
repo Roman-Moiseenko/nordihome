@@ -59,7 +59,6 @@ readonly class PostPageQuery
                         title: $text,
                     );
                 }
-                break;
             }
         }
 
