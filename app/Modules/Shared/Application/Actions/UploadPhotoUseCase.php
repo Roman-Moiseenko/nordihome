@@ -45,9 +45,11 @@ readonly class UploadPhotoUseCase
             type: new PhotoType($dto->type),
         );
 
+
         $photo = $this->photoRepository->save($photo);
 
-        if ($photo->thumb && $file) {
+        //Для не одиночных (gallery) делаем нарезку
+       if (!$photo->type->isSingle()) {
             $this->photoService->createThumbs(
                 $photo->id,
                 $photo->modelType,

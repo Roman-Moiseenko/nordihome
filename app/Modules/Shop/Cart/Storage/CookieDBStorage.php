@@ -29,7 +29,7 @@ class CookieDBStorage implements StorageInterface
                 $item->id,
                 $item->product,
                 (float)$item->quantity,
-                json_decode($item->options_json),
+                $item->is_parser,
                 $item->check
             );
         }
@@ -38,7 +38,7 @@ class CookieDBStorage implements StorageInterface
 
     public function add(CartItem $item): void
     {
-        $this->toStorage($this->user_ui, $item->getProduct(), $item->getQuantity(), $item->options);
+        $this->toStorage($this->user_ui, $item->id, $item->quantity, $item->is_parser);
     }
 
     public function sub(CartItem $item, float $quantity): void
@@ -73,13 +73,13 @@ class CookieDBStorage implements StorageInterface
         CartCookie::where('user_ui', $ui)->delete();
     }
 
-    private function toStorage(string $user_ui, Product $product, float $quantity, array $options = []): void
+    private function toStorage(string $user_ui, int $productId, float $quantity, bool $is_parser): void
     {
         CartCookie::register(
             $user_ui,
-            $product->id,
+            $productId,
             $quantity,
-            $options
+            $is_parser
         );
     }
 

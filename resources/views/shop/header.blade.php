@@ -16,11 +16,11 @@
             <div class="d-flex ">
                 <div>
                     @if(isset($menus['menu-header01']))
-                    <ul id="menu-menyu-v-shapke" class="h-menu">
-                        @foreach($menus['menu-header01']['items'] as $item)
-                            <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
-                        @endforeach
-                    </ul>
+                        <ul id="menu-menyu-v-shapke" class="h-menu">
+                            @foreach($menus['menu-header01']['items'] as $item)
+                                <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
+                            @endforeach
+                        </ul>
                     @else
                         Меню не найдено
                     @endif
@@ -51,8 +51,10 @@
                  --->
                 <div class="header-menu-buttons d-flex">
                     <!-- Главные кнопки открываются по клику -->
-                    <button class="nav-link header-menu-buttons-item" type="button" data-target="catalogMenu">Каталог</button>
-                    <button class="nav-link header-menu-buttons-item" type="button" data-target="roomsMenu">Комнаты</button>
+                    <button class="nav-link header-menu-buttons-item" type="button" data-target="catalogMenu">Каталог
+                    </button>
+                    <button class="nav-link header-menu-buttons-item" type="button" data-target="roomsMenu">Комнаты
+                    </button>
                 </div>
                 <div class="header-menu-mobile-btn">
                     <button class="menu-toggle" id="menuToggle">
@@ -61,13 +63,14 @@
                         <span></span>
                     </button>
                 </div>
-            @include('shop.widgets.header.category')
+                @include('shop.widgets.header.category')
 
             </div>
             <div class="menu-bottom-search flex-grow-1">
                 <div class="presearch" data-route="{{ route('shop.product.search') }}">
                     <div class="presearch-wrapper">
-                        <input id="pre-search" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');">
+                        <input id="pre-search" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"
+                               onblur="this.setAttribute('readonly','');">
                         <div class="presearch-suggest" style="display: none">
                         </div>
                         <div class="presearch-control fs-5 opacity-50">
@@ -84,42 +87,40 @@
             <div class="menu-bottom-profile">
                 <ul class="navbar-nav ms-auto">
                     @client
-                        @if (Route::has('login'))
-                            <li class="nav-item">
-                                <a id="login" class="nav-link d-flex flex-column text-center" href="#" data-bs-toggle="modal" data-bs-target="#login-popup">
-                                    <i class="fa-light fa-user-vneck fs-4"></i>
-                                    <span class="fs-7">Войти</span>
-                                </a>
-                            </li>
-
-                        @endif
-                    @else
-                        <li class="nav-item">
-                            <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.view') }}">
-                                <i class="fa-light fa-user-vneck fs-4"></i>
-                                <span class="fs-7">Кабинет</span>
-                            </a>
-                        </li>
-                    @endclient
-
                     <li class="nav-item">
-                        <livewire:header.wish />
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.order.index') }}"
-                           @client
-                           data-bs-toggle="modal" data-bs-target="#login-popup"
-                            @endclient
-                        >
-                            <i class="fa-sharp fa-light fa-box-open fs-4"></i>
-                            <span class="fs-7">Заказы</span>
+                        <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.view') }}">
+                            <i class="fa-light fa-user-vneck fs-4"></i>
+                            <span class="fs-7">Кабинет</span>
                         </a>
                     </li>
-
+                    @else
                     <li class="nav-item">
-                        <livewire:header.cart />
+                        <a id="login" class="nav-link d-flex flex-column text-center" href="#"
+                           data-bs-toggle="modal" data-bs-target="#login-popup">
+                            <i class="fa-light fa-user-vneck fs-4"></i>
+                            <span class="fs-7">Войти</span>
+                        </a>
                     </li>
+                    @endclient
+
+                        <li class="nav-item">
+                            <livewire:header.wish/>
+                        </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.order.index') }}"
+                               @notclient
+                                data-bs-toggle="modal" data-bs-target="#login-popup"
+                               @endnotclient
+                            >
+                                <i class="fa-sharp fa-light fa-box-open fs-4"></i>
+                                <span class="fs-7">Заказы</span>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <livewire:header.cart/>
+                        </li>
                 </ul>
             </div>
         </div>
@@ -142,7 +143,8 @@
             </li>
 
             <li class="menu-item">
-                <a href="{{ route('shop.cart.view') }}" class="nav-link d-flex flex-column text-center position-relative">
+                <a href="{{ route('shop.cart.view') }}"
+                   class="nav-link d-flex flex-column text-center position-relative">
                     <span id="counter-cart" class="counter-cart counter" style="display: none;"></span>
                     <i class="fa-light fa-cart-shopping fs-3"></i>
                     <span class="fs-8">Корзина</span>
@@ -157,24 +159,26 @@
                     <span class="fs-8">ИКЕА</span>
                 </a>
             </li>
-            @guest
-                @if (Route::has('login'))
-                    <li class="menu-item">
-                        <a id="login" class="nav-link d-flex flex-column text-center" href="#" data-bs-toggle="modal" data-bs-target="#login-popup">
-                            <i class="fa-light fa-user-vneck fs-3"></i>
-                            <span class="fs-8">Войти</span>
-                        </a>
-                    </li>
 
-                @endif
+
+                @client
+            <li class="menu-item">
+                <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.view') }}">
+                    <i class="fa-light fa-user-vneck fs-3"></i>
+                    <span class="fs-8">Кабинет</span>
+                </a>
+            </li>
+
+
             @else
                 <li class="menu-item">
-                    <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.view') }}">
+                    <a id="login" class="nav-link d-flex flex-column text-center" href="#" data-bs-toggle="modal"
+                       data-bs-target="#login-popup">
                         <i class="fa-light fa-user-vneck fs-3"></i>
-                        <span class="fs-8">Кабинет</span>
+                        <span class="fs-8">Войти</span>
                     </a>
                 </li>
-            @endguest
+            @endclient
         </ul>
     </nav>
 

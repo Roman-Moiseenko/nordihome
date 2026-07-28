@@ -436,13 +436,13 @@ class Product extends Model
      * Показывать на сайте (Фронтенд)
      */
     //TODO Переделать, везде запрашивать $user
-    public function getPrice(bool $previous = false, Client $client = null): float
+    public function getPrice(bool $previous = false, ?Client $client = null): float
     {
         $price = 0;
         if (!$this->isSale()) return $price;
         if (is_null($client)) {
             $user = auth()->user();
-            if (!is_null($user) && $user->profileable instanceof Client) $client = $user->profileable;
+            if (!is_null($user) && $user->isClient()) $client = $user->profileable;
         }
 
         if (!is_null($client)) {

@@ -20,6 +20,83 @@ class PhotoRepository implements PhotoRepositoryInterface
     {
     }
 
+    public function save(PhotoEntity $photo): PhotoEntity
+    {
+        /*  $model = $photo->id
+              ? Photo::findOrFail($photo->id)
+              : new Photo();
+
+          // Если есть файл для загрузки, обрабатываем его через серв
+       /*
+        *    if (isset($photo->fileForUpload) && $photo->fileForUpload instanceof UploadedFile) {
+              $photo->file = $this->photoService->uploadFile(
+                  $photo->modelType,
+                  $photo->imageableId,
+                  $photo->fileForUpload,
+                  $model->file ?? null,
+                  $photo->thumb,
+              );
+              unset($photo->fileForUpload);
+          }
+
+  */
+        if ($photo->type->isSingle()) {
+            // Для одиночных типов — удаляем старую запись (если есть) и создаём новую
+            Photo::where([
+                'model_type' => $photo->modelType,
+                'imageable_id'   => $photo->imageableId,
+                'type'       => $photo->type->getValue(),
+            ])->delete();
+
+            $model = new Photo();
+            $model->sort = 0;
+        } else {
+            // Галерея
+            if ($photo->id) {
+                $model = Photo::findOrFail($photo->id);
+                $oldSort = $model->sort;
+                if ($oldSort !== $photo->sort) {
+                    $this->reorderGalleryAfterChange($photo->modelType, $photo->imageableId, $photo->type->getValue(), $photo->id, $oldSort, $photo->sort);
+                    $model->sort = $photo->sort;
+                }
+            } else {
+                $model = new Photo();
+                $maxSort = Photo::where([
+                    'model_type' => $photo->modelType,
+                    'imageable_id'   => $photo->imageableId,
+                    'type'       => $photo->type->getValue(),
+                ])->max('sort');
+                $model->sort = is_null($maxSort) ? 0 : $maxSort + 1;
+            }
+        }
+
+        $model->imageable_id = $photo->imageableId;
+        $model->imageable_type = $photo->imageableType;
+        $model->model_type = $photo->modelType;
+        $model->file = $photo->file;
+        $model->alt = $photo->alt;
+        $model->slug = $photo->slug;
+        $model->title = $photo->title;
+        $model->description = $photo->description;
+       // $model->sort = $photo->sort;
+        $model->type = (string)$photo->type;
+        $model->thumb = $photo->thumb;
+
+        $model->save();
+
+        // Создаём thumbs при сохранении, если включено
+        if ($photo->thumb && $this->photoService->createThumbsOnSave) {
+            $this->photoService->createThumbs(
+                $model->id,
+                $photo->modelType,
+                $photo->imageableId,
+                $model->file,
+            );
+        }
+
+        return $this->hydrate($model->fresh());
+    }
+
     public function getById(int $id): PhotoEntity
     {
         $model = Photo::findOrFail($id);
@@ -73,50 +150,14 @@ class PhotoRepository implements PhotoRepositoryInterface
         return $result;
     }
 
-    public function save(PhotoEntity $photo): PhotoEntity
+
+    private function getSort(PhotoEntity $photo)
     {
-        $model = $photo->id
-            ? Photo::findOrFail($photo->id)
-            : new Photo();
+        if ($photo->id != null) return $photo->sort; //Для изобр. уже созданных возвращаем его sort
+        //Для новых находим
 
-        // Если есть файл для загрузки, обрабатываем его через сервис
-        if (isset($photo->fileForUpload) && $photo->fileForUpload instanceof UploadedFile) {
-            $model->file = $this->photoService->uploadFile(
-                $photo->modelType,
-                $photo->imageableId,
-                $photo->fileForUpload,
-                $model->file ?? null,
-                $photo->thumb,
-            );
-            unset($photo->fileForUpload);
-        }
 
-        $model->imageable_id = $photo->imageableId;
-        $model->imageable_type = $photo->imageableType;
-        $model->model_type = $photo->modelType;
-        $model->file = $photo->file;
-        $model->alt = $photo->alt;
-        $model->slug = $photo->slug;
-        $model->title = $photo->title;
-        $model->description = $photo->description;
-        $model->sort = $photo->sort;
-        $model->type = (string) $photo->type;
-        $model->thumb = $photo->thumb;
-
-        $model->save();
-
-        // Создаём thumbs при сохранении, если включено
-        if ($photo->thumb && $this->photoService->createThumbsOnSave) {
-            $this->photoService->createThumbs(
-                $model->id,
-                $photo->modelType,
-                $photo->imageableId,
-                $model->file,
-            );
-        }
-
-        return $this->hydrate($model->fresh());
-}
+    }
 
     public function update(int $id, array $data): PhotoEntity
     {
@@ -151,6 +192,44 @@ class PhotoRepository implements PhotoRepositoryInterface
         $model->delete();
     }
 
+
+    private function reorderGalleryAfterChange(string $modelType, int $modelId, string $type, int $mediaId, int $oldSort, int $newSort): void
+    {
+        // Получаем все элементы галереи, кроме текущего, отсортированные по sort
+        $items = Photo::where([
+            'model_type' => $modelType,
+            'imageable_id' => $modelId,
+            'type' => $type,
+        ])->where('id', '!=', $mediaId)
+            ->orderBy('sort')
+            ->get();
+
+        // Перестраиваем массив сортов после удаления старой позиции
+        $sorts = $items->pluck('sort')->toArray();
+
+        // Удаляем старый sort из набора (он не в элементах, но в последовательности)
+        // Сдвигаем все элементы, которые были > oldSort, на -1
+        foreach ($items as $item) {
+            if ($item->sort > $oldSort) {
+                $item->sort--;
+            }
+        }
+
+        // Вставляем элемент на позицию newSort
+        // Элементы с sort >= newSort сдвигаем +1
+        foreach ($items as $item) {
+            if ($item->sort >= $newSort) {
+                $item->sort++;
+            }
+        }
+
+        // Сохраняем изменения
+        foreach ($items as $item) {
+            $item->save();
+
+        }
+    }
+
     private function hydrate(Photo $model): PhotoEntity
     {
         $entity = new PhotoEntity(
@@ -167,7 +246,7 @@ class PhotoRepository implements PhotoRepositoryInterface
         $entity->title = $model->title ?? '';
         $entity->description = $model->description ?? '';
         $entity->sort = $model->sort ?? 0;
-        $entity->thumb = (bool) ($model->thumb ?? true);
+        $entity->thumb = (bool)($model->thumb ?? true);
 
         // Генерируем uploadUrl
         $entity->uploadUrl = $this->photoService->getUploadUrl(

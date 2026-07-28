@@ -8,6 +8,7 @@ use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Calculate\CalculatorOrder;
 use App\Modules\Shop\Cart\Storage\HybridStorage;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 
 
 class Cart
@@ -53,9 +54,9 @@ class Cart
         return $this->itemsPreOrder;
     }
 
-    public function add(Product $product, $quantity, array $options)
+    #[Deprecated]
+    public function add(Product $product, $quantity, bool $is_parser): void
     {
-
         $this->loadItems();
         foreach ($this->items as $i => $current) {
             if ($current->isProduct($product->id)) {
@@ -68,7 +69,7 @@ class Cart
             throw new \DomainException('Превышение остатка');
         }
 
-        $this->storage->add(CartItem::create($product, $quantity, $options));
+        $this->storage->add(CartItem::create($product->id, $quantity, $is_parser));
     }
 
     public function plus(int $product_id, $quantity)
@@ -376,13 +377,13 @@ class Cart
 
     private function calcInfoBlock(array $items): CartInfoBlock
     {
-        $user = \Auth::guard('web')->user();
+        $client = (auth()->check() && auth()->user()->isClient()) ? auth()->user()->profileable : null;
 
         $result = new CartInfoBlock();
         /** @var CartItem[] $items */
         foreach ($items as $item) {
             $result->count += $item->quantity;
-            $result->amount += $item->quantity * $item->product->getPrice(false, $user);
+            $result->amount += $item->quantity * $item->product->getPrice(false, $client);
             $result->discount += empty($item->discount_cost) ? 0 : $item->quantity * ($item->base_cost - $item->discount_cost);
         }
 

@@ -12,8 +12,8 @@ class ProductIndexQueryRepository
 {
     private const string PHOTO_MODEL_TYPE = 'catalog.product';
     public function __construct(
-        private AttributeQueryRepository $attributeQueryRepository,
-        private readonly PhotoService $photoService,
+        private readonly AttributeQueryRepository $attributeQueryRepository,
+        private readonly PhotoService             $photoService,
     )
     {
     }
@@ -30,17 +30,13 @@ class ProductIndexQueryRepository
                 options: ['path' => request()->url(), 'query' => request()->query()],
             );
         }
-
         $query = Product::whereIn('id', $allIds);
 
         $this->attributeQueryRepository->applyFilters($query, $filters);
-
         $this->attributeQueryRepository->applySorting($query, $filters['order'] ?? '');
-
 
         // Пагинируем через Eloquent
         $paginator = $query->paginate($perPage, ['id'], 'page', $page);
-
         // Возвращаем пагинатор только с ID товаров
         $ids = $paginator->getCollection()->pluck('id')->toArray();
 

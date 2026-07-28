@@ -30,7 +30,7 @@ class DBStorage implements StorageInterface
                 $item->id,
                 $item->product,
                 (float)$item->quantity,
-                json_decode($item->options_json),
+                $item->is_parser,
                 $item->check
             );
         }
@@ -41,9 +41,9 @@ class DBStorage implements StorageInterface
     {
         $this->toStorage(
             $this->client_id,
-            $item->getProduct(),
-            $item->getQuantity(),
-            $item->options);
+            $item->id,
+            $item->quantity,
+            $item->is_parser);
     }
 
     public function sub(CartItem $item, float $quantity): void
@@ -79,13 +79,13 @@ class DBStorage implements StorageInterface
         CartStorage::where('client_id', $id)->delete();
     }
 
-    private function toStorage(int $client_id, Product $product, float $quantity, array $options = [])
+    private function toStorage(int $client_id, int $productId, float $quantity, bool $is_parser)
     {
         CartStorage::register(
             $client_id,
-            $product->id,
+            $productId,
             $quantity,
-            $options
+            $is_parser
         );
     }
 

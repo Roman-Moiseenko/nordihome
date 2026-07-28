@@ -68,7 +68,7 @@ class SchemaBuilder
         $graph[] = new ProductSchema(
             name: $product->name,
             description: $product->description,
-            image: url($product->images[0]->src) ?? '',
+            image: !empty($product->images) ? url($product->images[0]->src) : '',
             sku: $product->code,
             offer: new OfferSchema($product->price),
             url: route('shop.ikea.product', $product->code)

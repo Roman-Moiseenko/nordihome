@@ -100,13 +100,15 @@ Route::group(
 
         Route::get('/promotion/{slug}', [PromotionController::class, 'view'])->name('promotion.view');
         Route::get('/group/{slug}', [GroupController::class, 'view'])->name('group.view');
+
+
         //Корзина AJAX
         Route::group([
             'as' => 'cart.',
             'prefix' => 'cart_post',
         ], function () {
             Route::post('/cart', [CartController::class, 'cart'])->name('all');
-            Route::post('/add/{product}', [CartController::class, 'add'])->name('add');
+            Route::post('/add', [CartController::class, 'add'])->name('add');
             //     Route::post('/sub/{product}', [CartController::class, 'sub'])->name('sub');
             //     Route::post('/set/{product}', [CartController::class, 'set'])->name('set');
             //      Route::post('/check/{product}', [CartController::class, 'check'])->name('check');

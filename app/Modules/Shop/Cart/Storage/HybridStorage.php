@@ -24,10 +24,11 @@ class HybridStorage implements StorageInterface
      */
     private function getStorage()
     {
-        $user_id = Auth::guard('web')->check() ? Auth::guard('web')->user()->id : null;
+
+        $client_id = (auth()->check() && auth()->user()->isClient()) ? auth()->user()->profileable_id : null;
         if (empty($this->storage)) {
             $cookieStorage = app()->make(CookieDBStorage::class);
-            if (is_null($user_id)) {
+            if (is_null($client_id)) {
                 $this->storage = $cookieStorage;
                 //throw new \DomainException('user_id - null' . Auth::guard('web')->user()->id . Auth::guard('web')->check());
             } else {
@@ -64,6 +65,9 @@ class HybridStorage implements StorageInterface
         $this->getStorage()->sub($item, $quantity);
     }
 
+    /**
+     * @throws BindingResolutionException
+     */
     public function plus(CartItem $item, float $quantity): void
     {
         $this->getStorage()->plus($item, $quantity);

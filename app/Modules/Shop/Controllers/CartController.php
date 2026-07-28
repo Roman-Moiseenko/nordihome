@@ -4,7 +4,11 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Controllers;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Shop\Application\DTOs\Cart\AddProductToCartData;
+use App\Modules\Shop\Application\Services\AddProductToCartService;
 use App\Modules\Shop\Cart\Cart;
+use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 
@@ -12,7 +16,8 @@ class CartController extends ShopController
 {
     private Cart $cart;
 
-    public function __construct(Cart $cart)
+    public function __construct(Cart $cart,
+    private readonly AddProductToCartService $addProductToCartService)
     {
         parent::__construct();
         $this->cart = $cart;
@@ -25,12 +30,17 @@ class CartController extends ShopController
     }
 
     //AJAX
-    public function add(Request $request, Product $product) //sub, set_count, clear
+
+    /**
+     * @throws BindingResolutionException
+     */
+    public function add(Request $request): JsonResponse
     {
-        $this->cart->add($product, 1, $request['options'] ?? []);
+        $dto = AddProductToCartData::validateAndCreate($request->all());
+        $this->addProductToCartService->execute($dto);
+
         return \response()->json('Товар добавлен в корзину');
     }
-
 
 
     public function remove(Request $request, Product $product) //sub, set_count, clear

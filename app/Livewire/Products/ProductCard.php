@@ -46,7 +46,7 @@ class ProductCard extends Component
     public function to_cart()
     {
         $cart = app()->make('\App\Modules\Shop\Cart\Cart');
-        $cart->add($this->product, 1, []);
+        //$cart->add($this->product, 1, []);
         $this->dispatch('update-header-cart');
     }
 

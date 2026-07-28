@@ -78,7 +78,7 @@ readonly class IkeaViewQuery
             ]
         );
 
-        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $category->slug, 'ikea');
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $category->slug, 'ikea', []);
 
         return new IkeaViewPageData(
             category: $category,

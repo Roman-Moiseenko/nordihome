@@ -8,6 +8,7 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 //TODO проработать все поля
 interface CartItemInterface
 {
+    public function isParser(): bool;
     public function getProduct(): Product;
     public function getQuantity(): float;
 
@@ -16,7 +17,6 @@ interface CartItemInterface
     public function getDiscount():? int;
 
     public function getDiscountType(): string;
-    public function getOptions(): array;
     public function getCheck(): bool;
     public function getPreorder(): bool;
 

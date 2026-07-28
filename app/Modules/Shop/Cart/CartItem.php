@@ -13,36 +13,35 @@ class CartItem implements CartItemInterface
     public float $quantity;
     public float $base_cost; //Базовая цена  - используется для удобства = $product->getLastPrice()
     public float $discount_cost; //Цена со скидкой
-    public string $discount_name; //Название акции
-    public int $discount_id;
+    public string $discount_name= ''; //Название акции
+    public int $discount_id = 0;
     public string $discount_type; //Класс скидка Promotion или Bonus
-    public array $options;
 //    public bool $pre_order;
     public bool $check;
+    public bool $is_parser = false;
 
-    public static function create(Product $product, float $quantity, array $options): self
+    public static function create(int $id, float $quantity, bool $is_parser): self
     {
         $item = new static();
 
-        $item->product = $product;
+        $item->id = $id;
         $item->quantity = $quantity;
-        $item->options = $options;
-        $item->base_cost = $product->getPrice();
+        $item->is_parser = $is_parser;
+        //$item->base_cost = $product->getPrice();
         $item->check = true;
-        $item->discount_name = '';
-        $item->discount_cost = 0;
+
         return $item;
     }
 
-    public static function load(int $id, Product $product, float $quantity, $options, bool $check): self
+    public static function load(int $id, Product $product, float $quantity, $is_parser, bool $check): self
     {
         $item = new static();
         $item->id = $id;
         $item->product = $product;
         $item->quantity = $quantity;
-        $item->options = $options;
+        $item->is_parser = $is_parser;
         $item->check = $check;
-        $item->base_cost = $product->getPrice();
+        $item->base_cost = $is_parser ? $product->getPriceParser() : $product->getPrice();
         $item->discount_name = '';
         $item->discount_cost = 0;
         return $item;
@@ -110,11 +109,6 @@ class CartItem implements CartItemInterface
         return $this->discount_type ?? '';
     }
 
-    public function getOptions(): array
-    {
-        return $this->options;
-    }
-
 
     public function getCheck(): bool
     {
@@ -144,6 +138,11 @@ class CartItem implements CartItemInterface
     public function getPreorder(): bool
     {
         return false;
+    }
+
+    public function isParser(): bool
+    {
+        return $this->is_parser;
     }
 }
 

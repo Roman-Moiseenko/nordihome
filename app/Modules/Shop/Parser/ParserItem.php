@@ -90,4 +90,9 @@ class ParserItem implements CartItemInterface
     {
         return true;
     }
+
+    public function isParser(): bool
+    {
+        // TODO: Implement isParser() method.
+    }
 }

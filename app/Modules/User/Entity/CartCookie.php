@@ -15,28 +15,36 @@ use Illuminate\Database\Eloquent\Model;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property string $options_json //Опции товара [id1, id2, ...]
+ * @property bool $is_parser
  * @property bool $check
  * @property Product $product
  */
 class CartCookie extends Model
 {
     protected $table = 'cart_cookie';
-    protected $casts = ['check' => 'bool'];
-    protected $attributes = ['check' => true];
+    protected $casts = [
+        'check' => 'boolean',
+        'is_parser' => 'boolean'
+        ];
+    protected $attributes = [
+        'check' => true,
+        'options_json' => '{}',
+        ];
     protected $fillable = [
         'user_ui',
         'product_id',
         'quantity',
         'options_json',
         'check',
+        'is_parser',
     ];
-    public static function register(string $user_ui, int $product_id, float $quantity, array $options_json = []): self
+    public static function register(string $user_ui, int $product_id, float $quantity, bool $is_parser): self
     {
         return self::create([
             'user_ui' => $user_ui,
             'product_id' => $product_id,
             'quantity' => $quantity,
-            'options_json' => json_encode($options_json)
+            'is_parser' => $is_parser
         ]);
     }
 

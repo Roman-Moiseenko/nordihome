@@ -74,4 +74,14 @@ class Client extends Model
             $this->middle_name,
         ]));
     }
+
+    public function isBulk(): bool
+    {
+        return false;
+    }
+    public function isSpecial(): bool
+    {
+        return false;
+    }
+
 }

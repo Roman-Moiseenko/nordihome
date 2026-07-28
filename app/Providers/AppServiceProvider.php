@@ -79,7 +79,10 @@ class AppServiceProvider extends ServiceProvider
         //Europe/Kaliningrad
 
         Blade::if('client', function () {
-            return auth()->check() && auth()->user()->profileable instanceof Client;
+            return auth()->check() && auth()->user()->isClient();
+        });
+        Blade::if('notclient', function () {
+            return !auth()->check() || !auth()->user()->isClient();
         });
     }
 

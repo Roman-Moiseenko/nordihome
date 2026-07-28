@@ -306,4 +306,8 @@ class OrderItem extends Model implements CartItemInterface
     }
 
 
+    public function isParser(): bool
+    {
+        // TODO: Implement isParser() method.
+    }
 }

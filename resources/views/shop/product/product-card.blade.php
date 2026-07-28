@@ -64,6 +64,11 @@
                 {{ price($product->price) }}
             @endif
         </div>
+        <div>
+            <button class="to-cart btn btn-black e-add" data-product="{{ $product->id }}">
+                В Корзину
+            </button>
+        </div>
 
     </div>
 </div>

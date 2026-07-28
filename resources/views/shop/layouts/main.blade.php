@@ -88,9 +88,9 @@
     @yield('bottom-content')
 </div>
 <!--POP-UP ОКНА-->
-@guest
+@notclient
     @include('shop.pop-up.login')
-@endguest
+@endnotclient
 
 <!--livewire:shop.popup.buy-click :user="$user" /-->
 @include('shop.pop-up.buy-click')

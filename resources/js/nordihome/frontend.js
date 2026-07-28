@@ -103,7 +103,7 @@ window.$ = jQuery;
 
     let timer;
     let catalog = $('.catalog');
-    let catalogParentItems = $('.dropdown-item');
+ /*   let catalogParentItems = $('.dropdown-item');
     let catalogSubmenu = $('#catalog-submenu');
     catalogParentItems.first().addClass('active');
     _updateSubMenu(catalogParentItems.first());
@@ -144,7 +144,7 @@ window.$ = jQuery;
                 }
             });
     }
-
+*/
     //HTML построители
     function _subFirst_a(item, level = 1) {
         let _class, _count = '';
@@ -263,12 +263,13 @@ window.$ = jQuery;
         item.preventDefault();
         let _productId = $(this).data('product');
         let _quantity = 1;
-        let _options = $(this).data('options');
+        let _is_parser = $(this).data('parser');
 
         $.post(
-            '/cart_post/add/' + _productId, {
+            '/cart_post/add', {
+                id: _productId,
                 quantity: _quantity,
-                options: _options,
+                isParser: _is_parser,
                 tz: -(new Date().getTimezoneOffset()),
             }, function (data) {//Получаем кол-во товаров в корзине
                 if (!common.error(data)) window.Livewire.dispatch('update-header-cart');//Меняем кол-во и сумму товаров в виджете корзины в хеадере

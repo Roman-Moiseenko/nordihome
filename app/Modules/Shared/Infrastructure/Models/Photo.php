@@ -20,6 +20,7 @@ use function public_path;
  * @property int $id
  * @property int $imageable_id
  * @property string $imageable_type
+ * @property string $model_type
  * @property string $file
  * @property string $alt
  * @property string $slug
@@ -53,6 +54,7 @@ class Photo extends Model
         'thumb',
         'title',
         'description',
+        'model_type',
     ];
 
     public UploadedFile $fileForUpload;

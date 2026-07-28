@@ -17,11 +17,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $options_json //Опции товара [id1, id2, ...]
  * @property bool $check
  * @property Product $product
+ * @property bool $is_parser
  */
 
 class CartStorage extends Model
 {
-    protected $attributes = ['check' => true];
+    protected $attributes = [
+        'check' => true,
+        'options_json' => '{}',
+        ];
     protected $table = 'cart_storage';
     protected $fillable = [
         'user_id',
@@ -29,17 +33,22 @@ class CartStorage extends Model
         'quantity',
         'options_json',
         'check',
+        'is_parser',
     ];
 
-    protected $casts = ['check' => 'bool'];
+    protected $casts = [
+        'check' => 'boolean',
+        'is_parser' => 'boolean',
+        'options_json' => 'json',
+    ];
 
-    public static function register(int $user_id, int $product_id, float $quantity, array $options_json = []): self
+    public static function register(int $user_id, int $product_id, float $quantity, bool $is_parser): self
     {
         return self::create([
             'user_id' => $user_id,
             'product_id' => $product_id,
             'quantity' => $quantity,
-            'options_json' => json_encode($options_json),
+            'is_parser' => $is_parser,
         ]);
     }
 
