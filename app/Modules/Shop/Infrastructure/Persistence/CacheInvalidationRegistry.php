@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Modules\Shop\Infrastructure\Persistence;
 use Illuminate\Support\Facades\Cache;
 class CacheInvalidationRegistry
@@ -31,6 +30,7 @@ class CacheInvalidationRegistry
     ];
 
     public const string MENUS = 'menus';
+    public const string CONTACTS = 'contacts';
 
     /**
      * Сбросить все ключи, связанные с категорией (включая глобальные).
@@ -61,5 +61,10 @@ class CacheInvalidationRegistry
     public function forgetMenus(): void
     {
         Cache::forget(self::MENUS);
+    }
+
+    public function forgetContacts(): void
+    {
+        Cache::forget(self::CONTACTS);
     }
 }

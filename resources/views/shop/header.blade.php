@@ -1,5 +1,8 @@
 @php
     /** @var App\Modules\Shop\Application\DTOs\Menu\MenuData[] $menus */
+/** @var  App\Modules\Shop\Application\DTOs\Menu\ContactData[] $contacts*/
+
+
 @endphp
 
 <header>
@@ -30,10 +33,10 @@
                 </div>
                 <div class="d-flex ms-2">
 
-                    @foreach(\App\Modules\Nordihome\Helper\MenuHelper::getMenuContacts() as $item)
+                    @foreach($contacts as $item)
                         <div class="ms-2">
-                            <a href="{{ $item['url'] }}" target="_blank" title="{{ $item['name'] }}">
-                                <i class="{{ $item['icon'] }} fs-3" style="color: {{ $item['color'] }}"></i>
+                            <a href="{{ $item->url }}" target="_blank" title="{{ $item->name }}">
+                                <i class="{{ $item->icon }} fs-3" style="color: {{ $item->color }}"></i>
                             </a>
                         </div>
                     @endforeach
@@ -97,14 +100,14 @@
                         </a>
                     </li>
                     @else
-                    <li class="nav-item">
-                        <a id="login" class="nav-link d-flex flex-column text-center" href="#"
-                           data-bs-toggle="modal" data-bs-target="#login-popup">
-                            <i class="fa-light fa-user-vneck fs-4"></i>
-                            <span class="fs-7">Войти</span>
-                        </a>
-                    </li>
-                    @endclient
+                        <li class="nav-item">
+                            <a id="login" class="nav-link d-flex flex-column text-center" href="#"
+                               data-bs-toggle="modal" data-bs-target="#login-popup">
+                                <i class="fa-light fa-user-vneck fs-4"></i>
+                                <span class="fs-7">Войти</span>
+                            </a>
+                        </li>
+                        @endclient
 
                         <li class="nav-item">
                             <livewire:header.wish/>
@@ -113,8 +116,8 @@
                         <li class="nav-item">
                             <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.order.index') }}"
                                @notclient
-                                data-bs-toggle="modal" data-bs-target="#login-popup"
-                               @endnotclient
+                               data-bs-toggle="modal" data-bs-target="#login-popup"
+                                @endnotclient
                             >
                                 <i class="fa-sharp fa-light fa-box-open fs-4"></i>
                                 <span class="fs-7">Заказы</span>
@@ -164,7 +167,7 @@
             </li>
 
 
-                @client
+            @client
             <li class="menu-item">
                 <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.view') }}">
                     <i class="fa-light fa-user-vneck fs-3"></i>
