@@ -30,6 +30,7 @@ class CacheInvalidationRegistry
         self::IKEA_PRODUCTS_ID,
     ];
 
+    public const string MENUS = 'menus';
 
     /**
      * Сбросить все ключи, связанные с категорией (включая глобальные).
@@ -57,5 +58,8 @@ class CacheInvalidationRegistry
             Cache::forget($resolvedKey);
         }
     }
-
+    public function forgetMenus(): void
+    {
+        Cache::forget(self::MENUS);
+    }
 }

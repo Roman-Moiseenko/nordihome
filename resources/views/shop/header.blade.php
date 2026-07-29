@@ -1,5 +1,8 @@
-<header>
+@php
+    /** @var App\Modules\Shop\Application\DTOs\Menu\MenuData[] $menus */
+@endphp
 
+<header>
     <div class="header-mobile">
         <div>
             <a class="navbar-brand" href="{{ url('/') }}">
@@ -17,8 +20,8 @@
                 <div>
                     @if(isset($menus['menu-header01']))
                         <ul id="menu-menyu-v-shapke" class="h-menu">
-                            @foreach($menus['menu-header01']['items'] as $item)
-                                <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
+                            @foreach($menus['menu-header01']->items as $item)
+                                <li><a href="{{ $item->url }}">{{ $item->name }}</a></li>
                             @endforeach
                         </ul>
                     @else

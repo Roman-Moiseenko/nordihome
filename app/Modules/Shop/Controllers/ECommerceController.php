@@ -18,7 +18,10 @@ class ECommerceController extends ShopController
 
     public function e_commerce(Request $request): \Illuminate\Http\JsonResponse
     {
+        //FIXME Заменить через Query
+
         $data = $this->repository->getDataCommerce($request);
+        //$data = [];
         return \response()->json($data);
     }
 }

@@ -1,3 +1,6 @@
+@php
+    /** @var App\Modules\Shop\Application\DTOs\Menu\MenuData[] $menus */
+@endphp
 <footer id="footer" class="p-t_50 p-b_50 bg-black">
     <div class="container-xl">
         <div class="row justify-content-between">
@@ -28,8 +31,8 @@
                 <div class="heading f-w_600 m-b_20">МЕНЮ</div>
                 @if(isset($menus['menu-footer01']))
                 <ul class="footer-menu">
-                    @foreach($menus['menu-footer01']['items'] as $item)
-                        <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
+                    @foreach($menus['menu-footer01']->items as $item)
+                        <li><a href="{{ $item->url }}">{{ $item->name }}</a></li>
                     @endforeach
                 </ul>
                 @else
@@ -40,8 +43,8 @@
                 <div class="heading f-w_600 m-b_20">ДЛЯ КЛИЕНТА</div>
                 @if(isset($menus['menu-footer02']))
                 <ul class="footer-menu">
-                    @foreach($menus['menu-footer02']['items'] as $item)
-                        <li><a href="{{ $item['url'] }}">{{ $item['name'] }}</a></li>
+                    @foreach($menus['menu-footer02']->items as $item)
+                        <li><a href="{{ $item->url }}">{{ $item->name }}</a></li>
                     @endforeach
                 </ul>
                 @else

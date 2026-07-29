@@ -37,6 +37,7 @@ class ECommerceRepository
         return $result;
     }
 
+
     private function getProduct(int $id, int $quantity): array
     {
         $product = Product::find($id);
