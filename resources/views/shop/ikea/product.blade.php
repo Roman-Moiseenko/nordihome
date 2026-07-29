@@ -11,7 +11,6 @@
 
 
 @section('content')
-
     <h1>{{ $pageData->product->name }}</h1>
     <!-- //TODO верстка левая панель -->
     <div>
