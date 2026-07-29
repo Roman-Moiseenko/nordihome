@@ -26,7 +26,7 @@
             <div class="col-lg-6">
                 <div class="view-image-product">
                     @if(!empty($product->images))
-                        <img id="main-image-product" src="{{ $product->images[0]->src }}" style="width: 100%;" data-index="0">
+                        <img id="main-image-product" src="{{ $product->images[0]->src }}" style="width: 100%; cursor: pointer" data-index="0">
                     @endif
                 </div>
 
