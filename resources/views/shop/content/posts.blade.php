@@ -7,7 +7,6 @@
     /** @var PostCategory $category */
     /** @var Post[] $posts */
     /** @var PostIndexPageData $pageData */
-
 @endphp
 @extends('shop.layouts.main')
 

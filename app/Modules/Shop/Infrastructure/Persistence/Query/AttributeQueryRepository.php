@@ -20,15 +20,17 @@ class AttributeQueryRepository
     )
     {
     }
+
     /**
      * Получить атрибуты для фильтрации по списку ID категорий и ID товаров.
      *
      * @param int[] $categoryIds ID категорий (обычно рутовые)
-     * @param int[] $productIds  ID товаров, входящих в эти категории
+     * @param int[] $productIds ID товаров, входящих в эти категории
      * @return AttributeFilterData[]
      */
     public function getAttributesByCategoryIds(array $categoryIds, array $productIds): array
     {
+
         if (empty($categoryIds) || empty($productIds)) {
             return [];
         }
@@ -49,7 +51,7 @@ class AttributeQueryRepository
                 foreach ($categoryRanges as $range) {
                     $q->orWhere(function ($sq) use ($range) {
                         $sq->where('_lft', '>=', $range->_lft)
-                           ->where('_rgt', '<=', $range->_rgt);
+                            ->where('_rgt', '<=', $range->_rgt);
                     });
                 }
             })
@@ -86,7 +88,7 @@ class AttributeQueryRepository
 
         $result = [];
         foreach ($attributes as $attr) {
-            if ($attr->type == 1) {
+            if ($attr->type == Attribute::TYPE_INTEGER || $attr->type == Attribute::TYPE_FLOAT) {
                 // Numeric (Integer/Float)
                 $values = DB::table('attributes_products')
                     ->where('attribute_id', $attr->id)
@@ -106,7 +108,7 @@ class AttributeQueryRepository
                         max: (float)max($decoded),
                     );
                 }
-            } elseif ($attr->type == 3) {
+            } elseif ($attr->type == Attribute::TYPE_VARIANT) {
                 // Variant
                 $values = DB::table('attributes_products')
                     ->where('attribute_id', $attr->id)
@@ -142,7 +144,7 @@ class AttributeQueryRepository
                         variants: $variantDtoList,
                     );
                 }
-            } elseif ($attr->type == 2) {
+            } elseif ($attr->type == Attribute::TYPE_BOOL) {
                 // Bool
                 $result[] = new AttributeFilterData(
                     id: $attr->id,
@@ -241,6 +243,7 @@ class AttributeQueryRepository
 
     public function getFilterAggregates(array $categoryIds, array $productIds): object
     {
+
         $cat = DB::table('categories')
             ->whereIn('id', $categoryIds)
             ->select(['_lft', '_rgt'])
@@ -318,6 +321,7 @@ class AttributeQueryRepository
      */
     public function applyFilters($query, array $filters): void
     {
+
         if (!empty($filters['price'])) {
             $min = (float)($filters['price'][0] ?? 0);
             $max = (float)($filters['price'][1] ?? 0);
@@ -343,6 +347,7 @@ class AttributeQueryRepository
                 $attrIds[] = (int)substr($key, 2);
             }
         }
+
         $attrTypes = $this->getAttributeTypes($attrIds);
 
         foreach ($filters as $key => $value) {
@@ -374,29 +379,33 @@ class AttributeQueryRepository
                     break;
 
                 case Attribute::TYPE_VARIANT:
-                    $variantIds = (array) $value;
+                    $variantIds = array_map('intval', (array)$value);
                     if (!empty($variantIds)) {
                         $query->where(function ($q) use ($attrId, $variantIds) {
+
                             // Товары без модификаций
                             $q->where(function ($sub) use ($attrId, $variantIds) {
                                 $sub->doesntHave('modification')
-                                    ->whereHas('prod_attributes', fn($attr) => $attr
-                                        ->where('attribute_id', $attrId)
-                                        ->whereIn('value', array_map(fn($v) => json_encode($v), $variantIds))
-                                    );
+                                    ->whereHas('prod_attributes', function ($attr) use ($attrId, $variantIds) {
+
+                                        $attr->where('attribute_id', $attrId)
+                                            ->whereIn('value', $variantIds);
+                                    });
                             });
                             // Товары с модификациями, у которых хотя бы одна вариация подходит
+
                             $q->orWhere(function ($sub) use ($attrId, $variantIds) {
                                 $sub->whereHas('modification', function ($mod) use ($attrId, $variantIds) {
                                     $mod->whereHas('products', function ($prod) use ($attrId, $variantIds) {
                                         $prod->where('not_sale', false)
                                             ->whereHas('prod_attributes', fn($attr) => $attr
                                                 ->where('attribute_id', $attrId)
-                                                ->whereIn('value', array_map(fn($v) => json_encode($v), $variantIds))
+                                                ->whereIn('value', $variantIds)
                                             );
                                     });
                                 });
                             });
+
                         });
                     }
                     break;

@@ -42,13 +42,13 @@
     <div class="attribute-filter">
         @foreach($filters->attributes as $attribute)
             <div>
-                @if(isset($attribute->isBool))
+                @if($attribute->isBool)
                     <x-widget.check name="a_{{ $attribute->id }}" class="mt-2" value="{{ $attribute->id }}"
                                     checked="{{ isset($request['a_' . $attribute->id]) }}">
                         {{ $attribute->name }}</x-widget.check>
                     <hr/>
                 @endif
-                @if(isset($attribute->isNumeric))
+                @if($attribute->isNumeric)
                     <x-widget.numeric name="a_{{ $attribute->id }}" min-value="{{ $attribute->min }}"
                                       max-value="{{ $attribute->max }}"
                                       current-min="{{ isset($request['a_' . $attribute->id]) ? $request['a_' . $attribute->id][0] : '' }}"
@@ -58,7 +58,7 @@
                     </x-widget.numeric>
                     <hr/>
                 @endif
-                @if(isset($attribute->isVariant))
+                @if($attribute->isVariant)
                     <x-widget.variant class="mt-3" caption="{{ $attribute->name }}" id="{{ $attribute->id }}">
                         @foreach($attribute->variants as $variant)
                             <x-widget.variant-item name="a_{{ $attribute->id }}[]" id="{{ $variant->id }}"

@@ -129,7 +129,6 @@ readonly class CategoryPageQuery
 
         $meta = $this->seoAdapter->getSeo('catalog.category', $mainInfo);
 
-
         $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'category', $faq);
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
@@ -207,11 +206,15 @@ readonly class CategoryPageQuery
             entity: 'room',
         );
 
+
+
+
         //FIXME
         $schema = $this->schemaBuilder->createSchema();
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,
+            blocks: [],
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
@@ -227,7 +230,6 @@ readonly class CategoryPageQuery
             now()->addDay(),
             function () use ($categoryId, $allProductIds) {
                 $aggr = $this->attributeQueryRepository->getFilterAggregates([$categoryId], $allProductIds);
-
 
                 $tags = array_map(
                     fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),

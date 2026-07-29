@@ -25,7 +25,7 @@ class PostIndexQueryRepository
             ->first();
 
         if (!$row) abort(404);
-        $meta = $row->meta;
+        $meta = json_decode($row->meta, true);
         return new PostCategoryData(
             id: (int)$row->id,
             slug: $row->slug,

@@ -41,7 +41,7 @@ class CategoryPageQueryRepository
             ->get(['id', 'name', 'slug']);
         $children = $childrenRows->map(fn($c) => new ChildrenData($c->id, $c->name, $c->slug))->all();
 
-        $meta = $row->meta;
+        $meta = json_decode($row->meta, true);
         return new CategoryRoomMainData(
             id: $row->id,
             name: $row->name,
