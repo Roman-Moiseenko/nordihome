@@ -948,14 +948,7 @@ window.$ = jQuery;
 
     }
 
-    /** СТРАНИЦА ТОВАРА **/
-    if (main.hasClass('product-page')) {
-        let sliderImages = $('.slider-image-product');
-        let mainImage = $('#main-image-product');
-        sliderImages.on('mouseover', function () {
-            mainImage.attr('src', $(this).data('image'));
-        });
-    }
+
     /** СТРАНИЦА ГЛАВНАЯ **/
     if (main.hasClass('home')) {
         let accordionItem = $('.accordion-heading');

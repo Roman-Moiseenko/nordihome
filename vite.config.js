@@ -49,9 +49,7 @@ export default defineConfig({
                 //Theme - Nordihome
                 'resources/sass/nordihome.scss',
                 'resources/js/nordihome.js',
-                //Theme - NB Russia
-                'resources/sass/nbrussia.scss',
-                'resources/js/nbrussia.js',
+                'resources/js/nordihome/product.js',
 
                // 'resources/sass/admin.scss',
                 'resources/js/admin.js',

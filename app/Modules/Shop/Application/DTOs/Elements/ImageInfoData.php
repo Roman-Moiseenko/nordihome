@@ -6,6 +6,7 @@ class ImageInfoData
 {
 
     public function __construct(
+        public string $full,
         public string $src,
         public string $alt,
         public string $title = '',
@@ -19,6 +20,7 @@ class ImageInfoData
     public static function fromArray(array $data): self
     {
         return new self(
+            full: $data['full'] ?? '',
             src: $data['src'],
             alt: $data['alt'],
             title: $data['title'],

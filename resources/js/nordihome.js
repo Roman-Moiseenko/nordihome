@@ -14,7 +14,7 @@ import './_feedback.js';
 
 /* Собственные */
 import './nordihome/menu-catalog.js';
-import './nordihome/product.js';
+//import './nordihome/product.js';
 import './nordihome/frontend';
 import './nordihome/maps';
 import './nordihome/parser';

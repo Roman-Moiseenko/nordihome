@@ -1,6 +1,14 @@
 @php
     /** @var \App\Modules\Shop\Application\DTOs\Pages\ProductViewPageData $pageData */
     $product = $pageData->product;
+    $galleryItems = [];
+    foreach ($product->images as $img) {
+        $galleryItems[] = [
+            'src' => $img->full,
+            'caption' => $img->alt ?? '',
+        ];
+    }
+
 @endphp
 
 @extends('shop.layouts.main')
@@ -18,14 +26,14 @@
             <div class="col-lg-6">
                 <div class="view-image-product">
                     @if(!empty($product->images))
-                        <img id="main-image-product" src="{{ $product->images[0]->src }}" style="width: 100%;">
+                        <img id="main-image-product" src="{{ $product->images[0]->src }}" style="width: 100%;" data-index="0">
                     @endif
                 </div>
 
                 <div class="slider-images-product owl-carousel owl-theme mt-3 p-3" data-responsive="[3,6,9]">
-                    @foreach($product->images as $photo)
+                    @foreach($product->images as $index => $photo)
                         <img src="{{ $photo->mini }}" data-image="{{ $photo->src }}"
-                             class="slider-image-product" alt="{{ $photo->alt }}">
+                             class="slider-image-product" alt="{{ $photo->alt }}" data-index="{{ $index }}">
                     @endforeach
                 </div>
 
@@ -164,6 +172,15 @@
     <script type="application/ld+json" class="schemantra.com">
         {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
+
+    {{-- Передаём данные из PHP в JavaScript --}}
+    <script>
+        window.productGalleryData = @json($galleryItems);
+    </script>
+
+    {{-- Подключаем наш отдельный JS-файл --}}
+    @vite('resources/js/nordihome/product.js')
+
 @endsection
 
 @section('bottom-content')

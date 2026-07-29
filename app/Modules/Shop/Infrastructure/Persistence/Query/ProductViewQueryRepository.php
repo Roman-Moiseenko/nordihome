@@ -134,8 +134,10 @@ class ProductViewQueryRepository
                 );
             }
 
-            $mini = '';
+            $mini = ''; $full = '';
             if (!empty($photo->file) && $photo->id) {
+
+
                 $mini = $this->photoService->getThumbUrl(
                     photoId: (int)$photo->id,
                     modelType: self::PHOTO_MODEL_TYPE,
@@ -144,9 +146,22 @@ class ProductViewQueryRepository
                     thumb: 'mini',
                     isThumbEnabled: (bool)$photo->thumb,
                 );
+
+                $full = $this->photoService->getThumbUrl(
+                    photoId: (int)$photo->id,
+                    modelType: self::PHOTO_MODEL_TYPE,
+                    imageableId: (int)$row->id,
+                    fileName: $photo->file,
+                    thumb: 'original',
+                    isThumbEnabled: (bool)$photo->thumb,
+                );
             }
 
+
+
+
             $images[] = ImageInfoData::fromArray([
+                'full' => $full,
                 'src' => $src,
                 'alt' => $photo->alt ?? '',
                 'title' => $photo->title ?? '',

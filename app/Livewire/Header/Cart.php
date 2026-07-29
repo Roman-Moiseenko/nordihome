@@ -38,7 +38,7 @@ class Cart extends Component
         $this->items = array_map(function (CartItem $item) {
             return [
                 'id' => $item->id,
-                'image' => $item->product->getImage('thumb'),
+                'image' => $item->product->getImage('mini'),
                 'name' => $item->product->name,
                 'url' => route('shop.product.view', $item->getProduct()->slug),
                 'product_id' => $item->product->id,
