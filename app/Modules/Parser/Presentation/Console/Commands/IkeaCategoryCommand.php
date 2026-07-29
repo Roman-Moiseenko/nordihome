@@ -18,5 +18,6 @@ class IkeaCategoryCommand extends Command
     public function handle(LoadParserCategoryIkeaService $service): void
     {
         $service->load();
+        $this->info('Задача поставлена в очередь');
     }
 }
