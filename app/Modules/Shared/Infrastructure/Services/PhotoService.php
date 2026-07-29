@@ -46,10 +46,8 @@ class PhotoService
      */
     public function patternGeneratePath(string $modelType, int $imageableId): string
     {
-        $parts = explode('.', $modelType);
-        $dirName = Str::slug(end($parts));
-
-        return '/' . $dirName . '/' . $imageableId . '/';
+        [$module, $model] = explode('.', $modelType);
+        return '/' . $module . '/' . $model . '/' . $imageableId . '/';
     }
 
     /**
