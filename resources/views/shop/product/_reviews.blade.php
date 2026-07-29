@@ -1,6 +1,6 @@
 @if(!is_null($reviews))
     <div class="box-card">
-        <h3 id="reviews">Отзывы</h3>
+        <h2 id="reviews">Отзывы</h2>
         @foreach($reviews as $review)
             <div class="review-product-item">
                 <div class="rating-data">

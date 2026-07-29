@@ -1,6 +1,6 @@
 @if(!is_null($bonus))
     <div class="box-card view-bonus">
-        <h3 id="bonus">Выгодная покупка</h3>
+        <h2 id="bonus">Выгодная покупка</h2>
         <div class="d-flex justify-content-around">
             @foreach($bonus as $_product)
                 <div class="item-bonus px-2">

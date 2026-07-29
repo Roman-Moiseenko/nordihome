@@ -179,6 +179,9 @@ window.$ = jQuery;
             let responsive = sliderImagesProduct.data('responsive');
             if (responsive === undefined || responsive.length !== 3) responsive = [3, 6, 9];
             product_optionsSliderBase.responsive = {0: {items: responsive[0]}, 576: {items: responsive[1]}, 991: {items: responsive[2]}};
+
+            product_optionsSliderBase.loop = false;
+
             product_optionsSliderBase.margin = 0;
             sliderImagesProduct.owlCarousel(product_optionsSliderBase);
             if (mouseScroll !== 0) {

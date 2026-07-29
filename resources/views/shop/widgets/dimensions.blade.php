@@ -17,12 +17,12 @@
     </div>
     <div class="delivery">
         <ul>
-            <li><i class="fa-light fa-person-dolly"></i> <a href="{{ route('shop.page.view', 'contact') }}" target="_blank">Самовывоз</a></li>
+            <li><i class="fa-light fa-person-dolly"></i> <a href="{{ route('shop.page.view', 'kontaktnye-dannye') }}" target="_blank">Самовывоз</a></li>
             @if($isRegion)
-            <li><i class="fa-light fa-truck"></i> <a href="{{ route('shop.page.view', 'tariff') }}" target="_blank">Доставка по области</a></li>
+            <li><i class="fa-light fa-truck"></i> <a href="{{ route('shop.page.view', 'tarify-i-usloviia-dostavki') }}" target="_blank">Доставка по области</a></li>
             @endif
             @if($isDelivery)
-                <li><i class="fa-light fa-plane-tail"></i> <a href="{{ route('shop.page.view', 'tariff') }}" target="_blank">Доставка по России</a></li>
+                <li><i class="fa-light fa-plane-tail"></i> <a href="{{ route('shop.page.view', 'tarify-i-usloviia-dostavki') }}" target="_blank">Доставка по России</a></li>
             @endif
         </ul>
     </div>

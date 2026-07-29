@@ -4,7 +4,7 @@
 @endphp
 @if($equivalents != null)
     <div class="box-card">
-        <h3 id="equivalent">Похожие товары</h3>
+        <h2 id="equivalent">Похожие товары</h2>
         <div class="slider-images-product owl-carousel owl-theme" data-responsive="[2,4,6]" data-mouse-scroll="0">
             @foreach($equivalents as $_product)
                 <div class="px-1">

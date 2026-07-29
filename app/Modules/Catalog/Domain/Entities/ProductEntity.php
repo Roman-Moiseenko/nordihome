@@ -130,12 +130,12 @@ final class ProductEntity
         set => $this->preOrder = $value;
     }
 
-    public bool $delivery = false {
+    public bool $delivery = true {
         get => $this->delivery;
         set => $this->delivery = $value;
     }
 
-    public bool $local = false {
+    public bool $local = true {
         get => $this->local;
         set => $this->local = $value;
     }

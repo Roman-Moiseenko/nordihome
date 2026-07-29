@@ -13,8 +13,6 @@
 @section('content')
     <span class="e-detail" data-product="{{ $product->id }}"></span>
 
-
-
     <div class="box-card">
         <div class="row">
             <div class="col-lg-6">
@@ -110,11 +108,11 @@
                             <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
                         @endif
                     </div>
-                    <h2 class="f-z_23 m-b_30 m-t_30" id="характеристики">Характеристики</h2>
+                    <!--h2 class="f-z_23 m-b_30 m-t_30" id="характеристики">Характеристики</h2-->
                     <div class="short-description">
-                        <p>береза, 58×70/93 см.(это краткое описание)</p>
+                        {!! $product->short !!}
                     </div>
-                    <h3 class="m-b_10 f-w_700 f-z_18">Размеры:</h3>
+                    <!--h3 class="m-b_10 f-w_700 f-z_18">Размеры:</h3>
                     <ul>
                         <li>Высота: 93 см</li>
                         <li>Ширина/Диаметр: 58 см</li>
@@ -129,7 +127,7 @@
                             <p>Для ухода рекомендуем масло для дерева VARDA.</p></div>
                     </div>
                     <h3 class="m-t_20 m-b_10 f-w_700 f-z_18">Цвета:</h3>
-                    <div>Натуральный</div>
+                    <div>Натуральный</div-->
                     @include('shop.product.__modification', ['modification' => $pageData->modification, 'current_id' => $product->id])
                     @include('shop.product.__related', ['related' => $pageData->related])
 
@@ -151,17 +149,17 @@
     @include('shop.product._series', ['series' => $pageData->series])
     <div class="box-card">
         <div id="описание"></div>
-        <h3 id="description">Описание</h3>
+        <h2 id="description">Описание</h2>
         {!! $product->description !!}
     </div>
     @include('shop.product._attribute', ['productAttributes' => $pageData->attributes])
     @include('shop.product._equivalent', ['equivalents' => $pageData->equivalents])
     @include('shop.product._reviews', ['reviews' => $pageData->reviews])
 
-    <section class="related-products">
+    <!--section class="related-products">
         <h2 id="с-этим-товаром-часто-покупают">С этим товаром часто покупают</h2>
         <p>Тут карусель с похожими товарами, думаю, на новом сайте нужно продумать, по какому принципу тут выводить товары.</p>
-    </section>
+    </section-->
     @include('shop.product._delivery')
     <script type="application/ld+json" class="schemantra.com">
         {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
@@ -170,6 +168,29 @@
 
 @section('bottom-content')
     @include ('shop.product._block-more-products')
-    <div style="padding:30px 0;">Тут надо вывести карту</div>
+    <div class="block-map">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12 padding_0">
+                    <div class="map-yandex" id="map-yandex">	</div>
+                    <script>
+                        let ok = false;
+                        window.addEventListener('scroll', function() {
+                            if (ok === false) {
+                                ok = true;
+                                setTimeout(() => {
+                                    let script = document.createElement('script');
+                                    script.src = 'https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Ade8d267d33a8a3658335441ae0726a71a93f99369797fd0a57314bfd35fa76a9&amp;width=100%&amp;height=400&amp;lang=ru_RU&amp;scroll=false';
+                                    document.getElementById('map-yandex').replaceWith(script);
+                                }, 2000)
+                            }
+                        });
+                    </script>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
 @endsection
 
