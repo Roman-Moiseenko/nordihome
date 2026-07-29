@@ -68,6 +68,10 @@ class Photo extends Model
     public function patternGeneratePath(): string
     {
         //if (is_null($this->imageable)) dd([$this->imageable_type, $this->imageable_id, Str::slug(class_basename($this->imageable_type))]);
+        if (!empty($this->model_type)) {
+            [$module, $model] = explode('.', $this->model_type);
+            return '/' . $module . '/' . $model . '/' . $this->imageable_id . '/';
+        }
         return '/' . Str::slug(class_basename($this->imageable_type)) . '/' . $this->imageable_id . '/';
     }
 

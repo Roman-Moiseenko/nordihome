@@ -2,8 +2,6 @@
 
 namespace App\Modules\Shop\Application\Queries\Post;
 
-use App\Modules\Content\Infrastructure\Models\Post;
-use App\Modules\Shop\Application\DTOs\Entities\PostData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\PostIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
@@ -11,18 +9,19 @@ use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Query\PostIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
 
-class PostIndexQuery
+readonly class PostIndexQuery
 {
 
     public function __construct(
 
         private PostIndexQueryRepository $repository,
-        private PaginatorBuilder            $paginatorBuilder,
+        private PaginatorBuilder         $paginatorBuilder,
         //private SeoAdapter                    $seoAdapter,
-        private SchemaBuilder                 $schemaBuilder,
+        private SchemaBuilder            $schemaBuilder,
     )
     {
     }
+
     public function execute(string $slug): PostIndexPageData
     {
         $perPage = 20;
@@ -48,12 +47,12 @@ class PostIndexQuery
                 'query' => array_diff_key(request()->query(), ['page' => null]),
             ]
         );
-
+        //$category->
         return new PostIndexPageData(
             category: $category,
             posts: $postsPaginator->items(),
             paginator: $paginator,
-            meta: new SeoData('', ''),
+            meta: new SeoData($category->title, $category->description),
             schema: $schema,
         );
     }

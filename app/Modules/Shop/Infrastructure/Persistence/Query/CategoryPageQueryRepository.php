@@ -36,9 +36,12 @@ class CategoryPageQueryRepository
             ->first();
         if (!$row) return null;
 
-        $childrenRows = DB::table('categories')->where('parent_id', $row->id)->get(['id', 'name', 'slug']);
+        $childrenRows = DB::table('categories')
+            ->where('parent_id', $row->id)
+            ->get(['id', 'name', 'slug']);
         $children = $childrenRows->map(fn($c) => new ChildrenData($c->id, $c->name, $c->slug))->all();
 
+        $meta = $row->meta;
         return new CategoryRoomMainData(
             id: $row->id,
             name: $row->name,
@@ -47,7 +50,7 @@ class CategoryPageQueryRepository
             entity: 'category',
             parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug) : null,
             totalProducts: 0,
-            title: $meta['title'] ?? $row->name,
+            title: $meta['title'] ?? '',
             description: $meta['description'] ?? '',
         );
     }

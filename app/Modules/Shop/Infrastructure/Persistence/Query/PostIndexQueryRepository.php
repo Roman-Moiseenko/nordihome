@@ -21,16 +21,17 @@ class PostIndexQueryRepository
     {
         $row = DB::table('post_categories')
             ->where('slug', $slug)
-            ->select('id', 'slug', 'title', 'description')
+            ->select('id', 'slug','meta', 'title', 'description')
             ->first();
 
         if (!$row) abort(404);
-
+        $meta = $row->meta;
         return new PostCategoryData(
             id: (int)$row->id,
             slug: $row->slug,
-            title: $row->title ?? '',
-            description: $row->description ?? '',
+            caption: $row->title ?? '',
+            title: $meta['title'] ?? '',
+            description: $meta['description'] ?? '',
         );
     }
 

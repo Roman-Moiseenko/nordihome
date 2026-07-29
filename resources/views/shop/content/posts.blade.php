@@ -1,16 +1,13 @@
 @php
 
+    use App\Modules\Content\Entity\PostCategory;
+    use App\Modules\Content\Infrastructure\Models\Post;
     use App\Modules\Shop\Application\DTOs\Pages\PostIndexPageData;
 
-    /** @var \App\Modules\Content\Entity\PostCategory $category */
-    /** @var \App\Modules\Content\Infrastructure\Models\Post[] $posts */
+    /** @var PostCategory $category */
+    /** @var Post[] $posts */
     /** @var PostIndexPageData $pageData */
-    /**
-    * $category->getImage();
-    * $category->getIcon();
-    * $post->getParagraphs() - первые абзацы из текста
-    *
-    */
+
 @endphp
 @extends('shop.layouts.main')
 
@@ -22,10 +19,7 @@
 @section('description', $pageData->meta->description)
 
 @section('content')
-    <h1 class="my-4">{{ $pageData->category->title }}</h1>
-    <div class="mt-4">
-        {{ $pageData->category->description }}
-    </div>
+    <h1 class="my-4">{{ $pageData->category->caption }}</h1>
 
     @foreach($pageData->posts as $post)
         <div class="item-news m-b_20">

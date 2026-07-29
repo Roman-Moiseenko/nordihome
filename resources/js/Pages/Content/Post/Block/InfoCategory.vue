@@ -165,7 +165,7 @@ const info = reactive({
 
 function onSetInfo() {
     router.visit(
-        route('admin.content.post-category.set-info', {room: props.category.id}), {
+        route('admin.content.post-category.set-info', {category: props.category.id}), {
             method: "post",
             data: info,
             onSuccess: page => {
