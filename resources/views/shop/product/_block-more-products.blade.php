@@ -24,6 +24,6 @@
                 <li>Вы можете сделать заказ из полного ассортимента IKEA.pl, а мы доставим выбранные позиции в кратчайшие сроки, не зависимо от веса и объёма.</li>
             </ol>
         </div>
-        <a href="/calculate/" class="btn btn-white t-t_uppercase f-z_14 m-t_20">Заказать</a>
+        <a href="/ikea" class="btn btn-white t-t_uppercase f-z_14 m-t_20">Заказать</a>
     </div>
 </div>

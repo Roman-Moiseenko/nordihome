@@ -17,7 +17,7 @@ class FindOrCreateTagUseCase
     {
         if (is_null($tag = $this->repository->findByName($name))) {
             $slugVO = new Slug(empty($slug) ? $name : $slug);
-            if ($this->repository->existsSlug((string)$slugVO)) $slugVO = new Slug((string)$slugVO . '-' . uniqid());
+            if ($this->repository->existsSlug($slugVO->getValue(), 0)) $slugVO = new Slug((string)$slugVO . '-' . uniqid());
 
             $tag = new TagEntity(
                 name: $name,

@@ -62,8 +62,8 @@
 
                     </div>
                     <div class="product-options-link">
-                        <a href="#характеристики">Характеристики</a>
-                        <a href="#описание">Описание</a>
+                        <a href="#specifications">Характеристики</a>
+                        <a href="#description">Описание</a>
                         <a href="#с-этим-товаром-часто-покупают">Рекомендуем</a>
                         <a href="#доставка-по-всей-россии">Доставка</a>
                     </div>
@@ -94,7 +94,6 @@
                                         Только под заказ
                                     @endif
                                 @endif
-                                <span class="" style="color: red; font-weight: bold;">Товар не продается! Цена вымышленная!</span>
                             </div>
                         </div>
                         <div class="f-z_14 m-b_20">Уточняйте наличие товара на данный момент</div>
@@ -145,8 +144,7 @@
                                 'isRegion' => $product->isRegion,
                                 'isDelivery' => $product->isDelivery])
                     </div>
-                    <div style="color: #ff5555">САЙТ В РАЗРАБОТКЕ! Оригинальный сайт по адресу <a
-                            href="https://nordihome.ru/" style="color: #5555ff">https://nordihome.ru/</a></div>
+
                 </div>
             </div>
         </div>
@@ -160,7 +158,10 @@
         <h2 id="description">Описание</h2>
         {!! $product->description !!}
     </div>
-    @include('shop.product._attribute', ['productAttributes' => $pageData->attributes])
+    @include('shop.product._attribute', [
+        'productAttributes' => $pageData->attributes,
+        'dimensions' => $product->dimensions,
+    ])
     @include('shop.product._equivalent', ['equivalents' => $pageData->equivalents])
     @include('shop.product._reviews', ['reviews' => $pageData->reviews])
 

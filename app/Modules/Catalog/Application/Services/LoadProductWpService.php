@@ -38,7 +38,9 @@ readonly class LoadProductWpService
         private UpdateProductUseCase             $updateProductUseCase,
         private SetProductPriceUseCase           $setProductPriceUseCase,
         private FindOrCreateTagUseCase           $findOrCreateTagUseCase,
-        private AttachTagsToProductUseCase       $attachTagsToProductUseCase
+        private AttachTagsToProductUseCase       $attachTagsToProductUseCase,
+        private AttachAttributeProductService    $attachAttributeProductService,
+        private DimensionsFromAttributeService   $dimensionsFromAttributeService,
     )
     {
     }
@@ -83,14 +85,6 @@ readonly class LoadProductWpService
             : BrandEntity::NONAME;
         $brand = $this->findOrCreateBrandUseCase->execute($brandName);
 
-        //Ищем или создаем теги
-        $tags = [];
-        foreach ($product['tags'] as $tagData) {
-            $tagEntity = $this->findOrCreateTagUseCase->execute($tagData['name'], $tagData['slug']);
-            $tags[] = $tagEntity->id;
-        }
-
-
         //Создаем Товар
         $dtoProduct = new ProductFastCreateData(
             name: $product['name'],
@@ -100,9 +94,19 @@ readonly class LoadProductWpService
             slug: $product['slug'],
         );
         $productEntity = $this->fastCreateProductUseCase->execute($dtoProduct, $userPermission);
-        //назначаем теги на товар
 
-        if (!empty($tags))$this->attachTagsToProductUseCase->execute($productEntity->id, $tags, $userPermission);
+        //Ищем или создаем теги
+        $tags = [];
+        foreach ($product['tags'] as $tagData) {
+            \Log::warning(json_encode($tagData));
+            $tagEntity = $this->findOrCreateTagUseCase->execute($tagData['name'], $tagData['slug']);
+            $tags[] = $tagEntity->id;
+        }
+        //назначаем найденные теги на товар
+        if (!empty($tags)) {
+            \Log::warning('tags for => ' . $productEntity->id);
+            $this->attachTagsToProductUseCase->execute($productEntity->id, $tags, $userPermission);
+        }
 
         unset($categories[0]); //Удаляем первую категорию, т.к. она теперь Main
 
@@ -120,6 +124,26 @@ readonly class LoadProductWpService
         // Присоединяем остальные категории и все комнаты к товару
         $this->attachCategoriesToProductUseCase->execute($productEntity->id, $categories, $userPermission);
         $this->attachRoomsToProductUseCase->execute($productEntity->id, $rooms, $userPermission);
+
+        //Атрибуты основные
+        if (isset($product['attributes']["pa_czveta"])) {
+            $this->attachAttributeProductService->SetColorAttribute($productEntity->id, $product['attributes']["pa_czveta"]);
+        }
+        if (isset($product['attributes']["pa_material"])) {
+            $this->attachAttributeProductService->SetMaterialAttribute($productEntity->id, $product['attributes']["pa_material"]);
+        }
+
+
+        //Парсим габариты pa_vysota pa_shirina pa_dlina
+        $this->dimensionsFromAttributeService->execute(
+            $productEntity->id,
+            $product['attributes']["pa_vysota"] ?? null,
+            $product['attributes']["pa_dlina"] ?? null,
+            $product['attributes']["pa_shirina"] ?? null,
+        );
+
+        //MAINDO Уход.
+
 
         // Привязываем изображения к товару
         foreach ($product['images'] as $imageData) {
@@ -151,4 +175,6 @@ readonly class LoadProductWpService
 
         return true;
     }
+
+
 }

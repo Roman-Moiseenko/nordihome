@@ -453,6 +453,7 @@ class CatalogServiceProvider extends ServiceProvider
         $this->app->afterResolving('seed.handler', function ($handler) {
             $handler->register([
                 \App\Modules\Catalog\Database\Seeders\CatalogRoleSeeder::class,
+                \App\Modules\Catalog\Database\Seeders\AttributeSeeder::class,
             ]);
         });
     }

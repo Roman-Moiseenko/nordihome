@@ -6,6 +6,8 @@ namespace App\Modules\Catalog\Infrastructure\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
+ * @property int $tag_id
+ * @property int $product_id
  * @property Product $product
  * @property Tag $tag
  */
