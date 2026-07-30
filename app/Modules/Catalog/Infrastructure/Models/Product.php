@@ -62,6 +62,7 @@ use JetBrains\PhpStorm\Pure;
  * @property string $code_search Артикул для поиска, без разделительных символов
  * @property string $description
  * @property string $short короткое описание
+ * @property string $care уход за товаром (описание тегами)
  * @property string $comment Комментарий, для специалистов. Клиентам не видно
  *
  * @property int $main_category_id
@@ -191,6 +192,7 @@ class Product extends Model
         'code',
         'status',
         'description',
+        'care',
         'short',
         'main_category_id',
         'brand_id',

@@ -53,6 +53,10 @@ readonly class UpdateProductUseCase
             $product->short = $dto->short;
         }
 
+        if ($dto->care !== null) {
+            $product->care = $dto->care;
+        }
+
         // ======================== Числовые поля ========================
         if ($dto->mainCategoryId !== null) {
             $product->mainCategoryId = $dto->mainCategoryId;

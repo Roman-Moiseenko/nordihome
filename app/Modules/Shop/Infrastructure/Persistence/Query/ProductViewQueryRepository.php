@@ -53,6 +53,7 @@ class ProductViewQueryRepository
                 'products.code',
                 'products.description',
                 'products.short',
+                'products.care',
                 'products.current_rating',
                 'products.not_sale',
                 'products.price_reduced',
@@ -211,6 +212,7 @@ class ProductViewQueryRepository
             isRegion: (bool)$row->local,
             isDelivery: (bool)$row->delivery,
             short: $row->short, //TODO Кол-во товаров на складах
+            care: $row->care,
         );
     }
 

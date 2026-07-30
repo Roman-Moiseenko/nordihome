@@ -14,7 +14,6 @@ class FormBackCreateData extends Data
     public function __construct(
         #[Required, StringType, Url]
         public readonly string $url,
-
         #[Required]
         public readonly array $data,
     ) {}

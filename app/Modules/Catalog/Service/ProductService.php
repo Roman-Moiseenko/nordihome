@@ -363,6 +363,7 @@ class ProductService
         foreach ($products as $product) {
             $product->description = $request->string('description')->trim()->value();
             $product->short = $request->string('short')->trim()->value();
+            $product->care = $request->string('care')->trim()->value();
             $product->model = $request->string('model')->trim()->value();
             $product->tags()->detach();
             $this->tags($request->input('tags'), $product);

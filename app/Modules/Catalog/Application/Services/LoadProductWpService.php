@@ -98,13 +98,11 @@ readonly class LoadProductWpService
         //Ищем или создаем теги
         $tags = [];
         foreach ($product['tags'] as $tagData) {
-            \Log::warning(json_encode($tagData));
             $tagEntity = $this->findOrCreateTagUseCase->execute($tagData['name'], $tagData['slug']);
             $tags[] = $tagEntity->id;
         }
         //назначаем найденные теги на товар
         if (!empty($tags)) {
-            \Log::warning('tags for => ' . $productEntity->id);
             $this->attachTagsToProductUseCase->execute($productEntity->id, $tags, $userPermission);
         }
 
@@ -115,9 +113,11 @@ readonly class LoadProductWpService
             id: (int)$productEntity->id,
             description: $product['description'],
             short: $product['short'],
+            care: $product['care'], //Уход и материалы
             published: true, //Сразу публикуем
             preOrder: true,
             delivery: true,
+            local: true,
         );
         $productEntity = $this->updateProductUseCase->execute($dtoUpdate, $userPermission);
 
@@ -141,9 +141,6 @@ readonly class LoadProductWpService
             $product['attributes']["pa_dlina"] ?? null,
             $product['attributes']["pa_shirina"] ?? null,
         );
-
-        //MAINDO Уход.
-
 
         // Привязываем изображения к товару
         foreach ($product['images'] as $imageData) {

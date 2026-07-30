@@ -66,6 +66,9 @@
                         <a href="#description">Описание</a>
                         <a href="#с-этим-товаром-часто-покупают">Рекомендуем</a>
                         <a href="#доставка-по-всей-россии">Доставка</a>
+                        @if(!empty($product->care))
+                            <a href="#care">Уход</a>
+                        @endif
                     </div>
                     <div class="price-brand-block">
                         <div class="view-price">
@@ -158,6 +161,15 @@
         <h2 id="description">Описание</h2>
         {!! $product->description !!}
     </div>
+
+    @if(!empty($product->care))
+    <div class="box-card">
+        <div id="описание"></div>
+        <h2 id="care">Материалы и уход за товаром</h2>
+        {!! $product->care !!}
+    </div>
+    @endif
+
     @include('shop.product._attribute', [
         'productAttributes' => $pageData->attributes,
         'dimensions' => $product->dimensions,

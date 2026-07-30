@@ -30,6 +30,7 @@ class ProductRepository implements ProductRepositoryInterface
         $model->brand_id = $product->brandId;
         $model->series_id = $product->seriesId;
         $model->description = $product->description;
+        $model->care = $product->care;
         $model->short = $product->short;
         $model->comment = $product->comment;
         $model->model = $product->model;
@@ -52,12 +53,12 @@ class ProductRepository implements ProductRepositoryInterface
         $model->published_at = $product->publishedAt?->format('Y-m-d H:i:s');
 
         $model->save();
-
+/*
         if ($product->id === null) {
             $product->id = $model->id;
         }
-
-        return $product;
+*/
+        return $this->hydrate($model);
     }
 
     public function findByCode(string $code): ?ProductEntity
@@ -155,6 +156,7 @@ class ProductRepository implements ProductRepositoryInterface
         $entity->oldSlug = $model->old_slug ?? '';
         $entity->seriesId = $model->series_id;
         $entity->description = $model->description ?? '';
+        $entity->care = $model->care ?? '';
         $entity->short = $model->short ?? '';
         $entity->comment = $model->comment ?? '';
         $entity->model = $model->model ?? '';

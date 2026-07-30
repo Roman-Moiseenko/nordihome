@@ -18,7 +18,7 @@
 
                 <el-form label-width="auto">
                     <el-form-item label="Полное описание" label-position="top">
-                        <el-input v-model="form.description" @change="onAutoSave" :disabled="isSaving" type="textarea" rows="16" resize="none"/>
+                        <el-input v-model="form.description" @change="onAutoSave" :disabled="isSaving" type="textarea" rows="26" resize="none"/>
                         <div v-if="errors.description" class="text-red-700">{{ errors.description }}</div>
                     </el-form-item>
                     <!-- Повторить -->
@@ -31,6 +31,10 @@
                         <el-input v-model="form.short" @change="onAutoSave" :disabled="isSaving" type="textarea" rows="10" resize="none"/>
                         <div v-if="errors.short" class="text-red-700">{{ errors.short }}</div>
                     </el-form-item>
+                    <el-form-item label="Материал и уход" label-position="top">
+                        <el-input v-model="form.care" @change="onAutoSave" :disabled="isSaving" type="textarea" rows="7" resize="none"/>
+                        <div v-if="errors.care" class="text-red-700">{{ errors.care }}</div>
+                    </el-form-item>
                     <!-- Повторить -->
                     <el-form-item label="Метки" label-position="left">
                         <el-select v-model="form.tags" @change="onAutoSave" :disabled="isSaving" multiple filterable allow-create>
@@ -39,7 +43,7 @@
                         <div v-if="errors.tags" class="text-red-700">{{ errors.tags }}</div>
                     </el-form-item>
                     <el-form-item label="Серия" label-position="left">
-                        <el-select v-model="form.series_id" @change="onAutoSave" :disabled="isSaving" filterable allow-create>
+                        <el-select v-model="form.series_id" @change="onAutoSave" :disabled="isSaving" filterable allow-create clearable>
                             <el-option v-for="item in series" :key="item.id" :value="item.id" :label="item.name" />
                         </el-select>
                         <div v-if="errors.tags" class="text-red-700">{{ errors.tags }}</div>
@@ -81,12 +85,13 @@ const props = defineProps({
     series: Array,
 })
 
-
+console.log(props.product)
 const autoSave = ref(true)
 const isSaving = ref(false)
 const form = reactive({
     description: props.product.description,
     short: props.product.short,
+    care: props.product.care,
     tags: [...props.product.tags.map(item => item.id)],
     series_id: props.product.series_id,
     model: props.product.model,

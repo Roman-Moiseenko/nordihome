@@ -48,6 +48,10 @@ final class ProductEntity
         get => $this->seriesId;
         set => $this->seriesId = $value;
     }
+    public string $care = '' {
+        get => $this->care;
+        set => $this->care = $value;
+    }
 
     public string $description = '' {
         get => $this->description;

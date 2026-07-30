@@ -37,6 +37,7 @@ class ProductData
         public bool $isRegion,
         public bool $isDelivery,
         public string $short,
+        public string $care, //Уход
         public int $quantity = 1,
 
     )

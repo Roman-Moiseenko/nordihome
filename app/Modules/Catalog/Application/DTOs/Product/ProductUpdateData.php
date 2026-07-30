@@ -42,6 +42,9 @@ class ProductUpdateData extends Data
         public readonly ?string $short = null,
 
         #[Nullable, StringType]
+        public readonly ?string $care = null,
+
+        #[Nullable, StringType]
         public readonly ?string $comment = null,
 
         #[Nullable, StringType, Max(255)]
