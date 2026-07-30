@@ -266,7 +266,7 @@ class Cart
     {
         return [
             'id' => $item->id,
-            'img' => $item->getProduct()->getImage('thumb'),
+            'img' => $item->getProduct()->getImage('mini'),
             'name' => $item->getProduct()->name,
             'url' => route('shop.product.view', $item->getProduct()->slug),
             'product_id' => $item->getProduct()->id,

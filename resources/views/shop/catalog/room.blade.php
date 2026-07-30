@@ -17,7 +17,7 @@
     </div>
     <div class="row">
         @foreach($pageData->categories as $room)
-            @include('shop.catalog.card', ['item' => $room])
+            @include('shop.catalog.card-room', ['item' => $room])
         @endforeach
     </div>
 

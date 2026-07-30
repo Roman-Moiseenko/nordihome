@@ -7,7 +7,8 @@
         <a href="{{ route('shop.category.view', $item->slug) }}">
             <div>
                 <img
-                    src="{{ (empty($item->image)) ? '\images\no-image.jpg' : $item->image }}">
+                    src="{{ (empty($item->image)) ? '\images\no-image.jpg' : $item->image }}"
+                    alt="{{ $item->name }}">
                 <span>{{ $item->name }}</span>
             </div>
         </a>

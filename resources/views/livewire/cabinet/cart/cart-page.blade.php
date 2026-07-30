@@ -30,12 +30,11 @@
                         @csrf
                         <input type="hidden" name="preorder" value="false">
                         <button id="button-to-order" class="btn-cart w-100 py-3"
-                                @guest()
-                                data-bs-toggle="modal" data-bs-target="#login-popup" type="button"
-                                @endguest
-                                @auth('user')
+                                @client
                                 type="submit"
-                            @endauth
+                                @else
+                                data-bs-toggle="modal" data-bs-target="#login-popup" type="button"
+                                @endclient
                         >Перейти к оформлению
                         </button>
                     </form>

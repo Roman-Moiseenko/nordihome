@@ -1,9 +1,37 @@
-{
-    "url": "http:\/\/127.0.0.1:8000\/post\/first-post",
-    "data": {
-        "form": "\u0417\u0430\u044f\u0432\u043a\u0430",
-        "name": "\u0418\u043c\u044f",
-        "phone": "+788888888888",
-        "agreement": "\u0421\u043e\u0433\u043b\u0430\u0441\u0438\u0435 \u043d\u0430 \u043e\u0431\u0440\u0430\u0431\u043e\u0442\u043a\u0443 \u043f\u0435\u0440\u0441\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0445 \u0434\u0430\u043d\u043d\u044b\u0445"
-    }
-}
+[
+    {
+        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray-1.webp",
+        "alt": ""
+    },
+    {
+        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/iw-backup\/2026\/07\/shablon_interer_v_kartochku_uh12-lq.png",
+        "alt": ""
+    },
+    {
+        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/iw-backup\/2026\/07\/shablon_interer_v_kartochku-1_9m6r-bv.png",
+        "alt": ""
+    },
+    {
+        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray-1.webp",
+        "alt": ""
+    },
+    {
+        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray1-1.webp",
+        "alt": ""
+    },
+    {
+        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray2-1.webp",
+        "alt": ""
+    },
+    {
+        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray5-1.webp",
+        "alt": ""
+    },
+    {
+        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray6-1.webp",
+        "alt": ""
+    },
+    {
+        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/sajt_razmery_x0h4-3p-1.webp",
+        "alt": ""
+    },
