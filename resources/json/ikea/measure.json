@@ -1,0 +1,76 @@
+[
+    {
+        "name": "GRUNNARP",
+        "typeName": "Sofa 3-osobowa, rozk\u0142adana",
+        "itemNo": "30583384",
+        "articleNumber": {
+            "label": "Numer artyku\u0142u",
+            "value": "305.833.84"
+        },
+        "measurementGroups": [
+            {
+                "heading": "Paczka 1",
+                "measurements": [
+                    {
+                        "label": "Szeroko\u015b\u0107",
+                        "type": "width",
+                        "text": "82 cm",
+                        "value": 82
+                    },
+                    {
+                        "label": "Wysoko\u015b\u0107",
+                        "type": "height",
+                        "text": "33 cm",
+                        "value": 33
+                    },
+                    {
+                        "label": "D\u0142ugo\u015b\u0107",
+                        "type": "length",
+                        "text": "204 cm",
+                        "value": 204
+                    },
+                    {
+                        "label": "Waga",
+                        "type": "weight",
+                        "text": "48.70 kg",
+                        "value": 48.7
+                    }
+                ]
+            },
+            {
+                "heading": "Paczka 2",
+                "measurements": [
+                    {
+                        "label": "Szeroko\u015b\u0107",
+                        "type": "width",
+                        "text": "69 cm",
+                        "value": 69
+                    },
+                    {
+                        "label": "Wysoko\u015b\u0107",
+                        "type": "height",
+                        "text": "31 cm",
+                        "value": 31
+                    },
+                    {
+                        "label": "D\u0142ugo\u015b\u0107",
+                        "type": "length",
+                        "text": "206 cm",
+                        "value": 206
+                    },
+                    {
+                        "label": "Waga",
+                        "type": "weight",
+                        "text": "37.10 kg",
+                        "value": 37.1
+                    }
+                ]
+            }
+        ],
+        "quantity": {
+            "label": "Paczka(i)",
+            "value": 1
+        },
+        "multiPackDisclaimerText": "Ten produkt sk\u0142ada si\u0119 kilku paczek"
+    }
+]

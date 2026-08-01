@@ -19,7 +19,7 @@ class UpdateParserProductUseCase
     {
     }
 
-    public function execute(ParserProductUpdateData $dto): ParserProductEntity
+    public function execute(ParserProductUpdateData $dto):? ParserProductEntity
     {
         // Получаем текущую сущность
         $product = $this->productRepository->getById($dto->id);
@@ -79,6 +79,13 @@ class UpdateParserProductUseCase
         if ($dto->colors !== null) {
             $product->colors = $dto->colors;
         }
+
+        if (!empty($dto->materials)) $product->materials = $dto->materials;
+
+        if (!empty($dto->care)) $product->care = $dto->care;
+        if (!empty($dto->dimensions)) $product->dimensions = $dto->dimensions;
+        if (!empty($dto->variants)) $product->variants = $dto->variants;
+
         return $this->productRepository->save($product);
     }
 }

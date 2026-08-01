@@ -12,20 +12,16 @@
 
 @section('content')
 
-    <h1>{{ $pageData->category->name }}. Товаров {{ $pageData->category->totalProducts }}</h1>
-
+    <h1>{{ $pageData->category->name }}. Товаров {{ $pageData->paginator->total }}</h1>
 
     <div class="row">
-        <!-- //TODO верстка левая панель -->
         <div class="col-lg-3">
             @include('shop.ikea.card-categories', [
                 'categories' => $pageData->categories,
                 'currentId' => $pageData->category->id
                 ])
         </div>
-        <!-- //TODO верстка правая панель -->
         <div class="col-lg-9">
-            <!-- //TODO Список товаров -->
             <div class="products">
                 <div class="row">
                     @foreach($pageData->products as $product)
@@ -35,7 +31,6 @@
                     @endforeach
                 </div>
             </div>
-            <!-- //TODO Пагинация -->
             <div class="products-page-list--bottom">
                 @include('shop.widgets.paginator', ['paginator' => $pageData->paginator])
             </div>

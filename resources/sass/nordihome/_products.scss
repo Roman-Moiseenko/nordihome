@@ -125,17 +125,22 @@
         width: 100%;
         margin-left: 1rem;
         .top-tags { //Теги
-            display: flex;
+            //display: flex;
             .tag-filter {
                 cursor: pointer;
+                border-radius: 12px;
                 margin: 0 4px;
-                padding: 6px 12px;
-                color: var(--bs-blue);
+                padding: 3px 6px;
+                color: var(--bs-gray-600);
+                background: var(--bs-gray-100);
+                text-decoration: none;
+                text-wrap-mode: nowrap;
+                line-height: 32px;
                 &.active {
-                    color: var(--bs-gray-600);
-                    background: var(--bs-gray-100);
+                    color: var(--bs-gold);
+                    background: var(--bs-gray-300);
 
-                    border-radius: 12px;
+
                     &:after {
                         font-family: "Font Awesome 6 Pro";
                         content: "\f00d";

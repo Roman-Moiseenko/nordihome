@@ -27,6 +27,10 @@ class ParserProductUpdateData extends Data
         /** @var string[]|null $colors */
         public readonly ?array $colors = null,
         public readonly int $packs = 1,
+        public readonly array $materials = [],
+        public readonly ?string $care = '',
+        public readonly array $dimensions = [],
+        public readonly array $variants = [],
     )
     {
     }

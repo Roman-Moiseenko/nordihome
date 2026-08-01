@@ -8,7 +8,7 @@ use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
 
 class IkeaProductData
 {
-    /** @param ImageInfoData[] $images */
+
     public function __construct(
         public readonly int     $id,
         public readonly string  $name,
@@ -26,7 +26,12 @@ class IkeaProductData
         public readonly array   $quantity,
         public readonly array   $colors,
         public readonly array   $packages,
+        /** @var ImageInfoData[] $images */
         public readonly array   $images,
+        public readonly array   $materials,
+        public readonly string  $care,
+        public readonly array   $dimensions,
+        public readonly array   $variants,
     )
     {
     }
@@ -54,6 +59,10 @@ class IkeaProductData
                 fn(array $img) => ImageInfoData::fromArray($img),
                 $item['images'],
             ),
+            materials: $item['materials'],
+            care: $item['care'],
+            dimensions: $item['dimensions'],
+            variants: $item['variants'],
         );
     }
 }

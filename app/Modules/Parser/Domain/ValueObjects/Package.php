@@ -6,25 +6,14 @@ namespace App\Modules\Parser\Domain\ValueObjects;
 
 class Package
 {
-    private float $height;
-    private float $width;
-    private float $length;
-    private float $weight;
-    private int $quantity;
-
     public function __construct(
-        float $height = 0.0,
-        float $width = 0.0,
-        float $length = 0.0,
-        float $weight = 0.0,
-        int $quantity = 1,
+        public float $height = 0.0,
+        public float $width = 0.0,
+        public float $length = 0.0,
+        public float $weight = 0.0,
+        public int $quantity = 1,
     )
     {
-        $this->height = $height;
-        $this->width = $width;
-        $this->length = $length;
-        $this->weight = $weight;
-        $this->quantity = $quantity;
     }
 
     public function getHeight(): float

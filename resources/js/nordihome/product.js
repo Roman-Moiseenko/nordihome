@@ -43,7 +43,7 @@
     });
     let main = $('main');
     /** СТРАНИЦА ТОВАРА **/
-    if (main.hasClass('product-page')) {
+    if (main.hasClass('product-page') || main.hasClass('ikea-product')) {
         let sliderImages = $('.slider-image-product');
         let mainImage = $('#main-image-product');
         sliderImages.on('mouseover', function () {

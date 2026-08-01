@@ -23,6 +23,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $short
  * @property string $description
  *
+ * @property string $care
+ * @property array $materials
+ * @property array $dimensions
+ * @property array $variants
+ *
  * @property bool $fragile - Хрупкий, может влиять на стоимость доставки
  * @property bool $sanctioned - Санкционный, может влиять на стоимость доставки
  * @property bool $availability - Можно или нет возить под заказ
@@ -48,11 +53,17 @@ class ParserProduct extends Model
         'composite' => '{}',
         'quantity' => '{}',
         'colors' => '[]',
+        'materials' => '[]',
+        'dimensions' => '[]',
+        'variants' => '[]',
         'packages' => '[]',
         'packs' => 1,
     ];
     protected $casts = [
         'colors' => 'json',
+        'materials' => 'json',
+        'dimensions' => 'json',
+        'variants' => 'json',
         'composite' => 'json',
         'quantity' => 'json',
         'packages' => 'json',
@@ -78,6 +89,10 @@ class ParserProduct extends Model
         'colors',
         'packages',
         'packs',
+        'materials',
+        'care',
+        'dimensions',
+        'variants',
     ];
 
     public static function register(string $url, int $product_id): self

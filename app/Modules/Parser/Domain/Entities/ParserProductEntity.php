@@ -98,6 +98,24 @@ final class ParserProductEntity
         set => $this->colors = $value;
     }
 
+    public array $materials = [] {
+        get => $this->materials;
+        set => $this->materials = $value;
+    }
+    public array $dimensions = [] {
+        get => $this->dimensions;
+        set => $this->dimensions = $value;
+    }
+    public array $variants = [] {
+        get => $this->variants;
+        set => $this->variants = $value;
+    }
+
+    public string $care = '' {
+        get => $this->care;
+        set => $this->care = $value;
+    }
+
     public ?\DateTimeImmutable $updatedAt = null {
         get => $this->updatedAt;
         set => $this->updatedAt = $value;

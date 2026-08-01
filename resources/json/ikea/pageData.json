@@ -1,0 +1,1314 @@
+{
+    "pageProps": {
+        "config": {
+            "apiCountry": "pl",
+            "apiLanguage": "pl",
+            "assemblyServiceApiClientId": "4d5d8c53-c2e7-4e3d-b791-a21eecc49ddc",
+            "assemblyServiceBaseUrl": "https:\/\/api.serviceoffers.ingka.com\/public\/graphql",
+            "ciaApiBaseUrl": "https:\/\/api.salesitem.ingka.com",
+            "ciaApiClientKey": "ef382663-a2a5-40d4-8afe-f0634821c0ed",
+            "cmaApiBaseUrl": "https:\/\/cma.ingka.com\/cma",
+            "cmaApiClientKey": "GnJEuqjAnY3vEeZQvaoCudpJewgGq00D",
+            "contactUsUrl": "https:\/\/www.ikea.com\/pl\/pl\/customer-service\/contact-us\/",
+            "country": "pl",
+            "dateFormat": {
+                "customDateFormat": "dd mmm, yyyy",
+                "customStockCheckDateFormat": "dd.mm.yyyy",
+                "customStockCheckTimeFormat": "'o godzinie' HH:MM",
+                "customTimeFormat": "HH:MM",
+                "translations": {
+                    "dayNames": [
+                        "niedz.",
+                        "pon.",
+                        "wt.",
+                        "\u015br.",
+                        "czw.",
+                        "pt.",
+                        "sob.",
+                        "niedziela",
+                        "poniedzia\u0142ek",
+                        "wtorek",
+                        "\u015broda",
+                        "czwartek",
+                        "pi\u0105tek",
+                        "sobota"
+                    ],
+                    "monthNames": [
+                        "sty",
+                        "lut",
+                        "mar",
+                        "kwi",
+                        "maj",
+                        "cze",
+                        "lip",
+                        "sie",
+                        "wrz",
+                        "pa\u017a",
+                        "lis",
+                        "gru",
+                        "stycznia",
+                        "lutego",
+                        "marca",
+                        "kwietnia",
+                        "maja",
+                        "czerwca",
+                        "lipca",
+                        "sierpnia",
+                        "wrze\u015bnia",
+                        "pa\u017adziernika",
+                        "listopada",
+                        "grudnia"
+                    ],
+                    "timeNames": [
+                        "AM",
+                        "PM"
+                    ]
+                }
+            },
+            "decimalSeparator": ".",
+            "disableECommerce": false,
+            "disableStockCheckSection": false,
+            "enableAsIsOnline": true,
+            "enableAssemblyServicePrice": false,
+            "enableClickAndCollectPrice": false,
+            "enableDeliveryPrice": false,
+            "enableDeliveryTime": false,
+            "enableFinancialServiceFragment": true,
+            "enableFoodAvailability": true,
+            "enableImperialDistance": false,
+            "enableMoreWaysToPay": false,
+            "enableMovInformation": false,
+            "enableProductCardApi": false,
+            "enableQuestionsAndAnswers": false,
+            "enableRegionalAvailability": true,
+            "enableRemovalService": false,
+            "enableSchemaRegionalAvailabilityOnServer": true,
+            "enableZipIn": true,
+            "favouritesClientId": "46673edd-4370-40db-a2cd-c307e6055029",
+            "homeSmartPolicyUrl": "",
+            "locale": "pl-PL",
+            "priceFormat": {
+                "currencyPrefix": "",
+                "currencySuffix": "",
+                "currencySuffixZeroDecimals": ",-",
+                "priceFormatter": "0[ ]0[,]?00"
+            },
+            "privacyPolicyUrl": "https:\/\/www.ikea.com\/pl\/pl\/customer-service\/privacy-policy\/",
+            "shortDateFormat": "dd mmm, yyyy",
+            "siteBaseUrl": "https:\/\/www.ikea.com",
+            "siteFolder": "pl\/pl",
+            "stockNotificationApiBaseUrl": "https:\/\/api.salesitem.ingka.com\/notifications\/signup",
+            "textDirection": "ltr",
+            "useSentry": true,
+            "useSuggestedStoresResource": false
+        },
+        "product": {
+            "currencyCode": "PLN",
+            "description": "Tapicerowana rama \u0142\u00f3\u017cka, Vissle ciemnoszary",
+            "isComingSoon": false,
+            "isCustomMade": false,
+            "isFood": false,
+            "isMattress": false,
+            "isServerOnlineSellable": true,
+            "itemMeasureReferenceText": "120x200 cm",
+            "itemNo": "10578741",
+            "mediaList": [
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "\u0141\u00f3\u017cko SLATTUM: elegancka rama, wezg\u0142owie z tkaniny, minimalistyczny design, nowoczesny styl, proste linie, \u0142atwy monta\u017c.",
+                        "height": 2000,
+                        "id": "1259334_PE926648",
+                        "imageFileName": "1259334_PE926648_S5.JPG",
+                        "pristineImage": {
+                            "aspectRatio": {
+                                "x": 1,
+                                "y": 1
+                            },
+                            "height": 4000,
+                            "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/p\/1c84393e5304525d\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary\/PE926648.jpg",
+                            "width": 4000
+                        },
+                        "type": "MAIN_PRODUCT_IMAGE",
+                        "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__1259334_pe926648_s5.jpg",
+                        "width": 2000,
+                        "ratio": "1:1"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "Nowoczesna sypialnia z szarym \u0142\u00f3\u017ckiem SLATTUM, bia\u0142\u0105 po\u015bciel\u0105, kinkietem, ma\u0142ym stolikiem, ro\u015blin\u0105 i du\u017c\u0105 lamp\u0105 wisz\u0105c\u0105.",
+                        "height": 2000,
+                        "id": "1259366_PE926664",
+                        "imageFileName": "1259366_PE926664_S5.JPG",
+                        "pristineImage": {
+                            "aspectRatio": {
+                                "x": 1,
+                                "y": 1
+                            },
+                            "height": 4000,
+                            "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/p\/6244b142a00ab0bc\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary\/PE926664.jpg",
+                            "width": 4000
+                        },
+                        "type": "CONTEXT_PRODUCT_IMAGE",
+                        "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__1259366_pe926664_s5.jpg",
+                        "width": 2000,
+                        "ratio": "1:1"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "Nowoczesne \u0142\u00f3\u017cko z tapicerowanym wezg\u0142owiem, du\u017cymi k\u00f3\u0142kami na kocu, obok lampa, butelka, szk\u0142o na \u0142\u00f3\u017cku, zas\u0142ony i widok przez okno.",
+                        "height": 2000,
+                        "id": "1259340_PE926652",
+                        "imageFileName": "1259340_PE926652_S5.JPG",
+                        "pristineImage": {
+                            "aspectRatio": {
+                                "x": 1,
+                                "y": 1
+                            },
+                            "height": 4000,
+                            "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/p\/67622ba493c7e588\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary\/PE926652.jpg",
+                            "width": 4000
+                        },
+                        "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                        "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__1259340_pe926652_s5.jpg",
+                        "width": 2000,
+                        "ratio": "1:1"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "Szara rama \u0142\u00f3\u017cka na tle niebieskiej \u015bciany, czarne wezg\u0142owie, kremowa po\u015bciel, szafka nocna z karafk\u0105, szk\u0142o, ksi\u0105\u017cki, zdj\u0119cie ro\u015bliny powy\u017cej.",
+                        "height": 2000,
+                        "id": "1259339_PE926653",
+                        "imageFileName": "1259339_PE926653_S5.JPG",
+                        "pristineImage": {
+                            "aspectRatio": {
+                                "x": 1,
+                                "y": 1
+                            },
+                            "height": 4000,
+                            "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/p\/37c3d0ab038e36c3\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary\/PE926653.jpg",
+                            "width": 4000
+                        },
+                        "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                        "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__1259339_pe926653_s5.jpg",
+                        "width": 2000,
+                        "ratio": "1:1"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "Rama \u0142\u00f3\u017cka z wy\u015bcie\u0142anym wezg\u0142owiem i drewnianymi listwami, idealna do nowoczesnych sypialni, \u0142atwa w monta\u017cu i utrzymaniu.",
+                        "height": 2000,
+                        "id": "1259364_PE926662",
+                        "imageFileName": "1259364_PE926662_S5.JPG",
+                        "pristineImage": {
+                            "aspectRatio": {
+                                "x": 1,
+                                "y": 1
+                            },
+                            "height": 4000,
+                            "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/p\/6884407e2cf73dd9\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary\/PE926662.jpg",
+                            "width": 4000
+                        },
+                        "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                        "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__1259364_pe926662_s5.jpg",
+                        "width": 2000,
+                        "ratio": "1:1"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "Zbli\u017cenie na \u0142\u00f3\u017cka SLATTUM wy\u015bcie\u0142ane, tapicerowane wezg\u0142owie, prezentuj\u0105ce mi\u0119kk\u0105 tkanin\u0119 i schludne przeszycia.",
+                        "height": 2000,
+                        "id": "1259362_PE926661",
+                        "imageFileName": "1259362_PE926661_S5.JPG",
+                        "pristineImage": {
+                            "aspectRatio": {
+                                "x": 1,
+                                "y": 1
+                            },
+                            "height": 4000,
+                            "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/p\/66bbd7d706eb1b83\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary\/PE926661.jpg",
+                            "width": 4000
+                        },
+                        "type": "QUALITY_PRODUCT_IMAGE",
+                        "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__1259362_pe926661_s5.jpg",
+                        "width": 2000,
+                        "ratio": "1:1"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "Zbli\u017cenie tekstury tkaniny \u0142\u00f3\u017cka SLATTUM, g\u0142adkiej z subtelnym po\u0142yskiem, podkre\u015blaj\u0105cej jako\u015b\u0107 i design.",
+                        "height": 2000,
+                        "id": "1296229_PE935740",
+                        "imageFileName": "1296229_PE935740_S5.JPG",
+                        "pristineImage": {
+                            "aspectRatio": {
+                                "x": 1,
+                                "y": 1
+                            },
+                            "height": 4000,
+                            "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/p\/4c8112f7433ab32e\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary\/PE935740.jpg",
+                            "width": 4000
+                        },
+                        "type": "QUALITY_PRODUCT_IMAGE",
+                        "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__1296229_pe935740_s5.jpg",
+                        "width": 2000,
+                        "ratio": "1:1"
+                    }
+                },
+                {
+                    "type": "image",
+                    "content": {
+                        "alt": "Ilustracja z wymiarami dla produktu: SLATTUM.",
+                        "height": 2000,
+                        "id": "0747514_PE744564",
+                        "imageFileName": "0747514_PE744564_S5.JPG",
+                        "type": "MEASUREMENT_ILLUSTRATION",
+                        "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__0747514_pe744564_s5.jpg",
+                        "width": 2000,
+                        "ratio": "square"
+                    }
+                }
+            ],
+            "name": "SLATTUM",
+            "prefixedProductId": "10578741",
+            "price": 499,
+            "showAsNonSellableProduct": false,
+            "type": "ART",
+            "visibleItemNo": "105.787.41",
+            "ratingProps": {
+                "rating": 4.9,
+                "label": "(22)",
+                "ariaLabel": "Opinia: 4.9 na 5 gwiazdki. Recenzje og\u00f3\u0142em: 22"
+            },
+            "reviewCount": 22,
+            "secondaryRatings": [
+                {
+                    "id": "appearance",
+                    "label": "Wygl\u0105d",
+                    "value": 4.9
+                },
+                {
+                    "id": "ease_of_assembly",
+                    "label": "\u0141atwo\u015b\u0107 monta\u017cu\/instalacji",
+                    "value": 5
+                },
+                {
+                    "id": "product_quality",
+                    "label": "Jako\u015b\u0107 produktu",
+                    "value": 4.9
+                },
+                {
+                    "id": "value_for_money",
+                    "label": "Produkt wart swojej ceny",
+                    "value": 4.9
+                },
+                {
+                    "id": "works_as_expected",
+                    "label": "Spe\u0142nia oczekiwania",
+                    "value": 4.9
+                }
+            ],
+            "commercialLabel": "breath_taking",
+            "packaging": {
+                "numberOfPackages": 1,
+                "packages": [
+                    {
+                        "name": "SLATTUM",
+                        "typeName": "Tapicerowana rama \u0142\u00f3\u017cka",
+                        "itemNo": "10578741",
+                        "articleNumber": {
+                            "label": "Numer artyku\u0142u",
+                            "value": "105.787.41"
+                        },
+                        "measurementGroups": [
+                            {
+                                "heading": null,
+                                "measurements": [
+                                    {
+                                        "label": "Szeroko\u015b\u0107",
+                                        "type": "width",
+                                        "text": "79 cm",
+                                        "value": 79
+                                    },
+                                    {
+                                        "label": "Wysoko\u015b\u0107",
+                                        "type": "height",
+                                        "text": "10 cm",
+                                        "value": 10
+                                    },
+                                    {
+                                        "label": "D\u0142ugo\u015b\u0107",
+                                        "type": "length",
+                                        "text": "134 cm",
+                                        "value": 134
+                                    },
+                                    {
+                                        "label": "Waga",
+                                        "type": "weight",
+                                        "text": "28.25 kg",
+                                        "value": 28.25
+                                    }
+                                ]
+                            }
+                        ],
+                        "quantity": {
+                            "label": "Paczka(i)",
+                            "value": 1
+                        },
+                        "multiPackDisclaimerText": null
+                    }
+                ],
+                "maxMeasurements": {
+                    "weightText": "28.25 kg",
+                    "widthText": "79 cm",
+                    "lengthText": "134 cm",
+                    "heightText": "10 cm",
+                    "diameterText": ""
+                }
+            },
+            "returnPolicy": {
+                "numberOfDays": 365,
+                "returnPolicyUrl": "https:\/\/www.ikea.com\/pl\/pl\/customer-service\/returns-claims\/"
+            },
+            "rating": 4.9
+        },
+        "translations": {
+            "A11Y_GALLERY_VIDEO_TRANSCRIPT_BUTTON": "Poka\u017c transkrypcj\u0119",
+            "A11Y_SHOPPABLE_IMAGE_KEY_FACT_DOTS_LABEL": "Zobacz szczeg\u00f3\u0142y ",
+            "A11Y_SHOPPABLE_IMAGE_TOGGLE_DOTS_LABEL": "W\u0142\u0105cz lub wy\u0142\u0105cz interaktywne znaczniki na zdj\u0119ciu",
+            "AVAILABILITY_LOADING_PLACEHOLDER": "Sprawdzanie dost\u0119pno\u015bci...",
+            "CHANGE_STORE_BUTTON_LABEL": "Zmie\u0144 sklep",
+            "CLICK_AND_COLLECT_AVAILABLE_BASIC": "Dost\u0119pne",
+            "CLICK_AND_COLLECT_BASIC": "Zam\u00f3w i odbierz",
+            "CLICK_AND_COLLECT_NOT_SOLD_BASIC": "Produkt niedost\u0119pny",
+            "CLICK_AND_COLLECT_UNAVAILABLE_BASIC": "Chwilowo niedost\u0119pne",
+            "COMMON_SEE_OPTIONS_AT_CHECKOUT": "Zobacz opcje dost\u0119pne przy sk\u0142adaniu zam\u00f3wienia",
+            "CUSTOM_MADE_ALTERNATIVE_OPTIONS_MODAL_MESSAGE": "Wykonaj stosowne pomiary powierzchni lub przygotuj sw\u00f3j projekt kuchni i odwied\u017a wybrany sklep IKEA, gdzie nasz specjalista pomo\u017ce Ci z\u0142o\u017cy\u0107 zam\u00f3wienie.",
+            "CUSTOM_MADE_MODAL_BUTTON_LABEL": "Skontaktuj si\u0119 z nami",
+            "CUSTOM_MADE_MODAL_MESSAGE": "Ten produkt jest wykonywany na zam\u00f3wienie zgodnie z dostarczonymi wymiarami.",
+            "CUSTOM_MADE_SECONDARY_TEXT": "Ten produkt jest wykonywany na zam\u00f3wienie. Kliknij, aby dowiedzie\u0107 si\u0119 wi\u0119cej.",
+            "CUSTOM_MADE": "Skontaktuj si\u0119 z nami",
+            "DELIVERY_AVAILABLE_BASIC": "Dost\u0119pny",
+            "DELIVERY_BASIC": "Dostawa",
+            "DELIVERY_CHECK_AVAILABILITY_BASIC": "Sprawd\u017a dost\u0119pno\u015b\u0107",
+            "DELIVERY_CURRENTLY_LIMITED_LARGE_ORDERS_BASIC": "Chwilowe ograniczenia w dostawie",
+            "DELIVERY_CURRENTLY_NOT_SOLD_BASIC": "Obecnie niesprzedawane",
+            "DELIVERY_CURRENTLY_UNAVAILABLE_BASIC": "Chwilowo niedost\u0119pne",
+            "DELIVERY_NO_INFO_BASIC": "Informacja jest obecnie niedost\u0119pna. Prosimy o weryfikacj\u0119 poprawno\u015bci kodu pocztowego.",
+            "DELIVERY_NOT_POSSIBLE_BASIC": "Niedost\u0119pna",
+            "DELIVERY_NOT_SOLD_BASIC": "Us\u0142uga dostawy niedost\u0119pna",
+            "DELIVERY_PARTS_OF_SPR_BASIC": "Dost\u0119pne: {countInStock} z {countAll} cz\u0119\u015bci",
+            "DELIVERY": "Dostawa do {zip}",
+            "FIND_ALL_OPTIONS_AT_CHECKOUT_SECONDARY_TEXT": "Zobacz opcje dost\u0119pne przy sk\u0142adaniu zam\u00f3wienia",
+            "FOOD_ITEMS": "Produkt\u00f3w spo\u017cywczych nie mo\u017cna obecnie kupi\u0107 online. Sprawd\u017a ich dost\u0119pno\u015b\u0107 w najbli\u017cszym sklepie IKEA.",
+            "GALLERY_VIDEO_TRANSCRIPT_HIDE_BUTTON": "Ukryj transkrypcj\u0119",
+            "GALLERY_VIDEO_TRANSCRIPT_TITLE": "Transkrypcja filmu",
+            "KEY_FACTS_ARIA_LABEL": "Cechy produktu",
+            "LEARN_MORE_LINK_TEXT": "Dowiedz si\u0119 wi\u0119cej",
+            "MEDIA_GRID_DESCRIPTION": "{counter} {productName} obrazy",
+            "MEDIA_GRID_SKIP_IMAGES": "Pomi\u0144 zdj\u0119cia",
+            "MODAL_CLOSE_BUTTON_ALT_TEXT": "Zamknij modal",
+            "MOV_DELIVERY_DISCLAIMER": "Dostawa dost\u0119pna przy zam\u00f3wieniu od {movThreshold}",
+            "MOV_TERMSCONDITIONS_MODAL_CONTENT_1": "Aby skorzysta\u0107 z dostawy, w Twoim koszyku musz\u0105 znale\u017a\u0107 si\u0119 produkty o warto\u015bci co najmniej {movThreshold}, ju\u017c po zastosowaniu zni\u017cek, kredyt\u00f3w lub ofert promocyjnych. Zakupy kart podarunkowych, podatki, op\u0142aty za wysy\u0142k\u0119 i dostaw\u0119, op\u0142aty za monta\u017c lub inne op\u0142aty serwisowe nie wliczaj\u0105 si\u0119 do minimalnej kwoty zam\u00f3wienia ({movThreshold}).",
+            "MOV_TERMSCONDITIONS_MODAL_CONTENT_2": "Niewiele Ci brakuje, aby spe\u0142ni\u0107 warunki? Po prostu dodaj wi\u0119cej produkt\u00f3w lub zwi\u0119ksz ich liczb\u0119 w koszyku. Mo\u017cesz te\u017c nie zwraca\u0107 uwagi na minimaln\u0105 kwot\u0119 i zdecydowa\u0107 si\u0119 na odbi\u00f3r osobisty (je\u015bli jest dost\u0119pny).",
+            "MOV_TERMSCONDITIONS_MODAL_LINK": "Warunki i postanowienia",
+            "MOV_TERMSCONDITIONS_MODAL_TITLE": "Minimalna kwota zam\u00f3wienia: {movThreshold}\u200b",
+            "MSO_DISCLAIMER": "Min. ilo\u015b\u0107 w zam\u00f3wieniu online: {quantityMultiplier} szt. (lub wielokrotno\u015b\u0107)",
+            "MSO_PRICE_LABEL": "Sprzedawane online w zestawach po {quantityMultiplier} szt.",
+            "MSO_QUANTITY_STEPPER_ARIA_DECREASE": "Zmniejsz ilo\u015b\u0107 produkt\u00f3w {productName} o {quantityMultiplier}",
+            "MSO_QUANTITY_STEPPER_ARIA_DESCRIBEDBY": "U\u017cyj przycisku Zmniejsz lub Zwi\u0119ksz, aby zmieni\u0107 ilo\u015b\u0107. Zam\u00f3wienia online s\u0105 sprzedawane w zestawach po {quantityMultiplier} sztuk.",
+            "MSO_QUANTITY_STEPPER_ARIA_INCREASE": "Zwi\u0119ksz ilo\u015b\u0107 produkt\u00f3w {productName} o {quantityMultiplier}",
+            "OFFERS_LINKING_TO_OFFERS_PAGE": "Zobacz\u202fpowi\u0105zane\u202foferty",
+            "OFFERS_LINKING_TO_OFFERS_PAGE_ARIA_LABEL_CLOSE_COMPONENT": "Zamknij oferty cenowe",
+            "OFFERS_LINKING_TO_OFFERS_PAGE_ARIA_LABEL_OPEN_COMPONENT": "Zobacz oferty cenowe",
+            "OFFERS_LINKING_TO_OFFERS_PAGE_ARIA_LIVE_COMPONENT_OPENED": "Sekcja ofert cenowych zosta\u0142a otwarta",
+            "PIP_A11Y_PRODUCT_GALLERY_IMAGE_COUNT": "Wybierz {thumbnailPosition} z {thumbnailCount} zdj\u0119\u0107 produktu",
+            "PIP_A11Y_PRODUCT_GALLERY_IMAGE_DOWN": "Przewi\u0144 w d\u00f3\u0142, \u017ceby zobaczy\u0107 wi\u0119cej zdj\u0119\u0107 produktu",
+            "PIP_A11Y_PRODUCT_GALLERY_IMAGE_UP": "Przewi\u0144 w g\u00f3r\u0119, \u017ceby zobaczy\u0107 wi\u0119cej zdj\u0119\u0107 produktu",
+            "PIP_A11Y_PRODUCT_GALLERY_IMAGE": "Wybierz zdj\u0119cie produktu",
+            "PIP_A11Y_PRODUCT_GALLERY_SHOW_3D": "Poka\u017c widok 3D",
+            "PIP_A11Y_PRODUCT_GALLERY_SHOW_ALL_MEDIA": "Poka\u017c wszystkie zdj\u0119cia, otw\u00f3rz widok.",
+            "PIP_A11Y_PRODUCT_GALLERY_SHOW_NEXT_IMAGE": "Poka\u017c nast\u0119pne zdj\u0119cie",
+            "PIP_A11Y_PRODUCT_GALLERY_SHOW_PREVIOUS_IMAGE": "Poka\u017c poprzednie zdj\u0119cie",
+            "PIP_A11Y_PRODUCT_GALLERY_VIDEO_COUNT": "Wybierz {thumbnailVideoPosition} z {thumbnailVideoCount} film\u00f3w o produkcie",
+            "PIP_A11Y_PRODUCT_GALLERY_VIDEO": "Wybierz film o produkcie",
+            "PIP_A11Y_STORE_LIST_CLEAR_SEARCH": "Wyczy\u015b\u0107 pole",
+            "PIP_A11Y_STORE_LIST_SEARCH_STORE": "Wyszukaj sklepy",
+            "PIP_ACCESSORIES_CATEGORY_ARIA_DESCRIPTION": "Poka\u017c {catalogName}. Otworzy si\u0119 nowe okno.",
+            "PIP_ACCESSORIES_CATEGORY_WITH_NUMBER_ARIA_DESCRIPTION": "Poka\u017c {catalogName}. Otwiera si\u0119 okno modalne, kt\u00f3re zawiera kilka ({number}) akcesori\u00f3w z tej kategorii.",
+            "PIP_ACCESSORIES_CTA": "Poka\u017c wszystkie akcesoria",
+            "PIP_ACCESSORIES_CTA_HEADING": "Znajd\u017a wszystkie potrzebne akcesoria",
+            "PIP_ACCESSORIES_MODAL_DESCRIPTION": "Uzupe\u0142nij wygl\u0105d tymi starannie dobranymi produktami, kt\u00f3re idealnie pasuj\u0105 do {productName}.",
+            "PIP_ADD_TO_CART_CURRENTLY_NOT_SOLD_ONLINE": "Obecnie nie jest sprzedawany online",
+            "PIP_ADD_TO_CART_NOT_SOLD": "Produkt wycofany ze sprzeda\u017cy",
+            "PIP_ADD_TO_CART_ONLY_SOLD_IN_STORE": "Dost\u0119pne tylko stacjonarnie",
+            "PIP_ADD_TO_CART_SOLD_OUT_ONLINE": "Wyprzedane online",
+            "PIP_ADD_TO_CART_SOLD_OUT": "Wyprzedane",
+            "PIP_ADD_TO_CART_UNAVAILABLE_ONLINE_FOR_SELECTED_AREAS": "Niedost\u0119pne online w wybranych lokalizacjach",
+            "PIP_ADD_TO_CART": "Dodaj do koszyka",
+            "PIP_ADD_TO_IGIFT": "Dodaj do listy prezent\u00f3w",
+            "PIP_ADD_X_TO_CART": "Dodaj {productCount} szt. do koszyka",
+            "PIP_ADDED_TO_CART": "Dodano",
+            "PIP_ARIA_LABEL_TEXT_OPENS_IN_A_NEW_TAB": "{text} (otwiera si\u0119 w nowej zak\u0142adce)",
+            "PIP_ARTICLE_NUMBER_LABEL": "Numer artyku\u0142u",
+            "IKEA_FAMILY": "IKEA Family",
+            "LOW_PRICE_GUARANTEE_BODY": "Cena spad\u0142a? W ci\u0105gu 90 dni zwr\u00f3cimy ci r\u00f3\u017cnic\u0119 w cenie z",
+            "LOW_PRICE_GUARANTEE_TITLE": "Gwarancja niskiej ceny",
+            "RETURNS_BODY": "W ci\u0105gu 365 dni mo\u017cesz zmieni\u0107 zdanie i zwr\u00f3ci\u0107 kupione produkty. ",
+            "RETURNS_MODAL_BODY_1": "Je\u015bli zakupy w IKEA nie do ko\u0144ca spe\u0142ni\u0142y twoje oczekiwania, mo\u017cesz je zwr\u00f3ci\u0107 w ci\u0105gu 365 dni bez wzgl\u0119du na to, czy produkt jest nowy i zapakowany, czy otwarty i zmontowany.Wystarczy, \u017ce oka\u017cesz dow\u00f3d zakupu, a otrzymasz zwrot pieni\u0119dzy.",
+            "RETURNS_MODAL_BODY_2": ".",
+            "RETURNS_MODAL_BODY_3": "Zwrotu mo\u017cesz dokona\u0107 w najbardziej odpowiadaj\u0105cy ci spos\u00f3b: korzystaj\u0105c z ekspresowego zwrotu towaru w sklepie stacjonarnym, dokona\u0107 standardowego zwrotu w sklepie stacjonarnym albo skorzysta\u0107 z us\u0142ugi zwrot kurierem - nadanie w Punkcie. ",
+            "RETURNS_MODAL_BODY_4": ".",
+            "RETURNS_MODAL_LEARN_MORE": "Poznaj nasze zasady dotycz\u0105ce zwrot\u00f3w",
+            "RETURNS_MODAL_TITLE": "W zmianie zdania nie ma nic z\u0142ego!",
+            "RETURNS_TITLE": "W zmianie zdania nie ma nic z\u0142ego!",
+            "PIP_BUY_MODULE_ON_DISPLAY": "Na ekspozycji w sklepie",
+            "PIP_CATEGORY_LINKS_A11Y_LABEL": "{categoryName}, produkty: {productCount}",
+            "PIP_CATEGORY_LINKS_PARENT_LINK": "Wszystkie {categoryName}",
+            "PIP_CATEGORY_LINKS_TITLE": "Odkryj wi\u0119cej mo\u017cliwo\u015bci aran\u017cacji",
+            "PIP_CLEAR_ALL": "Wyczy\u015b\u0107 wszystko",
+            "PIP_COLLECT_FROM_PRICE_MODAL": "Od {price}",
+            "PIP_COLLECT_PRICE_FREE_MODAL": "Bezp\u0142atne",
+            "PIP_CUT_THROUGH_MATTRESS_HEADING": "Warstwy dopasowane do\u202ftwoich potrzeb",
+            "PIP_DELIVERY_HEADING_REGIONAL": "Dostawa do twojej okolicy",
+            "PIP_DELIVERY_PRICE_FREE": "Bezp\u0142atnie",
+            "PIP_DELIVERY_PRICE_PARCEL_FROM_PUP": "Od {price} w najbli\u017cszym punkcie odbioru",
+            "PIP_DELIVERY_PRICE": "Od {price}",
+            "PIP_DELIVERY_REGIONAL_DISCLOSURE_CTA": "wpisz sw\u00f3j kod pocztowy",
+            "PIP_DELIVERY_REGIONAL_DISCLOSURE": "Mo\u017cliwo\u015b\u0107 dostawy zosta\u0142a okre\u015blona na podstawie twojej lokalizacji. Aby uzyska\u0107 dok\u0142adniejsze informacje, {enterPostcodeLinkText}",
+            "PIP_DELIVERY_TIME": "Przewidywana dost\u0119pno\u015b\u0107 w okresie od {fromDate} do {toDate}",
+            "PIP_ECO_WEEE_FEE_EXCLUDE": "",
+            "PIP_ECO_WEEE_FEE_LINK_TEXT": "",
+            "PIP_ENERGY_ENRICHMENT_TEXT": "Informacja o energoch\u0142onno\u015bci",
+            "PIP_HEADING_ACCESSORIES": "Akcesoria do {name}",
+            "PIP_HIGHLIGHTED_REVIEWS_AVERAGE_RATING": "\u015arednia ocena",
+            "PIP_HIGHLIGHTED_REVIEWS_CTA": "Poka\u017c wszystkie opinie",
+            "PIP_HIGHLIGHTED_REVIEWS_HEADING": "Opinie klient\u00f3w",
+            "PIP_HIGHLIGHTED_REVIEWS_SKIP_SECTION": "Pomi\u0144 opinie klient\u00f3w",
+            "PIP_HIGHLIGHTED_REVIEWS_TOTAL": "Opinie",
+            "PIP_HOME_SMART_POLICY_LINK_ARIA_LABEL": "Zasady Inteligentnego Domu",
+            "PIP_HOW_TO_GET_IT": "Mo\u017cliwo\u015bci zakupu",
+            "PIP_KEY_FACT_MODAL_TITLE": "Najwa\u017cniejsze informacje",
+            "PIP_MOQ_DISCLOSURE": "Minimalna liczba zamawianych sztuk: {moQuantity}",
+            "PIP_MOQ_PRICE_LABEL": "Minimalna liczba zamawianych sztuk: {moQuantity}",
+            "PIP_MORE_WAYS_TO_PAY_CHECKING_STATUS": "Sprawdzanie sposob\u00f3w p\u0142atno\u015bci...",
+            "PIP_MORE_WAYS_TO_PAY": "Wi\u0119cej metod p\u0142atno\u015bci",
+            "PIP_MULTIPLE_PACKAGES": "{numberOfPackages} szt.",
+            "PIP_MUST_BE_COMPLETED_A11Y_QTY_LABEL": "Wybierz odpowiedni\u0105 ilo\u015b\u0107",
+            "PIP_NEAREST_STORES_LABEL_NO_DISTANCE_SINGLE": "Produkt {productName} jest dost\u0119pny w jednym sklepie w twojej okolicy",
+            "PIP_NEAREST_STORES_LABEL_NO_DISTANCE": "Produkt {productName} jest dost\u0119pny w {storeCount} sklepach w twojej okolicy",
+            "PIP_NO_JAVASCRIPT": "Musisz w\u0142\u0105czy\u0107 obs\u0142ug\u0119 JavaScript aby robi\u0107 zakupy na IKEA.com",
+            "PIP_ONE_PACKAGE": "1 paczka",
+            "PIP_PLACE_ORDER_MODAL_MESSAGE": "Odwied\u017a sklep IKEA, aby zobaczy\u0107 ten lub podobny produkt. Nasi pracownicy pomog\u0105 sprawdzi\u0107 dost\u0119pno\u015b\u0107 i z\u0142o\u017cy\u0107 zam\u00f3wienie.",
+            "PIP_PRODUCT_DETAILS_MATERIAL": "Materia\u0142y",
+            "PIP_PRODUCT_GALLERY_MODAL_TAB_ALL_MEDIA": "Wszystkie media",
+            "PIP_PRODUCT_GALLERY_MODAL_TAB_MEASUREMENT": "Wymiar",
+            "PIP_PRODUCT_GALLERY_MODAL_TAB_VIDEO": "Wideo",
+            "PIP_PRODUCT_GALLERY_NO_IMAGE": "Wkr\u00f3tce tu b\u0119dzie zdj\u0119cie",
+            "PIP_PRODUCT_GALLERY_VIDEO_HEADING_ASSEMBLY_INSTRUCTIONS": "Instrukcja monta\u017cu",
+            "PIP_PRODUCT_GALLERY_VIDEO_HEADING_FEATURES_AND_USAGE": "Cechy i u\u017cytkowanie",
+            "PIP_QUESTIONS_AND_ANSWERS": "Pytania i odpowiedzi",
+            "PIP_RECENTLY_VIEWED": "Ostatnio przegl\u0105dane",
+            "PIP_RECOMMEND_MUST_BE_COMPLETED_WITH": "Pami\u0119taj o",
+            "PIP_REMOVE_FROM_IGIFT": "Usu\u0144 z listy prezent\u00f3w",
+            "PIP_REMOVE_FROM_SHOPPING_LIST": "Usu\u0144 z listy zakupowej",
+            "PIP_SAVE_TO_SHOPPING_LIST": "Dodaj do listy zakup\u00f3w",
+            "PIP_REVIEWS_ATTRIBUTE_APPEARANCE": "Klienci twierdz\u0105, \u017ce {productName} \u015bwietnie wygl\u0105da w ich domu",
+            "PIP_REVIEWS_ATTRIBUTE_EASE_OF_ASSEMBLY": "Klienci twierdz\u0105, \u017ce \u0142atwo z\u0142o\u017cy\u0107 {productName}",
+            "PIP_REVIEWS_ATTRIBUTE_PRODUCT_QUALITY": "Klienci s\u0105 zadowoleni z jako\u015bci {productName}",
+            "PIP_REVIEWS_ATTRIBUTE_VALUE_FOR_MONEY": "Klienci twierdz\u0105, \u017ce {productName} to dobry stosunek jako\u015bci do ceny",
+            "PIP_REVIEWS_ATTRIBUTE_WORKS_AS_EXPECTED": "Klienci s\u0105 zadowoleni, \u017ce {productName} dzia\u0142a tak, jak oczekiwali",
+            "PIP_SAVED_TO_SHOPPING_LIST": "Zapisane",
+            "PIP_SERVICES_ASSEMBLY_MODAL_BASE_FEE": "Us\u0142ugi monta\u017cu wymagaj\u0105 op\u0142aty rycza\u0142towej w wysoko\u015bci {assemblyServiceFee} za zam\u00f3wienie. Ta jednorazowa kwota jest naliczana przy realizacji zakupu, niezale\u017cnie od liczby produkt\u00f3w wybranych do monta\u017cu. Ostateczna cena b\u0119dzie widoczna przy finalizacji transakcji",
+            "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_1_CONTENT": null,
+            "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_1_TITLE": null,
+            "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_2_CONTENT": null,
+            "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_2_TITLE": null,
+            "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_3_CONTENT": null,
+            "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_3_TITLE": null,
+            "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_4_CONTENT": null,
+            "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_4_TITLE": null,
+            "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_5_CONTENT": null,
+            "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_5_TITLE": null,
+            "PIP_SERVICES_ASSEMBLY_MODAL_FAQ_TITLE": "Najcz\u0119\u015bciej zadawane pytania",
+            "PIP_SERVICES_ASSEMBLY_MODAL_INTRO": "Us\u0142uga monta\u017cu produktu {productName} jest dost\u0119pna dla kodu pocztowego {zipCode}.",
+            "PIP_SERVICES_ASSEMBLY_MODAL_INTRODUCTION": "Us\u0142uga monta\u017cu {productName} jest dost\u0119pna dla kodu pocztowego {zipCode}. Mo\u017cesz doda\u0107 t\u0119 us\u0142ug\u0119 do koszyka i zaplanowa\u0107 preferowany czas realizacji podczas sk\u0142adania zam\u00f3wienia.",
+            "PIP_SERVICES_ASSEMBLY_MODAL_LINK": "Dowiedz si\u0119 wi\u0119cej o us\u0142udze monta\u017cu",
+            "PIP_SERVICES_ASSEMBLY_MODAL_MIN_FEE": "Us\u0142ugi monta\u017cu wymagaj\u0105 minimalnej op\u0142aty w wysoko\u015bci {assemblyServiceFee}. Ostateczny koszt zale\u017cy od konkretnych produkt\u00f3w wybranych do monta\u017cu. Us\u0142ug\u0119 t\u0119 mo\u017cna doda\u0107 do poszczeg\u00f3lnych produkt\u00f3w z koszyka podczas realizacji zakupu. Za wybran\u0105 us\u0142ug\u0119 monta\u017cu zap\u0142acisz z g\u00f3ry podczas finalizacji transakcji.",
+            "PIP_SERVICES_ASSEMBLY_MODAL_PARTNER_INTRODUCTION": "This service will be fulfilled by {assemblyProvider}",
+            "PIP_SERVICES_ASSEMBLY_TITLE": "Us\u0142uga monta\u017cu",
+            "PIP_SERVICES_FURNITURE_REMOVAL_MODAL_P1": "Zabierzemy stare meble, gdy b\u0119dziemy dostarcza\u0107 Twoje zakupy.",
+            "PIP_SERVICES_FURNITURE_REMOVAL_MODAL_P2": "Mo\u017cesz zobaczy\u0107 list\u0119 mebli, o kt\u00f3rych mowa, i doda\u0107 t\u0119 us\u0142ug\u0119 do koszyka, a nast\u0119pnie wskaza\u0107 preferowan\u0105 godzin\u0119 podczas sk\u0142adania zam\u00f3wienia.",
+            "PIP_SERVICES_FURNITURE_REMOVAL_MODAL_TITLE": "Odbi\u00f3r mebli",
+            "PIP_SERVICES_REMOVAL_MODAL_LINK": "Dowiedz si\u0119 wi\u0119cej o us\u0142udze odbioru",
+            "PIP_SERVICES_REMOVAL_MODAL_TITLE": "Us\u0142uga odbioru",
+            "PIP_SERVICES_REMOVAL_P1_GENERIC": "Wyniesiemy Tw\u00f3j stary produkt, dzi\u0119ki czemu zyskasz miejsce na ten w\u0142a\u015bnie zakupiony.",
+            "PIP_SERVICES_REMOVAL_P1_MATTRESS": "Wyniesiemy Tw\u00f3j stary materac, dzi\u0119ki czemu zyskasz miejsce na ten w\u0142a\u015bnie zakupiony.",
+            "PIP_SERVICES_REMOVAL_P1_SOFA": "Wyniesiemy Twoj\u0105 star\u0105 sof\u0119, dzi\u0119ki czemu zyskasz miejsce na t\u0119 w\u0142a\u015bnie zakupion\u0105.",
+            "PIP_SERVICES_REMOVAL_P1_WHITEGOODS": "Wyniesiemy Twoje stare sprz\u0119ty AGD, dzi\u0119ki czemu zyskasz miejsce na te w\u0142a\u015bnie zakupione.",
+            "PIP_SERVICES_REMOVAL_P2": "Mo\u017cesz doda\u0107 t\u0119 us\u0142ug\u0119 do koszyka i wskaza\u0107 preferowan\u0105 godzin\u0119 podczas sk\u0142adania zam\u00f3wienia.",
+            "PIP_SERVICES_SHELF_ASSEMBLY_BASE_FEE": "Zam\u00f3w profesjonalny monta\u017c {productName} za {assemblyPrice} + jednorazowa op\u0142ata.",
+            "PIP_SERVICES_SHELF_ASSEMBLY_MIN_FEE_DISCLOSURE": "* Najni\u017csza cena za us\u0142ug\u0119 monta\u017cu to {assemblyServiceMinFee}",
+            "PIP_SERVICES_SHELF_ASSEMBLY_MIN_FEE": "Um\u00f3w si\u0119 na profesjonalny monta\u017c {productName} w cenie {assemblyPrice}.",
+            "PIP_SERVICES_SHELF_ASSEMBLY": "Zle\u0107 profesjonalny monta\u017c produktu {productName}.",
+            "PIP_SERVICES_SHELF_FURNITURE_REMOVAL": "Zabierzemy stare meble, gdy b\u0119dziemy dostarcza\u0107 Twoje zakupy.",
+            "PIP_SERVICES_SHELF_GENERIC_LINK": "Dowiedz si\u0119 wi\u0119cej",
+            "PIP_SERVICES_SHELF_REMOVAL": "Bezproblemowy odbi\u00f3r:",
+            "PIP_SERVICES_SHELF_TITLE": "Dost\u0119pne us\u0142ugi",
+            "PIP_SOLDOUT_SIMILAR_PRODUCTS_PROMOTING": "Poznaj produkty podobne do {productName} ",
+            "PIP_STOCK_LINK_CHECK_OTHER_IKEA_STORES": "Sprawd\u017a w innych sklepach IKEA",
+            "PIP_STOCK_NOTIFICATION_BUTTON_TEXT": "Wy\u015blij mi powiadomienie",
+            "PIP_STOCK_NOTIFICATION_CONTACT_TYPE_LABEL": "Jak mamy ci\u0119 powiadomi\u0107?",
+            "PIP_STOCK_NOTIFICATION_EMAIL_LABEL": "Wpisz sw\u00f3j adres e-mail",
+            "PIP_STOCK_NOTIFICATION_ENTER_VALID_EMAIL": "Podaj sw\u00f3j adres e-mail",
+            "PIP_STOCK_NOTIFICATION_ENTER_VALID_PHONE_NUMBER": "Podaj sw\u00f3j numer telefonu",
+            "PIP_STOCK_NOTIFICATION_ERROR_HEADING": "Co\u015b posz\u0142o nie tak",
+            "PIP_STOCK_NOTIFICATION_ERROR_MESSAGE": "Nie uda\u0142o nam si\u0119 po\u0142\u0105czy\u0107 z serwerem. Spr\u00f3buj ponownie za kilka minut.",
+            "PIP_STOCK_NOTIFICATION_ERROR_UNSUPPORTED_CLASS_UNIT": "Przepraszamy, powiadamianie o zapasach jest teraz niedost\u0119pne.",
+            "PIP_STOCK_NOTIFICATION_ERROR_UNSUPPORTED_CONTACT_TYPE": "Przepraszamy, wybrana metoda kontaktu jest niedost\u0119pna. Spr\u00f3buj innej metody.",
+            "PIP_STOCK_NOTIFICATION_MARKETING_CONSENT_CONFIRMATION": "Pomy\u015blnie zapisano ci\u0119 do subskrypcji wiadomo\u015bci e-mail.",
+            "PIP_STOCK_NOTIFICATION_MARKETING_CONSENT": "Chc\u0119 dostawa\u0107 e-maile z nowo\u015bciami, poradami i ofertami IKEA. Zrezygnujesz z tej us\u0142ugi w dowolnym momencie \u2013 wystarczy zmieni\u0107 ustawienia lub klikn\u0105\u0107 link w wiadomo\u015bci.{privacyLink}",
+            "PIP_STOCK_NOTIFICATION_MESSAGE_SUCCESS_CONTENT": "Powiadomimy ci\u0119, kiedy produkt {productName} b\u0119dzie z powrotem dost\u0119pny! Je\u015bli po 45 dniach wci\u0105\u017c nie b\u0119dzie dost\u0119pny, skontaktujemy si\u0119 z tob\u0105, aby odnowi\u0107 twoje powiadomienia.",
+            "PIP_STOCK_NOTIFICATION_MESSAGE_SUCCESS_TITLE": "Uda\u0142o ci si\u0119 zapisa\u0107!",
+            "PIP_STOCK_NOTIFICATION_OPTION_EMAIL": "E-mail",
+            "PIP_STOCK_NOTIFICATION_OPTION_SMS": "SMS",
+            "PIP_STOCK_NOTIFICATION_PHONE_NUMBER_SAVE_CONFIRMATION": "Numer telefonu {phoneNumber} zosta\u0142 dodany do Twojego profilu IKEA Family",
+            "PIP_STOCK_NOTIFICATION_PHONE_NUMBER_SAVE": "Zapisz numer telefonu w moim profilu IKEA Family",
+            "PIP_STOCK_NOTIFICATION_PHONE_NUMBER_UPDATE_CONFIRMATION": "Numer telefonu w Twoim profilu IKEA Family zosta\u0142 zmieniony na {phoneNumber}",
+            "PIP_STOCK_NOTIFICATION_PHONE_NUMBER_UPDATE": "Zaktualizuj numer telefonu w moim profilu IKEA Family",
+            "PIP_STOCK_NOTIFICATION_PRIVACY_POLICY_LINK_TEXT": "Polityka IKEA",
+            "PIP_STOCK_NOTIFICATION_PRIVACY_POLICY": "Potwierdzam, \u017ce zapozna\u0142am\/em si\u0119 z",
+            "PIP_STOCK_NOTIFICATION_SMS_LABEL_HINT": " Pami\u0119taj o kodzie kraju, je\u015bli Tw\u00f3j numer telefonu kom\u00f3rkowego jest zarejestrowany za granic\u0105.",
+            "PIP_STOCK_NOTIFICATION_SMS_LABEL": "Podaj sw\u00f3j numer telefonu kom\u00f3rkowego",
+            "PIP_STOCK_NOTIFICATION_SUBTITLE": "Zapisz si\u0119 teraz, aby otrzymywa\u0107 powiadomienia o stanach magazynowych i dowiedzie\u0107 si\u0119 od razu, gdy produkt {productName} b\u0119dzie ponownie dost\u0119pny.",
+            "PIP_STOCK_NOTIFICATION_TITLE": "Powiadomienie o dost\u0119pno\u015bci",
+            "PIP_STOCK_NOTIFICATION_VALIDATION_IKEA_POLICY": "Aby kontynuowa\u0107, musisz wyrazi\u0107 zgod\u0119 na zasady IKEA.",
+            "PIP_STYLE_REC_CTA": "Kupuj w dobrym stylu",
+            "PIP_STORE_DETAILS_LINK_TEXT": "Szczeg\u00f3\u0142y sklepu",
+            "PIP_STORE_MODAL_LAST_CHECKED": "Stan na: {lastCheckedDate}, godz. {lastCheckedTime}",
+            "PIP_STORE_MODAL_ON_DISPLAY_A_VARIANT": "Podobny produkt jest wystawiony w tym sklepie",
+            "PIP_STORE_MODAL_ON_DISPLAY_SEVERAL_VARIANTS": "Podobne produkty s\u0105 wystawione w tym sklepie",
+            "PIP_STORE_MODAL_ON_DISPLAY_THE_PRODUCT": "Produkt {productName} jest wystawiony w tym sklepie",
+            "PIP_STORE_MODAL_PARTS_OF_SPR_AVAILABLE_WHERE_TO_FIND_IT": "Gdzie znale\u017a\u0107 dost\u0119pne cz\u0119\u015bci",
+            "PIP_STORE_MODAL_PARTS_OF_SPR_UNAVAILABLE_DESCRIPTION": "Popro\u015b wsp\u00f3\u0142pracownika o pomoc w znalezieniu odpowiednich alternatyw.",
+            "PIP_STORE_MODAL_PARTS_OF_SPR_UNAVAILABLE_TITLE": "Niekt\u00f3re cz\u0119\u015bci s\u0105 niedost\u0119pne",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_FACT_COUNT": "Liczba opakowa\u0144 do odebrania: {packageCount}.",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_FACT_DIMENSION": "Najd\u0142u\u017cszy bok ma {packageMaxLength}, a najszerszy \u2013 {packageMaxWidth}.",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_FACT_WEIGHT_SINGLE": "Waga opakowania wynosi {packageMaxWeight}",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_FACT_WEIGHT": "Najci\u0119\u017csze opakowanie wa\u017cy {packageMaxWeight}.",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_LOCATION_FS": "Zam\u00f3w w Punkcie Samoobs\u0142ugowym lub zapytaj pracownika IKEA.",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_LOCATION_SS": "Magazyn samoobs\u0142ugowy",
+            "PIP_STORE_MODAL_PRODUCT_OVERVIEW_TITLE": "Informacje o pakowaniu",
+            "PIP_STORE_MODAL_TITLE": "IKEA {storeName}",
+            "PIP_STORE_MODAL_WHERE_TO_GET_IT_MARKET_HALL": "Poziom Akcesoria wyposa\u017cenia domu",
+            "PIP_STORE_MODAL_WHERE_TO_GET_IT_SECTION": "Dzia\u0142",
+            "PIP_STORE_MODAL_WHERE_TO_GET_IT_SHOWROOM": "Poziom Meble",
+            "PIP_STORE_MODAL_WHERE_TO_GET_IT_TITLE": "Lokalizacja produktu",
+            "PIP_STORE_MODAL_WHERE_TO_GET_IT_WITH_FLOOR_INFO": "{storeLocation}",
+            "PIP_TABS_OVERVIEW": "Przegl\u0105d",
+            "PIP_TABS_SUBTITLE_MORE_INFO": "Wi\u0119cej informacji",
+            "PIP_TOTAL_PRICE": "",
+            "PIP_UPSELL_COMPLETE_WITH_MODAL_TEXT": "Wybierz idealn\u0105 kombinacj\u0119, aby stworzy\u0107 {productName}",
+            "PIP_UPSELL_COMPLETE_WITH": "Uzupe\u0142nij o",
+            "PIP_USP_GUARANTEE_MESSAGE": "Pewno\u015b\u0107 ka\u017cdego zakupu",
+            "PIP_USP_SLEEPTRIAL_DAYS": "Wypr\u00f3buj w domu przez {sleepTrialDays} dni.",
+            "PIP_USP_SLEEPTRIAL_MESSAGE": "Nie podoba ci si\u0119? Wymie\u0144 go na inny.",
+            "PIP_ZIP_IN_MODAL_SUBTITLE": "Otrzymaj produkty IKEA z dostaw\u0105 prosto do domu.",
+            "PLANNER_MOBILE_STICKY_CTA": "Samodzielnie zaprojektuj {productName} ",
+            "QUANTITY_PICKER_ARIA_DESCRIBED_BY": "Wpisz liczb\u0119 lub zmie\u0144 jej warto\u015b\u0107 za pomoc\u0105 znaku plus i minus.",
+            "QUANTITY_PICKER_ARIA_DESCRIPTION": "Wpisz liczb\u0119 lub zmie\u0144 ilo\u015b\u0107. Ilo\u015b\u0107 minimalna to {minimumNumber}.",
+            "QUANTITY_PICKER_ARIA_LABEL_DECREASE": "Zmniejsz ilo\u015b\u0107",
+            "QUANTITY_PICKER_ARIA_LABEL_INCREASE": "Zwi\u0119ksz ilo\u015b\u0107",
+            "QUANTITY_PICKER_ARIA_LABEL_INPUT": "Wprowadzona ilo\u015b\u0107",
+            "QUEBEC_BILL29_DISCLAIMER": "Dost\u0119pno\u015b\u0107 napraw i cz\u0119\u015bci zamiennych \u2013 informacja dla klient\u00f3w z Quebecu.",
+            "READ_MORE_LINK_TEXT": "Dowiedz si\u0119 wi\u0119cej",
+            "SHOPPABLE_IMAGE_DOTS_ARIA_LABEL": "Zobacz produkt",
+            "STOCK_DISCLAIMER": "Stany magazynowe i ceny na stronie mog\u0105 si\u0119 r\u00f3\u017cni\u0107 od tych w sklepie",
+            "STOCK_FIND_AISLE": "Rega\u0142",
+            "STOCK_FIND_SHELF": "Miejsce",
+            "STORE_BASIC": "Sklep",
+            "STORE_CHECK_STOCK": "Sprawd\u017a dost\u0119pno\u015b\u0107 w sklepie",
+            "STORE_IN_STOCK_BASIC": "Dost\u0119pny",
+            "STORE_IN_STOCK_QUANTITY_DETAILED": "W magazynie. Dost\u0119pnych: {quantity}",
+            "STORE_LIST_CURRENT_LOCATION_FAIL_HEADING": "Nie wiemy, gdzie jeste\u015b",
+            "STORE_LIST_CURRENT_LOCATION_FAIL_TEXT": "Upewnij si\u0119, \u017ce przegl\u0105darka ma dost\u0119p do bie\u017c\u0105cej lokalizacji i spr\u00f3buj ponownie.",
+            "STORE_LIST_CURRENT_LOCATION_QUERY": "Bie\u017c\u0105ca lokalizacja",
+            "STORE_LIST_CURRENT_LOCATION": "U\u017cyj obecnej lokalizacji",
+            "STORE_LIST_DISTANCE_AWAY": "{distance} od Ciebie",
+            "STORE_LIST_FILTER_BY_AVAILABILITY_FAIL_HEADING": "Nie znaleziono sklep\u00f3w",
+            "STORE_LIST_FILTER_BY_AVAILABILITY_FAIL_TEXT": "Niestety \u017caden ze sklep\u00f3w nie ma dost\u0119pnych produkt\u00f3w.",
+            "STORE_LIST_FILTER_BY_AVAILABILITY": "Tylko sklepy z dost\u0119pnymi produktami",
+            "STORE_LIST_SEARCH_FAIL_HEADING": "Nie znaleziono lokalizacji",
+            "STORE_LIST_SEARCH_FAIL_TEXT": "Wprowad\u017a prawid\u0142ow\u0105 lokalizacj\u0119 w swoim kraju\/regionie i spr\u00f3buj ponownie.",
+            "STORE_LIST_SEARCH_PLACEHOLDER": "Szukaj wed\u0142ug lokalizacji",
+            "STORE_LIST_SELECT_STORE": "Wybierz sklep",
+            "STORE_LIST_SORT_BY_DISTANCE_TO_LOCATION": "Lista uporz\u0105dkowana wg odleg\u0142o\u015bci sklep\u00f3w od strefy {location}",
+            "STORE_NOT_SOLD_BASIC": "Produkt niedost\u0119pny",
+            "STORE_OUT_OF_STOCK_BASIC": "Produkt niedost\u0119pny",
+            "STORE_OUT_OF_STOCK_RESTOCK_DATES_BASIC": "Powraca: {fromDate}\u2013{toDate}",
+            "STORE_OUT_OF_STOCK_RESTOCK_DATES_DETAILED": "Brak w magazynie. Przewidywany powr\u00f3t: {fromDate}\u2013{toDate}",
+            "STORE_PARTS_OF_SPR_BASIC": "{countInStock} z {countAll} cz\u0119\u015bci w magazynie",
+            "STORE_PLACE_ORDER_BASIC": "Ten produkt mo\u017cesz zam\u00f3wi\u0107 w sklepie IKEA.",
+            "STORE_PLACE_ORDER_SECONDARY_TEXT": "Znajd\u017a ten lub podobny produkt na ekspozycji w sklepie",
+            "STORE_RUNNING_LOW_BASIC": "Ograniczona dost\u0119pno\u015b\u0107",
+            "STORE_RUNNING_LOW_QUANTITY_DETAILED": "Ograniczona dost\u0119pno\u015b\u0107. Pozosta\u0142o: {quantity}.",
+            "STORE_STOCK_NO_INFO_BASIC": "Us\u0142uga niedost\u0119pna w wybranej lokalizacji.",
+            "STORE_STOCK_NO_INFO_SECONDARY_TEXT": "Spr\u00f3buj ponownie p\u00f3\u017aniej",
+            "XR_VIEWER_AR_BUTTON_LABEL": "Wypr\u00f3buj to w swoim domu",
+            "XR_VIEWER_HEADING": "{productName} Widok 3D",
+            "XR_VIEWER_LOADING_LABEL": "\u0141adowanie...",
+            "XR_VIEWER_OPEN_BUTTON_LABEL": "Zobacz w 3D",
+            "XR_VIEWER_TOUCH_PROMPT_LABEL": "Dotknij i przeci\u0105gnij, aby obr\u00f3ci\u0107",
+            "ZIP_IN_CHANGE_OR_FORGET_POST_CODE": "{changePostCodeLinkText} lub {forgetPostCodeLinkText}.",
+            "ZIP_IN_CHANGE_ZIP_TEXT": "Sprawd\u017a dla innego kodu pocztowego",
+            "ZIP_IN_DELIVERY_INFORMATION_UNAVAILABLE_DESCRIPTION": "Przepraszamy, wygl\u0105da na to, \u017ce co\u015b posz\u0142o nie tak po naszej stronie. Sprawd\u017a przy realizacji zam\u00f3wienia, czy produkt mo\u017ce by\u0107 dostarczony na Tw\u00f3j adres lub spr\u00f3buj ponownie p\u00f3\u017aniej.",
+            "ZIP_IN_DELIVERY_NOT_OFFERED_DESCRIPTION": "Niestety, wygl\u0105da na to, \u017ce nie dostarczamy do tego rejonu. ",
+            "ZIP_IN_FORGET_POST_CODE_LINK_TEXT": "zapomnij kod pocztowy",
+            "ZIP_IN_LIMITED_DELIVERY_MODAL_MESSAGE": "Przykro nam, ale ten produkt mo\u017cemy dostarczy\u0107 pod adres z wybranym kodem pocztowym tylko wtedy, gdy wchodzi on w sk\u0142ad wi\u0119kszego zam\u00f3wienia. Mo\u017cesz robi\u0107 dalej zakupy i doda\u0107 do koszyka inne produkty albo kontynuowa\u0107 sk\u0142adanie zam\u00f3wienia, aby dowiedzie\u0107 si\u0119, czy Twoje zam\u00f3wienie jest ju\u017c dostatecznie du\u017ce."
+        },
+        "viewItem": {
+            "id": "10578741",
+            "product_buyable_online": 1,
+            "ratings_value": 49,
+            "number_of_ratings": 22,
+            "ratings_views": 1,
+            "assembly_availability_hit": 1,
+            "commercial_label": "breath_taking"
+        },
+        "purchaseType": "high_consideration_visual",
+        "modalProps": {
+            "ariaLabelBack": "Powr\u00f3t do poprzedniego ekranu",
+            "ariaLabelClose": "Zamknij modal"
+        },
+        "pipPriceModuleProps": {
+            "priceModuleProps": {
+                "currentPriceProps": {
+                    "integerValue": "499",
+                    "decimalValue": "-",
+                    "decimalSign": ",",
+                    "decimalVerticalAlignment": "base",
+                    "captionPrefix": "Cena"
+                },
+                "priceOfferType": "bti",
+                "productName": "SLATTUM"
+            },
+            "productDescriptionProps": {
+                "descriptionText": "Tapicerowana rama \u0142\u00f3\u017cka, Vissle ciemnoszary",
+                "measurementLinkProps": {
+                    "text": "120x200 cm",
+                    "aria-label": "120x200 cm. Poka\u017c wymiary"
+                }
+            }
+        },
+        "productSummaryProps": {
+            "articleNumberLabel": "Numer artyku\u0142u",
+            "description": "Rama \u0142\u00f3\u017cka SLATTUM ma mi\u0119kkie obicie i tapicerowany zag\u0142\u00f3wek, kt\u00f3ry stanowi pi\u0119kne wyko\u0144czenie dla prostego, stylowego wzornictwa. Co si\u0119 tu mo\u017ce nie podoba\u0107? Jest te\u017c \u0142atwa i wygodna w transporcie, poniewa\u017c ca\u0142a rama mie\u015bci si\u0119 w jednej paczce.",
+            "productName": "SLATTUM",
+            "showAsNonSellableProduct": false,
+            "visibleItemNo": "105.787.41",
+            "locateInStoreLinkText": "Znajd\u017a produkt w sklepie",
+            "designer": {
+                "label": "Projektant",
+                "name": "David Wahl",
+                "imageUrl": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__1441954_pe986629_s.jpg",
+                "imageAlt": "Czarno-bia\u0142y portret David Wahl z kr\u00f3tkimi w\u0142osami, ubranego w koszulk\u0119 z d\u0142ugim r\u0119kawem, pozuj\u0105cego pewnie."
+            }
+        },
+        "contentRecFragmentUrls": {
+            "imc": "\/pl\/pl\/content-rec\/fragments\/dynamic\/skeleton\/compact-feed-imc\/compact-feed-imc-fragment.html?productId=10578741",
+            "vugc": "\/pl\/pl\/content-rec\/fragments\/dynamic\/skeleton\/compact-feed-vugc\/compact-feed-vugc-fragment.html?productId=10578741"
+        },
+        "lowerFunnelFragmentUrls": {
+            "availability": "\/pl\/pl\/lower-funnel-fragments\/product-availability\/?itemNo=10578741&inline",
+            "comingSoon": "\/pl\/pl\/lower-funnel-fragments\/coming-soon\/?itemNo=10578741&inline"
+        },
+        "accessoriesFragmentUrl": "\/pl\/pl\/pip\/fragments\/accessories\/?itemNo=10578741&inline",
+        "breadcrumbsSource": "\/pl\/pl\/navigation\/breadcrumbs\/49096.html?page-title=~SLATTUM~%20Tapicerowana%20rama%20%C5%82%C3%B3%C5%BCka&page-url=https:\/\/www.ikea.com\/pl\/pl\/p\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary-10578741\/",
+        "categoryShortcutsProps": {
+            "shortcuts": [
+                {
+                    "id": "49096",
+                    "name": "\u0141\u00f3\u017cka tapicerowane",
+                    "url": "https:\/\/www.ikea.com\/pl\/pl\/cat\/lozka-tapicerowane-49096\/",
+                    "productCount": 98,
+                    "imageUrl": "https:\/\/www.ikea.com\/global\/assets\/range-categorisation\/images\/product\/upholstered-beds-49096.jpeg"
+                },
+                {
+                    "id": "16284",
+                    "name": "\u0141\u00f3\u017cka podw\u00f3jne",
+                    "url": "https:\/\/www.ikea.com\/pl\/pl\/cat\/lozka-podwojne-16284\/",
+                    "productCount": 723,
+                    "imageUrl": "https:\/\/www.ikea.com\/pl\/pl\/range-categorisation\/images\/product\/double-beds-16284.jpeg"
+                },
+                {
+                    "id": "19037",
+                    "name": "Le\u017canki i \u0142\u00f3\u017cka dla go\u015bci",
+                    "url": "https:\/\/www.ikea.com\/pl\/pl\/cat\/lezanki-i-lozka-dla-gosci-19037\/",
+                    "productCount": 61,
+                    "imageUrl": "https:\/\/www.ikea.com\/global\/assets\/range-categorisation\/images\/product\/guest-beds-day-beds-19037.jpeg"
+                },
+                {
+                    "id": "25205",
+                    "name": "\u0141\u00f3\u017cka z pojemnikami",
+                    "url": "https:\/\/www.ikea.com\/pl\/pl\/cat\/lozka-z-pojemnikami-25205\/",
+                    "productCount": 364,
+                    "imageUrl": "https:\/\/www.ikea.com\/pl\/pl\/range-categorisation\/images\/product\/beds-with-storage-25205.jpeg"
+                }
+            ],
+            "parentCategory": {
+                "name": "\u0141\u00f3\u017cka",
+                "url": "https:\/\/www.ikea.com\/pl\/pl\/cat\/lozka-bm003\/"
+            }
+        },
+        "completeWithFragmentUrl": "\/pl\/pl\/pip\/fragments\/complete-with\/?itemNo=10578741&inline",
+        "hasServiceOffers": true,
+        "highlightedReviews": [
+            {
+                "ariaLabel": "Opinia: 5 na 5 gwiazdki.",
+                "name": "Anna",
+                "ratingValue": 5,
+                "title": "Wygodne i sprytne \u0142\u00f3\u017cko",
+                "text": "Bardzo \u0142atwy monta\u017c. Rama na elegancki wygl\u0105d, rozmiar idealny na ma\u0142e powierzchnie. Materac kupiony odzielnie te\u017c w Ikea. Do pokoju nastolatka idelane!",
+                "countryCode": "pl",
+                "countryName": "Polska"
+            },
+            {
+                "ariaLabel": "Opinia: 5 na 5 gwiazdki.",
+                "name": "Zuzanna",
+                "ratingValue": 5,
+                "title": "Super",
+                "text": "Idealne polaczenie wygody i prostoty. Za rozsadna cene.",
+                "countryCode": "pl",
+                "countryName": "Polska"
+            },
+            {
+                "ariaLabel": "Opinia: 5 na 5 gwiazdki.",
+                "name": "Dorota",
+                "ratingValue": 5,
+                "title": "rama \u0142\u00f3\u017cka zgodna z oczekiwaniem",
+                "text": "Z\u0142o\u017cenie ramy \u0142\u00f3\u017cka proste, zgodnie z opisem.Rama stabilna .",
+                "countryCode": "pl",
+                "countryName": "Polska"
+            }
+        ],
+        "listingRecFragments": {
+            "similarProducts": {
+                "src": "\/pl\/pl\/listing\/fragments\/product-rec\/similar-products\/?layoutMode=carousel&cardType=standard&baseProduct=10578741",
+                "header": "Produkty pokrewne",
+                "attributionLabel": "rec-pip-similar-products"
+            },
+            "recommendedForYou": {
+                "src": "\/pl\/pl\/listing\/fragments\/product-rec\/recommended-for-you\/?layoutMode=carousel&cardType=standard&baseProduct=10578741",
+                "header": "Wybrane dla Ciebie",
+                "attributionLabel": "rec-pip-recommended-for-you"
+            },
+            "moreFrom": {
+                "src": "\/pl\/pl\/listing\/fragments\/product-rec\/more-from\/?layoutMode=carousel&cardType=standard&baseProduct=10578741",
+                "header": "Wi\u0119cej z ",
+                "attributionLabel": "rec-pip-more-from"
+            },
+            "accessories": {
+                "src": "\/pl\/pl\/listing\/fragments\/product-rec\/accessories\/?layoutMode=carousel&cardType=standard&baseProduct=10578741",
+                "header": "Akcesoria do SLATTUM",
+                "attributionLabel": "rec-pip-accessories"
+            }
+        },
+        "plannerProps": {
+            "headUrl": "https:\/\/www.ikea.com\/pl\/pl\/planners\/v1\/fragments\/head\/?fragments=banner-large",
+            "url": "https:\/\/www.ikea.com\/pl\/pl\/planners\/v1\/fragments\/banner-large\/10578741\/"
+        },
+        "productInformationSectionProps": {
+            "productDetailsProps": {
+                "accordionObject": {
+                    "goodToKnow": {
+                        "id": "product-details-good-to-know",
+                        "title": "Dobrze wiedzie\u0107",
+                        "contentProps": {
+                            "goodToKnow": [
+                                {
+                                    "name": "Sold separately",
+                                    "text": "Materac i po\u015bciel sprzedawane s\u0105 oddzielnie."
+                                },
+                                {
+                                    "name": "Functions (other)",
+                                    "text": "Ty\u0142 zag\u0142\u00f3wka jest wyko\u0144czony czarn\u0105 w\u0142\u00f3knin\u0105."
+                                },
+                                {
+                                    "name": "Included",
+                                    "text": "Zestaw obejmuje dno \u0142\u00f3\u017cka z listewek, belka \u015brodkowa nie jest wymagana."
+                                },
+                                {
+                                    "name": "Other information",
+                                    "text": "IKEA of Sweden AB SE-343 81 \u00c4lmhult, IKEA.com"
+                                }
+                            ]
+                        }
+                    },
+                    "materialsAndCare": {
+                        "id": "product-details-material-and-care",
+                        "title": "Materia\u0142y i piel\u0119gnacja",
+                        "contentProps": {
+                            "materials": [
+                                {
+                                    "materials": [
+                                        {
+                                            "material": "100 % poliester, watolina poliestrowa, stal, Pianka poliuretanowa 20 kg\/m3",
+                                            "part": "Szczyt \u0142\u00f3\u017cka:"
+                                        },
+                                        {
+                                            "material": "stal",
+                                            "part": "Szczyt dolny:"
+                                        },
+                                        {
+                                            "material": "100 % poliester, P\u0142yta wi\u00f3rowa, stal",
+                                            "part": "Bok \u0142\u00f3zka:"
+                                        },
+                                        {
+                                            "material": "stal, Epoksydowa\/poliestrowa pow\u0142oka proszkowa",
+                                            "part": "Belka \u015brodkowa\/ Szyna poprzeczna\/ Noga:"
+                                        },
+                                        {
+                                            "material": "100% polipropylen",
+                                            "part": "Wy\u015bci\u00f3\u0142ka:"
+                                        }
+                                    ]
+                                }
+                            ],
+                            "materialsAndCareLinks": [],
+                            "careInstructions": [
+                                {
+                                    "texts": [
+                                        "Odkurza\u0107.",
+                                        "Wyciera\u0107 szmatk\u0105 zwil\u017con\u0105 delikatnym \u015brodkiem do czyszczenia.",
+                                        "Pokrycie nie nadaje si\u0119 do prania."
+                                    ]
+                                }
+                            ],
+                            "proposition65": [],
+                            "detailsMaterialText": "Materia\u0142y",
+                            "detailsCareText": "Piel\u0119gnacja",
+                            "ariaOpensInNewTabLabel": "{text} (otwiera si\u0119 w nowej zak\u0142adce)",
+                            "warningText": "Uwaga"
+                        }
+                    },
+                    "safetyAndCompliance": {
+                        "id": "product-details-safety-and-compliance",
+                        "title": "Bezpiecze\u0144stwo i zgodno\u015b\u0107 z przepisami",
+                        "contentProps": {
+                            "safetyAndCompliance": [
+                                {
+                                    "name": "Test results and compliance",
+                                    "text": "Ta rama \u0142\u00f3\u017cka zosta\u0142a przetestowana i spe\u0142nia wymogi bezpiecze\u0144stwa, wytrzyma\u0142o\u015bci i stabilno\u015bci okre\u015blone w normie EN1725."
+                                }
+                            ],
+                            "safetyAndComplianceLinks": [],
+                            "ariaOpensInNewTabLabel": "{text} (otwiera si\u0119 w nowej zak\u0142adce)"
+                        }
+                    },
+                    "assemblyAndDocuments": {
+                        "id": "product-details-assembly-and-documents",
+                        "title": "Monta\u017c i dokumenty",
+                        "contentProps": {
+                            "ariaOpensInNewTabLabel": "{text} (otwiera si\u0119 w nowej zak\u0142adce)",
+                            "assemblyVideos": [],
+                            "attachments": {
+                                "assembly": {
+                                    "header": "Instrukcja monta\u017cu",
+                                    "attachments": [
+                                        {
+                                            "id": "105.787.41",
+                                            "url": "https:\/\/www.ikea.com\/pl\/pl\/assembly_instructions\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__AA-2141870-3-2.pdf",
+                                            "label": "SLATTUM Tapicerowana rama \u0142\u00f3\u017cka"
+                                        }
+                                    ]
+                                },
+                                "software": {
+                                    "header": "Software",
+                                    "attachments": []
+                                },
+                                "declaration": {
+                                    "header": "Deklaracja Zgodno\u015bci",
+                                    "attachments": []
+                                },
+                                "other": {
+                                    "header": "Inne dokumenty",
+                                    "attachments": []
+                                },
+                                "customerDisassembly": {
+                                    "header": "Instrukcja demonta\u017cu",
+                                    "attachments": []
+                                },
+                                "professionalDisassembly": {
+                                    "header": "Demonta\u017c & Recycling (dla profesjonalist\u00f3w z bran\u017cy)",
+                                    "attachments": []
+                                },
+                                "manual": {
+                                    "header": "Porady i wskaz\u00f3wki dotycz\u0105ce u\u017cytkowania i piel\u0119gnacji",
+                                    "attachments": []
+                                }
+                            }
+                        }
+                    }
+                },
+                "eventLabel": "pip_details",
+                "articleNumberLabel": "Numer artyku\u0142u",
+                "productDescriptionProps": {
+                    "paragraphs": [
+                        "Wygodne do zabrania do domu, gdy\u017c ca\u0142a rama \u0142\u00f3\u017cka, \u0142\u0105cznie z listwami, jest bezpiecznie zapakowana w 1 p\u0142aski karton.",
+                        "Szybki i prosty monta\u017c \u2013 prawdopodobnie \u0142atwiejszy ni\u017c my\u015blisz!",
+                        "Niezdejmowane pokrycie jest wykonane z poliestrowej tkaniny Vissle, barwionej w masie. Jest to trwa\u0142y materia\u0142 o g\u0142adkim splocie i \u0142adnym efekcie dwubarwnym.",
+                        "Proste i uniwersalne wzornictwo doskonale wsp\u00f3\u0142gra z innymi meblami do sypialni i pasuje doskonale do ka\u017cdej nowoczesnej sypialni.",
+                        "Pod ram\u0105 \u0142\u00f3\u017cka mo\u017cna wygodnie odkurza\u0107, aby by\u0142o tam czysto.",
+                        "Pod \u0142\u00f3\u017ckiem jest mn\u00f3stwo miejsca na pojemniki \u2013 idealny spos\u00f3b na przechowywanie zapasowych ko\u0142der i poduszek."
+                    ],
+                    "designerLabel": "Projektant",
+                    "designerName": "David Wahl",
+                    "labelClosed": "Poka\u017c wi\u0119cej",
+                    "labelOpen": "Poka\u017c mniej"
+                },
+                "productId": "10578741",
+                "title": "Informacje o produkcie"
+            },
+            "measurementsProps": {
+                "chooseDifferentSizeLinkText": "Wybierz inny rozmiar",
+                "eventLabel": "pip_measurements",
+                "fallbackImage": {
+                    "alt": "\u0141\u00f3\u017cko SLATTUM: elegancka rama, wezg\u0142owie z tkaniny, minimalistyczny design, nowoczesny styl, proste linie, \u0142atwy monta\u017c.",
+                    "height": 2000,
+                    "id": "1259334_PE926648",
+                    "imageFileName": "1259334_PE926648_S5.JPG",
+                    "pristineImage": {
+                        "aspectRatio": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "height": 4000,
+                        "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/p\/1c84393e5304525d\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary\/PE926648.jpg",
+                        "width": 4000
+                    },
+                    "type": "MAIN_PRODUCT_IMAGE",
+                    "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__1259334_pe926648_s5.jpg",
+                    "width": 2000
+                },
+                "images": [
+                    {
+                        "alt": "Ilustracja z wymiarami dla produktu: SLATTUM.",
+                        "height": 2000,
+                        "id": "0747514_PE744564",
+                        "imageFileName": "0747514_PE744564_S5.JPG",
+                        "type": "MEASUREMENT_ILLUSTRATION",
+                        "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__0747514_pe744564_s5.jpg",
+                        "width": 2000
+                    }
+                ],
+                "measurements": [
+                    {
+                        "measure": "206 cm",
+                        "name": "D\u0142ugo\u015b\u0107",
+                        "type": "00001"
+                    },
+                    {
+                        "measure": "124 cm",
+                        "name": "Szeroko\u015b\u0107",
+                        "type": "00047"
+                    },
+                    {
+                        "measure": "40 cm",
+                        "name": "Wysoko\u015b\u0107 szczytu",
+                        "type": "00109"
+                    },
+                    {
+                        "measure": "85 cm",
+                        "name": "Wysoko\u015b\u0107 szczytu",
+                        "type": "00110"
+                    },
+                    {
+                        "measure": "200 cm",
+                        "name": "D\u0142. materaca",
+                        "type": "00105"
+                    },
+                    {
+                        "measure": "120 cm",
+                        "name": "Szer. materaca",
+                        "type": "00104"
+                    }
+                ],
+                "packaging": {
+                    "id": "measurements-packaging",
+                    "title": "Opakowanie",
+                    "contentProps": {
+                        "numberOfPackages": 1,
+                        "packages": [
+                            {
+                                "name": "SLATTUM",
+                                "typeName": "Tapicerowana rama \u0142\u00f3\u017cka",
+                                "itemNo": "10578741",
+                                "articleNumber": {
+                                    "label": "Numer artyku\u0142u",
+                                    "value": "105.787.41"
+                                },
+                                "measurementGroups": [
+                                    {
+                                        "heading": null,
+                                        "measurements": [
+                                            {
+                                                "label": "Szeroko\u015b\u0107",
+                                                "type": "width",
+                                                "text": "79 cm",
+                                                "value": 79
+                                            },
+                                            {
+                                                "label": "Wysoko\u015b\u0107",
+                                                "type": "height",
+                                                "text": "10 cm",
+                                                "value": 10
+                                            },
+                                            {
+                                                "label": "D\u0142ugo\u015b\u0107",
+                                                "type": "length",
+                                                "text": "134 cm",
+                                                "value": 134
+                                            },
+                                            {
+                                                "label": "Waga",
+                                                "type": "weight",
+                                                "text": "28.25 kg",
+                                                "value": 28.25
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "quantity": {
+                                    "label": "Paczka(i)",
+                                    "value": 1
+                                },
+                                "multiPackDisclaimerText": null
+                            }
+                        ],
+                        "maxMeasurements": {
+                            "weightText": "28.25 kg",
+                            "widthText": "79 cm",
+                            "lengthText": "134 cm",
+                            "heightText": "10 cm",
+                            "diameterText": ""
+                        }
+                    }
+                },
+                "title": "Wymiary"
+            },
+            "seoReviewsProps": {
+                "reviews": [
+                    {
+                        "date": "2026-07-28T03:55:02Z",
+                        "name": "Karolina",
+                        "ratingValue": 5,
+                        "text": "Wszytko si\u0119 zgadza",
+                        "title": "super"
+                    },
+                    {
+                        "date": "2026-07-26T16:41:45Z",
+                        "name": "Agata",
+                        "ratingValue": 5,
+                        "text": "Najlepszw lozko",
+                        "title": "Lozko"
+                    },
+                    {
+                        "date": "2026-07-03T06:44:20Z",
+                        "name": "Anna",
+                        "ratingValue": 5,
+                        "text": "Dobra cena, dobra jako\u015b\u0107, dobry design",
+                        "title": "Rama \u0142\u00f3\u017cka"
+                    },
+                    {
+                        "date": "2026-06-21T21:27:26Z",
+                        "name": "Ma\u0142gorzata",
+                        "ratingValue": 5,
+                        "text": "\u0141\u00f3\u017cko jest lekkie , solidnie wykonane . Stela\u017c jest w stanie utrzyma\u0107 wag\u0119 dw\u00f3ch os\u00f3b .Z minus\u00f3w to, to \u017ce \u0142\u00f3\u017cko si\u0119 czasem przesuwa, gdy si\u0119 na nie siada.",
+                        "title": "Bardzo prosta w monta\u017cu"
+                    },
+                    {
+                        "date": "2026-01-31T08:24:19Z",
+                        "name": "Karol",
+                        "ratingValue": 5,
+                        "text": "\u015awietny Produkt , Super Jako\u015b\u0107 i dobra Cena",
+                        "title": "\u0141\u00f3\u017cko"
+                    },
+                    {
+                        "date": "2026-01-15T06:32:52Z",
+                        "name": "Barbara",
+                        "ratingValue": 5,
+                        "text": "bardzo fajny produkt w przyst\u0119pnej cenie, polecam",
+                        "title": "super"
+                    },
+                    {
+                        "date": "2025-10-26T10:36:17Z",
+                        "name": "Joanna",
+                        "ratingValue": 3,
+                        "text": "\u0141\u00f3\u017cko wykonane starannie. Ale niestety monta\u017c to pora\u017cka tak jak po miesi\u0105cu u\u017cytkowania skrzypi. Na \u0142\u00f3\u017cku \u015bpi 5 letnie dziecko wi\u0119c waga tutaj nie ma znaczenia. Dodatkowo listwy na materac maj\u0105 wiele do \u017cyczenia.",
+                        "title": "Jakosc"
+                    },
+                    {
+                        "date": "2025-07-27T10:31:22Z",
+                        "name": "Monika",
+                        "ratingValue": 5,
+                        "text": "Bardzo wygodne i dobre wykonanie ",
+                        "title": "Pozytywna"
+                    },
+                    {
+                        "date": "2025-07-24T07:47:12Z",
+                        "name": "Anna",
+                        "ratingValue": 5,
+                        "text": "Bardzo \u0142atwy monta\u017c. Rama na elegancki wygl\u0105d, rozmiar idealny na ma\u0142e powierzchnie. Materac kupiony odzielnie te\u017c w Ikea. Do pokoju nastolatka idelane!",
+                        "title": "Wygodne i sprytne \u0142\u00f3\u017cko"
+                    },
+                    {
+                        "date": "2025-07-15T16:23:16Z",
+                        "name": "Klaudia",
+                        "ratingValue": 5,
+                        "text": "Polecam do m\u0142odzie\u0144czej sypialni ",
+                        "title": "\u0141adne, dobrze wykonane, bardzo wygodne"
+                    },
+                    {
+                        "date": "2025-02-03T07:34:15Z",
+                        "name": "Beata",
+                        "ratingValue": 5,
+                        "text": "\u0141\u00f3\u017cko super ",
+                        "title": "\u0141\u00f3\u017cko "
+                    },
+                    {
+                        "date": "2025-01-08T22:11:37Z",
+                        "name": "Joanna",
+                        "ratingValue": 5,
+                        "text": "\u0141atwe w monta\u017cu,estetycznie wykonane i solidne ",
+                        "title": "Super polecam "
+                    },
+                    {
+                        "date": "2025-01-07T12:29:56Z",
+                        "name": "Monika",
+                        "ratingValue": 5,
+                        "text": "Dobry stosunek jako\u015bci do ceny - zale\u017ca\u0142o nam na czym\u015b prostym i spe\u0142nia swoje zadania ",
+                        "title": "Polecam"
+                    },
+                    {
+                        "date": "2024-12-16T07:18:06Z",
+                        "name": "Stanis\u0142awa",
+                        "ratingValue": 5,
+                        "text": "Do ma\u0142ego mieszkania.Bardzo solidnie wykonanie i mo\u017cna dopasowa\u0107 materac taki jaki sobie \u017cyczysz ",
+                        "title": "Boskie spanie"
+                    },
+                    {
+                        "date": "2024-11-28T05:23:32Z",
+                        "name": "Zuzanna",
+                        "ratingValue": 5,
+                        "text": "Idealne polaczenie wygody i prostoty. Za rozsadna cene.",
+                        "title": "Super"
+                    },
+                    {
+                        "date": "2024-11-14T15:23:13Z",
+                        "name": "Dorota",
+                        "ratingValue": 5,
+                        "text": "Z\u0142o\u017cenie ramy \u0142\u00f3\u017cka proste, zgodnie z opisem.Rama stabilna .",
+                        "title": "rama \u0142\u00f3\u017cka zgodna z oczekiwaniem"
+                    },
+                    {
+                        "date": "2024-10-23T05:38:44Z",
+                        "name": "Ma\u0142gorzata",
+                        "ratingValue": 5,
+                        "text": "\u0141\u00f3\u017cko ma szeroko\u015b\u0107 jak\u0105 potrzebowa\u0142am- jest bardzo wygodne  i bardzo \u0142adnie wygl\u0105da",
+                        "title": "Produkt bardzo wygodny"
+                    },
+                    {
+                        "date": "2024-10-03T06:52:24Z",
+                        "name": "Bogdan",
+                        "ratingValue": 5,
+                        "text": "Prosty i szybki monta\u017c. W po\u0142\u0105czeniu z materacem z Ikea bardzo wygodne \u0142\u00f3\u017cko. ",
+                        "title": "\u0141\u00f3\u017cko"
+                    },
+                    {
+                        "date": "2024-09-24T06:05:14Z",
+                        "name": "Anonimowy recenzent",
+                        "ratingValue": 5,
+                        "text": "polecam",
+                        "title": "polecam"
+                    },
+                    {
+                        "date": "2024-08-07T07:02:24Z",
+                        "name": "Piotr",
+                        "ratingValue": 5,
+                        "text": "Bardzo dobra rama \u0142\u00f3\u017cka, wytrzyma\u0142a, \u015bwietnie sprawuje si\u0119 w pokoju dzieci\u0119cym  idealny stosunek jako\u015bci do ceny.",
+                        "title": "Super"
+                    }
+                ],
+                "title": "Opinie"
+            }
+        },
+        "productSpecificationSectionProps": {
+            "variations": [
+                {
+                    "title": "Wybierz rozmiar",
+                    "selectedOption": "120x200 cm",
+                    "options": [
+                        {
+                            "title": "90x200 cm",
+                            "url": "https:\/\/www.ikea.com\/pl\/pl\/p\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary-80571251\/",
+                            "isSelected": false,
+                            "linkId": "80571251",
+                            "image": {
+                                "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__1259336_pe926649_s5.jpg",
+                                "alt": "Nowoczesne czarne \u0142\u00f3\u017cko z wy\u015bcie\u0142anym wezg\u0142owiem i metalowymi nogami."
+                            },
+                            "priceDifferenceProps": {
+                                "sign": "\u2212",
+                                "priceProps": {
+                                    "integerValue": "100",
+                                    "decimalValue": "-",
+                                    "decimalSign": ",",
+                                    "decimalVerticalAlignment": "base",
+                                    "size": "small"
+                                }
+                            }
+                        },
+                        {
+                            "title": "120x200 cm",
+                            "url": "https:\/\/www.ikea.com\/pl\/pl\/p\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary-10578741\/",
+                            "isSelected": true,
+                            "linkId": "10578741",
+                            "image": {
+                                "url": "https:\/\/www.ikea.com\/pl\/pl\/images\/products\/slattum-tapicerowana-rama-lozka-vissle-ciemnoszary__1259334_pe926648_s5.jpg",
+                                "alt": "\u0141\u00f3\u017cko SLATTUM: elegancka rama, wezg\u0142owie z tkaniny, minimalistyczny design, nowoczesny styl, proste linie, \u0142atwy monta\u017c."
+                            }
+                        }
+                    ],
+                    "code": "SIZE"
+                }
+            ],
+            "showMoreModalAriaLabel": "Poka\u017c wi\u0119cej opcji ({remainingOptions}) w nowym oknie"
+        },
+        "soldSeparatelyProps": {
+            "analyticsAction": "sold_separately_disclaimer_click",
+            "analyticsLabel": "Materac i po\u015bciel sprzedawane s\u0105 oddzielnie.",
+            "text": "Materac i po\u015bciel sprzedawane s\u0105 oddzielnie."
+        },
+        "serverExperiments": {
+            "reviews_redesign_v2": null,
+            "hip_accessories": null,
+            "enhanced_tabs": "b",
+            "tabs_accordions_mobile": null,
+            "cut_through_images": "a",
+            "sticky_planner_button": null
+        },
+        "version": "2.73.2"
+    }
+}

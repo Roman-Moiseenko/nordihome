@@ -33,7 +33,13 @@
         </div>
 
         <div>
-            <button class="parser-to-cart">В корзину</button>
+            <button
+                class="to-cart btn btn-black e-add"
+                data-product="{{ $product->id }}"
+                data-parser="1"
+            >
+                В корзину
+            </button>
         </div>
     </div>
 </div>

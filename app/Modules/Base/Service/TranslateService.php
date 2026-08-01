@@ -9,7 +9,10 @@ class TranslateService
 {
     public function translate(string $foreign, string $lang = 'pl'): string
     {
-        if (is_null($translate = Translate::where('foreign', $foreign)->first())) {
+        if (strlen($foreign) < 64) {
+            if ($translate = Translate::where('foreign', $foreign)->first()) return $translate->value;
+        }
+
             try {
                 $value = YandexTranslate::translate($foreign);
             } catch (\Throwable) {
@@ -19,8 +22,9 @@ class TranslateService
                     return $foreign;
                 }
             }
-            $translate = Translate::register($foreign, $value);
-        }
-        return $translate->value;
+            if (strlen($foreign) < 64) Translate::register($foreign, $value);
+            return $value;
+
+        return '';
     }
 }

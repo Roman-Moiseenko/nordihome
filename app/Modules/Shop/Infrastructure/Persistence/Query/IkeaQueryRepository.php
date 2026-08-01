@@ -68,11 +68,7 @@ class IkeaQueryRepository
             ->orderByRaw("FIELD(parser_products.id, $orderedIds)")
             ->select(
                 'parser_products.id',
-                'parser_products.name',
-                'parser_products.slug',
-                'parser_products.code',
-                'parser_products.price_sell',
-                'parser_products.short',
+                'parser_products.*',
                 DB::raw("(SELECT id FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_id"),
                 DB::raw("(SELECT file FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_file"),
                 DB::raw("(SELECT thumb FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_thumb"),
@@ -173,7 +169,7 @@ class IkeaQueryRepository
             ->first();
 
         if (!$row) return [];
-       return $this->hydrate($row);
+        return $this->hydrate($row);
     }
 
     public function getProductByCode(string $code): array
@@ -197,7 +193,9 @@ class IkeaQueryRepository
 
         $images = [];
         foreach ($photos as $photo) {
+            $full = '/images/no-image.jpg';
             $src = '/images/no-image.jpg';
+            $mini = '/images/no-image.jpg';
             if (!empty($photo->file) && $photo->id) {
                 $src = $this->photoService->getThumbUrl(
                     photoId: (int)$photo->id,
@@ -207,6 +205,22 @@ class IkeaQueryRepository
                     thumb: 'catalog',
                     isThumbEnabled: (bool)$photo->thumb,
                 );
+                $mini = $this->photoService->getThumbUrl(
+                    photoId: (int)$photo->id,
+                    modelType: self::PHOTO_MODEL_TYPE,
+                    imageableId: (int)$row->id,
+                    fileName: $photo->file,
+                    thumb: 'mini',
+                    isThumbEnabled: (bool)$photo->thumb,
+                );
+                $full = $this->photoService->getThumbUrl(
+                    photoId: (int)$photo->id,
+                    modelType: self::PHOTO_MODEL_TYPE,
+                    imageableId: (int)$row->id,
+                    fileName: $photo->file,
+                    thumb: 'original',
+                    isThumbEnabled: (bool)$photo->thumb,
+                );
             }
 
             $images[] = [
@@ -214,6 +228,8 @@ class IkeaQueryRepository
                 'alt' => $photo->alt ?? '',
                 'title' => $photo->title ?? '',
                 'description' => $photo->description ?? '',
+                'mini' => $mini,
+                'full' => $full,
             ];
         }
 
@@ -235,6 +251,10 @@ class IkeaQueryRepository
             'colors' => isset($row->colors) ? json_decode($row->colors, true) : [],
             'packages' => isset($row->packages) ? json_decode($row->packages, true) : [],
             'images' => $images,
+            'materials' => isset($row->materials) ? json_decode($row->materials, true) : [],
+            'care' => $row->care,
+            'dimensions' => isset($row->dimensions) ? json_decode($row->dimensions, true) : [],
+            'variants' => isset($row->variants) ? json_decode($row->variants, true) : [],
         ];
     }
 }

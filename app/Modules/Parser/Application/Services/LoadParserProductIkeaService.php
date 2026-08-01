@@ -77,10 +77,10 @@ class LoadParserProductIkeaService
     {
         $products = $this->ikeaProductApi->getProductsByCategory($ikeaId);
         //Запускаем парсинг каждого товара
-        foreach($products as $product) {
-        LoadProductIkeaJob::dispatch($product); //$entity = $this->CreateParserProduct($product);
-        if ($this->isTest) break;
-    }
+        foreach ($products as $product) {
+            LoadProductIkeaJob::dispatch($product); //$entity = $this->CreateParserProduct($product);
+            if ($this->isTest) break;
+        }
     }
 
     /**
@@ -96,12 +96,12 @@ class LoadParserProductIkeaService
 
 
         $name = $this->translate->translate($product['name']);
-        $short = $this->translate->translate($product['typeName'] . ' ' . $product['itemMeasureReferenceText']);
+        //$short = $this->translate->translate($product['typeName'] . ' ' . $product['itemMeasureReferenceText']);
         //DTO из $product
         $dto = new ParserProductCreateData(
             name: $name,
             code: $code,
-            short: $short,
+            short: '',
         );
         //UseCase - создать товар Parser
         $productEntity = $this->createParserProductUseCase->execute($dto);
@@ -117,31 +117,87 @@ class LoadParserProductIkeaService
             return $this->translate->translate($item['name']);
         }, $product['colors'] ?? []);
 
-        //$data = $this->parsingDataByUrl($product['pipUrl']);
 
-        $dataProduct = $this->ikeaProductApi->getProductPage($product['pipUrl']);
+        //Данные со страницы товара
+        $dataPage = $this->ikeaProductApi->getProductPage($product['pipUrl']);
+
+        $dataProduct = $dataPage['product'];
+        // \Log::info(json_encode($dataProduct));
         if (is_null($dataProduct))
             throw new \DomainException('Ошибка получения данных по урлу ' . $product['pipUrl']);
+
         //Составные товары
         $composite = $this->ikeaDataMapper->mapComposite($dataProduct['subProducts'] ?? []);
 
         //Пачки товара
         $packaging = $dataProduct['packaging'];
-
         $packs = $packaging['numberOfPackages'];
+
 
         $packages = $this->ikeaDataMapper->mapPackages($packaging['packages']);
 
-        $description = $dataProduct['description'] .
-            (empty($dataProduct['itemMeasureReferenceText']) ? '' : ', ' . $dataProduct['itemMeasureReferenceText']);
-        $description = $this->translate->translate($description);
 
+        $short = $this->translate->translate($dataProduct['description']);
+        //Описание
+        $description = '';
+        foreach ($dataPage['info']['paragraphs'] as $paragraph) {
+
+
+            try {
+                $description .= '<p>' . $this->translate->translate($paragraph) . '</p>';
+            } catch (\Throwable $e) {
+                \Log::warning($e->getMessage() . ' ' . $e->getLine());
+            }
+        }
+        /*
+                try {
+                    if (!empty($description)) $description = $this->translate->translate($description);
+                } catch (\Throwable $e) {
+                    \Log::warning($e->getMessage());
+                }
+        */
+
+
+        //Материалы
+        $materials = [];
+        foreach ($dataPage['materials'] as $material) {
+            $key = isset($material['part']) ? $this->translate->translate($material['part']) : '';
+            $value = $this->translate->translate($material['material']);
+            $materials[$key] = $value;
+        }
+
+        //Уход, собираем по абзацам из  массива
+        $care = '';
+        foreach ($dataPage['care'] as $text) {
+            $care .= '<p>' . $text . '</p>';
+        }
+        if (!empty($care)) $care = $this->translate->translate($care);
+        \Log::warning('Габариты');
+        //Габариты
+        $dimensions = [];
+        foreach ($dataPage['info']['measurements'] as $measurement) {
+            $key = $this->translate->translate($measurement['name']);
+            $value = $measurement['measure'];
+            $dimensions[$key] = $value;
+        }
+
+        //Варианты, найти данные
+        \Log::warning('Варианты');
+        \Log::info(json_encode($product));
         //Заполняем остальные данные
+        $variants = [];
+        if ($product['gprDescription']['numberOfVariants'] > 0) {
+            foreach ($product['gprDescription']['variants'] as $variant) {
+                $variants[] = $variant['id'];
+            }
+        }
+
         $dto = new ParserProductUpdateData(
             id: $productEntity->id,
             url: $product['pipUrl'],
             priceSell: $price_sell,
             priceBase: $price_base,
+            short: $short,
             description: $description,
             fragile: false,
             sanctioned: false,
@@ -150,9 +206,16 @@ class LoadParserProductIkeaService
             composite: $composite,
             colors: $colors,
             packs: $packs,
+            materials: $materials,
+            care: $care,
+            dimensions: $dimensions,
+            variants: $variants,
         );
 
         $productEntity = $this->updateParserProductUseCase->execute($dto);
+
+
+        if (is_null($productEntity)) \Log::warning('Товар не обновился ' . json_encode($dto));
         //Назначаем категори
         $categories = array_map(function ($item) {
             return $this->parserCategoryRepository->getByIkeaId($item['key'])->id;
@@ -219,12 +282,12 @@ class LoadParserProductIkeaService
     {
         $productEntity = $this->parserProductRepository->getById($productId);
 
-/*
-        $url = sprintf(self::API_URL_QUANTITY, $productEntity->code);
-        $json_product = $this->httpPage->getPage($url, '_cache');
+        /*
+                $url = sprintf(self::API_URL_QUANTITY, $productEntity->code);
+                $json_product = $this->httpPage->getPage($url, '_cache');
 
-        $_array = json_decode($json_product, true);
-*/
+                $_array = json_decode($json_product, true);
+        */
         $availabilities = $this->ikeaProductApi->getAvailability($productEntity->code);
         $_result = [];
         if ($availabilities == null) {

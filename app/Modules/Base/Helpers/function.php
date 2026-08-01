@@ -137,7 +137,14 @@ if (!function_exists('photo')) {
         return Photo::get_photo($id, $thumb);
     }
 }
+if (!function_exists('codeIkea')) {
+    function codeIkea(string $code  ): string {
+        $str = (string)$code;
+        $parts = str_split($str, 3);
+        return implode('.', $parts);
+    }
 
+}
 if (!function_exists('photo_std')) {
     /**
      * Получение объекта на изображение для клиентской части (используется в шаблонах)

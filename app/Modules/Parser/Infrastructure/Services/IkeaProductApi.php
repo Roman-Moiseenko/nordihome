@@ -13,7 +13,9 @@ class IkeaProductApi implements IkeaProductApiInterface
 
     public function __construct(
         private readonly HttpPage $httpPage,
-    ) {}
+    )
+    {
+    }
 
     /**
      * Получить список товаров по категории
@@ -39,7 +41,7 @@ class IkeaProductApi implements IkeaProductApiInterface
             $end += 1000;
         } while (count($list) == 1000);
 
-        return  $products;
+        return $products;
     }
 
     /**
@@ -72,8 +74,18 @@ class IkeaProductApi implements IkeaProductApiInterface
 
         foreach ($res[1] as $item_res) {
             $_data = json_decode($item_res, true);
+
             if (isset($_data["pageProps"])) {
-                return $_data["pageProps"]["product"];
+                $productDetail = $_data["pageProps"]['productInformationSectionProps']['productDetailsProps'];
+                $care_materials = $productDetail['accordionObject']['materialsAndCare']['contentProps'];
+                $measurements = $_data["pageProps"]['productInformationSectionProps']['measurementsProps'];
+                $result['product'] = $_data["pageProps"]['product'];
+                $result['materials'] = $care_materials['materials'][0]['materials'] ?? [];
+                $result['care'] = $care_materials['careInstructions'][0]['texts'];
+                $result['info']['paragraphs'] = $productDetail['productDescriptionProps']['paragraphs'];
+                $result['info']['measurements'] = $measurements['measurements'];
+              //  $result['info']['packaging'] = $measurements['packaging']['contentProps']['maxMeasurements'];
+                return $result;
             }
         }
 

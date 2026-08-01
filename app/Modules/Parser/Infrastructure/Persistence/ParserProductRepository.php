@@ -50,6 +50,10 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         $model->availability = $product->availability;
         $model->product_id = $product->productId;
         $model->packs = $product->packs;
+        $model->materials = $product->materials;
+        $model->care = $product->care;
+        $model->dimensions = $product->dimensions;
+        $model->variants = $product->variants;
 
         // composite — массив Composite[]
         $model->composite = array_map(
@@ -67,6 +71,7 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         $model->colors = $product->colors;
 
         $model->save();
+        $model->refresh();
 
         return $this->hydrate($model);
     }
@@ -128,6 +133,11 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         $entity->sanctioned = (bool) ($model->sanctioned ?? false);
         $entity->availability = (bool) ($model->availability ?? false);
         $entity->packs = (int) ($model->packs ?? 1);
+
+        $entity->materials = (array)$model->materials;
+        $entity->care = $model->care;
+        $entity->dimensions = (array)$model->dimensions;
+        $entity->variants = (array)$model->variants;
 
         // composite
         $compositeData = $model->composite ?? [];
