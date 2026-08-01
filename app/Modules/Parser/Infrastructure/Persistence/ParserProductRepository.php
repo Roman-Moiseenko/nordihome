@@ -30,6 +30,10 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         }
         return $this->hydrate($model);
     }
+    public function existsByCode(string $code): bool
+    {
+        return ParserProduct::where('code', $code)->exists();
+    }
 
     public function save(ParserProductEntity $product): ParserProductEntity
     {
@@ -55,11 +59,7 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         $model->dimensions = $product->dimensions;
         $model->variants = $product->variants;
 
-        // composite — массив Composite[]
-        $model->composite = array_map(
-            fn(Composite $c) => ['product_id' => $c->getProductId(), 'quantity' => $c->getQuantity()],
-            $product->composite
-        );
+        $model->composite = $product->composite;
 
         // packages — массив Package[]
         $model->packages = array_map(
@@ -139,15 +139,7 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         $entity->dimensions = (array)$model->dimensions;
         $entity->variants = (array)$model->variants;
 
-        // composite
-        $compositeData = $model->composite ?? [];
-        $entity->composite = array_map(
-            fn(array $item) => new Composite(
-                productId: (int) ($item['product_id'] ?? 0),
-                quantity: (int) ($item['quantity'] ?? 1),
-            ),
-            $compositeData
-        );
+        $entity->composite = $model->composite ?? [];
 
         // packages
         $packagesData = $model->packages ?? [];

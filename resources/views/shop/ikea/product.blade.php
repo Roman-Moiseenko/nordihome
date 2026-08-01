@@ -97,7 +97,11 @@
                 @if(!empty($product->variants))
                     <h4>Варианты</h4>
                 <div>
-                    {!! json_encode($product->variants)  !!}
+                    @foreach($product->variants as $variant)
+                        <a href="{{ route('shop.ikea.product', $variant->code) }}">
+                            <img src="{{ $variant->image }}" alt="" title="{{ codeIkea($variant->code) }}">
+                        </a>
+                    @endforeach
                 </div>
                 @endif
                 <h4>Габариты товара</h4>

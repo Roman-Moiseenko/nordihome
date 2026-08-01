@@ -35,7 +35,6 @@ final class ParserProductEntity
         set => $this->slug = $value;
     }
 
-    /** @var Composite[] $composite */
     public array $composite = [] {
         get => $this->composite;
         set => $this->composite = $value;

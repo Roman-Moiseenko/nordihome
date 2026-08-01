@@ -18,6 +18,7 @@ use App\Modules\Parser\Application\Interfaces\ParserCategoryRepositoryInterface;
 use App\Modules\Parser\Domain\ValueObjects\ParserStatus;
 use App\Modules\Parser\Infrastructure\Jobs\LoadProductIkeaJob;
 use App\Modules\Parser\Infrastructure\Jobs\LoadProductsIkeaJob;
+use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Parser\Infrastructure\Services\IkeaProductDataMapper;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -126,94 +127,83 @@ class LoadParserProductIkeaService
         if (is_null($dataProduct))
             throw new \DomainException('Ошибка получения данных по урлу ' . $product['pipUrl']);
 
-        //Составные товары
-        $composite = $this->ikeaDataMapper->mapComposite($dataProduct['subProducts'] ?? []);
-
-        //Пачки товара
-        $packaging = $dataProduct['packaging'];
-        $packs = $packaging['numberOfPackages'];
 
 
-        $packages = $this->ikeaDataMapper->mapPackages($packaging['packages']);
+            //Составные товары
+            $composite = $this->ikeaDataMapper->mapComposite($dataProduct['subProducts'] ?? []);
 
+            //Пачки товара
+            $packaging = $dataProduct['packaging'];
+            $packs = $packaging['numberOfPackages'];
 
-        $short = $this->translate->translate($dataProduct['description']);
-        //Описание
-        $description = '';
-        foreach ($dataPage['info']['paragraphs'] as $paragraph) {
+            $packages = $this->ikeaDataMapper->mapPackages($packaging['packages']);
 
-
-            try {
+            $short = $this->translate->translate($dataProduct['description']);
+            //Описание
+            $description = '';
+            foreach ($dataPage['info']['paragraphs'] as $paragraph) {
                 $description .= '<p>' . $this->translate->translate($paragraph) . '</p>';
-            } catch (\Throwable $e) {
-                \Log::warning($e->getMessage() . ' ' . $e->getLine());
             }
-        }
-        /*
-                try {
-                    if (!empty($description)) $description = $this->translate->translate($description);
-                } catch (\Throwable $e) {
-                    \Log::warning($e->getMessage());
+
+
+            //Материалы
+            $materials = [];
+            foreach ($dataPage['materials'] as $material) {
+                $key = isset($material['part']) ? $this->translate->translate($material['part']) : '';
+                $value = $this->translate->translate($material['material']);
+                $materials[$key] = $value;
+            }
+
+            //Уход, собираем по абзацам из  массива
+            $care = '';
+            foreach ($dataPage['care'] as $text) {
+                $care .= '<p>' . $text . '</p>';
+            }
+            if (!empty($care)) $care = $this->translate->translate($care);
+
+            //Габариты
+            $dimensions = [];
+            foreach ($dataPage['info']['measurements'] as $measurement) {
+                $key = $this->translate->translate($measurement['name']);
+                $value = $measurement['measure'];
+                $dimensions[$key] = $value;
+            }
+
+            //Варианты, найти данные
+            $variants = [];
+            if ($product['gprDescription']['numberOfVariants'] > 0) {
+                foreach ($product['gprDescription']['variants'] as $variant) {
+                    $varCode = ltrim($variant['id'], 's');
+                    $variants[] = $varCode;
+                    //Если вариант еще не спарсен
+                    if (!$this->parserProductRepository->existsByCode($varCode)) {
+                        $productVar = $this->ikeaProductApi->getProductByCode($varCode);
+                        LoadProductIkeaJob::dispatch($productVar);
+                    }
                 }
-        */
-
-
-        //Материалы
-        $materials = [];
-        foreach ($dataPage['materials'] as $material) {
-            $key = isset($material['part']) ? $this->translate->translate($material['part']) : '';
-            $value = $this->translate->translate($material['material']);
-            $materials[$key] = $value;
-        }
-
-        //Уход, собираем по абзацам из  массива
-        $care = '';
-        foreach ($dataPage['care'] as $text) {
-            $care .= '<p>' . $text . '</p>';
-        }
-        if (!empty($care)) $care = $this->translate->translate($care);
-        \Log::warning('Габариты');
-        //Габариты
-        $dimensions = [];
-        foreach ($dataPage['info']['measurements'] as $measurement) {
-            $key = $this->translate->translate($measurement['name']);
-            $value = $measurement['measure'];
-            $dimensions[$key] = $value;
-        }
-
-        //Варианты, найти данные
-        \Log::warning('Варианты');
-        \Log::info(json_encode($product));
-        //Заполняем остальные данные
-        $variants = [];
-        if ($product['gprDescription']['numberOfVariants'] > 0) {
-            foreach ($product['gprDescription']['variants'] as $variant) {
-                $variants[] = $variant['id'];
             }
-        }
 
-        $dto = new ParserProductUpdateData(
-            id: $productEntity->id,
-            url: $product['pipUrl'],
-            priceSell: $price_sell,
-            priceBase: $price_base,
-            short: $short,
-            description: $description,
-            fragile: false,
-            sanctioned: false,
-            availability: true,
-            packages: $packages,
-            composite: $composite,
-            colors: $colors,
-            packs: $packs,
-            materials: $materials,
-            care: $care,
-            dimensions: $dimensions,
-            variants: $variants,
-        );
+            $dto = new ParserProductUpdateData(
+                id: $productEntity->id,
+                url: $product['pipUrl'],
+                priceSell: $price_sell,
+                priceBase: $price_base,
+                short: $short,
+                description: $description,
+                fragile: false,
+                sanctioned: false,
+                availability: true,
+                packages: $packages,
+                composite: $composite,
+                colors: $colors,
+                packs: $packs,
+                materials: $materials,
+                care: $care,
+                dimensions: $dimensions,
+                variants: $variants,
+            );
 
-        $productEntity = $this->updateParserProductUseCase->execute($dto);
-
+            $productEntity = $this->updateParserProductUseCase->execute($dto);
 
         if (is_null($productEntity)) \Log::warning('Товар не обновился ' . json_encode($dto));
         //Назначаем категори
@@ -236,7 +226,7 @@ class LoadParserProductIkeaService
                 url: $imageItem['url'],
                 alt: $imageItem['altText'],
             );
-            LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission);
+            //MAINDO LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission);
         }
 
         return $productEntity;

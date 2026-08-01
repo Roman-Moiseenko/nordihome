@@ -59,13 +59,7 @@ class UpdateParserProductUseCase
             $product->availability = $dto->availability;
         }
         if ($dto->composite !== null) {
-            $product->composite = array_map(
-                fn(array $item) => new Composite(
-                    productId: (int) ($item['product_id'] ?? 0),
-                    quantity: (int) ($item['quantity'] ?? 1),
-                ),
-                $dto->composite
-            );
+            $product->composite = $dto->composite;
         }
         if ($dto->packages !== null) {
             $product->packages = array_map(

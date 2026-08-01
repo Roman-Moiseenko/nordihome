@@ -233,13 +233,13 @@ class IkeaQueryRepository
                 'full' => $full,
             ];
         }
-        $composite = array_map(function ($item) {
-            return $this->getShortProduct($item);
-        }, isset($row->composite) ? json_decode($row->composite, true) : []);
+        $composite = array_filter(array_map(function ($item) {
+            return $this->getShortProduct($item['code']);
+        }, isset($row->composite) ? json_decode($row->composite, true) : []));
 
-        $variants = array_map(function ($item) {
+        $variants = array_filter(array_map(function ($item) {
             return $this->getShortProduct($item);
-        }, isset($row->variants) ? json_decode($row->variants, true) : []);
+        }, isset($row->variants) ? json_decode($row->variants, true) : []));
 
         return [
             'id' => $row->id,
@@ -272,14 +272,33 @@ class IkeaQueryRepository
         $row = DB::table('parser_products')
             ->where('code', $code)
             ->first();
+
         if (is_null($row)) return null;
 
-        $image_mini = '';
-       return new IkeaVariantData(
-           id: $row->id,
-           name: $row->name,
-           code: $code,
-           image: $image_mini,
-       );
+        $photo = DB::table('photos')
+            ->where('imageable_id', $row->id)
+            ->where('model_type', self::PHOTO_MODEL_TYPE)
+            ->where('type', 'gallery')
+            ->orderBy('sort')
+            ->first(['id', 'file', 'thumb']);
+
+        $image_mini = '/images/no-image.jpg';
+        if ($photo && !empty($photo->file) && $photo->id) {
+            $image_mini = $this->photoService->getThumbUrl(
+                photoId: (int)$photo->id,
+                modelType: self::PHOTO_MODEL_TYPE,
+                imageableId: (int)$row->id,
+                fileName: $photo->file,
+                thumb: 'mini',
+                isThumbEnabled: (bool)$photo->thumb,
+            );
+        }
+
+        return new IkeaVariantData(
+            id: $row->id,
+            name: $row->name,
+            code: $code,
+            image: $image_mini,
+        );
     }
 }

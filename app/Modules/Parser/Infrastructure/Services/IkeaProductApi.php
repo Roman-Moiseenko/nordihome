@@ -81,7 +81,7 @@ class IkeaProductApi implements IkeaProductApiInterface
                 $measurements = $_data["pageProps"]['productInformationSectionProps']['measurementsProps'];
                 $result['product'] = $_data["pageProps"]['product'];
                 $result['materials'] = $care_materials['materials'][0]['materials'] ?? [];
-                $result['care'] = $care_materials['careInstructions'][0]['texts'];
+                $result['care'] = (!empty($care_materials['careInstructions'])) ? $care_materials['careInstructions'][0]['texts'] : [];
                 $result['info']['paragraphs'] = $productDetail['productDescriptionProps']['paragraphs'];
                 $result['info']['measurements'] = $measurements['measurements'];
               //  $result['info']['packaging'] = $measurements['packaging']['contentProps']['maxMeasurements'];
