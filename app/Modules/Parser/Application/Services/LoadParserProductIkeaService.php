@@ -226,7 +226,7 @@ class LoadParserProductIkeaService
                 url: $imageItem['url'],
                 alt: $imageItem['altText'],
             );
-            //MAINDO LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission);
+            LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission);
         }
 
         return $productEntity;
