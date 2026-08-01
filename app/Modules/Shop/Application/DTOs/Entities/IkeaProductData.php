@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\DTOs\Entities;
 
+use App\Modules\Shop\Application\DTOs\Elements\IkeaVariantData;
 use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
 
 class IkeaProductData
@@ -22,6 +23,7 @@ class IkeaProductData
         public readonly bool    $sanctioned,
         public readonly bool    $availability,
         public readonly int     $packs,
+        /** @var IkeaVariantData[] $composite */
         public readonly array   $composite,
         public readonly array   $quantity,
         public readonly array   $colors,
@@ -31,6 +33,7 @@ class IkeaProductData
         public readonly array   $materials,
         public readonly string  $care,
         public readonly array   $dimensions,
+        /** @var IkeaVariantData[] $variants */
         public readonly array   $variants,
     )
     {

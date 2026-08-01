@@ -4,6 +4,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
+use App\Modules\Shop\Application\DTOs\Elements\IkeaVariantData;
 use App\Modules\Shop\Application\DTOs\Entities\IkeaCategoryMainData;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -232,6 +233,13 @@ class IkeaQueryRepository
                 'full' => $full,
             ];
         }
+        $composite = array_map(function ($item) {
+            return $this->getShortProduct($item);
+        }, isset($row->composite) ? json_decode($row->composite, true) : []);
+
+        $variants = array_map(function ($item) {
+            return $this->getShortProduct($item);
+        }, isset($row->variants) ? json_decode($row->variants, true) : []);
 
         return [
             'id' => $row->id,
@@ -246,7 +254,7 @@ class IkeaQueryRepository
             'sanctioned' => (bool)($row->sanctioned ?? false),
             'availability' => (bool)($row->availability ?? false),
             'packs' => (int)($row->packs ?? 1),
-            'composite' => isset($row->composite) ? json_decode($row->composite, true) : [],
+            'composite' => $composite,
             'quantity' => isset($row->quantity) ? json_decode($row->quantity, true) : [],
             'colors' => isset($row->colors) ? json_decode($row->colors, true) : [],
             'packages' => isset($row->packages) ? json_decode($row->packages, true) : [],
@@ -254,7 +262,24 @@ class IkeaQueryRepository
             'materials' => isset($row->materials) ? json_decode($row->materials, true) : [],
             'care' => $row->care,
             'dimensions' => isset($row->dimensions) ? json_decode($row->dimensions, true) : [],
-            'variants' => isset($row->variants) ? json_decode($row->variants, true) : [],
+            'variants' => $variants,
         ];
+    }
+
+
+    private function getShortProduct(string $code):? IkeaVariantData
+    {
+        $row = DB::table('parser_products')
+            ->where('code', $code)
+            ->first();
+        if (is_null($row)) return null;
+
+        $image_mini = '';
+       return new IkeaVariantData(
+           id: $row->id,
+           name: $row->name,
+           code: $code,
+           image: $image_mini,
+       );
     }
 }
