@@ -6,7 +6,12 @@
     <div class="ikea-card">
 
         <img src="{{ (empty($category->image)) ? '\images\no-image.jpg' : $category->image }}"/>
-        <p><b>{{ $category->name }}</b></p>
+
+        <p>
+            <a href="{{ route('shop.ikea.view', $category->slug) }}">
+                <b>{{ $category->name }}</b>
+            </a>
+        </p>
         <ul>
             @foreach($category->children as $child)
                 <li>
