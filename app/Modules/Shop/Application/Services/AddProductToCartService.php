@@ -29,7 +29,7 @@ class AddProductToCartService
     public function execute(AddProductToCartData $dto)
     {
         $userPermission = new UserPermission(null, ['admin'], [
-            'parser.product.view', 'catalog.product.create',
+            'parser.product.view', 'catalog.product.create', 'catalog.product.edit',
             ]);
         //1. Товар Из парсера или нет
         if ($dto->isParser) {

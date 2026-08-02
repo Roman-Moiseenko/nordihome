@@ -84,7 +84,11 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return $models->map(fn(Category $model) => $this->hydrate($model))->toArray();
     }
-
+    public function getBySlug(string $slug):? CategoryEntity
+    {
+        $model = Category::where('slug', $slug)->get();
+        return $this->hydrate($model);
+    }
     public function existsSlug(string $slug, ?int $excludeId = null): bool
     {
         $query = Category::where('slug', $slug);

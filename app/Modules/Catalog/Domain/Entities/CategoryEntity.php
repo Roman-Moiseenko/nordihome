@@ -7,6 +7,8 @@ use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 final class CategoryEntity
 {
+    public const string TEMP_IKEA = 'temp-ikea';
+
     public ?int $id = null {
         get => $this->id;
         set => $this->id = $value;

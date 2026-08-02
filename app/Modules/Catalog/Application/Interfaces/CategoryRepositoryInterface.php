@@ -41,4 +41,6 @@ interface CategoryRepositoryInterface
     public function hasChildren(int $id): bool;
 
     public function bulkTogglePublished(array $ids, bool $published): void;
+
+    public function getBySlug(string $slug):? CategoryEntity;
 }

@@ -2,8 +2,11 @@
 # Подтверждение регистрации на сайте nordihome.ru
 
 Ваш логин {{ $login }}
-Укажите на сайте ваш код.
-Ваш код активации {{ $verify_token }}
+
+Укажите на сайте ваш код активации
+
+# {{ $verify_token }}
+
 
 Или перейдите по ссылке:
 @component('mail::button', ['url' => route('register.verify', ['token' => $verify_token])])
