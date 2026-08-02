@@ -71,7 +71,7 @@ readonly class RegisterUserClientUseCase
                 'login' => $email->value,
                 'token' => $token,
             ],
-            new Recipient(email: $email->value, userId: $user->id)
+            new Recipient(email: $email->value, userId: $savedUser->id)
         );
 
         return $savedUser;
