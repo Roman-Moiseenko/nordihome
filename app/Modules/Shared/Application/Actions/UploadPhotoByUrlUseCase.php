@@ -10,6 +10,7 @@ use App\Modules\Shared\Application\DTOs\Photo\PhotoUploadData;
 use App\Modules\Shared\Domain\Entities\PhotoEntity;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Setting\Entity\Settings;
+use App\Modules\Shared\Infrastructure\Job\RemoveTempPhotoJob;
 use Illuminate\Http\UploadedFile;
 
 readonly class UploadPhotoByUrlUseCase
@@ -72,6 +73,7 @@ readonly class UploadPhotoByUrlUseCase
         if (!file_exists($fullFilename)) {
             return null;
         }
+        RemoveTempPhotoJob::dispatch($fullFilename)->delay(now()->addMinutes(1));
 
         return new UploadedFile(
             $fullFilename,
