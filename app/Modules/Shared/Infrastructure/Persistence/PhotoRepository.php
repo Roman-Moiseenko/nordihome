@@ -44,8 +44,8 @@ class PhotoRepository implements PhotoRepositoryInterface
             // Для одиночных типов — удаляем старую запись (если есть) и создаём новую
             Photo::where([
                 'model_type' => $photo->modelType,
-                'imageable_id'   => $photo->imageableId,
-                'type'       => $photo->type->getValue(),
+                'imageable_id' => $photo->imageableId,
+                'type' => $photo->type->getValue(),
             ])->delete();
 
             $model = new Photo();
@@ -63,8 +63,8 @@ class PhotoRepository implements PhotoRepositoryInterface
                 $model = new Photo();
                 $maxSort = Photo::where([
                     'model_type' => $photo->modelType,
-                    'imageable_id'   => $photo->imageableId,
-                    'type'       => $photo->type->getValue(),
+                    'imageable_id' => $photo->imageableId,
+                    'type' => $photo->type->getValue(),
                 ])->max('sort');
                 $model->sort = is_null($maxSort) ? 0 : $maxSort + 1;
             }
@@ -78,7 +78,7 @@ class PhotoRepository implements PhotoRepositoryInterface
         $model->slug = $photo->slug;
         $model->title = $photo->title;
         $model->description = $photo->description;
-       // $model->sort = $photo->sort;
+        // $model->sort = $photo->sort;
         $model->type = (string)$photo->type;
         $model->thumb = $photo->thumb;
 
@@ -115,6 +115,21 @@ class PhotoRepository implements PhotoRepositoryInterface
         }
 
         return $this->hydrate($model);
+    }
+
+    public function findAllByEntity(int $imageableId, string $modelType, PhotoType $type): array
+    {
+        $models = Photo::where('imageable_id', $imageableId)
+            ->where('model_type', $modelType)
+            ->where('type', $type->getValue())
+            ->get();
+
+        if ($models === null) return [];
+
+
+        return array_map(function ($model) {
+            return $this->hydrate($model);
+        }, $models);
     }
 
     public function findByEntities(array $imageableIds, string $modelType, PhotoType $type): array

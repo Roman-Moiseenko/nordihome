@@ -20,8 +20,12 @@ use App\Modules\Parser\Application\Actions\Product\AttachProductToParserUseCase;
 use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
 use App\Modules\Setting\Repository\SettingRepository;
+use App\Modules\Shared\Application\DTOs\JobPhotoCopyData;
+use App\Modules\Shared\Application\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\ValueObjects\PhotoType;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
+use App\Modules\Shared\Infrastructure\Job\CopyPhotoByIdJob;
 
 readonly class CreateProductFromParserService
 {
@@ -34,8 +38,9 @@ readonly class CreateProductFromParserService
         private UpdateProductUseCase             $updateProductUseCase,
         private AttachAttributeProductService    $attachAttributeProductService,
         private SetProductPriceUseCase           $setProductPriceUseCase,
-        public AttachProductToParserUseCase $attachProductToParserUseCase,
+        private AttachProductToParserUseCase $attachProductToParserUseCase,
 
+        private PhotoRepositoryInterface $photoRepository,
         private SettingRepository $settingRepository,
     )
     {
@@ -93,7 +98,21 @@ readonly class CreateProductFromParserService
         /**
          * Переносим картинки
          */
-        //
+        $images = $this->photoRepository->findAllByEntity(
+            $parserEntity->id,
+            'parser.product',
+            new PhotoType(PhotoType::GALLERY),
+        );
+        foreach ($images as $image) {
+            $dtoImage = new JobPhotoCopyData(
+                imageableId: $productEntity->id,
+                modelType: 'catalog.product',
+                type: 'gallery',
+                copyId: $image->id,
+                alt: $image->alt,
+            );
+            CopyPhotoByIdJob::dispatch($dtoImage, $userPermission);
+        }
         // DTO ProductCreate
 
 
