@@ -6,6 +6,7 @@ class Recipient
 {
     public function __construct(
         public string $email,
-        public ?string $name = null
+        public ?string $name = null,
+        public ?int $userId = null,
     ) {}
 }

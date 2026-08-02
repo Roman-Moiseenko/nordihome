@@ -6,7 +6,9 @@ use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
 use DateTimeImmutable;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class FreelanceEntity
 {
     public ?UserEntity $user = null {

@@ -26,10 +26,12 @@ readonly class RegisterUserClientUseCase
     public function __construct(
         private UserRepositoryInterface   $userRepository,
         private ClientRepositoryInterface $clientRepository,
-        private readonly MailServiceInterface $mailService,
-        private readonly string $frontendUrl,
-        private readonly PasswordHasherInterface $passwordHasher
-    ) {}
+        private MailServiceInterface      $mailService,
+        private string                    $frontendUrl,
+        private PasswordHasherInterface   $passwordHasher
+    )
+    {
+    }
 
     public function execute(int $clientId, RegisterUserData $dto, UserPermission $permissions): UserEntity
     {
@@ -59,14 +61,17 @@ readonly class RegisterUserClientUseCase
 
         $savedUser = $this->userRepository->save($user);
         // Генерация токена и отправка подтверждения
-        $token = Str::random(60);
+        $token = rand(1234, 9876);
         $this->userRepository->saveEmailVerification($savedUser->id, $email, $token);
 
-        $verificationUrl = $this->frontendUrl . '/verify-email?token=' . $token;
+        //$verificationUrl = $this->frontendUrl . '/verify-email?token=' . $token;
         $this->mailService->send(
-            'auth.verify_email',
-            ['verificationUrl' => $verificationUrl],
-            new Recipient($email->value)
+            'auth.verify',
+            [
+                'login' => $email->value,
+                'token' => $token,
+            ],
+            new Recipient(email: $email->value, userId: $user->id)
         );
 
         return $savedUser;

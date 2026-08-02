@@ -14,6 +14,7 @@ use App\Modules\Auth\Presentation\Http\Controllers\Web\ClientController;
 use App\Modules\Auth\Presentation\Http\Controllers\Web\FreelanceController;
 use App\Modules\Auth\Presentation\Http\Controllers\Web\RoleController;
 use App\Modules\Auth\Presentation\Http\Controllers\Web\StaffController;
+use App\Modules\User\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Support\Facades\Route;
 
 // Аутентификация сотрудников (Inertia)
@@ -27,53 +28,75 @@ Route::get('/verify-email', [ClientController::class, 'verifyEmail'])->name('ver
 Route::group([
     'prefix' => 'admin',
     'as' => 'admin.',
-],function () {
+], function () {
     Route::post('/login', [AuthController::class, 'login']);
-
-    //Без доступа
-    //Аутентификация
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-    ///Регистрация клиента восстановление пароля
-    Route::group([
-        'prefix' => 'client',
-    ], function () {
-        //TODO Сделать позже
-        Route::post('/registration', [ClientController::class, 'registration']);
-//        Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-//        Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-    });
+
 
     //С доступом
-    Route::middleware('auth')->group(function () {
+    Route::middleware(['auth', 'role:admin|staff'])->group(function () {
         Route::get('/logout', [AuthController::class, 'logout']);
-        //Клиенты Client
-        // Клиент может управлять своим профилем
-        Route::post('/client/credentials', [ClientController::class, 'credentials']); //смена регистр.данных
-        Route::get('/client/profile', [ClientController::class, 'profile']);
-        Route::put('/client/profile', [ClientController::class, 'updateProfile']);
+
         // Админские маршруты для управления клиентами
-        Route::middleware(['role:admin|staff'])->group(function () {
-            Route::apiResource('client', ClientController::class);
-            Route::post('/client/{id}/register', [ClientController::class, 'register']);
-        });
+        Route::apiResource('client', ClientController::class);
+        Route::post('/client/{id}/register', [ClientController::class, 'register']);
 
-        // маршруты для управления сотрудниками
-        Route::middleware(['role:admin|staff'])->group(function () {
-            //Route::get('/user', [AuthController::class, 'profile']);
-            //Сотрудники Staff
-            Route::get('staff/positions', [StaffController::class, 'positions'])->name('staff.positions');
-            Route::get('staff/groups', [StaffController::class, 'groups'])->name('staff.groups');
-            Route::get('permission/grouped', [RoleController::class, 'permissions'])->name('role.permissions');
-            Route::get('roles', [RoleController::class, 'roles'])->name('role.roles');
-            Route::Resource('staff', StaffController::class);
-            Route::post('/staff/{id}/user', [StaffController::class, 'user'])->name('staff.user');
+        // Маршруты для управления сотрудниками
+        Route::get('staff/positions', [StaffController::class, 'positions'])->name('staff.positions');
+        Route::get('staff/groups', [StaffController::class, 'groups'])->name('staff.groups');
+        Route::get('permission/grouped', [RoleController::class, 'permissions'])->name('role.permissions');
+        Route::get('roles', [RoleController::class, 'roles'])->name('role.roles');
+        Route::Resource('staff', StaffController::class);
+        Route::post('/staff/{id}/user', [StaffController::class, 'user'])->name('staff.user');
 
-            //Внештатные сотрудники Freelance
-            Route::Resource('freelance', FreelanceController::class);
-            Route::post('/freelance/{id}/user', [FreelanceController::class, 'user']);
+        //Внештатные сотрудники Freelance
+        Route::Resource('freelance', FreelanceController::class);
+        Route::post('/freelance/{id}/user', [FreelanceController::class, 'user']);
 
-            //Управление ролями
-            Route::Resource('role', RoleController::class)->except(['create', 'edit']);
-        });
+        //Управление ролями
+        Route::Resource('role', RoleController::class)->except(['create', 'edit']);
+
     });
+});
+//Клиентская часть
+//без доступа
+Route::group(
+    [
+        'middleware' => ['user_cookie_id'],
+    ],
+    function () {
+
+
+        //Без доступа
+        //Аутентификация или регистрация
+        Route::any('/login-client', [AuthController::class, 'loginClient'])->name('login');
+        //TODO Переделать
+        Route::any('/password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+        Route::get('/register/verify', [AuthController::class, 'verify'])->name('register.verify');
+        ///Регистрация клиента восстановление пароля
+        Route::group([
+            'prefix' => 'client',
+        ], function () {
+            //TODO Сделать позже
+           // Route::post('/registration', [ClientController::class, 'registration']);
+//        Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+//        Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+        });
+
+
+
+    }
+);
+
+//с доступом
+Route::middleware(['auth', 'role:client'])->group(function () {
+    Route::any('/logout', [AuthController::class, 'logoutClient'])->name('logout');
+
+
+    //Клиенты Client
+    // Клиент может управлять своим профилем
+    Route::post('/client/credentials', [ClientController::class, 'credentials']); //смена регистр.данных
+    Route::get('/client/profile', [ClientController::class, 'profile']);
+    Route::put('/client/profile', [ClientController::class, 'updateProfile']);
+
 });

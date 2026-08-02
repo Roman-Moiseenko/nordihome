@@ -19,6 +19,8 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserRepository implements UserRepositoryInterface
 {
+    use HydratesProfileableEntities;
+
     public function save(UserEntity $user): UserEntity
     {
         $model = $user->id
@@ -32,6 +34,7 @@ class UserRepository implements UserRepositoryInterface
         $model->remember_token = $user->rememberToken;
         $model->profileable_type = $user->profileableType?->getModelClass();
         $model->profileable_id = $user->profileableId;
+
         $model->banned_at = $user->getBannedAt();
         //$model->
         $model->syncRoles($user->roles);
@@ -70,6 +73,10 @@ class UserRepository implements UserRepositoryInterface
         return User::paginate($perPage)
             ->through(fn ($model) => $this->hydrate($model)); // ← применяем hydrate к каждому элементу
     }
+
+    /**
+     * @throws \DateMalformedStringException
+     */
     private function hydrate(User $model): UserEntity
     {
         $user = new UserEntity(
@@ -80,6 +87,7 @@ class UserRepository implements UserRepositoryInterface
         if ($model->email_verified_at) {
             $user->emailVerifiedAt = DateTimeImmutable::createFromMutable($model->email_verified_at);
         }
+
         $user->rememberToken = $model->remember_token;
 
         // --- Обратный маппинг: Eloquent class → Enum ---
@@ -94,6 +102,18 @@ class UserRepository implements UserRepositoryInterface
 
         $user->roles = $model->getRoleNames()->toArray();
         $user->permissions = $model->getAllPermissions()->pluck('name')->toArray();
+
+        // Загрузка profileable сущности (ClientEntity или StaffEntity)
+        if ($model->profileable_type && $model->profileable_id) {
+            $model->load('profileable');
+            if ($model->profileable) {
+                $user->profileable = match (true) {
+                    $model->profileable instanceof Client => $this->hydrateClient($model->profileable),
+                    $model->profileable instanceof Staff => $this->hydrateStaff($model->profileable),
+                    default => null,
+                };
+            }
+        }
 
         return $user;
     }

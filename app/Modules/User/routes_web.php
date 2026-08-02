@@ -65,7 +65,7 @@ Route::group([
         });
     }
 );
-
+/*
 //Аутентификация
 Route::group(
     [
@@ -94,3 +94,4 @@ Route::group(
         Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     }
 );
+*/

@@ -8,6 +8,7 @@ use DateTime;
 use Illuminate\Database\Eloquent\Model;
 use App\Modules\Auth\Infrastructure\Models\User;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * @property int $id
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property DateTime $termination_date
  * @property ?User $user
  */
+#[Deprecated]
 class Freelance extends Model
 {
 

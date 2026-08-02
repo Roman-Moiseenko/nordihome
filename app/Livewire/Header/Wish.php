@@ -25,6 +25,8 @@ class Wish extends Component
     public function refresh_fields()
     {
         if (!is_null($this->client))
+            //FIXME !!
+            /*
         $this->items = array_map(function (\App\Modules\User\Entity\Wish $wish) {
             return [
                 'id' => $wish->id,
@@ -33,7 +35,7 @@ class Wish extends Component
                 'url' => route('shop.product.view', $wish->product->slug),
             ];
         },  $this->client->wishes()->getModels());
-
+*/
         $this->count = count($this->items);
 
     }

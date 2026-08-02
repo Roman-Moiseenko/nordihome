@@ -193,7 +193,7 @@ window.$ = jQuery;
                 form.addClass('was-validated');
                 return true;
             }
-            $.post('/login_register',
+            $.post('/login-client',
                 {
                     email: inputEmail.val(),
                     password: inputPassword.val(),
@@ -203,7 +203,20 @@ window.$ = jQuery;
                     common.error(data);
                     $('#token-error').hide();
                     $('#password-error').hide();
-
+                    if (data === "token") $('#token-error').show(); //неверный токен
+                    if (data === "verification") {
+                        inputEmail.prop('disabled', true);
+                        inputPassword.prop('disabled', true);
+                        inputVerify.prop('required', true);
+                        inputVerify.parent().show();
+                    }
+                    if (data === "password") $('#password-error').show(); //Неверный пароль
+                    if (data === "login") location.reload(); //Аутентификация прошла
+                    if (data === "banned") {
+                        alert('Ваш аккаунт заблокирован!')
+                        //Доступ ограничен
+                    }
+/*
                     if (data.token === true) $('#token-error').show(); //неверный токен
                     if (data.verification === true || data.register === true) { //требуется верификация
                         inputEmail.prop('disabled', true);
@@ -213,6 +226,7 @@ window.$ = jQuery;
                     }
                     if (data.password === true) $('#password-error').show(); //Неверный пароль
                     if (data.login === true) location.reload(); //Аутентификация прошла
+                    */
                 }
             );
 

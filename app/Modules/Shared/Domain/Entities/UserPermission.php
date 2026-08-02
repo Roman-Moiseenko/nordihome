@@ -17,7 +17,7 @@ class UserPermission
         get => $this->permissions;
     }
 
-    public function __construct(?int $userId, array $roles, array $permissions)
+    public function __construct(?int $userId = null, array $roles = [], array $permissions = [])
     {
         $this->userId = $userId;
         $this->roles = $roles;

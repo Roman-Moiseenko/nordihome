@@ -12,21 +12,18 @@ use Illuminate\Support\Facades\Auth;
 readonly class LoginUserUseCase
 {
     public function __construct(private UserRepositoryInterface $userRepository,
-    private PasswordHasherInterface                             $passwordHasher,) {}
+    private PasswordHasherInterface                             $passwordHasher,
+    ) {}
 
-    public function execute(LoginData $dto): string
+    public function execute(LoginData $dto): bool
     {
         $email = new Email($dto->email);
         $user = $this->userRepository->findByEmail($email);
+        if (!$user || !$user->validatePassword($dto->password, $this->passwordHasher)) return false;
 
-        if (!$user || !$user->validatePassword($dto->password, $this->passwordHasher)) {
-            throw new InvalidCredentialsException('Неверный email или пароль');
-        }
+        if (!$user->hasRole('client') && !$user->hasRole('staff')) return false;
 
-        // Создаём Sanctum токен
-        $guard = Auth::guard('api');
-        $model = $guard->getProvider()->retrieveById($user->id);
-
-        return $model->createToken('api-token')->plainTextToken;
+        Auth::attempt(['email' => $email, 'password' => $dto->password], $dto->remember);
+        return true;
     }
 }

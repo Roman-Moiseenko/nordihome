@@ -22,6 +22,9 @@ use App\Modules\Auth\Infrastructure\Persistence\StaffRepository;
 use App\Modules\Auth\Infrastructure\Persistence\UserRepository;
 use App\Modules\Auth\Infrastructure\Services\LaravelPasswordHasher;
 use App\Modules\Auth\Infrastructure\Services\PermissionProvider;
+use App\Modules\Mail\Service\FakeMailService;
+use App\Modules\Mail\Service\SystemMailService;
+use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;
 use App\Modules\Auth\Presentation\Console\Commands\AdminCreateCommand;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Debug\ExceptionHandler;
@@ -151,6 +154,12 @@ class AuthServiceProvider extends ServiceProvider
         $this->app->bind(
             PermissionProviderInterface::class,
             PermissionProvider::class
+        );
+        $this->app->bind(
+            MailServiceInterface::class,
+            $this->app->environment('local')
+                ? FakeMailService::class
+                : SystemMailService::class
         );
         $this->app->when(ChangeUserCredentialsUseCase::class)
             ->needs('$frontendUrl')
@@ -510,3 +519,4 @@ class AuthServiceProvider extends ServiceProvider
         return $this->baseNamespace . '\\' . str_replace('/', '\\', $namespace);
     }
 }
+

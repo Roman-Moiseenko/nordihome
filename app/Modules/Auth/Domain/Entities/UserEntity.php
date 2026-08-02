@@ -47,6 +47,10 @@ class UserEntity
         get => $this->permissions;
         set => $this->permissions = $value;
     }
+    public ClientEntity|StaffEntity|null $profileable = null {
+        get => $this->profileable;
+        set => $this->profileable = $value;
+    }
     private ?DateTimeImmutable $bannedAt = null;
 
     public function __construct(
