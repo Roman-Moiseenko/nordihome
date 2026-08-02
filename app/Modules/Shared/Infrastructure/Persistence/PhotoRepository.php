@@ -126,10 +126,7 @@ class PhotoRepository implements PhotoRepositoryInterface
 
         if ($models === null) return [];
 
-
-        return array_map(function ($model) {
-            return $this->hydrate($model);
-        }, $models);
+        return $models->map(fn($model) => $this->hydrate($model))->toArray();
     }
 
     public function findByEntities(array $imageableIds, string $modelType, PhotoType $type): array

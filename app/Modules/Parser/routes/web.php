@@ -33,6 +33,7 @@ Route::group([
         Route::post('/available/{id}', [ProductParserController::class, 'available'])->name('available');
         Route::post('/fragile/{id}', [ProductParserController::class, 'fragile'])->name('fragile');
         Route::post('/sanctioned/{id}', [ProductParserController::class, 'sanctioned'])->name('sanctioned');
+        Route::post('/to-catalog/{id}', [ProductParserController::class, 'toCatalog'])->name('to-catalog');
 
     });
     //LOG

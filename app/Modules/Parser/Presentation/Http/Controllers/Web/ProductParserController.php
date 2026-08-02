@@ -8,6 +8,7 @@ use App\Modules\Parser\Application\Actions\Product\ToggleProductAvailabilityUseC
 use App\Modules\Parser\Application\Actions\Product\ToggleProductFragileUseCase;
 use App\Modules\Parser\Application\Actions\Product\ToggleProductSanctionedUseCase;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductFilterData;
+use App\Modules\Parser\Application\Services\CreateProductFromParserService;
 use App\Modules\Parser\Infrastructure\Jobs\UpdateProductIkeaJob;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\RedirectResponse;
@@ -22,6 +23,7 @@ class ProductParserController extends Controller
         private readonly ToggleProductAvailabilityUseCase $toggleProductAvailabilityUseCase,
         private readonly ToggleProductFragileUseCase $toggleProductFragileUseCase,
         private readonly ToggleProductSanctionedUseCase $toggleProductSanctionedUseCase,
+        private readonly CreateProductFromParserService $createProductFromParserService,
     ) {}
 
     public function index(Request $request, UserPermission $userPermission): \Inertia\Response
@@ -37,6 +39,14 @@ class ProductParserController extends Controller
     public function show(int $id)
     {
         //TODO Возможно сделать страницу, чтоб показать все спарсенные атрибуты и остатки  remainsProduct
+    }
+
+    public function toCatalog(int $id, UserPermission $userPermission): RedirectResponse
+    {
+        \Log::info($id);
+        $product = $this->createProductFromParserService->execute($id, $userPermission);
+
+        return redirect()->route('admin.catalog.product.edit', $product->id);
     }
 
     public function available(int $id, UserPermission $userPermission): RedirectResponse

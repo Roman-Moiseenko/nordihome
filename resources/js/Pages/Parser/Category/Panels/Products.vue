@@ -52,6 +52,11 @@
                         Спарсить
                     </el-button>
 
+
+                    <el-button v-if="scope.row.productId === null" type="success" size="small" plain @click="toCatalog(scope.row)">
+                        В Каталог
+                    </el-button>
+
                 </template>
             </el-table-column>
         </el-table>
@@ -186,5 +191,7 @@ function onSanctioned(row) {
         }
     })
 }
-
+function toCatalog(row) {
+    router.post(route('admin.parser.product.to-catalog', {id: row.id}))
+}
 </script>

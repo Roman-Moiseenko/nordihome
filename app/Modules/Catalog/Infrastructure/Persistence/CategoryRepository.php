@@ -86,7 +86,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
     public function getBySlug(string $slug):? CategoryEntity
     {
-        $model = Category::where('slug', $slug)->get();
+        $model = Category::where('slug', $slug)->first();
+        if (is_null($model)) return null;
         return $this->hydrate($model);
     }
     public function existsSlug(string $slug, ?int $excludeId = null): bool

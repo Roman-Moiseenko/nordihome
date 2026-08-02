@@ -12,9 +12,7 @@ use App\Modules\Catalog\Application\DTOs\Product\ProductUpdateData;
 use App\Modules\Catalog\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Catalog\Application\Interfaces\BrandRepositoryInterface;
 use App\Modules\Catalog\Application\Services\AttachAttributeProductService;
-use App\Modules\Catalog\Application\Services\DimensionsFromAttributeService;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
-use App\Modules\Catalog\Domain\ValueObjects\Code;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Parser\Application\Actions\Product\AttachProductToParserUseCase;
 use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
@@ -24,7 +22,6 @@ use App\Modules\Shared\Application\DTOs\JobPhotoCopyData;
 use App\Modules\Shared\Application\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\PhotoType;
-use App\Modules\Shared\Domain\ValueObjects\Slug;
 use App\Modules\Shared\Infrastructure\Job\CopyPhotoByIdJob;
 
 readonly class CreateProductFromParserService
@@ -53,6 +50,8 @@ readonly class CreateProductFromParserService
             throw new \DomainException('Отсутствует доступ');
 
         $parserEntity = $this->parserProductRepository->getById($id);
+
+        \Log::info(json_encode($parserEntity));
         $category = $this->findOrCreateTempCategory->execute(); //Найти временную Категорию
         $brandId = $this->brandRepository->getIkeaId(); //Бренд ИКЕА
         $dto = new ProductFastCreateData(
@@ -137,7 +136,7 @@ readonly class CreateProductFromParserService
         //Сохраняем id product для $parserEntity
         $this->attachProductToParserUseCase->execute($parserEntity->id, $productEntity->id);
 
-        return new $productEntity;
+        return $productEntity;
     }
 
     private function getDimensions(ParserProductEntity $parserEntity): Dimensions
@@ -166,13 +165,19 @@ readonly class CreateProductFromParserService
             }
 
         }
+        \Log::info(json_encode([$width, $height, $depth, $weight]));
         return Dimensions::create(
-            width: $width,
-            height: $height,
-            depth: $depth,
+            width: $this->getValue($width),
+            height: $this->getValue($height),
+            depth: $this->getValue($depth),
             weight: $weight,
             measure: Dimensions::MEASURE_KG,
             type: $type,
         );
+    }
+
+    private function getValue(string $data): float
+    {
+        return (float) preg_replace('/[^0-9.]/', '', str_replace(',', '.', $data));
     }
 }

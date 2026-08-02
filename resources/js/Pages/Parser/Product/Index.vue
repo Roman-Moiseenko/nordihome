@@ -60,6 +60,11 @@
                 </el-table-column>
                 <el-table-column prop="category_name" label="Категория" width="250" align="center"
                                  show-overflow-tooltip/>
+                <el-table-column prop="productId" label="Ест в каталоге" width="120" align="center">
+                    <template #default="scope">
+                        <Active :active="scope.row.productId !== null"/>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="availability" label="Доступен" width="120" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.availability"/>
@@ -76,7 +81,13 @@
                         <Active :active="scope.row.sanctioned"/>
                     </template>
                 </el-table-column>
-
+                <el-table-column width="160" align="right">
+                    <template #default="scope">
+                    <el-button v-if="scope.row.productId === null" type="success" plain size="small" @click="toCatalog(scope.row)">
+                        В Каталог
+                    </el-button>
+                    </template>
+                </el-table-column>
             </el-table>
         </div>
         <pagination
@@ -120,6 +131,10 @@ const filter = reactive({
     show: props.filters.show,
 })
 const store = useStore();
+
+function toCatalog(row) {
+    router.post(route('admin.parser.product.to-catalog', {id: row.id}))
+}
 
 function onAvailable(row) {
     router.visit(route('admin.parser.product.available', {id: row.id}), {
