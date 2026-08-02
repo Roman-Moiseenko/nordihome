@@ -11,14 +11,14 @@ class VerifyMail extends SystemMailable
 {
 
     private string $verify_token;
-    private string $email;
+    private string $login;
 
     public function __construct(array $data)
     {
         parent::__construct();
         $this->subject = 'Подтверждение почты при регистрации';
-        $this->verify_token = $data['token'];
-        $this->email = $data['email'];
+        $this->verify_token = (string)$data['token'];
+        $this->login = $data['login'];
     }
 
     #[Pure] public function content(): Content
@@ -27,7 +27,7 @@ class VerifyMail extends SystemMailable
             markdown: 'mail.user.verify',
             with: [
                 'verify_token' => $this->verify_token,
-                'email' => $this->email,
+                'login' => $this->login,
             ],
         );
     }
