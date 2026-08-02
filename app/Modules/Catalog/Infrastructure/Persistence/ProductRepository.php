@@ -52,6 +52,10 @@ class ProductRepository implements ProductRepositoryInterface
         $model->hide_price = $product->hidePrice;
         $model->published_at = $product->publishedAt?->format('Y-m-d H:i:s');
 
+        if ($product->dimensions !== null) {
+            $model->dimensions = $product->dimensions;
+        }
+
         $model->save();
 /*
         if ($product->id === null) {
@@ -176,6 +180,10 @@ class ProductRepository implements ProductRepositoryInterface
         $entity->onlyOnOrder = (bool)$model->only_on_order;
         $entity->fractional = (bool)$model->fractional;
         $entity->hidePrice = (bool)$model->hide_price;
+
+        if ($model->dimensions !== null) {
+            $entity->dimensions = $model->dimensions;
+        }
 
         if ($model->published_at !== null) {
             $entity->publishedAt = \DateTimeImmutable::createFromInterface($model->published_at);

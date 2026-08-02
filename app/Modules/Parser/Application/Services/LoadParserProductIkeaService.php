@@ -127,8 +127,6 @@ class LoadParserProductIkeaService
         if (is_null($dataProduct))
             throw new \DomainException('Ошибка получения данных по урлу ' . $product['pipUrl']);
 
-
-
             //Составные товары
             $composite = $this->ikeaDataMapper->mapComposite($dataProduct['subProducts'] ?? []);
 
@@ -219,12 +217,13 @@ class LoadParserProductIkeaService
         //Запус Job загрузки изображений
 
         foreach ($product['allProductImage'] as $imageItem) {
+            $altImage = $this->translate->translate($imageItem['altText']);
             $dtoPhoto = new JobPhotoLoadData(
                 imageableId: $productEntity->id,
                 modelType: 'parser.product',
                 type: 'gallery',
                 url: $imageItem['url'],
-                alt: $imageItem['altText'],
+                alt: $altImage,
             );
             LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission);
         }

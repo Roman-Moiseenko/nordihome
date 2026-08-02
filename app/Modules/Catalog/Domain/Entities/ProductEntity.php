@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Domain\Entities;
 
+use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
@@ -172,6 +173,11 @@ final class ProductEntity
     public bool $hidePrice = false {
         get => $this->hidePrice;
         set => $this->hidePrice = $value;
+    }
+
+    public ?Dimensions $dimensions = null {
+        get => $this->dimensions;
+        set => $this->dimensions = $value;
     }
 
     public function __construct(

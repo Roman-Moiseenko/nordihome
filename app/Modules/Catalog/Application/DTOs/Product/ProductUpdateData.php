@@ -109,6 +109,10 @@ class ProductUpdateData extends Data
 
         #[Nullable]
         public readonly ?bool $hidePrice = null,
+
+        // ======================== Габариты ========================
+        #[Nullable]
+        public readonly ?array $dimensions = null,
     )
     {
     }

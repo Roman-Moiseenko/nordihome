@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\Actions\Product;
 
+use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Catalog\Application\DTOs\Product\ProductUpdateData;
 use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
@@ -71,6 +72,11 @@ readonly class UpdateProductUseCase
             if ($dto->published) {
                 $product->publish();
             }
+        }
+
+        // ======================== Габариты ========================
+        if ($dto->dimensions !== null) {
+            $product->dimensions = Dimensions::fromArray($dto->dimensions);
         }
 
         return $this->productRepository->save($product);

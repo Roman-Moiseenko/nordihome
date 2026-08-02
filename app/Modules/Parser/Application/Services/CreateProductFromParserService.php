@@ -16,7 +16,10 @@ use App\Modules\Catalog\Application\Services\DimensionsFromAttributeService;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Parser\Application\Actions\Product\AttachProductToParserUseCase;
 use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
+use App\Modules\Parser\Domain\Entities\ParserProductEntity;
+use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
@@ -31,7 +34,9 @@ readonly class CreateProductFromParserService
         private UpdateProductUseCase             $updateProductUseCase,
         private AttachAttributeProductService    $attachAttributeProductService,
         private SetProductPriceUseCase           $setProductPriceUseCase,
+        public AttachProductToParserUseCase $attachProductToParserUseCase,
 
+        private SettingRepository $settingRepository,
     )
     {
 
@@ -39,15 +44,12 @@ readonly class CreateProductFromParserService
 
     public function execute(int $id, UserPermission $userPermission): ProductEntity
     {
-        if (!$userPermission->can('catalog.product.create')) throw new \DomainException('Отсутствует доступ');
+        if (!$userPermission->can('catalog.product.create'))
+            throw new \DomainException('Отсутствует доступ');
 
         $parserEntity = $this->parserProductRepository->getById($id);
-
-        $brandId = $this->brandRepository->getIkeaId();
-        //MAINDO Создать
-        //Найти временную Категорию
-        $category = $this->findOrCreateTempCategory->execute();
-
+        $category = $this->findOrCreateTempCategory->execute(); //Найти временную Категорию
+        $brandId = $this->brandRepository->getIkeaId(); //Бренд ИКЕА
         $dto = new ProductFastCreateData(
             name: $parserEntity->short . ' ' . $parserEntity->name . ' ИКЕА',
             code: codeIkea($parserEntity->code),
@@ -56,8 +58,6 @@ readonly class CreateProductFromParserService
             slug: null,
         );
         $productEntity = $this->fastCreateProductUseCase->execute($dto, $userPermission);
-
-
 
         //Описание
         $productEntity->short = $parserEntity->short;
@@ -71,46 +71,8 @@ readonly class CreateProductFromParserService
         if (!empty($parserEntity->materials)) $care .= '<h4>Уход</h4>' . $parserEntity->care;
         $productEntity->care = $care;
 
-
-
-
         //Получаем габариты из Парсера
-
-       $weight = 0;
-       foreach ($parserEntity->packages as $package) {
-           $weight = $package->weight * $package->quantity;
-       }
-       $width = 0; $height = 0; $depth = 0; $type = Dimensions::TYPE_LENGTH;
-
-       foreach ($parserEntity->dimensions as $key => $value) {
-           if ($key == 'Высота') $height = $value;
-           if ($key == 'Ширина') $width = $value;
-           if ($key == 'Длина') {
-               $type = Dimensions::TYPE_LENGTH;
-               $depth = $value;
-           }
-           if ($key == 'Глубина') {
-               $type = Dimensions::TYPE_DEPTH;
-               $depth = $value;
-           }
-           if ($key == 'Диаметр') {
-               $type = Dimensions::TYPE_DIAMETER;
-               $depth = $value;
-               $width = $value;
-           }
-
-       }
-
-
-        $dimensions = Dimensions::create(
-            width: $width,
-            height: $height,
-            depth: $depth,
-            weight: $weight,
-            measure: Dimensions::MEASURE_KG,
-            type: $type,
-        );
-
+        $dimensions = $this->getDimensions($parserEntity);
 
         $dtoUpdate = new ProductUpdateData(
             id: $productEntity->id,
@@ -120,37 +82,78 @@ readonly class CreateProductFromParserService
             preOrder: true,
             delivery: true,
             local: true,
+            dimensions: $dimensions->toArray(),
         );
 
         $productEntity = $this->updateProductUseCase->execute($dtoUpdate, $userPermission);
 
-        //Атрибуты
+        //Атрибуты - цвет
         $this->attachAttributeProductService->SetColorAttribute($productEntity->id, $parserEntity->colors);
 
-        //Переносим картинки
+        /**
+         * Переносим картинки
+         */
         //
         // DTO ProductCreate
 
-        // UseCase ProductCreate
 
-        //Установить цену из $product["price"], только розницу и минимальную (половина)
+
+        //Установить цену из для товаров в злотах по курсу
+        $ratio = $this->settingRepository->getParser()->parser_coefficient;
         //Рыночная цена
         $dtoPrice = new SetProductPriceData(
             productId: $productEntity->id,
-            price: (float)$parserEntity->priceSell * 29, //MAINDO Взять из настроек
+            price: (float)$parserEntity->priceSell * $ratio,
             priceType: PriceType::RETAIL,
         );
         $this->setProductPriceUseCase->execute($dtoPrice, $userPermission);
         //Минимальная
         $dtoPrice = new SetProductPriceData(
             productId: $productEntity->id,
-            price: (float)$parserEntity->priceSell * 29,
+            price: (float)$parserEntity->priceSell * $ratio,
             priceType: PriceType::MINIMAL,
         );
         $this->setProductPriceUseCase->execute($dtoPrice, $userPermission);
 
         //Сохраняем id product для $parserEntity
+        $this->attachProductToParserUseCase->execute($parserEntity->id, $productEntity->id);
 
         return new $productEntity;
+    }
+
+    private function getDimensions(ParserProductEntity $parserEntity): Dimensions
+    {
+        $weight = 0;
+        foreach ($parserEntity->packages as $package) {
+            $weight = $package->weight * $package->quantity;
+        }
+        $width = 0; $height = 0; $depth = 0; $type = Dimensions::TYPE_LENGTH;
+
+        foreach ($parserEntity->dimensions as $key => $value) {
+            if ($key == 'Высота') $height = $value;
+            if ($key == 'Ширина') $width = $value;
+            if ($key == 'Длина') {
+                $type = Dimensions::TYPE_LENGTH;
+                $depth = $value;
+            }
+            if ($key == 'Глубина') {
+                $type = Dimensions::TYPE_DEPTH;
+                $depth = $value;
+            }
+            if ($key == 'Диаметр') {
+                $type = Dimensions::TYPE_DIAMETER;
+                $depth = $value;
+                $width = $value;
+            }
+
+        }
+        return Dimensions::create(
+            width: $width,
+            height: $height,
+            depth: $depth,
+            weight: $weight,
+            measure: Dimensions::MEASURE_KG,
+            type: $type,
+        );
     }
 }

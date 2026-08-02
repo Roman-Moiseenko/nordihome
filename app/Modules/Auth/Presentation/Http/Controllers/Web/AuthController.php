@@ -35,6 +35,8 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $dto = LoginData::validateAndCreate($request->all());
+        //Выходим из другого логина, возможно это client
+        $this->logoutUser->execute($request);
         $user = $this->loginStaffUser->execute($dto);
         $request->session()->regenerate();
 
