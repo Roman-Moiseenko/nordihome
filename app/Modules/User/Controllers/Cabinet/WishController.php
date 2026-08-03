@@ -4,68 +4,69 @@ declare(strict_types=1);
 namespace App\Modules\User\Controllers\Cabinet;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\WishService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use function response;
 use function view;
 
-class WishController extends AuthCabinetController
+//MAINDO Сделать Избранное
+class WishController extends ShopController
 {
     private WishService $service;
     private UserRepository $repository;
 
     public function __construct(WishService $service, UserRepository $repository)
     {
-        parent::__construct();
-        $this->middleware(['auth:user'])->except('get');
+      //  $this->middleware(['auth:user'])->except('get');
         $this->service = $service;
         $this->repository = $repository;
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $user_id = Auth::guard('web')->user()->id;
-        $products = Product::whereHas('wishes', function ($query) use ($user_id) {
-            $query->where('user_id', $user_id);
+        $client = $this->getClient($request);
+        $products = Product::whereHas('wishes', function ($query) use ($client) {
+            $query->where('client_id', $client->id);
         })->get();
-        return view($this->route('cabinet.wish'), compact('products'));
+        return view('shop.cabinet.wish', compact('products'));
     }
 
     //Ajax
-    public function toggle(Product $product)
+    public function toggle(Request $request, Product $product)
     {
-        /** @var User $user */
-        $user = Auth::guard('web')->user();
-        $result = $this->service->toggle($user->id, $product->id);
-        $products = $this->repository->getWish($user);
+        $client = $this->getClient($request);
+        $result = $this->service->toggle($client->id, $product->id);
+        //$products = $this->repository->getWish($user);
 
         return response()->json([
-            'items' => $products,
+            'items' => [],
             'state' => $result,
         ]);
     }
 
-    public function get()
+    public function get(Request $request)
     {
-        if (!Auth::guard('web')->check())
+        if (!auth()->check())
             return response()->json([
                 'items' => [],
             ]);
         /** @var User $user */
-        $user = Auth::guard('web')->user();
-        $products = $this->repository->getWish($user);
+        $client = $this->getClient($request);
+        $products = $this->repository->getWish($client->id);
         return response()->json([
             'items' => $products,
         ]);
     }
 
-    public function clear()
+    public function clear(Request $request)
     {
         /** @var User $user */
-        $user = Auth::guard('web')->user();
-        $this->service->clear($user->id);
+        //$user = Auth::guard('web')->user();
+       // $this->service->clear($user->id);
 
         return response()->json(true);
     }

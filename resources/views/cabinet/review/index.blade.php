@@ -36,7 +36,7 @@
             </div>
         </div>
     @endforeach
-    @if($user->reviews()->count() == 0)
+    @if($client->reviews()->count() == 0)
         <div class="fs-5 m-3 mb-5">
             У вас еще нет отзывов на товары.
         </div>

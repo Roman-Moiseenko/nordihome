@@ -101,8 +101,9 @@ class UserRepository
         ]);
     }
 
-    public function getWish(Client $user): array
+    public function getWish(int $clientId): array
     {
+        $client = Client::find($clientId);
         return array_map(function (Wish $wish) {
             return [
                 'img' => $wish->product->getImage('thumb'),
@@ -112,7 +113,7 @@ class UserRepository
                 'remove' => route('cabinet.wish.toggle', $wish->product),
                 'product_id' => $wish->product->id,
             ];
-        }, $user->wishes()->getModels());
+        }, $client->wishes()->getModels());
     }
 
     public function getUsersBySubscription(string $class): array

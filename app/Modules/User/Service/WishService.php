@@ -8,11 +8,11 @@ use App\Modules\User\Entity\Wish;
 class WishService
 {
 
-    public function toggle(int $user_id, int $product_id): bool
+    public function toggle(int $client_id, int $product_id): bool
     {
-        $wish = Wish::where('user_id', $user_id)->where('product_id', $product_id)->first();
+        $wish = Wish::where('client_id', $client_id)->where('product_id', $product_id)->first();
         if (empty($wish)) {
-            Wish::register($user_id, $product_id);
+            Wish::register($client_id, $product_id);
             return true;
         } else {
             $wish->delete();
@@ -20,8 +20,8 @@ class WishService
         }
     }
 
-    public function clear(int $user_id)
+    public function clear(int $client_id)
     {
-        Wish::where('user_id', $user_id)->delete();
+        Wish::where('client_id', $client_id)->delete();
     }
 }

@@ -879,7 +879,7 @@ window.$ = jQuery;
             let new_value = fullnameInput.val();
             fullnameData.text(new_value);
             $.post(fullnameSave.data('route'), {fullname: new_value}, function (data) {
-
+                console.log(data)
             })
         });
 

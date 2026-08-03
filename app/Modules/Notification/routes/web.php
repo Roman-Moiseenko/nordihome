@@ -14,5 +14,5 @@ Route::group([
     function(){
         Route::post('/notification/read/{notification}', [NotificationController::class, 'read'])->name('notification.read');
         Route::post('/telegram/chat-id', [TelegramController::class, 'chat_id'])->name('telegram.chat-id');
-        Route::Resource('notification', 'NotificationController')->only(['index', 'create', 'store']);
+        Route::Resource('notification', NotificationController::class)->only(['index', 'create', 'store']);
     });

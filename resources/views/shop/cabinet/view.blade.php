@@ -1,3 +1,7 @@
+@php
+
+@endphp
+
 @extends('shop.cabinet.cabinet')
 
 @section('title', 'Мой кабинет - NORDI HOME')
@@ -10,8 +14,8 @@
         <div class="field mt-3">
             <span class="label">Фамилия Имя Отчество:</span>
             <span id="data-fullname" class="data"
-                  style="display: {{ $client->fullname->isEmpty() ? 'none' :' inherit' }};">{{ $client->fullname->getFullName() }}</span>
-            <div id="group-fullname" class="input-group" style="display: {{ !$client->fullname->isEmpty() ? 'none' :' inherit' }};">
+                  style="display: {{ empty($client->fullName) ? 'none' :' inherit' }};">{{ $client->fullName }}</span>
+            <div id="group-fullname" class="input-group" style="display: {{ !empty($client->fullname) ? 'none' :' inherit' }};">
                 <input type="text" class="form-control" id="input-fullname" aria-describedby="Фамилия получателя" placeholder="Фамилия Имя Отчество"
                        autocomplete="off" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');">
                 <button id="save-fullname" class="btn btn-outline-secondary" type="button"
@@ -19,7 +23,7 @@
                 >Сохранить</button>
             </div>
             <button id="change-fullname" class="change btn btn-outline-primary"
-                    style="display: {{ $client->fullname->isEmpty() ? 'none' :' inherit' }};">Изменить</button>
+                    style="display: {{ empty($client->fullname) ? 'none' :' inherit' }};">Изменить</button>
         </div>
         <div class="field mt-3">
             <span class="label">Контактный телефон:</span>

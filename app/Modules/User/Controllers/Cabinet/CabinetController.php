@@ -5,64 +5,66 @@ namespace App\Modules\User\Controllers\Cabinet;
 
 
 use App\Http\Controllers\Controller;
+use App\Modules\Auth\Infrastructure\Models\Client;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\UserService;
 use Illuminate\Http\Request;
 use function response;
 use function view;
 
-class CabinetController extends AuthCabinetController
+class CabinetController extends ShopController
 {
 
     private UserService $service;
 
     public function __construct(UserService $service)
     {
-        parent::__construct();
+        //parent::__construct();
         $this->service = $service;
     }
 
-    public function view(User $user)
+    public function view(Request $request)
     {
-        return view($this->route('cabinet.view'));
+        return view('shop.cabinet.view');
     }
 
-    public function profile(User $user)
+    public function profile(Client $client)
     {
         //
     }
 
-    public function update(Request $request, User $user)
+    public function update(Request $request, Client $client)
     {
         //
     }
 
     //AJAX
     //TODO Перенести в Livewire
-    public function fullname(User $user, Request $request)
+    public function fullname(Client $client, Request $request)
     {
-        $result = $this->service->setFullname($user, $request);
+        $result = $this->service->setFullname($client, $request);
+        $client->refresh();
+        return response()->json($result);
+    }
+
+    public function phone(Client $client, Request $request)
+    {
+        $result = $this->service->setPhone($client, $request);
+        $client->refresh();
+        return response()->json($result);
+    }
+
+    public function email(Client $client, Request $request)
+    {
+        $result = $this->service->setEmail($client, $request);
         $user->refresh();
         return response()->json($result);
     }
 
-    public function phone(User $user, Request $request)
+    public function password(Client $user, Request $request)
     {
-        $result = $this->service->setPhone($user, $request);
-        $user->refresh();
-        return response()->json($result);
-    }
-
-    public function email(User $user, Request $request)
-    {
-        $result = $this->service->setEmail($user, $request);
-        $user->refresh();
-        return response()->json($result);
-    }
-
-    public function password(User $user, Request $request)
-    {
-        $result = $this->service->setPassword($user, $request);
+        $result = $this->service->setPassword($client, $request);
         $user->refresh();
         return response()->json($result);
     }

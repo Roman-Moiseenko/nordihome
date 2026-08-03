@@ -5,6 +5,7 @@ namespace App\Modules\User\Controllers\Cabinet;
 
 
 use App\Http\Controllers\Controller;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use App\Modules\User\Entity\Subscription;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\SubscriptionService;
@@ -13,21 +14,20 @@ use Illuminate\Support\Facades\Auth;
 use function response;
 use function view;
 
-class OptionsController extends AuthCabinetController
+class OptionsController extends ShopController
 {
 
     private SubscriptionService $service;
 
     public function __construct(SubscriptionService $service)
     {
-        parent::__construct();
         $this->service = $service;
     }
 
     public function index(Request $request)
     {
         $subscriptions = Subscription::orderBy('name')->active()->get();
-        return view($this->route('cabinet.options'), compact('subscriptions'));
+        return view('shop.cabinet.options', compact('subscriptions'));
     }
 
     //AJAX

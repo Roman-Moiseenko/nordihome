@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Controllers\Cabinet;
 
-use App\Http\Controllers\Controller;
+
 use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Shop\Controllers\ShopController;
+
+use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
@@ -14,22 +15,23 @@ use function view;
 /**
  * Контроллер для просмотра заказов клиента
  */
-class OrderController extends AuthCabinetController
+class OrderController extends ShopController
 {
+    public function __construct()
+    {
+        //$this->middleware(['auth', 'role:client']);
+    }
 
     public function view(Order $order): View
     {
-        //$t = $this->route('cabinet.order.view');
-        //dd($t);
-        return view($this->route('cabinet.order.view'), compact('order'));
+
+        return view('shop.cabinet.order.view', compact('order'));
     }
 
     public function index(): View
     {
         $orders = Order::where('client_id', Auth::guard('web')->user()->id)->orderByDesc('updated_at')->get();
-        return view(
-            $this->route('cabinet.order.index'),
-            compact('orders')
+        return view('shop.cabinet.order.index', compact('orders')
         );
     }
 
@@ -45,6 +47,6 @@ class OrderController extends AuthCabinetController
                 'quantity' => $item->quantity,
             ];
         }
-        return view($this->route('cabinet.order.new'), compact('order', 'e_array'));
+        return view('shop.cabinet.order.new', compact('order', 'e_array'));
     }
 }

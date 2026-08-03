@@ -3,8 +3,12 @@
 namespace App\Modules\Auth\Infrastructure\Models;
 
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Catalog\Entity\Review;
+use App\Modules\Order\Entity\Order\Order;
+use App\Modules\User\Entity\Wish;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
 
 /**
@@ -28,6 +32,11 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string $action_identifier
  * @property bool $consent_active
  * @property User $user
+ *
+ * @property Wish[] $wishes
+ * @property Review[] $reviews
+ * @property Order[] $orders
+ *
  */
 class Client extends Model
 {
@@ -91,4 +100,17 @@ class Client extends Model
         return PriceType::retail();
     }
 
+    public function reviews(): HasMany
+    {
+        return $this->hasMany(Review::class, 'client_id', 'id');
+    }
+    public function orders(): HasMany
+    {
+        return $this->hasMany(Order::class, 'client_id', 'id')->orderByDesc('created_at');
+    }
+
+    public function wishes(): HasMany
+    {
+        return $this->hasMany(Wish::class, 'client_id', 'id');
+    }
 }

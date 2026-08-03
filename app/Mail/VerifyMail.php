@@ -3,6 +3,7 @@
 namespace App\Mail;
 
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\User\Entity\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -16,15 +17,15 @@ class VerifyMail extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public User $user;
+    public Client $client;
 
     /**
      * Create a new message instance.
-     * @param User $user
+     * @param Client $client
      */
-    public function __construct(User $user)
+    public function __construct(Client $client)
     {
-        $this->user = $user;
+        $this->client = $client;
 
     }
 
@@ -43,12 +44,12 @@ class VerifyMail extends Mailable
      */
     public function content(): Content
     {
-        \Log::info('VerifyMail  Content  ' . $this->user->id);
+        \Log::info('VerifyMail  Content  ' . $this->client->id);
         return new Content(
             markdown: 'mail.user.verify',
             with: [
-                'user' => $this->user,
-                'verify_token' => $this->user->verify_token,
+                'user' => $this->client,
+                'verify_token' => $this->client->verify_token,
                 ]
         );
     }
