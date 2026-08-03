@@ -14,6 +14,7 @@ use App\Modules\Parser\Infrastructure\Persistence\ParserProductRepository;
 use App\Modules\Parser\Infrastructure\Services\IkeaProductApi;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaAvailablePriceCommand;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaCategoryCommand;
+use App\Modules\Parser\Presentation\Console\Commands\IkeaClearData;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaProductCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
@@ -137,6 +138,7 @@ class ParserServiceProvider extends ServiceProvider
         $this->commands([
             IkeaAvailablePriceCommand::class,
             IkeaCategoryCommand::class,
+            IkeaClearData::class,
             IkeaProductCommand::class,
         ]);
     }
