@@ -9,6 +9,7 @@
 <div class="filters">
     <div class="mobile-close"><i class="fa-light fa-xmark"></i></div>
     <div class="base-filter">
+        @if(!is_null($mainInfo))
         <div class="children">
             <a href="{{ $mainInfo->back->url }}" class="heading">{{ $mainInfo->back->name }}</a>
             <div>
@@ -21,7 +22,8 @@
             @endforeach
         </div>
         <br>
-
+        @endif
+        @if(!is_null($secondInfo))
         <div class="children">
             <a href="{{ $secondInfo->back->url}}" class="heading">{{ $secondInfo->back->name }}</a>
             @foreach($secondInfo->children as $child)
@@ -30,6 +32,7 @@
                 </div>
             @endforeach
         </div>
+        @endif
         <x-widget.numeric name="price" min-value="{{ $filters->minPrice }}" max-value="{{ $filters->maxPrice }}"
                           current-min="{{ isset($request['price']) ? $request['price'][0] : '' }}"
                           current-max="{{ isset($request['price']) ? $request['price'][1] : '' }}"

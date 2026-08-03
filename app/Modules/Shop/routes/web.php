@@ -58,7 +58,9 @@ Route::group(
             'prefix' => 'shop',
         ], function () {
 
+
             Route::post('/search', [ProductController::class, 'search'])->name('search');
+            Route::get('/search', [ProductController::class, 'searchIndex'])->name('search-index');
             Route::post('/count-for-sell/{product}', [ProductController::class, 'count_for_sell'])->name('count-for-sell');
             Route::get('/{slug}', [ProductController::class, 'view'])->name('view');
             Route::get('/draft/{product}', [ProductController::class, 'view_draft'])->name('view-draft');

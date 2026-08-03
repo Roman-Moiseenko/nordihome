@@ -24,6 +24,10 @@ Breadcrumbs::for('shop.novelty', function (BreadcrumbTrail $trail) { //Без у
     $trail->parent('shop.category.index');
     $trail->push('Новинки', route('shop.novelty'));
 });
+Breadcrumbs::for('shop.product.search-index', function (BreadcrumbTrail $trail) { //Без указания главной - home
+    $trail->parent('shop.category.index');
+    $trail->push('Страница поиска', route('shop.product.search'));
+});
 
 Breadcrumbs::for('shop.category.view', function (BreadcrumbTrail $trail, $slug) use ($settings) { //Без указания главной - home
     // \Log::info('shop.category.view ' .$slug);

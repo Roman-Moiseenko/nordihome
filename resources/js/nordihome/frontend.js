@@ -1,5 +1,6 @@
 import jQuery from "jquery";
 import common from "@/_common.js";
+
 window.$ = jQuery;
 
 (function () {
@@ -68,9 +69,22 @@ window.$ = jQuery;
                 });
         }, 180);
     });
-    presearchInput.on('keydown', function () { //отменяем таймер при нажатии клавиши
+    presearchInput.on('keydown', function (e) { //отменяем таймер при нажатии клавиши
         clearTimeout(timerInput);
+        if (e.which === 13) {
+            // Предотвращаем стандартное поведение (например, отправку формы)
+            e.preventDefault();
+            // Получаем значение поля, обрезаем пробелы по краям
+            let value = $(this).val().trim();
+
+            // Отправляем запрос только если длина >= 4
+            if (value.length >= 4) {
+                window.location.href = presearch.data('route') + '?search=' + encodeURIComponent(value);
+            }
+        }
     });
+
+
 
     //HTML построители
     function _itemSuggestPresearch(item) {

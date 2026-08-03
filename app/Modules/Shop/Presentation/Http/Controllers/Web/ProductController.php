@@ -4,8 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Shop\Application\Queries\Product\ProductSearchQuery;
 use App\Modules\Shop\Application\Queries\Product\ProductViewQuery;
-use App\Modules\Shop\Controllers\ShopController;
+
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
@@ -19,22 +20,36 @@ class ProductController extends ShopController
         ShopRepository $repository,
         ViewRepository $views,
         private ProductViewQuery $productViewQuery,
+        private ProductSearchQuery $productSearchQuery,
     )
     {
-        $this->middleware(['auth:admin'])->only(['view_draft']);
-        parent::__construct();
+        $this->middleware(['role:admin'])->only(['view_draft']);
+      //  parent::__construct();
         $this->repository = $repository;
         $this->views = $views;
     }
 
     public function view(Request $request, $slug)
     {
-        $data = $this->productViewQuery->execute($slug, $this->client);
+        $client = $this->getClient($request);
+        $data = $this->productViewQuery->execute($slug, $client);
 
         return view('shop.product.view', [
             'pageData' => $data,
         ]);
         //return $this->views->product($slug);
+    }
+
+    public function searchIndex(Request $request)
+    {
+        $search = $request->string('search')->trim()->value();
+        $client = $this->getClient($request);
+        $data = $this->productSearchQuery->execute($search, $request->all(), $client);
+        return view('shop.product.search', [
+            'pageData' => $data,
+            'request' => $request->all(),
+        ]);
+
     }
 
     public function view_draft(Product $product)
