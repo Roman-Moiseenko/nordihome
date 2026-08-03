@@ -34,9 +34,9 @@
             </div>
             <div>
                 @if(!is_null($client))
-                    <button class="{{ $product['is_wish'] ? 'is-wish' : 'to-wish' }}" type="button"
+                    <button class="{{ $product->is_wish ? 'is-wish' : 'to-wish' }}" type="button"
                             title="В Избранное">
-                        <i class="{{ $product['is_wish'] ? 'fa-solid' : 'fa-light' }} fa-heart"></i>
+                        <i class="{{ $product->is_wish  ? 'fa-solid' : 'fa-light' }} fa-heart"></i>
                     </button>
                 @else
                     <button class="to-wish" data-bs-toggle="modal" data-bs-target="#login-popup"

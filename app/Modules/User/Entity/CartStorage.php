@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property int $user_id
+ * @property int $client_id
  * @property int $product_id
  * @property float $quantity
  * @property Carbon $created_at
@@ -28,7 +28,7 @@ class CartStorage extends Model
         ];
     protected $table = 'cart_storage';
     protected $fillable = [
-        'user_id',
+        'client_id',
         'product_id',
         'quantity',
         'options_json',
@@ -42,10 +42,10 @@ class CartStorage extends Model
         'options_json' => 'json',
     ];
 
-    public static function register(int $user_id, int $product_id, float $quantity, bool $is_parser): self
+    public static function register(int $client_id, int $product_id, float $quantity, bool $is_parser): self
     {
         return self::create([
-            'user_id' => $user_id,
+            'client_id' => $client_id,
             'product_id' => $product_id,
             'quantity' => $quantity,
             'is_parser' => $is_parser,

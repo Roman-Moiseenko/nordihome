@@ -41,7 +41,7 @@ class DBStorage implements StorageInterface
     {
         $this->toStorage(
             $this->client_id,
-            $item->id,
+            $item->product->id,
             $item->quantity,
             $item->is_parser);
     }
