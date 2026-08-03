@@ -67,7 +67,10 @@ class ShopServiceProvider extends ServiceProvider
     /**
      * Default middlewares for web routes
      */
-    protected array $webMiddlewares = ['web'];
+    protected array $webMiddlewares = [
+        'web',
+        \App\Modules\Shop\Presentation\Http\Middlewares\InjectClientContextMiddleware::class,
+    ];
 
     /**
      * Default middlewares for API routes

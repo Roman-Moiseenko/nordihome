@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -53,7 +54,7 @@ class ProductIndexQueryRepository
     }
 
 
-    public function loadProductCards(array $ids): array
+    public function loadProductCards(array $ids, ClientContext $client): array
     {
         if (empty($ids)) {
             return [];
@@ -63,12 +64,12 @@ class ProductIndexQueryRepository
             ->whereIn('products.id', $ids)
             ->orderByRaw("FIELD(products.id, $orderedIds)")
             ->join('brands', 'products.brand_id', '=', 'brands.id')
-            ->leftJoin('product_prices', function ($join) {
+            ->leftJoin('product_prices', function ($join) use ($client) {
                 $join->on('products.id', '=', 'product_prices.product_id')
-                    ->where('product_prices.type', '=', PriceType::RETAIL)
+                    ->where('product_prices.type', '=', $client->priceType)
                     ->whereRaw('product_prices.id = (
                         SELECT MAX(pp2.id) FROM product_prices pp2
-                        WHERE pp2.product_id = products.id AND pp2.type = \'' . PriceType::RETAIL . '\'
+                        WHERE pp2.product_id = products.id AND pp2.type = \'' . $client->priceType . '\'
                     )');
             })
             ->select(
@@ -132,15 +133,15 @@ class ProductIndexQueryRepository
 
         $previousPrices = DB::table('product_prices')
             ->whereIn('product_id', $ids)
-            ->where('type', PriceType::RETAIL)
+            ->where('type', $client->priceType)
             ->whereRaw('product_prices.id IN (
                 SELECT MAX(pp2.id) FROM product_prices pp2
                 WHERE pp2.product_id = product_prices.product_id
-                  AND pp2.type = \'' . PriceType::RETAIL . '\'
+                  AND pp2.type = \'' . $client->priceType . '\'
                   AND pp2.id < (
                       SELECT MAX(pp3.id) FROM product_prices pp3
                       WHERE pp3.product_id = product_prices.product_id
-                        AND pp3.type = \'' . PriceType::RETAIL . '\'
+                        AND pp3.type = \'' . $client->priceType . '\'
                   )
                 GROUP BY pp2.product_id
             )')

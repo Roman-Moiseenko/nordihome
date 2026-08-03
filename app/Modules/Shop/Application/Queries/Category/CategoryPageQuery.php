@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\Queries\Category;
 
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Elements\UrlData;
@@ -38,7 +39,7 @@ readonly class CategoryPageQuery
     {
     }
 
-    public function execute(string $slug, array $params): ?ProductIndexPageData
+    public function execute(string $slug, array $params, ClientContext $clientContext): ?ProductIndexPageData
     {
         $mainInfo = $this->repository->getCategory($slug);
         if (is_null($mainInfo)) throw new \DomainException("Не найдена категория $slug");
@@ -88,7 +89,7 @@ readonly class CategoryPageQuery
          */
         $productIds = $idPaginator->items();
 
-        $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds);
+        $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds, $clientContext);
 
         $productCards = array_map(
             fn(array $item) => ProductCardData::fromArray($item),
@@ -142,7 +143,7 @@ readonly class CategoryPageQuery
         );
     }
 
-    public function executeNew(array $params): ProductIndexPageData
+    public function executeNew(array $params, ClientContext $clientContext): ProductIndexPageData
     {
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
@@ -151,7 +152,7 @@ readonly class CategoryPageQuery
         $idPaginator = $this->productIndexQueryRepository->getFilterSortPaginationProducts($params, $allProductIds, $page, $perPage);
 
         $productIds = $idPaginator->items();
-        $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds);
+        $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds, $clientContext);
 
         $productCards = array_map(
             fn(array $item) => ProductCardData::fromArray($item),

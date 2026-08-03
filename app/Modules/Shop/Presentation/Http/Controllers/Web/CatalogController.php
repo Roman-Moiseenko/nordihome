@@ -12,7 +12,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
-class CatalogController extends BaseController
+class CatalogController extends ShopController
 {
     public function __construct(
         private readonly CategoryPageQuery $categoryPageQuery,
@@ -34,7 +34,8 @@ class CatalogController extends BaseController
     {
         //$start = microtime(true);
 
-        $data = $this->categoryPageQuery->execute($slug, $request->all());
+        $data = $this->categoryPageQuery->execute($slug, $request->all(),
+            $this->getClient($request));
 
        // $time = (microtime(true) - $start);
    //     \Log::info("CategoryPageQuery::execute время: " . number_format($time, 3, '.', '') . " сек");
@@ -47,7 +48,8 @@ class CatalogController extends BaseController
 
     public function novelty(Request $request): View|Factory|\Illuminate\View\View
     {
-        $data = $this->categoryPageQuery->executeNew($request->all());
+        $data = $this->categoryPageQuery->executeNew($request->all(),
+            $this->getClient($request));
 
         return view('shop.product.novelty', [
             'pageData' => $data,

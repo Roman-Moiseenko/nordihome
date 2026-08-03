@@ -2,12 +2,12 @@
 
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
-use App\Http\Controllers\Controller;
+
 use App\Modules\Shop\Application\Queries\Room\RoomIndexQuery;
 use App\Modules\Shop\Application\Queries\Room\RoomPageQuery;
 use Illuminate\Http\Request;
 
-class RoomController extends Controller
+class RoomController extends ShopController
 {
     public function __construct(
         private readonly RoomPageQuery $roomPageQuery,
@@ -29,7 +29,11 @@ class RoomController extends Controller
     public function view(Request $request, string $slug)
     {
 
-        $data = $this->roomPageQuery->execute($slug, $request->all());
+        $data = $this->roomPageQuery->execute(
+            $slug,
+            $request->all(),
+            $this->getClient($request)
+        );
         return view('shop.product.index', [
             'pageData' => $data,
             'request' => $request->all(),

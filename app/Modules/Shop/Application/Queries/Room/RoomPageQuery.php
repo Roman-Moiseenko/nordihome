@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Application\Queries\Room;
 
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Elements\UrlData;
@@ -33,7 +34,7 @@ readonly class RoomPageQuery
     {
     }
 
-    public function execute(string $slug, array $params): ?ProductIndexPageData
+    public function execute(string $slug, array $params, ClientContext $clientContext): ?ProductIndexPageData
     {
         $mainInfo = $this->repository->getRoom($slug);
 
@@ -78,7 +79,7 @@ readonly class RoomPageQuery
          */
         $productIds = $idPaginator->items();
 
-        $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds);
+        $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds, $clientContext);
 
         $productCards = array_map(
             fn(array $item) => ProductCardData::fromArray($item),

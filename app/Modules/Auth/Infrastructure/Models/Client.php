@@ -2,6 +2,7 @@
 
 namespace App\Modules\Auth\Infrastructure\Models;
 
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
@@ -82,6 +83,12 @@ class Client extends Model
     public function isSpecial(): bool
     {
         return false;
+    }
+
+    //FixMe Сделать поле и изменение цены клиентам, плюс может быть индивидальную скидку
+    public function getPriceType(): PriceType
+    {
+        return PriceType::retail();
     }
 
 }
