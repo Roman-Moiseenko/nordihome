@@ -39,6 +39,17 @@ window.$ = jQuery;
     let presearchInput = $('#pre-search');
     let presearch = $('.presearch');
     let suggestBlock = $('.presearch-suggest');
+
+    // Восстанавливаем значение поискового запроса из URL при загрузке страницы
+    (function () {
+        let params = new URLSearchParams(window.location.search);
+        let searchQuery = params.get('search');
+        if (searchQuery) {
+            presearchInput.val(decodeURIComponent(searchQuery));
+            $('#presearch--icon-clear').show();
+        }
+    })();
+
     presearchInput.on('input', function () {
         if ($(this).val().length > 0) {
             $('#presearch--icon-clear').show();
