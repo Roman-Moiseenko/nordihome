@@ -60,7 +60,7 @@ class ProductIndexQueryRepository
             return [];
         }
         $orderedIds = implode(',', array_map('intval', $ids));
-        $products = DB::table('products')
+        $query = DB::table('products')
             ->whereIn('products.id', $ids)
             ->orderByRaw("FIELD(products.id, $orderedIds)")
             ->join('brands', 'products.brand_id', '=', 'brands.id')
@@ -71,7 +71,18 @@ class ProductIndexQueryRepository
                         SELECT MAX(pp2.id) FROM product_prices pp2
                         WHERE pp2.product_id = products.id AND pp2.type = \'' . $client->priceType . '\'
                     )');
-            })
+            });
+
+        $isWishSelect = '0 as is_wish';
+        if ($client->id !== null) {
+            $query->leftJoin('wishes', function ($join) use ($client) {
+                $join->on('products.id', '=', 'wishes.product_id')
+                    ->where('wishes.client_id', '=', $client->id);
+            });
+            $isWishSelect = 'CASE WHEN wishes.id IS NOT NULL THEN 1 ELSE 0 END as is_wish';
+        }
+
+        $products = $query
             ->select(
                 'products.id',
                 'products.name',
@@ -98,6 +109,7 @@ class ProductIndexQueryRepository
                 DB::raw("(SELECT alt FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_alt"),
                 DB::raw("(SELECT title FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_title"),
                 DB::raw("(SELECT description FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_description"),
+                DB::raw($isWishSelect),
             )
             ->get();
 
@@ -182,6 +194,7 @@ class ProductIndexQueryRepository
                 'promotion' => $promo
                     ? ['has' => true, 'price' => (float)$promo->price, 'title' => $promo->title]
                     : ['has' => false, 'price' => 0.0, 'title' => ''],
+                'is_wish' => (bool)$item->is_wish,
             ];
         }
 
