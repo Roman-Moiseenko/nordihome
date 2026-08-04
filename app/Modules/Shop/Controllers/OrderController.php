@@ -3,25 +3,26 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Controllers;
 
-use App\Events\ThrowableHasAppeared;
+
 use App\Modules\Accounting\Repository\StorageRepository;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Delivery\Service\DeliveryService;
-use App\Modules\Order\Entity\Order\Order;
+
 use App\Modules\Order\Repository\PaymentRepository;
 use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Order\Service\OrderService;
+use App\Modules\Shop\Application\Actions\Cart\GetCartUseCase;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+
 use Illuminate\Support\Facades\Auth;
 
 
 /**
  * Контроллер по созданию заказа из клиентской части, для просмотра используется контроллер из User
  */
-class OrderController extends ShopController
+class OrderController extends \App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController
 {
     private Cart $cart;
     private OrderPaymentService $payments;
@@ -40,10 +41,11 @@ class OrderController extends ShopController
         DeliveryService   $deliveries,
         OrderService      $service,
         StorageRepository $storages,
+        private GetCartUseCase $getCartUseCase,
     )
     {
-        parent::__construct();
-        $this->middleware('auth:user')->except(['create_cart', 'create_click']);
+       // parent::__construct();
+        //$this->middleware('auth:user')->except(['create_cart', 'create_click']);
         $this->cart = $cart;
         $this->payments = $payments;
         $this->deliveries = $deliveries;
@@ -56,7 +58,7 @@ class OrderController extends ShopController
 
     public function create(Request $request): \Illuminate\View\View
     {
-
+/*
         if (Auth::guard('web')->check()) {
             $user_id = Auth::guard('web')->user()->id;
         } else {
@@ -67,16 +69,21 @@ class OrderController extends ShopController
         if ($request->has('preorder') && ($request->get('preorder') == "false")) {
             $preorder = false;
         }
+*/
 
-        $cart = $this->cart->getCartToFront($request['tz'], $preorder);
+
+        //$cart = $this->cart->getCartToFront($request['tz']);
+        //$client = $this->getClient($request);
 
         $payments = $this->paymentRepository->getPayments();
         $storages = $this->storages->getPointDelivery();
         $companies = DeliveryHelper::deliveries();
-        $delivery_cost = $this->deliveries->calculate($user_id, $this->cart->getItems());
+        //$delivery_cost = $this->deliveries->calculate($client->id, $this->cart->getItems());
 
-        return view($this->route('order.create'), compact('cart', 'payments',
-            'storages', 'companies', 'delivery_cost', 'preorder'));
+        $cartInfo = $this->getCartUseCase->execute();
+
+        return view('shop.order.create', compact('cartInfo', 'payments',
+            'storages', 'companies'));
 
     }
 
@@ -92,11 +99,11 @@ class OrderController extends ShopController
             ];
         }
 
-        return view($this->route('order.new'), compact('order', 'e_array'))->with('success', 'Ваш заказ успешно создан!');
+        return view('shop.cabinet.order.new', compact('order', 'e_array'))->with('success', 'Ваш заказ успешно создан!');
 
        // return redirect()->route('order.new', compact('array'))->with('success', 'Ваш заказ успешно создан!');
     }
-
+/*
     public function create_parser(Request $request)
     {
         if (Auth::guard('web')->check()) {
@@ -112,7 +119,7 @@ class OrderController extends ShopController
         return view($this->route('order.create-parser'), compact('cart', 'payments',
             'storages', 'companies', 'delivery_cost'));
 
-    }
+    }*/
 
     public function create_click(Request $request)
     {

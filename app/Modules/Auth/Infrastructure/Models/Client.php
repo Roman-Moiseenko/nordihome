@@ -2,6 +2,8 @@
 
 namespace App\Modules\Auth\Infrastructure\Models;
 
+use App\Modules\Base\Casts\GeoAddressCast;
+use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Entity\Review;
 use App\Modules\Order\Entity\Order\Order;
@@ -32,6 +34,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string $action_identifier
  * @property bool $consent_active
  * @property User $user
+ * @property GeoAddress $address
  *
  * @property Wish[] $wishes
  * @property Review[] $reviews
@@ -41,6 +44,9 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Client extends Model
 {
     protected $table = 'clients';
+    protected $attributes = [
+        'address' => '{}',
+    ];
 
     protected $fillable = [
         'last_name',
@@ -69,6 +75,7 @@ class Client extends Model
         'consented' => 'boolean',
         'consented_at' => 'datetime',
         'consent_active' => 'boolean',
+        'address' => GeoAddressCast::class
     ];
 
     public function user(): MorphOne
@@ -121,4 +128,20 @@ class Client extends Model
         }
         return false;
     }
+
+    public function isStorage(): bool
+    {
+        return true;
+    }
+
+    public function isLocal(): bool
+    {
+        return false;
+    }
+
+    public function isRegion(): bool
+    {
+        return false;
+    }
+
 }

@@ -122,21 +122,30 @@ Route::group(
             'as' => 'order.',
             'prefix' => 'order',
         ], function () {
-            Route::post('/create', [OrderController::class, 'create'])->name('create');
-            Route::put('/create', [OrderController::class, 'store']);
-            Route::post('/create-parser', [OrderController::class, 'create_parser'])->name('create-parser');
+
+            //В один клик без авторизации
+            Route::post('/create-click', [OrderController::class, 'create_click'])->name('create-click');
+
+            Route::middleware(['auth', 'role:client'])->group(function () {
+                Route::post('/create', [OrderController::class, 'create'])->name('create');
+                Route::put('/create', [OrderController::class, 'store']);
+
+                Route::post('/checkorder', [OrderController::class, 'checkorder'])->name('checkorder');
+                Route::post('/coupon', [OrderController::class, 'coupon'])->name('coupon');
+            });
+
+            //Route::post('/create-parser', [OrderController::class, 'create_parser'])->name('create-parser');
             Route::post('/create-cart', [OrderController::class, 'create_cart'])->name('create-cart');
             Route::get('/create-click', function () {
                 abort(404);
             });
 
-            Route::post('/create-click', [OrderController::class, 'create_click'])->name('create-click');
-            Route::put('/create-parser', [OrderController::class, 'store_parser']);
+
+            //Route::put('/create-parser', [OrderController::class, 'store_parser']);
 
             //ajax
             //Route::post('/payment', [OrderController::class, 'payment'])->name('payment');
-            Route::post('/checkorder', [OrderController::class, 'checkorder'])->name('checkorder');
-            Route::post('/coupon', [OrderController::class, 'coupon'])->name('coupon');
+
         });
 
         Route::group([
