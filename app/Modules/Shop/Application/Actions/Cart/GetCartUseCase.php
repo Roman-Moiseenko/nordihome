@@ -53,9 +53,6 @@ readonly class GetCartUseCase
         $weight = 0; $fragile = 0;
         /** @var CartItem $item */
 
-
-
-
         foreach ($cartItems as $item) {
 
             if ($item->is_parser) {
@@ -102,7 +99,6 @@ readonly class GetCartUseCase
         };
         $deliveryParser = $this->getCostDelivery($weight, $fragile);
 
-        dd($items);
         return new CartInfoData(
             items: $items,
             amount: $amount,
