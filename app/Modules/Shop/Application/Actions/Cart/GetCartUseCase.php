@@ -39,7 +39,8 @@ readonly class GetCartUseCase
         $parser = $this->settings->getParser();
 
 
-
+        $ratio =$parser->parser_coefficient;
+        $sanctioned = $parser->cost_sanctioned;
         $cartItems = $this->storage->load();
         $items = [];
         $amount = 0;
@@ -52,11 +53,14 @@ readonly class GetCartUseCase
         $weight = 0; $fragile = 0;
         /** @var CartItem $item */
 
+
+
+
         foreach ($cartItems as $item) {
 
             if ($item->is_parser) {
                 $url = route('shop.ikea.product', $item->getProduct()->parser->code);
-                $price = $item->base_cost * (1 + (int)$item->product->parser->sanctioned * $parser->parser_coefficient / 100) * $parser->parser_coefficient;
+                $price = $item->base_cost * (1 + (int)$item->product->parser->sanctioned * $sanctioned / 100) * $ratio;
             } else {
                 $url = route('shop.product.view', $item->getProduct()->slug);
                 $price = empty($item->discount_cost) ? $item->base_cost : $item->discount_cost;
@@ -98,6 +102,7 @@ readonly class GetCartUseCase
         };
         $deliveryParser = $this->getCostDelivery($weight, $fragile);
 
+        dd($items);
         return new CartInfoData(
             items: $items,
             amount: $amount,
