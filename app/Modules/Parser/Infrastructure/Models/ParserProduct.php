@@ -47,6 +47,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class ParserProduct extends Model
 {
+
     public $timestamps = true;
     protected $table = 'parser_products';
     protected $attributes = [
@@ -127,6 +128,15 @@ class ParserProduct extends Model
         /** @var ParserCategory $category */
         $category = $this->categories()->first();
         return $category->brand->currency->first();
+    }
+
+    public function getFullPackWeight(): float
+    {
+        $result = 0.0;
+        foreach ($this->packages as $package) {
+            $result += $package['weight'] * $package['quantity'];
+        }
+        return $result;
     }
 
 }

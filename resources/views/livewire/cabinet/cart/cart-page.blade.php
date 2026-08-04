@@ -18,7 +18,7 @@
         @endif
     </div>
     @foreach($items as $item)
-        <livewire:cabinet.cart.cart-item :item="$item" :key="$item['product_id']" :user="$client"/>
+        <livewire:cabinet.cart.cart-item :item="$item" :key="$item['id'] . '-' . $renderKey" :client="$client"/>
     @endforeach
     </div>
 
@@ -41,19 +41,25 @@
                     <div class="full-cart-order--info">
                         <div class="d-flex justify-content-between">
                             <div class="fs-5">Товаров в корзине</div>
-                            <div id="cart-count-products" class="fs-5">{{ $count }}</div>
+                            <div id="cart-count-products" class="fs-5">{{ $quantityCheck }}</div>
                         </div>
                         <div class="d-flex justify-content-between mt-4">
                             <div class="fs-6">Полная стоимость корзины</div>
-                            <div id="cart-full-amount" class="fs-6">{{ price($amount) }}</div>
+                            <div id="cart-full-amount" class="fs-6">{{ price($amountCheck) }}</div>
                         </div>
                         <div class="d-flex justify-content-between">
                             <div class="fs-7">Ваша скидка</div>
-                            <div id="cart-full-discount" class="fs-7">{{ price($discount) }}</div>
+                            <div id="cart-full-discount" class="fs-7">{{ price($discountCheck) }}</div>
                         </div>
+                        @if($deliveryParser > 0)
+                        <div class="d-flex justify-content-between mt-4">
+                            <div class="fs-6">Доставка до г.Калининград</div>
+                            <div id="cart-full-amount" class="fs-6">{{ price($deliveryParser) }}</div>
+                        </div>
+                        @endif
                         <div class="d-flex justify-content-between mt-4 pt-3 border-top">
                             <div class="fs-5">Сумма к оплате</div>
-                            <div id="cart-amount-pay" class="fs-5">{{ price($amount - $discount) }}</div>
+                            <div id="cart-amount-pay" class="fs-5">{{ price($amountCheck - $discountCheck + $delivery + $deliveryParser) }}</div>
                         </div>
                     </div>
                 </div>

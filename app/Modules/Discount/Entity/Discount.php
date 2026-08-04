@@ -64,7 +64,7 @@ class Discount extends Model
         if (!$this->active) throw new \DomainException('Неверный алгоритм - текущий Discount (' . $this->id . ') не активен');
         $amount = array_sum(array_map(function ($item) {
             return ($item->getCheck())
-                ? $item->getSellCost() * $item->getQuantity()
+                ? $item->getSellCost() * $item->quantity
                 : 0;
         }, $items));
 

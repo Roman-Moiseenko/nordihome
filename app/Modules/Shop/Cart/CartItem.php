@@ -9,6 +9,7 @@ use App\Modules\Shop\CartItemInterface;
 class CartItem implements CartItemInterface
 {
     public Product $product;
+    public int $productId;
     public int $id;
     public float $quantity;
     public float $base_cost; //Базовая цена  - используется для удобства = $product->getLastPrice()
@@ -20,11 +21,11 @@ class CartItem implements CartItemInterface
     public bool $check;
     public bool $is_parser = false;
 
-    public static function create(int $id, float $quantity, bool $is_parser): self
+    public static function create(int $productId, float $quantity, bool $is_parser): self
     {
         $item = new static();
 
-        $item->id = $id;
+        $item->productId = $productId;
         $item->quantity = $quantity;
         $item->is_parser = $is_parser;
         //$item->base_cost = $product->getPrice();
@@ -37,11 +38,12 @@ class CartItem implements CartItemInterface
     {
         $item = new static();
         $item->id = $id;
+        $item->productId = $product->id;
         $item->product = $product;
         $item->quantity = $quantity;
         $item->is_parser = $is_parser;
         $item->check = $check;
-        $item->base_cost = $is_parser ? $product->getPriceParser() : $product->getPrice();
+        $item->base_cost = $is_parser ? $product->parser->price_base : $product->getPrice();
         $item->discount_name = '';
         $item->discount_cost = 0;
         return $item;
@@ -96,6 +98,7 @@ class CartItem implements CartItemInterface
 
     public function getSellCost(): float
     {
+        if ($this->is_parser) return $this->base_cost; //Для парсера нет скидок
         return ($this->discount_cost == 0) ? $this->base_cost : $this->discount_cost;
     }
 

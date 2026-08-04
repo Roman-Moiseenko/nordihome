@@ -1,30 +1,31 @@
 <div>
-    <div class="box-card full-cart-item" id="full-cart-item-{{ $item['product_id'] }}">
+    <div class="box-card full-cart-item" id="full-cart-item-{{ $item['productId'] }}">
         <div class="checked">
             <input type="checkbox" wire:model="check" wire:change="check_item">
         </div>
         <div class="image">
-            <a href="{{ $item['url'] }}" target="_blank"><img src="{{ $item['img'] }}"/></a>
+            <a href="{{ $item['url'] }}" target="_blank"><img src="{{ $item['image'] }}"/></a>
         </div>
         <div class="info">
             <div>
                 <a href="{{ $item['url'] }}" target="_blank"><span>{{ $item['name'] }}</span></a>
             </div>
             <div class="discount"
-                 @if(is_null($item['discount_cost'])) style="display: none" @endif>
-                <span class="badge text-bg-danger">{{ $item['discount_name'] }}</span>
+                 @if(is_null($item['discountCost'])) style="display: none" @endif>
+                <span class="badge text-bg-danger">{{ $item['discountName'] }}</span>
             </div>
             <div class="available fs-7 mt-1"
-                 @if(is_null($item['available'])) style="display: none" @endif
-            > Товар на предзаказ@if(!is_null($item['discount_cost'])) (акция не распространяется)@endif, доступно - <span class="available-count">{{ $item['available'] }}</span> шт.</div>
+                 @if(!$item['isParser']) style="display: none" @endif
+            > Товар на доставку из Икеа@if(!is_null($item['discountCost'])) (акции не распространяются)@endif</div>
             <div class="costblock">
                 <div class="cost"
-                     @if(!is_null($item['discount_cost'])) style="display: none" @endif>
+                     @if($item['discountCost'] != 0) style="display: none" @endif>
                     <span class="current-cost">{{ price($item['cost']) }}</span>
                 </div>
                 <div class="combinate"
-                     @if(is_null($item['discount_cost'])) style="display: none" @endif>
-                    <span class="discount-cost">{{ price($item['discount_cost']) }}</span> <span
+                     {{ $item['discountCost'] }}
+                     @if($item['discountCost'] == 0) style="display: none" @endif>
+                    <span class="discount-cost">{{ price($item['discountCost']) }}</span> <span
                         class="current-cost">{{ price($item['cost']) }}</span>
                 </div>
             </div>
@@ -37,7 +38,7 @@
                 >
                     <i class="fa-light fa-minus"></i></button>
                 <input type="text" class="form-control" autocomplete="off"
-                       data-product="{{ $item['product_id'] }}" value="{{ $item['quantity'] }}"
+                       data-product="{{ $item['productId'] }}" value="{{ $item['quantity'] }}"
                        wire:change="set_item" wire:model="quantity" wire:loading.attr="disabled"
                 />
                 <button class="btn btn-outline-dark"

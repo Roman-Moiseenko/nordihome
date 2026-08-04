@@ -38,7 +38,12 @@ class CookieDBStorage implements StorageInterface
 
     public function add(CartItem $item): void
     {
-        $this->toStorage($this->user_ui, $item->id, $item->quantity, $item->is_parser);
+        CartCookie::register(
+            $this->user_ui,
+            $item->productId,
+            $item->quantity,
+            $item->is_parser
+        );
     }
 
     public function sub(CartItem $item, float $quantity): void
@@ -71,16 +76,6 @@ class CookieDBStorage implements StorageInterface
     private function clearByUser(string $ui): void
     {
         CartCookie::where('user_ui', $ui)->delete();
-    }
-
-    private function toStorage(string $user_ui, int $productId, float $quantity, bool $is_parser): void
-    {
-        CartCookie::register(
-            $user_ui,
-            $productId,
-            $quantity,
-            $is_parser
-        );
     }
 
     private function updateQuantity(int $id, float $new_quantity): void

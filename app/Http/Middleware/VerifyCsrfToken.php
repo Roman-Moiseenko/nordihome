@@ -20,6 +20,7 @@ class VerifyCsrfToken extends Middleware
         'file-upload',
         'csrf-token',
         'product/search',
+        'login-client',
     ];
 
     public function handle($request, \Closure $next)

@@ -31,16 +31,16 @@
                                 <div class="cart-item-name"><a href="{{ $item['url'] }}" class="cart-item-url" title="{{ $item['name'] }}">{{ $item['name'] }}</a></div>
                                 <div class="cart-item-quantity">{{ $item['quantity'] }} шт</div>
                             </div>
-                            @if($item['discount_cost'] == 0)
+                            @if($item['discountCost'] == 0)
                             <div class="cart-item-cost cart-item-costonly">{{ price($item['cost']) }}</div>
                             @else
                             <div class="cart-item-combined">
                                 <div class="cart-item-cost">{{ price($item['cost']) }}</div>
-                                <div class="cart-item-discount_cost">{{ price($item['discount_cost']) }}</div>
+                                <div class="cart-item-discount_cost">{{ price($item['discountCost']) }}</div>
                             </div>
                             @endif
                             <div class="cart-item-trash">
-                                <a href="#" wire:click="del_item({{$item['product_id']}})"><i class="fa-light fa-trash-can"></i></a>
+                                <a href="#" wire:click="del_item({{$item['productId']}})"><i class="fa-light fa-trash-can"></i></a>
                             </div>
                         </div>
                         @endforeach

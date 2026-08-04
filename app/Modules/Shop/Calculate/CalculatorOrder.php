@@ -37,11 +37,11 @@ class CalculatorOrder
             /** @var Bonus $bonus_product */
             $bonus_product = Bonus::where('bonus_id', $item->getProduct()->id)->first();
             if (!$item->getPreorder() && !empty($bonus_product) && in_array($bonus_product->product_id, $product_ids)) {
-                $q_bonus = $item->getQuantity();
+                $q_bonus = $item->quantity;
                 $q_product = $q_bonus;
                 foreach($items as $_item) {
                     if ($_item->getProduct()->id == $bonus_product->product_id) {
-                        $q_product = $_item->getQuantity();
+                        $q_product = $_item->quantity;
                     }
                 }
                 if ($q_bonus <= $q_product) {

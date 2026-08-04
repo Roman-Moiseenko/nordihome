@@ -220,6 +220,7 @@ window.$ = jQuery;
             }
             $.post('/login-client',
                 {
+                    _token: $('meta[name="csrf-token"]').attr('content'),
                     email: inputEmail.val(),
                     password: inputPassword.val(),
                     verify_token: inputVerify.val()

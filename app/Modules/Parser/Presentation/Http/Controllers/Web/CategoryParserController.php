@@ -45,9 +45,9 @@ class CategoryParserController extends Controller
         ]);
     }
 
-    public function toggle(ParserCategory $category_parser, UserPermission $userPermission): RedirectResponse
+    public function toggle(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $message = $this->toggleCategoryWithProductsService->execute($category_parser->id, $userPermission);
+        $message = $this->toggleCategoryWithProductsService->execute($id, $userPermission);
 
         return redirect()->back()->with('success', $message);
     }

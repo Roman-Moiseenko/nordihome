@@ -172,7 +172,7 @@ class Cart
     {
         $this->loadItems();
         foreach ($this->items as $current) {
-            if ($current->isProduct($product_id)) return $current->getQuantity();
+            if ($current->isProduct($product_id)) return $current->quantity;
         }
         throw new \DomainException('Товар с id ' . $product_id . ' не найден');
     }
@@ -270,11 +270,11 @@ class Cart
             'name' => $item->getProduct()->name,
             'url' => route('shop.product.view', $item->getProduct()->slug),
             'product_id' => $item->getProduct()->id,
-            'cost' => $item->base_cost * $item->getQuantity(),
+            'cost' => $item->base_cost * $item->quantity,
             'price' => empty($item->discount_cost) ? $item->base_cost : $item->discount_cost,
-            'quantity' => $item->getQuantity(),
+            'quantity' => $item->quantity,
             'discount_id' => $item->discount_id ?? null,
-            'discount_cost' => empty($item->discount_cost) ? null : $item->discount_cost * $item->getQuantity(),
+            'discount_cost' => empty($item->discount_cost) ? null : $item->discount_cost * $item->quantity,
             'discount_name' => $item->discount_name,
             'remove' => route('shop.cart.remove', $item->getProduct()->id),
             'check' => $item->check,

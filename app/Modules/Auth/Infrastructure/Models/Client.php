@@ -113,4 +113,12 @@ class Client extends Model
     {
         return $this->hasMany(Wish::class, 'client_id', 'id');
     }
+
+    public function isWish(mixed $productId)
+    {
+        foreach ($this->wishes as $wish) {
+            if ($wish->product_id == $productId) return true;
+        }
+        return false;
+    }
 }

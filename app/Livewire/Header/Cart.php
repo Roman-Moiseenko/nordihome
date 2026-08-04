@@ -2,8 +2,11 @@
 
 namespace App\Livewire\Header;
 
+use App\Modules\Shop\Application\Actions\Cart\GetCartUseCase;
+use App\Modules\Shop\Application\DTOs\Cart\CartItemData;
 use App\Modules\Shop\Cart\Cart as CartEntity;
 use App\Modules\Shop\Cart\CartItem;
+use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -16,6 +19,7 @@ class Cart extends Component
     public float $discount;
     //private mixed $tz;
 
+    /** @var CartItemData[] $items  */
     public array $items;
 
     public function boot(): void
@@ -30,31 +34,36 @@ class Cart extends Component
         $this->refresh_fields();
     }
 
+
     #[On('update-header-cart')]
     public function refresh_fields(): void
     {
+        $useCase = app()->make(GetCartUseCase::class);
+        $data = $useCase->execute();
+  //      dd($useCase->execute());
         $this->cart->loadItems();
         //dd(count($this->cart->getItems()));
-        $this->items = array_map(function (CartItem $item) {
+  /*      $this->items = array_map(function (CartItem $item) {
             return [
                 'id' => $item->id,
                 'image' => $item->product->getImage('mini'),
                 'name' => $item->product->name,
                 'url' => route('shop.product.view', $item->getProduct()->slug),
                 'product_id' => $item->product->id,
-                'cost' => $item->base_cost * $item->getQuantity(),
+                'cost' => $item->base_cost * $item->quantity,
                 'price' => empty($item->discount_cost) ? $item->base_cost : $item->discount_cost,
-                'quantity' => $item->getQuantity(),
+                'quantity' => $item->quantity,
                 'discount_id' => $item->discount_id ?? null,
-                'discount_cost' => empty($item->discount_cost) ? null : $item->discount_cost * $item->getQuantity(),
+                'discount_cost' => empty($item->discount_cost) ? null : $item->discount_cost * $item->quantity,
                 'discount_name' => $item->discount_name,
             ];
 
         }, $this->cart->getItems());
-
-        $this->amount = $this->cart->info->all->amount;
-        $this->discount = $this->cart->info->all->discount;
-        $this->count = $this->cart->info->all->count;
+*/
+        $this->items = json_decode(json_encode($data->items), true);
+        $this->amount = $data->amount; // $this->cart->info->all->amount;
+        $this->discount = $data->discount; //$this->cart->info->all->discount;
+        $this->count = $data->quantity; //$this->cart->info->all->count;
     }
 
     public function del_item($id): void
