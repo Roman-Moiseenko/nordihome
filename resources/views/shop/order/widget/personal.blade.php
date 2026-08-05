@@ -1,23 +1,28 @@
+@php
+    use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+    use App\Modules\Shop\Application\DTOs\Client\ClientInfoData;
+    /** @var ClientInfoData $client */
+@endphp
 <div class="box-card">
     <div>Контактные данные *</div>
-    <div class="fullname-block mt-3" {!! $client->fullName != '' ? '' : ' style="display: none"' !!}>
+    <div class="fullname-block mt-3" {!! $client->fullName->getValue()  != '' ? '' : ' style="display: none"' !!}>
         <span class="address-delivery--title">Получатель: </span>
-        <span class="address-delivery--info"> {{ $client->fullName }} </span>
+        <span class="address-delivery--info"> {{ $client->fullName->getValue()  }} </span>
         <span class="address-delivery--change" for="d---3">Изменить</span>
-        <input type="hidden" name="fullname" id="input-fullname-hidden" value="{{ $client->fullName }}">
+        <input type="hidden" name="fullname" id="input-fullname-hidden" value="{{ $client->fullName->getValue()  }}">
     </div>
-    <div class="input-group" id="d---3" {!! $client->fullname == '' ? '' : ' style="display: none"' !!}>
+    <div class="input-group" id="d---3" {!! $client->fullName->getValue()  == '' ? '' : ' style="display: none"' !!}>
         <input type="text" class="form-control" id="input-fullname" aria-describedby="Фамилия получателя"
                placeholder="Фамилия Имя Отчество" autocomplete="off">
         <button class="btn btn-outline-secondary input-to-hidden" type="button" from="input-fullname" to="input-fullname-hidden">Сохранить</button>
     </div>
-    <div class="phone-block mt-3" {!! $client->phone != '' ? '' : ' style="display: none"' !!}>
+    <div class="phone-block mt-3" {!! $client->phone->getValue() != '' ? '' : ' style="display: none"' !!}>
         <span class="address-delivery--title">Телефон: </span>
-        <span class="address-delivery--info"> {{ $client->phone }} </span>
+        <span class="address-delivery--info"> {{ $client->phone->getValue() }} </span>
         <span class="address-delivery--change" for="d---4">Изменить</span>
-        <input type="hidden" name="phone" id="input-phone-hidden" value="{{ $client->phone }}">
+        <input type="hidden" name="phone" id="input-phone-hidden" value="{{ $client->phone->getValue() }}">
     </div>
-    <div class="input-group" id="d---4" {!! $client->phone == '' ? '' : ' style="display: none"' !!}>
+    <div class="input-group" id="d---4" {!! $client->phone->getValue() == '' ? '' : ' style="display: none"' !!}>
         <input type="text" class="form-control mask-phone" id="input-phone" aria-describedby="Телефон получателя"
                placeholder="Телефон" autocomplete="off">
         <button class="btn btn-outline-secondary input-to-hidden" type="button" from="input-phone" to="input-phone-hidden">Сохранить</button>

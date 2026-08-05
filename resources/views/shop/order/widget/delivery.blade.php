@@ -4,6 +4,7 @@
 $isStorage = is_null($client->address->regionCode);
 $isLocal = $client->address->regionCode == 39;
 $isRegion = !$isStorage && !$isLocal;
+$noAddress = is_null($client->address->regionCode);
 @endphp
 <div class="box-card">
     <div>Доставка</div>
@@ -30,61 +31,59 @@ $isRegion = !$isStorage && !$isLocal;
                     <input type="radio" class="form-check-inline" name="storage" data-state="change"
                            id="{{ $storage->slug }}" autocomplete="off"
                            value="{{ $storage->id }}"
-
                     >
                     <label for="{{ $storage->slug }}">{{ $storage->address }}</label>
                 </div>
             @endforeach
         </div>
-        <div class="delivery-local mt-3 p-3" {!! $isLocal ? '' : ' style="display: none"' !!}>
-            <div {!! $client->address->address != '' ? '' : ' style="display: none"' !!}>
-                <span class="address-delivery--title">Адрес доставки: </span>
-                <span class="address-delivery--info"> {{ $client->address->address }} </span>
-                <span class="address-delivery--change" for="d---1">Изменить</span>
-                <input type="hidden" name="address-local" id="input-delivery-local-hidden"
-                       value="{{ $client->address->address }}">
-                <input type="hidden" name="latitude-local" value="{{ $client->address->latitude }}">
-                <input type="hidden" name="longitude-local" value="{{ $client->address->longitude }}">
-                <input type="hidden" name="post-local" value="{{ $client->address->post }}">
-            </div>
-            <div class="input-group" id="d---1" {!! $client->address->address == '' ? '' : ' style="display: none"' !!}>
-                <input type="text" class="form-control" id="input-delivery-local"
-                       aria-describedby="emailHelp" placeholder="Начните вводить адрес" autocomplete="off">
-                <button class="btn btn-outline-secondary input-to-hidden" type="button" from="input-delivery-local"
-                        to="input-delivery-local-hidden">Сохранить
-                </button>
-            </div>
-        </div>
-        <div class="delivery-region" {!! $isRegion ? '' : ' style="display: none"' !!}>
-            @php
-                /*
-                <div id="slider-delivery-company" class="owl-carousel owl-theme mt-3 p-3">
-                    @foreach($companies as $i => $company)
-                        <label class="radio-img">
-                            <input type="radio" name="company" data-state="change" value="{{ $company['class'] }}">
-                            <img src="{{ $company['image'] }}" alt="{{ $company['name'] }}" title="{{ $company['name'] }}">
-                        </label>
-                    @endforeach
+
+        {{-- Адрес доставки (local + region) --}}
+        <div class="delivery-local mt-3 p-3" id="delivery-address" {!! ($isLocal || $isRegion) ? '' : ' style="display: none"' !!}>
+            <span class="address-delivery--title">Адрес доставки: </span>
+            <span class="data-view" {!! $noAddress ? ' style="display:none;"' : '' !!}>{{ $client->address->getFullAddress() }}</span>
+            <div class="edit-group" {!! $noAddress ? '' : ' style="display:none;"' !!}>
+                <div class="input-group mb-1">
+                    <input type="text" class="form-control" name="country" id="input-delivery-country"
+                           placeholder="Страна" value="{{ $client->address->country }}" autocomplete="off">
                 </div>
-                */
-            @endphp
-            <div {!! $client->address->address != '' ? '' : ' style="display: none"' !!}>
-                <span class="address-delivery--title">Адрес доставки: </span>
-                <span class="address-delivery--info"> {{ $client->address->address }} </span>
-                <span class="address-delivery--change" for="d---2">Изменить</span>
-                <input type="hidden" name="address-region" id="input-delivery-region-hidden"
-                       value="{{ $client->address->address }}">
-                <input type="hidden" name="latitude-region" value="{{ $client->address->latitude }}">
-                <input type="hidden" name="longitude-region" value="{{ $client->address->longitude }}">
-                <input type="hidden" name="post-region" value="{{ $client->address->post }}">
+                <div class="input-group mb-1">
+                    <select class="form-select" name="region" id="input-delivery-region">
+                        <option value="">-- Выберите регион --</option>
+                    </select>
+                    <input type="text" class="form-control" name="regionCode" id="input-delivery-region-code"
+                           value="{{ $client->address->regionCode }}" readonly style="max-width:100px;"
+                           placeholder="Код">
+                </div>
+                <div class="input-group mb-1">
+                    <input type="text" class="form-control" name="city" id="input-delivery-city"
+                           placeholder="Город" value="{{ $client->address->city }}" autocomplete="off">
+                </div>
+                <div class="input-group mb-1">
+                    <input type="text" class="form-control" name="street" id="input-delivery-street"
+                           placeholder="Улица, дом, квартира" value="{{ $client->address->street }}" autocomplete="off">
+                </div>
+                <div class="input-group mb-1">
+                    <input type="text" class="form-control" name="postalCode" id="input-delivery-postal-code"
+                           placeholder="Почтовый индекс" value="{{ $client->address->postalCode }}" autocomplete="off">
+                </div>
+                <div class="mt-2">
+                    <button id="save-delivery-address" class="btn btn-outline-secondary" type="button"
+                            data-route="{{ route('client.update-profile') }}">Сохранить</button>
+                    <button id="cancel-delivery-address" class="btn btn-outline-danger" type="button" {!! $noAddress ? ' style="display:none;"' : '' !!}>Отмена</button>
+                </div>
             </div>
-            <div class="input-group" id="d---2" {!! $client->address->address == '' ? '' : ' style="display: none"' !!}>
-                <input type="text" class="form-control" id="input-delivery-region" aria-describedby="emailHelp"
-                       placeholder="Начните вводить адрес" autocomplete="off">
-                <button class="btn btn-outline-secondary input-to-hidden" type="button" from="input-delivery-region"
-                        to="input-delivery-region-hidden">Сохранить
-                </button>
-            </div>
+            <button id="change-delivery-address" class="btn btn-outline-primary address-delivery--change" {!! $noAddress ? ' style="display:none;"' : '' !!}>Изменить</button>
+
+            <input type="hidden" name="address-local" id="input-delivery-local-hidden"
+                   value="{{ $client->address->getFullAddress() }}">
+            <input type="hidden" name="latitude-local" value="{{ $client->address->latitude ?? '' }}">
+            <input type="hidden" name="longitude-local" value="{{ $client->address->longitude ?? '' }}">
+            <input type="hidden" name="post-local" value="{{ $client->address->post ?? '' }}">
+            <input type="hidden" name="address-region" id="input-delivery-region-hidden"
+                   value="{{ $client->address->getFullAddress() }}">
+            <input type="hidden" name="latitude-region" value="{{ $client->address->latitude ?? '' }}">
+            <input type="hidden" name="longitude-region" value="{{ $client->address->longitude ?? '' }}">
+            <input type="hidden" name="post-region" value="{{ $client->address->post ?? '' }}">
         </div>
     </div>
 </div>

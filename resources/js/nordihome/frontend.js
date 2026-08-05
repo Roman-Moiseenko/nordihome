@@ -721,8 +721,7 @@ window.$ = jQuery;
     if (main.hasClass('order-page-create') || main.hasClass('order-page-create-parser') ) {
         //Переключение способов доставки
         let deliveryStorageDIV = $('.block-delivery>.delivery-storage');
-        let deliveryLocalDIV = $('.block-delivery>.delivery-local');
-        let deliveryRegionDIV = $('.block-delivery>.delivery-region');
+        let deliveryLocalDIV = $('#delivery-address');
         let inputStorage = $('input[name=storage]');
 
         function readElements() {
@@ -748,10 +747,9 @@ window.$ = jQuery;
         function writeElements(state) {
             //Записываем полученный результат в элементы
             //Данные по доставке
-            let spanRegion = $('.delivery-region').find('.address-delivery--info');
-            let spanLocal = $('.delivery-local').find('.address-delivery--info');
-            spanLocal.html(state.delivery.delivery_local);
-            spanRegion.html(state.delivery.delivery_address);
+            let spanDelivery = $('#delivery-address .data-view');
+            let deliveryText = state.delivery.delivery_local || state.delivery.delivery_address || '';
+            spanDelivery.html(deliveryText);
             if (state.delivery.storage !== null) {
                 inputStorage.each(function () {
                     $(this).prop('checked', ($(this).val() == state.delivery.storage));
@@ -820,17 +818,79 @@ window.$ = jQuery;
         $('input[name=delivery]').on('change', function () {
             deliveryStorageDIV.hide();
             deliveryLocalDIV.hide();
-            deliveryRegionDIV.hide();
             if ($(this).attr('id') === 'delivery_storage') {
                 deliveryStorageDIV.show();
             }
-            if ($(this).attr('id') === 'delivery_local') {
+            if ($(this).attr('id') === 'delivery_local' || $(this).attr('id') === 'delivery_region') {
                 deliveryLocalDIV.show();
             }
-            if ($(this).attr('id') === 'delivery_region') {
-                deliveryRegionDIV.show();
-            }
         });
+        // === Адрес доставки (local + region объединены) ===
+        // Заполняем select регионов
+        if (window.regions && window.regions.length) {
+            let regionSelect = $('#input-delivery-region');
+            let regionCodeInput = $('#input-delivery-region-code');
+            window.regions.forEach(function (r) {
+                regionSelect.append($('<option>', {value: r.name, text: r.name, 'data-code': r.code}));
+            });
+            let currentCode = regionCodeInput.val();
+            if (currentCode) {
+                let match = window.regions.find(function (r) { return r.code == currentCode; });
+                if (match) regionSelect.val(match.name);
+            }
+            regionSelect.on('change', function () {
+                let code = $(this).find('option:selected').data('code');
+                regionCodeInput.val(code || '');
+            });
+        }
+
+        // Кнопка "Изменить" адрес
+        $('#change-delivery-address').on('click', function () {
+            $('#delivery-address .data-view').hide();
+            $('#delivery-address .edit-group').show();
+            $(this).hide();
+        });
+
+        // Кнопка "Отмена"
+        $('#cancel-delivery-address').on('click', function () {
+            $('#delivery-address .edit-group').hide();
+            $('#delivery-address .data-view').show();
+            $('#change-delivery-address').show();
+        });
+
+        // Кнопка "Сохранить" адрес
+        $('#save-delivery-address').on('click', function () {
+            let saveBtn = $(this);
+            let data = {
+                country: $('#input-delivery-country').val(),
+                region: $('#input-delivery-region').val(),
+                regionCode: $('#input-delivery-region-code').val(),
+                city: $('#input-delivery-city').val(),
+                street: $('#input-delivery-street').val(),
+                postalCode: $('#input-delivery-postal-code').val()
+            };
+
+            $.ajax({
+                url: saveBtn.data('route'),
+                type: 'PUT',
+                data: data,
+                success: function (res) {
+                    common.error(res);
+                    let addrParts = [data.country, data.region, data.city, data.street, data.postalCode].filter(Boolean);
+                    let fullAddr = addrParts.join(', ');
+                    $('#delivery-address .data-view').text(fullAddr);
+                    // Обновляем скрытые поля для формы заказа
+                    $('#input-delivery-local-hidden').val(fullAddr);
+                    $('#input-delivery-region-hidden').val(fullAddr);
+
+                    $('#delivery-address .edit-group').hide();
+                    $('#delivery-address .data-view').show();
+                    $('#change-delivery-address').show();
+                    sendToBackend();
+                }
+            });
+        });
+
         //Ввод купона
         let inputCoupon = $('input[name=coupon]');
         inputCoupon.on('input', function () {
