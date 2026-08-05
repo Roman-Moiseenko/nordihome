@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('price_type')->nullable();
             $table->float('discount')->nullable();
             $table->integer('region_code')->nullable();
+            $table->boolean('is_pickup')->nullable();
         });
     }
 
@@ -27,6 +28,7 @@ return new class extends Migration
             $table->dropColumn('price_type');
             $table->dropColumn('discount');
             $table->dropColumn('region_code');
+            $table->dropColumn('is_pickup');
         });
     }
 };
