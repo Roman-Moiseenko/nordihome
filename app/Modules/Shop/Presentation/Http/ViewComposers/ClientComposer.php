@@ -3,12 +3,12 @@
 namespace App\Modules\Shop\Presentation\Http\ViewComposers;
 
 use App\Modules\Shop\Application\Queries\Client\GetInfoClientQuery;
-use Illuminate\Support\Facades\Auth;
+
 use Illuminate\View\View;
-class ClientComposer
+readonly class ClientComposer
 {
 
-    public function __construct(private readonly GetInfoClientQuery $getClientQuery)
+    public function __construct(private GetInfoClientQuery $getClientQuery)
     {
     }
 

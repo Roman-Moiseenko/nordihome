@@ -22,7 +22,7 @@ class ClientInfoData
         public PriceType $priceType,
         public float $discount,
         public PhoneNumber $phone,
-        public PersonalDataConsent $consent,
+        public ?PersonalDataConsent $consent,
         public Address $address,
 
     )
