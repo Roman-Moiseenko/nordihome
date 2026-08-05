@@ -25,8 +25,8 @@ class ClientInfoData
         public PhoneNumber $phone,
         public ?PersonalDataConsent $consent,
         public Address $address,
-        public ?Gender $gender = null,
-
+        public ?Gender $gender,
+        public bool $isPickup,
     )
     {
 

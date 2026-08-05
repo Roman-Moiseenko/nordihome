@@ -59,7 +59,7 @@ class ClientEntity
     public bool $isActive {
         get => $this->bannedAt == null;
     }
-    public bool $isPickup {
+    public ?bool $isPickup = null {
         get => $this->isPickup;
         set => $this->isPickup = $value;
     }

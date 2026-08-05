@@ -36,6 +36,7 @@ class ClientQueryRepository
                 'c.region_code',
                 'c.city',
                 'c.street',
+                'c.is_pickup',
                 'c.postal_code',
                 'c.price_type',
                 'c.discount',

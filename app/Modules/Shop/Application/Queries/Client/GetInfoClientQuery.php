@@ -90,6 +90,7 @@ readonly class GetInfoClientQuery
             consent: $consent,
             address: $address,
             gender: $gender,
+            isPickup: (bool)$data->is_pickup,
         );
     }
 }
