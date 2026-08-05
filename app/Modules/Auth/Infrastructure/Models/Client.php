@@ -30,6 +30,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string $postal_code
  * @property Carbon $banned_at
  * @property bool $consented
+ * @property bool $is_pickup
  * @property Carbon $consented_at
  * @property string $policy_version
  * @property string $action_identifier
@@ -72,6 +73,7 @@ class Client extends Model
         'consent_active',
         'price_type',
         'discount',
+        'is_pickup',
     ];
 
     protected $casts = [

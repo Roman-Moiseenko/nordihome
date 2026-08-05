@@ -2,6 +2,7 @@
 
 namespace App\Modules\Auth\Application\DTOs\Client;
 
+use Spatie\LaravelData\Attributes\Validation\BooleanType;
 use Spatie\LaravelData\Attributes\Validation\Date;
 use Spatie\LaravelData\Attributes\Validation\Email;
 use Spatie\LaravelData\Attributes\Validation\Max;
@@ -13,6 +14,8 @@ use Spatie\LaravelData\Data;
 
 class ClientUpdateData extends Data
 {
+
+
     public function __construct(
         #[Required, StringType, Max(255)]
         public readonly string $lastName,
@@ -45,5 +48,7 @@ class ClientUpdateData extends Data
         public ?string $priceType = null,
         #[Nullable, Numeric]
         public ?float $discount = null,
+        #[Nullable, BooleanType]
+        public ?bool $isPickup = null
     ) {}
 }

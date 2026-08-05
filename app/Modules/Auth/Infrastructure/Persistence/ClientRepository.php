@@ -69,7 +69,7 @@ class ClientRepository implements ClientRepositoryInterface
         }
         $model->price_type = $client->priceType->value;
         $model->discount = $client->discount;
-
+        $model->is_pickup = $client->isPickup;
         $model->save();
 
         return $this->hydrate($model);
@@ -174,7 +174,7 @@ class ClientRepository implements ClientRepositoryInterface
                 $model->region_code,
             );
         }
-
+        $client->isPickup = $model->is_pickup;
         if ($model->banned_at) {
             $client->bannedAt = DateTimeImmutable::createFromMutable($model->banned_at);
         }

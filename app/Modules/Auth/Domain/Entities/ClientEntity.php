@@ -59,6 +59,10 @@ class ClientEntity
     public bool $isActive {
         get => $this->bannedAt == null;
     }
+    public bool $isPickup {
+        get => $this->isPickup;
+        set => $this->isPickup = $value;
+    }
     public ?PersonalDataConsent $dataConsent = null {
         get => $this->dataConsent;
         set => $this->dataConsent = $value;

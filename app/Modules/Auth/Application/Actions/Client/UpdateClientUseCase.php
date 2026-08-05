@@ -101,6 +101,7 @@ class UpdateClientUseCase
         if ($dto->discount != null)
             $client->discount = $dto->discount;
 
+        if ($dto->isPickup != null) $client->isPickup = $dto->isPickup;
         return $this->clientRepository->save($client);
     }
 }
