@@ -26,6 +26,7 @@ class ClientViewData extends Data
         // адрес
         public readonly ?string $country,
         public readonly ?string $region,
+        public readonly ?int $regionCode,
         public readonly ?string $city,
         public readonly ?string $street,
         public readonly ?string $postalCode,
@@ -61,6 +62,7 @@ class ClientViewData extends Data
             gender: $clientEntity->gender?->getValue(),
             country: $address?->country,
             region: $address?->region,
+            regionCode: $address?->regionCode,
             city: $address?->city,
             street: $address?->street,
             postalCode: $address?->postalCode,

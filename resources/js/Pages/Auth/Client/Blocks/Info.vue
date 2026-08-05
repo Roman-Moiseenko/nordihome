@@ -2,7 +2,7 @@
     <el-row :gutter="10">
         <el-col :span="8">
 
-            <EditUser :user="user" />
+            <EditUser :client="client"/>
             <!--el-descriptions v-if="!editUser" :column="1" border class="mb-5">
                 <el-descriptions-item label="ФИО">
                     {{ func.fullName(user.fullname) }}
@@ -58,7 +58,7 @@
                 <el-button type="success" @click="setInfo">Сохранить</el-button>
             </el-form-->
 
-            <div v-if="!user.active" class="mt-3">
+            <div v-if="!client.active" class="mt-3">
                 <el-button type="primary" @click="onActive">Активировать</el-button>
             </div>
         </el-col>
@@ -69,33 +69,34 @@
                     <template #label>
                         <i class="fa-sharp fa-light fa-bags-shopping"></i>
                     </template>
-                    {{ user.quantity }} заказа(ов)
+                    {{ client.quantity }} заказа(ов)
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template #label>
                         <i class="fa-light fa-ruble-sign"></i>
                     </template>
-                    {{ func.price(user.amount) }}
+                    {{ func.price(client.amount) }}
                 </el-descriptions-item>
                 <el-descriptions-item>
                     <template #label>
                         <i class="fa-light fa-scanner-gun"></i>
                     </template>
-                    {{ user.pricing }}
+                    {{ client.pricing }}
                 </el-descriptions-item>
             </el-descriptions>
             <el-button type="success" @click="createOrder">Сделать заказ</el-button>
         </el-col>
         <el-col :span="8">
             <h2>Организации</h2>
-            <div v-for="item in user.organizations">
+            <div v-for="item in client.organizations">
                 <template v-if="item.pivot.default">
-                    <el-tag  type="success">{{ item.short_name }}</el-tag>
+                    <el-tag type="success">{{ item.short_name }}</el-tag>
                 </template>
                 <template v-else>
                     {{ item.short_name }}
                     <el-tooltip effect="dark" content="Назначить по-умолчанию" placement="top-start">
-                        <el-button type="success" size="small" @click="defaultOrganization(item.id)" style="margin-left: 4px">
+                        <el-button type="success" size="small" @click="defaultOrganization(item.id)"
+                                   style="margin-left: 4px">
                             <i class="fa-light fa-check"></i>
                         </el-button>
                     </el-tooltip>
@@ -104,13 +105,14 @@
                 <el-button type="danger" size="small" @click="detachOrganization(item.id)" style="margin-left: 4px">
                     <i class="fa-light fa-trash"></i>
                 </el-button>
-                <Link type="primary" class="ml-3" :href="route('admin.accounting.organization.show', {organization: item.id})">
+                <Link type="primary" class="ml-3"
+                      :href="route('admin.accounting.organization.show', {organization: item.id})">
                     <i class="fa-light fa-right"></i>
                 </Link>
             </div>
             <div class="mt-3">
                 <SearchAttachOrganization
-                    :route="route('admin.user.attach', {user: props.user.id})"/>
+                    :route="route('admin.user.attach', {user: props.client.id})"/>
             </div>
             <h2>Файлы физ.лица</h2>
             <el-upload
@@ -147,7 +149,7 @@ import axios from "axios";
 import EditUser from "@Comp/User/Edit.vue";
 
 const props = defineProps({
-    user: Object,
+    client: Object,
     deliveries: Array,
     type_pricing: Array,
 })
@@ -155,42 +157,46 @@ const props = defineProps({
 const showEdit = ref(false)
 const editUser = ref(false)
 const form = reactive({
-    phone: props.user.phone,
-    email: props.user.email,
-    fullname: {
-        surname: props.user.fullname.surname,
-        firstname: props.user.fullname.firstname,
-        secondname: props.user.fullname.secondname,
-    },
-    address: {
-        post: props.user.address.post,
-        region: props.user.address.region,
-        address: props.user.address.address,
-    },
-    delivery: props.user.delivery,
-    client: props.user.client,
+    phone: props.client.phone,
+    email: props.client.email,
+    firstName: props.client.firstName,
+    middleName: props.client.middleName,
+    lastName: props.client.lastName,
+
+    country: props.client.country,
+    region: props.client.region,
+    regionCode: props.client.regionCode,
+    city: props.client.city,
+    street: props.client.street,
+    postalCode: props.client.postalCode,
+    //   delivery: props.user.delivery,
+    //  client: props.user.client,
 })
 
 function onActive() {
-    router.visit(route('admin.user.verify', {user: props.user.id}), {
+    router.visit(route('admin.user.verify', {user: props.client.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,
     })
 }
+
 function createOrder() {
-    router.post(route('admin.order.store', {user_id: props.user.id}))
+    router.post(route('admin.order.store', {user_id: props.client.id}))
 }
+
 function detachOrganization(id) {
     showEdit.value = false;
-    router.post(route('admin.user.detach', {user: props.user.id, organization: id}))
+    router.post(route('admin.user.detach', {user: props.client.id, organization: id}))
 }
+
 function defaultOrganization(id) {
     showEdit.value = false;
-    router.post(route('admin.user.default', {user: props.user.id, organization: id}))
+    router.post(route('admin.user.default', {user: props.client.id, organization: id}))
 }
+
 function setInfo() {
-    router.visit(route('admin.user.set-info', {user: props.user.id}), {
+    router.visit(route('admin.user.set-info', {user: props.client.id}), {
         method: "post",
         data: form,
         preserveScroll: true,
@@ -200,6 +206,7 @@ function setInfo() {
         }
     })
 }
+
 /*
 function deliveryText() {
     for (let key in props.deliveries) {
@@ -211,14 +218,15 @@ function deliveryText() {
 ///Файлы ===>
 const fileList = ref<UploadUserFile[]>([]);
 
-for (let key in props.user.files) {
+for (let key in props.client.files) {
     fileList.value.push({
-        id: props.user.files[key].id,
-        name: props.user.files[key].title,
+        id: props.client.files[key].id,
+        name: props.client.files[key].title,
     });
 }
+
 function upload(file) {
-    router.visit(route('admin.user.upload', {user: props.user.id}), {
+    router.visit(route('admin.user.upload', {id: props.client.id}), {
         method: "post",
         data: {
             file: file,
@@ -232,12 +240,12 @@ const handleRemove: UploadProps['onRemove'] = (file, uploadFiles) => {
     router.post(route('admin.file.remove-file'), {id: file.id})
 }
 const handlePreview: UploadProps['onPreview'] = (uploadFile) => {
-    axios.post(route('admin.file.download'),null,
+    axios.post(route('admin.file.download'), null,
         {
             responseType: 'arraybuffer',
             params: {id: uploadFile.id},
         }
-    ).then(res=>{
+    ).then(res => {
         let blob = new Blob([res.data], {type: 'application/*'})
         let link = document.createElement('a')
         link.href = window.URL.createObjectURL(blob)

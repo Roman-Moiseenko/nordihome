@@ -29,8 +29,9 @@
             >
                 <el-table-column prop="name" label="Клиент" width="" show-overflow-tooltip>
                     <template #default="scope">
-                        <div class="font-medium text-sm">{{ scope.row.name }}</div>
+                        <div class="font-medium text-sm">{{ scope.row.fullName }}</div>
                         <div class="text-slate-700 text-xs">{{ func.phone(scope.row.phone) }}</div>
+                        <div class="text-slate-700 text-xs">{{ scope.row.email }}</div>
                     </template>
                 </el-table-column>
                 <el-table-column prop="pricing" label="Цена" width="100"/>
@@ -48,7 +49,7 @@
                         {{ func.price(scope.row.amount) }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="address.region" label="Регион"/>
+                <el-table-column prop="regionCode" label="Регион"/>
                 <el-table-column prop="active" label="Подтвержден" width="120">
                     <template #default="scope">
                         <Active :active="scope.row.active"/>

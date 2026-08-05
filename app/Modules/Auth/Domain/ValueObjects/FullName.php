@@ -147,8 +147,8 @@ final class FullName
     {
         $parts = explode(' ', $fullName);
 
-        $lastName = $parts[0];
-        $firstName = $parts[1];
+        $lastName = $parts[0] ?? '';
+        $firstName = $parts[1] ?? '';
         $middleName = isset($parts[2]) ? implode(' ', array_slice($parts, 2)) : null;
 
         // Если слов два, считаем, что это Фамилия Имя

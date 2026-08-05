@@ -33,6 +33,8 @@ class ClientUpdateData extends Data
         public readonly ?string $country = null,
         #[Nullable, StringType, Max(255)]
         public readonly ?string $region = null,
+        #[Nullable, Numeric]
+        public readonly ?string $regionCode = null,
         #[Nullable, StringType, Max(255)]
         public readonly ?string $city = null,
         #[Nullable, StringType, Max(255)]

@@ -89,7 +89,8 @@ class UpdateClientUseCase
                 $dto->city ?? '',
                 $dto->street ?? '',
                 $dto->region ?? '',
-                $dto->postalCode ?? ''
+                $dto->postalCode ?? '',
+                $dto->regionCode
             );
         } else {
             $client->address = null;

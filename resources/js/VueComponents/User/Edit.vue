@@ -1,28 +1,28 @@
 <template>
     <el-descriptions v-if="!editUser" :column="1" border class="mb-5" :size="small ? 'small' : 'default'">
         <el-descriptions-item label="ФИО">
-            {{ func.fullName(user.fullname) }}
+            {{ client.fullName }}
         </el-descriptions-item>
         <el-descriptions-item label="Телефон">
-            {{ func.phone(user.phone) }}
+            {{ func.phone(client.phone) }}
         </el-descriptions-item>
         <el-descriptions-item label="Email">
-            {{ user.email }}
+            {{ client.email }}
         </el-descriptions-item>
         <el-descriptions-item label="Доставка">
-            {{ deliveryText() }}
+
         </el-descriptions-item>
         <el-descriptions-item label="Адрес">
-            {{ user.address.post }} {{ user.address.region }} {{ user.address.address }}
+            {{ client.postalCode}} {{ client.region }} {{ client.street }}
         </el-descriptions-item>
     </el-descriptions>
     <el-button v-if="!editUser" type="warning" @click="editUser = true">Изменить</el-button>
     <el-form v-if="editUser" label-width="auto">
         <el-form-item label="ФИО">
             <div class="flex">
-                <el-input v-model="form.fullname.surname" placeholder="Фамилия" />
-                <el-input v-model="form.fullname.firstname" placeholder="Имя" />
-                <el-input v-model="form.fullname.secondname" placeholder="Отчество" />
+                <el-input v-model="form.lastName" placeholder="Фамилия" />
+                <el-input v-model="form.firstName" placeholder="Имя" />
+                <el-input v-model="form.middleName" placeholder="Отчество" />
             </div>
         </el-form-item>
         <el-form-item label="Телефон">
@@ -33,22 +33,21 @@
         </el-form-item>
         <el-form-item label="Индекс, Регион">
             <div class="flex">
-                <el-input v-model="form.address.post" placeholder="Индекс" :formatter="val => func.MaskInteger(val, 6)"/>
-                <el-input v-model="form.address.region" placeholder="Регион" />
+                <el-input v-model="form.postalCode" placeholder="Индекс" :formatter="val => func.MaskInteger(val, 6)"/>
+                <el-input v-model="form.region" placeholder="Регион" />
             </div>
         </el-form-item>
-        <el-form-item label="Адрес">
-            <el-input v-model="form.address.address" placeholder="Город, Улица, Д., Кв." />
+        <el-form-item label="Улица">
+            <el-input v-model="form.street" placeholder="Город, Улица, Д., Кв." />
         </el-form-item>
-        <el-form-item label="Доставка">
-            <el-select v-model="form.delivery">
-                <el-option v-for="item in deliveries" :key="item.value" :value="item.value" :label="item.label" />
-            </el-select>
-        </el-form-item>
-        <el-form-item label="Цена товара">
-            <el-select v-model="form.client">
+
+        <el-form-item label="Уровень цен">
+            <el-select v-model="form.priceType">
                 <el-option v-for="item in type_pricing" :key="item.value" :value="item.value" :label="item.label" />
             </el-select>
+        </el-form-item>
+        <el-form-item label="Персональная скидка*">
+            <el-input v-model="form.discount" placeholder="Город, Улица, Д., Кв." />
         </el-form-item>
         <el-button type="info" @click="editUser = false">Отмена</el-button>
         <el-button type="success" @click="setInfo">Сохранить</el-button>
@@ -63,7 +62,7 @@ import {router} from "@inertiajs/vue3";
 import axios from "axios";
 
 const props = defineProps({
-    user: Object,
+    client: Object,
     small: {
         type: Boolean,
         default: false,
@@ -71,42 +70,47 @@ const props = defineProps({
 })
 const deliveries = ref([])
 const type_pricing = ref([])
+
+/*
 onMounted(() => {
-    axios.post(route('admin.user.user-params')).then(result => {
+    axios.post(route('admin.client.user-params')).then(result => {
         deliveries.value = [...result.data.deliveries]
         type_pricing.value = [...result.data.type_pricing]
 
     })
 })
+*/
+
 
 const editUser = ref(false)
 const form = reactive({
-    phone: props.user.phone,
-    email: props.user.email,
-    fullname: {
-        surname: props.user.fullname.surname,
-        firstname: props.user.fullname.firstname,
-        secondname: props.user.fullname.secondname,
-    },
-    address: {
-        post: props.user.address.post,
-        region: props.user.address.region,
-        address: props.user.address.address,
-    },
-    delivery: props.user.delivery,
-    client: props.user.client,
+    phone: props.client.phone,
+    email: props.client.email,
+    firstName: props.client.firstName,
+    middleName: props.client.middleName,
+    lastName: props.client.lastName,
+
+    country: props.client.country,
+    region: props.client.region,
+    regionCode: props.client.regionCode,
+    city: props.client.city,
+    street: props.client.street,
+    postalCode: props.client.postalCode,
+    priceType: props.client.priceType,
+    discount: props.client.discount,
+
 })
 
 function deliveryText() {
     for (let key in deliveries.value) {
         let item = deliveries.value[key]
-        if (item.value === props.user.delivery) {
+        if (item.value === props.client.delivery) {
             return item.label
         }
     }
 }
 function setInfo() {
-    router.visit(route('admin.user.set-info', {user: props.user.id}), {
+    router.visit(route('admin.client.set-info', {client: props.client.id}), {
         method: "post",
         data: form,
         preserveScroll: true,

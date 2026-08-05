@@ -22,6 +22,7 @@ class ClientIndexData extends Data
 
         public readonly ?string $gender,
         public readonly ?string $address,
+        public readonly ?string $regionCode,
         // адрес
         public readonly bool $isActive,
         public readonly bool $isConsent,
@@ -41,6 +42,7 @@ class ClientIndexData extends Data
             $clientEntity->phone ? (string) $clientEntity->phone : null,
             $clientEntity->gender?->getValue(),
             $clientEntity->address?->getFullAddress() ?? '',
+            $clientEntity->address?->regionCode,
             $clientEntity->isActive,
             $clientEntity->dataConsent?->consented ?? false,
             !is_null($clientEntity->user),

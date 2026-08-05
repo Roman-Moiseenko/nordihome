@@ -58,10 +58,13 @@ class ClientController extends Controller
         ]);
     }
 
-    public function show(int $id, UserPermission $userPermission): JsonResponse
+    public function show(int $id, UserPermission $userPermission):  \Inertia\Response
     {
         $client = $this->viewClientUseCase->execute($id, $userPermission);
-        return response()->json(ClientViewData::fromEntity($client), Response::HTTP_OK);
+        return Inertia::render('Auth/Client/Show', [
+            'client' => ClientViewData::fromEntity($client),
+        ]);
+       // return response()->json(ClientViewData::fromEntity($client), Response::HTTP_OK);
     }
 
     /**
