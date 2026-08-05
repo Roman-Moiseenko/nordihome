@@ -809,24 +809,7 @@ window.$ = jQuery;
             to.parent().show();
             sendToBackend();
         })
-        //Изменить адрес (открыть блок)
-        $('.address-delivery--change').on('click', function () {
-            let id = $(this).attr('for');
-            $('#' + id).show();
-        });
-        //Переключение типов доставки
-        $('input[name=delivery]').on('change', function () {
-            deliveryStorageDIV.hide();
-            deliveryLocalDIV.hide();
-            if ($(this).attr('id') === 'delivery_storage') {
-                deliveryStorageDIV.show();
-            }
-            if ($(this).attr('id') === 'delivery_local' || $(this).attr('id') === 'delivery_region') {
-                deliveryLocalDIV.show();
-            }
-        });
-        // === Адрес доставки (local + region объединены) ===
-        // Заполняем select регионов
+        // === Заполняем select регионов ===
         if (window.regions && window.regions.length) {
             let regionSelect = $('#input-delivery-region');
             let regionCodeInput = $('#input-delivery-region-code');
@@ -844,65 +827,18 @@ window.$ = jQuery;
             });
         }
 
-        // Кнопка "Изменить" адрес
-        $('#change-delivery-address').on('click', function () {
-            $('#delivery-address .data-view').hide();
-            $('#delivery-address .edit-group').show();
-            $(this).hide();
-        });
-
-        // Кнопка "Отмена"
-        $('#cancel-delivery-address').on('click', function () {
-            $('#delivery-address .edit-group').hide();
-            $('#delivery-address .data-view').show();
-            $('#change-delivery-address').show();
-        });
-
-        // Кнопка "Сохранить" адрес
-        $('#save-delivery-address').on('click', function () {
-            let saveBtn = $(this);
-            let data = {
-                country: $('#input-delivery-country').val(),
-                region: $('#input-delivery-region').val(),
-                regionCode: $('#input-delivery-region-code').val(),
-                city: $('#input-delivery-city').val(),
-                street: $('#input-delivery-street').val(),
-                postalCode: $('#input-delivery-postal-code').val()
-            };
-
-            $.ajax({
-                url: saveBtn.data('route'),
-                type: 'PUT',
-                data: data,
-                success: function (res) {
-                    common.error(res);
-                    let addrParts = [data.country, data.region, data.city, data.street, data.postalCode].filter(Boolean);
-                    let fullAddr = addrParts.join(', ');
-                    $('#delivery-address .data-view').text(fullAddr);
-                    // Обновляем скрытые поля для формы заказа
-                    $('#input-delivery-local-hidden').val(fullAddr);
-                    $('#input-delivery-region-hidden').val(fullAddr);
-
-                    $('#delivery-address .edit-group').hide();
-                    $('#delivery-address .data-view').show();
-                    $('#change-delivery-address').show();
-                    sendToBackend();
-                }
-            });
-        });
-
-        // === Персональные данные (ФИО, телефон, email) ===
+        // === Единая кнопка "Изменить" (адрес + контактные данные + способ получения) ===
         $('#change-order-personal').on('click', function () {
-            $('#personal-order .data-view').hide();
-            $('#personal-order .edit-group').show();
+            $('.box-card .data-view').hide();
+            $('.box-card .edit-group').show();
             $(this).hide();
             $('#save-order-personal').show();
             $('#cancel-order-personal').show();
         });
 
         $('#cancel-order-personal').on('click', function () {
-            $('#personal-order .edit-group').hide();
-            $('#personal-order .data-view').show();
+            $('.box-card .edit-group').hide();
+            $('.box-card .data-view').show();
             $('#change-order-personal').show();
             $('#save-order-personal').hide();
             $('#cancel-order-personal').hide();
@@ -911,6 +847,13 @@ window.$ = jQuery;
         $('#save-order-personal').on('click', function () {
             let saveBtn = $(this);
             let data = {
+                isPickup: $('#input-is-pickup').val(),
+                country: $('#input-delivery-country').val(),
+                region: $('#input-delivery-region').val(),
+                regionCode: $('#input-delivery-region-code').val(),
+                city: $('#input-delivery-city').val(),
+                street: $('#input-delivery-street').val(),
+                postalCode: $('#input-delivery-postal-code').val(),
                 lastName: $('#input-order-lastname').val(),
                 firstName: $('#input-order-firstname').val(),
                 middleName: $('#input-order-middlename').val(),
@@ -924,6 +867,18 @@ window.$ = jQuery;
                 data: data,
                 success: function (res) {
                     common.error(res);
+
+                    // Обновляем способ получения
+                    let isPickup = data.isPickup == 1;
+                    $('#pickup-block .data-view').text(isPickup ? 'Самовывоз' : 'Доставка');
+
+                    // Обновляем адрес
+                    let addrParts = [data.country, data.region, data.city, data.street, data.postalCode].filter(Boolean);
+                    let fullAddr = addrParts.join(', ');
+                    $('#delivery-address .data-view').text(fullAddr || 'Не указан');
+                    $('#input-delivery-address-hidden').val(fullAddr);
+
+                    // Обновляем ФИО
                     let parts = [data.lastName, data.firstName, data.middleName].filter(Boolean);
                     let fullName = parts.join(' ');
                     $('#personal-order .fullname-block .data-view').text(fullName);
@@ -934,8 +889,9 @@ window.$ = jQuery;
                     $('#input-fullname-hidden').val(fullName);
                     $('#input-phone-hidden').val(data.phone);
 
-                    $('#personal-order .edit-group').hide();
-                    $('#personal-order .data-view').show();
+                    // Возвращаем режим просмотра
+                    $('.box-card .edit-group').hide();
+                    $('.box-card .data-view').show();
                     $('#change-order-personal').show();
                     $('#save-order-personal').hide();
                     $('#cancel-order-personal').hide();

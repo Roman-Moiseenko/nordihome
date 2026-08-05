@@ -114,7 +114,7 @@
 
 
         {{-- Тип цены (только чтение) --}}
-        @if($client->priceType !== PriceType::retail())
+        @if($client->priceType != PriceType::retail())
             <div class="field mt-3">
                 <span class="label">Тип цены:</span>
                 <span class="data-view">{{ $client->priceType->value }}</span>
