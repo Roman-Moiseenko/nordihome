@@ -29,7 +29,7 @@ final class PriceType
         }
     }
 
-    private function __construct(string $value)
+    public function __construct(string $value)
     {
         if (!in_array($value, self::ALLOWED_VALUES, true)) {
             throw new InvalidArgumentException(

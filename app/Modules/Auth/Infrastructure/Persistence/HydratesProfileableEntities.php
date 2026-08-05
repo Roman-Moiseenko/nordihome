@@ -47,7 +47,8 @@ trait HydratesProfileableEntities
                 $model->city,
                 $model->street,
                 $model->region,
-                $model->postal_code
+                $model->postal_code,
+                $model->region_code
             );
         }
 

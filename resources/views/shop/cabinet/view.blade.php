@@ -36,7 +36,7 @@
                 >Сохранить</button>
             </div>
             <button id="change-phone" class="change btn btn-outline-primary"
-                    style="display: {{ empty($user->phone) ? 'none' :' inherit' }};">Изменить</button>
+                    style="display: {{ empty($client->phone) ? 'none' :' inherit' }};">Изменить</button>
         </div>
     </div>
 

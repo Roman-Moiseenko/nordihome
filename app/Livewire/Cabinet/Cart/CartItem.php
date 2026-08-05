@@ -18,7 +18,7 @@ class CartItem extends Component
     private mixed $cart;
     public array $item;
     public int $quantity;
-    public Client|null $client;
+    private Client|null $client;
 
     public bool $wish;
     public bool $check;
@@ -28,13 +28,13 @@ class CartItem extends Component
         $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
     }
 
-    public function mount(array $item, mixed $client): void
+    public function mount(array $item, int $clientId): void
     {
         //dd($item);
         $this->item = $item;
         $this->quantity = $item['quantity'];
         $this->check = $item['check'];
-        $this->client = $client;
+        $this->client = Client::find($clientId);
         $this->update_wish();
         $this->wish = !is_null($this->client) && ($this->client->isWish($this->item['productId']));
     }

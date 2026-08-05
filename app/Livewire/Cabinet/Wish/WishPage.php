@@ -10,12 +10,12 @@ use Livewire\Component;
 class WishPage extends Component
 {
 
-    public ?Client $client;
+    private ?Client $client;
     public mixed $wishes;
 
-    public function mount(mixed $client)
+    public function mount(int $clientId)
     {
-        $this->client = $client;
+        $this->client = Client::find($clientId);
         $this->refresh_data();
     }
 
@@ -28,6 +28,7 @@ class WishPage extends Component
     public function refresh_data()
     {
         $this->client->refresh();
+        $this->wishes = $this->client->wishes;
     }
 
     public function remove()

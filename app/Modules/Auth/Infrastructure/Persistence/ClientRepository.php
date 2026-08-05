@@ -14,6 +14,7 @@ use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\Gender;
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Auth\Infrastructure\Models\User;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use DateTimeImmutable;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -45,8 +46,9 @@ class ClientRepository implements ClientRepositoryInterface
             $model->city = $address->city;
             $model->street = $address->street;
             $model->postal_code = $address->postalCode;
+            $model->region_code = $address->regionCode;
         } else {
-            $model->country = $model->region = $model->city = $model->street = $model->postal_code = null;
+            $model->country = $model->region = $model->city = $model->street = $model->postal_code = $model->region_code = null;
         }
 
         $model->banned_at = $client->bannedAt;
@@ -65,6 +67,8 @@ class ClientRepository implements ClientRepositoryInterface
             $model->action_identifier = null;
             $model->consent_active = false;
         }
+        $model->price_type = $client->priceType->value;
+        $model->discount = $client->discount;
 
         $model->save();
 
@@ -164,7 +168,8 @@ class ClientRepository implements ClientRepositoryInterface
                 $model->city,
                 $model->street,
                 $model->region,
-                $model->postal_code
+                $model->postal_code,
+                $model->region_code,
             );
         }
 
@@ -186,6 +191,8 @@ class ClientRepository implements ClientRepositoryInterface
         } else {
             $client->dataConsent = null;
         }
+        $client->priceType = new PriceType($model->price_type);
+        $client->discount = $model->discount;
 
         $client->user = $this->hydrateUser($model->user);
 

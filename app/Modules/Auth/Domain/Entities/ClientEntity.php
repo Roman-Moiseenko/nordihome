@@ -8,6 +8,7 @@ use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\Gender;
 use App\Modules\Auth\Domain\ValueObjects\PersonalDataConsent;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use DateTimeImmutable;
 
 class ClientEntity
@@ -43,6 +44,14 @@ class ClientEntity
     public ?Address $address = null {
         get => $this->address;
         set => $this->address = $value;
+    }
+    public ?PriceType $priceType = null {
+        get => $this->priceType;
+        set => $this->priceType = $value;
+    }
+    public ?float $discount = null {
+        get => $this->discount;
+        set => $this->discount = $value;
     }
     public ?DateTimeImmutable $bannedAt = null {
         get => $this->bannedAt;

@@ -9,7 +9,7 @@
 @section('h1', 'Отзывы')
 
 @section('subcontent')
-    @foreach($user->reviews as $review)
+    @foreach($reviews as $review)
         <div class="box-card d-flex review-item">
             <div class="product-img">
                 <a href="{{ route('shop.product.view', $review->product->slug) }}" target="_blank"><img
@@ -36,7 +36,7 @@
             </div>
         </div>
     @endforeach
-    @if($client->reviews()->count() == 0)
+    @if(count($reviews) == 0)
         <div class="fs-5 m-3 mb-5">
             У вас еще нет отзывов на товары.
         </div>

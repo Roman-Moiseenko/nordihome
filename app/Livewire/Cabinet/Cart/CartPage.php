@@ -31,7 +31,6 @@ class CartPage extends Component
     public bool $button_trash;
     public bool $check_all;
     public bool $check_preorder;
-    public mixed $user;
 
     public int $renderKey = 0; // счётчик изменений
     public function boot()
@@ -39,9 +38,9 @@ class CartPage extends Component
         $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
     }
 
-    public function mount(mixed $user, bool $preorder = false)
+    public function mount(bool $preorder = false)
     {
-        $this->user = $user;
+
         $this->refresh_data();
         $this->check_preorder = $preorder;
     }

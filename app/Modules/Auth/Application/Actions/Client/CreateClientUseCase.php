@@ -9,6 +9,7 @@ use App\Modules\Auth\Domain\Exceptions\ClientAlreadyExistsException;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
@@ -45,6 +46,8 @@ readonly class CreateClientUseCase
             email: $email,
             phone: $phone,
         );
+        $client->priceType = PriceType::retail();
+
 
         return $this->clientRepository->save($client);
     }

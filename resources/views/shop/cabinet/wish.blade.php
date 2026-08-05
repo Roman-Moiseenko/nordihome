@@ -8,5 +8,5 @@
 @section('h1', 'Избранное')
 
 @section('subcontent')
-    <livewire:cabinet.wish.wish-page :client="$client"/>
+    <livewire:cabinet.wish.wish-page :client-id="$client->id"/>
 @endsection

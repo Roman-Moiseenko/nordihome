@@ -18,11 +18,12 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string $last_name
  * @property string $first_name
  * @property string $middle_name
- * @property string $email
+ * @property string $email почта уведомлений
  * @property string $phone
  * @property Carbon $birth_date
  * @property string $gender
  * @property string $country
+ * @property int $region_code
  * @property string $region
  * @property string $city
  * @property string $street
@@ -35,7 +36,8 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property bool $consent_active
  * @property User $user
  * @property GeoAddress $address
- *
+ * @property string $price_type
+ * @property float $discount
  * @property Wish[] $wishes
  * @property Review[] $reviews
  * @property Order[] $orders
@@ -57,6 +59,7 @@ class Client extends Model
         'birth_date',
         'gender',
         'country',
+        'region_code',
         'region',
         'city',
         'street',
@@ -67,6 +70,8 @@ class Client extends Model
         'policy_version',
         'action_identifier',
         'consent_active',
+        'price_type',
+        'discount',
     ];
 
     protected $casts = [

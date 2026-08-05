@@ -6,6 +6,7 @@ use Spatie\LaravelData\Attributes\Validation\Date;
 use Spatie\LaravelData\Attributes\Validation\Email;
 use Spatie\LaravelData\Attributes\Validation\Max;
 use Spatie\LaravelData\Attributes\Validation\Nullable;
+use Spatie\LaravelData\Attributes\Validation\Numeric;
 use Spatie\LaravelData\Attributes\Validation\Required;
 use Spatie\LaravelData\Attributes\Validation\StringType;
 use Spatie\LaravelData\Data;
@@ -38,5 +39,9 @@ class ClientUpdateData extends Data
         public readonly ?string $street = null,
         #[Nullable, StringType, Max(20)]
         public readonly ?string $postalCode = null,
+        #[Nullable, StringType, Max(20)]
+        public readonly ?string $priceType = null,
+        #[Nullable, Numeric]
+        public readonly ?float $discount = null,
     ) {}
 }

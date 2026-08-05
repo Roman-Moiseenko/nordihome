@@ -13,7 +13,10 @@ class ReviewController extends ShopController
 
     public function index()
     {
-        return view('shop.cabinet.review.index');
+        //FIXME - Отзывы сделать useCase для получения всех отзывово, через пагинацию
+        // Либо отдельный CabinetReviewPageData
+        $reviews = [];
+        return view('shop.cabinet.review.index', ['reviews' => $reviews]);
     }
 
     public function show(Review $review)

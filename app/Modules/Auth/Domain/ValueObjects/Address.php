@@ -9,6 +9,11 @@ final class Address
     public string $country {
         get => $this->country;
     }
+    public ?int $regionCode = null {
+        get => $this->regionCode;
+        set => $this->regionCode = $value;
+    }
+
     public ?string $region {
         get => $this->region;
     }
@@ -27,7 +32,8 @@ final class Address
         string  $city,
         string  $street,
         ?string $region = null,
-        ?string $postalCode = null
+        ?string $postalCode = null,
+        ?int $regionCode = null,
     )
     {
         $this->country = trim($country);
@@ -35,7 +41,7 @@ final class Address
         $this->street = trim($street);
         $this->region = $region ? trim($region) : null;
         $this->postalCode = $postalCode ? trim($postalCode) : null;
-
+        $this->regionCode = $regionCode;
     }
 
     public function getFullAddress(): string

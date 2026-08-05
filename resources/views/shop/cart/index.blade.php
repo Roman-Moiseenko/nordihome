@@ -6,7 +6,7 @@
 
 @section('content')
 
-    <livewire:cabinet.cart.cart-page :user="$client" />
+    <livewire:cabinet.cart.cart-page  />
 @endsection
 
 

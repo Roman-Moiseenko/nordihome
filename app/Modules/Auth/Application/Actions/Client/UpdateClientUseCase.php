@@ -12,6 +12,8 @@ use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\Gender;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Discount\Entity\Discount;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use DateTimeImmutable;
@@ -92,7 +94,11 @@ class UpdateClientUseCase
         } else {
             $client->address = null;
         }
+        if ($dto->priceType !== null)
+            $client->priceType = new PriceType($dto->priceType);
 
+        if ($dto->discount != null)
+            $client->discount = $dto->discount;
 
         return $this->clientRepository->save($client);
     }
