@@ -827,6 +827,17 @@ window.$ = jQuery;
             });
         }
 
+        // === Переключение способа получения: показывать/скрывать адрес ===
+        $('#input-is-pickup').on('change', function () {
+            let isPickup = $(this).val() == 1;
+            if (isPickup) {
+                $('#delivery-address').hide();
+            } else {
+                $('#delivery-address').show();
+            }
+            sendToBackend();
+        });
+
         // === Единая кнопка "Изменить" (адрес + контактные данные + способ получения) ===
         $('#change-order-personal').on('click', function () {
             $('.box-card .data-view').hide();
@@ -871,6 +882,7 @@ window.$ = jQuery;
                     // Обновляем способ получения
                     let isPickup = data.isPickup == 1;
                     $('#pickup-block .data-view').text(isPickup ? 'Самовывоз' : 'Доставка');
+                    $('#delivery-address').toggle(!isPickup);
 
                     // Обновляем адрес
                     let addrParts = [data.country, data.region, data.city, data.street, data.postalCode].filter(Boolean);
