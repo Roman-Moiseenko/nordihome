@@ -73,9 +73,9 @@
             </el-table>
         </div>
         <pagination
-            :current_page="users.current_page"
-            :per_page="users.per_page"
-            :total="users.total"
+            :current_page="clients.current_page"
+            :per_page="clients.per_page"
+            :total="clients.total"
         />
         <AddUser :show="dialogCreate" @update:user="onCreateUser"/>
     </el-config-provider>
@@ -94,7 +94,7 @@ import {ElMessage} from "element-plus";
 import {classes} from "@Res/className"
 
 const props = defineProps({
-    users: Object,
+    clients: Object,
     title: {
         type: String,
         default: 'Список клиентов',
@@ -102,9 +102,11 @@ const props = defineProps({
     filters: Array,
     type_pricing: Array,
 })
+
+console.log(props.clients.data)
 const store = useStore();
 const visible_create = ref(false)
-const tableData = ref([...props.users.data])
+const tableData = ref([...props.clients.data])
 const filter = reactive({
     name: props.filters.name,
     address: props.filters.address,
@@ -121,10 +123,10 @@ function onActive(row) {
     })
 }
 function createOrder(row) {
-    router.post(route('admin.order.store', {user_id: row.id}))
+    // router.post(route('admin.order.store', {user_id: row.id}))
 }
 function routeClick(row) {
-    router.get(route('admin.user.show', {user: row.id}))
+    router.get(route('admin.client.show', {id: row.id}))
 }
 
 function diffDate(date: any) {

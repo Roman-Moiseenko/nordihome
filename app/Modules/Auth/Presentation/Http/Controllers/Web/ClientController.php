@@ -27,6 +27,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 
 class ClientController extends Controller
@@ -45,10 +46,16 @@ class ClientController extends Controller
 
     ) {}
 
-    public function index(UserPermission $userPermission): JsonResponse
+    public function index(UserPermission $userPermission): \Inertia\Response
     {
         $clients = $this->indexClientUseCase->execute($userPermission);
-        return response()->json(ClientIndexData::collect($clients), Response::HTTP_CREATED);
+
+        //return response()->json(, Response::HTTP_CREATED);
+        return Inertia::render('Auth/Client/Index', [
+            'clients' => ClientIndexData::collect($clients),
+            'filters' => [], //$filters,
+            //'type_pricing' => $type_pricing,
+        ]);
     }
 
     public function show(int $id, UserPermission $userPermission): JsonResponse

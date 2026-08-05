@@ -35,8 +35,8 @@ readonly class LoginOrRegisterUserService
             $name = $this->getNameFromEmail($dto->email);
             //Регистрируем клиента
             $clientDto = new ClientCreateData(
-                lastName: $name,
-                firstName: $name,
+                lastName: '',
+                firstName: '',
                 email: $dto->email,
             );
             $client = $this->createClientUseCase->execute($clientDto, new UserPermission(null, ['role:admin'], ['auth.buyer.create']));

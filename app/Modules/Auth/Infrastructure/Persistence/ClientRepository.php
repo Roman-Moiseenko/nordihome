@@ -33,8 +33,8 @@ class ClientRepository implements ClientRepositoryInterface
         $model->first_name = $fullName->getFirstName();
         $model->middle_name = $fullName->getMiddleName();
 
-        $model->email = (string) $client->email;
-        $model->phone = $client->phone ? (string) $client->phone : null;
+        $model->email = (string)$client->email;
+        $model->phone = $client->phone ? (string)$client->phone : null;
 
         $model->birth_date = $client->birthDate;
         $model->gender = $client->gender?->getValue();
@@ -83,13 +83,13 @@ class ClientRepository implements ClientRepositoryInterface
 
     public function findByPhone(PhoneNumber $phone): ?ClientEntity
     {
-        $model = Client::where('phone', (string) $phone)->first();
+        $model = Client::where('phone', (string)$phone)->first();
         return $model ? $this->hydrate($model) : null;
     }
 
     public function findByEmail(Email $email): ?ClientEntity
     {
-        $model = Client::where('email', (string) $email)->first();
+        $model = Client::where('email', (string)$email)->first();
         return $model ? $this->hydrate($model) : null;
     }
 
@@ -105,7 +105,7 @@ class ClientRepository implements ClientRepositoryInterface
 
     public function emailExists(Email $email, ?int $excludeId = null): bool
     {
-        $query = Client::where('email', (string) $email);
+        $query = Client::where('email', (string)$email);
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
@@ -114,7 +114,7 @@ class ClientRepository implements ClientRepositoryInterface
 
     public function phoneExists(PhoneNumber $phone, ?int $excludeId = null): bool
     {
-        $query = Client::where('phone', (string) $phone);
+        $query = Client::where('phone', (string)$phone);
         if ($excludeId) {
             $query->where('id', '!=', $excludeId);
         }
@@ -126,12 +126,14 @@ class ClientRepository implements ClientRepositoryInterface
         $model = Client::find($id);
         return $model ? $model->delete() : false;
     }
+
     public function paginate(int $perPage = 20): LengthAwarePaginator
     {
         return Client::with('user')
             ->paginate($perPage)
-            ->through(fn ($model) => $this->hydrate($model)); // ← применяем hydrate к каждому элементу
+            ->through(fn($model) => $this->hydrate($model)); // ← применяем hydrate к каждому элементу
     }
+
     /**
      * @throws \DateMalformedStringException
      */
@@ -191,7 +193,7 @@ class ClientRepository implements ClientRepositoryInterface
         } else {
             $client->dataConsent = null;
         }
-        $client->priceType = new PriceType($model->price_type);
+        $client->priceType = is_null($model->price_type) ? PriceType::retail() : new PriceType($model->price_type);
         $client->discount = $model->discount;
 
         $client->user = $this->hydrateUser($model->user);

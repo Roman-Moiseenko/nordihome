@@ -116,7 +116,8 @@ final class FullName
     private function ensureIsValid(string $value): void
     {
         if (empty($value)) {
-            throw new InvalidArgumentException('Имя не может быть пустым');
+            return;
+            //throw new InvalidArgumentException('Имя не может быть пустым');
         }
 
         // Проверка на допустимые символы (буквы, пробелы, дефисы)
