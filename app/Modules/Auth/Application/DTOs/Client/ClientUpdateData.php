@@ -42,8 +42,8 @@ class ClientUpdateData extends Data
         #[Nullable, StringType, Max(20)]
         public readonly ?string $postalCode = null,
         #[Nullable, StringType, Max(20)]
-        public readonly ?string $priceType = null,
+        public ?string $priceType = null,
         #[Nullable, Numeric]
-        public readonly ?float $discount = null,
+        public ?float $discount = null,
     ) {}
 }

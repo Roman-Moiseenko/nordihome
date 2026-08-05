@@ -7,6 +7,7 @@ namespace App\Modules\Shop\Application\Queries\Client;
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
+use App\Modules\Auth\Domain\ValueObjects\Gender;
 use App\Modules\Auth\Domain\ValueObjects\PersonalDataConsent;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
@@ -72,6 +73,10 @@ readonly class GetInfoClientQuery
             ? array_map('intval', explode(',', $data->wishes_ids))
             : [];
 
+        $gender = !empty($data->gender)
+            ? new Gender($data->gender)
+            : null;
+
         return new ClientInfoData(
             id: (int)$data->id,
             wishesIds: $wishesIds,
@@ -84,6 +89,7 @@ readonly class GetInfoClientQuery
             phone: $phone,
             consent: $consent,
             address: $address,
+            gender: $gender,
         );
     }
 }

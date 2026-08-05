@@ -886,53 +886,98 @@ window.$ = jQuery;
 
     /** КАБИНЕТ **/
     if (main.hasClass('cabinet')) {
-        //Смена ФИО
-        let fullnameButton = $('#change-fullname');
-        let fullnameGroup = $('#group-fullname');
-        let fullnameData = $('#data-fullname');
-        let fullnameInput = $('#input-fullname');
-        let fullnameSave = $('#save-fullname');
-        fullnameButton.on('click', function () {
-            fullnameButton.hide();
-            fullnameData.hide();
-            fullnameGroup.show();
-            fullnameInput.val(fullnameData.text());
-        });
-        fullnameSave.on('click', function () {
-            fullnameButton.show();
-            fullnameData.show();
-            fullnameGroup.hide();
-            let new_value = fullnameInput.val();
-            fullnameData.text(new_value);
-            $.post(fullnameSave.data('route'), {fullname: new_value}, function (data) {
-                console.log(data)
-            })
-        });
 
-        //Смена телефона
-        let phoneButton = $('#change-phone');
-        let phoneGroup = $('#group-phone');
-        let phoneData = $('#data-phone');
-        let phoneInput = $('#input-phone');
-        let phoneSave = $('#save-phone');
-        phoneButton.on('click', function () {
-            phoneButton.hide();
-            phoneData.hide();
-            phoneGroup.show();
-            phoneInput.val(phoneData.text());
-        });
-        phoneSave.on('click', function () {
-            phoneButton.show();
-            phoneData.show();
-            phoneGroup.hide();
-            let new_value = phoneInput.val();
-            phoneData.text(new_value);
-            $.post(phoneSave.data('route'), {phone: new_value}, function (data) {
+        // Заполняем select регионов из window.regions
+        if (window.regions && window.regions.length) {
+            let regionSelect = $('#input-region');
+            let regionCodeInput = $('#input-region-code');
+            window.regions.forEach(function (r) {
+                regionSelect.append($('<option>', {value: r.name, text: r.name, 'data-code': r.code}));
+            });
+            let currentCode = regionCodeInput.val();
+            if (currentCode) {
+                let match = window.regions.find(function (r) { return r.code == currentCode; });
+                if (match) regionSelect.val(match.name);
+            }
+            regionSelect.on('change', function () {
+                let code = $(this).find('option:selected').data('code');
+                regionCodeInput.val(code || '');
+            });
+        }
 
-            })
-        });
+        // === Одна кнопка "Изменить" для всех полей персональных данных ===
+        let changeBtn = $('#change-personal');
+        let saveBtn = $('#save-personal');
+        let cancelBtn = $('#cancel-personal');
 
-        //Смена email
+        if (changeBtn.length) {
+            changeBtn.on('click', function () {
+                // Скрываем просмотр, показываем редактирование
+                $('#personal-data .data-view').hide();
+                $('#personal-data .edit-group').show();
+                changeBtn.hide();
+                saveBtn.show();
+                cancelBtn.show();
+            });
+
+            cancelBtn.on('click', function () {
+                $('#personal-data .edit-group').hide();
+                $('#personal-data .data-view').show();
+                changeBtn.show();
+                saveBtn.hide();
+                cancelBtn.hide();
+            });
+
+            saveBtn.on('click', function () {
+                let data = {
+                    lastName: $('#input-lastname').val(),
+                    firstName: $('#input-firstname').val(),
+                    middleName: $('#input-middlename').val(),
+                    email: $('#input-email-notify').val(),
+                    phone: $('#input-phone').val(),
+                    gender: $('input[name="gender"]:checked').val() || null,
+                    country: $('#input-country').val(),
+                    region: $('#input-region').val(),
+                    regionCode: $('#input-region-code').val(),
+                    city: $('#input-city').val(),
+                    street: $('#input-street').val(),
+                    postalCode: $('#input-postal-code').val()
+                };
+
+                $.ajax({
+                    url: saveBtn.data('route'),
+                    type: 'PUT',
+                    data: data,
+                    success: function (res) {
+                        common.error(res);
+                        // Обновляем отображаемые данные
+                        let parts = [data.lastName, data.firstName, data.middleName].filter(Boolean);
+                        $('#personal-data .data-view').eq(0).text(parts.join(' '));        // ФИО
+                        $('#personal-data .data-view').eq(1).text(data.email);              // Email
+                        // Тип цены (eq 2) — не меняем
+                        // Скидка (eq 3) — не меняем
+                        $('#personal-data .data-view').eq(4).text(data.phone);              // Телефон
+                        let addrParts = [data.country, data.region, data.city, data.street, data.postalCode].filter(Boolean);
+                        $('#personal-data .data-view').eq(5).text(addrParts.join(', '));    // Адрес
+                        // Пол (eq 6)
+                        let genderText = 'Не указан';
+                        if (data.gender === 'male') genderText = 'Мужской';
+                        else if (data.gender === 'female') genderText = 'Женский';
+                        $('#personal-data .data-view').eq(6).text(genderText);
+                        // Согласие (eq 7) — не меняем
+
+                        // Возвращаем режим просмотра
+                        $('#personal-data .edit-group').hide();
+                        $('#personal-data .data-view').show();
+                        changeBtn.show();
+                        saveBtn.hide();
+                        cancelBtn.hide();
+                    }
+                });
+            });
+        }
+
+        // --- Email для входа ---
         let emailButton = $('#change-email');
         let emailGroup = $('#group-email');
         let emailData = $('#data-email');
@@ -957,7 +1002,7 @@ window.$ = jQuery;
             })
         });
 
-        //Смена пароля
+        // --- Пароль ---
         let passwordButton = $('#change-password');
         let passwordGroup = $('#group-password');
         let passwordInput = $('#input-password');

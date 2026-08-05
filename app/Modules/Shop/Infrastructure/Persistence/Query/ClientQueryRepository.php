@@ -25,6 +25,7 @@ class ClientQueryRepository
             ->where('c.id', $clientId)
             ->select(
                 'c.id',
+                'c.gender',
                 'c.last_name',
                 'c.first_name',
                 'c.middle_name',

@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Application\DTOs\Client;
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
+use App\Modules\Auth\Domain\ValueObjects\Gender;
 use App\Modules\Auth\Domain\ValueObjects\PersonalDataConsent;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
@@ -24,6 +25,7 @@ class ClientInfoData
         public PhoneNumber $phone,
         public ?PersonalDataConsent $consent,
         public Address $address,
+        public ?Gender $gender = null,
 
     )
     {

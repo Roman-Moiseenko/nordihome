@@ -220,7 +220,6 @@ class ClientController extends Controller
     {
         /** @var User $user */
         $user = $request->user();
-
         // 1. Проверяем, что пользователь привязан к профилю клиента
         $profileType = ProfileType::fromModelClass($user->profileable_type);
         if ($profileType !== ProfileType::CLIENT) {
@@ -229,13 +228,13 @@ class ClientController extends Controller
 
         // 2. Получаем ID клиента из собственного профиля пользователя
         $clientId = $user->profileable_id;
-        try {
-            $dto = ClientUpdateData::validateAndCreate($request->all());
-        } catch (ValidationException $e) {
-            return response()->json(['errors' => $e->errors()], Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
+        $dto = ClientUpdateData::validateAndCreate($request->all());
 
-            // 3. Вызываем тот же Use Case, но с ID, полученным из аутентификации
+        //Сбрасываем значения, если подмена данных с фронта
+        $dto->priceType = null;
+        $dto->discount = null;
+
+        // 3. Вызываем тот же Use Case, но с ID, полученным из аутентификации
         $client = $this->updateClientUseCase->execute($clientId, $dto, $userPermission);
 
         return response()->json(ClientViewData::fromEntity($client), Response::HTTP_CREATED);
