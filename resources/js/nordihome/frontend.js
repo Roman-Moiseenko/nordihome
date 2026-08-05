@@ -781,8 +781,8 @@ window.$ = jQuery;
             orderDelivery.html(common.price_format(state.amount.delivery.cost));
             //let orderAmount = $('#order-amount-pay');
             //orderAmount.html(price_format(Number(orderAmount.data('base-cost'))))
-            let spanFullname = $('.fullname-block').find('.address-delivery--info');
-            let spanPhone = $('.phone-block').find('.address-delivery--info');
+            let spanFullname = $('#personal-order .fullname-block .data-view');
+            let spanPhone = $('#personal-order .phone-block .data-view');
             spanFullname.html(state.delivery.fullname);
             spanPhone.html(state.phone);
         }
@@ -886,6 +886,59 @@ window.$ = jQuery;
                     $('#delivery-address .edit-group').hide();
                     $('#delivery-address .data-view').show();
                     $('#change-delivery-address').show();
+                    sendToBackend();
+                }
+            });
+        });
+
+        // === Персональные данные (ФИО, телефон, email) ===
+        $('#change-order-personal').on('click', function () {
+            $('#personal-order .data-view').hide();
+            $('#personal-order .edit-group').show();
+            $(this).hide();
+            $('#save-order-personal').show();
+            $('#cancel-order-personal').show();
+        });
+
+        $('#cancel-order-personal').on('click', function () {
+            $('#personal-order .edit-group').hide();
+            $('#personal-order .data-view').show();
+            $('#change-order-personal').show();
+            $('#save-order-personal').hide();
+            $('#cancel-order-personal').hide();
+        });
+
+        $('#save-order-personal').on('click', function () {
+            let saveBtn = $(this);
+            let data = {
+                lastName: $('#input-order-lastname').val(),
+                firstName: $('#input-order-firstname').val(),
+                middleName: $('#input-order-middlename').val(),
+                phone: $('#input-order-phone').val(),
+                email: $('#input-order-email').val()
+            };
+
+            $.ajax({
+                url: saveBtn.data('route'),
+                type: 'PUT',
+                data: data,
+                success: function (res) {
+                    common.error(res);
+                    let parts = [data.lastName, data.firstName, data.middleName].filter(Boolean);
+                    let fullName = parts.join(' ');
+                    $('#personal-order .fullname-block .data-view').text(fullName);
+                    $('#personal-order .phone-block .data-view').text(data.phone);
+                    $('#personal-order .data-view').eq(2).text(data.email);
+
+                    // Обновляем скрытые поля для формы заказа
+                    $('#input-fullname-hidden').val(fullName);
+                    $('#input-phone-hidden').val(data.phone);
+
+                    $('#personal-order .edit-group').hide();
+                    $('#personal-order .data-view').show();
+                    $('#change-order-personal').show();
+                    $('#save-order-personal').hide();
+                    $('#cancel-order-personal').hide();
                     sendToBackend();
                 }
             });
