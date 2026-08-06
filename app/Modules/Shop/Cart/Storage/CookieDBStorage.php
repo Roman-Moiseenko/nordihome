@@ -58,9 +58,9 @@ class CookieDBStorage implements StorageInterface
         $this->updateQuantity($item->id, $new_quantity);
     }
 
-    public function remove(CartItem $item): void
+    public function remove(int $itemId): void
     {
-        $this->fromStorage($item->id);
+        CartCookie::destroy($itemId);
     }
 
     public function clear(): void
@@ -98,7 +98,7 @@ class CookieDBStorage implements StorageInterface
     }
     private function fromStorage(int $id): void
     {
-        CartCookie::destroy($id);
+
     }
 
 

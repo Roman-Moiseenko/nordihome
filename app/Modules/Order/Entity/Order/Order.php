@@ -35,7 +35,7 @@ use JetBrains\PhpStorm\Pure;
  * @property int $client_id
  * @property int $shopper_id
  * @property int $trader_id
- * @property int $type //ONLINE, MANUAL, SHOP, PARSER
+ * @property string $type //ONLINE, MANUAL, SHOP, PARSER
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
  * @property int $staff_id // Staff::class - менеджер, создавший или прикрепленный к заказу
@@ -74,16 +74,12 @@ class Order extends Model
 {
     use HtmlInfoData, LeadField;
 
-    const int ONLINE = 701;
-    const int MANUAL = 702;
-    const int SHOP = 703;
-    const int PARSER = 704;
-    const int OZON = 705;
+    const string ONLINE = 'online';
+    const string MANUAL = 'manual';
+    const string OZON = 'ozon';
     const array TYPES = [
         self::ONLINE => 'Интернет-магазин',
         self::MANUAL => 'Менеджер',
-        self::SHOP => 'Магазин',
-        self::PARSER => 'Парсер',
         self::OZON => 'Озон',
     ];
 
@@ -108,7 +104,7 @@ class Order extends Model
         'coupon_amount' => 'float',
     ];
 
-    public static function register(int|null $client_id, int $type, int $trader_id): self
+    public static function register(int|null $client_id, string $type, int $trader_id): self
     {
         $number = self::get()->count();
         $order = self::create([
@@ -133,11 +129,6 @@ class Order extends Model
             if ($status->value == $value) return true;
         }
         return false;
-    }
-
-    public function isParser(): bool
-    {
-        return $this->type == self::PARSER;
     }
 
     public function isOzon(): bool

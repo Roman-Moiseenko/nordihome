@@ -59,9 +59,9 @@ class DBStorage implements StorageInterface
         $this->updateQuantity($item->id, $new_quantity);
     }
 
-    public function remove(CartItem $item): void
+    public function remove(int $itemId): void
     {
-        $this->fromStorage($item->id);
+        CartStorage::destroy($itemId);
     }
 
     public function clear(): void
@@ -104,7 +104,7 @@ class DBStorage implements StorageInterface
 
     private function fromStorage(int $id)
     {
-        CartStorage::destroy($id);
+
     }
 
 }

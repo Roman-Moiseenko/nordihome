@@ -78,11 +78,11 @@ class OrderItem extends Model implements CartItemInterface
         'order',
         ];
 
-    public static function new(Product $product, float $quantity, bool $preorder/*, int $user_id*/): self
+    public static function new(int $productID, float $quantity, bool $preorder): self
     {
         return self::make([
             'quantity' => $quantity,
-            'product_id' => $product->id,
+            'product_id' => $productID,
             //'base_cost' => $product->getLastPrice($user_id),
             //'sell_cost' => $product->getLastPrice($user_id),
             'options' => [],

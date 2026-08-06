@@ -16,6 +16,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property int $type
  * @property bool $manual
  * @property bool $is_quantity
+ * @property string $slug
  * @property string $class Class Обсчета стоимости
  * @property OrderAddition[] $orderAdditions
  */
@@ -30,6 +31,7 @@ class Addition extends Model
         'base',
         'class',
         'is_quantity',
+        'slug',
     ];
     const DELIVERY = 102;
     const PACKING = 103;
@@ -47,6 +49,7 @@ class Addition extends Model
 
     public static function register(
         string $name,
+        string $slug,
         #[ExpectedValues(valuesFromClass: Addition::class)]int $type,
         bool $manual,
         int $base,
@@ -56,6 +59,7 @@ class Addition extends Model
     {
         return self::create([
             'name' => $name,
+            'slug' => $slug,
             'manual' => $manual,
             'type' => $type,
             'base' => $base,

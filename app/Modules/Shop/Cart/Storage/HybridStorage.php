@@ -74,9 +74,9 @@ class HybridStorage implements StorageInterface
     }
 
 
-    public function remove(CartItem $item): void
+    public function remove(int $itemId): void
     {
-        $this->getStorage()->remove($item);
+        $this->getStorage()->remove($itemId);
     }
 
     public function clear(): void

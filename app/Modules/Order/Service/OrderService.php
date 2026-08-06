@@ -102,10 +102,10 @@ class OrderService
         $this->bankService = $bankService;
     }
 
-    public function createOrder(int $user_id = null, int $type = Order::ONLINE): Order
+    public function createOrder(int $client_id, string $type = Order::ONLINE): Order
     {
         $trader_id = Trader::default()->organization->id;
-        return Order::register($user_id, $type, $trader_id);
+        return Order::register($client_id, $type, $trader_id);
     }
 
     public function create_cart(Request $request): Order
@@ -290,33 +290,6 @@ class OrderService
         return $order;
     }
 
-    /**
-     * Создание заказа из корзины парсера клиента
-     */
-    //TODO Переделать на получение полных данных из базы
-    public function create_parser(): Order
-    {
-        DB::transaction(function () use (&$order) {
-            if (Auth::guard('web')->check()) {
-                /** @var User $user */
-                $user = Auth::guard('web')->user();
-            } else {
-                throw new \DomainException('Не задан клиент, проверка Заказа невозможна');
-            }
-            $OrderItems = $this->parserCart->getItems();
-            $order = $this->createOrder($user->id);
-            $order->save();
-            foreach ($OrderItems as $item) {
-                $orderItemPre = OrderItem::new($item->product, $item->quantity, true);
-                $orderItemPre->setCost($item->cost, $item->cost);
-                $order->items()->save($orderItemPre);
-            }
-            $this->parserCart->clear();
-            $this->recalculation($order);
-            event(new OrderHasCreated($order));
-        });
-        return $order;
-    }
 
     /**
      * Создание заказа по кнопке В 1 клик
@@ -534,33 +507,33 @@ class OrderService
         float $quantity, bool $preorder = false,
         bool  $assemblage = false, bool $packing = false): void
     {
-        \Log::info('$quantity = ' . $quantity);
-        \Log::info('$product_id = ' .$product_id);
+    //    \Log::info('$quantity = ' . $quantity);
+    //    \Log::info('$product_id = ' .$product_id);
         /** @var Product $product */
         $product = Product::find($product_id);
         $quantity_preorder = 0;
-        \Log::info('$preorder = ' .$preorder);
+ //       \Log::info('$preorder = ' .$preorder);
         //По предзаказу
         if ($preorder) {
             $quantity_preorder = $quantity;
             $quantity = 0;
-            \Log::info('1');
+    //        \Log::info('1');
 
         }
-        \Log::info('getQuantitySell = ' . $product->getQuantitySell());
+   //     \Log::info('getQuantitySell = ' . $product->getQuantitySell());
 
         if ($quantity > 0 && $product->getQuantitySell() <= $quantity) {
             $quantity_preorder = $quantity - $product->getQuantitySell(); //По предзаказу
             $quantity = $product->getQuantitySell(); //в наличии
-            \Log::info('2');
+      //      \Log::info('2');
         }
 
         $last_price = $product->getPrice(false, $order->client);
-        \Log::info('$quantity = ' . $quantity);
-        \Log::info('$quantity_preorder = ' . $quantity_preorder);
+  //      \Log::info('$quantity = ' . $quantity);
+  //      \Log::info('$quantity_preorder = ' . $quantity_preorder);
         if ($quantity > 0) {
-            \Log::info('3');
-            $orderItem = OrderItem::new($product, $quantity, false);
+   //         \Log::info('3');
+            $orderItem = OrderItem::new($product->id, $quantity, false);
             if ($last_price == 0) throw new \DomainException('Нельзя добавить товар без цены ' . $product->name);
             $orderItem->setCost($last_price, $last_price);
             $orderItem->assemblage = $assemblage;
@@ -579,7 +552,7 @@ class OrderService
 
         if ($quantity_preorder > 0) {
             \Log::info('4');
-            $orderItemPre = OrderItem::new($product, $quantity_preorder, true);
+            $orderItemPre = OrderItem::new($product->id, $quantity_preorder, true);
             $pre_price = ($product->getPricePre() == 0) ? $last_price : $product->getPricePre();
             if ($last_price == 0) {
                 //TODO Высчитываем цену по парсеру Доп.наценка и другое
@@ -910,7 +883,7 @@ class OrderService
         $product = $this->parserService->findProduct($search);
 
         $cost_item = ceil($this->parser_set->parser_coefficient * $product->parser->price);
-        $orderItemPre = OrderItem::new($product, $quantity, true);
+        $orderItemPre = OrderItem::new($product->id, $quantity, true);
         $orderItemPre->setCost((int)$cost_item, (int)$cost_item);
 
         $order->items()->save($orderItemPre);

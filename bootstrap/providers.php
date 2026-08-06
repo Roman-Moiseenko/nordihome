@@ -7,6 +7,7 @@ return [
     App\Modules\Feedback\Providers\FeedbackServiceProvider::class,
     App\Modules\Lead\Providers\LeadServiceProvider::class,
     App\Modules\Notification\Providers\NotificationServiceProvider::class,
+    App\Modules\Order\Providers\OrderServiceProvider::class,
     App\Modules\Parser\Providers\ParserServiceProvider::class,
     App\Modules\Shared\Providers\SharedServiceProvider::class,
     App\Modules\Shop\Providers\ShopServiceProvider::class,

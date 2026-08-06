@@ -8,6 +8,7 @@ use App\Modules\Accounting\Repository\StorageRepository;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Delivery\Service\DeliveryService;
 
+use App\Modules\Order\Application\Services\CreateOrderFromCartService;
 use App\Modules\Order\Repository\PaymentRepository;
 use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Order\Service\OrderService;
@@ -42,6 +43,7 @@ class OrderController extends \App\Modules\Shop\Presentation\Http\Controllers\We
         OrderService      $service,
         StorageRepository $storages,
         private GetCartUseCase $getCartUseCase,
+        private CreateOrderFromCartService $createOrderFromCartService,
     )
     {
        // parent::__construct();
@@ -129,12 +131,6 @@ class OrderController extends \App\Modules\Shop\Presentation\Http\Controllers\We
         return redirect()->back()->with('success', 'Ваш заказ успешно создан!');
     }
 
-    public function store_parser(Request $request)
-    {
-        $order = $this->service->create_parser($request);
-
-        return redirect()->route('cabinet.order.view', $order)->with('success', 'Ваш заказ успешно создан!');
-    }
 
     public function create_pre(Request $request)
     {
@@ -143,8 +139,10 @@ class OrderController extends \App\Modules\Shop\Presentation\Http\Controllers\We
 
     public function store(Request $request)
     {
-        \Log::info(json_encode($request->all()));
-        return null;
+
+        $client = $this->getClient($request);
+        $order = $this->createOrderFromCartService->execute($client, $request->input('coupon'));
+        //return null;
         $order = $this->service->create($request);
         return redirect()->route('cabinet.order.new_order', ['order' => $order, 'from' => 'store'])->with('success', 'Ваш заказ успешно создан!');
     }

@@ -13,7 +13,7 @@ interface StorageInterface
     public function sub(CartItem $item, float $quantity): void;
     public function plus(CartItem $item, float $quantity): void;
 
-    public function remove(CartItem $item): void;
+    public function remove(int $itemId): void;
 
     public function check(CartItem $item): void;
 
