@@ -789,11 +789,11 @@ window.$ = jQuery;
 
         function sendToBackend() {
             let data = readElements();
-            $.post('/order/checkorder', {data}, function (res) {
+         /*   $.post('/order/checkorder', {data}, function (res) {
                 //console.log(res);
                 common.error(res);
                 writeElements(res);
-            })
+            })*/
         }
 
         //Навешиваем событие при изменении элементов //

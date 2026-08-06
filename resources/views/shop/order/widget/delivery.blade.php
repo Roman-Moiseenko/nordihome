@@ -22,17 +22,6 @@ $noAddress = is_null($client->address->regionCode);
     </div>
 
     <div class="block-delivery">
-        <div class="delivery-storage mt-3 p-3" {!! $isStorage ? '' : ' style="display: none"' !!}>
-            @foreach($storages as $storage)
-                <div class="checkbox-group">
-                    <input type="radio" class="form-check-inline" name="storage" data-state="change"
-                           id="{{ $storage->slug }}" autocomplete="off"
-                           value="{{ $storage->id }}"
-                    >
-                    <label for="{{ $storage->slug }}">{{ $storage->address }}</label>
-                </div>
-            @endforeach
-        </div>
 
         {{-- Адрес доставки (local + region) --}}
         <div class="delivery-local mt-3" id="delivery-address" {!! !$client->isPickup ? '' : ' style="display: none"' !!}>
@@ -72,7 +61,7 @@ $noAddress = is_null($client->address->regionCode);
 
     {{-- Контактные данные --}}
     <div class="mt-4" id="personal-order">
-        <div>Контактные данные *</div>
+        <div>Контактные данные</div>
 
         {{-- ФИО --}}
         <div class="fullname-block mt-3">

@@ -46,6 +46,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ArrayShape;
+use JetBrains\PhpStorm\Deprecated;
 
 
 class OrderService
@@ -147,7 +148,7 @@ class OrderService
 
 
     //**** ФУНКЦИИ СОЗДАНИЯ ЗАКАЗА
-    #[ArrayShape(['payment' => "array", 'delivery' => "array", 'phone' => "string", 'amount' => "array"])]
+    #[Deprecated]
     public function checkorder(array $data): array
     {
         $enabled = true;

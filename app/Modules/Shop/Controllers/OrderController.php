@@ -165,6 +165,7 @@ class OrderController extends \App\Modules\Shop\Presentation\Http\Controllers\We
     //AJAX
     public function checkorder(Request $request)
     {
+        \Log::info(json_encode($request->all()));
         $result = $this->service->checkorder($request['data']);
         return \response()->json($result);
     }
