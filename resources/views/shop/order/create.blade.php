@@ -15,24 +15,25 @@
     <div class="screen-action">
         <div class="left-list-block">
             <!-- @ include('shop.order.widget.payment') -->
-            @include('shop.order.widget.delivery')
-            @include('shop.order.widget.personal')
+            @include('shop.order.widget.client')
 
             <div class="box-card">
                 <div>Список товаров в корзине</div>
                 <div class="row">
-                @foreach($cartInfo->items as $item)
-                    @if($item->check)
-                        @include('shop.order.widget.item', ['item' => $item])
-                    @endif
-                @endforeach
+                    @foreach($cartInfo->items as $item)
+                        @if($item->check)
+                            @include('shop.order.widget.item', ['item' => $item])
+                        @endif
+                    @endforeach
                 </div>
             </div>
         </div>
         <div class="right-action-block">
             <div class="sticky-block">
                 <div>
-                    <button id="button-to-order" class="btn btn-dark w-100 py-3" onclick="document.getElementById('form-order-create').submit();">Оформить</button>
+                    <button id="button-to-order" class="btn btn-dark w-100 py-3"
+                            onclick="document.getElementById('form-order-create').submit();">Оформить
+                    </button>
                     <div class="d-flex justify-content-between mt-3">
                         <div class="fs-5">Ваш заказ</div>
                         <div id="order-count-products" class="fs-5">{{ $cartInfo->quantityCheck }} товар(а/ов)</div>
@@ -46,15 +47,17 @@
                         <div id="order-full-discount" class="fs-7">{{ price($cartInfo->discountCheck) }}</div>
                     </div>
                     <div class="d-flex justify-content-between mt-1">
-                        <div class="fs-7">Стоимость доставки*</div>
-                        <div id="order-full-delivery" class="fs-7" >{{ price($cartInfo->delivery + $cartInfo->deliveryParser) }}</div>
+                        <div class="fs-7">Стоимость доставки *</div>
+                        <div id="order-full-delivery"
+                             class="fs-7">{{ price($cartInfo->delivery + $cartInfo->deliveryParser) }}</div>
                     </div>
                     <div class="d-flex justify-content-between">
                         <div class="fs-8">* рассчитывается отдельно, после оформления заказа</div>
                     </div>
                     <div class="d-flex justify-content-between mt-4 pt-3 border-top">
-                        <div class="fs-5">Сумма к оплате</div>
-                        <div id="order-amount-pay" class="fs-5" data-base-cost="{{ $amountCommon }}">{{ price($amountCommon) }}</div>
+                        <div class="fs-5">Сумма по заказу</div>
+                        <div id="order-amount-pay" class="fs-5"
+                             data-base-cost="{{ $amountCommon }}">{{ price($amountCommon) }}</div>
                     </div>
                 </div>
                 <div class="mt-3">
@@ -70,7 +73,8 @@
                     </div>
                 </div>
                 <div class="mt-3">
-                    <a href="{{ route('shop.cart.view') }}" class="btn btn-outline-dark w-100 py-3">Вернуться в корзину</a>
+                    <a href="{{ route('shop.cart.view') }}" class="btn btn-outline-dark w-100 py-3">Вернуться в
+                        корзину</a>
                 </div>
             </div>
         </div>

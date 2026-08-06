@@ -11,7 +11,7 @@
     <div class="screen-action">
         <div class="left-list-block">
             @include('shop.order.widget.payment')
-            @include('shop.order.widget.delivery')
+            @include('shop.order.widget.client')
             @include('shop.order.widget.personal')
             <div class="box-card">
                 <div>Список товаров в корзине</div>
