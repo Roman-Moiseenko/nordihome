@@ -17,7 +17,7 @@
         {{-- Фамилия Имя Отчество --}}
         <div class="field mt-3">
             <span class="label">Фамилия Имя Отчество:</span>
-            <span class="data-view">{{ $client->fullName->getValue() }}</span>
+            <span class="data-view" id="data-view-fullname">{{ $client->fullName->getValue() }}</span>
             <div class="edit-group" style="display:none;">
                 <div class="input-group mb-1">
                     <input type="text" class="form-control" name="lastName" id="input-lastname"
@@ -37,7 +37,7 @@
         {{-- Email уведомлений --}}
         <div class="field mt-3">
             <span class="label">Email уведомлений:</span>
-            <span class="data-view">{{ $client->email }}</span>
+            <span class="data-view" id="data-view-email">{{ $client->email }}</span>
             <div class="edit-group" style="display:none;">
                 <input type="email" class="form-control" id="input-email-notify" name="email" placeholder="Email"
                        value="{{ $client->email }}" autocomplete="off">
@@ -47,7 +47,7 @@
         {{-- Контактный телефон --}}
         <div class="field mt-3">
             <span class="label">Контактный телефон:</span>
-            <span class="data-view">{{ $client->phone->getValue() }}</span>
+            <span class="data-view" id="data-view-phone">{{ $client->phone->getValue() }}</span>
             <div class="edit-group" style="display:none;">
                 <input type="text" class="form-control" id="input-phone" name="phone" placeholder="Телефон"
                        value="{{ $client->phone->getValue() }}" autocomplete="off">
@@ -57,7 +57,7 @@
         {{-- Адрес доставки --}}
         <div class="field mt-3">
             <span class="label">Адрес доставки:</span>
-            <span class="data-view">{{ $client->address->getFullAddress() }}</span>
+            <span class="data-view" id="data-view-address">{{ $client->address->getFullAddress() }}</span>
             <div class="edit-group" style="display:none;">
                 <div class="input-group mb-1">
                     <input type="text" class="form-control" name="country" id="input-country"
@@ -89,7 +89,7 @@
         {{-- Пол --}}
         <div class="field mt-3">
             <span class="label">Пол:</span>
-            <span class="data-view">
+            <span class="data-view" id="data-view-gender">
                 @if($client->gender && $client->gender->getValue() === 'male')
                     Мужской
                 @elseif($client->gender && $client->gender->getValue() === 'female')

@@ -717,6 +717,85 @@ window.$ = jQuery;
 
        }*/
 
+    // === Вспомогательные функции для профиля клиента ===
+    function _val(selector) {
+        let el = $(selector);
+        return el.length ? el.val() : null;
+    }
+    function _radioVal(name) {
+        let checked = $('input[name="' + name + '"]:checked');
+        return checked.length ? checked.val() : null;
+    }
+
+    /** Инициализация select регионов (единая для кабинета и оформления заказа) */
+    function initRegionSelect(selectSelector, codeSelector) {
+        if (!window.regions || !window.regions.length) return;
+        let regionSelect = $(selectSelector);
+        let regionCodeInput = $(codeSelector);
+        if (!regionSelect.length || !regionCodeInput.length) return;
+
+        // Заполняем только если ещё не заполнен
+        if (regionSelect.find('option[data-code]').length === 0) {
+            window.regions.forEach(function (r) {
+                regionSelect.append($('<option>', {value: r.name, text: r.name, 'data-code': r.code}));
+            });
+        }
+        let currentCode = regionCodeInput.val();
+        if (currentCode) {
+            let match = window.regions.find(function (r) { return r.code == currentCode; });
+            if (match) regionSelect.val(match.name);
+        }
+        regionSelect.off('change.region').on('change.region', function () {
+            let code = $(this).find('option:selected').data('code');
+            regionCodeInput.val(code || '');
+        });
+    }
+
+    /**
+     * Единая функция сохранения профиля клиента.
+     * Собирает поля по унифицированным ID, отсутствующие отправляет как null.
+     * Поля соответствуют ClientUpdateData (кроме priceType и discount — не меняются клиентом).
+     *
+     * @param {object} options - { route: string, onSuccess: function(data, res) }
+     */
+    function saveClientProfile(options) {
+        let data = {
+            lastName: _val('#input-lastname'),
+            firstName: _val('#input-firstname'),
+            middleName: _val('#input-middlename'),
+            phone: _val('#input-phone'),
+            email: _val('#input-email-notify'),
+            birthDate: null,
+            gender: _radioVal('gender'),
+            country: _val('#input-country'),
+            region: _val('#input-region'),
+            regionCode: _val('#input-region-code'),
+            city: _val('#input-city'),
+            street: _val('#input-street'),
+            postalCode: _val('#input-postal-code'),
+            isPickup: _val('#input-is-pickup')
+        };
+
+        // Предвычисляем общие значения, чтобы не дублировать в колбэках
+        let computed = {
+            fullName: [data.lastName, data.firstName, data.middleName].filter(Boolean).join(' '),
+            fullAddr: [data.country, data.region, data.city, data.street, data.postalCode].filter(Boolean).join(', '),
+            genderText: data.gender === 'male' ? 'Мужской' : (data.gender === 'female' ? 'Женский' : 'Не указан')
+        };
+
+        $.ajax({
+            url: options.route,
+            type: 'PUT',
+            data: data,
+            success: function (res) {
+                common.error(res);
+                if (typeof options.onSuccess === 'function') {
+                    options.onSuccess(data, computed);
+                }
+            }
+        });
+    }
+
     /** ОФОРМЛЕНИЕ ЗАКАЗА  */
     if (main.hasClass('order-page-create') || main.hasClass('order-page-create-parser') ) {
         //Переключение способов доставки
@@ -810,22 +889,7 @@ window.$ = jQuery;
             sendToBackend();
         })
         // === Заполняем select регионов ===
-        if (window.regions && window.regions.length) {
-            let regionSelect = $('#input-delivery-region');
-            let regionCodeInput = $('#input-delivery-region-code');
-            window.regions.forEach(function (r) {
-                regionSelect.append($('<option>', {value: r.name, text: r.name, 'data-code': r.code}));
-            });
-            let currentCode = regionCodeInput.val();
-            if (currentCode) {
-                let match = window.regions.find(function (r) { return r.code == currentCode; });
-                if (match) regionSelect.val(match.name);
-            }
-            regionSelect.on('change', function () {
-                let code = $(this).find('option:selected').data('code');
-                regionCodeInput.val(code || '');
-            });
-        }
+        initRegionSelect('#input-region', '#input-region-code');
 
         // === Переключение способа получения: показывать/скрывать адрес ===
         $('#input-is-pickup').on('change', function () {
@@ -857,48 +921,25 @@ window.$ = jQuery;
 
         $('#save-order-personal').on('click', function () {
             let saveBtn = $(this);
-            let data = {
-                isPickup: $('#input-is-pickup').val(),
-                country: $('#input-delivery-country').val(),
-                region: $('#input-delivery-region').val(),
-                regionCode: $('#input-delivery-region-code').val(),
-                city: $('#input-delivery-city').val(),
-                street: $('#input-delivery-street').val(),
-                postalCode: $('#input-delivery-postal-code').val(),
-                lastName: $('#input-order-lastname').val(),
-                firstName: $('#input-order-firstname').val(),
-                middleName: $('#input-order-middlename').val(),
-                phone: $('#input-order-phone').val(),
-                email: $('#input-order-email').val()
-            };
-
-            $.ajax({
-                url: saveBtn.data('route'),
-                type: 'PUT',
-                data: data,
-                success: function (res) {
-                    common.error(res);
-
+            saveClientProfile({
+                route: saveBtn.data('route'),
+                onSuccess: function (data, c) {
                     // Обновляем способ получения
                     let isPickup = data.isPickup == 1;
                     $('#pickup-block .data-view').text(isPickup ? 'Самовывоз' : 'Доставка');
                     $('#delivery-address').toggle(!isPickup);
 
                     // Обновляем адрес
-                    let addrParts = [data.country, data.region, data.city, data.street, data.postalCode].filter(Boolean);
-                    let fullAddr = addrParts.join(', ');
-                    $('#delivery-address .data-view').text(fullAddr || 'Не указан');
-                    $('#input-delivery-address-hidden').val(fullAddr);
+                    $('#delivery-address .data-view').text(c.fullAddr || 'Не указан');
+                    $('#input-address-hidden').val(c.fullAddr);
 
-                    // Обновляем ФИО
-                    let parts = [data.lastName, data.firstName, data.middleName].filter(Boolean);
-                    let fullName = parts.join(' ');
-                    $('#personal-order .fullname-block .data-view').text(fullName);
+                    // Обновляем ФИО, телефон, email
+                    $('#personal-order .fullname-block .data-view').text(c.fullName);
                     $('#personal-order .phone-block .data-view').text(data.phone);
                     $('#personal-order .data-view').eq(2).text(data.email);
 
                     // Обновляем скрытые поля для формы заказа
-                    $('#input-fullname-hidden').val(fullName);
+                    $('#input-fullname-hidden').val(c.fullName);
                     $('#input-phone-hidden').val(data.phone);
 
                     // Возвращаем режим просмотра
@@ -969,22 +1010,7 @@ window.$ = jQuery;
     if (main.hasClass('cabinet')) {
 
         // Заполняем select регионов из window.regions
-        if (window.regions && window.regions.length) {
-            let regionSelect = $('#input-region');
-            let regionCodeInput = $('#input-region-code');
-            window.regions.forEach(function (r) {
-                regionSelect.append($('<option>', {value: r.name, text: r.name, 'data-code': r.code}));
-            });
-            let currentCode = regionCodeInput.val();
-            if (currentCode) {
-                let match = window.regions.find(function (r) { return r.code == currentCode; });
-                if (match) regionSelect.val(match.name);
-            }
-            regionSelect.on('change', function () {
-                let code = $(this).find('option:selected').data('code');
-                regionCodeInput.val(code || '');
-            });
-        }
+        initRegionSelect('#input-region', '#input-region-code');
 
         // === Одна кнопка "Изменить" для всех полей персональных данных ===
         let changeBtn = $('#change-personal');
@@ -1010,42 +1036,15 @@ window.$ = jQuery;
             });
 
             saveBtn.on('click', function () {
-                let data = {
-                    lastName: $('#input-lastname').val(),
-                    firstName: $('#input-firstname').val(),
-                    middleName: $('#input-middlename').val(),
-                    email: $('#input-email-notify').val(),
-                    phone: $('#input-phone').val(),
-                    gender: $('input[name="gender"]:checked').val() || null,
-                    country: $('#input-country').val(),
-                    region: $('#input-region').val(),
-                    regionCode: $('#input-region-code').val(),
-                    city: $('#input-city').val(),
-                    street: $('#input-street').val(),
-                    postalCode: $('#input-postal-code').val()
-                };
-
-                $.ajax({
-                    url: saveBtn.data('route'),
-                    type: 'PUT',
-                    data: data,
-                    success: function (res) {
-                        common.error(res);
-                        // Обновляем отображаемые данные
-                        let parts = [data.lastName, data.firstName, data.middleName].filter(Boolean);
-                        $('#personal-data .data-view').eq(0).text(parts.join(' '));        // ФИО
-                        $('#personal-data .data-view').eq(1).text(data.email);              // Email
-                        // Тип цены (eq 2) — не меняем
-                        // Скидка (eq 3) — не меняем
-                        $('#personal-data .data-view').eq(4).text(data.phone);              // Телефон
-                        let addrParts = [data.country, data.region, data.city, data.street, data.postalCode].filter(Boolean);
-                        $('#personal-data .data-view').eq(5).text(addrParts.join(', '));    // Адрес
-                        // Пол (eq 6)
-                        let genderText = 'Не указан';
-                        if (data.gender === 'male') genderText = 'Мужской';
-                        else if (data.gender === 'female') genderText = 'Женский';
-                        $('#personal-data .data-view').eq(6).text(genderText);
-                        // Согласие (eq 7) — не меняем
+                saveClientProfile({
+                    route: saveBtn.data('route'),
+                    onSuccess: function (data, c) {
+                        // Обновляем отображаемые данные по ID
+                        $('#data-view-fullname').text(c.fullName);
+                        $('#data-view-email').text(data.email);
+                        $('#data-view-phone').text(data.phone);
+                        $('#data-view-address').text(c.fullAddr);
+                        $('#data-view-gender').text(c.genderText);
 
                         // Возвращаем режим просмотра
                         $('#personal-data .edit-group').hide();

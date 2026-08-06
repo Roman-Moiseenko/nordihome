@@ -29,32 +29,32 @@ $noAddress = is_null($client->address->regionCode);
             <span class="data-view">{{ $client->address->getFullAddress() ?: 'Не указан' }}</span>
             <div class="edit-group" style="display:none;">
                 <div class="input-group mb-1">
-                    <input type="text" class="form-control" name="country" id="input-delivery-country"
+                    <input type="text" class="form-control" name="country" id="input-country"
                            placeholder="Страна" value="{{ $client->address->country }}" autocomplete="off">
                 </div>
                 <div class="input-group mb-1">
-                    <select class="form-select" name="region" id="input-delivery-region">
+                    <select class="form-select" name="region" id="input-region">
                         <option value="">-- Выберите регион --</option>
                     </select>
-                    <input type="text" class="form-control" name="regionCode" id="input-delivery-region-code"
+                    <input type="text" class="form-control" name="regionCode" id="input-region-code"
                            value="{{ $client->address->regionCode }}" readonly style="max-width:100px;"
                            placeholder="Код">
                 </div>
                 <div class="input-group mb-1">
-                    <input type="text" class="form-control" name="city" id="input-delivery-city"
+                    <input type="text" class="form-control" name="city" id="input-city"
                            placeholder="Город" value="{{ $client->address->city }}" autocomplete="off">
                 </div>
                 <div class="input-group mb-1">
-                    <input type="text" class="form-control" name="street" id="input-delivery-street"
+                    <input type="text" class="form-control" name="street" id="input-street"
                            placeholder="Улица, дом, квартира" value="{{ $client->address->street }}" autocomplete="off">
                 </div>
                 <div class="input-group mb-1">
-                    <input type="text" class="form-control" name="postalCode" id="input-delivery-postal-code"
+                    <input type="text" class="form-control" name="postalCode" id="input-postal-code"
                            placeholder="Почтовый индекс" value="{{ $client->address->postalCode }}" autocomplete="off">
                 </div>
             </div>
 
-            <input type="hidden" name="address" id="input-delivery-address-hidden"
+            <input type="hidden" name="address" id="input-address-hidden"
                    value="{{ $client->address->getFullAddress() }}">
         </div>
     </div>
@@ -69,15 +69,15 @@ $noAddress = is_null($client->address->regionCode);
             <span class="data-view">{{ $client->fullName->getValue() }}</span>
             <div class="edit-group" style="display:none;">
                 <div class="input-group mb-1">
-                    <input type="text" class="form-control" name="lastName" id="input-order-lastname"
+                    <input type="text" class="form-control" name="lastName" id="input-lastname"
                            placeholder="Фамилия" value="{{ $client->fullName->getLastName() }}" autocomplete="off">
                 </div>
                 <div class="input-group mb-1">
-                    <input type="text" class="form-control" name="firstName" id="input-order-firstname"
+                    <input type="text" class="form-control" name="firstName" id="input-firstname"
                            placeholder="Имя" value="{{ $client->fullName->getFirstName() }}" autocomplete="off">
                 </div>
                 <div class="input-group mb-1">
-                    <input type="text" class="form-control" name="middleName" id="input-order-middlename"
+                    <input type="text" class="form-control" name="middleName" id="input-middlename"
                            placeholder="Отчество" value="{{ $client->fullName->getMiddleName() }}" autocomplete="off">
                 </div>
             </div>
@@ -88,7 +88,7 @@ $noAddress = is_null($client->address->regionCode);
             <span class="address-delivery--title">Телефон: </span>
             <span class="data-view">{{ $client->phone->getValue() }}</span>
             <div class="edit-group" style="display:none;">
-                <input type="text" class="form-control mask-phone" id="input-order-phone" name="phone"
+                <input type="text" class="form-control mask-phone" id="input-phone" name="phone"
                        placeholder="Телефон" value="{{ $client->phone->getValue() }}" autocomplete="off">
             </div>
         </div>
@@ -98,7 +98,7 @@ $noAddress = is_null($client->address->regionCode);
             <span class="address-delivery--title">Email: </span>
             <span class="data-view">{{ $client->email }}</span>
             <div class="edit-group" style="display:none;">
-                <input type="email" class="form-control" id="input-order-email" name="email"
+                <input type="email" class="form-control" id="input-email-notify" name="email"
                        placeholder="Email" value="{{ $client->email }}" autocomplete="off">
             </div>
         </div>

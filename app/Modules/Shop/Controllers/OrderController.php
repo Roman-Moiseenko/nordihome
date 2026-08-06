@@ -143,6 +143,8 @@ class OrderController extends \App\Modules\Shop\Presentation\Http\Controllers\We
 
     public function store(Request $request)
     {
+        \Log::info(json_encode($request->all()));
+        return null;
         $order = $this->service->create($request);
         return redirect()->route('cabinet.order.new_order', ['order' => $order, 'from' => 'store'])->with('success', 'Ваш заказ успешно создан!');
     }
