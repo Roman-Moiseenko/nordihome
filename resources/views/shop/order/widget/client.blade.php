@@ -107,11 +107,10 @@ $noAddress = is_null($client->address->regionCode);
     </div>
 
     {{-- Кнопки (единые для всего блока) --}}
-    <div class="mt-3">
-        <button id="change-order-personal" class="btn btn-outline-primary address-delivery--change">Изменить</button>
-        <button id="save-order-personal" class="btn btn-outline-secondary" type="button"
+    <div class="mt-3"><button id="change-personal" class="btn btn-outline-primary address-delivery--change">Изменить</button>
+        <button id="save-personal" class="btn btn-outline-secondary" type="button"
                 data-route="{{ route('client.update-profile') }}" style="display:none;">Сохранить</button>
-        <button id="cancel-order-personal" class="btn btn-outline-danger" type="button" style="display:none;">Отмена</button>
+        <button id="cancel-personal" class="btn btn-outline-danger" type="button" style="display:none;">Отмена</button>
     </div>
 
     <div class="mt-4 fs-8">* Персональные данные необходимы для уточнения заказа и при получении товара для идентификации покупателя</div>

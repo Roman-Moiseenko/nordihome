@@ -69,7 +69,6 @@ class ClientRepository implements ClientRepositoryInterface
         }
         $model->price_type = $client->priceType->value;
         $model->discount = $client->discount;
-        \Log::info(json_encode($client->isPickup));
         $model->is_pickup = $client->isPickup;
         $model->save();
 

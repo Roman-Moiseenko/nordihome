@@ -804,12 +804,12 @@ window.$ = jQuery;
                 $('#input-fullname-hidden').val(computed.fullName);
                 $('#input-phone-hidden').val(data.phone);
 
-                // === Возврат в режим просмотра (пробуем оба варианта — сработает нужный) ===
+                // === Возврат в режим просмотра ===
                 $('.box-card .edit-group, #personal-data .edit-group').hide();
                 $('.box-card .data-view, #personal-data .data-view').show();
-                $('#change-order-personal, #change-personal').show();
-                $('#save-order-personal, #save-personal').hide();
-                $('#cancel-order-personal, #cancel-personal').hide();
+                $('#change-personal').show();
+                $('#save-personal').hide();
+                $('#cancel-personal').hide();
 
                 if (typeof options.onSuccess === 'function') {
                     options.onSuccess(data, computed);
@@ -826,9 +826,9 @@ window.$ = jQuery;
      */
     function initClientProfileEdit(options) {
         options = options || {};
-        let changeBtn = $('#change-order-personal, #change-personal').first();
-        let saveBtn   = $('#save-order-personal, #save-personal').first();
-        let cancelBtn = $('#cancel-order-personal, #cancel-personal').first();
+        let changeBtn = $('#change-personal');
+        let saveBtn   = $('#save-personal');
+        let cancelBtn = $('#cancel-personal');
         let container = $('.box-card, #personal-data').first();
 
         if (!changeBtn.length) return;
