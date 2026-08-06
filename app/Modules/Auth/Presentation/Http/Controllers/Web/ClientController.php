@@ -226,6 +226,7 @@ class ClientController extends Controller
             return response()->json(['message' => 'Доступ запрещён'], 403);
         }
 
+        \Log::info(json_encode($request->all()));
         // 2. Получаем ID клиента из собственного профиля пользователя
         $clientId = $user->profileable_id;
         $dto = ClientUpdateData::validateAndCreate($request->all());

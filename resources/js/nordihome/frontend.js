@@ -776,7 +776,6 @@ window.$ = jQuery;
             isPickup: _val('#input-is-pickup')
         };
 
-        // Предвычисляем общие значения, чтобы не дублировать в колбэках
         let computed = {
             fullName: [data.lastName, data.firstName, data.middleName].filter(Boolean).join(' '),
             fullAddr: [data.country, data.region, data.city, data.street, data.postalCode].filter(Boolean).join(', '),
@@ -789,10 +788,72 @@ window.$ = jQuery;
             data: data,
             success: function (res) {
                 common.error(res);
+
+                // === Общие обновления data-view (единые ID в обоих шаблонах) ===
+                $('#data-view-fullname').text(computed.fullName);
+                $('#data-view-email').text(data.email);
+                $('#data-view-phone').text(data.phone);
+                $('#data-view-address').text(computed.fullAddr || 'Не указан');
+                $('#data-view-gender').text(computed.genderText);
+
+                // === Специфичные для оформления заказа (невидимые в кабинете — нет эффекта) ===
+                let isPickup = data.isPickup == 1;
+                $('#data-view-is-pickup').text(isPickup ? 'Самовывоз' : 'Доставка');
+                $('#delivery-address').toggle(!isPickup);
+                $('#input-address-hidden').val(computed.fullAddr);
+                $('#input-fullname-hidden').val(computed.fullName);
+                $('#input-phone-hidden').val(data.phone);
+
+                // === Возврат в режим просмотра (пробуем оба варианта — сработает нужный) ===
+                $('.box-card .edit-group, #personal-data .edit-group').hide();
+                $('.box-card .data-view, #personal-data .data-view').show();
+                $('#change-order-personal, #change-personal').show();
+                $('#save-order-personal, #save-personal').hide();
+                $('#cancel-order-personal, #cancel-personal').hide();
+
                 if (typeof options.onSuccess === 'function') {
                     options.onSuccess(data, computed);
                 }
             }
+        });
+    }
+
+    /**
+     * Единая инициализация кнопок Изменить/Отмена/Сохранить для профиля.
+     * Работает и в кабинете, и в оформлении заказа — селекторы пробуют оба варианта.
+     *
+     * @param {{ onSave: function|undefined }} options
+     */
+    function initClientProfileEdit(options) {
+        options = options || {};
+        let changeBtn = $('#change-order-personal, #change-personal').first();
+        let saveBtn   = $('#save-order-personal, #save-personal').first();
+        let cancelBtn = $('#cancel-order-personal, #cancel-personal').first();
+        let container = $('.box-card, #personal-data').first();
+
+        if (!changeBtn.length) return;
+
+        changeBtn.on('click', function () {
+            container.find('.data-view').hide();
+            container.find('.edit-group').show();
+            changeBtn.hide();
+            saveBtn.show();
+            cancelBtn.show();
+        });
+
+        cancelBtn.on('click', function () {
+            container.find('.edit-group').hide();
+            container.find('.data-view').show();
+            changeBtn.show();
+            saveBtn.hide();
+            cancelBtn.hide();
+        });
+
+        saveBtn.on('click', function () {
+            saveClientProfile({
+                route: saveBtn.data('route'),
+                onSuccess: options.onSave
+            });
         });
     }
 
@@ -902,56 +963,8 @@ window.$ = jQuery;
             sendToBackend();
         });
 
-        // === Единая кнопка "Изменить" (адрес + контактные данные + способ получения) ===
-        $('#change-order-personal').on('click', function () {
-            $('.box-card .data-view').hide();
-            $('.box-card .edit-group').show();
-            $(this).hide();
-            $('#save-order-personal').show();
-            $('#cancel-order-personal').show();
-        });
-
-        $('#cancel-order-personal').on('click', function () {
-            $('.box-card .edit-group').hide();
-            $('.box-card .data-view').show();
-            $('#change-order-personal').show();
-            $('#save-order-personal').hide();
-            $('#cancel-order-personal').hide();
-        });
-
-        $('#save-order-personal').on('click', function () {
-            let saveBtn = $(this);
-            saveClientProfile({
-                route: saveBtn.data('route'),
-                onSuccess: function (data, c) {
-                    // Обновляем способ получения
-                    let isPickup = data.isPickup == 1;
-                    $('#pickup-block .data-view').text(isPickup ? 'Самовывоз' : 'Доставка');
-                    $('#delivery-address').toggle(!isPickup);
-
-                    // Обновляем адрес
-                    $('#delivery-address .data-view').text(c.fullAddr || 'Не указан');
-                    $('#input-address-hidden').val(c.fullAddr);
-
-                    // Обновляем ФИО, телефон, email
-                    $('#personal-order .fullname-block .data-view').text(c.fullName);
-                    $('#personal-order .phone-block .data-view').text(data.phone);
-                    $('#personal-order .data-view').eq(2).text(data.email);
-
-                    // Обновляем скрытые поля для формы заказа
-                    $('#input-fullname-hidden').val(c.fullName);
-                    $('#input-phone-hidden').val(data.phone);
-
-                    // Возвращаем режим просмотра
-                    $('.box-card .edit-group').hide();
-                    $('.box-card .data-view').show();
-                    $('#change-order-personal').show();
-                    $('#save-order-personal').hide();
-                    $('#cancel-order-personal').hide();
-                    sendToBackend();
-                }
-            });
-        });
+        // === Кнопки Изменить/Отмена/Сохранить ===
+        initClientProfileEdit({ onSave: function () { sendToBackend(); } });
 
         //Ввод купона
         let inputCoupon = $('input[name=coupon]');
@@ -1012,50 +1025,8 @@ window.$ = jQuery;
         // Заполняем select регионов из window.regions
         initRegionSelect('#input-region', '#input-region-code');
 
-        // === Одна кнопка "Изменить" для всех полей персональных данных ===
-        let changeBtn = $('#change-personal');
-        let saveBtn = $('#save-personal');
-        let cancelBtn = $('#cancel-personal');
-
-        if (changeBtn.length) {
-            changeBtn.on('click', function () {
-                // Скрываем просмотр, показываем редактирование
-                $('#personal-data .data-view').hide();
-                $('#personal-data .edit-group').show();
-                changeBtn.hide();
-                saveBtn.show();
-                cancelBtn.show();
-            });
-
-            cancelBtn.on('click', function () {
-                $('#personal-data .edit-group').hide();
-                $('#personal-data .data-view').show();
-                changeBtn.show();
-                saveBtn.hide();
-                cancelBtn.hide();
-            });
-
-            saveBtn.on('click', function () {
-                saveClientProfile({
-                    route: saveBtn.data('route'),
-                    onSuccess: function (data, c) {
-                        // Обновляем отображаемые данные по ID
-                        $('#data-view-fullname').text(c.fullName);
-                        $('#data-view-email').text(data.email);
-                        $('#data-view-phone').text(data.phone);
-                        $('#data-view-address').text(c.fullAddr);
-                        $('#data-view-gender').text(c.genderText);
-
-                        // Возвращаем режим просмотра
-                        $('#personal-data .edit-group').hide();
-                        $('#personal-data .data-view').show();
-                        changeBtn.show();
-                        saveBtn.hide();
-                        cancelBtn.hide();
-                    }
-                });
-            });
-        }
+        // === Кнопки Изменить/Отмена/Сохранить ===
+        initClientProfileEdit();
 
         // --- Email для входа ---
         let emailButton = $('#change-email');

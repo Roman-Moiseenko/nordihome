@@ -33,6 +33,7 @@ class UpdateClientUseCase
      */
     public function execute(int $clientId, ClientUpdateData $dto, UserPermission $permissions): ClientEntity
     {
+
         if (!$permissions->can('auth.buyer.edit')) throw new AccessDeniedException();
 
         $client = $this->clientRepository->findById($clientId);
@@ -101,7 +102,7 @@ class UpdateClientUseCase
         if ($dto->discount != null)
             $client->discount = $dto->discount;
 
-        if ($dto->isPickup != null) $client->isPickup = $dto->isPickup;
+        if ($dto->isPickup !== null) $client->isPickup = $dto->isPickup;
         return $this->clientRepository->save($client);
     }
 }

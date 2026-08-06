@@ -1,9 +1,7 @@
 @php
     use App\Modules\Shop\Application\DTOs\Client\ClientInfoData;
     /** @var ClientInfoData $client */
-$isStorage = is_null($client->address->regionCode);
-$isLocal = $client->address->regionCode == 39;
-$isRegion = !$isStorage && !$isLocal;
+
 $noAddress = is_null($client->address->regionCode);
 @endphp
 <div class="box-card">
@@ -12,7 +10,7 @@ $noAddress = is_null($client->address->regionCode);
     {{-- Тип получения: самовывоз или доставка --}}
     <div class="mt-2" id="pickup-block">
         <span class="address-delivery--title">Способ получения: </span>
-        <span class="data-view">{{ $client->isPickup ? 'Самовывоз' : 'Доставка' }}</span>
+        <span class="data-view" id="data-view-is-pickup">{{ $client->isPickup ? 'Самовывоз' : 'Доставка' }}</span>
         <div class="edit-group" style="display:none;">
             <select class="form-select" name="isPickup" id="input-is-pickup" style="max-width:200px;">
                 <option value="1" {{ $client->isPickup ? 'selected' : '' }}>Самовывоз</option>
@@ -26,7 +24,7 @@ $noAddress = is_null($client->address->regionCode);
         {{-- Адрес доставки (local + region) --}}
         <div class="delivery-local mt-3" id="delivery-address" {!! !$client->isPickup ? '' : ' style="display: none"' !!}>
             <span class="address-delivery--title">Адрес доставки: </span>
-            <span class="data-view">{{ $client->address->getFullAddress() ?: 'Не указан' }}</span>
+            <span class="data-view" id="data-view-address">{{ $client->address->getFullAddress() ?: 'Не указан' }}</span>
             <div class="edit-group" style="display:none;">
                 <div class="input-group mb-1">
                     <input type="text" class="form-control" name="country" id="input-country"
@@ -66,7 +64,7 @@ $noAddress = is_null($client->address->regionCode);
         {{-- ФИО --}}
         <div class="fullname-block mt-3">
             <span class="address-delivery--title">Получатель: </span>
-            <span class="data-view">{{ $client->fullName->getValue() }}</span>
+            <span class="data-view" id="data-view-fullname">{{ $client->fullName->getValue() }}</span>
             <div class="edit-group" style="display:none;">
                 <div class="input-group mb-1">
                     <input type="text" class="form-control" name="lastName" id="input-lastname"
@@ -86,7 +84,7 @@ $noAddress = is_null($client->address->regionCode);
         {{-- Телефон --}}
         <div class="phone-block mt-3">
             <span class="address-delivery--title">Телефон: </span>
-            <span class="data-view">{{ $client->phone->getValue() }}</span>
+            <span class="data-view" id="data-view-phone">{{ $client->phone->getValue() }}</span>
             <div class="edit-group" style="display:none;">
                 <input type="text" class="form-control mask-phone" id="input-phone" name="phone"
                        placeholder="Телефон" value="{{ $client->phone->getValue() }}" autocomplete="off">
@@ -96,7 +94,7 @@ $noAddress = is_null($client->address->regionCode);
         {{-- Email --}}
         <div class="mt-3">
             <span class="address-delivery--title">Email: </span>
-            <span class="data-view">{{ $client->email }}</span>
+            <span class="data-view" id="data-view-email">{{ $client->email }}</span>
             <div class="edit-group" style="display:none;">
                 <input type="email" class="form-control" id="input-email-notify" name="email"
                        placeholder="Email" value="{{ $client->email }}" autocomplete="off">
