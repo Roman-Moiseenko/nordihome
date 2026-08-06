@@ -52,6 +52,7 @@ readonly class CreateLeadFromFormBackUseCase
                 $email = $value;
             }
         }
+        if (is_null($lead->name)) $lead->name = 'Заказ с сайта';
 
         // Ищем клиента по phone или email через Auth-модуль
         $client = $this->findClientByContactUseCase->execute(

@@ -118,7 +118,7 @@ class OrderRepository
         return array_merge($order->toArray(), [
             'staff' => is_null($order->staff_id) ? 'Не назначен' : $order->staff->fullname->getShortname(),
             'user' => [
-                'name' => $order->client->getPublicName(),
+                'name' => $order->client->fullName,
                 'phone' => $order->client->phone,
             ],
             'amount' => $order->getTotalAmount(),
