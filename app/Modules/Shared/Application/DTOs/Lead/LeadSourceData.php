@@ -8,7 +8,8 @@ readonly class LeadSourceData
     public function __construct(
         public int $id,
         public string $able,
-        public array $data
+        public array $data,
+        public ?int $orderId = null,
     )
     {
 
@@ -20,6 +21,7 @@ readonly class LeadSourceData
             id: $entity->id,
             able: $entity->able,
             data: $entity->data,
+            orderId: $entity->orderId ?? null,
         );
     }
 }

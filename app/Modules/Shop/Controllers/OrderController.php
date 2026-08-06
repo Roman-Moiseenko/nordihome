@@ -143,7 +143,7 @@ class OrderController extends \App\Modules\Shop\Presentation\Http\Controllers\We
         $client = $this->getClient($request);
         $order = $this->createOrderFromCartService->execute($client, $request->input('coupon'));
         //return null;
-        $order = $this->service->create($request);
+        //$order = $this->service->create($request);
         return redirect()->route('cabinet.order.new_order', ['order' => $order, 'from' => 'store'])->with('success', 'Ваш заказ успешно создан!');
     }
 

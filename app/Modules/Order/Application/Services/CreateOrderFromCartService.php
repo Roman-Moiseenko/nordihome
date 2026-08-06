@@ -8,12 +8,15 @@ use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Shared\Application\DTOs\Lead\LeadSourceData;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
+use App\Modules\Shared\Infrastructure\Events\LeadCollected;
 use App\Modules\Shop\Application\Actions\Cart\GetCartUseCase;
 use App\Modules\Shop\Application\Actions\Cart\RemoveCartItemUseCase;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\Queries\Client\GetInfoClientQuery;
 use Carbon\Carbon;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Support\Facades\Auth;
 
 readonly class CreateOrderFromCartService
@@ -24,7 +27,7 @@ readonly class CreateOrderFromCartService
         private RemoveCartItemUseCase $removeCartItemUseCase,
         private GetInfoClientQuery $getInfoClientQuery,
         private OrderCalculateService $orderCalculateService,
-
+        private Dispatcher $dispatcher,
     )
     {
 
@@ -84,6 +87,16 @@ readonly class CreateOrderFromCartService
 
             //Пересчет скидок
             $this->orderCalculateService->execute($order->id);
+
+            //MAINDO Создание Lead
+            $leadData = new LeadSourceData(
+                id: $order->id,
+                able: 'order.order',
+                data: [],
+                orderId: $order->id,
+            );
+            $this->dispatcher->dispatch(new LeadCollected($leadData));
+
         });
         return $order;
     }

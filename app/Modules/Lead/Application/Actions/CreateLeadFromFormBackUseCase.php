@@ -24,9 +24,14 @@ readonly class CreateLeadFromFormBackUseCase
             leadableType: $dto->able,
             data: [],
         );
-
+        $lead->orderId = $dto->orderId;
         $phone = null;
         $email = null;
+        if (!is_null($dto->orderId)) {
+            $lead->orderId = $dto->orderId;
+            //$lead->clientId;
+        }
+
 
         // Преобразуем data в VO и ищем телефон/email
         foreach ($dto->data as $key => $value) {

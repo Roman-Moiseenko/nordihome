@@ -25,11 +25,22 @@ class StaffNotificationFormBackService
 
         \Log::info('Уведомляем о новой форме !');
 
+        if (is_null($leadData->orderId)) {
+            \Log::info('Уведомляем о новой форме !');
+        } else {
+            \Log::info('Уведомляем о новом заказе !');
+        }
         //MAINDO - Отключить перед запуском
         return;
 
+        if (is_null($leadData->orderId)) {
+            $mail = new FormBackMail($leadData);
+        } else {
+            //MAINDO сделать письмо
+           // $mail = new OrderNewBackMail($leadData);
+        }
         //Отправляем письмо
-        $mail = new FormBackMail($leadData);
+
         Mail::mailer('system')->to('info@nordihome.ru')->send($mail);
 
         //Отправляем телеграм
