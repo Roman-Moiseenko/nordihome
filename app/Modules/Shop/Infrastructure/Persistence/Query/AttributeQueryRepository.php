@@ -381,31 +381,16 @@ class AttributeQueryRepository
                 case Attribute::TYPE_VARIANT:
                     $variantIds = array_map('intval', (array)$value);
                     if (!empty($variantIds)) {
-                        $query->where(function ($q) use ($attrId, $variantIds) {
-
-                            // Товары без модификаций
-                            $q->where(function ($sub) use ($attrId, $variantIds) {
-                                $sub->doesntHave('modification')
-                                    ->whereHas('prod_attributes', function ($attr) use ($attrId, $variantIds) {
-
-                                        $attr->where('attribute_id', $attrId)
-                                            ->whereIn('value', $variantIds);
-                                    });
-                            });
-                            // Товары с модификациями, у которых хотя бы одна вариация подходит
-
-                            $q->orWhere(function ($sub) use ($attrId, $variantIds) {
-                                $sub->whereHas('modification', function ($mod) use ($attrId, $variantIds) {
-                                    $mod->whereHas('products', function ($prod) use ($attrId, $variantIds) {
-                                        $prod->where('not_sale', false)
-                                            ->whereHas('prod_attributes', fn($attr) => $attr
-                                                ->where('attribute_id', $attrId)
-                                                ->whereIn('value', $variantIds)
-                                            );
-                                    });
+                        $query->whereIn('id', function ($sub) use ($attrId, $variantIds) {
+                            $sub->select('product_id')
+                                ->from('attributes_products')
+                                ->where('attribute_id', $attrId)
+                                ->where(function ($q) use ($variantIds) {
+                                    foreach ($variantIds as $vid) {
+                                        $q->orWhere('value', (string)$vid)
+                                          ->orWhereRaw('JSON_CONTAINS(value, ?)', [json_encode($vid)]);
+                                    }
                                 });
-                            });
-
                         });
                     }
                     break;

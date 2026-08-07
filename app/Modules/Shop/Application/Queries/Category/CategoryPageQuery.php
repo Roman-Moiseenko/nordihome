@@ -49,7 +49,6 @@ readonly class CategoryPageQuery
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
 
-
         /**
          * $allProductIds - Список всех ID товаров без фильтрации
          */
@@ -59,7 +58,6 @@ readonly class CategoryPageQuery
             now()->addDay(),
             fn() => $this->repository->getProductIdsInCategory($mainInfo->id),
         );
-
 
         $rooms = [];
         if ($allProductIds) {
