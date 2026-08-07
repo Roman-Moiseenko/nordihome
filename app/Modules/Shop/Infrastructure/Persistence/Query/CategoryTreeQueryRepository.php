@@ -20,6 +20,7 @@ class CategoryTreeQueryRepository
     public function getFullTree(): array
     {
         $rows = DB::table('categories')
+            ->where('categories.published', true)
             ->leftJoin('photos', function ($join) {
                 $join->on('categories.id', '=', 'photos.imageable_id')
                     ->where('photos.model_type', '=', self::MODEL_TYPE)
@@ -82,7 +83,7 @@ class CategoryTreeQueryRepository
      */
     public function getChildren(?int $parentId = null): array
     {
-        $query = DB::table('categories')
+        $query = DB::table('categories')->where('categories.published', true)
             ->leftJoin('photos', function ($join) {
                 $join->on('categories.id', '=', 'photos.imageable_id')
                     ->where('photos.model_type', '=', self::MODEL_TYPE)

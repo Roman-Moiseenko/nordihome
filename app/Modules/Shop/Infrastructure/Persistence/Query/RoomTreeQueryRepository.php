@@ -22,6 +22,7 @@ class RoomTreeQueryRepository
     public function getFullTree(): array
     {
         $rows = DB::table('rooms')
+            ->where('rooms.published', true)
             ->leftJoin('photos', function ($join) {
                 $join->on('rooms.id', '=', 'photos.imageable_id')
                     ->where('photos.model_type', '=', self::MODEL_TYPE)
@@ -86,6 +87,7 @@ class RoomTreeQueryRepository
     public function getChildren(?int $parentId = null): array
     {
         $query = DB::table('rooms')
+            ->where('rooms.published', true)
             ->leftJoin('photos', function ($join) {
                 $join->on('rooms.id', '=', 'photos.imageable_id')
                     ->where('photos.model_type', '=', self::MODEL_TYPE)
