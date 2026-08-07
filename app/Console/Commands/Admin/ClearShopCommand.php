@@ -2,8 +2,8 @@
 
 namespace App\Console\Commands\Admin;
 
-use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\Series;
+use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;

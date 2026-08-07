@@ -92,6 +92,7 @@
                     <h2>Варианты</h2>
                     <VarianField
                         v-for="item in Variants" :key="item"
+                        :id="item.id"
                         :name="item.name"
                         :image="item.image"
                         @update:fields="val => onUpdateVariant(val, item.identity)"
@@ -210,6 +211,7 @@ if (props.attribute.is_variant) {
             identity: Math.random().toString(36).slice(2),
         })
     })
+    console.log(Variants)
     console.log(props.attribute.variants)
 }
 

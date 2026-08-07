@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Service;
 
-use App\Modules\Catalog\Entity\AttributeGroup;
+use App\Modules\Catalog\Infrastructure\Models\AttributeGroup;
 use Illuminate\Http\Request;
 
 class AttributeGroupService

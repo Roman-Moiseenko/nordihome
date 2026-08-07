@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
-use App\Modules\Catalog\Entity\Attribute;
+use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameImageData;
 use App\Modules\Shop\Application\DTOs\Entities\AttributeFilterData;
-use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Support\Facades\DB;
 
 class AttributeQueryRepository

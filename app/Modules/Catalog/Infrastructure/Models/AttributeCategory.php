@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Entity;
+namespace App\Modules\Catalog\Infrastructure\Models;
 
 use Illuminate\Database\Eloquent\Model;
 

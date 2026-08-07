@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Database\Seeders;
 
-use App\Modules\Catalog\Entity\Attribute;
-use App\Modules\Catalog\Entity\AttributeGroup;
+use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Catalog\Infrastructure\Models\AttributeGroup;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use Illuminate\Database\Seeder;
 

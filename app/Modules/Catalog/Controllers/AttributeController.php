@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Attribute;
-use App\Modules\Catalog\Entity\AttributeGroup;
+use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Catalog\Infrastructure\Models\AttributeGroup;
 use App\Modules\Catalog\Repository\AttributeGroupRepository;
 use App\Modules\Catalog\Repository\AttributeRepository;
 use App\Modules\Catalog\Service\AttributeGroupService;

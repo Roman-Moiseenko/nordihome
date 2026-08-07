@@ -1,11 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Entity;
+namespace App\Modules\Catalog\Infrastructure\Models;
 
 use App\Modules\Base\Traits\ImageField;
-use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 

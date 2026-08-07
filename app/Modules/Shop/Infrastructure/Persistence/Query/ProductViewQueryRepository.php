@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Base\Entity\Dimensions;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
-use App\Modules\Catalog\Entity\Attribute;
+use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\Elements\DimensionsData;
 use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
 use App\Modules\Shop\Application\DTOs\Elements\PromotionProductData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
-use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Support\Facades\DB;
 
 class ProductViewQueryRepository

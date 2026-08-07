@@ -19,14 +19,6 @@ class VariantItem extends Component
 
     public function __construct(string $name, string $id, string $caption, string $image = '', bool $checked = false, string $alt = '')
     {
-        /*if (!empty($selected)) {
-            if (is_string($selected)) {
-                $this->checked = ($id == $selected);
-            }
-            if (is_array($selected)) {
-                $this->checked = in_array($id, $selected);
-            }
-        }*/
         $this->checked = $checked;
         $this->image_type = !(empty($image));
         $this->name = $name;

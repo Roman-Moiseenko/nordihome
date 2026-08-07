@@ -87,7 +87,6 @@ const props = defineProps({
     type: { type: String, default: 'image' },
     mini: { type: Boolean, default: false },
 })
-
 const csrf = document.querySelector('meta[name="csrf-token]')?.getAttribute('content') || ''
 
 const uploadRef = ref()

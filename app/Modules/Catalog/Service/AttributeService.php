@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Service;
 
-use App\Modules\Catalog\Entity\Attribute;
-use App\Modules\Catalog\Entity\AttributeVariant;
+use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Catalog\Infrastructure\Models\AttributeVariant;
 use App\Modules\Catalog\Repository\AttributeGroupRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;

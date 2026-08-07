@@ -5,7 +5,6 @@ namespace App\Modules\Catalog\Infrastructure\Models;
 
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
-use App\Modules\Catalog\Entity\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;

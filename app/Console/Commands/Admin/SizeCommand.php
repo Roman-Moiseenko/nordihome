@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands\Admin;
 
-use App\Modules\Catalog\Entity\Attribute;
+use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Console\Command;
 

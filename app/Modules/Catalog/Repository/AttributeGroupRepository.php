@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Repository;
 
-use App\Modules\Catalog\Entity\AttributeGroup;
+use App\Modules\Catalog\Infrastructure\Models\AttributeGroup;
 
 class AttributeGroupRepository
 {

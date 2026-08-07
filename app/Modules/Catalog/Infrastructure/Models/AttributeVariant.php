@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Entity;
+namespace App\Modules\Catalog\Infrastructure\Models;
 
 use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
@@ -20,7 +20,7 @@ class AttributeVariant extends Model
     use ImageField;
 
     public $timestamps = false;
-    public $thumbs = false;
+
     protected $fillable = [
         'name', 'slug', 'attribute_id'
     ];

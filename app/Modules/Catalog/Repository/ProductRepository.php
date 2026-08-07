@@ -5,8 +5,8 @@ namespace App\Modules\Catalog\Repository;
 
 
 use App\Modules\Accounting\Entity\StorageItem;
-use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\Equivalent;
+use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;

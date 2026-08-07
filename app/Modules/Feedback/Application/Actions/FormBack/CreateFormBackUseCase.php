@@ -20,10 +20,8 @@ readonly class CreateFormBackUseCase
 
     public function execute(FormBackCreateData $dto): FormBackEntity
     {
-
         // Определяем form_name из данных формы
         $formName = $dto->data['form'] ?? $dto->data['form_name'] ?? 'unknown';
-
 
         $formBack = new FormBackEntity(
             url: $dto->url,

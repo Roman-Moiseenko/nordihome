@@ -14,7 +14,6 @@ use App\Modules\Base\Entity\Packages;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Base\Traits\GalleryField;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
-use App\Modules\Catalog\Entity\Attribute;
 use App\Modules\Catalog\Entity\Equivalent;
 use App\Modules\Catalog\Entity\EquivalentProduct;
 use App\Modules\Catalog\Entity\Group;

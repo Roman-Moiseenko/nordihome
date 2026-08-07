@@ -1,13 +1,8 @@
 <template>
     <div class="flex">
         <el-input v-model="form.name" placeholder="Вариант" class="input-variant" @change="onEmit"/>
-        <UploadImageFile
-            label=""
-            v-model:image="props.image"
-            @selectImageFile="onSelectImage"
-            :mini="true"
 
-        />
+        <PhotoDTO model-type="catalog.attribute-variant" :entity-id="id" type="image" :mini="true" />
         <el-button type="danger" class="button-variant" @click="onRemove">-</el-button>
     </div>
 
@@ -16,10 +11,13 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import UploadImageFile from "@Comp/UploadImageFile.vue";
+import PhotoDTO from "@Comp/PhotoDTO.vue";
 
 const props = defineProps({
+    id: Number,
     name: String,
     image: String,
+
 })
 const $emit = defineEmits(['update:fields', 'remove:fields'])
 const form = reactive({
