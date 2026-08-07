@@ -47,12 +47,14 @@ readonly class PostIndexQuery
                 'query' => array_diff_key(request()->query(), ['page' => null]),
             ]
         );
+        $seo = new SeoData($category->title, $category->description);
+        if ($page > 1) $seo->title .= ' - Страница ' . $page;
         //$category->
         return new PostIndexPageData(
             category: $category,
             posts: $postsPaginator->items(),
             paginator: $paginator,
-            meta: new SeoData($category->title, $category->description),
+            meta: $seo,
             schema: $schema,
         );
     }

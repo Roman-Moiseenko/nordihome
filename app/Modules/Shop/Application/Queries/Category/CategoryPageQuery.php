@@ -126,7 +126,7 @@ readonly class CategoryPageQuery
             }
         }
 
-        $meta = $this->seoAdapter->getSeo('catalog.category', $mainInfo);
+        $meta = $this->seoAdapter->getSeo('catalog.category', $mainInfo, $page);
 
         $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'category', $faq);
         return new ProductIndexPageData(

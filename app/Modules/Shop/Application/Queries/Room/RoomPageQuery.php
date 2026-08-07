@@ -123,7 +123,7 @@ readonly class RoomPageQuery
                 break;
             }
         }
-        $meta = $this->seoAdapter->getSeo('catalog.room', $mainInfo);
+        $meta = $this->seoAdapter->getSeo('catalog.room', $mainInfo, $page);
 
         $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'room', $faq);
         return new ProductIndexPageData(

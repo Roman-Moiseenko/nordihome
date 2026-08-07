@@ -17,9 +17,12 @@ readonly class SeoAdapter
     ) {}
 
 
-    public function getSeo(string $entityKey, object $dto): SeoData
+    public function getSeo(string $entityKey, object $dto, int $page = 1): SeoData
     {
-        return $this->seoService->generateSeo($entityKey, $dto);
+        $seo = $this->seoService->generateSeo($entityKey, $dto);
+        //Добавляем номер страницы к title чтоб избежать дублей
+        if ($page > 1) $seo->title .= ' - Страница ' . $page;
+        return $seo;
     }
 
     /**
