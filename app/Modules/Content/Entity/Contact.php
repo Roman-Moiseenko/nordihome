@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $id
  * @property string $name
  * @property string $slug
+ * @property string $svg
  * @property string $icon
  * @property string $color
  * @property string $url
@@ -27,10 +28,12 @@ class Contact extends Model
         'type',
         'sort',
         'published',
-        'slug'
+        'slug',
+        'svg',
     ];
 
-    public static function register(string $name, string $icon, string $color, string $url, int $type, string $slug): self
+    public static function register(string $name, string $icon, string $color, string $url,
+                                    int $type, string $slug, string $svg): self
     {
         $sort = self::count();
         return self::create([
@@ -42,6 +45,7 @@ class Contact extends Model
             'sort' => $sort + 1,
             'published' => false,
             'slug' => $slug,
+            'svg' => $svg,
         ]);
     }
 

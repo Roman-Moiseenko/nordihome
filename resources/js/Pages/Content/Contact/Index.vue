@@ -32,6 +32,11 @@
                         <Active :active="scope.row.published" />
                     </template>
                 </el-table-column>
+                <el-table-column prop="svg" label="SVG" width="180" align="center">
+                    <template #default="scope">
+                        <Active :active="scope.row.svg !== null" />
+                    </template>
+                </el-table-column>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
                         <el-button size="small" type="primary" dark @click.stop="onUp(scope.row)">
@@ -72,7 +77,9 @@
                 <el-form-item label="Класс иконки" label-position="top" class="mt-3">
                     <el-input v-model="form.icon" placeholder="fontawesome 6.0"/>
                 </el-form-item>
-
+                <el-form-item label="SVG" label-position="top" class="mt-3" >
+                    <el-input v-model="form.svg" placeholder="svg-код" type="textarea" rows="3"/>
+                </el-form-item>
                 <el-color-picker v-model="form.color" />
                 <el-form-item label="Ссылка на контакт" label-position="top" class="mt-3">
                     <el-input v-model="form.url" placeholder="https://"/>
@@ -113,7 +120,7 @@ const props = defineProps({
         default: 'Сайт. Контакты',
     },
 })
-
+console.log(props.contacts)
 const store = useStore();
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
@@ -128,6 +135,7 @@ const form = reactive({
     type: null,
     color: null,
     slug: null,
+    svg: null,
 })
 
 function onOpenDialog() {
@@ -138,6 +146,7 @@ function onOpenDialog() {
     form.type = null
     form.color = null
     form.slug = null
+    form.svg = null
     dialogCreate.value = true
 }
 
@@ -171,6 +180,7 @@ function routeClick(row) {
     form.type = row.type
     form.color = row.color
     form.slug = row.slug
+    form.svg = row.svg
     dialogCreate.value = true
 }
 

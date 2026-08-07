@@ -48,6 +48,7 @@ return new class extends Migration
                 url: $contact['url'],
                 type: (int)$contact['type'],
                 slug: $slug,
+                svg: null,
             );
             $model->published = true;
             $model->save();
