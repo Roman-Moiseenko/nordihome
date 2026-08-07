@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 class AttributeQueryRepository
 {
     private const string BRAND_PHOTO_MODEL_TYPE = 'catalog.brand';
+    private const string ATTRIBUTE_VARIANT_PHOTO_MODEL_TYPE = 'catalog.attribute-variant';
 
     public function __construct(
         private readonly PhotoService $photoService,
@@ -128,14 +129,27 @@ class AttributeQueryRepository
 
                 if (!empty($variantIds)) {
                     $variants = DB::table('attribute_variants')
-                        ->whereIn('id', $variantIds)
-                        ->select(['id', 'name'])
-                        ->orderBy('name')
+                        ->whereIn('attribute_variants.id', $variantIds)
+                        ->leftJoin('photos', function ($join) {
+                            $join->on('attribute_variants.id', '=', 'photos.imageable_id')
+                                ->where('photos.model_type', '=', self::ATTRIBUTE_VARIANT_PHOTO_MODEL_TYPE)
+                                ->where('photos.type', '=', 'image');
+                        })
+                        ->select('attribute_variants.id', 'attribute_variants.name', 'photos.id as photo_id', 'photos.file as photo_file')
+                        ->orderBy('attribute_variants.name')
                         ->get();
 
-                    $variantDtoList = $variants->map(
-                        fn($v) => new IdNameImageData(id: (int)$v->id, name: $v->name, image: '')
-                    )->toArray();
+                    $variantDtoList = $variants->map(function ($v) {
+                        $image = '';
+                        if (!empty($v->photo_file) && !empty($v->photo_id)) {
+                            $image = $this->photoService->getUploadUrl(
+                                modelType: self::ATTRIBUTE_VARIANT_PHOTO_MODEL_TYPE,
+                                imageableId: (int)$v->id,
+                                fileName: $v->photo_file,
+                            );
+                        }
+                        return new IdNameImageData(id: (int)$v->id, name: $v->name, image: $image);
+                    })->toArray();
 
                     $result[] = new AttributeFilterData(
                         id: $attr->id,
