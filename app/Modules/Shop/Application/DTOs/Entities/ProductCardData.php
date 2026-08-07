@@ -28,7 +28,8 @@ readonly class ProductCardData
         public ImageInfoData        $image,
         public ImageInfoData        $image_next,
         public PromotionProductData $promotion = new PromotionProductData(),
-        public bool $is_wish,
+        public bool                 $is_wish,
+        public bool                 $in_cart,
     )
     {
     }
@@ -55,6 +56,7 @@ readonly class ProductCardData
             image_next: ImageInfoData::fromArray($item['image_next']),
             promotion: PromotionProductData::fromArray($item['promotion']),
             is_wish: $item['is_wish'],
+            in_cart: $item['in_cart'],
         );
     }
 }

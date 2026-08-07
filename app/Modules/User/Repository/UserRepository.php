@@ -118,11 +118,14 @@ class UserRepository
 
     public function getUsersBySubscription(string $class): array
     {
+        //FIXME Подписки
         $subscription = Subscription::where('listener', $class)->first();
-
+/*
         return Client::where('active', true)->whereHas('subscriptions', function ($query) use ($subscription) {
             $query->where('subscription_id', $subscription->id);
         })->getModels();
+        */
+        return [];
     }
 
     #[ArrayShape(['last' => "string", 'count' => "int", 'amount' => "string"])]

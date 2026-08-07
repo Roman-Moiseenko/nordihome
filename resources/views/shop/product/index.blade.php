@@ -1,6 +1,10 @@
 @php
     use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
     /** @var ProductIndexPageData $pageData */
+
+$from = ($pageData->paginator->currentPage - 1) * $pageData->paginator->perPage + 1;
+$to = $from + $pageData->paginator->perPage - 1;
+$total = $pageData->paginator->total;
 @endphp
 @extends('shop.layouts.main')
 @section('body', 'products')

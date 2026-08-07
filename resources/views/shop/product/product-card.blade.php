@@ -1,6 +1,6 @@
 @php
     use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
-     /** @var ProductCardData $product */
+     /** @var ProductCardDat    a $product */
 @endphp
 
 <div>
@@ -65,7 +65,7 @@
             @endif
         </div>
         <div>
-            <button class="to-cart btn btn-black e-add" data-product="{{ $product->id }}">
+            <button class="to-cart btn btn-black e-add{{ $product->in_cart ? ' in-cart' : '' }}" data-product="{{ $product->id }}">
                 В Корзину
             </button>
         </div>

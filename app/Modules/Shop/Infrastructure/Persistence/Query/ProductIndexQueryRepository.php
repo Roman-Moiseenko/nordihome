@@ -74,12 +74,19 @@ class ProductIndexQueryRepository
             });
 
         $isWishSelect = '0 as is_wish';
+        $inCartSelect = '0 as in_cart';
         if ($client->id !== null) {
             $query->leftJoin('wishes', function ($join) use ($client) {
                 $join->on('products.id', '=', 'wishes.product_id')
                     ->where('wishes.client_id', '=', $client->id);
             });
             $isWishSelect = 'CASE WHEN wishes.id IS NOT NULL THEN 1 ELSE 0 END as is_wish';
+
+            $query->leftJoin('cart_storage', function($join) use ($client) {
+                $join->on('products.id', '=', 'cart_storage.product_id')
+                    ->where('cart_storage.client_id', '=', $client->id);
+            });
+            $inCartSelect = 'CASE WHEN cart_storage.id IS NOT NULL THEN 1 ELSE 0 END as in_cart';
         }
 
         $products = $query
@@ -110,6 +117,7 @@ class ProductIndexQueryRepository
                 DB::raw("(SELECT title FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_title"),
                 DB::raw("(SELECT description FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_description"),
                 DB::raw($isWishSelect),
+                DB::raw($inCartSelect),
             )
             ->get();
 
@@ -127,7 +135,10 @@ class ProductIndexQueryRepository
             ->whereIn('promotions_products.product_id', $ids)
             ->where('promotions.active', true)
             ->where('promotions.start_at', '<=', $now)
-            ->where('promotions.finish_at', '>=', $now)
+            ->where(function ($query) use ($now) {
+                $query->where('promotions.finish_at', '>=', $now)
+                    ->orWhereNull('promotions.finish_at');
+            })
             ->select(
                 'promotions_products.product_id',
                 'promotions_products.price',
@@ -195,6 +206,7 @@ class ProductIndexQueryRepository
                     ? ['has' => true, 'price' => (float)$promo->price, 'title' => $promo->title]
                     : ['has' => false, 'price' => 0.0, 'title' => ''],
                 'is_wish' => (bool)$item->is_wish,
+                'in_cart' => (bool)$item->in_cart,
             ];
         }
 

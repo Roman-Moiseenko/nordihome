@@ -300,10 +300,11 @@ window.$ = jQuery;
     /** КНОПКА В КОРЗИНУ **/
     //Оставлено для блоков без livewire
     $('.to-cart').on('click', function (item) {
+        let $btn = $(this);
         item.preventDefault();
-        let _productId = $(this).data('product');
+        let _productId = $btn.data('product');
         let _quantity = 1;
-        let _is_parser = $(this).data('parser');
+        let _is_parser = $btn.data('parser');
 
         $.post(
             '/cart_post/add', {
@@ -312,7 +313,10 @@ window.$ = jQuery;
                 isParser: _is_parser,
                 tz: -(new Date().getTimezoneOffset()),
             }, function (data) {//Получаем кол-во товаров в корзине
-                if (!common.error(data)) window.Livewire.dispatch('update-header-cart');//Меняем кол-во и сумму товаров в виджете корзины в хеадере
+                if (!common.error(data)) {
+                    window.Livewire.dispatch('update-header-cart');//Меняем кол-во и сумму товаров в виджете корзины в хеадере
+                    if (!$btn.hasClass('in-cart')) $btn.addClass('in-cart');
+                }
             }
         );
     });
