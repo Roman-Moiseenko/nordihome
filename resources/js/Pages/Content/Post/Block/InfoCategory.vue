@@ -47,9 +47,7 @@
                 <el-descriptions-item label="Записей на странице">
                     {{ category.paginate }}
                 </el-descriptions-item>
-                <el-descriptions-item label="Шаблон для записей">
-                    {{ category.post_template }}
-                </el-descriptions-item>
+
                 <el-descriptions-item label="Мета Заголовок">
                     {{ category.meta.title }}
                 </el-descriptions-item>
@@ -78,11 +76,7 @@
                 <el-form-item label="Записей на странице">
                     <el-input v-model="info.paginate"/>
                 </el-form-item>
-                <el-form-item label="Шаблон для записей" >
-                    <el-select v-model="info.post_template" clearable  placeholder="По-умолчанию">
-                        <el-option v-for="item in post_templates" :key="item.value" :value="item.value" :label="item.label"/>
-                    </el-select>
-                </el-form-item>
+
                 <el-form-item label="Заголовок">
                     <el-input v-model="info.title"/>
                 </el-form-item>
@@ -148,7 +142,6 @@ const props = defineProps({
 const info = reactive({
     name: props.category.name,
     template: props.category.template,
-    post_template: props.category.post_template,
     title: props.category.title,
     description: props.category.description,
     slug: props.category.slug,

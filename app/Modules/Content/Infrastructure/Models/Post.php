@@ -28,6 +28,11 @@ class Post extends RenderPage
 {
     use ImageField;
 
+    protected $attributes = [
+        'template' => '',
+        'text' => '',
+    ];
+
     protected $fillable = [
         'name',
         'slug',

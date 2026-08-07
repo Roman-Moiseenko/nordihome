@@ -16,11 +16,12 @@ class PostCreateData extends Data
     public function __construct(
         #[Required, StringType, Max(255)]
         public readonly string $name,
-        #[Nullable, StringType, Max(255)]
-        public readonly ?string $slug,
-        #[Required, StringType, Max(255)]
-        public readonly string $template,
-        #[Nullable, Numeric]
+        #[Required, Numeric]
         public readonly ?int $categoryId,
+        #[Nullable, StringType, Max(255)]
+        public readonly ?string $slug = null,
+    //    #[Nullable, StringType, Max(255)]
+      //  public readonly string $template,
+
     ) {}
 }

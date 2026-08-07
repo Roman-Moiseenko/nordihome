@@ -18,7 +18,6 @@ use Illuminate\Support\Str;
  * @property string $description
  * @property string $template
  * @property string $slug
- * @property string $post_template
  * @property int $paginate
  * @property Meta $meta
  * @property Post[] $posts

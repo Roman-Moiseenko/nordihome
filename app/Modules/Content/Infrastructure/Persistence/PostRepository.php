@@ -37,8 +37,7 @@ class PostRepository implements PostRepositoryInterface
 
         $model->name = $post->name;
         $model->slug = (string) $post->slug;
-        $model->template = $post->template;
-        $model->caption = $post->caption;
+        $model->caption = $post->caption ?? $post->name;
         $model->fragment = $post->fragment;
         $model->published = $post->isPublished();
         $model->category_id = $post->categoryId;
@@ -77,7 +76,6 @@ class PostRepository implements PostRepositoryInterface
         $entity = new PostEntity(
             name: $model->name,
             slug: new Slug($model->slug),
-            template: $model->template,
             categoryId: $model->category_id,
         );
 

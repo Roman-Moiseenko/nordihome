@@ -31,7 +31,6 @@ readonly class CreatePostUseCase
         $post = new PostEntity(
             name: $dto->name,
             slug: $slug,
-            template: $dto->template,
             categoryId: $dto->categoryId ?: null,
         );
 

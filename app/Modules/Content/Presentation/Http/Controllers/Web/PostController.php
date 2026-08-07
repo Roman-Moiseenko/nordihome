@@ -12,6 +12,7 @@ use App\Modules\Content\Application\Actions\Post\UpdatePostUseCase;
 use App\Modules\Content\Application\Actions\Post\ViewPostUseCase;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockViewData;
+use App\Modules\Content\Application\DTOs\Post\PostCreateData;
 use App\Modules\Content\Application\DTOs\Post\PostUpdateData;
 use App\Modules\Content\Application\DTOs\Post\PostViewData;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
@@ -26,6 +27,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use function Symfony\Component\Translation\t;
 
 class PostController extends Controller
 {
@@ -66,12 +68,11 @@ class PostController extends Controller
     public function category(PostCategory $category, Request $request): Response
     {
         $templates = $this->templates->getTemplates('posts');
-        $post_templates = $this->templates->getTemplates('post');
+     //   $post_templates = $this->templates->getTemplates('post');
 
         return Inertia::render('Content/Post/Category', [
             'category' => Inertia::always($this->repository->CategoryWithToArray($category)),
             'templates' => $templates,
-            'post_templates' => $post_templates,
             'tiny_api' => config('shop.tinymce'),
         ]);
     }
@@ -115,12 +116,15 @@ class PostController extends Controller
         ]);
     }
 
-    public function post_create(Request $request): RedirectResponse
+    public function post_create(Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $category = PostCategory::find($request->integer('category_id'));
-        $post = $this->service->createPost($category, $request);
+        $dto = PostCreateData::validateAndCreate($request->all());
 
-        return redirect()->route('admin.content.post.show', $post)->with('success', 'Запись создана');
+        $post = $this->createPostUseCase->execute($dto, $userPermission);
+        //$category = PostCategory::find($request->integer('category_id'));
+        //$post = $this->service->createPost($category, $request);
+
+        return redirect()->route('admin.content.post.show', $post->id)->with('success', 'Запись создана');
     }
 
     public function post_set_info(int $id, Request $request, UserPermission $userPermission): RedirectResponse

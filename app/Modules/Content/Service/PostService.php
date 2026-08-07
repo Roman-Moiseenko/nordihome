@@ -26,7 +26,6 @@ class PostService
         $category->name = $name;
         $category->slug  = empty($slug) ? Str::slug($name) : $slug;
         $category->template = $request->string('template')->value();
-        $category->post_template = $request->string('post_template')->value();
         $category->title = $request->string('title')->trim()->value();
         $category->description = $request->string('description')->trim()->value();
         $category->paginate = $request->input('paginate');
@@ -75,23 +74,6 @@ class PostService
         $post->save();
     }
 
-    public function setInfoPost(Post $post, Request $request): void
-    {
-        $name = $request->string('name')->trim()->value();
-        $slug = $request->string('slug')->trim()->value();
-        $post->name = $name;
-        $post->slug  = empty($slug) ? Str::slug($name) : $slug;
-        $post->template = $request->string('template')->value();
-        $post->title = $request->string('title')->trim()->value();
-        $post->description = $request->string('description')->trim()->value();
-        $post->published_at = $request->input('published_at');
-        $post->meta->fromRequest($request);
-        $post->save();
-
-        $post->saveImage($request->file('image'), $request->boolean('clear_image'));
-        $post->saveIcon($request->file('icon'), $request->boolean('clear_icon'));
-
-    }
 
     public function destroyPost(Post $post): void
     {

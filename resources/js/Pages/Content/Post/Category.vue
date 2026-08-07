@@ -1,7 +1,7 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <div class="mt-3 p-3 bg-white rounded-lg ">
-        <InfoCategory :category="category" :templates="templates" :post_templates="post_templates" />
+        <InfoCategory :category="category" :templates="templates" />
     </div>
 
     <el-popover :visible="visible_create" placement="bottom-start" :width="246">
@@ -12,9 +12,6 @@
             </el-button>
         </template>
         <el-input v-model="form.name" placeholder="Название"/>
-        <el-select v-model="form.template" class="mt-2" placeholder="Шаблон записи">
-            <el-option v-for="item in post_templates" :key="item.value" :value="item.value" :label="item.label" />
-        </el-select>
         <div class="mt-2">
             <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
         </div>
@@ -40,7 +37,7 @@ const notSave = ref(false)
 const props = defineProps({
     category: Object,
     templates: Array<ISelectItem>,
-    post_templates: Array<ISelectItem>,
+  //  post_templates: Array<ISelectItem>,
     title: {
         type: String,
         default: 'Рубрика',
@@ -50,8 +47,7 @@ const props = defineProps({
 const visible_create = ref(false)
 const form = reactive({
     name: null,
-    category_id: props.category.id,
-    template: props.category.post_template,
+    categoryId: props.category.id,
 })
 
 function createButton() {
