@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Analytics\Entity;
 
 use App\Modules\Auth\Infrastructure\Models\Staff;
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Infrastructure\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 

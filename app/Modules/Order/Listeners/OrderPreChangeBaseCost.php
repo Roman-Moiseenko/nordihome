@@ -3,7 +3,7 @@
 namespace App\Modules\Order\Listeners;
 
 use App\Modules\Accounting\Events\CurrencyHasUpdateFixed;
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Repository\OrderRepository;
 
 class OrderPreChangeBaseCost

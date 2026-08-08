@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Guide\Entity;
 
 use App\Modules\Order\Entity\Addition\CalculateAddition;
-use App\Modules\Order\Entity\Order\OrderAddition;
+use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use JetBrains\PhpStorm\ExpectedValues;

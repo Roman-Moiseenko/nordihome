@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity;
 
 use App\Modules\Accounting\Entity\StorageItem;
-use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use function now;

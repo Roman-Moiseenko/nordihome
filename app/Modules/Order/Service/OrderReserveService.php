@@ -6,8 +6,8 @@ namespace App\Modules\Order\Service;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Analytics\LoggerService;
-use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\OrderReserve;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Setting\Entity\Settings;
 use Illuminate\Support\Facades\DB;
 

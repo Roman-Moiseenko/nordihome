@@ -5,7 +5,7 @@ namespace App\Modules\Analytics;
 
 use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Auth\Infrastructure\Models\Staff;
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Infrastructure\Models\Order;
 
 class LoggerService
 {

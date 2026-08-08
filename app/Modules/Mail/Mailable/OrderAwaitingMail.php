@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Mail\Mailable;
 
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Infrastructure\Models\Order;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use JetBrains\PhpStorm\Pure;

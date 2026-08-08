@@ -6,11 +6,9 @@ namespace App\Modules\Mail\Job;
 
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Auth\Infrastructure\Models\Client;
-use App\Modules\Auth\Infrastructure\Models\User;
 use App\Modules\Mail\Mailable\AbstractMailable;
 use App\Modules\Mail\Service\SystemMailService;
-use App\Modules\Order\Entity\Order\Order;
-
+use App\Modules\Order\Infrastructure\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;

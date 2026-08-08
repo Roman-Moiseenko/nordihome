@@ -7,8 +7,8 @@ namespace App\Console\Commands\Cron;
 use App\Events\ReserveHasTimeOut;
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Analytics\Entity\LoggerCron;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\OrderReserve;
+use App\Modules\Order\Infrastructure\Models\Order;
 use Illuminate\Console\Command;
 
 class ReserveBeforeCommand extends Command

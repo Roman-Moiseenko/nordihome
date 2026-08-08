@@ -5,7 +5,6 @@ namespace App\Modules\Accounting\Entity;
 
 
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
-use App\Modules\Order\Entity\Order\OrderItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

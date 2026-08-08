@@ -5,15 +5,14 @@ namespace App\Modules\Order\Controllers;
 
 
 use App\Http\Controllers\Controller;
-use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Order\Application\Actions\ViewOrderUseCase;
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderAddition;
-use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderAddition;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\OrderReserveService;
 use App\Modules\Order\Service\OrderService;
@@ -23,7 +22,6 @@ use App\Modules\User\Entity\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;

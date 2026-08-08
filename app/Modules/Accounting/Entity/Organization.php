@@ -9,14 +9,13 @@ use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Guide\Entity\VAT;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderPayment;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 

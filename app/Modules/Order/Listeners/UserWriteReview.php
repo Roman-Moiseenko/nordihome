@@ -4,8 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Order\Listeners;
 
 
-use App\Modules\Mail\Job\SendSystemMail;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Events\ExpenseHasCompleted;
 
 class UserWriteReview

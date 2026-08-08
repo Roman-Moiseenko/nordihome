@@ -8,9 +8,9 @@ use App\Modules\Accounting\Service\OrganizationService;
 use App\Modules\Accounting\Service\PaymentDocumentService;
 use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Base\Entity\BankPayment;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderPayment;
-use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderHistoryStatus;
 use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Setting\Entity\Setting;
 use App\Modules\Setting\Entity\Settings;
@@ -154,7 +154,7 @@ class BankService
         $orders = Order::where('trader_id', $trader->id)
             ->where('shopper_id', $shopper->id)
             ->whereHas('status', function ($query) {
-                $query->whereIn('value', [OrderStatus::AWAITING, OrderStatus::PREPAID]);
+                $query->whereIn('value', [OrderHistoryStatus::AWAITING, OrderHistoryStatus::PREPAID]);
             })->getModels();
 
         $amount = $payment['Сумма'];

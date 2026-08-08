@@ -6,9 +6,9 @@ use App\Modules\Feedback\Infrastructure\Models\FormBack;
 use App\Modules\Lead\Infrastructure\Models\Lead;
 use App\Modules\Lead\Infrastructure\Models\LeadItem;
 use App\Modules\Lead\Infrastructure\Models\LeadStatus;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
-use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderHistoryStatus;
 use App\Modules\Order\Service\OrderService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -231,7 +231,7 @@ class LeadService
     public function createOrder(Lead $lead, Request $request): Order
     {
         $order = $this->orderService->createOrder($lead->client_id);
-        $order->setStatus(OrderStatus::DRAFT);
+        $order->setStatus(OrderHistoryStatus::DRAFT);
         $order->setManager($lead->staff_id);
         $lead->order_id = $order->id;
         $lead->save();

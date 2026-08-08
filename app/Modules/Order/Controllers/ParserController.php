@@ -3,12 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Repository\OrderRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use JetBrains\PhpStorm\Deprecated;
 
 #[Deprecated]

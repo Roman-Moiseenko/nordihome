@@ -7,8 +7,8 @@ use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Mail\Job\SendSystemMail;
 use App\Modules\Mail\Mailable\OrderNew;
 use App\Modules\Notification\Helpers\TelegramParams;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Events\OrderHasCreated;
+use App\Modules\Order\Infrastructure\Models\Order;
 
 //use App\Mail\OrderNew;
 

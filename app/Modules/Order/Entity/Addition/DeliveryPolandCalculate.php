@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Addition;
 
 use App\Modules\Catalog\Infrastructure\Models\Brand;
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Setting\Entity\Settings;
 
 class DeliveryPolandCalculate extends CalculateAddition

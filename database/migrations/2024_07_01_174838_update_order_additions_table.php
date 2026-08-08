@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Order\Entity\Order\OrderAddition;
+use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;

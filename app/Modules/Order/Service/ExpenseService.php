@@ -13,17 +13,17 @@ use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Helpers\NotificationHelper;
 use App\Modules\Notification\Helpers\TelegramParams;
 use App\Modules\Notification\Message\StaffMessage;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Entity\Order\OrderExpenseWorker;
-use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Events\ExpenseHasAssembling;
 use App\Modules\Order\Events\ExpenseHasCanceled;
 use App\Modules\Order\Events\ExpenseHasCompleted;
 use App\Modules\Order\Events\OrderHasCompleted;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
+use App\Modules\Order\Infrastructure\Models\OrderHistoryStatus;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -354,7 +354,7 @@ class ExpenseService
 
                 //Проверить все ли распоряжения выданы?
                 if ($check) {
-                    $expense->order->setStatus(OrderStatus::COMPLETED);
+                    $expense->order->setStatus(OrderHistoryStatus::COMPLETED);
                     event(new OrderHasCompleted($expense->order));
                     $this->logger->logOrder(order: $expense->order, action:  'Заказ завершен');
                 } else {

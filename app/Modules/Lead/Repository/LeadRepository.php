@@ -4,9 +4,9 @@ namespace App\Modules\Lead\Repository;
 
 use App\Modules\Lead\Infrastructure\Models\Lead;
 use App\Modules\Lead\Infrastructure\Models\LeadStatus;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
-use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\ExpectedValues;
 

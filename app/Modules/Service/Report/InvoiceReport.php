@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Service\Report;
 
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Base\Service\ReportService;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Pdf\Mpdf;
-use App\Modules\Base\Service\ReportService;
 
 class InvoiceReport
 {

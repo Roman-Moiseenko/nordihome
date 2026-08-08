@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Order\Infrastructure\Models\Order;
 use Illuminate\Database\Eloquent\Model;
 
 /**

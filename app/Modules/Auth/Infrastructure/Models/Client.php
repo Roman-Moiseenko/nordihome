@@ -6,7 +6,7 @@ use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Entity\Review;
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\User\Entity\Wish;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

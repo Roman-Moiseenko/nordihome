@@ -16,7 +16,7 @@ use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
 
 class SupplyService extends AccountingService

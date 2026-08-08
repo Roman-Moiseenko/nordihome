@@ -7,6 +7,7 @@ use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Casts\BankPaymentCast;
 use App\Modules\Base\Entity\BankPayment;
+use App\Modules\Order\Infrastructure\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

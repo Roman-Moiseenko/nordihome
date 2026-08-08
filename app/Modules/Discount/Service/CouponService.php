@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Service;
 
 use App\Modules\Discount\Entity\Coupon;
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Setting\Entity\Settings;
 use JetBrains\PhpStorm\Pure;
 

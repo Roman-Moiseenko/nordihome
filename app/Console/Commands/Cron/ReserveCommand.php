@@ -6,10 +6,10 @@ namespace App\Console\Commands\Cron;
 use App\Events\ReserveHasTimeOut;
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Analytics\Entity\LoggerCron;
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Order\Events\OrderHasCanceled;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderHistoryStatus;
 use Illuminate\Console\Command;
 
 class ReserveCommand extends Command
@@ -35,7 +35,7 @@ class ReserveCommand extends Command
                 /** @var OrderReserve $reserve */
                 foreach ($reserves as $reserve) {
                     $order = $reserve->orderItem->order;
-                    if ($order->status->value < OrderStatus::AWAITING) {
+                    if ($order->status->value < OrderHistoryStatus::AWAITING) {
                         $logger->items()->create([
                             'object' => $reserve->orderItem->product->name,
                             'action' => 'Снято с резерва - ',
@@ -50,7 +50,7 @@ class ReserveCommand extends Command
                                 'value' => price($order->total),
                             ]);
 
-                            $order->setStatus(OrderStatus::CANCELLED, 'Закончилось время резерва');
+                            $order->setStatus(OrderHistoryStatus::CANCELLED, 'Закончилось время резерва');
                             event(new OrderHasCanceled($order));
                         }
                     } else {

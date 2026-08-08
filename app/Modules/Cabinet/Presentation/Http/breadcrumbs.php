@@ -2,10 +2,8 @@
 
 declare(strict_types=1);
 
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Catalog\Entity\Review;
-use App\Modules\User\Entity\Subscription;
-use App\Modules\User\Entity\User;
+use App\Modules\Order\Infrastructure\Models\Order;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 

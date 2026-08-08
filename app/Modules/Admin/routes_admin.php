@@ -6,16 +6,6 @@ use App\Modules\Admin\Controllers\ShopSettingsController;
 use App\Modules\Admin\Controllers\WorkerController;
 use Illuminate\Support\Facades\Route;
 
-Route::group([
-    'prefix' => 'worker',
-    'as' => 'worker.',
-], function () {
-    Route::post('/toggle/{worker}', [WorkerController::class, 'toggle'])->name('toggle');
-    Route::post('/update/{worker}', [WorkerController::class, 'update'])->name('update');
-});
-
-
-Route::resource('worker', 'WorkerController')->except(['create', 'edit', 'update']); //CRUD
 
 //Настройки
 Route::group(

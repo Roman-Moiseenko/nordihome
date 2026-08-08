@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**

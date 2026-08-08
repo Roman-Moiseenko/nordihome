@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 

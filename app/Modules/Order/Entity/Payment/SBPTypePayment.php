@@ -3,8 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Payment;
 
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderAddition;
+use App\Modules\Order\Infrastructure\Models\Order;
 
 class SBPTypePayment extends PaymentAbstract
 {

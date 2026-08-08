@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Addition;
 
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Infrastructure\Models\Order;
 
 abstract class CalculateAddition
 {

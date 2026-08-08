@@ -4,17 +4,14 @@ namespace App\Jobs;
 
 use App\Events\ThrowableHasAppeared;
 use App\Mail\UserReview;
-use App\Modules\Analytics\Entity\LoggerCron;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Catalog\Service\ReviewService;
+use App\Modules\Order\Infrastructure\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
-use App\Console\CreatesApplication;
 
 class RequestReview implements ShouldQueue
 {

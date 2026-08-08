@@ -15,6 +15,7 @@ use App\Modules\Delivery\Entity\CalendarExpense;
 use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Guide\Entity\Addition;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -23,7 +24,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
-use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\ExpectedValues;
 
 /**

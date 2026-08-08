@@ -5,14 +5,13 @@ namespace App\Modules\Order\Service;
 
 use App\Modules\Analytics\LoggerService;
 use App\Modules\Base\Entity\BankPayment;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderPayment;
-use App\Modules\Order\Entity\Order\OrderStatus;
 use App\Modules\Order\Events\OrderHasPaid;
 use App\Modules\Order\Events\OrderHasPrepaid;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderHistoryStatus;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class OrderPaymentService
@@ -215,27 +214,27 @@ class OrderPaymentService
         $payment = $order->getPaymentAmount();
         $total = $order->getTotalAmount();
         //Заказ в ожидании
-        if ($order->status->value == OrderStatus::AWAITING) {
+        if ($order->status->value == OrderHistoryStatus::AWAITING) {
             $order->setReserve(now()->addDays(45));//Увеличиваем резерв
             if ($payment == $total) { //Оплачен полностью
                 $order->setPaid();
                 event(new OrderHasPaid($order));
             }
             if ($payment < $total) { //Оплачен частично
-                $order->setStatus(OrderStatus::PREPAID);
+                $order->setStatus(OrderHistoryStatus::PREPAID);
                 event(new OrderHasPrepaid($order));
             }
         }
 
         //Заказ на предоплате
-        if ($order->status->value == OrderStatus::PREPAID) {
+        if ($order->status->value == OrderHistoryStatus::PREPAID) {
             if ($payment == $total) { //Оплачен полностью
                 $order->setPaid();
                 $order->setReserve(now()->addDays(45));//Увеличиваем резерв
                 event(new OrderHasPaid($order));
             } else {
                 if ($payment == 0) { //Отмена предоплаты
-                    $order->delStatus(OrderStatus::PREPAID);
+                    $order->delStatus(OrderHistoryStatus::PREPAID);
                 } else { //Новая предоплата
                     $order->setReserve(now()->addDays(45));//Увеличиваем резерв
                     event(new OrderHasPrepaid($order));
@@ -243,15 +242,15 @@ class OrderPaymentService
 
             }
         }
-        if ($order->status->value == OrderStatus::PAID) {
+        if ($order->status->value == OrderHistoryStatus::PAID) {
             if ($payment == $total) throw new \DomainException('Неверный вызов checkPayment');
             if ($payment == 0) { //Полная отмена оплаты
-                $order->delStatus(OrderStatus::PAID);
-                $order->delStatus(OrderStatus::PREPAID);
+                $order->delStatus(OrderHistoryStatus::PAID);
+                $order->delStatus(OrderHistoryStatus::PREPAID);
             } else {
-                $order->delStatus(OrderStatus::PAID);
+                $order->delStatus(OrderHistoryStatus::PAID);
                 $order->refresh();
-                if ($order->status->value != OrderStatus::PREPAID) $order->setStatus(OrderStatus::PREPAID);
+                if ($order->status->value != OrderHistoryStatus::PREPAID) $order->setStatus(OrderHistoryStatus::PREPAID);
             }
         }
 

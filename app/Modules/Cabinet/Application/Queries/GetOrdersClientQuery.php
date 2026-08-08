@@ -5,8 +5,8 @@ namespace App\Modules\Cabinet\Application\Queries;
 use App\Modules\Cabinet\Application\DTOs\OrderClientData;
 use App\Modules\Cabinet\Application\DTOs\OrderInfoData;
 use App\Modules\Cabinet\Application\DTOs\OrderInfoItemData;
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 
 class GetOrdersClientQuery
 {

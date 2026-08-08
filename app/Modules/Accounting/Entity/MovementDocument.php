@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderMovement;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Traits\HtmlInfoData;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;

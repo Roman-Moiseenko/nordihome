@@ -4,11 +4,11 @@ namespace App\Modules\Order\Application\Actions;
 
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderExpense;
-use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderPayment;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderAddition;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
 class ViewOrderUseCase

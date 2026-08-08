@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Entity\Order;
+namespace App\Modules\Order\Infrastructure\Models;
 
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Organization;
@@ -14,6 +14,10 @@ use App\Modules\Discount\Entity\Discount;
 use App\Modules\Lead\Infrastructure\Models\Lead;
 use App\Modules\Lead\Traits\LeadField;
 use App\Modules\Mail\Entity\SystemMail;
+use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Entity\Order\OrderExpenseRefund;
+use App\Modules\Order\Entity\Order\OrderPayment;
+use App\Modules\Order\Entity\Order\OrderResponsible;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Service\Entity\Report;
 use App\Traits\HtmlInfoData;
@@ -35,10 +39,6 @@ use JetBrains\PhpStorm\Pure;
  * @property int $client_id
  * @property int $trader_id
  * @property string $type //ONLINE, MANUAL, SHOP, PARSER
- *
- * //УДАЛИТЬ
- * @property bool $paid //Оплачен (для быстрой фильтрации)
- * @property bool $finished //Завершен (для быстрой фильтрации)
  * @property int $shopper_id
  *
  * @property int $staff_id // Staff::class - менеджер, создавший или прикрепленный к заказу
@@ -60,22 +60,22 @@ use JetBrains\PhpStorm\Pure;
  * @property string $street
  * @property string $postal_code
  *
- * @property OrderStatus $status //текущий
- * @property OrderStatus[] $statuses
+ * @property OrderHistoryStatus $status //текущий
+ * @property OrderHistoryStatus[] $statuses
  * @property OrderAddition[] $additions //Дополнения к заказу (услуги)
- * @property OrderPayment[] $payments //Платежи за заказ
- * @property OrderPayment $payment //Последний платежи за заказ
- * @property OrderExpense[] $expenses //Расходники на выдачу товаров и услуг - расчет от $issuances
+ * @property OrderPayment[] $payments //Платежи за заказ УДАЛИТЬ
+ * @property OrderPayment $payment //Последний платежи за заказ УДАЛИТЬ
+ * @property OrderExpense[] $expenses //Расходники на выдачу товаров и услуг - расчет от $issuances УДАЛИТЬ
  * @property OrderItem[] $items
  * @property Client $client Клиент покупатель
  * @property Organization $shopper Организация покупатель
  * @property Organization $trader Организация продавец
- * @property OrderResponsible[] $responsible - удалить
- * @property MovementDocument[] $movements- удалить
+ * @property OrderResponsible[] $responsible - УДАЛИТЬ
+ * @property MovementDocument[] $movements- УДАЛИТЬ
  * @property Discount $discount
  * @property Staff $staff
  * @property Coupon $coupon
- * @property OrderExpenseRefund $refund
+ * @property OrderExpenseRefund $refund УДАЛИТЬ
  * @property LoggerOrder[] $logs
  * @property Report $invoice
  * @property SystemMail[] $systemMails
@@ -126,7 +126,7 @@ class Order extends Model
             'trader_id' => $trader_id,
             'number' => $number,
         ]);
-        $order->statuses()->create(['value' => OrderStatus::NEW]);
+        $order->statuses()->create(['value' => OrderHistoryStatus::NEW]);
         return $order;
     }
 
@@ -135,7 +135,7 @@ class Order extends Model
     /**
      * Статус $value был применен
      */
-    public function isStatus(#[ExpectedValues(valuesFromClass: OrderStatus::class)] string $value): bool
+    public function isStatus(#[ExpectedValues(valuesFromClass: OrderHistoryStatus::class)] string $value): bool
     {
         foreach ($this->statuses as $status) {
             if ($status->value == $value) return true;
@@ -151,32 +151,32 @@ class Order extends Model
     ///***Проверка текущего статуса
     public function isNew(): bool
     {
-        return $this->status->value == OrderStatus::NEW;
+        return $this->status->value == OrderHistoryStatus::NEW;
     }
 
     public function isManager(): bool
     {
-        return $this->status->value == OrderStatus::DRAFT;
+        return $this->status->value == OrderHistoryStatus::DRAFT;
     }
 
     public function isAwaiting(): bool
     {
-        return $this->status->value == OrderStatus::AWAITING;
+        return $this->status->value == OrderHistoryStatus::AWAITING;
     }
 
     public function isPrepaid(): bool
     {
-        return $this->status->value == OrderStatus::PREPAID;
+        return $this->status->value == OrderHistoryStatus::PREPAID;
     }
 
     public function isPaid(): bool
     {
-        return $this->status->value == OrderStatus::PAID;
+        return $this->status->value == OrderHistoryStatus::PAID;
     }
 
     public function inWork(): bool
     {
-        return $this->status->value >= OrderStatus::PREPAID && $this->status->value < OrderStatus::CANCELLED;
+        return $this->status->value >= OrderHistoryStatus::PREPAID && $this->status->value < OrderHistoryStatus::CANCELLED;
     }
 
     /**
@@ -185,44 +185,44 @@ class Order extends Model
      */
     public function afterPaid(): bool
     {
-        return $this->status->value > OrderStatus::PAID && $this->status->value < OrderStatus::CANCELLED;
+        return $this->status->value > OrderHistoryStatus::PAID && $this->status->value < OrderHistoryStatus::CANCELLED;
     }
 
     public function isCompleted(bool $only = false): bool
     {
-        if ($only) return $this->status->value == OrderStatus::COMPLETED;
-        return $this->status->value >= OrderStatus::COMPLETED;
+        if ($only) return $this->status->value == OrderHistoryStatus::COMPLETED;
+        return $this->status->value >= OrderHistoryStatus::COMPLETED;
     }
 
     public function isCanceled(): bool
     {
-        return $this->status->value >= OrderStatus::CANCELLED && $this->status->value < OrderStatus::COMPLETED;
+        return $this->status->value >= OrderHistoryStatus::CANCELLED && $this->status->value < OrderHistoryStatus::COMPLETED;
     }
 
     ///*** SET-еры
     public function setStatus(
-        #[ExpectedValues(valuesFromClass: OrderStatus::class)] string $value,
-        string $comment = ''
+        #[ExpectedValues(valuesFromClass: OrderHistoryStatus::class)] string $value,
+        string                                                               $comment = ''
     ): void
     {
-        if ($this->finished && $value != OrderStatus::COMPLETED_REFUND) throw new \DomainException('Заказ закрыт, статус менять нельзя');
+        if ($this->finished && $value != OrderHistoryStatus::COMPLETED_REFUND) throw new \DomainException('Заказ закрыт, статус менять нельзя');
         if ($this->isStatus($value)) throw new \DomainException('Статус уже назначен');
         if ($this->status->value > $value) throw new \DomainException('Нарушена последовательность статусов');
 
         $this->statuses()->create(['value' => $value, 'comment' => $comment]);
 
         if (in_array($value, [
-            OrderStatus::CANCELLED,
-            OrderStatus::COMPLETED,
-            OrderStatus::COMPLETED_REFUND,
-            OrderStatus::RETURNED
+            OrderHistoryStatus::CANCELLED,
+            OrderHistoryStatus::COMPLETED,
+            OrderHistoryStatus::COMPLETED_REFUND,
+            OrderHistoryStatus::RETURNED
             ])) $this->update(['finished' => true]);
-        if ($value == OrderStatus::PAID) $this->update(['paid' => true]);
+        if ($value == OrderHistoryStatus::PAID) $this->update(['paid' => true]);
     }
 
     public function setPaid(): void
     {
-        $this->setStatus(OrderStatus::PAID);
+        $this->setStatus(OrderHistoryStatus::PAID);
         $this->paid = true;
         $this->save();
         //Увеличиваем резерв на оплаченные товары
@@ -699,12 +699,12 @@ class Order extends Model
 
     public function status(): HasOne
     {
-        return $this->hasOne(OrderStatus::class, 'order_id', 'id')->latestOfMany();
+        return $this->hasOne(OrderHistoryStatus::class, 'order_id', 'id')->latestOfMany();
     }
 
     public function statuses(): HasMany
     {
-        return $this->hasMany(OrderStatus::class, 'order_id', 'id');
+        return $this->hasMany(OrderHistoryStatus::class, 'order_id', 'id');
     }
 
     public function discount(): BelongsTo
@@ -746,7 +746,7 @@ class Order extends Model
     {
         $comment = '';
         if (!empty($this->status->comment)) $comment = ' (' . $this->status->comment . ')';
-        return OrderStatus::STATUSES[$this->status->value] . $comment;
+        return OrderHistoryStatus::STATUSES[$this->status->value] . $comment;
     }
 
     public function clientFullName(): string
@@ -761,7 +761,7 @@ class Order extends Model
         }
     }
 
-    public function delStatus(#[ExpectedValues(valuesFromClass: OrderStatus::class)] int $value): void
+    public function delStatus(#[ExpectedValues(valuesFromClass: OrderHistoryStatus::class)] int $value): void
     {
         foreach ($this->statuses as $status) {
             if ($status->value == $value) $status->delete();

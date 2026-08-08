@@ -1,10 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Entity\Order;
+namespace App\Modules\Order\Infrastructure\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use setasign\Fpdi\PdfParser\Filter\Lzw;
 use function now;
 
 /**
@@ -13,10 +14,13 @@ use function now;
  * @property string $value
  * @property Carbon $created_at
  * @property string $comment
+ * @property string $number_document
+ * @property string $date_document
  */
 
-class OrderStatus extends Model
+class OrderHistoryStatus extends Model
 {
+    protected $table = 'order_statuses';
     ///Стартовые статусы
 
     const string NEW = 'new'; //Новый заказ
@@ -25,14 +29,17 @@ class OrderStatus extends Model
     const string PREPAID = 'prepaid';  //Предоплата
     const string PAID = 'paid';  //Оплачен
 
-
+    const string SHIPPED = 'partially_shipped'; //Частично выдан
     ///Отмененные статусы
     const string CANCELLED = 'cancelled';//
-    const string RETURNED = 'returned'; //Возврат денег
+
+
 
     //Завершен успешно
     const string COMPLETED = 'completed'; //Выдан (завершен)
     const string COMPLETED_REFUND = 'partially_returned'; //Выдан частично, с возвратом части товара (завершен)
+    const string RETURNED = 'returned'; //Полный возврат денег (завершен)
+
 
     const array STATUSES = [
         self::NEW => 'Сформирован',
@@ -40,6 +47,7 @@ class OrderStatus extends Model
         self::AWAITING => 'Ожидает оплаты',
         self::PREPAID => 'Внесена предоплата',
         self::PAID => 'Оплачен',
+        self::SHIPPED => 'Выдан частично',
 
         self::COMPLETED => 'Завершен',
         self::COMPLETED_REFUND => 'Завершен с возвратом',
@@ -64,7 +72,9 @@ class OrderStatus extends Model
     protected $fillable = [
         'order_id',
         'value',
-        'comment'
+        'comment',
+        'date_document',
+        'number_document',
     ];
 
     public $timestamps = false;
@@ -80,7 +90,7 @@ class OrderStatus extends Model
     protected static function boot()
     {
         parent::boot();
-        self::saving(function (OrderStatus $status) {
+        self::saving(function (OrderHistoryStatus $status) {
             $status->created_at = now();
         });
     }

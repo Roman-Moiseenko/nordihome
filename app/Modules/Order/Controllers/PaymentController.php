@@ -5,10 +5,9 @@ namespace App\Modules\Order\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Repository\StorageRepository;
-
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderPayment;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Repository\PaymentRepository;
 use App\Modules\Order\Service\OrderPaymentService;

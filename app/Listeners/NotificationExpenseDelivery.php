@@ -4,8 +4,8 @@ namespace App\Listeners;
 
 use App\Modules\Mail\Job\SendSystemMail;
 use App\Modules\Mail\Mailable\ExpenseDelivery;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Events\ExpenseHasDelivery;
+use App\Modules\Order\Infrastructure\Models\Order;
 
 class NotificationExpenseDelivery
 {

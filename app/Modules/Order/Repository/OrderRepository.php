@@ -10,14 +10,14 @@ use App\Modules\Admin\Entity\Worker;
 use App\Modules\Base\Traits\FiltersRepository;
 use App\Modules\Delivery\Service\CalendarService;
 use App\Modules\Guide\Entity\Addition;
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
-use App\Modules\Order\Entity\Order\OrderItem;
 use App\Modules\Order\Entity\Order\OrderPayment;
-use App\Modules\Order\Entity\Order\OrderStatus;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderAddition;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
+use App\Modules\Order\Infrastructure\Models\OrderHistoryStatus;
 use App\Modules\User\Repository\UserRepository;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -255,7 +255,7 @@ class OrderRepository
     public function getNotPaidYet(int $order_id = null): mixed
     {
         $query = Order::whereHas('status', function ($query) {
-            $query->where('value', OrderStatus::PREPAID)->orWhere('value', OrderStatus::AWAITING);
+            $query->where('value', OrderHistoryStatus::PREPAID)->orWhere('value', OrderHistoryStatus::AWAITING);
         });
         if (!is_null($order_id)) $query->orWhere('id', $order_id);
         return $query->orderBy('number')->get();
@@ -325,7 +325,7 @@ class OrderRepository
     public function getInWorkWithPreorder()
     {
         $query = Order::whereHas('status', function ($query) {
-            $query->whereIn('value', [OrderStatus::NEW, OrderStatus::DRAFT]);
+            $query->whereIn('value', [OrderHistoryStatus::NEW, OrderHistoryStatus::DRAFT]);
         })->whereHas('items', function ($query) {
             $query->where('preorder', true);
         });

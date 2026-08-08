@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Entity\Order;
+namespace App\Modules\Order\Infrastructure\Models;
 
 use App\Modules\Guide\Entity\Addition;
+use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use JetBrains\PhpStorm\Pure;
-use function now;
 
 /**
  * Дополнительные оплаты(услуги) к заказу

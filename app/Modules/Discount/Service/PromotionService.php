@@ -6,7 +6,7 @@ namespace App\Modules\Discount\Service;
 use App\Events\PromotionHasMoved;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;

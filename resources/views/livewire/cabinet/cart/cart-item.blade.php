@@ -11,21 +11,21 @@
                 <a href="{{ $item['url'] }}" target="_blank"><span>{{ $item['name'] }}</span></a>
             </div>
             <div class="discount"
-                 @if(is_null($item['discountCost'])) style="display: none" @endif>
+                 @if(is_null($item['discountPrice'])) style="display: none" @endif>
                 <span class="badge text-bg-danger">{{ $item['discountName'] }}</span>
             </div>
             <div class="available fs-7 mt-1"
                  @if(!$item['isParser']) style="display: none" @endif
-            > Товар на доставку из Икеа@if(!is_null($item['discountCost'])) (акции не распространяются)@endif</div>
+            > Товар на доставку из Икеа@if(!is_null($item['discountPrice'])) (акции не распространяются)@endif</div>
             <div class="costblock">
                 <div class="cost"
-                     @if($item['discountCost'] != 0) style="display: none" @endif>
+                     @if($item['discountPrice'] != 0) style="display: none" @endif>
                     <span class="current-cost">{{ price($item['cost']) }}</span>
                 </div>
                 <div class="combinate"
-                     {{ $item['discountCost'] }}
-                     @if($item['discountCost'] == 0) style="display: none" @endif>
-                    <span class="discount-cost">{{ price($item['discountCost']) }}</span> <span
+                     {{ $item['discountPrice'] }}
+                     @if($item['discountPrice'] == 0) style="display: none" @endif>
+                    <span class="discount-cost">{{ price($item['discountPrice']) }}</span> <span
                         class="current-cost">{{ price($item['cost']) }}</span>
                 </div>
             </div>

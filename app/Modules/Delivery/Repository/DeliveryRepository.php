@@ -5,8 +5,8 @@ namespace App\Modules\Delivery\Repository;
 
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Delivery\Entity\CalendarPeriod;
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Repository\OrderRepository;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;

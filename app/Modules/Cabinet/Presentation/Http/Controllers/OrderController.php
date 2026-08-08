@@ -5,10 +5,9 @@ namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
 
 use App\Modules\Cabinet\Application\Queries\GetOrdersClientQuery;
-use App\Modules\Order\Entity\Order\Order;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use function view;
 

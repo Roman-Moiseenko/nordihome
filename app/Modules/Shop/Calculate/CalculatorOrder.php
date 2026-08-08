@@ -3,13 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Calculate;
 
+use App\Modules\Catalog\Entity\Bonus;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Discount\Repository\PromotionRepository;
-use App\Modules\Order\Entity\ItemInterface;
-use App\Modules\Order\Entity\Order\OrderItem;
-use App\Modules\Catalog\Entity\Bonus;
-use App\Modules\Shop\Cart\CartItem;
 use App\Modules\Shop\CartItemInterface;
 
 class CalculatorOrder

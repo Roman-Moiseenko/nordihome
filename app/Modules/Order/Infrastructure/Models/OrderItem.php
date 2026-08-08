@@ -1,11 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Order\Entity\Order;
+namespace App\Modules\Order\Infrastructure\Models;
 
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Discount;
+use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Shop\CartItemInterface;
 use Carbon\Carbon;
@@ -21,7 +22,7 @@ use JetBrains\PhpStorm\Pure;
  * @property int $product_id
  * @property float $quantity
  * @property bool $preorder //на предзаказ
- * @property int $supply_stack_id - данная позиция в стеке заказов
+ * @property int $supply_stack_id - данная позиция в стеке заказов //удалить
  * @property int $base_cost - базовая цена, не меняется
  * @property int $sell_cost - цена продажи, со скидкой, можно ставить вручную
  * @property int $discount_id - Акция или бонус

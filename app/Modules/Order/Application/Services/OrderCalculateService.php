@@ -7,8 +7,8 @@ use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Discount\Service\CouponService;
-use App\Modules\Order\Entity\Order\Order;
-use App\Modules\Order\Entity\Order\OrderItem;
+use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Shop\CartItemInterface;
 
 class OrderCalculateService

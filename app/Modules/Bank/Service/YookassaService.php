@@ -2,9 +2,9 @@
 
 namespace App\Modules\Bank\Service;
 
-use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderPayment;
+use App\Modules\Order\Infrastructure\Models\Order;
 use JetBrains\PhpStorm\Deprecated;
 use YooKassa\Client;
 use YooKassa\Request\Payments\CreatePaymentResponse;
