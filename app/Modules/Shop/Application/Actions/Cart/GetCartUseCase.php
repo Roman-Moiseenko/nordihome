@@ -60,7 +60,13 @@ readonly class GetCartUseCase
                 $price = $item->base_cost * (1 + (int)$item->product->parser->sanctioned * $sanctioned / 100) * $ratio;
             } else {
                 $url = route('shop.product.view', $item->getProduct()->slug);
-                $price = empty($item->discount_cost) ? $item->base_cost : $item->discount_cost;
+                if (!is_null($item->product->promotion())) {
+                    $item->discount_cost = $item->product->promotion()->pivot->price;
+                    $item->discount_name = $item->product->promotion()->title;
+                    $item->discount_id = $item->product->promotion()->id;
+                }
+
+                $price = $item->base_cost; // empty($item->discount_cost) ? $item->base_cost : $item->discount_cost;
             }
 
             $itemData = new CartItemData(
@@ -74,16 +80,16 @@ readonly class GetCartUseCase
                 price: $price,
                 quantity: $item->getQuantity(),
                 discountId: $item->discount_id ?? null,
-                discountCost: empty($item->discount_cost) ? 0 : $item->discount_cost * $item->getQuantity(),
+                discountPrice: empty($item->discount_cost) ? 0 : $item->discount_cost * $item->getQuantity(),
                 discountName: $item->discount_name,
                 check: $item->check,
             );
             $amount += $itemData->cost;
-            $discount += $itemData->discountCost;
+            if ($itemData->discountPrice > 0) $discount += ($itemData->cost - $itemData->discountPrice);
             $quantity += $itemData->quantity;
             if ($itemData->check) {
                 $amountCheck += $itemData->cost;
-                $discountCheck += $itemData->discountCost;
+                if ($itemData->discountPrice > 0) $discountCheck += ($itemData->cost - $itemData->discountPrice);
                 $quantityCheck += $itemData->quantity;
 
                 if ($itemData->isParser) {
@@ -93,7 +99,6 @@ readonly class GetCartUseCase
                     if ($parser->fragile) $fragile += $weightParser * $itemData->quantity;
                 }
             }
-
 
             $items[] = $itemData;
         };

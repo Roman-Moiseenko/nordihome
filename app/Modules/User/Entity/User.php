@@ -61,15 +61,6 @@ class User extends Authenticatable
     protected string $guard = 'user';
     public string $uploads = 'uploads/users/';
 
-    const TYPE_PRICING = [
-        self::CLIENT_RETAIL => 'Розничная',
-        self::CLIENT_BULK => 'Оптовая',
-        self::CLIENT_SPECIAL => 'Специальная',
-    ];
-
-    const CLIENT_RETAIL = 7700;
-    const CLIENT_BULK = 7701;
-    const CLIENT_SPECIAL = 7702;
 
     protected $attributes = [
         'fullname' => '{}',
@@ -163,15 +154,8 @@ class User extends Authenticatable
         return false;
     }
 
-    public function isBulk(): bool
-    {
-        return $this->client == self::CLIENT_BULK;
-    }
 
-    public function isSpecial(): bool
-    {
-        return $this->client == self::CLIENT_SPECIAL;
-    }
+
 
     public function isStorage(): bool
     {
@@ -247,23 +231,7 @@ class User extends Authenticatable
     }
 
     //*** GET-....
-    public function getLastOrder():? Order
-    {
-        return $this->orders()->first();
-    }
 
-    public function getAmountOrders(): float
-    {
-        $result = 0.0;
-        foreach ($this->orders as $order) {
-            if ($order->isCompleted()) {
-                $result += $order->getExpenseAmount();
-            } else {
-                $result += $order->getTotalAmount();
-            }
-        }
-        return $result;
-    }
 
     public function getDocumentName(): string
     {
@@ -306,14 +274,6 @@ class User extends Authenticatable
         return $this->hasMany(Wish::class, 'user_id', 'id');
     }
 
-    //TODO Перенести в таблицу Users или сделать UserDefault
-    // delivery и payment
-  /*
-    public function delivery()
-    {
-        return $this->hasOne(UserDelivery::class, 'user_id', 'id')->withDefault();
-    }
-*/
     public function payment(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         $payments = PaymentHelper::payments();
@@ -349,43 +309,8 @@ class User extends Authenticatable
         return $this->hasMany(Lead::class, 'client_id', 'id');
     }
 
-    //*** Хелперы
-
-    public function htmlPayment(): string
-    {
-        $payments = PaymentHelper::payments();
-        return $payments[$this->payment->class_payment]['name'];
-    }
-
-    public function htmlDelivery(): string
-    {
-        $type = OrderExpense::TYPES[$this->delivery];
-        if (in_array($this->delivery, [OrderExpense::DELIVERY_REGION, OrderExpense::DELIVERY_LOCAL])) {
-            $address = ' (' . $this->address->address . ')';
-        } else {
-            $address = '';
-        }
-        return $type . $address;
-    }
-
     public function StorageDefault():? int
     {
         return $this->storage;
-    }
-
-    public function pricingText(): string
-    {
-        return self::TYPE_PRICING[$this->client];
-    }
-
-    public function deliveryText(): string
-    {
-        if (empty($this->delivery)) $this->delivery = OrderExpense::DELIVERY_STORAGE;
-        return OrderExpense::DELIVERIES[$this->delivery];
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('active', true);
     }
 }

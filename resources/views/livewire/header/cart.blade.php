@@ -31,12 +31,12 @@
                                 <div class="cart-item-name"><a href="{{ $item['url'] }}" class="cart-item-url" title="{{ $item['name'] }}">{{ $item['name'] }}</a></div>
                                 <div class="cart-item-quantity">{{ $item['quantity'] }} шт</div>
                             </div>
-                            @if($item['discountCost'] == 0)
+                            @if($item['discountPrice'] == 0)
                             <div class="cart-item-cost cart-item-costonly">{{ price($item['cost']) }}</div>
                             @else
                             <div class="cart-item-combined">
                                 <div class="cart-item-cost">{{ price($item['cost']) }}</div>
-                                <div class="cart-item-discount_cost">{{ price($item['discountCost']) }}</div>
+                                <div class="cart-item-discount_cost">{{ price($item['discountPrice']) }}</div>
                             </div>
                             @endif
                             <div class="cart-item-trash">

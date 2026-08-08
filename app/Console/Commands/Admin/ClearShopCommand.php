@@ -9,8 +9,8 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Catalog\Infrastructure\Models\Tag;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\User\Entity\CartCookie;
-use App\Modules\User\Entity\CartStorage;
+use App\Modules\Shop\Infrastructure\Models\CartCookie;
+use App\Modules\Shop\Infrastructure\Models\CartStorage;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 

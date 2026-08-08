@@ -50,7 +50,7 @@ class ReserveCommand extends Command
                                 'value' => price($order->total),
                             ]);
 
-                            $order->setStatus(OrderStatus::CANCEL, 'Закончилось время резерва');
+                            $order->setStatus(OrderStatus::CANCELLED, 'Закончилось время резерва');
                             event(new OrderHasCanceled($order));
                         }
                     } else {

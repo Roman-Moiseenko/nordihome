@@ -231,7 +231,7 @@ class LeadService
     public function createOrder(Lead $lead, Request $request): Order
     {
         $order = $this->orderService->createOrder($lead->client_id);
-        $order->setStatus(OrderStatus::SET_MANAGER);
+        $order->setStatus(OrderStatus::DRAFT);
         $order->setManager($lead->staff_id);
         $lead->order_id = $order->id;
         $lead->save();

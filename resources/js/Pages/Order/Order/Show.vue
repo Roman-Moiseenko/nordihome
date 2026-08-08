@@ -81,6 +81,7 @@ const props = defineProps({
         type: String,
         default: 'Заказ покупателя',
     },
+    client: Object,
     additions: Array,
     storages: Array,
     staffs: Array,
@@ -88,6 +89,10 @@ const props = defineProps({
     traders: Array,
     order_related: Array,
 })
+
+console.log(props.order)
+console.log(props.client)
+
 provide('$order_related', props.order_related)
 
 const is_new = computed(() => {

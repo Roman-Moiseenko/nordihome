@@ -1,19 +1,9 @@
 <?php
 //Cabinet - функции кабинета клиента
-use App\Modules\User\Controllers\Auth\ConfirmPasswordController;
-use App\Modules\User\Controllers\Auth\ForgotPasswordController;
-use App\Modules\User\Controllers\Auth\LoginController;
-use App\Modules\User\Controllers\Auth\RegisterController;
-use App\Modules\User\Controllers\Auth\ResetPasswordController;
-use App\Modules\User\Controllers\Cabinet\CabinetController;
-use App\Modules\User\Controllers\Cabinet\OptionsController;
-use App\Modules\User\Controllers\Cabinet\OrderController;
-use App\Modules\User\Controllers\Cabinet\ReviewController;
-use App\Modules\User\Controllers\Cabinet\WishController;
-use Illuminate\Support\Facades\Route;
 
 
 //Кабинет
+/*
 Route::group([
     'as' => 'cabinet.',
     'prefix' => 'cabinet',
@@ -65,6 +55,7 @@ Route::group([
         });
     }
 );
+*/
 /*
 //Аутентификация
 Route::group(

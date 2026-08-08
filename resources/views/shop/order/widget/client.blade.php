@@ -1,6 +1,6 @@
 @php
-    use App\Modules\Shop\Application\DTOs\Client\ClientInfoData;
-    /** @var ClientInfoData $client */
+    use App\Modules\Auth\Application\DTOs\Client\ClientInfoWebData;
+    /** @var ClientInfoWebData $client */
 
 $noAddress = is_null($client->address->regionCode);
 @endphp
@@ -22,9 +22,11 @@ $noAddress = is_null($client->address->regionCode);
     <div class="block-delivery">
 
         {{-- Адрес доставки (local + region) --}}
-        <div class="delivery-local mt-3" id="delivery-address" {!! !$client->isPickup ? '' : ' style="display: none"' !!}>
+        <div class="delivery-local mt-3"
+             id="delivery-address" {!! !$client->isPickup ? '' : ' style="display: none"' !!}>
             <span class="address-delivery--title">Адрес доставки: </span>
-            <span class="data-view" id="data-view-address">{{ $client->address->getFullAddress() ?: 'Не указан' }}</span>
+            <span class="data-view"
+                  id="data-view-address">{{ $client->address->getFullAddress() ?: 'Не указан' }}</span>
             <div class="edit-group" style="display:none;">
                 <div class="input-group mb-1">
                     <input type="text" class="form-control" name="country" id="input-country"
@@ -107,11 +109,15 @@ $noAddress = is_null($client->address->regionCode);
     </div>
 
     {{-- Кнопки (единые для всего блока) --}}
-    <div class="mt-3"><button id="change-personal" class="btn btn-outline-primary address-delivery--change">Изменить</button>
+    <div class="mt-3">
+        <button id="change-personal" class="btn btn-outline-primary address-delivery--change">Изменить</button>
         <button id="save-personal" class="btn btn-outline-secondary" type="button"
-                data-route="{{ route('client.update-profile') }}" style="display:none;">Сохранить</button>
+                data-route="{{ route('client.update-profile') }}" style="display:none;">Сохранить
+        </button>
         <button id="cancel-personal" class="btn btn-outline-danger" type="button" style="display:none;">Отмена</button>
     </div>
 
-    <div class="mt-4 fs-8">* Персональные данные необходимы для уточнения заказа и при получении товара для идентификации покупателя</div>
+    <div class="mt-4 fs-8">* Персональные данные необходимы для уточнения заказа и при получении товара для
+        идентификации покупателя
+    </div>
 </div>

@@ -10,7 +10,7 @@ use function now;
 /**
  * @property int $id
  * @property int $order_id
- * @property int $value
+ * @property string $value
  * @property Carbon $created_at
  * @property string $comment
  */
@@ -18,57 +18,35 @@ use function now;
 class OrderStatus extends Model
 {
     ///Стартовые статусы
-    const int DRAFT = 199; //Резерв нет --- ????
 
-    const int FORMED = 200; //Резерв 1ч
-    const int SET_MANAGER = 201; //В работе у менеджера
-    const int AWAITING = 202; //Ожидает оплаты - резерв 3 дня ??????
-    const int PREPAID = 203;  //Предоплата
-    const int PAID = 204;  //Оплачен
-
-    ///Предзаказ
-    const int ISSUED_SELLER = 210; //Оформлен у поставщика
-    const int ON_PACKAGE = 211; //На комплектации
-    const int CUSTOMS = 212; //'Проходит таможенный контроль',
-    const int WAREHOUSE = 213; //'Доставлен на склад',
-
-    ///Служба заказов
-    const int ORDER_SERVICE = 220;//'Передан в службу заказов',
-    const int ORDER_COMPLETED = 221; //'Заказ собран',
-
-    ///Доставка
-    const int DELIVERY_REGION = 240; //Готов для отправки ТК
-    const int DELIVERY_REGION_SERVICE = 241; //Передан в службу доставки ТК
-    const int DELIVERY_LOCAL = 250; //Готов для отправки по региону
-    const int DELIVERY_LOCAL_SEND = 251; //Отправлен
-
-    ///Выдача
-    const int READY = 260;// 'Готов к выдаче'
+    const string NEW = 'new'; //Новый заказ
+    const string DRAFT = 'draft'; //В работе у менеджера
+    const string AWAITING = 'awaiting'; //Ожидает оплаты - резерв 3 дня ??????
+    const string PREPAID = 'prepaid';  //Предоплата
+    const string PAID = 'paid';  //Оплачен
 
 
     ///Отмененные статусы
-    const int CANCEL = 280;//
-    const int CANCEL_BY_CUSTOMER = 281;//
-    const int REFUND = 282; //Возврат денег
+    const string CANCELLED = 'cancelled';//
+    const string RETURNED = 'returned'; //Возврат денег
 
     //Завершен успешно
-    const int COMPLETED = 290; //Выдан (завершен)
-    const int COMPLETED_REFUND = 291; //Выдан частично, с возвратом части товара (завершен)
+    const string COMPLETED = 'completed'; //Выдан (завершен)
+    const string COMPLETED_REFUND = 'partially_returned'; //Выдан частично, с возвратом части товара (завершен)
 
     const array STATUSES = [
-        self::FORMED => 'Сформирован',
-        self::SET_MANAGER => 'В работе у менеджера',
+        self::NEW => 'Сформирован',
+        self::DRAFT => 'В работе у менеджера',
         self::AWAITING => 'Ожидает оплаты',
         self::PREPAID => 'Внесена предоплата',
         self::PAID => 'Оплачен',
 
         self::COMPLETED => 'Завершен',
         self::COMPLETED_REFUND => 'Завершен с возвратом',
-        self::CANCEL => 'Отменен',
-        self::CANCEL_BY_CUSTOMER => 'Отменен клиентом',
-        self::REFUND => 'Возврат оплаты',
+        self::CANCELLED => 'Отменен',
+        self::RETURNED => 'Возврат оплаты',
     ];
-
+/*
     const array CONDITIONS = [
         self::ISSUED_SELLER => 'Оформлен у поставщика',
         self::ON_PACKAGE => 'На комплектации',
@@ -82,7 +60,7 @@ class OrderStatus extends Model
         self::DELIVERY_LOCAL_SEND => 'Отправлен',
         self::READY => 'Готов к выдаче',
     ];
-
+*/
     protected $fillable = [
         'order_id',
         'value',
@@ -107,15 +85,5 @@ class OrderStatus extends Model
         });
     }
 
-    public static function getServiceStatuses(): array
-    {
-        $result = [];
-        foreach (self::STATUSES as $code => $name) {
-            if ($code > self::PAID && $code < self::ORDER_SERVICE) {
-                $result[$code] = $name;
-            }
-        }
-        return $result;
-    }
 
 }

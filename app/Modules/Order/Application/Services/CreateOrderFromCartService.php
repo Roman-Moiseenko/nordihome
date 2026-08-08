@@ -3,6 +3,7 @@
 namespace App\Modules\Order\Application\Services;
 
 use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Auth\Application\Queries\GetInfoWebClientQuery;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Entity\Order\Order;
@@ -14,32 +15,30 @@ use App\Modules\Shared\Infrastructure\Events\LeadCollected;
 use App\Modules\Shop\Application\Actions\Cart\GetCartUseCase;
 use App\Modules\Shop\Application\Actions\Cart\RemoveCartItemUseCase;
 use App\Modules\Shop\Application\DTOs\ClientContext;
-use App\Modules\Shop\Application\Queries\Client\GetInfoClientQuery;
 use Carbon\Carbon;
 use Illuminate\Events\Dispatcher;
-use Illuminate\Support\Facades\Auth;
 
 readonly class CreateOrderFromCartService
 {
     public function __construct(
         private TransactionManagerInterface $transactionManager,
         private GetCartUseCase              $cartUseCase,
-        private RemoveCartItemUseCase $removeCartItemUseCase,
-        private GetInfoClientQuery $getInfoClientQuery,
-        private OrderCalculateService $orderCalculateService,
-        private Dispatcher $dispatcher,
+        private RemoveCartItemUseCase       $removeCartItemUseCase,
+        private GetInfoWebClientQuery       $getInfoClientQuery,
+        private OrderCalculateService       $orderCalculateService,
+        private Dispatcher                  $dispatcher,
     )
     {
 
     }
 
-    public function execute(ClientContext $clientContext, string|null $code): Order
+    public function execute(ClientContext $clientContext, string|null $code, string|null $commentClient): Order
     {
         //FIXME Каждую задачу из // вынести в UseCase
-        $this->transactionManager->execute(function () use ($clientContext, $code, &$order) {
+        $this->transactionManager->execute(function () use ($clientContext, $code, $commentClient, &$order) {
             //Создаем пустой заказ
             $trader_id = Trader::default()->organization->id;
-            $order = Order::register($clientContext->id, Order::MANUAL, $trader_id);
+            $order = Order::register($clientContext->id, Order::ONLINE, $trader_id);
 
             $isParser = false;
             $cartData = $this->cartUseCase->execute();
@@ -85,10 +84,23 @@ readonly class CreateOrderFromCartService
                 $order->save();
             }
 
+            //Данные из Клиента в Заказ
+            $order->comment_client = $commentClient;
+            $order->is_pickup = $clientInfo->isPickup;
+            if (!$clientInfo->isPickup) {
+                $order->country = $clientInfo->address->country;
+                $order->city = $clientInfo->address->city;
+                $order->street = $clientInfo->address->street;
+                $order->region = $clientInfo->address->region;
+                $order->region_code = $clientInfo->address->regionCode;
+                $order->postal_code = $clientInfo->address->postalCode;
+            }
+            $order->save();
+
             //Пересчет скидок
             $this->orderCalculateService->execute($order->id);
 
-            //MAINDO Создание Lead
+            //FIXME Создание Lead тест
             $leadData = new LeadSourceData(
                 id: $order->id,
                 able: 'order.order',

@@ -1,7 +1,6 @@
 @php
-    use App\Modules\Catalog\Domain\ValueObjects\PriceType;
-    use App\Modules\Shop\Application\DTOs\Client\ClientInfoData;
-    /** @var ClientInfoData $client */
+    use App\Modules\Auth\Application\DTOs\Client\ClientInfoWebData;
+    /** @var ClientInfoWebData $client */
 @endphp
 
 

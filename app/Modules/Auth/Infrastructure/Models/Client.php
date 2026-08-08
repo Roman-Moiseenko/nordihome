@@ -22,15 +22,17 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string $phone
  * @property Carbon $birth_date
  * @property string $gender
+ *
  * @property string $country
  * @property int $region_code
  * @property string $region
  * @property string $city
  * @property string $street
  * @property string $postal_code
+ * @property bool $is_pickup
+ *
  * @property Carbon $banned_at
  * @property bool $consented
- * @property bool $is_pickup
  * @property Carbon $consented_at
  * @property string $policy_version
  * @property string $action_identifier

@@ -29,17 +29,6 @@ class UserController extends Controller
         $this->repository = $repository;
     }
 
-    public function index(Request $request): Response
-    {
-        $users = $this->repository->getIndex($request, $filters);
-        $type_pricing = array_select(User::TYPE_PRICING);
-
-        return Inertia::render('User/User/Index', [
-            'users' => $users,
-            'filters' => $filters,
-            'type_pricing' => $type_pricing,
-        ]);
-    }
 
     public function create(Request $request)
     {
@@ -50,17 +39,6 @@ class UserController extends Controller
             return \response()->json(['error' => $e->getMessage()]);
         }
 
-    }
-
-    public function show(Request $request, User $user): Response
-    {
-       // $organizations = Organization::orderBy('short_name')->active()->getModels();
-        return Inertia::render('User/User/Show', [
-            'user' => $this->repository->UserWithToArray($user, $request),
-            //'organizations' => $organizations,
-            'deliveries' => array_select(OrderExpense::DELIVERIES),
-            'type_pricing' => array_select(User::TYPE_PRICING),
-        ]);
     }
 
     public function verify(User $user): RedirectResponse
@@ -133,20 +111,7 @@ class UserController extends Controller
     {
         $user = User::find($request->integer('user_id'));
 
-       /* $data = ['user' => $this->repository->UserWithToArray($user, $request),
-            'deliveries' => array_select(OrderExpense::DELIVERIES),
-            'type_pricing' => array_select(User::TYPE_PRICING),
-            ];*/
         return \response()->json($this->repository->UserWithToArray($user, $request));
     }
 
-    public function user_params()
-    {
-        return \response()->json(
-            [
-                'deliveries' => array_select(OrderExpense::DELIVERIES),
-                'type_pricing' => array_select(User::TYPE_PRICING),
-            ]
-        );
-    }
 }

@@ -16,6 +16,7 @@ use App\Modules\Shop\Infrastructure\Observers\MenuCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\MenuItemCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\RoomCacheObserver;
 use App\Modules\Shop\Infrastructure\Services\BreadcrumbService;
+use App\Modules\Shop\Presentation\Http\Middlewares\InjectClientContextMiddleware;
 use App\Modules\Shop\Presentation\Http\ViewComposers\CategoryComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\ClientComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\IkeaComposer;
@@ -69,7 +70,7 @@ class ShopServiceProvider extends ServiceProvider
      */
     protected array $webMiddlewares = [
         'web',
-        \App\Modules\Shop\Presentation\Http\Middlewares\InjectClientContextMiddleware::class,
+        InjectClientContextMiddleware::class,
     ];
 
     /**

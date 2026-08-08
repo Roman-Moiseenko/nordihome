@@ -148,7 +148,7 @@ class OrderRepository
             'pre_order' => $order->items()->where('preorder', true)->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
             'items' => $order->items()->get()->map(fn(OrderItem $item) => $this->OrderItemToArray($item)),
             'additions' => $order->additions()->get()->map(fn(OrderAddition $orderAddition) => $this->OrderAdditionToArray($orderAddition)),
-            'user' => is_null($order->client_id) ? null : $this->users->UserToArray($order->client),
+            'client' => is_null($order->client_id) ? null : $this->users->UserToArray($order->client),
             'amount' => [
                 'base' => $order->getBaseAmount(),
                 'manual' => (int)$order->manual,
@@ -162,7 +162,7 @@ class OrderRepository
                 'refund' => $order->getRefundAmount(),
             ],
             'emails' => is_null($order->shopper_id) ? [] : array_select($order->shopper->getEmails()),
-            'shoppers' => is_null($order->client) ? [] : $order->client->organizations,
+            'shoppers' => [], //is_null($order->client) ? [] : $order->client->organizations,
             'reserve' => $order->getReserveTo(),
             'payments' => $order->payments()->get()->map(fn(OrderPayment $payment) => [
                 'id' => $payment->id,
@@ -325,7 +325,7 @@ class OrderRepository
     public function getInWorkWithPreorder()
     {
         $query = Order::whereHas('status', function ($query) {
-            $query->whereIn('value', [OrderStatus::FORMED, OrderStatus::SET_MANAGER]);
+            $query->whereIn('value', [OrderStatus::NEW, OrderStatus::DRAFT]);
         })->whereHas('items', function ($query) {
             $query->where('preorder', true);
         });

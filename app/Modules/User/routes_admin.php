@@ -13,7 +13,6 @@ Route::group([
     'as' => 'user.',
 ], function(){
 
-    Route::post('/user-params', [UserController::class, 'user_params'])->name('user-params');
     Route::post('/attach/{user}', [UserController::class, 'attach'])->name('attach');
     Route::post('/detach/{user}', [UserController::class, 'detach'])->name('detach');
     Route::post('/default/{user}', [UserController::class, 'default'])->name('default');
@@ -40,9 +39,9 @@ Route::group([
         }
     );
 
-    Route::get('/{user}', [UserController::class, 'show'])->name('show');
+    //Route::get('/{user}', [UserController::class, 'show'])->name('show');
     Route::post('/create', [UserController::class, 'create'])->name('create');
-    Route::get('/', [UserController::class, 'index'])->name('index');
+    //Route::get('/', [UserController::class, 'index'])->name('index');
 
 });
 

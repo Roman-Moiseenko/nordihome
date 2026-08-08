@@ -41,7 +41,7 @@ class Cart extends Component
         $useCase = app()->make(GetCartUseCase::class);
         $data = $useCase->execute();
   //      dd($useCase->execute());
-        $this->cart->loadItems();
+     //   $this->cart->loadItems();
         //dd(count($this->cart->getItems()));
   /*      $this->items = array_map(function (CartItem $item) {
             return [

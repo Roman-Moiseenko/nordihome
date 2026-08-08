@@ -33,11 +33,14 @@ use JetBrains\PhpStorm\Pure;
  * @property int $id
  * @property int $number - номер заказа, присваивается автоматически ++ при отправке на оплату
  * @property int $client_id
- * @property int $shopper_id
  * @property int $trader_id
  * @property string $type //ONLINE, MANUAL, SHOP, PARSER
+ *
+ * //УДАЛИТЬ
  * @property bool $paid //Оплачен (для быстрой фильтрации)
  * @property bool $finished //Завершен (для быстрой фильтрации)
+ * @property int $shopper_id
+ *
  * @property int $staff_id // Staff::class - менеджер, создавший или прикрепленный к заказу
  * @property int $discount_id //Скидка на заказ - от суммы, или по дням
  * @property int $discount_amount //Скидка в рублях для фиксации конечного значения
@@ -47,6 +50,15 @@ use JetBrains\PhpStorm\Pure;
  * @property string $comment
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ *
+ * @property string $comment_client
+ * @property bool $is_pickup
+ * @property string $country
+ * @property int $region_code
+ * @property string $region
+ * @property string $city
+ * @property string $street
+ * @property string $postal_code
  *
  * @property OrderStatus $status //текущий
  * @property OrderStatus[] $statuses
@@ -59,7 +71,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Organization $shopper Организация покупатель
  * @property Organization $trader Организация продавец
  * @property OrderResponsible[] $responsible - удалить
- * @property MovementDocument[] $movements
+ * @property MovementDocument[] $movements- удалить
  * @property Discount $discount
  * @property Staff $staff
  * @property Coupon $coupon
@@ -114,7 +126,7 @@ class Order extends Model
             'trader_id' => $trader_id,
             'number' => $number,
         ]);
-        $order->statuses()->create(['value' => OrderStatus::FORMED]);
+        $order->statuses()->create(['value' => OrderStatus::NEW]);
         return $order;
     }
 
@@ -123,7 +135,7 @@ class Order extends Model
     /**
      * Статус $value был применен
      */
-    public function isStatus(#[ExpectedValues(valuesFromClass: OrderStatus::class)] int $value): bool
+    public function isStatus(#[ExpectedValues(valuesFromClass: OrderStatus::class)] string $value): bool
     {
         foreach ($this->statuses as $status) {
             if ($status->value == $value) return true;
@@ -139,12 +151,12 @@ class Order extends Model
     ///***Проверка текущего статуса
     public function isNew(): bool
     {
-        return $this->status->value == OrderStatus::FORMED;
+        return $this->status->value == OrderStatus::NEW;
     }
 
     public function isManager(): bool
     {
-        return $this->status->value == OrderStatus::SET_MANAGER;
+        return $this->status->value == OrderStatus::DRAFT;
     }
 
     public function isAwaiting(): bool
@@ -164,7 +176,7 @@ class Order extends Model
 
     public function inWork(): bool
     {
-        return $this->status->value >= OrderStatus::PREPAID && $this->status->value < OrderStatus::CANCEL;
+        return $this->status->value >= OrderStatus::PREPAID && $this->status->value < OrderStatus::CANCELLED;
     }
 
     /**
@@ -173,12 +185,7 @@ class Order extends Model
      */
     public function afterPaid(): bool
     {
-        return $this->status->value > OrderStatus::PAID && $this->status->value < OrderStatus::CANCEL;
-    }
-
-    public function isToDelivery(): bool
-    {
-        return $this->status->value >= OrderStatus::ORDER_SERVICE && $this->status->value < OrderStatus::CANCEL;
+        return $this->status->value > OrderStatus::PAID && $this->status->value < OrderStatus::CANCELLED;
     }
 
     public function isCompleted(bool $only = false): bool
@@ -189,12 +196,12 @@ class Order extends Model
 
     public function isCanceled(): bool
     {
-        return $this->status->value >= OrderStatus::CANCEL && $this->status->value < OrderStatus::COMPLETED;
+        return $this->status->value >= OrderStatus::CANCELLED && $this->status->value < OrderStatus::COMPLETED;
     }
 
     ///*** SET-еры
     public function setStatus(
-        #[ExpectedValues(valuesFromClass: OrderStatus::class)] int $value,
+        #[ExpectedValues(valuesFromClass: OrderStatus::class)] string $value,
         string $comment = ''
     ): void
     {
@@ -205,11 +212,10 @@ class Order extends Model
         $this->statuses()->create(['value' => $value, 'comment' => $comment]);
 
         if (in_array($value, [
-            OrderStatus::CANCEL,
-            OrderStatus::CANCEL_BY_CUSTOMER,
+            OrderStatus::CANCELLED,
             OrderStatus::COMPLETED,
             OrderStatus::COMPLETED_REFUND,
-            OrderStatus::REFUND
+            OrderStatus::RETURNED
             ])) $this->update(['finished' => true]);
         if ($value == OrderStatus::PAID) $this->update(['paid' => true]);
     }
@@ -257,13 +263,6 @@ class Order extends Model
     /**
      * Доступные статусы для текущего заказа, ограниченные сверху
      */
-    public function getAvailableStatuses(int $top_status = OrderStatus::COMPLETED): array
-    {
-        $last_code = $this->status->value;
-        return array_filter(OrderStatus::STATUSES, function ($code) use ($top_status, $last_code) {
-            return $code > $last_code && $code < $top_status;
-        }, ARRAY_FILTER_USE_KEY);
-    }
 
     public function getQuantity(): float
     {

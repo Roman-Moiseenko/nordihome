@@ -15,7 +15,7 @@ class ContactData extends Data
         public readonly string $url,
         public readonly int $type,
         public readonly string $slug,
-        public readonly string $svg,
+        public readonly ?string $svg,
     )
     {
     }

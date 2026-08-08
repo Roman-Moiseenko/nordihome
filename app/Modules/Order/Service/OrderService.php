@@ -351,7 +351,7 @@ class OrderService
 
 
             $staff = auth()->user()->profileable;
-            $order->setStatus(OrderStatus::SET_MANAGER);
+            $order->setStatus(OrderStatus::DRAFT);
             $order->setManager($staff->id);
             $order->setClient($user_id);
             $order->refresh();
@@ -371,7 +371,7 @@ class OrderService
 
         $staff = Staff::find($staff_id);
         if (empty($staff)) throw new \DomainException('Менеджер под ID ' . $staff_id . ' не существует!');
-        $order->setStatus(OrderStatus::SET_MANAGER);
+        $order->setStatus(OrderStatus::DRAFT);
         $order->setManager($staff->id);
         $this->logger->logOrder(order: $order, action: 'Назначен менеджер',
             value: $staff->fullname->getFullName(), old: $old);
@@ -389,7 +389,7 @@ class OrderService
     {
         DB::transaction(function () use ($order, $comment) {
             $order->clearReserve();
-            $order->setStatus(value: OrderStatus::CANCEL, comment: $comment);
+            $order->setStatus(value: OrderStatus::CANCELLED, comment: $comment);
 
             foreach ($order->payments as $payment) {
                 if ($payment->method != OrderPayment::METHOD_ACCOUNT)
@@ -414,7 +414,7 @@ class OrderService
         DB::transaction(function () use ($order, $request) {
             $emails = $request->input('emails', []);
 
-            if ($order->status->value != OrderStatus::SET_MANAGER) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
+            if ($order->status->value != OrderStatus::DRAFT) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
             if ($order->getTotalAmount() == 0) throw new \DomainException('Сумма заказа не может быть равно нулю');
 
             $is_assemblage = false;
@@ -679,7 +679,7 @@ class OrderService
         $items = $order->items()->getModels();
 
         //Если заказ не через Парсер, ищем бонусы и скидки
-        if (!$order->isParser()) {
+
             //Ищем акционные и бонусные товары
             /** @var OrderItem[] $items */
             $items = $this->calculator->calculate($items);
@@ -694,7 +694,7 @@ class OrderService
                 $order->discount_id = null;
                 $order->discount_amount = 0;
             }
-        }
+
 
         //Ручная скидка от скидок за товары
         $order->manual = 0;
@@ -818,8 +818,8 @@ class OrderService
             $new_order->paid = false;
             $new_order->finished = false;
             $new_order->save();
-            $new_order->statuses()->create(['value' => OrderStatus::FORMED]);
-            $new_order->setStatus(OrderStatus::SET_MANAGER);
+            $new_order->statuses()->create(['value' => OrderStatus::NEW]);
+            $new_order->setStatus(OrderStatus::DRAFT);
             $new_order->refresh();
 
             foreach ($order->items as $item) {
@@ -1021,7 +1021,7 @@ class OrderService
             $order = Order::find($event->id);
             try {
                 $order->setManager($event->staff->id);
-                $order->setStatus(OrderStatus::SET_MANAGER);
+                $order->setStatus(OrderStatus::DRAFT);
                 //FIXME Отправка сообщений
                 /*
                 $event->staff->notify(

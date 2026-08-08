@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Cart\Storage;
 
-use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\Cart\CartItem;
-use App\Modules\User\Entity\CartCookie;
+use App\Modules\Shop\Infrastructure\Models\CartCookie;
 use Illuminate\Support\Facades\Cookie;
 
 class CookieDBStorage implements StorageInterface

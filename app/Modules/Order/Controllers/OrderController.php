@@ -7,8 +7,10 @@ namespace App\Modules\Order\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Repository\OrganizationRepository;
+use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+use App\Modules\Order\Application\Actions\ViewOrderUseCase;
 use App\Modules\Order\Entity\Order\Order;
 use App\Modules\Order\Entity\Order\OrderAddition;
 use App\Modules\Order\Entity\Order\OrderItem;
@@ -41,7 +43,9 @@ class OrderController extends Controller
         private readonly InvoiceReport          $report,
         private readonly OrganizationRepository $organizations,
         private readonly OrderReserveService    $reserveService,
-        private readonly ListStaffByPositionUseCase $positionUseCase
+        private readonly ListStaffByPositionUseCase $positionUseCase,
+        private readonly ViewOrderUseCase $viewOrderUseCase,
+        private readonly ViewClientUseCase $clientUseCase,
     )
     {
     }
@@ -62,17 +66,21 @@ class OrderController extends Controller
     public function show(Request $request, Order $order, UserPermission $permissions): Response
     {
         $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
-        $storages = Storage::orderBy('name')->getModels();
-        $mainStorage = Storage::where('default', true)->first();
+
+        $order = $this->viewOrderUseCase->execute($order->id, $permissions);
+        $client = $this->clientUseCase->execute($order['client_id'], $permissions);
+        //$storages = Storage::orderBy('name')->getModels();
+        //$mainStorage = Storage::where('default', true)->first();
         $additions = $this->repository->guideAddition();
         return Inertia::render('Order/Order/Show', [
-            'order' => $this->repository->OrderWithToArray($order),
-            'storages' => $storages,
-            'mainStorage' => $mainStorage,
+            'order' => $order, //$this->repository->OrderWithToArray($order),
+            'client' => $client,
+          //  'storages' => $storages,
+           // 'mainStorage' => $mainStorage,
             'staffs' => $staffs,
             'additions' => $additions,
             'traders' => $this->organizations->getTraders(),
-            'order_related' => $order->relatedDocuments(),
+           // 'order_related' => $order->relatedDocuments(),
         ]);
     }
 

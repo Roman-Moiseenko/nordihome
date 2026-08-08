@@ -4,13 +4,13 @@ use App\Modules\Shop\Controllers\CartController;
 use App\Modules\Shop\Controllers\ECommerceController;
 use App\Modules\Shop\Controllers\FeedXMLController;
 use App\Modules\Shop\Controllers\GroupController;
-use App\Modules\Shop\Controllers\OrderController;
 use App\Modules\Shop\Controllers\PageController;
 use App\Modules\Shop\Controllers\ParserController;
 use App\Modules\Shop\Controllers\PromotionController;
 use App\Modules\Shop\Controllers\SitemapXmlController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\CatalogController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\IkeaController;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\CheckoutController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\PostController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ProductController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\RoomController;
@@ -124,18 +124,18 @@ Route::group(
         ], function () {
 
             //В один клик без авторизации
-            Route::post('/create-click', [OrderController::class, 'create_click'])->name('create-click');
+            Route::post('/create-click', [CheckoutController::class, 'create_click'])->name('create-click');
 
             Route::middleware(['auth', 'role:client'])->group(function () {
-                Route::post('/create', [OrderController::class, 'create'])->name('create');
-                Route::put('/create', [OrderController::class, 'store']);
+                Route::post('/create', [CheckoutController::class, 'create'])->name('create');
+                Route::put('/create', [CheckoutController::class, 'store']);
 
-                Route::post('/checkorder', [OrderController::class, 'checkorder'])->name('checkorder');
-                Route::post('/coupon', [OrderController::class, 'coupon'])->name('coupon');
+                Route::post('/checkorder', [CheckoutController::class, 'checkorder'])->name('checkorder');
+                Route::post('/coupon', [CheckoutController::class, 'coupon'])->name('coupon');
             });
 
             //Route::post('/create-parser', [OrderController::class, 'create_parser'])->name('create-parser');
-            Route::post('/create-cart', [OrderController::class, 'create_cart'])->name('create-cart');
+          //  Route::post('/create-cart', [CheckoutController::class, 'create_cart'])->name('create-cart');
             Route::get('/create-click', function () {
                 abort(404);
             });

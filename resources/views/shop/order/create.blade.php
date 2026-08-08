@@ -61,11 +61,12 @@
                     </div>
                 </div>
                 <div class="mt-3">
-                    <div class="fs-5">Купон на скидку</div>
+                    <div class="fs-5"></div>
                     <form id="form-order-create" method="POST" action="{{ route('shop.order.create') }}">
                         @method('PUT')
                         @csrf
-                        <input type="text" class="form-control p-2" name="coupon" autocomplete="off"/>
+                        <textarea class="form-control p-2" name="commentClient" placeholder="Комментарий к заказу"></textarea>
+                        <input type="text" class="form-control mt-2 p-2" name="coupon" autocomplete="off" placeholder="Купон на скидку"/>
                     </form>
                     <div class="coupon-info" style="display:none;">
                         <div>Скидка по купону:</div>
