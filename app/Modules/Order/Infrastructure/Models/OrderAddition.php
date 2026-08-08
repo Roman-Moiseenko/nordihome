@@ -23,7 +23,7 @@ use JetBrains\PhpStorm\Pure;
  * @property int $quantity
  * @property Order $order
  * @property Addition $addition
- * @property OrderExpenseAddition[] $expenseAdditions
+ * @property OrderExpenseAddition[] $expenseAdditions // удалить
  */
 class OrderAddition extends Model
 {
