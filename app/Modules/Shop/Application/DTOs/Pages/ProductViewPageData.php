@@ -15,25 +15,20 @@ class ProductViewPageData
         public SeoData                $meta,
         public SchemaData             $schema,
 
-
-        //TODO Рекомендации
-        // public ...
-        //TODO Еще чтото
-        // public ...
-
-        public ?array $bonus = null,
-        /** @var ProductCardData[] $series */
-        public ?array $series = null, //Товары той же серии
+        public array $attributes = [],
         /** @var ProductCardData[] $equivalents */
-        public ?array $equivalents = null, //Аналоги
-        public ?array $reviews = null,
+        public array $equivalents = [], //Аналоги
 
-        public ?array $attributes = null,
+        //TODO Блоки еще не реализованные
+        public array $bonus = [],
+        /** @var ProductCardData[] $series */
+        public array $series = [], //Товары той же серии
+        public array $reviews = [],
         /** @var ProductCardData[] $related */
-        public ?array $related = null, //Связанные (акссесуары)
+        public array $related = [], //Связанные (акссесуары)
         public ?array $modification = null,
 
-
+        //TODO Рекомендации и Еще чтото
 
     )
     {

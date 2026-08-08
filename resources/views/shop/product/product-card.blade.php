@@ -1,6 +1,6 @@
 @php
     use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
-     /** @var ProductCardDat    a $product */
+    /** @var ProductCardData $product */
 @endphp
 
 <div>

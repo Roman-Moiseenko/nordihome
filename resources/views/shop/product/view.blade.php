@@ -1,5 +1,6 @@
 @php
     /** @var \App\Modules\Shop\Application\DTOs\Pages\ProductViewPageData $pageData */
+
     $product = $pageData->product;
     $galleryItems = [];
     foreach ($product->images as $img) {
