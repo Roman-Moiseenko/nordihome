@@ -7,11 +7,7 @@ readonly class OrderItemViewData
 
     public function __construct(
         public int     $id,
-        public int     $productId,
-        public string  $productName,
-        public string  $productCode,
-        public string  $productVolume,
-        public string  $productWeight,
+        public ProductItemData $product,
         public float   $baseCost,
         public float   $sellCost,
         public float   $quantity,
