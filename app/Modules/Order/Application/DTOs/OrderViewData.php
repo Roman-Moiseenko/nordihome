@@ -33,7 +33,11 @@ readonly class OrderViewData
 
         /** @var OrderItemViewData[] $items */
         public array $items,
-        /** @var OrderAdditionViewData[] $items */
+        /** @var OrderItemViewData[] $preOrder */
+        public array $preOrder,
+        /** @var OrderItemViewData[] $inStock */
+        public array $inStock,
+        /** @var OrderAdditionViewData[] $additions */
         public array $additions,
         /** @var OrderStatusViewData[] $statuses */
         public array $statuses,

@@ -27,9 +27,9 @@ class GetRoomTreeQuery
         if ($cached = Cache::get(self::CACHE_KEY)) {
             return $cached;
         }
-
         // Блокировка, чтобы избежать множественной сборки при холодном старте
         $lock = Cache::lock('build_' . self::CACHE_KEY, 10);
+
         try {
             if ($lock->block(5)) {
                 // Повторная проверка после блокировки
@@ -43,6 +43,7 @@ class GetRoomTreeQuery
         } finally {
             optional($lock)->release();
         }
+
 
         // Fallback без кеша
         return $this->repository->getFullTree();

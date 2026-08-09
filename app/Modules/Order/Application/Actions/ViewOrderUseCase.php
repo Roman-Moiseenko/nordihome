@@ -6,7 +6,9 @@ use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Order\Application\DTOs\AmountOrderData;
 use App\Modules\Order\Application\DTOs\ClientOrderData;
+use App\Modules\Order\Application\DTOs\OrderItemViewData;
 use App\Modules\Order\Application\DTOs\OrderViewData;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Entity\Order\OrderExpense;
@@ -50,7 +52,7 @@ class ViewOrderUseCase
             $clientDto = null;
         }
 
-        $inStock = []; $preOrder = [];
+        $items = []; $inStock = []; $preOrder = [];
         foreach ($orderEntity->items as $item) {
             //Получить данные из ItemEntity из Товара и заполнить:
             $itemDto = new OrderItemViewData();
@@ -59,13 +61,31 @@ class ViewOrderUseCase
             } else {
                 $inStock[] = $itemDto;
             }
+            $items[] = $itemDto;
         }
 
         $orderData = new OrderViewData(
             id: $orderEntity->id,
 
-
+            number: $orderEntity->number,
+            staffId: $orderEntity->staffId,
+            traderId: $orderEntity->traderId,
+            traderName: '',
+            discountAmount: $orderEntity->discountAmount,
+            couponAmount: $orderEntity->couponAmount,
+            manual: $orderEntity->manual,
+            amount: new AmountOrderData(),
+            isPickup: $orderEntity->isPickup,
+            address: $orderEntity->address->getFullAddress(),
+            comment: $orderEntity->comment,
+            commentClient: $orderEntity->comment,
             client: $clientDto,
+            items: $items,
+            preOrder: $preOrder,
+            inStock: $inStock,
+            additions: $additions,
+            statuses: $statuses,
+            status: $status,
         );
 
         /** @var Order $order */

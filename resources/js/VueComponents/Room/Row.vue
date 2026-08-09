@@ -1,7 +1,7 @@
 <template>
     <div class="bg-white rounded-md flex items-center mb-1 p-2 border border-slate-200">
         <div>
-            <i v-if="room.published" class="fa-light fa-lock"></i>
+            <i v-if="!room.published" class="fa-light fa-lock"></i>
         </div>
         <div class="w-11" style="height: 40px;">
             <img v-if="room.image_url" :src="room.image_url" style="width: 40px; height: 40px;">
@@ -53,10 +53,10 @@
             </el-popover>
 
             <el-button size="small"
-                       :type="!room.published ? 'warning' : 'success'"
+                       :type="room.published ? 'warning' : 'success'"
                        @click.stop="onToggle()"
             >
-                <i class="fa-light" :class="!room.published ? 'fa-lock' : 'fa-lock-open'"></i>
+                <i class="fa-light" :class="room.published ? 'fa-lock' : 'fa-lock-open'"></i>
             </el-button>
             <el-button size="small"
                        type="danger"
