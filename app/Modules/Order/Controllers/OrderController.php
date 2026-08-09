@@ -66,13 +66,12 @@ class OrderController extends Controller
         $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
 
         $order = $this->viewOrderUseCase->execute($order->id, $permissions);
-        $client = $this->clientUseCase->execute($order['client_id'], $permissions);
+
         //$storages = Storage::orderBy('name')->getModels();
         //$mainStorage = Storage::where('default', true)->first();
         $additions = $this->repository->guideAddition();
         return Inertia::render('Order/Order/Show', [
             'order' => $order, //$this->repository->OrderWithToArray($order),
-            'client' => $client,
           //  'storages' => $storages,
            // 'mainStorage' => $mainStorage,
             'staffs' => $staffs,

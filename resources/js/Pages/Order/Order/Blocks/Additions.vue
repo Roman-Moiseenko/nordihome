@@ -5,16 +5,16 @@
         style="width: 100%;"
     >
         <el-table-column type="index" label="п/п"/>
-        <el-table-column prop="name" label="Услуга"/>
-        <el-table-column prop="base" label="Базовый коэф." width="160px" align="center"/>
-        <el-table-column prop="manual" label="Авто" width="80px" align="center">
+        <el-table-column prop="addition.name" label="Услуга"/>
+        <el-table-column prop="addition.baseRatio" label="Базовый коэф." width="160px" align="center"/>
+        <el-table-column prop="addition.isManual" label="Авто" width="80px" align="center">
             <template #default="scope">
-                <Active :active="!scope.row.manual"/>
+                <Active :active="!scope.row.addition.isManual"/>
             </template>
         </el-table-column>
         <el-table-column prop="quantity" label="Кол-во" width="80px" align="center">
             <template #default="scope">
-                <div v-if="scope.row.is_quantity">
+                <div v-if="scope.row.addition.isQuantity">
                     <el-input v-if="is_new" v-model="scope.row.quantity" :formatter="val => func.MaskCount(val, 1)"
                               @change="setAddition(scope.row)"
                               :disabled="iSaving"
@@ -28,14 +28,12 @@
         </el-table-column>
         <el-table-column prop="" label="Стоимость" width="160">
             <template #default="scope">
-                <div v-if="scope.row.is_quantity">
-                    <el-tag v-if="!scope.row.manual" type="success" effect="dark">{{ func.price(scope.row.calculate) }}
+                <div v-if="scope.row.addition.isQuantity">
+                    <el-tag v-if="!scope.row.addition.isManual" type="success" effect="dark">{{ func.price(scope.row.amount) }}
                     </el-tag>
-                    <el-tag v-if="scope.row.manual && !is_new" type="success" effect="dark">
-                        {{ func.price(scope.row.calculate) }}
-                    </el-tag>
+
                 </div>
-                <el-input v-if="scope.row.manual && is_new" v-model="scope.row.amount"
+                <el-input v-if="scope.row.addition.isManual && is_new" v-model="scope.row.amount"
                           @change="setAddition(scope.row)"
                           :disabled="iSaving"
                 >
@@ -46,12 +44,10 @@
         </el-table-column>
         <el-table-column prop="" label="Сумма">
             <template #default="scope">
-                <el-tag v-if="!scope.row.manual" type="success" effect="dark">
-                    {{ func.price(scope.row.calculate * scope.row.quantity) }}
-                </el-tag>
-                <el-tag v-if="scope.row.manual" type="success" effect="dark">
+                <el-tag type="success" effect="dark">
                     {{ func.price(scope.row.amount * scope.row.quantity) }}
                 </el-tag>
+
             </template>
         </el-table-column>
         <el-table-column prop="comment" label="Комментарий" :width="is_new ? 260 : 120" show-overflow-tooltip>

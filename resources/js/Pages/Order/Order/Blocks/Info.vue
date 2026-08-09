@@ -124,7 +124,7 @@
             </div>
             <div class="border-t mt-2 pt-2">
                 <el-form-item label="Продавец" size="small">
-                    <el-select v-model="info.trader_id" @change="setInfo" :disabled="iSavingInfo || !is_new" filterable
+                    <el-select v-model="info.traderId" @change="setInfo" :disabled="iSavingInfo || !is_new" filterable
                                style="max-width: 280px;">
                         <el-option v-for="item in traders" :key="item.id" :value="item.id"
                                    :label="item.short_name + ' (' + item.inn +')'"/>
@@ -201,7 +201,7 @@ const props = defineProps({
 })
 const iSavingInfo = ref(false)
 const info = reactive({
-    trader_id: props.order.trader_id,
+    traderId: props.order.traderId,
     shopper_id: props.order.shopper_id,
     comment: props.order.comment,
 })

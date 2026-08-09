@@ -134,7 +134,7 @@
 
     </template>
 
-    <OrderRelatedDocuments  v-if="!is_new" />
+    <!--OrderRelatedDocuments  v-if="!is_new" /-->
 
     <el-dialog v-model="dialogFindPayment" title="Выбрать платеж" width="400">
         <el-select v-model="payment_id">

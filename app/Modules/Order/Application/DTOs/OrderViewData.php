@@ -9,10 +9,9 @@ readonly class OrderViewData
         //Основные данные по заказу
 
         public int $id,
-        public int $number,
+        public ?int $number,
         public ?int $staffId,
         public int $traderId,
-        public string $traderName,
 
         //Данные о суммах
         public ?float $discountAmount,
@@ -41,7 +40,7 @@ readonly class OrderViewData
         public array $additions,
         /** @var OrderStatusViewData[] $statuses */
         public array $statuses,
-        public OrderStatusViewData $status,
+        public string $status,
 
     )
     {

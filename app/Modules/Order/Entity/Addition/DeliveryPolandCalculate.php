@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Addition;
 
 use App\Modules\Catalog\Infrastructure\Models\Brand;
+use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Setting\Entity\Settings;
 
@@ -38,28 +39,18 @@ class DeliveryPolandCalculate extends CalculateAddition
         //Коэффициент к стоимости
 
         $coef = self::getCoef($weight, $parser);
-  /*      if ($weight <= 5.0) $coef = $parser->parser_delivery_0;
-        if ($weight <= 10.0) $coef = $parser->parser_delivery_1;
-        if ($weight <= 15.0) $coef = $parser->parser_delivery_2;
-        if ($weight <= 30.0) $coef = $parser->parser_delivery_3;
-        if ($weight <= 40.0) $coef = $parser->parser_delivery_4;
-        if ($weight <= 50.0) $coef = $parser->parser_delivery_5;
-        if ($weight <= 200.0) $coef = $parser->parser_delivery_6;
-        if ($weight <= 300.0) $coef = $parser->parser_delivery_7;
-        if ($weight <= 400.0) $coef = $parser->parser_delivery_8;
-        if ($weight <= 600.0) $coef = $parser->parser_delivery_9;
-        if ($weight > 600.0) $coef = $parser->parser_delivery_10;
-*/
-        /*
-        Log::info(json_encode([
-            '$weight' => $weight,
-            '$coef' => $coef,
-            '$fragile * $parser->cost_weight_fragile + $sanctioned' => ($fragile * $parser->cost_weight_fragile + $sanctioned),
-            '$parser' => $parser,
-        ]));*/
+
         $cost = $weight * $coef + $fragile * $parser->cost_weight_fragile + $sanctioned;
 
         return $cost < 1000 ? 1000 : (int)ceil($cost);
+    }
+
+
+    public static function calculateEntity(OrderEntity $order, int $base): int
+    {
+        //MAINDO Переделать на UseCase под OrderEntity
+        $order = Order::find($order->id);
+        return self::calculate($order, $base);
     }
 
     private static function getCoef(float $weight, $parser)
@@ -77,4 +68,5 @@ class DeliveryPolandCalculate extends CalculateAddition
         if ($weight > 600.0) return $parser->parser_delivery_10;
         throw new \DomainException("Неверный вес - " . $weight);
     }
+
 }

@@ -6,10 +6,11 @@ class AdditionData
 {
     public function __construct(
 
-        public float $baseRatio,
+        public float  $baseRatio,
         public string $name,
-        public bool $isQuantity,
-        public bool $isManual,
+        public bool   $isQuantity,
+        public bool   $isManual,
+        public ?float $calculate,
     )
     {
 

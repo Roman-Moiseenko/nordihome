@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Addition;
 
+use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Infrastructure\Models\Order;
 
 class LiftingCalculate extends CalculateAddition
@@ -20,5 +21,12 @@ class LiftingCalculate extends CalculateAddition
         }
         if ($result < 1) $result = 1;
         return (int)ceil($result * $base);
+    }
+
+    public static function calculateEntity(OrderEntity $order, int $base): int
+    {
+        //MAINDO Переделать на UseCase под OrderEntity
+        $order = Order::find($order->id);
+        return self::calculate($order, $base);
     }
 }

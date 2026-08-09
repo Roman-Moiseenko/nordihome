@@ -25,23 +25,23 @@
         </el-affix>
 
         <div v-if="is_new || is_awaiting">
-            <div v-if="order.in_stock.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
+            <div v-if="order.inStock.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
                 <h2 class="font-medium text-cyan-800">Товары в наличии</h2>
-                <OrderItemsNew :items=[...order.in_stock] />
+                <OrderItemsNew :items=[...order.inStock] />
             </div>
-            <div v-if="order.pre_order.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
+            <div v-if="order.preOrder.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
                 <h2 class="font-medium text-orange-800">Товары под заказ</h2>
-                <OrderItemsNew :items=[...order.pre_order]  />
+                <OrderItemsNew :items=[...order.preOrder]  />
             </div>
         </div>
         <div v-if="is_issued">
-            <div v-if="order.in_stock.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
+            <div v-if="order.inStock.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
                 <h2 class="font-medium text-cyan-800">Товары на выдачу</h2>
-                <OrderItemsIssued :items=[...order.in_stock] />
+                <OrderItemsIssued :items=[...order.inStock] />
             </div>
-            <div v-if="order.pre_order.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
+            <div v-if="order.preOrder.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
                 <h2 class="font-medium text-orange-800">Товары под заказ</h2>
-                <OrderItemsIssued :items=[...order.pre_order] />
+                <OrderItemsIssued :items=[...order.preOrder] />
             </div>
         </div>
         <div v-if="is_view">
@@ -94,15 +94,15 @@ console.log(props.order)
 console.log(props.client)
 
 provide('$order_related', props.order_related)
-
+console.log(props.order.status)
 const is_new = computed(() => {
-    return props.order.status.is_new || props.order.status.is_manager
+    return props.order.status === "new" || props.order.status === "draft"
 })
 const is_awaiting = computed(() => {
-    return props.order.status.is_awaiting
+    return props.order.status === "awaiting"
 })
 const is_issued = computed(() => {
-    return props.order.status.is_prepaid || props.order.status.is_paid
+    return props.order.status === "prepaid" || props.order.status === "paid"
 })
 const is_view = computed(() => {
     return !is_new.value && !is_issued.value && !is_awaiting.value

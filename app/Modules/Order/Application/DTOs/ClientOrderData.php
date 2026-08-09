@@ -6,7 +6,7 @@ class ClientOrderData
 {
     public function __construct(
         public int $id,
-        public int $fullName,
+        public string $fullName,
         public string $email,
         public string $phone,
         public string $priceType,

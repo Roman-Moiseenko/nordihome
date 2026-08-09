@@ -17,7 +17,7 @@
         <el-table-column v-if="is_new" label="Базовая" width="100" align="center">
             <template #default="scope">
                 <span :class="scope.row.percent > 0 ? 'text-red-800 font-medium' : ''">{{
-                        func.price(scope.row.base_cost)
+                        func.price(scope.row.baseCost)
                     }}</span>
                 <div v-if="isProm(scope.row)" class="text-red-800">
                     Акция
@@ -28,7 +28,7 @@
             <template #default="scope">
                 <span v-if="is_new" class="flex">
                     <el-input
-                        v-model="scope.row.sell_cost"
+                        v-model="scope.row.sellCost"
                         :formatter="val => func.MaskInteger(val)"
                         @change="setProduct(scope.row)"
                         :disabled="iSaving || isProm(scope.row)"
@@ -37,8 +37,8 @@
                 </span>
                 <span v-else>
                     <span class="text-green-800">{{ func.price(scope.row.sell_cost) }}</span>
-                    <span v-if="scope.row.percent > 0" class="text-green-800 ml-2"> -{{
-                            scope.row.percent
+                    <span v-if="scope.row.percentDiscount > 0" class="text-green-800 ml-2"> -{{
+                            scope.row.percentDiscount
                         }}%</span>
                 </span>
             </template>
@@ -46,11 +46,11 @@
         <el-table-column v-if="is_new" label="Скид. %" width="70" align="center">
             <template #default="scope">
                 <el-input
-                    v-model="scope.row.percent"
+                    v-model="scope.row.percentDiscount"
                     :formatter="val => func.MaskFloat(val, 0, 100)"
                     @change="setProduct(scope.row)"
                     :disabled="iSaving || isProm(scope.row)"
-                    :class="(scope.row.percent > 0 ? 'bg-red-100' : '') + ' m-0'" style="width: 60px;">
+                    :class="(scope.row.percentDiscount > 0 ? 'bg-red-100' : '') + ' m-0'" style="width: 60px;">
                 </el-input>
             </template>
         </el-table-column>
@@ -73,7 +73,7 @@
         </el-table-column>
         <el-table-column v-if="is_new" label="Сумма" width="80" align="center">
             <template #default="scope">
-                <el-tag size="large" type="success" effect="dark">{{ func.price(scope.row.quantity * scope.row.sell_cost) }}</el-tag>
+                <el-tag size="large" type="success" effect="dark">{{ func.price(scope.row.quantity * scope.row.sellCost) }}</el-tag>
             </template>
         </el-table-column>
 
@@ -164,7 +164,7 @@ function setProduct(row) {
         method: "post",
         data: {
             quantity: row.quantity,
-            sell_cost: row.sell_cost,
+            sell_cost: row.sellCost,
             percent: row.percent,
             comment: row.comment,
             assemblage: row.assemblage,

@@ -6,6 +6,7 @@ namespace App\Modules\Order\Entity\Addition;
 use App\Modules\Base\Entity\Package;
 use App\Modules\Base\Entity\Packages;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Infrastructure\Models\Order;
 
 class PackingCalculate extends CalculateAddition
@@ -93,4 +94,10 @@ class PackingCalculate extends CalculateAddition
     }
 
 
+    public static function calculateEntity(OrderEntity $order, int $base): int
+    {
+        //MAINDO Переделать на UseCase под OrderEntity
+        $order = Order::find($order->id);
+        return self::calculate($order, $base);
+    }
 }

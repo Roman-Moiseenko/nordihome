@@ -2,6 +2,8 @@
 
 namespace App\Modules\Order\Application\DTOs;
 
+use App\Modules\Order\Domain\Entities\OrderHistoryStatusEntity;
+
 readonly class OrderStatusViewData
 {
 
@@ -13,5 +15,16 @@ readonly class OrderStatusViewData
     )
     {
 
+    }
+
+    public static function fromEntity(OrderHistoryStatusEntity $entity): self
+    {
+
+        return new self(
+            value: $entity->value->getValue(),
+            comment: $entity->comment,
+            numberDocument: $entity->numberDocument,
+            dateDocument: $entity->dateDocument,
+        );
     }
 }

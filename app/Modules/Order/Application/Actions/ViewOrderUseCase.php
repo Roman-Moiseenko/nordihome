@@ -1,16 +1,26 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Modules\Order\Application\Actions;
 
 use App\Modules\Accounting\Entity\MovementDocument;
+use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Guide\Entity\Addition;
+use App\Modules\Order\Application\DTOs\AdditionData;
 use App\Modules\Order\Application\DTOs\AmountOrderData;
 use App\Modules\Order\Application\DTOs\ClientOrderData;
+use App\Modules\Order\Application\DTOs\OrderAdditionViewData;
 use App\Modules\Order\Application\DTOs\OrderItemViewData;
+use App\Modules\Order\Application\DTOs\OrderStatusViewData;
 use App\Modules\Order\Application\DTOs\OrderViewData;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Domain\Entities\OrderAdditionEntity;
+use App\Modules\Order\Domain\Entities\OrderHistoryStatusEntity;
+use App\Modules\Order\Domain\Entities\OrderItemEntity;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Infrastructure\Models\Order;
@@ -21,8 +31,12 @@ use App\Modules\Shared\Domain\Entities\UserPermission;
 class ViewOrderUseCase
 {
 
-    public function __construct(private readonly OrderRepositoryInterface $repository,
-    private readonly ClientRepositoryInterface $clientRepository,)
+    public function __construct(
+        private readonly OrderRepositoryInterface $repository,
+        private readonly ClientRepositoryInterface $clientRepository,
+        private readonly GetProductItemDataUseCase $getProductItemData,
+        private readonly GetAdditionDataUseCase $getAdditionDataUseCase,
+    )
     {
 
     }
@@ -34,11 +48,7 @@ class ViewOrderUseCase
 
         $orderEntity = $this->repository->getById($id);
 
-
-        /**
-         * Здесь заполнить OrderViewData из $orderEntity
-         */
-
+        // --- client ---
         if (!is_null($orderEntity->clientId)) {
             $clientEntity = $this->clientRepository->findById($orderEntity->clientId);
             $clientDto = new ClientOrderData(
@@ -52,41 +62,140 @@ class ViewOrderUseCase
             $clientDto = null;
         }
 
-        $items = []; $inStock = []; $preOrder = [];
+        // --- items + расчёт сумм ---
+        $items = [];
+        $inStock = [];
+        $preOrder = [];
+
+        $baseAmount = 0.0;
+        $promotionsAmount = 0.0;
+        $totalWeight = 0.0;
+        $totalVolume = 0.0;
+
         foreach ($orderEntity->items as $item) {
-            //Получить данные из ItemEntity из Товара и заполнить:
-            $itemDto = new OrderItemViewData();
+            $productItemData = $this->getProductItemData->execute($item->productId);
+
+            // Признак скидки и процент
+            $isDiscount = $item->discountId !== null;
+            $percentDiscount = 0.0;
+            if ($item->baseCost > 0) {
+                $percentDiscount = ceil(($item->baseCost - $item->sellCost) / $item->baseCost * 100 * 10) / 10;
+            }
+
+            $itemDto = new OrderItemViewData(
+                id: $item->id,
+                product: $productItemData,
+                baseCost: $item->baseCost,
+                sellCost: $item->sellCost,
+                quantity: $item->quantity,
+                preorder: $item->preorder,
+                isDiscount: $isDiscount,
+                percentDiscount: $percentDiscount,
+                comment: $item->comment,
+                assemblage: $item->assemblage,
+                packing: $item->packing,
+            );
+
             if ($item->preorder) {
                 $preOrder[] = $itemDto;
             } else {
                 $inStock[] = $itemDto;
             }
             $items[] = $itemDto;
+
+            // Суммы
+            $baseAmount += $item->baseCost * $item->quantity;
+
+            // Промо-скидки
+            if (!is_null($item->discountId)){
+                $promotionsAmount += ($item->baseCost - $item->sellCost) * $item->quantity;
+            }
+            $totalWeight += (float)$productItemData->weight * $item->quantity;
+            $totalVolume += (float)$productItemData->volume * $item->quantity;
         }
+
+        // --- additions ---
+        $additions = [];
+        $additionsAmount = 0.0;
+        foreach ($orderEntity->additions as $orderAddition) {
+            $addition = $this->getAdditionDataUseCase->execute($orderAddition->additionId, $orderEntity);
+
+            $additionAmount = $orderAddition->amount;
+            if ($additionAmount == 0) {
+                $additionAmount = $addition->calculate ?? $addition->baseRatio;
+            }
+
+            $additionDto = new OrderAdditionViewData(
+                id: $orderAddition->id,
+                amount: $additionAmount,
+                comment: $orderAddition->comment,
+                quantity: $orderAddition->quantity,
+                addition: $addition,
+            );
+
+            $additions[] = $additionDto;
+            $additionsAmount += $additionAmount * $orderAddition->quantity;
+        }
+
+        // --- statuses ---
+        $statuses = array_map(function (OrderHistoryStatusEntity $entity) {
+            return OrderStatusViewData::fromEntity($entity);
+        }, $orderEntity->statuses);
+
+        // Последний статус — текущий
+        $currentStatus = OrderStatusViewData::fromEntity($orderEntity->status);
+
+        // --- amount ---
+        $discountAmount = $orderEntity->discountAmount ?? 0.0;
+        $couponAmount = $orderEntity->couponAmount ?? 0.0;
+        $manualAmount = $orderEntity->manual;
+
+        // total = base - promotions + additions + discount - coupon (как в getTotalAmount, но без refund)
+        $totalAmount = ceil(
+            ($baseAmount - $promotionsAmount)
+            + $additionsAmount
+            + $discountAmount
+            - $couponAmount
+        );
+
+        $amountDto = new AmountOrderData(
+            base: $baseAmount,
+            addition: $additionsAmount,
+            manual: $manualAmount,
+            promotions: $promotionsAmount,
+            coupon: $couponAmount,
+            discount: $discountAmount,
+            total: $totalAmount,
+            weight: ceil($totalWeight * 1000) / 1000,
+            volume: ceil($totalVolume * 10000) / 10000,
+        );
+
 
         $orderData = new OrderViewData(
             id: $orderEntity->id,
-
             number: $orderEntity->number,
             staffId: $orderEntity->staffId,
             traderId: $orderEntity->traderId,
-            traderName: '',
             discountAmount: $orderEntity->discountAmount,
             couponAmount: $orderEntity->couponAmount,
             manual: $orderEntity->manual,
-            amount: new AmountOrderData(),
+            amount: $amountDto,
             isPickup: $orderEntity->isPickup,
-            address: $orderEntity->address->getFullAddress(),
+            address: $orderEntity->address?->getFullAddress() ?? null,
             comment: $orderEntity->comment,
-            commentClient: $orderEntity->comment,
+            commentClient: $orderEntity->commentClient,
+
             client: $clientDto,
             items: $items,
             preOrder: $preOrder,
             inStock: $inStock,
             additions: $additions,
             statuses: $statuses,
-            status: $status,
+            status: $currentStatus->value,
         );
+
+        return $orderData;
+
 
         /** @var Order $order */
         $order = Order::find($id);
@@ -232,15 +341,15 @@ class ViewOrderUseCase
 
     private function OrderAdditionToArray(OrderAddition $orderAddition): array
     {
-        $refund = $orderAddition->getRefund();
+        ///$refund = $orderAddition->getRefund();
         return array_merge($orderAddition->toArray(), [
             'calculate' => $orderAddition->getAmount(),
             'name' => $orderAddition->addition->name,
             'manual' => $orderAddition->addition->manual,
             'base' => $orderAddition->addition->base,
             'is_quantity' => $orderAddition->addition->is_quantity,
-            'remains' => $orderAddition->getRemains(),
-            'refund' => $refund == 0 ? null : $refund,
+           // 'remains' => $orderAddition->getRemains(),
+           // 'refund' => $refund == 0 ? null : $refund,
         ]);
     }
 }
