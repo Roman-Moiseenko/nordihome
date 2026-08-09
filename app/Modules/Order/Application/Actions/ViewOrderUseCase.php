@@ -4,6 +4,9 @@ namespace App\Modules\Order\Application\Actions;
 
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Order\Application\DTOs\ClientOrderData;
 use App\Modules\Order\Application\DTOs\OrderViewData;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Entity\Order\OrderExpense;
@@ -16,7 +19,8 @@ use App\Modules\Shared\Domain\Entities\UserPermission;
 class ViewOrderUseCase
 {
 
-    public function __construct(private readonly OrderRepositoryInterface $repository)
+    public function __construct(private readonly OrderRepositoryInterface $repository,
+    private readonly ClientRepositoryInterface $clientRepository,)
     {
 
     }
@@ -33,10 +37,24 @@ class ViewOrderUseCase
          * Здесь заполнить OrderViewData из $orderEntity
          */
 
+        if (!is_null($orderEntity->clientId)) {
+            $clientEntity = $this->clientRepository->findById($orderEntity->clientId);
+            $clientDto = new ClientOrderData(
+                id: $clientEntity->id,
+                fullName: $clientEntity->fullName,
+                email: $clientEntity->email->value,
+                phone: $clientEntity->phone->getValue(),
+                priceType: $clientEntity->priceType->value,
+            );
+        } else {
+            $clientDto = null;
+        }
 
+        $orderData = new OrderViewData(
+            id: $orderEntity->id,
 
-
-        $orderData = new OrderViewData();
+            client: $clientDto,
+        );
 
         /** @var Order $order */
         $order = Order::find($id);
