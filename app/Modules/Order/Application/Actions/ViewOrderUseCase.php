@@ -41,7 +41,7 @@ class ViewOrderUseCase
             $clientEntity = $this->clientRepository->findById($orderEntity->clientId);
             $clientDto = new ClientOrderData(
                 id: $clientEntity->id,
-                fullName: $clientEntity->fullName,
+                fullName: $clientEntity->fullName->getValue(),
                 email: $clientEntity->email->value,
                 phone: $clientEntity->phone->getValue(),
                 priceType: $clientEntity->priceType->value,
@@ -50,8 +50,20 @@ class ViewOrderUseCase
             $clientDto = null;
         }
 
+        $inStock = []; $preOrder = [];
+        foreach ($orderEntity->items as $item) {
+            //Получить данные из ItemEntity из Товара и заполнить:
+            $itemDto = new OrderItemViewData();
+            if ($item->preorder) {
+                $preOrder[] = $itemDto;
+            } else {
+                $inStock[] = $itemDto;
+            }
+        }
+
         $orderData = new OrderViewData(
             id: $orderEntity->id,
+
 
             client: $clientDto,
         );
