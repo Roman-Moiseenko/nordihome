@@ -85,7 +85,7 @@ import Active from "@Comp/Elements/Active.vue";
 import {func} from "@Res/func.js"
 import {computed, inject, ref} from "vue";
 import {router} from "@inertiajs/vue3";
-
+//MAINDO заменить calculate на amount
 const props = defineProps({
     additions: Array,
 })

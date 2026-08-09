@@ -4,6 +4,8 @@ namespace App\Modules\Order\Application\Actions;
 
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Order\Application\DTOs\OrderViewData;
+use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Infrastructure\Models\Order;
@@ -14,13 +16,28 @@ use App\Modules\Shared\Domain\Entities\UserPermission;
 class ViewOrderUseCase
 {
 
-    public function __construct()
+    public function __construct(private readonly OrderRepositoryInterface $repository)
     {
 
     }
 
     public function execute(int $id, UserPermission $permission)
     {
+
+       // if ($permission->can('order.order.edit')) throw new \DomainException('Нет доступа к редактированию заказов');
+
+        $orderEntity = $this->repository->getById($id);
+
+
+        /**
+         * Здесь заполнить OrderViewData из $orderEntity
+         */
+
+
+
+
+        $orderData = new OrderViewData();
+
         /** @var Order $order */
         $order = Order::find($id);
         return array_merge($this->OrderToArray($order), [
@@ -43,17 +60,22 @@ class ViewOrderUseCase
             ],
             'emails' => is_null($order->shopper_id) ? [] : array_select($order->shopper->getEmails()),
             'shoppers' => [], //is_null($order->client) ? [] : $order->client->organizations,
-            'reserve' => $order->getReserveTo(),
+        //    'reserve' => $order->getReserveTo(),
+            /*
             'payments' => $order->payments()->get()->map(fn(OrderPayment $payment) => [
                 'id' => $payment->id,
                 'amount' => $payment->amount,
                 'method_text' => $payment->methodText(),
             ]),
+            */
+                /*
             'movements' => $order->movements()->get()->map(fn(MovementDocument $movement) => [
                 'id' => $movement->id,
                 'number' => $movement->number,
                 'status_text' => $movement->statusHTML(),
             ]),
+            */
+            /*
             'expenses' => $order->expenses()->get()->map(fn(OrderExpense $expense) => [
                 'id' => $expense->id,
                 'number' => $expense->number,
@@ -62,6 +84,7 @@ class ViewOrderUseCase
                 'is_canceled' => $expense->isCanceled(),
                 'is_completed' => $expense->isCompleted(),
             ]),
+            */
             'weight' => $order->getWeight(),
             'volume' => $order->getVolume(),
         ]);

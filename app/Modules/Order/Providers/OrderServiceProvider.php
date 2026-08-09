@@ -85,7 +85,10 @@ class OrderServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register module-specific services
+        $this->app->bind(
+            \App\Modules\Order\Application\Interfaces\OrderRepositoryInterface::class,
+            \App\Modules\Order\Infrastructure\Persistence\OrderRepository::class
+        );
     }
 
     // =====================================================================

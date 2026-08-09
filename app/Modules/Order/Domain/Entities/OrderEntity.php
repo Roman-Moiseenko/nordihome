@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Domain\Entities;
 
+use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
 use DateTimeImmutable;
 
@@ -83,34 +84,9 @@ class OrderEntity
         set => $this->isPickup = $value;
     }
 
-    public ?string $country = null {
-        get => $this->country;
-        set => $this->country = $value;
-    }
-
-    public ?int $regionCode = null {
-        get => $this->regionCode;
-        set => $this->regionCode = $value;
-    }
-
-    public ?string $region = null {
-        get => $this->region;
-        set => $this->region = $value;
-    }
-
-    public ?string $city = null {
-        get => $this->city;
-        set => $this->city = $value;
-    }
-
-    public ?string $street = null {
-        get => $this->street;
-        set => $this->street = $value;
-    }
-
-    public ?string $postalCode = null {
-        get => $this->postalCode;
-        set => $this->postalCode = $value;
+    public ?Address $address = null {
+        get => $this->address;
+        set => $this->address = $value;
     }
 
     public ?DateTimeImmutable $createdAt = null {
