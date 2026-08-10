@@ -28,13 +28,12 @@ class CartItem extends Component
         $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
     }
 
-    public function mount(array $item, int $clientId): void
+    public function mount(array $item, int|null $clientId): void
     {
-        //dd($item);
         $this->item = $item;
         $this->quantity = $item['quantity'];
         $this->check = $item['check'];
-        $this->client = Client::find($clientId);
+        $this->client = is_null($clientId) ? null : Client::find($clientId);
         $this->update_wish();
         $this->wish = !is_null($this->client) && ($this->client->isWish($this->item['productId']));
     }

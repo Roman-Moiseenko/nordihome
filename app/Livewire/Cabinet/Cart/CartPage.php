@@ -56,6 +56,7 @@ class CartPage extends Component
         $data = $useCase->execute();
         $this->items = json_decode(json_encode($data->items), true);
 
+        //dd($this->items);
         //$this->cart->loadItems();
         //$this->items = $this->cart->ItemsData($this->cart->getItems());
 

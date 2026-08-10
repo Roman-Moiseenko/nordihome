@@ -17,8 +17,9 @@
         <button id="cart-trash" class="btn btn-light ms-3 p-1" wire:click="del_select">Удалить выбранные</button>
         @endif
     </div>
+
     @foreach($items as $item)
-        <livewire:cabinet.cart.cart-item :item="$item" :key="$item['id'] . '-' . $renderKey" :client-id="$client->id"/>
+        <livewire:cabinet.cart.cart-item :item="$item" :key="$item['id'] . '-' . $renderKey" :client-id="$client?->id"/>
     @endforeach
     </div>
 
