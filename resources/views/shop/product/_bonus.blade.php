@@ -1,4 +1,4 @@
-@if(!is_null($bonus))
+@if(!empty($bonus))
     <div class="box-card view-bonus">
         <h2 id="bonus">Выгодная покупка</h2>
         <div class="d-flex justify-content-around">

@@ -1,4 +1,4 @@
-@if(!is_null($modification))
+@if(!empty($modification))
 <div class="modification">
     @foreach($modification as $attribute)
         @if(isset($attribute['products']))

@@ -2,7 +2,7 @@
     use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
     /** @var ProductCardData[] $equivalents */
 @endphp
-@if($equivalents != null)
+@if(!empty($equivalents))
     <div class="box-card">
         <h2 id="equivalent">Похожие товары</h2>
         <div class="slider-images-product owl-carousel owl-theme" data-responsive="[2,4,6]" data-mouse-scroll="0">

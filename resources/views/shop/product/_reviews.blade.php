@@ -1,4 +1,4 @@
-@if(!is_null($reviews))
+@if(!empty($reviews))
     <div class="box-card">
         <h2 id="reviews">Отзывы</h2>
         @foreach($reviews as $review)
