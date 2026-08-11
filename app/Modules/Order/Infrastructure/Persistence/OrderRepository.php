@@ -80,6 +80,10 @@ class OrderRepository implements OrderRepositoryInterface
 
         $model->save();
 
+        $this->syncItems($model, $order->items);
+        $this->syncAdditions($model, $order->additions);
+        $this->syncStatuses($model, $order->statuses);
+
         return $this->hydrate(
             $model->fresh()->load(['status', 'statuses', 'items', 'additions'])
         );
@@ -111,6 +115,151 @@ class OrderRepository implements OrderRepositoryInterface
             ->orderByDesc('created_at')
             ->paginate($perPage, ['*'], 'page', $page)
             ->through(fn(Order $model) => $this->hydrate($model));
+    }
+
+    // ====================== Sync ======================
+
+    /**
+     * Синхронизирует элементы заказа (OrderItem): создаёт новые, обновляет существующие, удаляет отсутствующие.
+     *
+     * @param Order $model
+     * @param OrderItemEntity[] $items
+     */
+    private function syncItems(Order $model, array $items): void
+    {
+        $existingIds = $model->items()->pluck('id')->toArray();
+        $entityIds = [];
+
+        foreach ($items as $entity) {
+            if ($entity->id !== null && in_array($entity->id, $existingIds, true)) {
+                $item = OrderItem::find($entity->id);
+                if ($item) {
+                    $item->product_id = $entity->productId;
+                    $item->quantity = $entity->quantity;
+                    $item->base_cost = $entity->baseCost;
+                    $item->sell_cost = $entity->sellCost;
+                    $item->discount_id = $entity->discountId;
+                    $item->discount_type = $entity->discountType;
+                    $item->preorder = $entity->preorder;
+                    $item->fix_manual = $entity->fixManual;
+                    $item->options = $entity->options;
+                    $item->comment = $entity->comment;
+                    $item->assemblage = $entity->assemblage;
+                    $item->packing = $entity->packing;
+                    $item->save();
+                    $entityIds[] = $entity->id;
+                }
+            } else {
+                $item = $model->items()->create([
+                    'product_id' => $entity->productId,
+                    'quantity' => $entity->quantity,
+                    'base_cost' => $entity->baseCost,
+                    'sell_cost' => $entity->sellCost,
+                    'discount_id' => $entity->discountId,
+                    'discount_type' => $entity->discountType,
+                    'preorder' => $entity->preorder,
+                    'fix_manual' => $entity->fixManual,
+                    'options' => $entity->options,
+                    'comment' => $entity->comment,
+                    'assemblage' => $entity->assemblage,
+                    'packing' => $entity->packing,
+                ]);
+                $entity->id = $item->id;
+                $entity->orderId = $model->id;
+                $entityIds[] = $item->id;
+            }
+        }
+
+        // Удаляем элементы, которых нет в entity-списке
+        $toDelete = array_diff($existingIds, $entityIds);
+        if (!empty($toDelete)) {
+            OrderItem::whereIn('id', $toDelete)->delete();
+        }
+    }
+
+    /**
+     * Синхронизирует дополнения заказа (OrderAddition): создаёт новые, обновляет существующие, удаляет отсутствующие.
+     *
+     * @param Order $model
+     * @param OrderAdditionEntity[] $additions
+     */
+    private function syncAdditions(Order $model, array $additions): void
+    {
+        $existingIds = $model->additions()->pluck('id')->toArray();
+        $entityIds = [];
+
+        foreach ($additions as $entity) {
+            if ($entity->id !== null && in_array($entity->id, $existingIds, true)) {
+                $addition = OrderAddition::find($entity->id);
+                if ($addition) {
+                    $addition->addition_id = $entity->additionId;
+                    $addition->amount = $entity->amount;
+                    $addition->comment = $entity->comment;
+                    $addition->quantity = $entity->quantity;
+                    $addition->save();
+                    $entityIds[] = $entity->id;
+                }
+            } else {
+                $addition = $model->additions()->create([
+                    'addition_id' => $entity->additionId,
+                    'amount' => $entity->amount,
+                    'comment' => $entity->comment,
+                    'quantity' => $entity->quantity,
+                ]);
+                $entity->id = $addition->id;
+                $entity->orderId = $model->id;
+                $entityIds[] = $addition->id;
+            }
+        }
+
+        $toDelete = array_diff($existingIds, $entityIds);
+        if (!empty($toDelete)) {
+            OrderAddition::whereIn('id', $toDelete)->delete();
+        }
+    }
+
+    /**
+     * Синхронизирует историю статусов заказа (OrderHistoryStatus): создаёт новые, обновляет существующие, удаляет отсутствующие.
+     *
+     * @param Order $model
+     * @param OrderHistoryStatusEntity[] $statuses
+     */
+    private function syncStatuses(Order $model, array $statuses): void
+    {
+        $existingIds = $model->statuses()->pluck('id')->toArray();
+        $entityIds = [];
+
+        foreach ($statuses as $entity) {
+            if ($entity->id !== null && in_array($entity->id, $existingIds, true)) {
+                $status = OrderHistoryStatus::find($entity->id);
+                if ($status) {
+                    $status->value = (string) $entity->value;
+                    $status->comment = $entity->comment;
+                    $status->number_document = $entity->numberDocument;
+                    $status->date_document = $entity->dateDocument;
+                    if ($entity->createdAt !== null) {
+                        $status->created_at = $entity->createdAt;
+                    }
+                    $status->save();
+                    $entityIds[] = $entity->id;
+                }
+            } else {
+                $status = $model->statuses()->create([
+                    'value' => (string) $entity->value,
+                    'comment' => $entity->comment,
+                    'number_document' => $entity->numberDocument,
+                    'date_document' => $entity->dateDocument,
+                ]);
+                $entity->id = $status->id;
+                $entity->orderId = $model->id;
+                $entityIds[] = $status->id;
+            }
+        }
+
+        $toDelete = array_diff($existingIds, $entityIds);
+        if (!empty($toDelete)) {
+            OrderHistoryStatus::whereIn('id', $toDelete)->delete();
+        }
     }
 
     // ====================== Hydration ======================

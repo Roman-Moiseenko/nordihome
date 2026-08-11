@@ -7,6 +7,7 @@ use App\Modules\Auth\Application\Services\FindOrCreateClientService;
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Catalog\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
 use App\Modules\Guide\Entity\Addition;
+use App\Modules\Order\Application\DTOs\OrderItemData;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
@@ -71,9 +72,14 @@ readonly class CreateOrderOneClickService
             }
 
             //Добавляем продукт
-            $orderEntity->addItem($dto->productId, 1.0,
-                $product->basePrice, $product->sellPrice,
-                $product->discountId, $product->discountType);
+            $orderEntity->addItem(new OrderItemData(
+                productId: $dto->productId,
+                quantity: 1.0,
+                basePrice: $product->basePrice,
+                sellPrice: $product->sellPrice,
+                discountId: $product->discountId,
+                discountType: $product->discountType,
+            ));
 
             //Устанавливаем статусы
             $orderEntity->addStatus(OrderStatus::new());
