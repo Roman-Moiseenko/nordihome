@@ -20,7 +20,7 @@
             <div class="order-header" onclick="window.location.href='{{ route('cabinet.order.view', $order->id) }}'">
                 <div>
                     <div class="fs-5">{{ $order->info->date }}</div>
-                    <div class="fs-8">{{ $order->info->number }}</div>
+                    <div class="fs-8">Заказ #{{ $order->info->number }}</div>
                 </div>
                 <div>
                     <div class="fs-5">{{ price($order->info->totalAmount) }}</div>
@@ -32,7 +32,7 @@
                     <div class="fs-7">Доставка: <br>{{ $order->info->address }}</div>
                     <div class="fs-7 mt-1">Стоимость доставки*
                         - {{ price($order->info->delivery) }}</div>
-                    <div class="fs-8 mt-1">{{ '$order->delivery->status->value()' }}</div>
+                    <div class="fs-8 mt-1">{{ '' }}</div>
                 </div>
                 <div class="row position-relative">
                     @foreach($order->items as $item)

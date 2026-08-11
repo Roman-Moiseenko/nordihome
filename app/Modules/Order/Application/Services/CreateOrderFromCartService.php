@@ -42,12 +42,10 @@ readonly class CreateOrderFromCartService
     public function execute(ClientContext $clientContext, string|null $code, string|null $commentClient): OrderEntity
     {
         //FIXME Каждую задачу из // вынести в UseCase
-       // $this->transactionManager->execute(function () use ($clientContext, $code, $commentClient, &$order) {
+        $this->transactionManager->execute(function () use ($clientContext, $code, $commentClient, &$orderEntity) {
             //Создаем пустой заказ
             $trader_id = Trader::default()->organization->id;
             $orderEntity = new OrderEntity($trader_id, new OrderSellType(Order::ONLINE), $clientContext->id);
-
-         //   $order = Order::register($clientContext->id, Order::ONLINE, $trader_id);
 
             $isParser = false;
             $cartData = $this->cartUseCase->execute();
@@ -56,7 +54,6 @@ readonly class CreateOrderFromCartService
 
                     if ($item->isParser) $isParser = true; //Хотя бы одна позиция на доставку
                     //Присоединяем к нему товары
-                    //DTO (orderId, productId, quantity, isPreorder (isParser), price)
                     $itemDto = new OrderItemData(
                         productId: $item->productId,
                         quantity: $item->quantity,
@@ -67,14 +64,6 @@ readonly class CreateOrderFromCartService
                         preorder: $item->isParser,
                     );
                     $orderEntity->addItem($itemDto);
-
-  /*
-                    $orderItem = OrderItem::new($item->productId, $item->quantity, $item->isParser);
-                    $orderItem->setCost($item->price, $item->price);
-                    $orderItem->assemblage = false;
-                    $orderItem->packing = false;
-                    $order->items()->save($orderItem);
-*/
                     //Удаляем товары из корзины
                     $this->removeCartItemUseCase->execute($item->id);
 
@@ -85,9 +74,7 @@ readonly class CreateOrderFromCartService
             //Добавляем базовые услуги //доставка из польши
             if ($isParser) {
                 $addition = Addition::where('slug', 'poland')->first();
-                //$orderAddition = OrderAddition::new($addition->id);
                 $orderEntity->addAddition($addition->id);
-                //$order->additions()->save($orderAddition);
             }
 
             //Добавляем доставку до региона или по региону
@@ -99,15 +86,11 @@ readonly class CreateOrderFromCartService
                     $addition = Addition::where('slug', 'russia')->first();
                 }
                 $orderEntity->addAddition($addition->id);
-               // $orderAddition = OrderAddition::new($addition->id);
-                //$order->additions()->save($orderAddition);
             }
 
             //Применяем купон
             if (!is_null($code) && !is_null($coupon = $this->getCoupon($code, $clientContext->id))) {
                 $orderEntity->couponId = $coupon->id;
-                //$order->coupon_id = $coupon->id;
-                //$order->save();
             }
 
             //Данные из Клиента в Заказ
@@ -116,22 +99,21 @@ readonly class CreateOrderFromCartService
             if (!$clientInfo->isPickup) $orderEntity->address = $clientInfo->address;
             //Устанавливаем статусы
             $orderEntity->addStatus(OrderStatus::new());
-            $order = $this->repository->save($orderEntity);
-            //$order->save();
+            $orderEntity = $this->repository->save($orderEntity);
 
             //Пересчет скидок
-            $this->orderCalculateService->execute($order->id);
+            $this->orderCalculateService->execute($orderEntity->id);
 
             //FIXME Создание Lead тест
             $leadData = new LeadSourceData(
-                id: $order->id,
+                id: $orderEntity->id,
                 able: 'order.order',
                 data: [],
-                orderId: $order->id,
+                orderId: $orderEntity->id,
             );
             $this->dispatcher->dispatch(new LeadCollected($leadData));
 
-      //  });
+        });
         return $orderEntity;
     }
 

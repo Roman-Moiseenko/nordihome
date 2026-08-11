@@ -15,7 +15,7 @@ class CartItem implements CartItemInterface
     public float $base_cost; //Базовая цена  - используется для удобства = $product->getLastPrice()
     public float $discount_cost; //Цена со скидкой
     public string $discount_name= ''; //Название акции
-    public int $discount_id = 0;
+    public ?int $discount_id = null;
     public string $discount_type; //Класс скидка Promotion или Bonus
 //    public bool $pre_order;
     public bool $check;
