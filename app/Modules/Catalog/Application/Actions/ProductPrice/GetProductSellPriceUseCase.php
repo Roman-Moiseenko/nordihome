@@ -20,7 +20,7 @@ readonly class GetProductSellPriceUseCase
         private GetLatestProductPricesUseCase $pricesUseCase,
     ) {
     }
-    public function execute(int $id, $priceType): ProductSellPriceData
+    public function execute(int $id, PriceType $priceType): ProductSellPriceData
     {
         //FIXME Переделать на репозиторий, получить ProductEntity c данными по акции
 
@@ -28,6 +28,7 @@ readonly class GetProductSellPriceUseCase
         $product = Product::find($id);
 
         $prices = $this->pricesUseCase->execute($id, new UserPermission(null, [] , ['catalog.product.price.view']));
+        \Log::info(json_encode($prices));
         $discountId = null;
         $discountType = null;
         if ($product->promotion() != null) {
@@ -35,7 +36,7 @@ readonly class GetProductSellPriceUseCase
             $discountType = Promotion::class;
             $sellPrice = $product->promotion()->pivot->price;
         } else {
-            $sellPrice = $prices[$priceType];
+            $sellPrice = $prices[$priceType->value] ?? $prices[PriceType::RETAIL];
         }
 
 

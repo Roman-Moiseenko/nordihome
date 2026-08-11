@@ -11,7 +11,7 @@ use DateTimeImmutable;
 
 class OrderEntity
 {
-    public ?int $id {
+    public ?int $id = null {
         get => $this->id;
         set => $this->id = $value;
     }
@@ -147,7 +147,7 @@ class OrderEntity
         );
         $orderItem->discountId = $data->discountId;
         $orderItem->discountType = $data->discountType;
-        $orderItem->preorder = $data->preorder;
+        $orderItem->preorder = $data->preorder ?? false;
 
         $this->items[] = $orderItem;
 

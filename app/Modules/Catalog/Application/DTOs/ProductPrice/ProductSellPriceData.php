@@ -8,8 +8,8 @@ readonly class ProductSellPriceData
         public int $productId,
         public float $basePrice,
         public float $sellPrice,
-        public int $discountId,
-        public int $discountType,
+        public ?int $discountId,
+        public ?int $discountType,
     )
     {
 

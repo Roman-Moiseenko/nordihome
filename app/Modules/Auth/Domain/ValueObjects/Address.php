@@ -6,7 +6,7 @@ use InvalidArgumentException;
 
 final class Address
 {
-    public string $country {
+    public ?string $country = null {
         get => $this->country;
     }
     public ?int $regionCode = null {
@@ -14,23 +14,23 @@ final class Address
         set => $this->regionCode = $value;
     }
 
-    public ?string $region {
+    public ?string $region = null {
         get => $this->region;
     }
-    public string $city {
+    public ?string $city = null {
         get => $this->city;
     }
-    public string $street {
+    public ?string $street = null {
         get => $this->street;
     }
-    public ?string $postalCode {
+    public ?string $postalCode = null {
         get => $this->postalCode;
     }
 
     public function __construct(
-        string  $country,
-        string  $city,
-        string  $street,
+        ?string  $country = null,
+        ?string  $city = null,
+        ?string  $street = null,
         ?string $region = null,
         ?string $postalCode = null,
         ?int $regionCode = null,

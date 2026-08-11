@@ -8,12 +8,12 @@ use DateTimeImmutable;
 
 class OrderHistoryStatusEntity
 {
-    public ?int $id {
+    public ?int $id = null {
         get => $this->id;
         set => $this->id = $value;
     }
 
-    public ?int $orderId {
+    public ?int $orderId = null {
         get => $this->orderId;
         set => $this->orderId = $value;
     }

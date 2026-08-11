@@ -10,7 +10,11 @@
     </div>
     <div class="screen-action">
         <div class="left-list-block">
+
             Менеджер свяжется с вами в течении .... минут, для обсуждения деталей
+            <br>
+            <h2>Жду ТЗ, что здесь должно быть</h2>
+
         </div>
         <div class="right-action-block">
             <div class="sticky-block">

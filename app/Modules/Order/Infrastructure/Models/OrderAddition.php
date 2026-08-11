@@ -36,6 +36,7 @@ class OrderAddition extends Model
         'addition_id',
         'comment',
         'quantity',
+        'amount',
     ];
 
     public static function new(int $addition_id): self

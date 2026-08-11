@@ -55,12 +55,12 @@ class OrderRepository implements OrderRepositoryInterface
         $model->shopper_id = $order->shopperId;
         $model->staff_id = $order->staffId;
         $model->discount_id = $order->discountId;
-        $model->discount_amount = $order->discountAmount;
-        $model->coupon_amount = $order->couponAmount;
+        $model->discount_amount = $order->discountAmount ?? 0;
+        $model->coupon_amount = $order->couponAmount ?? 0;
         $model->coupon_id = $order->couponId;
         $model->manual = $order->manual;
-        $model->comment = $order->comment;
-        $model->comment_client = $order->commentClient;
+        $model->comment = $order->comment ?? '';
+        $model->comment_client = $order->commentClient ?? '';
         $model->is_pickup = $order->isPickup;
 
         if ($order->address !== null) {
@@ -139,11 +139,11 @@ class OrderRepository implements OrderRepositoryInterface
                     $item->base_cost = $entity->baseCost;
                     $item->sell_cost = $entity->sellCost;
                     $item->discount_id = $entity->discountId;
-                    $item->discount_type = $entity->discountType;
+                    $item->discount_type = $entity->discountType ?? '';
                     $item->preorder = $entity->preorder;
                     $item->fix_manual = $entity->fixManual;
-                    $item->options = $entity->options;
-                    $item->comment = $entity->comment;
+                    $item->options = $entity->options ?? [];
+                    $item->comment = $entity->comment ?? '';
                     $item->assemblage = $entity->assemblage;
                     $item->packing = $entity->packing;
                     $item->save();
@@ -156,11 +156,11 @@ class OrderRepository implements OrderRepositoryInterface
                     'base_cost' => $entity->baseCost,
                     'sell_cost' => $entity->sellCost,
                     'discount_id' => $entity->discountId,
-                    'discount_type' => $entity->discountType,
+                    'discount_type' => $entity->discountType ?? '',
                     'preorder' => $entity->preorder,
                     'fix_manual' => $entity->fixManual,
-                    'options' => $entity->options,
-                    'comment' => $entity->comment,
+                    'options' => $entity->options ?? [],
+                    'comment' => $entity->comment ?? '',
                     'assemblage' => $entity->assemblage,
                     'packing' => $entity->packing,
                 ]);
@@ -194,7 +194,7 @@ class OrderRepository implements OrderRepositoryInterface
                 if ($addition) {
                     $addition->addition_id = $entity->additionId;
                     $addition->amount = $entity->amount;
-                    $addition->comment = $entity->comment;
+                    $addition->comment = $entity->comment ?? '';
                     $addition->quantity = $entity->quantity;
                     $addition->save();
                     $entityIds[] = $entity->id;
@@ -203,7 +203,7 @@ class OrderRepository implements OrderRepositoryInterface
                 $addition = $model->additions()->create([
                     'addition_id' => $entity->additionId,
                     'amount' => $entity->amount,
-                    'comment' => $entity->comment,
+                    'comment' => $entity->comment ?? '',
                     'quantity' => $entity->quantity,
                 ]);
                 $entity->id = $addition->id;
@@ -246,7 +246,7 @@ class OrderRepository implements OrderRepositoryInterface
             } else {
                 $status = $model->statuses()->create([
                     'value' => (string) $entity->value,
-                    'comment' => $entity->comment,
+                    'comment' => $entity->comment ?? '',
                     'number_document' => $entity->numberDocument,
                     'date_document' => $entity->dateDocument,
                 ]);

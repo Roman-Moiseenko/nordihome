@@ -2,8 +2,6 @@
 
 namespace App\Modules\Auth\Infrastructure\Models;
 
-use App\Modules\Base\Casts\GeoAddressCast;
-use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Entity\Review;
 use App\Modules\Order\Infrastructure\Models\Order;
@@ -38,7 +36,6 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string $action_identifier
  * @property bool $consent_active
  * @property User $user
- * @property GeoAddress $address
  * @property string $price_type
  * @property float $discount
  * @property Wish[] $wishes
@@ -49,9 +46,6 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Client extends Model
 {
     protected $table = 'clients';
-    protected $attributes = [
-        'address' => '{}',
-    ];
 
     protected $fillable = [
         'last_name',
@@ -84,7 +78,6 @@ class Client extends Model
         'consented' => 'boolean',
         'consented_at' => 'datetime',
         'consent_active' => 'boolean',
-        'address' => GeoAddressCast::class
     ];
 
     public function user(): MorphOne

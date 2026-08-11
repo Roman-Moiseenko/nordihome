@@ -39,11 +39,13 @@ class OrderController extends ShopController
     }
 
 
-    public function new_order(Order $order, Request $request)
+    public function new_order(int $id, Request $request)
     {
+        //TODO заменить на DTO
+        $order = Order::find($id);
         if ($request->string('from')->value() != 'store') abort(404);
         $e_array = [];
-        //dd($order->items);
+
         foreach ($order->items as $item) {
             $e_array[] = [
                 'id' => $item->product->id,

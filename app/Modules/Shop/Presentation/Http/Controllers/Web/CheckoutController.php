@@ -89,14 +89,21 @@ class CheckoutController extends ShopController
 
     public function create_click(Request $request)
     {
-        //MAINDO Создать заказ в 1 клик
-       // $order = $this->service->create_click($request);
+//try {
+            $dto = OneClickOrderData::validateAndCreate($request->all());
+           \Log::info(json_encode($dto));
+     //   } catch (\Throwable $e) {
+      //      \Log::info($e->getMessage());
+      //  }
 
-        $dto = OneClickOrderData::validateAndCreate($request->all());
+
 
         $order = $this->createOrderOneClickService->execute($dto);
-        //->route('cabinet.order.view', $order)
-        return redirect()->back()->with('success', "Ваш заказ успешно создан! № $order->id");
+        if (!is_null($order)) {
+            return redirect()->back()->with('success', "Ваш заказ успешно создан! № $order->number");
+        } else {
+            return redirect()->back()->with('error', "Ошибка создания заказа");
+        }
     }
 
     public function create_copy(int $id)
@@ -114,7 +121,7 @@ class CheckoutController extends ShopController
             $client,
             $request->input('coupon'),
             $request->input('commentClient'));
-        return redirect()->route('cabinet.order.new_order', ['order' => $order, 'from' => 'store'])->with('success', 'Ваш заказ успешно создан!');
+        return redirect()->route('cabinet.order.new_order', ['id' => $order->id, 'from' => 'store'])->with('success', 'Ваш заказ успешно создан!');
     }
 
 

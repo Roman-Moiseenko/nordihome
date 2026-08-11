@@ -48,9 +48,6 @@
                               title="В заказе {{ count($order->items) }} товаров">...</span>
                     @endif
                 </div>
-                <div>
-                    * список услуг
-                </div>
             </div>
             <div class="order-footer">
                 {{ $order->info->status }}

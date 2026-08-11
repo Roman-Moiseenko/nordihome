@@ -5,7 +5,7 @@
             <form id="buy-click-form" class="p-3 needs-validation" method="get" role="form" novalidate>
                 @csrf
                 <input type="hidden" name="intended">
-                <input id="one-click-product-id" type="hidden" name="product_id">
+                <input id="one-click-product-id" type="hidden" name="productId">
                 <div class="d-flex justify-content-between p-2 text-center mb-4 align-items-center">
                     <p class="modal-title fs-4" id="exampleModalLabel">Быстрая покупка</p>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -38,6 +38,7 @@
                         <div id="delivery_address" class=" mb-3" style="display: none">
                             <div class="form-floating input-group mb-1">
                                 <select class="form-select" name="region" id="input-region">
+                                    <option></option>
                                 </select>
                                 <label for="region">Регион</label>
                                 <input type="hidden" class="form-control" name="regionCode" id="input-region-code"

@@ -22,7 +22,7 @@ class OneClickOrderData extends Data
         #[Required, BooleanType]
         public bool $isPickup,
         #[Nullable, StringType]
-        public ?int $region,
+        public ?string $region,
         #[Nullable, Numeric]
         public ?int $regionCode,
         #[Nullable, StringType]

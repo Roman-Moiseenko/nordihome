@@ -24,42 +24,34 @@ readonly class CreateOrderOneClickService
     public function __construct(
         private TransactionManagerInterface $transactionManager,
 
-        private OrderCalculateService       $orderCalculateService,
+        //private OrderCalculateService       $orderCalculateService,
         private Dispatcher                  $dispatcher,
 
-        private FindOrCreateClientService $findOrCreateClientService,
-        private GetProductSellPriceUseCase $sellPriceUseCase,
-        private OrderRepositoryInterface $repository,
+        private FindOrCreateClientService   $findOrCreateClientService,
+        private GetProductSellPriceUseCase  $sellPriceUseCase,
+        private OrderRepositoryInterface    $repository,
     )
     {
 
     }
 
-    public function execute(OneClickOrderData $dto): OrderEntity
+    public function execute(OneClickOrderData $dto): ?OrderEntity
     {
         $this->transactionManager->execute(function () use ($dto, &$order) {
-
-
             $client = $this->findOrCreateClientService->execute($dto); //Ищем или создаем клиента
-
             //Получаем данные о товаре
             $product = $this->sellPriceUseCase->execute($dto->productId, $client->priceType);
             //Создаем заказ с клиентом
-
             $trader_id = Trader::default()->organization->id;
-
             $orderEntity = new OrderEntity($trader_id, new OrderSellType(Order::ONLINE), $client->id);
 
             $orderEntity->isPickup = $dto->isPickup;
             if (!$dto->isPickup) {
                 $orderEntity->address = new Address(
-                    country: null,
-                    city: null,
                     street: $dto->address,
                     region: $dto->region,
                     regionCode: $dto->regionCode,
                 );
-
                 //По доставке или нет, добавляем Доставку по региону или РФ, и вносим данные
                 //FIXME Сделать Query GetAdditionData какой нибудь
                 if ($orderEntity->address->regionCode == 39) {
@@ -67,7 +59,6 @@ readonly class CreateOrderOneClickService
                 } else {
                     $addition = Addition::where('slug', 'russia')->first();
                 }
-
                 $orderEntity->addAddition($addition->id);
             }
 
@@ -80,12 +71,10 @@ readonly class CreateOrderOneClickService
                 discountId: $product->discountId,
                 discountType: $product->discountType,
             ));
-
             //Устанавливаем статусы
             $orderEntity->addStatus(OrderStatus::new());
-
             $order = $this->repository->save($orderEntity);
-
+            //Отправляем событие
             $leadData = new LeadSourceData(
                 id: $order->id,
                 able: 'order.order',
@@ -93,7 +82,6 @@ readonly class CreateOrderOneClickService
                 orderId: $order->id,
             );
             $this->dispatcher->dispatch(new LeadCollected($leadData));
-
         });
         return $order;
     }

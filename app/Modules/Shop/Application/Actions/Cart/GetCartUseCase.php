@@ -80,7 +80,7 @@ readonly class GetCartUseCase
                 price: $price,
                 quantity: $item->getQuantity(),
                 discountId: $item->discount_id ?? null,
-                discountPrice: empty($item->discount_cost) ? 0 : $item->discount_cost * $item->getQuantity(),
+                discountPrice: empty($item->discount_cost) ? null : $item->discount_cost * $item->getQuantity(),
                 discountName: $item->discount_name,
                 check: $item->check,
             );
