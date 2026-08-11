@@ -7,6 +7,7 @@ namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 use App\Modules\Accounting\Repository\StorageRepository;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Order\Application\Services\CreateOrderFromCartService;
+use App\Modules\Order\Application\Services\CreateOrderOneClickService;
 use App\Modules\Order\Repository\PaymentRepository;
 use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Order\Service\OrderService;

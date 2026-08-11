@@ -72,7 +72,11 @@ class OrderRepository implements OrderRepositoryInterface
             $model->postal_code = $order->address->postalCode;
         }
 
-        $model->number = $order->number;
+        if (is_null($order->number)) {
+            $model->number = (Order::max('number') ?? 0) + 1;
+        } else {
+            $model->number = $order->number;
+        }
 
         $model->save();
 

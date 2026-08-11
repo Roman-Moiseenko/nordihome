@@ -5,6 +5,7 @@ namespace App\Modules\Order\Domain\Entities;
 
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
+use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use DateTimeImmutable;
 
 class OrderEntity
@@ -120,5 +121,51 @@ class OrderEntity
         $this->traderId = $traderId;
         $this->type = $type;
         $this->clientId = $clientId;
+    }
+
+
+    public function addItem($productId, $quantity, $basePrice, $sellPrice = null, $discountId = null, $discountType = null, $preorder = false): void
+    {
+        //При добавлении товара, добавляем, даже дубли, без изменения кол-ва
+        /*
+        foreach ($this->items as &$item) {
+            //Если такой товар уже есть и тип заказа совпадает
+            if ($item->productId == $productId && $item->preorder == $preorder) {
+                $item->quantity += $quantity;
+                return;
+            }
+        }
+        */
+        $orderItem = new OrderItemEntity($productId, $quantity, $basePrice, $sellPrice ?? $basePrice);
+        $orderItem->discountId = $discountId;
+        $orderItem->discountType = $discountType;
+        $orderItem->preorder = $preorder;
+
+        $this->items[] = $orderItem;
+
+        $this->recalculateTotals();
+    }
+
+    public function addAddition($additionId, $amount = 0, $quantity = 1): void
+    {
+        $orderAddition = new OrderAdditionEntity($additionId);
+        $orderAddition->amount = $amount;
+        $orderAddition->quantity = $quantity;
+
+        $this->additions[] = $orderAddition;
+        $this->recalculateTotals();
+    }
+
+    public function addStatus(OrderStatus $status): void
+    {
+        $statusHistory = new OrderHistoryStatusEntity($status);
+        $statusHistory->createdAt = new DateTimeImmutable();
+        $this->statuses[] = $statusHistory;
+        $this->status = $status->getValue();
+    }
+
+    public function recalculateTotals()
+    {
+
     }
 }
