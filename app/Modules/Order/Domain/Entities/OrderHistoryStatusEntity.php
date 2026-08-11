@@ -13,7 +13,7 @@ class OrderHistoryStatusEntity
         set => $this->id = $value;
     }
 
-    public int $orderId {
+    public ?int $orderId {
         get => $this->orderId;
         set => $this->orderId = $value;
     }
@@ -44,10 +44,8 @@ class OrderHistoryStatusEntity
     }
 
     public function __construct(
-        int $orderId,
         OrderStatus $orderStatus,
     ) {
-        $this->orderId = $orderId;
         $this->value = $orderStatus;
 
     }

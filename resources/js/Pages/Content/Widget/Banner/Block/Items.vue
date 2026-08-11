@@ -1,33 +1,39 @@
 <template>
     <el-table :data="[...items]"
               header-cell-class-name="nordihome-header"
-              style="width: 100%;">
-        <el-table-column prop="image_file" label="IMG" width="80">
+              style="width: 100%;"
+    >
+        <el-table-column prop="image_file" label="IMG" width="80" align="left">
             <template #default="scope">
                 <img :src="scope.row.image_file" style="height: 40px;"/>
             </template>
         </el-table-column>
-        <el-table-column prop="url" label="Ссылка на страницу" width="240">
+        <el-table-column prop="url" label="Ссылка на страницу" width="240" align="center">
             <template #default="scope">
                 <EditField :field="scope.row.url" @update:field="val => setUrl(scope.row, val)" />
             </template>
         </el-table-column>
-        <el-table-column prop="slug" label="Slug" width="200">
+        <el-table-column prop="slug" label="Slug" width="200" align="center">
             <template #default="scope">
                 <EditField :field="scope.row.slug" @update:field="val => setSlug(scope.row, val)"/>
             </template>
         </el-table-column>
-        <el-table-column prop="caption" label="Заголовок" width="300">
+        <el-table-column prop="button" label="Кнопка" width="200" align="center">
+            <template #default="scope">
+                <EditField :field="scope.row.button" @update:field="val => setButton(scope.row, val)"/>
+            </template>
+        </el-table-column>
+        <el-table-column prop="caption" label="Заголовок" width="300" align="center">
             <template #default="scope">
                 <EditField :field="scope.row.caption" @update:field="val => setCaption(scope.row, val)" />
             </template>
         </el-table-column>
-        <el-table-column prop="marking" label="Маркировка" >
+        <el-table-column prop="marking" label="Маркировка" align="center">
             <template #default="scope">
                 <EditField :field="scope.row.marking" @update:field="val => setMarking(scope.row, val)" />
             </template>
         </el-table-column>
-        <el-table-column prop="description" label="Описание" >
+        <el-table-column prop="description" label="Описание" align="center">
             <template #default="scope">
                 <EditField :field="scope.row.description" @update:field="val => setDescription(scope.row, val)" />
             </template>
@@ -65,6 +71,7 @@ const props = defineProps({
 })
 const form = reactive({
     slug: null,
+    button: null,
     url: null,
     caption: null,
     description: null,
@@ -92,6 +99,7 @@ function onDown(row) {
 }
 function getRow(row) {
     form.slug = row.slug
+    form.button = row.button
     form.url = row.url
     form.caption = row.caption
     form.description = row.description
@@ -101,6 +109,12 @@ function setSlug(row, val) {
     form.slug = val
     setItem(row)
 }
+function setButton(row, val) {
+    getRow(row)
+    form.button = val
+    setItem(row)
+}
+
 function setUrl(row, val) {
     getRow(row)
     form.url = val

@@ -12,7 +12,7 @@ class OrderAdditionEntity
         set => $this->id = $value;
     }
 
-    public int $orderId {
+    public ?int $orderId {
         get => $this->orderId;
         set => $this->orderId = $value;
     }
@@ -48,10 +48,8 @@ class OrderAdditionEntity
     }
 
     public function __construct(
-        int $orderId,
         int $additionId,
     ) {
-        $this->orderId = $orderId;
         $this->additionId = $additionId;
     }
 }

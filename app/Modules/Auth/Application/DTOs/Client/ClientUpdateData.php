@@ -17,10 +17,10 @@ class ClientUpdateData extends Data
 
 
     public function __construct(
-        #[Required, StringType, Max(255)]
-        public readonly string $lastName,
-        #[Required, StringType, Max(255)]
-        public readonly string $firstName,
+        #[Nullable, StringType, Max(255)]
+        public readonly ?string $lastName = null,
+        #[Nullable, StringType, Max(255)]
+        public readonly ?string $firstName = null,
         #[Nullable, StringType, Max(255)]
         public readonly ?string $middleName = null,
         #[Nullable, StringType, Max(255)]

@@ -111,7 +111,7 @@ class Cart
         $this->loadItems();
         foreach ($this->items as $i => $current) {
             if ($current->isProduct($product_id)) {
-                $this->storage->remove($current);
+                $this->storage->remove($current->id);
                 return true;
             }
         }

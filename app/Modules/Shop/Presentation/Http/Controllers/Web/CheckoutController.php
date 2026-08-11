@@ -11,6 +11,7 @@ use App\Modules\Order\Repository\PaymentRepository;
 use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Shop\Application\Actions\Cart\GetCartUseCase;
+use App\Modules\Shop\Application\DTOs\Checkout\OneClickOrderData;
 use App\Modules\Shop\Cart\Cart;
 use App\Modules\Shop\Parser\ParserCart;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -41,6 +42,7 @@ class CheckoutController extends ShopController
    //     StorageRepository $storages,
         private readonly GetCartUseCase                      $getCartUseCase,
         private readonly CreateOrderFromCartService $createOrderFromCartService,
+        private readonly CreateOrderOneClickService $createOrderOneClickService,
     )
     {
        // parent::__construct();
@@ -89,8 +91,11 @@ class CheckoutController extends ShopController
         //MAINDO Создать заказ в 1 клик
        // $order = $this->service->create_click($request);
 
+        $dto = OneClickOrderData::validateAndCreate($request->all());
+
+        $order = $this->createOrderOneClickService->execute($dto);
         //->route('cabinet.order.view', $order)
-        return redirect()->back()->with('success', 'Ваш заказ успешно создан!');
+        return redirect()->back()->with('success', "Ваш заказ успешно создан! № $order->id");
     }
 
     public function create_copy(int $id)

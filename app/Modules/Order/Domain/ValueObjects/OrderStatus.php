@@ -59,4 +59,9 @@ public const array STATUSES = [
 
     public function getValue(): ?string { return $this->value; }
     public function __toString(): string { return $this->value ?? ''; }
+
+    public static function new(): self
+    {
+        return new self(OrderStatus::NEW);
+    }
 }

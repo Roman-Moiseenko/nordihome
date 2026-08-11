@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property string $url
  * @property string $marking
+ * @property string $button
  * @property BannerWidget $widget
  */
 class BannerWidgetItem extends WidgetItem
@@ -17,6 +18,11 @@ class BannerWidgetItem extends WidgetItem
 
     protected $table= "widget_banner_items";
 
+    protected $fillable = [
+        'url',
+        'marking',
+        'button'
+    ];
     public static function register(int $widget_id): self
     {
         $item = parent::new($widget_id);

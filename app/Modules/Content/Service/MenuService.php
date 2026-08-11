@@ -39,8 +39,10 @@ class MenuService
 
         foreach ($new_sort as $i => $id) {
             $item = MenuItem::find($id);
-            $item->sort = $i;
-            $item->save();
+            if (!is_null($item)) {
+                $item->sort = $i;
+                $item->save();
+            }
         }
     }
 

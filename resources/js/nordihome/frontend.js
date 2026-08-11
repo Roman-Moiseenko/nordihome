@@ -266,14 +266,14 @@ window.$ = jQuery;
         let buttonBuyClick = $('#button-buy-click');
         let inputBCEmail = buyClickPopup.find('input[name="email"]');
         let inputBCPhone = buyClickPopup.find('input[name="phone"]');
-        let selectBCPayment = buyClickPopup.find('select[name="payment"]');
+       // let selectBCPayment = buyClickPopup.find('select[name="payment"]');
         let selectBCDelivery = buyClickPopup.find('select[name="delivery"]');
         let inputBCAddress = buyClickPopup.find('input[name="address"]');
         buttonBuyClick.on('click', function (item) {
             let product_id = buyClickPopup.find('input[name=product_id]').val();
             let errorBlock = $('#buy-click-error');
             item.preventDefault();
-            if (inputBCEmail.val() === '' || inputBCPhone.val() === '' || selectBCPayment.val() === '' || selectBCDelivery.val() === '') {
+            if (inputBCEmail.val() === '' || inputBCPhone.val() === '' || selectBCDelivery.val() === '') {
                 errorBlock.html('Не заполнены поля');
                 return false;
             }
@@ -281,6 +281,10 @@ window.$ = jQuery;
                 errorBlock.html('Не заполнен адрес доставки');
                 return false;
             }
+            formBuyClick.attr('method', 'post')
+            formBuyClick.attr('action', '/order/create-click')
+            formBuyClick.submit();
+           /*
             $.post('/product/count-for-sell/' + product_id, {}, function (data) {
                 if (data === 0) {
                     errorBlock.html('Товар не в наличии! Оформите предзаказ!');
@@ -291,6 +295,7 @@ window.$ = jQuery;
                     formBuyClick.submit();
                 }
             });
+            */
 
         });
 
@@ -860,6 +865,8 @@ window.$ = jQuery;
             });
         });
     }
+    // === Заполняем select регионов ===
+    initRegionSelect('#input-region', '#input-region-code');
 
     /** ОФОРМЛЕНИЕ ЗАКАЗА  */
     if (main.hasClass('order-page-create') || main.hasClass('order-page-create-parser') ) {
@@ -953,8 +960,7 @@ window.$ = jQuery;
             to.parent().show();
             sendToBackend();
         })
-        // === Заполняем select регионов ===
-        initRegionSelect('#input-region', '#input-region-code');
+
 
         // === Переключение способа получения: показывать/скрывать адрес ===
         $('#input-is-pickup').on('change', function () {
@@ -1025,10 +1031,6 @@ window.$ = jQuery;
 
     /** КАБИНЕТ **/
     if (main.hasClass('cabinet')) {
-
-        // Заполняем select регионов из window.regions
-        initRegionSelect('#input-region', '#input-region-code');
-
         // === Кнопки Изменить/Отмена/Сохранить ===
         initClientProfileEdit();
 

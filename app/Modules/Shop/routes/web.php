@@ -118,6 +118,8 @@ Route::group(
             Route::post('/remove/{product}', [CartController::class, 'remove'])->name('remove');
             Route::post('/clear', [CartController::class, 'clear'])->name('clear');
         });
+
+        //CHECKOUT
         Route::group([
             'as' => 'order.',
             'prefix' => 'order',

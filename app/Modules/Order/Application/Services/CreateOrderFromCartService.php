@@ -69,6 +69,7 @@ readonly class CreateOrderFromCartService
 
             //Добавляем доставку до региона или по региону
             if (!$clientInfo->isPickup) {
+                //FIXME Сделать Query GetAdditionData какой нибудь
                 if ($clientInfo->address->regionCode == 39) {
                     $addition = Addition::where('slug', 'koenig')->first();
                 } else {

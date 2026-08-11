@@ -42,13 +42,14 @@ class UpdateClientUseCase
         }
 
         // Обновляем ФИО
-        $fullName = new FullName(implode(' ', array_filter([
-            $dto->lastName,
-            $dto->firstName,
-            $dto->middleName,
-        ])));
-        $client->fullName = $fullName;
-
+        if (!is_null($dto->lastName) && !is_null($dto->firstName)) {
+            $fullName = new FullName(implode(' ', array_filter([
+                $dto->lastName,
+                $dto->firstName,
+                $dto->middleName,
+            ])));
+            $client->fullName = $fullName;
+        }
         // Телефон
         if ($dto->phone !== null) {
             $phone = $dto->phone ? new PhoneNumber($dto->phone) : null;

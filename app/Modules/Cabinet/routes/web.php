@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'as' => 'cabinet.',
     'prefix' => 'cabinet',
-    'namespace' => 'Cabinet',
-    'middleware' => ['user_cookie_id'],
+    //'namespace' => 'Cabinet',
+    'middleware' => ['user_cookie_id', 'auth', 'role:client'],
 ],
     function () {
         Route::get('/', [CabinetController::class, 'view'])->name('view');

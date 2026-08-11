@@ -180,10 +180,9 @@ class OrderRepository implements OrderRepositoryInterface
     private function hydrateStatus(OrderHistoryStatus $model): OrderHistoryStatusEntity
     {
         $entity = new OrderHistoryStatusEntity(
-            orderId: $model->order_id,
             orderStatus: new OrderStatus($model->value),
         );
-
+        $entity->orderId = $model->order_id;
         $entity->id = $model->id;
         $entity->comment = $model->comment;
         $entity->numberDocument = $model->number_document;
@@ -199,13 +198,13 @@ class OrderRepository implements OrderRepositoryInterface
     private function hydrateItem(OrderItem $model): OrderItemEntity
     {
         $entity = new OrderItemEntity(
-            orderId: $model->order_id,
             productId: $model->product_id,
             quantity: (float) $model->quantity,
             baseCost: (float) $model->base_cost,
             sellCost: (float) $model->sell_cost,
         );
 
+        $entity->orderId = $model->order_id;
         $entity->id = $model->id;
         $entity->preorder = (bool) $model->preorder;
         $entity->discountId = $model->discount_id;
@@ -230,10 +229,9 @@ class OrderRepository implements OrderRepositoryInterface
     private function hydrateAddition(OrderAddition $model): OrderAdditionEntity
     {
         $entity = new OrderAdditionEntity(
-            orderId: $model->order_id,
             additionId: $model->addition_id,
         );
-
+        $entity->orderId = $model->order_id;
         $entity->id = $model->id;
         $entity->amount = (float) $model->amount;
         $entity->comment = $model->comment;

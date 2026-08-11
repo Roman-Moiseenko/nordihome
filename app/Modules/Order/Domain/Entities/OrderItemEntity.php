@@ -12,7 +12,7 @@ class OrderItemEntity
         set => $this->id = $value;
     }
 
-    public int $orderId {
+    public ?int $orderId {
         get => $this->orderId;
         set => $this->orderId = $value;
     }
@@ -92,13 +92,11 @@ class OrderItemEntity
         set => $this->updatedAt = $value;
     }
     public function __construct(
-        int $orderId,
         int $productId,
         float $quantity,
         float $baseCost,
         float $sellCost,
     ) {
-        $this->orderId = $orderId;
         $this->productId = $productId;
         $this->quantity = $quantity;
         $this->baseCost = $baseCost;
