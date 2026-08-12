@@ -22,10 +22,10 @@ readonly class OrderViewData
 
         //Данные о доставке
         public bool $isPickup,
-        public string $address,
+        public ?string $address,
 
-        public string $comment,
-        public string $commentClient,
+        public ?string $comment,
+        public ?string $commentClient,
         // Данные о клиенте
         public ?ClientOrderData $client,
 
@@ -41,6 +41,8 @@ readonly class OrderViewData
         /** @var OrderStatusViewData[] $statuses */
         public array $statuses,
         public string $status,
+
+        public ?int $clientId,
 
     )
     {

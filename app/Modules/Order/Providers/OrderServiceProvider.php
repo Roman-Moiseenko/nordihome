@@ -4,6 +4,8 @@ namespace App\Modules\Order\Providers;
 
 use App\Modules\Order\Database\Seeders\AdditionSeeder;
 use App\Modules\Order\Database\Seeders\OrderRoleSeeder;
+use App\Modules\Order\Infrastructure\Events\OrderHasCreated;
+use App\Modules\Order\Infrastructure\Listeners\SendClientOrderNew;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -223,8 +225,9 @@ class OrderServiceProvider extends ServiceProvider
     /**
      * Register events and listeners for the module
      */
-    public function registerEvents()
+    public function registerEvents(): void
     {
+        Event::listen(OrderHasCreated::class, SendClientOrderNew::class);
         // Event::listen(EventClass::class, ListenerClass::class);
         // Event::subscribe(SubscriberClass::class);
     }

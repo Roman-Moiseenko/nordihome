@@ -33,7 +33,7 @@ class LeadService
 
 
     }
-
+/*
     public function createLeadFromOrder(Order $order): void
     {
         //TODO
@@ -51,7 +51,7 @@ class LeadService
         }
 
     }
-
+*/
     public function setStatus(Lead $lead, Request $request): bool
     {
         $newStatus = $request->integer('status');

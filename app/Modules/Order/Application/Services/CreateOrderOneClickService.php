@@ -12,6 +12,7 @@ use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
+use App\Modules\Order\Infrastructure\Events\OrderHasCreated;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Shared\Application\DTOs\Lead\LeadSourceData;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
@@ -37,7 +38,7 @@ readonly class CreateOrderOneClickService
 
     public function execute(OneClickOrderData $dto): ?OrderEntity
     {
-        $this->transactionManager->execute(function () use ($dto, &$order) {
+        $this->transactionManager->execute(function () use ($dto, &$orderEntity) {
             $client = $this->findOrCreateClientService->execute($dto); //Ищем или создаем клиента
             //Получаем данные о товаре
             $product = $this->sellPriceUseCase->execute($dto->productId, $client->priceType);
@@ -73,16 +74,18 @@ readonly class CreateOrderOneClickService
             ));
             //Устанавливаем статусы
             $orderEntity->addStatus(OrderStatus::new());
-            $order = $this->repository->save($orderEntity);
+
+            $orderEntity = $this->repository->save($orderEntity);
             //Отправляем событие
             $leadData = new LeadSourceData(
-                id: $order->id,
+                id: $orderEntity->id,
                 able: 'order.order',
                 data: [],
-                orderId: $order->id,
+                orderId: $orderEntity->id,
             );
             $this->dispatcher->dispatch(new LeadCollected($leadData));
+            $this->dispatcher->dispatch(new OrderHasCreated($orderEntity->id));
         });
-        return $order;
+        return $orderEntity;
     }
 }

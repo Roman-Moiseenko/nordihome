@@ -12,6 +12,7 @@ use App\Modules\Auth\Domain\Services\PasswordHasherInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\HashedPassword;
 use App\Modules\Auth\Domain\ValueObjects\ProfileType;
+use App\Modules\Mail\Entity\MailTemplateRegistry;
 use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;
 use App\Modules\Shared\Domain\Entities\Mail\Recipient;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -65,13 +66,14 @@ readonly class RegisterUserClientUseCase
         $this->userRepository->saveEmailVerification($savedUser->id, $email, $token);
 
         //$verificationUrl = $this->frontendUrl . '/verify-email?token=' . $token;
+        $template = MailTemplateRegistry::get('user.verify');
         $this->mailService->send(
-            'auth.verify',
+            $template,
             [
                 'login' => $email->value,
                 'token' => $token,
             ],
-            new Recipient(email: $email->value, userId: $savedUser->id)
+            new Recipient(email: $email->value, clientId: $savedUser->id)
         );
 
         return $savedUser;

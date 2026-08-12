@@ -3,9 +3,10 @@
 namespace App\Modules\Lead\Listeners;
 
 use App\Modules\Lead\Service\LeadService;
-use App\Modules\Order\Events\OrderHasCreated;
+use App\Modules\Order\Infrastructure\Events\OrderHasCreated;
+use JetBrains\PhpStorm\Deprecated;
 
-
+#[Deprecated]
 class LeadNewFromOrder
 {
     private LeadService $service;
@@ -21,6 +22,6 @@ class LeadNewFromOrder
     public function handle(OrderHasCreated $event): void
     {
         //Письмо клиенту о новом заказе
-        $this->service->createLeadFromOrder($event->order);
+      //  $this->service->createLeadFromOrder($event->order);
     }
 }

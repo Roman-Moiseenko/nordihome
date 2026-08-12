@@ -23,7 +23,6 @@ class StaffNotificationFormBackService
 
         //TODO отправить всем сообщения через Job
 
-        \Log::info('Уведомляем о новой форме !');
 
         if (is_null($leadData->orderId)) {
             \Log::info('Уведомляем о новой форме !');

@@ -8,9 +8,15 @@ use App\Modules\Mail\Mailable\VerifyMail;
 use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;
 use App\Modules\Shared\Domain\Entities\Mail\Recipient;
 use App\Modules\User\Entity\User;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-
+use App\Modules\Mail\Entity\MailTemplate;
+use Illuminate\Mail\Mailables\Content;
+use Illuminate\Mail\Mailables\Envelope;
+use Illuminate\Mail\Mailables\Address;
+use Illuminate\Bus\Queueable;
 class SystemMailService implements MailServiceInterface
 {
 
@@ -38,8 +44,54 @@ class SystemMailService implements MailServiceInterface
     }
 
     //TODO сделать через useCase
-    public function send(string $templateName, array $data, Recipient $recipient): void
+    public function send(MailTemplate $template, array $data, Recipient $recipient): void
     {
+
+        // Создаём стандартное Laravel-письмо «на лету», без отдельных классов
+        $mail = new class($template, $data) extends Mailable
+        {
+            use Queueable, SerializesModels;
+
+            public function __construct(
+                private readonly MailTemplate $template,
+                private readonly array        $data,
+            ) {}
+
+            public function envelope(): Envelope
+            {
+                return new Envelope(
+                    from: new Address(
+                        config('mail.from.address'),
+                        config('mail.from.name')
+                    ),
+                    subject: $this->template->subject,
+                );
+            }
+
+            public function content(): Content
+            {
+                return new Content(
+                    markdown: $this->template->view,
+                    with: $this->data,
+                );
+            }
+
+            public function attachments(): array
+            {
+                return $this->template->getAttachments($this->data);
+            }
+        };
+
+        Mail::mailer('system')->to($recipient->email)->send($mail);
+
+        // Логирование в SystemMail для статистики (если нужно)
+        SystemMail::register($mail, $recipient->clientId, [$recipient->email]);
+    }
+
+
+
+
+  /*
         $mail = null;
         if ($templateName == 'auth.verify') $mail = new VerifyMail($data);
 
@@ -52,6 +104,6 @@ class SystemMailService implements MailServiceInterface
             Log::error('Письмо не отправлено ' . $recipient->email);
             $systemMail->notSent(); //Письмо не отправлено, внутрення ошибка
         };
+*/
 
-    }
 }

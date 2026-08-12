@@ -1,28 +1,25 @@
 <?php
 
-namespace App\Modules\Order\Events;
+namespace App\Modules\Order\Infrastructure\Events;
 
-use App\Modules\Order\Infrastructure\Models\Order;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-//TODO Перенести в модуль Order
-
 class OrderHasCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public Order $order;
+    public int $orderId;
     private string $action;
 
     /**
      * Слушатели - уведомления, доставка и платежи (сервисы)
      */
-    public function __construct(Order $order, string $action = '')
+    public function __construct(int $orderId, string $action = '')
     {
-        $this->order = $order;
+        $this->orderId = $orderId;
         $this->action = $action;
     }
 

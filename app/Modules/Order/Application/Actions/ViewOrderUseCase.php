@@ -41,7 +41,7 @@ class ViewOrderUseCase
 
     }
 
-    public function execute(int $id, UserPermission $permission)
+    public function execute(int $id, UserPermission $permission): OrderViewData
     {
 
        // if ($permission->can('order.order.edit')) throw new \DomainException('Нет доступа к редактированию заказов');
@@ -53,9 +53,9 @@ class ViewOrderUseCase
             $clientEntity = $this->clientRepository->findById($orderEntity->clientId);
             $clientDto = new ClientOrderData(
                 id: $clientEntity->id,
-                fullName: $clientEntity->fullName->getValue(),
-                email: $clientEntity->email->value,
-                phone: $clientEntity->phone->getValue(),
+                fullName: $clientEntity->fullName?->getValue() ?? '',
+                email: $clientEntity->email?->value ?? '',
+                phone: $clientEntity->phone?->getValue() ?? '',
                 priceType: $clientEntity->priceType->value,
             );
         } else {
@@ -192,6 +192,7 @@ class ViewOrderUseCase
             additions: $additions,
             statuses: $statuses,
             status: $currentStatus->value,
+            clientId: $orderEntity->clientId,
         );
 
         return $orderData;

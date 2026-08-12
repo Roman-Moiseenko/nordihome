@@ -27,7 +27,6 @@ use App\Listeners\CheckNotificationStatus;
 use App\Listeners\NotificationArrivalCompleted;
 use App\Listeners\NotificationCouponCreated;
 use App\Listeners\NotificationDepartureNew;
-use App\Listeners\NotificationExpenseAssembly;
 use App\Listeners\NotificationExpenseDelivery;
 use App\Listeners\NotificationExpenseInfo;
 use App\Listeners\NotificationMovementCompleted;
@@ -35,7 +34,6 @@ use App\Listeners\NotificationMovementNew;
 use App\Listeners\NotificationNewLogger;
 use App\Listeners\NotificationOrderCanceled;
 use App\Listeners\NotificationOrderCompleted;
-use App\Listeners\NotificationOrderNew;
 use App\Listeners\NotificationOrderPaid;
 use App\Listeners\NotificationOrderPrepaid;
 use App\Listeners\NotificationParserPriceChange;
@@ -61,7 +59,6 @@ use App\Modules\Admin\Listeners\NotificationStaff;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Lead\Listeners\LeadCanceled;
 use App\Modules\Lead\Listeners\LeadCompleted;
-use App\Modules\Lead\Listeners\LeadNewFromOrder;
 use App\Modules\Lead\Listeners\LeadReturnPaid;
 use App\Modules\Lead\Listeners\LeadSetAssembling;
 use App\Modules\Lead\Listeners\LeadSetAwaiting;
@@ -79,7 +76,6 @@ use App\Modules\Order\Events\ExpenseHasDelivery;
 use App\Modules\Order\Events\OrderHasAwaiting;
 use App\Modules\Order\Events\OrderHasCanceled;
 use App\Modules\Order\Events\OrderHasCompleted;
-use App\Modules\Order\Events\OrderHasCreated;
 use App\Modules\Order\Events\OrderHasLogger;
 use App\Modules\Order\Events\OrderHasPaid;
 use App\Modules\Order\Events\OrderHasPrepaid;
@@ -134,10 +130,6 @@ class EventServiceProvider extends ServiceProvider
             LeadSetDelivery::class,
         ],
 
-        OrderHasCreated::class => [
-            NotificationOrderNew::class,
-            LeadNewFromOrder::class,
-        ],
         OrderHasCanceled::class => [
             NotificationOrderCanceled::class,
             LeadCanceled::class,

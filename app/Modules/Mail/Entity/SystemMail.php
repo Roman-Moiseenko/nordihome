@@ -15,6 +15,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Log\Logger;
+use Illuminate\Mail\Mailable;
 use Illuminate\Support\Facades\Log;
 
 /**
@@ -72,14 +73,17 @@ class SystemMail extends Model
         return $this->morphTo()->withTrashed();
     }
 
-    public static function register(AbstractMailable $mailable, int $user_id, array $emails): self
+    /**
+     * @throws \ReflectionException
+     */
+    public static function register(AbstractMailable|Mailable $mailable, int $client_id, array $emails): self
     {
         return self::create([
             'mailable' => $mailable::class,
-            'client_id' => $user_id,
+            'client_id' => $client_id,
             'title' => $mailable->envelope()->subject,
             'content' => $mailable->render(),
-            'attachments' => $mailable->getFiles(),
+            'attachments' => $mailable->attachments(),
             'count' => 1,
             'emails' => $emails,
         ]);

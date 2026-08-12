@@ -12,6 +12,7 @@ use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
+use App\Modules\Order\Infrastructure\Events\OrderHasCreated;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
@@ -112,7 +113,7 @@ readonly class CreateOrderFromCartService
                 orderId: $orderEntity->id,
             );
             $this->dispatcher->dispatch(new LeadCollected($leadData));
-
+            $this->dispatcher->dispatch(new OrderHasCreated($orderEntity->id));
         });
         return $orderEntity;
     }

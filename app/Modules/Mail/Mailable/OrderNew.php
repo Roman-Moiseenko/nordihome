@@ -2,6 +2,8 @@
 
 namespace App\Modules\Mail\Mailable;
 
+use App\Modules\Order\Application\DTOs\OrderViewData;
+use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Infrastructure\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailables\Content;
@@ -11,12 +13,12 @@ class OrderNew extends SystemMailable
 {
     use Queueable, SerializesModels;
 
-    private Order $order;
+    private OrderViewData $order;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(Order $order)
+    public function __construct(OrderViewData $order)
     {
         parent::__construct();
         $this->order = $order;
