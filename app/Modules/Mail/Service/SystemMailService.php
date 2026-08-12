@@ -85,7 +85,8 @@ class SystemMailService implements MailServiceInterface
         Mail::mailer('system')->to($recipient->email)->send($mail);
 
         // Логирование в SystemMail для статистики (если нужно)
-        SystemMail::register($mail, $recipient->clientId, [$recipient->email]);
+        if (!is_null($recipient->clientId))
+            SystemMail::register($mail, $recipient->clientId, [$recipient->email]);
     }
 
 

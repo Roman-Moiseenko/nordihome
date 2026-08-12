@@ -24,6 +24,11 @@ class MailTemplateRegistry
                 subject: 'Новая заявка с сайта',
                 view: 'mail.lead.form',
             ),
+            'lead.order' => new MailTemplate(
+                code: 'lead.order',
+                subject: 'Новый заказ с сайта',
+                view: 'mail.lead.order',
+            ),
         ];
     }
 

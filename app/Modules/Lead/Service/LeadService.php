@@ -54,11 +54,9 @@ class LeadService
 */
     public function setStatus(Lead $lead, Request $request): bool
     {
-        $newStatus = $request->integer('status');
+        $newStatus = $request->input('status');
         if (!isset(LeadStatus::STATUSES[$newStatus])) return false;
-
-        if (!$this->checkStatus($lead, $newStatus)) return false;
-
+        if (!in_array($newStatus, LeadStatus::MANUAL)) return false;
         if ($lead->isNew()) {
             $lead->staff_id = auth()->user()->profileable->id;
             $lead->setStatus($newStatus);
@@ -84,9 +82,9 @@ class LeadService
 
     }
 
-    private function checkStatus(Lead $lead, int $status): bool
+    private function checkStatus(Lead $lead, string $status): bool
     {
-        if (is_null($lead->order_id) && $status > LeadStatus::NOT_DECIDED) return false;
+       // if (is_null($lead->order_id) && $status > LeadStatus::NOT_DECIDED) return false;
         //TODO Другие варианты
         return true;
     }

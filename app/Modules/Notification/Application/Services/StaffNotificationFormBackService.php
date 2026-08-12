@@ -2,10 +2,12 @@
 
 namespace App\Modules\Notification\Application\Services;
 
+use App\Modules\Mail\Entity\MailTemplateRegistry;
 use App\Modules\Mail\Mailable\Inner\FormBackMail;
 use App\Modules\Notification\Presentation\Views\Max\MaxFormBackNotification;
 use App\Modules\Notification\Presentation\Views\Telegram\TelegramFormBackNotification;
 use App\Modules\Shared\Application\DTOs\Lead\LeadSourceData;
+use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Notification;
 use NotificationChannels\Max\Exceptions\CouldNotSendNotification;
@@ -13,6 +15,10 @@ use NotificationChannels\Max\MaxMessage;
 
 class StaffNotificationFormBackService
 {
+
+    public function __construct(private MailServiceInterface $mailService)
+    {
+    }
 
     /**
      * @throws CouldNotSendNotification
@@ -34,9 +40,12 @@ class StaffNotificationFormBackService
 
         if (is_null($leadData->orderId)) {
             $mail = new FormBackMail($leadData);
+
+            $template = MailTemplateRegistry::get('lead.form');
         } else {
             //MAINDO сделать письмо
            // $mail = new OrderNewBackMail($leadData);
+            $template = MailTemplateRegistry::get('lead.order');
         }
         //Отправляем письмо
 

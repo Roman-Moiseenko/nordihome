@@ -76,7 +76,7 @@ class Lead extends Model
     }
 
     public function setStatus(
-        #[ExpectedValues(valuesFromClass: LeadStatus::class)] int $value): void
+        #[ExpectedValues(valuesFromClass: LeadStatus::class)] string $value): void
     {
         $this->statuses()->create(['value' => $value, 'created_at' => now()]);
     }

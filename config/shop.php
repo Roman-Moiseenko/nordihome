@@ -5,6 +5,9 @@ return [
  //   'theme' => env('SHOP_THEME', ''),
     'yookassa-id' => env('YOOKASSA_SHOP_ID', ''),
     'yookassa-key' => env('YOOKASSA_KEY', ''),
+    'telegram-chat-id' => env('TELEGRAM_CHAT_ID', ''),
+    'max-chat-id' => env('MAX_CHAT_ID', ''),
+
     'crm' => [
         'name-crm' => 'shop-L',
         'version' => '0.1',

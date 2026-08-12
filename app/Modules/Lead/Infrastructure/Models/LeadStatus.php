@@ -37,7 +37,13 @@ class LeadStatus extends Model
         self::CANCELED => 'Отменен',
         self::COMPLETED => 'Завершен',
     ];
+    const array MANUAL = [
+        self::NEW_LEAD,
+        self::IN_WORK,
+        self::NOT_DECIDED,
+        self::CANCELED,
 
+    ];
 
     public $timestamps = false;
     protected $touches = ['lead'];

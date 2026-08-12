@@ -207,7 +207,7 @@ class Order extends Model
     {
         if ($this->finished && $value != OrderHistoryStatus::COMPLETED_REFUND) throw new \DomainException('Заказ закрыт, статус менять нельзя');
         if ($this->isStatus($value)) throw new \DomainException('Статус уже назначен');
-        if ($this->status->value > $value) throw new \DomainException('Нарушена последовательность статусов');
+       //if ($this->status->value > $value) throw new \DomainException('Нарушена последовательность статусов');
 
         $this->statuses()->create(['value' => $value, 'comment' => $comment]);
 

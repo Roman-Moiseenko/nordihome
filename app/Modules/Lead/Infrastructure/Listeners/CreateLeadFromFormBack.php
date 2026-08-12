@@ -5,14 +5,13 @@ namespace App\Modules\Lead\Infrastructure\Listeners;
 use App\Modules\Lead\Application\Actions\CreateLeadFromFormBackUseCase;
 use App\Modules\Shared\Infrastructure\Events\LeadCollected;
 
-class CreateLeadFromFormBack
+readonly class CreateLeadFromFormBack
 {
     /**
      * Create the event listener.
      */
-    public function __construct(private readonly CreateLeadFromFormBackUseCase $useCase)
+    public function __construct(private CreateLeadFromFormBackUseCase $useCase)
     {
-        //
     }
 
     /**

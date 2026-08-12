@@ -28,14 +28,14 @@ use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
-class ViewOrderUseCase
+readonly class ViewOrderUseCase
 {
 
     public function __construct(
-        private readonly OrderRepositoryInterface $repository,
-        private readonly ClientRepositoryInterface $clientRepository,
-        private readonly GetProductItemDataUseCase $getProductItemData,
-        private readonly GetAdditionDataUseCase $getAdditionDataUseCase,
+        private OrderRepositoryInterface  $repository,
+        private ClientRepositoryInterface $clientRepository,
+        private GetProductItemDataUseCase $getProductItemData,
+        private GetAdditionDataUseCase    $getAdditionDataUseCase,
     )
     {
 
@@ -198,6 +198,7 @@ class ViewOrderUseCase
         return $orderData;
 
 
+        //MAINDO Удалить после полного тестирования !!
         /** @var Order $order */
         $order = Order::find($id);
         return array_merge($this->OrderToArray($order), [

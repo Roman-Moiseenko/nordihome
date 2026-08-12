@@ -9,6 +9,7 @@ use App\Modules\Auth\Domain\Exceptions\UserAlreadyExistsException;
 use App\Modules\Auth\Domain\Services\PasswordHasherInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\HashedPassword;
+use App\Modules\Mail\Entity\MailTemplateRegistry;
 use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;
 use App\Modules\Shared\Domain\Entities\Mail\Recipient;
 use Illuminate\Support\Str;
@@ -31,11 +32,13 @@ readonly class ChangeUserCredentialsUseCase
      */
     public function execute(int $userId, ChangeUserCredentialsData $dto): array
     {
+        //TODO Проверка что Client и получить Id
         $user = $this->userRepository->findById($userId);
-        if (!$user) {
-            throw new InvalidCredentialsException('Пользователь не найден');
-        }
 
+        if (!$user)
+            throw new InvalidCredentialsException('Пользователь не найден');
+        if (!$user->isClient())
+            throw new InvalidCredentialsException('Пользователь не клиент');
         // Проверяем текущий пароль
         if (!$user->validatePassword($dto->currentPassword, $this->passwordHasher)) {
             throw new InvalidCredentialsException('Неверный текущий пароль');
@@ -64,14 +67,15 @@ readonly class ChangeUserCredentialsUseCase
 
             // Формируем ссылку подтверждения
             $verificationUrl = $this->frontendUrl . '/verify-email?token=' . $token;
-
+            $template = MailTemplateRegistry::get('user.verify');
             // Отправляем письмо через общий почтовый сервис
             $this->mailService->send(
-                'auth.verify_email',
+                $template,
                 [
-                    'verificationUrl' => $verificationUrl,
+                    'login' => $newEmail->value,
+                    'token' => $token,
                 ],
-                new Recipient($newEmail->value)
+                new Recipient(email:$newEmail->value, clientId: $user->profileableId)
             );
 
             $response['message'] = 'На новый email отправлено письмо для подтверждения';

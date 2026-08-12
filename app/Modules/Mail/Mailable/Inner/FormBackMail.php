@@ -7,7 +7,9 @@ use App\Modules\Shared\Application\DTOs\Lead\LeadSourceData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Queue\SerializesModels;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class FormBackMail extends SystemMailable
 {
     use Queueable, SerializesModels;
