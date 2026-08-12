@@ -41,9 +41,6 @@ readonly class OrderViewData
         /** @var OrderStatusViewData[] $statuses */
         public array $statuses,
         public string $status,
-
-        public ?int $clientId,
-
     )
     {
 

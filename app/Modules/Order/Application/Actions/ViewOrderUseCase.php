@@ -171,7 +171,7 @@ readonly class ViewOrderUseCase
         );
 
 
-        $orderData = new OrderViewData(
+        return new OrderViewData(
             id: $orderEntity->id,
             number: $orderEntity->number,
             staffId: $orderEntity->staffId,
@@ -192,10 +192,7 @@ readonly class ViewOrderUseCase
             additions: $additions,
             statuses: $statuses,
             status: $currentStatus->value,
-            clientId: $orderEntity->clientId,
         );
-
-        return $orderData;
 
 
         //MAINDO Удалить после полного тестирования !!

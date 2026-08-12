@@ -2,13 +2,17 @@
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl flex">
-            Заказ <span v-if="order.number" class="ml-1 mr-1"> № {{ order.number }}</span> покупателя [{{ order.status_text }}]
+
+            <div style="width: 100%">
+            Заказ <span v-if="order.number" class="ml-1 mr-1"> № {{ order.number }}</span> покупателя [{{ order.status }}]
 
             <span class="ml-2 mr-2">от</span>
+            </div>
             <EditField v-if="is_new || is_awaiting" :field="order.created_at" @update:field="setCreated" :isdate="true" />
             <span v-else>
                 {{ func.date(order.created_at)}}
             </span>
+            
             <el-tooltip content="История заказа" placement="right-start" effect="dark">
                 <el-button size="small" type="primary" class="ml-2" plain @click="handleLogOrder">
                     <i class="fa-light fa-rectangle-history"></i>
@@ -81,7 +85,7 @@ const props = defineProps({
         type: String,
         default: 'Заказ покупателя',
     },
-    client: Object,
+
     additions: Array,
     storages: Array,
     staffs: Array,
@@ -91,7 +95,7 @@ const props = defineProps({
 })
 
 console.log(props.order)
-console.log(props.client)
+
 
 provide('$order_related', props.order_related)
 console.log(props.order.status)

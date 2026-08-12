@@ -2,10 +2,10 @@
     <el-row :gutter="10">
         <!-- Данные клиента -->
         <el-col :span="8">
-            <div v-if="order.user_id">
+            <div v-if="order.client">
 
                 <el-descriptions :column="1" border class="mb-1" size="small">
-                    <el-descriptions-item v-if="order.user.organization" label="Юридическое лицо">
+                    <el-descriptions-item v-if="order.client.organization" label="Юридическое лицо">
                         <el-select v-model="info.shopper_id" @change="setInfo" :disabled="iSavingInfo || !is_new"
                                    filterable style="max-width: 280px;" clearable>
                             <el-option v-for="item in order.shoppers" :key="item.id" :value="item.id"
@@ -13,9 +13,32 @@
                         </el-select>
                     </el-descriptions-item>
                 </el-descriptions>
-                <EditUser :user="order.user" />
 
-                <el-button type="warning" plain @click="toUserInfo(order.user.id)">Перейти в Карточку</el-button>
+                <el-descriptions v-if="order.client" :column="1" border class="mb-5" :size="small ? 'small' : 'default'">
+                    <el-descriptions-item label="ФИО">
+                        {{ order.client.fullName }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Телефон">
+                        {{ order.client.phone }}
+                    </el-descriptions-item>
+                    <el-descriptions-item label="Email">
+                        {{ order.client.email }}
+                    </el-descriptions-item>
+                </el-descriptions>
+
+                <el-descriptions  :column="1" border class="mb-5" :size="small ? 'small' : 'default'">
+                    <el-descriptions-item label="Доставка">
+                        <template v-if="order.isPickup">
+                            Самовывоз
+                        </template>
+                        <template v-else>
+                            {{ order.address }}
+                        </template>
+                    </el-descriptions-item>
+                </el-descriptions>
+
+
+                <el-button type="warning" plain @click="toUserInfo(order.client.id)">Перейти в Карточку</el-button>
             </div>
             <SearchUser v-else :route="route('admin.order.set-user', {order: order.id})"/>
         </el-col>
@@ -213,8 +236,8 @@ const {is_new, is_awaiting, is_issued, is_view} = inject('$status')
 
 const showEdit = ref(false)
 
-function toUserInfo(userId) {
-    router.get(route('admin.user.show', {user: userId}))
+function toUserInfo(id) {
+    router.get(route('admin.client.show', {client: id}))
 }
 function SaveComment(val) {
     //Сохраняем комментарий

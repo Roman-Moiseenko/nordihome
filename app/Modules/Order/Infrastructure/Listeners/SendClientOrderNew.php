@@ -17,52 +17,25 @@ use App\Modules\Shared\Domain\Entities\UserPermission;
 readonly class SendClientOrderNew
 {
 
-    /**
-     * Create the event listener.
-     */
     public function __construct(
         private MailServiceInterface $mailService,
-        private ViewClientUseCase    $viewClientUseCase,
         private ViewOrderUseCase     $viewOrderUseCase,
     )
 
     {}
 
-    /**
-     * Handle the event.
-     */
     public function handle(OrderHasCreated $event): void
     {
         $permissions = new UserPermission(null, [], ['auth.buyer.view']);
         $orderView = $this->viewOrderUseCase->execute($event->orderId, $permissions);
-        $client = $this->viewClientUseCase->execute($orderView->clientId, $permissions);
+
+        if (is_null($orderView->client)) throw new \InvalidArgumentException("Заказу $orderView->id не присвои клиент, невозможно отправить email");
 
         $template = MailTemplateRegistry::get('order.new');
         $this->mailService->send(
             $template,
             ['order' => $orderView,],
-            new Recipient(email: $client->email->value, clientId: $client->id)
+            new Recipient(email: $orderView->client->email, clientId: $orderView->client->id)
         );
-
-
-        // 2. Отправить письмо (инфраструктура)
-       // Mail::to($orderView->client->email)->send(new OrderConfirmationMail($orderView));
-
-        //Письмо клиенту о новом заказе
-    //    SendSystemMail::dispatch($event->order->client, new OrderNew($event->order), Order::class, $event->order->id);
-
-
-
-
-        //FIXME Модуль Notification - через RecipientResolverInterface
-      /*  foreach ($staffs as $staff) {
-            $staff->notify(new StaffMessage(
-                NotificationHelper::EVENT_NEW_ORDER,
-                "Список товаров " . $_items,
-                '',
-            $params,
-            ));
-        }
-      */
     }
 }

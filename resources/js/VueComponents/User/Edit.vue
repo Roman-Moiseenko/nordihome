@@ -4,7 +4,7 @@
             {{ client.fullName }}
         </el-descriptions-item>
         <el-descriptions-item label="Телефон">
-            {{ func.phone(client.phone) }}
+            {{ client.phone }}
         </el-descriptions-item>
         <el-descriptions-item label="Email">
             {{ client.email }}
@@ -68,6 +68,8 @@ const props = defineProps({
         default: false,
     }
 })
+console.log(props.client)
+
 const deliveries = ref([])
 const type_pricing = ref([])
 
