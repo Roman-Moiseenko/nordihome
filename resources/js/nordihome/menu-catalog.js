@@ -8,6 +8,7 @@
     function closeAll() {
         panels.forEach(p => p.classList.remove('show'));
         buttons.forEach(b => b.classList.remove('active'));
+        console.log('closeAll')
         body.classList.remove('no-scroll'); // Всегда убираем класс скролла при общем закрытии
     }
 

@@ -22,6 +22,7 @@ window.$ = jQuery;
     let presearch = $('.presearch');
     let suggestBlock = $('.presearch-suggest');
 
+
     // Восстанавливаем значение поискового запроса из URL при загрузке страницы
     (function () {
         let params = new URLSearchParams(window.location.search);
@@ -40,12 +41,10 @@ window.$ = jQuery;
         }
     });
     presearchInput.on('focus', function () {
-        $('.presearch-overlay').show();
-        $('.presearch-suggest').show();
+        overlay(true)
     });
     $('.presearch-overlay').on('click', function (e) {
-        $('.presearch-overlay').hide();
-        $('.presearch-suggest').hide();
+        overlay(false)
     });
     //По таймеру - предотвращаем ajax при быстром наборе
     let timerInput;
@@ -77,7 +76,21 @@ window.$ = jQuery;
         }
     });
 
+    function overlay(show) {
+        const overlay = $('.presearch-overlay')
+        const suggest = $('.presearch-suggest')
 
+        if (show) {
+            overlay.show();
+            suggest.show();
+            $('body').addClass('no-scroll')
+        } else {
+            overlay.hide();
+            suggest.hide();
+
+            $('body').removeClass('no-scroll')
+        }
+    }
 
     //HTML построители
     function _itemSuggestPresearch(item) {
