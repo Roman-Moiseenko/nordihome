@@ -8,7 +8,7 @@ use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
-use App\Modules\Shop\Application\DTOs\Pages\ProductSearchPageData;
+use App\Modules\Shop\Application\DTOs\Search\ProductSearchPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Query\AttributeQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepository;

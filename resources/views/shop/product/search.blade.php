@@ -1,5 +1,5 @@
 @php
-    use App\Modules\Shop\Application\DTOs\Pages\ProductSearchPageData;
+    use App\Modules\Shop\Application\DTOs\Search\ProductSearchPageData;
     /** @var ProductSearchPageData $pageData */
 @endphp
 @extends('shop.layouts.main')
