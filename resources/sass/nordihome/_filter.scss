@@ -1,4 +1,5 @@
 .base-filter {
+    color: black;
     .children {
         border: 1px solid black;
         border-radius: 8px;
@@ -11,4 +12,40 @@
             display: inline-block;
         }
     }
+}
+.attribute-filter {
+    label {margin-bottom: 0;}
+    .widget-variants {
+        .accordion-item {
+            border:1px solid $black;
+            border-radius: $border-radius_8;
+            .accordion-button {
+                font-size: 16px;
+                color:$black;
+                border-bottom:1px solid $black;
+                background: $white;
+                &.collapsed {
+                    border:none;
+                }
+                &:focus {
+                    box-shadow: none;
+                }
+            }
+        }
+    }
+}
+.form-switch .form-check-input {width:auto;}
+#ikea-categories-accordion .accordion-item {
+    border: 1px solid $black;
+    border-radius: $border-radius_8;
+}
+#ikea-categories-accordion .accordion-collapse {padding:16px 20px;font-size: 16px;}
+#ikea-categories-accordion .accordion-button {
+    font-size: 16px;
+    color: $black;
+    border-bottom: 1px solid $black;
+    background: $white;
+}
+#ikea-categories-accordion .accordion-button.collapsed {
+    border: none;
 }

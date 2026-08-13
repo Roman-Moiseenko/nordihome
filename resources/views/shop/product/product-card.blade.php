@@ -19,7 +19,7 @@
                     <div class="product-label promotion"><span>Акция</span></div>
                 @endif
                 @if($product->is_new)
-                    <div class="product-label new"><span>Новинка</span></div>
+                    <div class="product-label new"><span>NEW</span></div>
                 @endif
             </a>
         </div>
@@ -47,11 +47,12 @@
                 @endif
             </div>
         </div>
-        <div class="product-card-name fs-6">
+        <div class="product-card-name">
             <a class="product-trunc e-click" data-product="{{ $product->id }}"
                href="{{ route('shop.product.view', $product->slug) }}"
                title="{{ $product->name }}">{{ $product->name }}</a>
         </div>
+        <div class="short-description">тут краткое описание</div>
         <div class="product-card-info">
             @if($product->is_sale)
                 @if(!$product->promotion->has)

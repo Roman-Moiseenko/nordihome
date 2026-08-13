@@ -31,7 +31,7 @@
         </div>
         <div class="control">
             <div class="set-value">
-                <button class="btn btn-outline-dark cartitem-sub"
+                <button class="btn cartitem-sub"
                         @if($item['quantity'] == 1) disabled @endif
                         wire:click="sub_item" wire:loading.attr="disabled"
                 >
@@ -40,7 +40,7 @@
                        data-product="{{ $item['product_id'] }}" value="{{ $item['quantity'] }}"
                        wire:change="set_item" wire:model="quantity" wire:loading.attr="disabled"
                 />
-                <button class="btn btn-outline-dark"
+                <button class="btn"
                         wire:click="plus_item" wire:loading.attr="disabled">
                     <i class="fa-light fa-plus"></i>
                 </button>
@@ -49,10 +49,10 @@
                 <span class="current-price">{{ price($item['price']) }}/шт.</span>
             </div>
             <div class="buttons">
-                <button class="btn {{ ($wish) ? 'btn-warning' : 'btn-light'  }}" wire:click="toggle_wish">
+                <button class="btn {{ ($wish) ? 'btn-warning' : 'btn-black'  }}" wire:click="toggle_wish">
                     <i class="fa-light fa-heart"></i>
                 </button>
-                <button class="btn btn-light" wire:click="del_item">
+                <button class="btn btn-black" wire:click="del_item">
                     <i class="fa-light fa-trash-can"></i>
                 </button>
             </div>

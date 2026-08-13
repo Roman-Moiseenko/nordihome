@@ -1,3 +1,22 @@
 @import "form/form-questions-for-pages";
 
+.form-floating > .form-control {
+    height: auto;
+    border-radius: $border-radius_12;
+    border: 1px solid $black;
+    font-size: 14px;
+    min-height: auto;
+}
+#show-hide-password {
+    border-radius: 0 $border-radius_12 $border-radius_12 0;
+    background: $black;
+}
 
+.form-floating > label {
+    padding: 13px;
+    font-size: 16px;
+}
+.form-floating > .form-select {
+    border-radius: $border-radius_12;
+    border: 1px solid $black;
+}

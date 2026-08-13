@@ -55,13 +55,15 @@ input[type='checkbox'] {
         -webkit-appearance: none; /* Remove default appearance */
         -moz-appearance: none;
         appearance: none;
-        width: 20px;
-        height: 20px;
-        border: 2px solid #999;
+        width: 13px;
+        height: 13px;
+        border: 1px solid $black;
         border-radius: $radius-icon;
         outline: none;
         transition: background-color 0.3s ease-in-out;
         cursor: pointer;
+        margin: 0;
+        padding: 0;
         &:checked {
             background: var(--bs-gray-900);
         }
@@ -69,8 +71,8 @@ input[type='checkbox'] {
             content: '\2714'; /* check mark symbol Unicode */
             display: block;
             text-align: center;
-            font-size: 16px;
-            line-height: 18px;
+            font-size: 14px;
+            line-height: 12px;
             color: white;
         }
     }
@@ -253,8 +255,7 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
 
 //карточка тенью и закругл.углами
 .box-card {
-    margin-bottom: 20px;
-    padding: 10px;
+    /*padding: 10px;*/
 }
 
 .no-resize {
@@ -267,12 +268,11 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
     cursor: pointer;
 }
 
-.form-check-label {
-    font-size: $widget-height;
-}
+.form-check-label {}
 .form-check-input {
     height: 1.2rem;
     top: 0;
+    margin-top:0;
     &:checked {
         background-color: var(--bs-gray-700);
         border-color: var(--bs-gray-700);
@@ -286,8 +286,8 @@ label.radio-img > input:checked + img{ /* (RADIO CHECKED) IMAGE STYLES */
     width: 49%;
     align-items: center;
     background: var(--bs-white);
-    border: 1px solid var(--bs-gray-400);
-    border-radius: $radius-button;
+    border: 1px solid $black;
+    border-radius: $border-radius_8;
     font-size: 0.9rem;
     height: 40px;
     position: relative;

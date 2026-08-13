@@ -1,7 +1,7 @@
 .catalog-card {
     overflow: hidden;
-    margin: 20px 10px;
-    box-shadow: $shadow-img;
+    margin: 0 0 20px 0;
+    border-radius: 12px;
     img {
         width: 100%;
         transition: $transition-slow;
@@ -36,7 +36,23 @@
         z-index: 2;
     }
 }
-
+.products-page .order {
+    color: var(--dark-gray);
+    border: 1px solid black;
+    padding: 8px 15px;
+    font-size: 14px;
+    border-radius: 12px;
+    .dropdown-menu.show {
+        border:1px solid black;
+        border-radius: 12px;
+        font-size: 14px;
+        ul li.active {
+            &:before {
+                border: 5px solid var(--orange);
+            }
+        }
+    }
+}
 @media screen and (max-width: 991px){
     .catalog-card {
         margin: 10px 0;

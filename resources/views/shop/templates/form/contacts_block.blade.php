@@ -34,6 +34,12 @@ use App\Modules\Content\Entity\Widgets\FormWidget;
             <label>{{ $widget->fields["question"] }} <textarea class="width_100" placeholder="Мой вопрос"></textarea>
             </label>
         </div>
+        <div class="m-b_10">
+            <label>Ваш ник в Telegram <input name="telegram" class="width_100" required placeholder="Пример: @username"/></label>
+        </div>
+        <div class="m-b_10">
+            <label>Выберите удобный способ для связи с Вами <select class="width_100"><option value="">—Выберите вариант—</option><option value="Позвонить по телефону">Позвонить по телефону</option><option value="Написать на почту">Написать на почту</option><option value="Написать в Телеграм">Написать в Телеграм</option><option value="Написать в Макс">Написать в Макс</option></select></label>
+        </div>
         <div>
             <label class="f-z_14">
                 <input type="checkbox" name="agreement" value="{{ $widget->fields["agreement"] }}"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
@@ -42,6 +48,7 @@ use App\Modules\Content\Entity\Widgets\FormWidget;
         <div>
             <label><button class="btn-form width_100" type="button">Отправить</button></label>
         </div>
+        <input type="hidden" name="form" value="Форма с блока контактов">
     </div>
     <div id="{{ $widget->id }}-callback" style="display: none">
         Спасибо за Ваше сообщение. Оно успешно отправлено. Наш менеджер свяжется с Вами в ближайшее время.

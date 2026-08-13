@@ -14,7 +14,7 @@
             <label class="" for="checked-all">Выбрать все</label>
         </div>
         @if($button_trash)
-        <button id="cart-trash" class="btn btn-light ms-3 p-1" wire:click="del_select">Удалить выбранные</button>
+        <button id="cart-trash" class="btn btn-black ms-3" wire:click="del_select">Удалить выбранные</button>
         @endif
     </div>
     @foreach($items as $item)
