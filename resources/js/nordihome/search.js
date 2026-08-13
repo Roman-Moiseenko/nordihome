@@ -15,7 +15,6 @@ window.$ = jQuery;
         }
     });
 
-
     /**  ПОИСК в ТОП-МЕНЮ    ***/
         //INPUT поиска
     const presearchInput = $('#pre-search');
@@ -24,17 +23,18 @@ window.$ = jQuery;
 
     const presearchIconClear = $('#presearch--icon-clear')
     const presearchOverlay = $('.presearch-overlay')
-    const presearchSuggest = $('.presearch-suggest')
+    const presearchSuggest = $('.presearch-suggest');
 
     // Восстанавливаем значение поискового запроса из URL при загрузке страницы
     (function () {
         let params = new URLSearchParams(window.location.search);
         let searchQuery = params.get('search');
         if (searchQuery) {
-            presearchInput.val(decodeURIComponent(searchQuery));
+            presearchInput.val(searchQuery);
             presearchIconClear.show();
         }
     })();
+
 
     presearchInput.on('input', function () {
         if ($(this).val().length > 0) {
@@ -67,7 +67,7 @@ window.$ = jQuery;
                             suggestBlock.append(_itemSuggestPresearch(data.products[i]));
                         }
                         const _url = presearch.data('route') + '?search=' + encodeURIComponent(presearchInput.val())
-                        suggestBlock.append('<a href="' + _url +'" class="btn btn-dark">Смотреть все результаты</a>');
+                        suggestBlock.append('<a href="' + _url + '" class="btn btn-dark">Смотреть все результаты</a>');
                     }
                 });
         }, 180);
@@ -113,10 +113,10 @@ window.$ = jQuery;
             price = '';
         }
 
-        const button = (item.code !== null) ? ('<button class="to-cart btn btn-small btn-black e-add" data-product="'+ item.id +'"><i class="fa-sharp fa-light fa-cart-plus"></i></button>') : '';
+        const button = (item.code !== null) ? ('<button class="to-cart btn btn-small btn-black e-add" data-product="' + item.id + '"><i class="fa-sharp fa-light fa-cart-plus"></i></button>') : '';
 
         return '<div class="presearch-suggest-item">' +
-        '<a class="" href="' + item.url + '">\n' +
+            '<a class="" href="' + item.url + '">\n' +
             '   <span class="suggest--icon">' + img + '</span>\n' +
             '   <span class="suggest--label">' + name + '</span>\n' +
             '   <span class="suggest--price">' + price + '</span>\n' +
