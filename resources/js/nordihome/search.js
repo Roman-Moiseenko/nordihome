@@ -18,10 +18,13 @@ window.$ = jQuery;
 
     /**  ПОИСК в ТОП-МЕНЮ    ***/
         //INPUT поиска
-    let presearchInput = $('#pre-search');
-    let presearch = $('.presearch');
-    let suggestBlock = $('.presearch-suggest');
+    const presearchInput = $('#pre-search');
+    const presearch = $('.presearch');
+    const suggestBlock = $('.presearch-suggest');
 
+    const presearchIconClear = $('#presearch--icon-clear')
+    const presearchOverlay = $('.presearch-overlay')
+    const presearchSuggest = $('.presearch-suggest')
 
     // Восстанавливаем значение поискового запроса из URL при загрузке страницы
     (function () {
@@ -29,21 +32,21 @@ window.$ = jQuery;
         let searchQuery = params.get('search');
         if (searchQuery) {
             presearchInput.val(decodeURIComponent(searchQuery));
-            $('#presearch--icon-clear').show();
+            presearchIconClear.show();
         }
     })();
 
     presearchInput.on('input', function () {
         if ($(this).val().length > 0) {
-            $('#presearch--icon-clear').show();
+            presearchIconClear.show();
         } else {
-            $('#presearch--icon-clear').hide();
+            presearchIconClear.hide();
         }
     });
     presearchInput.on('focus', function () {
         overlay(true)
     });
-    $('.presearch-overlay').on('click', function (e) {
+    presearchOverlay.on('click', function (e) {
         overlay(false)
     });
     //По таймеру - предотвращаем ajax при быстром наборе
@@ -54,9 +57,14 @@ window.$ = jQuery;
                 function (data) {
                     common.error(data);
                     suggestBlock.html('');
-                    if ($.isArray(data)) {
-                        for (let i = 0; i < data.length; i++) {
-                            suggestBlock.append(_itemSuggestPresearch(data[i]));
+                    console.log(data)
+                    if (data.products.length > 0) {
+                        for (let i = 0; i < data.categories.length; i++) {
+                            suggestBlock.append(_itemSuggestPresearch(data.categories[i]));
+                        }
+
+                        for (let i = 0; i < data.products.length; i++) {
+                            suggestBlock.append(_itemSuggestPresearch(data.products[i]));
                         }
                         const _url = presearch.data('route') + '?search=' + encodeURIComponent(presearchInput.val())
                         suggestBlock.append('<a href="' + _url +'" class="btn btn-dark">Смотреть все результаты</a>');
@@ -79,18 +87,14 @@ window.$ = jQuery;
         }
     });
 
-    //function getSearchPage
-
     function overlay(show) {
-        const overlay = $('.presearch-overlay')
-        const suggest = $('.presearch-suggest')
         if (show) {
-            overlay.show();
-            suggest.show();
+            presearchOverlay.show();
+            presearchSuggest.show();
             $('body').addClass('no-scroll')
         } else {
-            overlay.hide();
-            suggest.hide();
+            presearchOverlay.hide();
+            presearchSuggest.hide();
 
             $('body').removeClass('no-scroll')
         }
@@ -101,15 +105,16 @@ window.$ = jQuery;
         let img = '<i class="fa-light fa-magnifying-glass"></i>';
         let price = item.price + ' ₽';
         let name = item.name;
-        if (item.image !== '') {
+        if (item.image !== null) {
             img = '<img class="" src="' + item.image + '"/>';
         }
-        if (item.price === '') {
+        if (item.price === null) {
             name = '<strong>' + name + '</strong>'
             price = '';
         }
 
-        const button = (item.code !== '') ? ('<button class="to-cart btn btn-black e-add" data-product="'+ item.id +'"><i class="fa-sharp fa-light fa-cart-plus"></i></button>') : '';
+        const button = (item.code !== null) ? ('<button class="to-cart btn btn-small btn-black e-add" data-product="'+ item.id +'"><i class="fa-sharp fa-light fa-cart-plus"></i></button>') : '';
+
         return '<div class="presearch-suggest-item">' +
         '<a class="" href="' + item.url + '">\n' +
             '   <span class="suggest--icon">' + img + '</span>\n' +
@@ -120,7 +125,7 @@ window.$ = jQuery;
     }
 
     //Кнопки в INPUT
-    $('#presearch--icon-clear').on('click', function () {
+    presearchIconClear.on('click', function () {
         suggestBlock.html('');
         $('#pre-search').val('');
         $(this).hide();

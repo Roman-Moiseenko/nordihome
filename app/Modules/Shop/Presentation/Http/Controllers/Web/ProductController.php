@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\Application\Queries\Product\ProductViewQuery;
+use App\Modules\Shop\Application\Queries\Search\FullSearchQuery;
 use App\Modules\Shop\Application\Queries\Search\ProductSearchQuery;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\ViewRepository;
@@ -20,6 +21,7 @@ class ProductController extends ShopController
         ViewRepository $views,
         private ProductViewQuery $productViewQuery,
         private ProductSearchQuery $productSearchQuery,
+        private FullSearchQuery $fullSearchQuery,
     )
     {
         $this->middleware(['role:admin'])->only(['view_draft']);
@@ -44,7 +46,7 @@ class ProductController extends ShopController
         $search = $request->string('search')->trim()->value();
         $client = $this->getClient($request);
         $data = $this->productSearchQuery->execute($search, $request->all(), $client);
-        \Log::warning(json_encode($data));
+       // \Log::warning(json_encode($data));
         return view('shop.product.search', [
             'pageData' => $data,
             'request' => $request->all(),
@@ -57,12 +59,12 @@ class ProductController extends ShopController
         $search = $request->string('search')->trim()->value();
         if (empty($search)) return \response()->json(false);
         $client = $this->getClient($request);
-        $data = $this->productSearchQuery->execute($search, $request->all(), $client);
+        $data = $this->fullSearchQuery->execute($search, $client);
 
 
         $result = $this->repository->search($request['search']);
-        \Log::warning(json_encode($result));
-        return \response()->json($result);
+       // \Log::warning(json_encode($data));
+        return \response()->json($data);
     }
 
     public function view_draft(Product $product)

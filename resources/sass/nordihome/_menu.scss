@@ -320,6 +320,7 @@ body.no-scroll {
 
         >.presearch-suggest {
             display: block;
+            min-width: 600px;
             z-index: 1001;
             background-color: var(--bs-white);
             border-top: none;
@@ -336,6 +337,7 @@ body.no-scroll {
                 >a {
                     width: 100%;
                     display: flex;
+                    text-decoration: none;
                 }
                 &:hover {
                     text-decoration: none;
@@ -353,9 +355,10 @@ body.no-scroll {
                     flex-grow: 1;
                     text-align: left;
                     display: -webkit-box;
-                    -webkit-line-clamp: 1;
+                    -webkit-line-clamp: 2;
                     -webkit-box-orient: vertical;
                     overflow: hidden;
+                    line-height: inherit;
                 }
                 .suggest--price {
                     white-space: nowrap;
@@ -652,7 +655,14 @@ body.no-scroll {
     .presearch {
         height: 37px;
     }
-    .presearch > .presearch-wrapper > .presearch-control .presearch-icon {top: 2px;}
+    .presearch > .presearch-wrapper {
+        >.presearch-control .presearch-icon {
+            top: 2px;
+        }
+        >.presearch-suggest {
+            min-width: unset;
+        }
+    }
 }
 @media screen and (max-width: 768px) {
     .header-menu-mobile ul {

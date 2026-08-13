@@ -32,6 +32,8 @@ readonly class ProductSearchQuery
 
     public function execute(string $search, array $params, ClientContext $clientContext): ?ProductSearchPageData
     {
+        //MAINDO Аналитика
+
         $allProductIds = $this->productSearchQueryRepository->getProductIdsBySearch($search);
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);

@@ -6,7 +6,12 @@ use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 
 class FullSearchData
 {
+    public const int LIMIT_PRODUCTS = 10;
+    public const int LIMIT_CATEGORIES = 3;
+    public const int LIMIT_ROOMS = 3;
+
     public function __construct(
+        public string $search,
 
         /** @var ItemSearchData[] */
         public array  $products,
@@ -16,8 +21,6 @@ class FullSearchData
         public array  $rooms = [],
         /** @var ItemSearchData[] */
         public array  $recommends = [],
-        public string $search,
-
     )
     {
     }

@@ -213,6 +213,74 @@ class ProductIndexQueryRepository
         return $result;
     }
 
+    /**
+     * Загрузка упрощённых карточек товаров для полнотекстового поиска.
+     *
+     * @param int[] $ids
+     * @return array<int, array{id: int, name: string, url: string, code: string|null, image: string|null, price: float|null}>
+     */
+    public function loadProductSearchItems(array $ids, ClientContext $client): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        $orderedIds = implode(',', array_map('intval', $ids));
+
+        $rows = DB::table('products')
+            ->whereIn('products.id', $ids)
+            ->orderByRaw("FIELD(products.id, $orderedIds)")
+            ->leftJoin('product_prices', function ($join) use ($client) {
+                $join->on('products.id', '=', 'product_prices.product_id')
+                    ->where('product_prices.type', '=', $client->priceType)
+                    ->whereRaw('product_prices.id = (
+                        SELECT MAX(pp2.id) FROM product_prices pp2
+                        WHERE pp2.product_id = products.id AND pp2.type = \'' . $client->priceType . '\'
+                    )');
+            })
+            ->select(
+                'products.id',
+                'products.name',
+                'products.slug',
+                'products.code',
+                'product_prices.amount as price',
+                DB::raw("(SELECT id FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo_id"),
+                DB::raw("(SELECT file FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo_file"),
+                DB::raw("(SELECT thumb FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo_thumb"),
+            )
+            ->get();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[] = [
+                'id' => (int) $row->id,
+                'name' => $row->name,
+                'url' => route('shop.product.view', $row->slug),
+                'code' => $row->code,
+                'image' => $this->buildSearchImageUrl($row),
+                'price' => $row->price !== null ? (float) $row->price : null,
+            ];
+        }
+
+        return $result;
+    }
+
+    private function buildSearchImageUrl(\stdClass $row): ?string
+    {
+        if (empty($row->photo_file) || empty($row->photo_id)) {
+            return null;
+        }
+
+        return $this->photoService->getThumbUrl(
+            photoId: (int) $row->photo_id,
+            modelType: self::PHOTO_MODEL_TYPE,
+            imageableId: (int) $row->id,
+            fileName: $row->photo_file,
+            thumb: 'catalog',
+            isThumbEnabled: (bool) $row->photo_thumb,
+        );
+    }
+
     private function buildImageDataFromRow(\stdClass $row, string $suffix = '1'): array
     {
         $id = $row->{"photo{$suffix}_id"} ?? null;
