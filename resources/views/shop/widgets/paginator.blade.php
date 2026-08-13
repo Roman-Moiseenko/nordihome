@@ -4,7 +4,7 @@
 @endphp
 
 @if ($paginator->hasPages)
-    <div class="d-flex justify-content-center mt-5">
+    <div class="d-flex justify-content-center mt-4 mb-4">
         <nav class="w-full sm:w-auto sm:mr-auto">
             <ul class="pagination">
                 @if ($paginator->onFirstPage)

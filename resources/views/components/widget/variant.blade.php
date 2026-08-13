@@ -1,4 +1,4 @@
-<div class="widget-variants {{ $class }}">
+<div class="widget-variants{{ $class }}">
     <div class="accordion" id="attribute-{{ $id }}">
         <div class="accordion-item">
             <div class="accordion-header widget-name" id="headingOne-{{ $id }}">

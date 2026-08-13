@@ -7,19 +7,37 @@
 
 <header>
     <div class="header-mobile">
-        <div>
-            <a class="navbar-brand" href="{{ url('/') }}">
-                <img src="{{ $config["logo-nav"] }}" alt="{{ $config["brand-alt"] }}" class="img-fluid img-logo">
-            </a>
-        </div>
-        <div>
-            <i class="fa-light fa-location-dot"></i>&nbsp;Россия
+        <div class="menu-top container-xl mt-2">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex">
+                    <div>
+                        @if(isset($menus['menu-header01']))
+                            <ul id="menu-menyu-v-shapke" class="h-menu">
+                                @foreach($menus['menu-header01']->items as $item)
+                                    <li><a href="{{ $item->url }}">{{ $item->name }}</a></li>
+                                @endforeach
+                            </ul>
+                        @else
+                            Меню не найдено
+                        @endif
+                    </div>
+                    <div class="d-flex ms-2">
+
+                        @foreach($contacts as $item)
+                            <div class="ms-2">
+                                <a href="{{ $item->url }}" target="_blank" title="{{ $item->name }}">
+                                    <i class="{{ $item->icon }} fs-3" style="color: {{ $item->color }}"></i>
+                                </a>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div class="menu-top container-xl mt-2 hide-mobile">
         <div class="d-flex justify-content-between">
-            <div><i class="fa-light fa-location-dot"></i>&nbsp;Россия</div>
-            <div class="d-flex ">
+            <div class="d-flex">
                 <div>
                     @if(isset($menus['menu-header01']))
                         <ul id="menu-menyu-v-shapke" class="h-menu">
@@ -49,7 +67,8 @@
         <div class="menu-container container-xl">
             <div class="menu-bottom-catalog d-flex">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="/images/nordihome/logo-nordi-home-2.svg" alt="Nordi Home" class="img-fluid img-logo">
+                    <img src="/uploads/gallery/7/nordi-home-rus.svg" alt="Nordi Home" class="img-fluid img-logo">
+                    <div class="h-city-text">склады находятся в г.Калининград</div>
                 </a>
                 <!--- <a href="{{ route('shop.category.index') }}">Категории</a>
 
@@ -57,17 +76,30 @@
                  --->
                 <div class="header-menu-buttons d-flex">
                     <!-- Главные кнопки открываются по клику -->
-                    <button class="nav-link header-menu-buttons-item" type="button" data-target="catalogMenu">Каталог
+                    <button class="nav-link header-menu-buttons-item m-r_5" type="button" data-target="catalogMenu">
+                        <div class="header-menu-buttons-item-burger">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div>Каталог</div>
                     </button>
-                    <button class="nav-link header-menu-buttons-item" type="button" data-target="roomsMenu">Комнаты
+                    <button class="nav-link header-menu-buttons-item" type="button" data-target="roomsMenu">
+                        <div class="header-menu-buttons-item-burger">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <div>Комнаты</div>
                     </button>
                 </div>
-                <div class="header-menu-mobile-btn">
-                    <button class="menu-toggle" id="menuToggle">
+                <div class="header-menu-mobile-btn" id="menuToggle">
+                    <button class="menu-toggle" >
                         <span></span>
                         <span></span>
                         <span></span>
                     </button>
+                    <div>Каталог</div>
                 </div>
                 @include('shop.widgets.header.category')
 

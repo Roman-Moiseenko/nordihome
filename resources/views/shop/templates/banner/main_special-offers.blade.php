@@ -18,15 +18,15 @@
         <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
         <div id="slider-main-specials" class="owl-carousel owl-theme main-slider">
             @foreach($widget->items as $item)
-                <div class="row justify-content-between">
-                    <div class="col-12 col-lg-6">
+                <div class="row justify-content-between row-margin_0">
+                    <div class="col-12 col-lg-6 padding_0">
                         <div class="sl-text">
                             <div class="heading-border">{{ $item->caption }}</div>
                             <div class="text">{{ $item->description }}</div>
                             <a href="{{ $item->url }}" class="btn btn-white btn-big m-t_20">Подробнее</a>
                         </div>
                     </div>
-                    <div class="col-12 col-lg-6"
+                    <div class="col-12 col-lg-6 padding_0 b-radius-right_12"
                          style="background: url({{ $item->getImage() }}) center center / cover no-repeat;"></div>
                 </div>
             @endforeach

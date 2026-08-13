@@ -22,6 +22,7 @@ $font-sizes: (
 ) !default;
 
 $black: #000000;
+$white: #ffffff;
 $gray: #e8e8e8;
 $light-gray: #6b6b6b;
 $dark-gray: #858585;
@@ -34,6 +35,10 @@ $light-red: #ff8562;
 $blue: #0088cc;
 $green: #56ab56;
 $base-font: 'Adverta', sans-serif;
+$border-radius_20: 20px;
+$border-radius_16: 16px;
+$border-radius_12: 12px;
+$border-radius_8: 8px;
 
 *  {
     box-sizing: border-box;
@@ -76,6 +81,10 @@ ul, ol {
     padding: 0;
     margin: 0;
 }
+h1, h2, h3, h4, h5, h6 {
+    margin-top: 0.9em;
+    margin-bottom: 0.9em;
+}
 h1 {
     font-size: 37px;
     margin: 0 0 30px 0;
@@ -91,7 +100,7 @@ ul li, ol li {list-style-position: inside;}
 .t-color_dark-gray {color: $dark-gray;}
 .t-color_sert-red {color: $sert-red;}
 .t-color_dark-red {color: $dark-red;}
-.t-a_center {text-align:center;} // заменяем на text-center от бутстрап 5
+.t-a_center {text-align:center;}
 .t-a_left {text-align:left;}
 .t-a_right {text-align:right;}
 .t-t_uppercase {text-transform: uppercase;}
@@ -102,7 +111,7 @@ ul li, ol li {list-style-position: inside;}
 .f-z_13 {font-size: 13px;}
 .f-z_14 {font-size: 14px;}
 .f-z_15 {font-size: 15px;}
-.f-z_16 {font-size: 16px;}
+.f-z_16 {font-size: 16px!important;}
 .f-z_17 {font-size: 17px;}
 .f-z_18 {font-size: 18px;}
 .f-z_23 {font-size: 23px;}
@@ -114,6 +123,7 @@ ul li, ol li {list-style-position: inside;}
 .m_0 {margin:0;}
 .m-b_5 {margin-bottom:5px;}
 .m-l_5 {margin-left:5px;}
+.m-r_5 {margin-right:5px;}
 .m-t_10 {margin-top:10px;}
 .m-b_10 {margin-bottom:10px;}
 .m-r_10 {margin-right:10px;}
@@ -156,6 +166,11 @@ ul li, ol li {list-style-position: inside;}
 .bg-515151 {background:#515151;color:white;}
 .bg-faf7f4 {background:#FAF7F4;}
 .bg-f2f2f2 {background: #F2F2F2;}
+.row-margin_0 {margin-right: 0;margin-left: 0;}
+.b-radius-right_12 {border-radius: 0 $border-radius_12 $border-radius_12 0;}
+.b-radius_8 {border-radius:$border-radius_8;}
+.b-radius_12 {border-radius:$border-radius_12;}
+.b-radius_16 {border-radius:$border-radius_16;}
 
 img {
     max-width: 100%;
@@ -168,6 +183,7 @@ img {
 .btn {
     border-radius: 50px;
     padding: 9px 25px 11px 25px;
+    font-size: 18px;
     text-decoration: none;
     font-weight: 500;
     transition: 0.5s;
@@ -176,13 +192,13 @@ img {
     display: inline-block;
     cursor: pointer;
     text-align: center;
-    color: white;
 }
 .btn-big {
     padding:20px 50px;
 }
 .btn-black {
     background:$black;
+    color:$white;
 }
 .btn-black:hover {
     background:$gray;
@@ -190,7 +206,7 @@ img {
 }
 .btn-orange {
     background:$orange;
-    color:white;
+    color:$white;
     text-transform:uppercase;
 }
 .btn-orange:hover {
@@ -211,7 +227,7 @@ img {
 .btn-white-b {
     background:white;
     color:$black;
-    border:2px solid $black;
+    border:1px solid $black;
 }
 .btn-white-b:hover {
     background:$black;
@@ -236,11 +252,11 @@ img {
 .btn-gradient:hover {background:linear-gradient(156deg, rgba(60,60,60,1) 0%, rgba(60,60,60,1) 100%);}
 
 input, button[type="submit"], textarea, select, .feedback button[type="button"]  {
-    border: 1px solid black;
+    border: 1px solid $black;
     padding: 11px;
     font-size: 14px;
     font-family: $base-font;
-    border-radius: 12px;
+    border-radius: $border-radius_12;
 }
 textarea {
     min-height: 219px;
@@ -266,10 +282,19 @@ input[type="submit"]:hover, .feedback button[type="button"]:hover {
     color:black;
 }
 input[type="checkbox"] {
-    width:10px!important;
-    height:10px!important;
+    width:13px;
+    height:13px;
 }
-
+select {
+    //background: url(/wp-content/themes/euroikea/images/arrow-down.svg) top 15px right 11px / 11px no-repeat;
+    //-webkit-appearance: none;
+    //-moz-appearance: none;
+    //-ms-appearance: none;
+   // appearance: none !important;
+    //padding-right: 25px;
+    max-width: 100%;
+    color:$dark-gray;
+}
 .h-menu {
     display: flex;
     flex-wrap: wrap;
@@ -295,8 +320,12 @@ input[type="checkbox"] {
 .h-menu li a, #menu-menyu-katalog li a {text-decoration:none;}
 .h-menu li a:hover {color:$dark-gray;}
 .h-menu li a {padding-top:5px;padding-bottom:5px;}
-.h-menu li:first-child a {background:url(/wp-content/themes/euroikea/images/svg-hot-50.svg) no-repeat center left / 17px;padding-left: 20px;}
-.h-menu li:first-child a:after {content:'до -50%';background:$orange;text-transform:none;color:white;border-radius: 13px;padding: 2px 9px 4px 9px;margin-left: 5px;font-weight: 500;}
+.h-menu li:first-child a {color: $blue;}
+.h-menu li:nth-child(2) a {
+    background: url(/uploads/gallery/7/svg-hot-50.svg) no-repeat center left / 17px;
+    padding-left: 20px;
+}
+.h-menu li:nth-child(2) a:after {content:'до -50%';background:$orange;text-transform:none;color:white;border-radius: 13px;padding: 2px 9px 4px 9px;margin-left: 5px;font-weight: 500;}
 .h-menu li .sub-menu, #menu-menyu-katalog .sub-menu {display:none;}
 .h-menu li:hover .sub-menu, #menu-menyu-katalog li:hover .sub-menu {
     display:block;
@@ -335,17 +364,22 @@ input[type="checkbox"] {
     top: 0;
 }
 .h-menu li .sub-menu li:hover .sub-menu {display:block;}
-
+.h-city-text {
+    font-size: 11px;
+    text-align: left;
+}
 .main-slider .sl-text {
     background: $black;
     padding: 60px;
     min-height: 500px;
+    border-radius: $border-radius_12 0 0 $border-radius_12;
 }
 .main-slider .sl-text .text {
     color:white;
     line-height: 25px;
 }
 .main-slider .sl-text .text a {color:$orange;}
+#main-slider01 img {border-radius:$border-radius_16;}
 .heading-border {
     margin-bottom: 30px;
     font-size: 28px;
@@ -380,6 +414,24 @@ input[type="checkbox"] {
     }
 }
 .owl-carousel .owl-item img {width:100%;}
+.main-articles img, .item-news .img img {border-radius: $border-radius_12;}
+.page-item .page-link {
+    font-weight: 600;
+    padding: 11px 10px;
+    border-radius: 50%!important;
+    border: 1px solid $black;
+    margin-right: 5px;
+    width: 45px;
+    height: 45px;
+    text-align: center;
+    line-height: 20px;
+    background: $white;
+    color:$black;
+}
+.page-item:hover .page-link, .page-item.active .page-link{
+    background: $black;
+    color: $white;
+}
 #footer {
     a {
         color:white;

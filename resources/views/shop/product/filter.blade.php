@@ -16,7 +16,7 @@
                 <b>{{ $mainInfo->name }}</b>
             </div>
             @foreach($mainInfo->children as $child)
-                <div class="m-l_10">
+                <div class="m-l_10 f-z_16">
                     <a href="{{ route('shop.' . $mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
                 </div>
             @endforeach
@@ -27,7 +27,7 @@
         <div class="children">
             <a href="{{ $secondInfo->back->url}}" class="heading">{{ $secondInfo->back->name }}</a>
             @foreach($secondInfo->children as $child)
-                <div>
+                <div class="f-z_16 m-l_10">
                     <a href="{{ route('shop.' . $secondInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
                 </div>
             @endforeach
@@ -62,7 +62,7 @@
                     <hr/>
                 @endif
                 @if($attribute->isVariant)
-                    <x-widget.variant class="mt-3" caption="{{ $attribute->name }}" id="{{ $attribute->id }}">
+                    <x-widget.variant class="" caption="{{ $attribute->name }}" id="{{ $attribute->id }}">
                         @foreach($attribute->variants as $variant)
                             <x-widget.variant-item name="a_{{ $attribute->id }}[]" id="{{ $variant->id }}"
                                                    caption="{{ $variant->name }}"
@@ -79,8 +79,8 @@
         @endforeach
     </div>
     <div class="buttons-filter">
-        <button class="btn btn-dark w-auto">Применить</button>
-        <button id="clear-filter" class="btn btn-outline-dark w-auto" type="button">Сбросить</button>
+        <button class="btn btn-black w-auto">Применить</button>
+        <button id="clear-filter" class="btn btn-black w-auto" type="button">Сбросить</button>
 
     </div>
 </div>

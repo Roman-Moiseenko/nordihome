@@ -12,7 +12,7 @@
     <div class="container-xl">
         <h1 class="my-4">{{ $page->name }}</h1>
         <div class="row">
-            <div class="col-lg-6 bg-black">
+            <div class="col-lg-6 bg-black b-radius-left_15">
                 <div class="about-block-text"><p>NORDI HOME — магазин мебели и товаров из ИКЕА и других европейских магазинов с доставкой по всей РФ.</p>
                 <p>Мы работаем с 2020 года и помогли уже более 10 000 клиентам преобразить их дома.</p>
                 <p>Ниже можно ознакомиться более подробно с условиями и тарифами на доставку.</p>

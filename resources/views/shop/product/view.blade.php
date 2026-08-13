@@ -31,7 +31,7 @@
                     @endif
                 </div>
 
-                <div class="slider-images-product owl-carousel owl-theme mt-3 p-3" data-responsive="[3,6,9]">
+                <div class="slider-images-product owl-carousel owl-theme p-3" data-responsive="[3,6,9]">
                     @foreach($product->images as $index => $photo)
                         <img src="{{ $photo->mini }}" data-image="{{ $photo->src }}"
                              class="slider-image-product" alt="{{ $photo->alt }}" data-index="{{ $index }}">
@@ -165,7 +165,6 @@
 
     @if(!empty($product->care))
     <div class="box-card">
-        <div id="описание"></div>
         <h2 id="care">Материалы и уход за товаром</h2>
         {!! $product->care !!}
     </div>
@@ -178,10 +177,33 @@
     @include('shop.product._equivalent', ['equivalents' => $pageData->equivalents])
     @include('shop.product._reviews', ['reviews' => $pageData->reviews])
 
-    <!--section class="related-products">
+    <section class="related-products">
         <h2 id="с-этим-товаром-часто-покупают">С этим товаром часто покупают</h2>
-        <p>Тут карусель с похожими товарами, думаю, на новом сайте нужно продумать, по какому принципу тут выводить товары.</p>
-    </section-->
+        <div id="" class="owl-carousel owl-theme slider-images-product">
+                <div>
+                    тут товар 1
+                </div>
+            <div>
+                тут товар 1
+            </div>
+            <div>
+                тут товар 1
+            </div>
+            <div>
+                тут товар 1
+            </div>
+            <div>
+                тут товар 1
+            </div>
+            <div>
+                тут товар 1
+            </div>
+            <div>
+                тут товар 1
+            </div>
+
+        </div>
+    </section>
     @include('shop.product._delivery')
     <script type="application/ld+json" class="schemantra.com">
         {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}

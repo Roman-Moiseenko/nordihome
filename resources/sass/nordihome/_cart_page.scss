@@ -15,7 +15,9 @@
 }
 .full-cart-item {
     display: flex;
-
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid $light-gray;
+    padding-bottom: 15px;
     .checked {
         margin: auto 0;
         margin-right: 20px;
@@ -32,8 +34,6 @@
     .info {
         width: 100%;
         padding: 4px 12px;
-        display: flex;
-        flex-direction: column;
         .costblock {
             margin-top: auto;
             .cost > .current-cost {
@@ -61,11 +61,28 @@
             display: flex;
             input {
                 text-align: center;
+                border-top: 1px solid $black;
+                border-bottom: 1px solid $black;
+                border-radius: 0;
+            }
+            .btn {
+                color: $black;
+                border: 1px solid $black;
+                border-radius: 0 $border-radius_8 $border-radius_8 0;
+                padding: 4px 10px;
+                font-size: 16px;
+            }
+            .btn.cartitem-sub {
+                border-radius:$border-radius_8 0 0 $border-radius_8 ;
             }
         }
         >.buttons {
             margin-top: auto;
             text-align: center;
+            .btn {
+                padding: 5px 10px;
+                font-size: 16px;
+            }
         }
         .current-price {
             margin-top: 4px;
@@ -116,4 +133,11 @@
 .btn-cart {
     @extend .btn;
     @extend .btn-dark;
+}
+.right-action-block {
+    .sticky-block > div {border:1px solid $black;border-radius:$border-radius_12;}
+}
+#cart-trash {
+    padding: 5px 15px;
+    font-size: 14px;
 }

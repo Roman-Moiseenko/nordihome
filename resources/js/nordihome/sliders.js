@@ -13,8 +13,6 @@ window.$ = jQuery;
         autoplay: true, //
         smartSpeed: 1500, //Время движения слайда
         autoplayTimeout: 4000, //Время смены слайда
-        animateOut: 'fadeOut',
-        animateIn: 'fadeIn',
         margin: 10,
         loop: true,
         dots: true,
@@ -89,38 +87,23 @@ window.$ = jQuery;
     if (document.getElementById('main-slider01') !== null) {
         let sliderPayment = $('#main-slider01');
         sliderPayment.owlCarousel(optionsSliderBase);
-        sliderPayment.on('mousewheel', '.owl-stage', function (e) {
-            if (e.originalEvent.deltaY > 0) {
-                sliderPayment.trigger('next.owl');
-            } else {
-                sliderPayment.trigger('prev.owl');
-            }
-            e.preventDefault();
-        });
+
     }
     if (document.getElementById('slider-main-specials') !== null) {
         let sliderPayment = $('#slider-main-specials');
         sliderPayment.owlCarousel(optionsSliderBase);
-        sliderPayment.on('mousewheel', '.owl-stage', function (e) {
-            if (e.originalEvent.deltaY > 0) {
-                sliderPayment.trigger('next.owl');
-            } else {
-                sliderPayment.trigger('prev.owl');
-            }
-            e.preventDefault();
-        });
+        //sliderPayment.on('mousewheel', '.owl-stage', function (e) {
+            //if (e.originalEvent.deltaY > 0) {
+               // sliderPayment.trigger('next.owl');
+           // } else {
+              //  sliderPayment.trigger('prev.owl');
+           // }
+           // e.preventDefault();
+       // });
     }
     if (document.getElementById('slider-main-interesting') !== null) {
         let sliderPayment = $('#slider-main-interesting');
         sliderPayment.owlCarousel(optionsSliderBase);
-        sliderPayment.on('mousewheel', '.owl-stage', function (e) {
-            if (e.originalEvent.deltaY > 0) {
-                sliderPayment.trigger('next.owl');
-            } else {
-                sliderPayment.trigger('prev.owl');
-            }
-            e.preventDefault();
-        });
     }
     if (document.getElementById('slider-delivery-company') !== null) {
         let sliderDeliveryCompany = $('#slider-delivery-company');
@@ -177,7 +160,7 @@ window.$ = jQuery;
             let sliderImagesProduct = $(this);
             let mouseScroll = sliderImagesProduct.data('mouse-scroll');
             let responsive = sliderImagesProduct.data('responsive');
-            if (responsive === undefined || responsive.length !== 3) responsive = [3, 6, 9];
+            if (responsive === undefined || responsive.length !== 3) responsive = [2, 3, 4];
             product_optionsSliderBase.responsive = {0: {items: responsive[0]}, 576: {items: responsive[1]}, 991: {items: responsive[2]}};
 
             product_optionsSliderBase.loop = false;
