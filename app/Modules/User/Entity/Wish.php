@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
- * @property int $user_id
+ * @property int $client_id
  * @property int $product_id
  * @property Carbon $created_at
  * @property Product $product
@@ -21,14 +21,14 @@ class Wish extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'user_id',
+        'client_id',
         'product_id',
         'created_at',
     ];
-    public static function register(int $user_id, int $product_id): self
+    public static function register(int $client_id, int $product_id): self
     {
         return self::create([
-            'user_id' => $user_id,
+            'client_id' => $client_id,
             'product_id' => $product_id,
             'created_at' => now(),
         ]);

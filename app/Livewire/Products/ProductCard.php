@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Products;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\WishService;
@@ -11,13 +12,13 @@ use Livewire\Component;
 class ProductCard extends Component
 {
     public Product $product;
-    public ?User $user;
+    public ?Client $user;
     public bool $is_wish;
 
     public function mount(Product $product, mixed $user)
     {
         $this->product = $product;
-        $this->user = $user;
+        //$this->user = $user;
         $this->is_wish = !is_null($user) && $product->isWish($user->id);
     }
 

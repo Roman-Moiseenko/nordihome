@@ -104,7 +104,7 @@ window.$ = jQuery;
     })
     function eCommerceAjax(eType, eId, href = null, quantity = 1) {
         $.post('/e-commerce', {e_id: eId, e_type: eType, quantity: quantity}, function (data) {
-            console.log(data)
+          //  console.log(data)
             window.dataLayer.push(data)
             if (href !== null) window.location = href
         });

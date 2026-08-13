@@ -35,7 +35,7 @@
             <div>
                 @if(!is_null($client))
                     <button class="{{ $product->is_wish ? 'is-wish' : 'to-wish' }}" type="button"
-                            title="В Избранное">
+                            title="В Избранное" data-product="{{ $product->id }}">
                         <i class="{{ $product->is_wish  ? 'fa-solid' : 'fa-light' }} fa-heart"></i>
                     </button>
                 @else

@@ -22,4 +22,6 @@ import './nordihome/parser';
 import './nordihome/sliders';
 import './functions.js';
 import './nordihome/e-commerce.js';
+import  './nordihome/wish.js'
 import  './nordihome/search.js'
+
