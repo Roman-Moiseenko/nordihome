@@ -4,8 +4,10 @@ namespace App\Modules\Auth\Application\Services;
 
 use App\Modules\Auth\Application\Actions\Auth\LoginUserUseCase;
 use App\Modules\Auth\Application\Actions\Client\CreateClientUseCase;
+use App\Modules\Auth\Application\Actions\Client\FindClientByContactUseCase;
 use App\Modules\Auth\Application\Actions\User\RegisterUserClientUseCase;
 use App\Modules\Auth\Application\DTOs\Client\ClientCreateData;
+use App\Modules\Auth\Application\DTOs\Client\FindClientByContactData;
 use App\Modules\Auth\Application\DTOs\LoginData;
 use App\Modules\Auth\Application\DTOs\User\RegisterUserData;
 use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
@@ -22,6 +24,7 @@ readonly class LoginOrRegisterUserService
         private RegisterUserClientUseCase $registerUserClientUseCase,
         private CreateClientUseCase       $createClientUseCase,
         private LoginUserUseCase          $loginUserUseCase,
+        private FindClientByContactUseCase $findClientByContactUseCase,
     )
     {
     }
@@ -32,14 +35,18 @@ readonly class LoginOrRegisterUserService
         $user = $this->userRepository->findByEmail(new Email($dto->email));
         //Новый клиент
         if (is_null($user)) {
-            $name = $this->getNameFromEmail($dto->email);
-            //Регистрируем клиента
-            $clientDto = new ClientCreateData(
-                lastName: '',
-                firstName: '',
-                email: $dto->email,
-            );
-            $client = $this->createClientUseCase->execute($clientDto, new UserPermission(null, ['role:admin'], ['auth.buyer.create']));
+
+            $findDto = new FindClientByContactData(email: $dto->email);
+            //Ищем клиента по email
+            if (is_null($client = $this->findClientByContactUseCase->execute($findDto))) {
+                //Регистрируем клиента
+                $clientDto = new ClientCreateData(
+                    lastName: '',
+                    firstName: '',
+                    email: $dto->email,
+                );
+                $client = $this->createClientUseCase->execute($clientDto, new UserPermission(null, ['role:admin'], ['auth.buyer.create']));
+            }
             //Привязываем новый user к клиенту
             $registerDto = new RegisterUserData($dto->email, $dto->password);
             $this->registerUserClientUseCase->execute($client->id, $registerDto, new UserPermission());
@@ -55,9 +62,4 @@ readonly class LoginOrRegisterUserService
 
     }
 
-    private function getNameFromEmail(string $email): string
-    {
-        $name = strstr($email, '@', true);
-        return preg_replace('/[^\p{L}]/u', '', $name);
-    }
 }

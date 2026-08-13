@@ -1,27 +1,22 @@
 <?php
 
-namespace App\Modules\Shop\Application\Queries\Product;
+namespace App\Modules\Shop\Application\Queries\Search;
 
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
-use App\Modules\Shop\Application\DTOs\Elements\UrlData;
-use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
-use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductSearchPageData;
-use App\Modules\Shop\Application\DTOs\Pages\ProductViewPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Query\AttributeQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductSearchQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomPageQueryRepository;
-use Illuminate\Support\Facades\Cache;
 
-class ProductSearchQuery
+readonly class ProductSearchQuery
 {
     public function __construct(
         private CategoryPageQueryRepository  $categoryPageQueryRepository,

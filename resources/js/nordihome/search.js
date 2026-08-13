@@ -54,10 +54,13 @@ window.$ = jQuery;
                 function (data) {
                     common.error(data);
                     suggestBlock.html('');
-                    if ($.isArray(data))
+                    if ($.isArray(data)) {
                         for (let i = 0; i < data.length; i++) {
                             suggestBlock.append(_itemSuggestPresearch(data[i]));
                         }
+                        const _url = presearch.data('route') + '?search=' + encodeURIComponent(presearchInput.val())
+                        suggestBlock.append('<a href="' + _url +'" class="btn btn-dark">Смотреть все результаты</a>');
+                    }
                 });
         }, 180);
     });
@@ -76,10 +79,11 @@ window.$ = jQuery;
         }
     });
 
+    //function getSearchPage
+
     function overlay(show) {
         const overlay = $('.presearch-overlay')
         const suggest = $('.presearch-suggest')
-
         if (show) {
             overlay.show();
             suggest.show();
