@@ -129,7 +129,7 @@ class ProductViewQueryRepository
                     modelType: self::PHOTO_MODEL_TYPE,
                     imageableId: (int)$row->id,
                     fileName: $photo->file,
-                    thumb: 'catalog',
+                    thumb: 'card',
                     isThumbEnabled: (bool)$photo->thumb,
                 );
             }
