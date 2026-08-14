@@ -3,7 +3,6 @@
 namespace App\Modules\Auth\Application\Services;
 
 use App\Modules\Auth\Application\Actions\Auth\LoginUserUseCase;
-use App\Modules\Auth\Application\Actions\Client\ConsentClientUseCase;
 use App\Modules\Auth\Application\Actions\Client\CreateClientUseCase;
 use App\Modules\Auth\Application\Actions\Client\FindClientByContactUseCase;
 use App\Modules\Auth\Application\Actions\User\RegisterUserClientUseCase;
@@ -11,11 +10,9 @@ use App\Modules\Auth\Application\DTOs\Client\ClientCreateData;
 use App\Modules\Auth\Application\DTOs\Client\FindClientByContactData;
 use App\Modules\Auth\Application\DTOs\LoginData;
 use App\Modules\Auth\Application\DTOs\User\RegisterUserData;
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Shared\Domain\Entities\UserPermission;
-use Illuminate\Support\Facades\Auth;
 
 readonly class LoginOrRegisterUserService
 {
@@ -25,7 +22,6 @@ readonly class LoginOrRegisterUserService
         private CreateClientUseCase       $createClientUseCase,
         private LoginUserUseCase          $loginUserUseCase,
         private FindClientByContactUseCase $findClientByContactUseCase,
-        private ConsentClientUseCase $consentClientUseCase,
     )
     {
     }
@@ -47,7 +43,6 @@ readonly class LoginOrRegisterUserService
                     email: $dto->email,
                 );
                 $client = $this->createClientUseCase->execute($clientDto, new UserPermission(null, ['role:admin'], ['auth.buyer.create']));
-                $this->consentClientUseCase->execute($client->id); //Согласие
             }
             //Привязываем новый user к клиенту
             $registerDto = new RegisterUserData($dto->email, $dto->password);
@@ -58,10 +53,8 @@ readonly class LoginOrRegisterUserService
         if (!$user->isEmailVerified()) return 'verification'; //не верифицирован
         if ($user->isBanned) return 'banned'; // забанен
 
-
         //логинимся
         return $this->loginUserUseCase->execute($dto) ? 'login' : 'password';
-
     }
 
 }

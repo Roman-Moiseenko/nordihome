@@ -2,6 +2,7 @@
 
 namespace App\Modules\Auth\Application\Services;
 
+use App\Modules\Auth\Application\Actions\Client\ConsentClientUseCase;
 use App\Modules\Auth\Application\Actions\Client\CreateClientUseCase;
 use App\Modules\Auth\Application\Actions\Client\FindClientByContactUseCase;
 use App\Modules\Auth\Application\Actions\Client\UpdateClientUseCase;
@@ -20,6 +21,7 @@ readonly class FindOrCreateClientService
         private FindClientByContactUseCase $findClientByContactUseCase,
         private CreateClientUseCase $createClientUseCase,
         private UpdateClientUseCase $updateClientUseCase,
+        private ConsentClientUseCase $consentClientUseCase,
     )
     {
 
@@ -33,6 +35,8 @@ readonly class FindOrCreateClientService
 
         $userPermission = new UserPermission(null, [] , ['auth.buyer.create', 'auth.buyer.edit']);
 
+        if (!$dto->agreement) throw new \InvalidArgumentException('Нет согласия на ПДн');
+
         $clientDto = new FindClientByContactData(phone: new PhoneNumber($dto->phone)->getValue(),
             email: $dto->email);
         $client = $this->findClientByContactUseCase->execute($clientDto);
@@ -45,6 +49,7 @@ readonly class FindOrCreateClientService
                 phone: new PhoneNumber($dto->phone)->getValue(),
             );
             $client = $this->createClientUseCase->execute($clientDto, $userPermission);
+            $this->consentClientUseCase->execute($client->id); //Согласие
         }
 
         $updateDta = new ClientUpdateData(

@@ -52,9 +52,10 @@
                             </div>
                         </div>
                         <div class="form-check checked mt-2 p-0">
-                            <input class="form-check-input" type="checkbox" name="agreement" id="agreement"
-                                   value="Согласие на обработку персональных данных">
-                            <label class="form-check-label f-z_14" for="agreement">Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
+                            <input type="hidden" name="agreement" value="0">
+                            <input class="form-check-input" type="checkbox" name="agreement" id="agreement-buy-click"
+                                   value="1">
+                            <label class="form-check-label f-z_14" for="agreement-buy-click">Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
                             </label>
                             <div class="invalid-feedback">
                                 Необходимо согласие на обработку персональных данных

@@ -29,6 +29,8 @@ class OneClickOrderData extends Data
         public ?string $address,
         #[Nullable, StringType]
         public ?string $name = null,
+        #[Nullable, BooleanType]
+        public readonly bool $agreement = false,
     )
     {
 

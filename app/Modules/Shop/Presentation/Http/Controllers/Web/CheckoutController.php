@@ -3,18 +3,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
-
-use App\Modules\Accounting\Repository\StorageRepository;
-use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Order\Application\Services\CreateOrderFromCartService;
 use App\Modules\Order\Application\Services\CreateOrderOneClickService;
-use App\Modules\Order\Repository\PaymentRepository;
-use App\Modules\Order\Service\OrderPaymentService;
 use App\Modules\Order\Service\OrderService;
 use App\Modules\Shop\Application\Actions\Cart\GetCartUseCase;
 use App\Modules\Shop\Application\DTOs\Checkout\OneClickOrderData;
-use App\Modules\Shop\Cart\Cart;
-use App\Modules\Shop\Parser\ParserCart;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 
@@ -89,6 +82,7 @@ class CheckoutController extends ShopController
 
     public function create_click(Request $request)
     {
+        \Log::info(json_encode($request->all()));
 //try {
             $dto = OneClickOrderData::validateAndCreate($request->all());
            \Log::info(json_encode($dto));

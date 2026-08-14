@@ -24,7 +24,7 @@
                         <div id="password-error" class="fs-7 text-danger" style="display: none">Неверный пароль</div>
                         <div class="form-floating my-3">
                             <input type="text" class="form-control" name="verify_token" id="verify_token"
-                                   placeholder="Код верификации" autocomplete="on" autocomplete="off">
+                                   placeholder="Код верификации" autocomplete="off">
                             <label for="verify_token">Код подтверждения (с почты)</label>
                             <div class="form-check checked mt-2 p-0">
                                 <input class="form-check-input" type="checkbox" name="agreement" id="agreement"

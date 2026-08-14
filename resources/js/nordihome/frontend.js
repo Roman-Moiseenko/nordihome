@@ -121,7 +121,7 @@ window.$ = jQuery;
        // let selectBCPayment = buyClickPopup.find('select[name="payment"]');
         let selectBCDelivery = buyClickPopup.find('select[name="delivery"]');
         let inputBCAddress = buyClickPopup.find('input[name="address"]');
-        let checkAgreement = buyClickPopup.find('input[name="agreement"]');
+        let checkAgreement = buyClickPopup.find('input[name="agreement"][type="checkbox"]');
         buttonBuyClick.on('click', function (item) {
             let product_id = buyClickPopup.find('input[name=product_id]').val();
             let errorBlock = $('#buy-click-error');
