@@ -26,11 +26,14 @@
                             <input type="text" class="form-control" name="verify_token" id="verify_token"
                                    placeholder="Код верификации" autocomplete="on" autocomplete="off">
                             <label for="verify_token">Код подтверждения (с почты)</label>
-                            <div class="checked mt-2">
-                                <label class="f-z_14">
-                                    <input type="checkbox" name="agreement"
-                                           value="Согласие на обработку персональных данных"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
+                            <div class="form-check checked mt-2 p-0">
+                                <input class="form-check-input" type="checkbox" name="agreement" id="agreement"
+                                       value="Согласие на обработку персональных данных">
+                                <label class="form-check-label f-z_14" for="agreement">Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
                                 </label>
+                                <div class="invalid-feedback">
+                                    Необходимо согласие на обработку персональных данных
+                                </div>
                             </div>
                             <span id="token-error" class="fs-7 text-danger" style="display: none">Неверный код подтверждения</span>
                         </div>

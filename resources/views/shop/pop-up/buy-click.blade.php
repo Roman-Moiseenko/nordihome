@@ -51,6 +51,16 @@
                                 <label for="address">Адрес</label>
                             </div>
                         </div>
+                        <div class="form-check checked mt-2 p-0">
+                            <input class="form-check-input" type="checkbox" name="agreement" id="agreement"
+                                   value="Согласие на обработку персональных данных">
+                            <label class="form-check-label f-z_14" for="agreement">Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
+                            </label>
+                            <div class="invalid-feedback">
+                                Необходимо согласие на обработку персональных данных
+                            </div>
+                        </div>
+
                         <div id="buy-click-error" class="fs-7 text-danger"></div>
                         <div class="d-flex justify-content-center my-5">
                             <button id="button-buy-click" type="button" class="btn btn-dark fs-5 py-2 px-3 e-buy-click"

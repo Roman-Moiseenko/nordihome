@@ -38,10 +38,11 @@ window.$ = jQuery;
                     _token: $('meta[name="csrf-token"]').attr('content'),
                     email: inputEmail.val(),
                     password: inputPassword.val(),
-                    verify_token: inputVerify.val()
+                    verify_token: inputVerify.val(),
+                    agreement: checkAgreement.prop('checked') ? 1 : 0
                 }, function (data) {
                     console.log(data)
-                    common.error(data);
+
                     tokenError.hide();
                     passwordError.hide();
                     if (data === "token") tokenError.show(); //неверный токен

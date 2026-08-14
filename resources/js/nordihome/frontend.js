@@ -121,11 +121,13 @@ window.$ = jQuery;
        // let selectBCPayment = buyClickPopup.find('select[name="payment"]');
         let selectBCDelivery = buyClickPopup.find('select[name="delivery"]');
         let inputBCAddress = buyClickPopup.find('input[name="address"]');
+        let checkAgreement = buyClickPopup.find('input[name="agreement"]');
         buttonBuyClick.on('click', function (item) {
             let product_id = buyClickPopup.find('input[name=product_id]').val();
             let errorBlock = $('#buy-click-error');
             item.preventDefault();
-            if (inputBCEmail.val() === '' || inputBCPhone.val() === '' || selectBCDelivery.val() === '') {
+            if (inputBCEmail.val() === '' || inputBCPhone.val() === ''
+                || selectBCDelivery.val() === '') {
                 errorBlock.html('Не заполнены поля');
                 return false;
             }
@@ -133,22 +135,13 @@ window.$ = jQuery;
                 errorBlock.html('Не заполнен адрес доставки');
                 return false;
             }
+            if (!checkAgreement.prop('checked')) {
+                errorBlock.html('Подтвердите согласие на обработку персональных данных');
+                return false;
+            }
             formBuyClick.attr('method', 'post')
             formBuyClick.attr('action', '/order/create-click')
             formBuyClick.submit();
-           /*
-            $.post('/product/count-for-sell/' + product_id, {}, function (data) {
-                if (data === 0) {
-                    errorBlock.html('Товар не в наличии! Оформите предзаказ!');
-                    return false;
-                } else {
-                    formBuyClick.attr('method', 'post')
-                    formBuyClick.attr('action', '/order/create-click')
-                    formBuyClick.submit();
-                }
-            });
-            */
-
         });
 
     }

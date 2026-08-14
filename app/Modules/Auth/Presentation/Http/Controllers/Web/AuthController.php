@@ -66,7 +66,7 @@ class AuthController extends Controller
         if (!is_null($dto->verify_token)) {
             try {
                 //Верифицируемся
-                $this->confirmEmailUseCase->execute($dto->verify_token);
+                $this->confirmEmailUseCase->execute($dto->verify_token, $dto->agreement);
                 //Логинимся
                 $result = $this->loginClientUseCase->execute($dto);
                 return \response()->json($result ? 'login' : 'password');

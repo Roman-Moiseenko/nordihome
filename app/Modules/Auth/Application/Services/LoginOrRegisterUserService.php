@@ -3,6 +3,7 @@
 namespace App\Modules\Auth\Application\Services;
 
 use App\Modules\Auth\Application\Actions\Auth\LoginUserUseCase;
+use App\Modules\Auth\Application\Actions\Client\ConsentClientUseCase;
 use App\Modules\Auth\Application\Actions\Client\CreateClientUseCase;
 use App\Modules\Auth\Application\Actions\Client\FindClientByContactUseCase;
 use App\Modules\Auth\Application\Actions\User\RegisterUserClientUseCase;
@@ -20,11 +21,11 @@ readonly class LoginOrRegisterUserService
 {
     public function __construct(
         private UserRepositoryInterface   $userRepository,
-        //private ClientRepositoryInterface $clientRepository,
         private RegisterUserClientUseCase $registerUserClientUseCase,
         private CreateClientUseCase       $createClientUseCase,
         private LoginUserUseCase          $loginUserUseCase,
         private FindClientByContactUseCase $findClientByContactUseCase,
+        private ConsentClientUseCase $consentClientUseCase,
     )
     {
     }
@@ -46,6 +47,7 @@ readonly class LoginOrRegisterUserService
                     email: $dto->email,
                 );
                 $client = $this->createClientUseCase->execute($clientDto, new UserPermission(null, ['role:admin'], ['auth.buyer.create']));
+                $this->consentClientUseCase->execute($client->id); //Согласие
             }
             //Привязываем новый user к клиенту
             $registerDto = new RegisterUserData($dto->email, $dto->password);
