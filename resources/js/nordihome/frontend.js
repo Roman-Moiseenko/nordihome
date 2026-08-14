@@ -111,65 +111,6 @@ window.$ = jQuery;
         return '<div class="submenu-second-level-div">' + html + '</div>';
     }
 
-    /** LOGIN POPUP **/
-    let loginPopup = $('#login-popup');
-    if (loginPopup.length) {
-        let form = $('form#login-form');
-        let buttonLogin = $('#button-login');
-        let inputEmail = loginPopup.find('input[name="email"]');
-        let inputPassword = loginPopup.find('input[name="password"]');
-        let inputVerify = loginPopup.find('input[name="verify_token"]');
-        inputVerify.parent().hide();
-        buttonLogin.on('click', function () {
-            if (inputEmail.val().length === 0 || inputPassword.val().length === 0 || !common.isEmail(inputEmail.val())) {
-                form.addClass('was-validated');
-                return true;
-            }
-            if (inputVerify.parent().is(':visible') && inputVerify.val().length === 0) {
-                form.addClass('was-validated');
-                return true;
-            }
-            $.post('/login-client',
-                {
-                    _token: $('meta[name="csrf-token"]').attr('content'),
-                    email: inputEmail.val(),
-                    password: inputPassword.val(),
-                    verify_token: inputVerify.val()
-                }, function (data) {
-                    console.log(data)
-                    common.error(data);
-                    $('#token-error').hide();
-                    $('#password-error').hide();
-                    if (data === "token") $('#token-error').show(); //неверный токен
-                    if (data === "verification") {
-                        inputEmail.prop('disabled', true);
-                        inputPassword.prop('disabled', true);
-                        inputVerify.prop('required', true);
-                        inputVerify.parent().show();
-                    }
-                    if (data === "password") $('#password-error').show(); //Неверный пароль
-                    if (data === "login") location.reload(); //Аутентификация прошла
-                    if (data === "banned") {
-                        alert('Ваш аккаунт заблокирован!')
-                        //Доступ ограничен
-                    }
-/*
-                    if (data.token === true) $('#token-error').show(); //неверный токен
-                    if (data.verification === true || data.register === true) { //требуется верификация
-                        inputEmail.prop('disabled', true);
-                        inputPassword.prop('disabled', true);
-                        inputVerify.prop('required', true);
-                        inputVerify.parent().show();
-                    }
-                    if (data.password === true) $('#password-error').show(); //Неверный пароль
-                    if (data.login === true) location.reload(); //Аутентификация прошла
-                    */
-                }
-            );
-
-        });
-    }
-
     /** BUY-CLICK POPUP **/
     let buyClickPopup = $('#buy-click');
     if (buyClickPopup.length) {
@@ -231,7 +172,10 @@ window.$ = jQuery;
             }, function (data) {//Получаем кол-во товаров в корзине
                 if (!common.error(data)) {
                     window.Livewire.dispatch('update-header-cart');//Меняем кол-во и сумму товаров в виджете корзины в хеадере
-                    if (!$btn.hasClass('in-cart')) $btn.addClass('in-cart');
+                    if (!$btn.hasClass('in-cart')) {
+                        $btn.addClass('in-cart')
+                        $btn.text('В Корзине')
+                    }
                 }
             }
         );

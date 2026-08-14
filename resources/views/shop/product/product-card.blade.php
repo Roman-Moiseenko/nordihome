@@ -67,7 +67,7 @@
         </div>
         <div>
             <button class="to-cart btn btn-black e-add{{ $product->in_cart ? ' in-cart' : '' }}" data-product="{{ $product->id }}">
-                В Корзину
+                {{ $product->in_cart ? 'В Корзине' : 'В Корзину' }}
             </button>
         </div>
 

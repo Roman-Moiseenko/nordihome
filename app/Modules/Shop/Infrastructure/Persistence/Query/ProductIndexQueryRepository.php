@@ -87,6 +87,12 @@ class ProductIndexQueryRepository
                     ->where('cart_storage.client_id', '=', $client->id);
             });
             $inCartSelect = 'CASE WHEN cart_storage.id IS NOT NULL THEN 1 ELSE 0 END as in_cart';
+        } elseif ($client->uuid !== null) {
+            $query->leftJoin('cart_cookie', function($join) use ($client) {
+                $join->on('products.id', '=', 'cart_cookie.product_id')
+                    ->where('cart_cookie.user_ui', '=', $client->uuid);
+            });
+            $inCartSelect = 'CASE WHEN cart_cookie.id IS NOT NULL THEN 1 ELSE 0 END as in_cart';
         }
 
         $products = $query
