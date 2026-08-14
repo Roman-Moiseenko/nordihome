@@ -38,6 +38,12 @@
                     >
                         {{ scope.row.published ? 'Draft' : 'Published' }}
                     </el-button>
+                    <el-button size="small"
+                               type="primary"
+                               @click.stop="onCopy(scope.row)"
+                    >
+                        Copy
+                    </el-button>
                     <el-button v-if="!scope.row.published" size="small"
                                type="danger"
                                @click.stop="handleDeleteEntity(scope.row)"
@@ -77,6 +83,10 @@ function onToggle(row) {
             tableData.value = [...page.props.category.posts]
         }
     })
+}
+
+function onCopy(row) {
+    router.post(route('admin.content.post.copy', {id: row.id}))
 }
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.content.post.destroy', {post: row.id}), {name: 'post'});

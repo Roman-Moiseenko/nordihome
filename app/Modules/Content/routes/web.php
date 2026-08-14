@@ -237,6 +237,7 @@ Route::group(
             Route::post('/toggle/{id}', [PostController::class, 'post_toggle'])->name('toggle');
             Route::post('/set-text/{post}', [PostController::class, 'post_set_text'])->name('set-text');
             Route::get('/{id}', [PostController::class, 'post'])->name('show');
+            Route::post('/copy/{id}', [PostController::class, 'copy'])->name('copy');
             Route::delete('/{post}', [PostController::class, 'post_destroy'])->name('destroy');
             Route::post('/', [PostController::class, 'post_create'])->name('store');
 

@@ -39,6 +39,7 @@ class PostRepository implements PostRepositoryInterface
         $model->slug = (string) $post->slug;
         $model->caption = $post->caption ?? $post->name;
         $model->fragment = $post->fragment;
+        $model->text = $post->text ?? '';
         $model->published = $post->isPublished();
         $model->category_id = $post->categoryId;
         $model->old_render = $post->oldRender;

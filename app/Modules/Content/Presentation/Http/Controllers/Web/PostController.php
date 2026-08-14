@@ -15,6 +15,7 @@ use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockViewData;
 use App\Modules\Content\Application\DTOs\Post\PostCreateData;
 use App\Modules\Content\Application\DTOs\Post\PostUpdateData;
 use App\Modules\Content\Application\DTOs\Post\PostViewData;
+use App\Modules\Content\Application\Services\CopyPostService;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Infrastructure\Models\Post;
@@ -47,6 +48,7 @@ class PostController extends Controller
         private readonly CreatePostUseCase $createPostUseCase,
         private readonly RemovePostUseCase $removePostUseCase,
         private readonly TogglePostUseCase $togglePostUseCase,
+        private readonly CopyPostService $copyPostService,
     )
     {
         $this->service = $service;
@@ -100,6 +102,12 @@ class PostController extends Controller
 
     }
 
+    public function copy(int $id, UserPermission $userPermission)
+    {
+        $post = $this->copyPostService->execute($id, $userPermission);
+        return redirect()->route('admin.content.post.show', $post->id);
+    }
+
     public function post(int $id, UserPermission $userPermission): Response
     {
         //$templates = $this->templates->getTemplates('post');
@@ -110,7 +118,6 @@ class PostController extends Controller
 
         return Inertia::render('Content/Post/Post', [
             'post' => Inertia::always(PostViewData::fromEntity($post)), //Заменить на useCase $this->repository->PostWithToArray($post)
-
             'tiny_api' => config('shop.tinymce'), //Удалить
             'blocks' => $blocks,
         ]);
