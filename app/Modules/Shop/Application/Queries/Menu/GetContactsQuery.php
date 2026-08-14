@@ -22,6 +22,16 @@ readonly class GetContactsQuery
      */
     public function execute(): array
     {
+
+        $contacts = $this->repository->getPublishedContacts();
+
+        $indexed = [];
+        foreach ($contacts as $contact) {
+            $indexed[$contact->slug] = $contact;
+        }
+
+        return $contacts;
+        /*
         return Cache::remember(
             CacheInvalidationRegistry::CONTACTS,
             now()->addDay(),
@@ -34,5 +44,6 @@ readonly class GetContactsQuery
                 return $indexed;
             }
         );
+        */
     }
 }

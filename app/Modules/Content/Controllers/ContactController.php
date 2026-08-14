@@ -31,7 +31,6 @@ class ContactController extends Controller
     {
         $request->validate([
             'name' => 'required|string|min:3',
-            'icon' => 'required|string|min:3',
             'url' => 'required|string|min:6',
         ]);
         $this->service->create($request);
@@ -44,7 +43,6 @@ class ContactController extends Controller
     {
         $request->validate([
             'name' => 'required|string|min:3',
-            'icon' => 'required|string|min:3',
             'url' => 'required|string|min:6',
         ]);
         $this->service->setInfo($request, $contact);

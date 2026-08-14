@@ -26,17 +26,15 @@ readonly class UpdatePostUseCase
 
         $post = $this->postRepository->getById($id);
 
-        if ($dto->name !== null) {
-            $post->name = $dto->name;
-        }
+        if ($dto->name !== null) $post->name = $dto->name;
+
 
         // Slug
         $slugValue = $dto->slug;
         if ($slugValue !== null || $dto->name !== null) {
             $slugString = $slugValue !== null ? trim($slugValue) : '';
-            if ($slugString === '') {
-                $slugString = Str::slug($post->name);
-            }
+            if ($slugString === '') $slugString = Str::slug($post->name);
+
             $slug = new Slug($slugString);
             if ($this->postRepository->existsSlug((string) $slug, $id)) {
                 $slug = new Slug((string) $slug . '-' . uniqid());
@@ -44,29 +42,16 @@ readonly class UpdatePostUseCase
             $post->slug = $slug;
         }
 
-        if ($dto->template !== null) {
-            $post->template = $dto->template;
-        }
+        if ($dto->caption !== null) $post->caption = $dto->caption;
 
-        if ($dto->caption !== null) {
-            $post->caption = $dto->caption;
-        }
+        if ($dto->fragment !== null) $post->fragment = $dto->fragment;
 
-        if ($dto->fragment !== null) {
-            $post->fragment = $dto->fragment;
-        }
+        if ($dto->categoryId !== null) $post->categoryId = $dto->categoryId;
 
-        if ($dto->categoryId !== null) {
-            $post->categoryId = $dto->categoryId;
-        }
-
-        if ($dto->published !== null) {
+        if ($dto->published !== null)
             $dto->published ? $post->publish() : $post->unpublish();
-        }
 
-        if ($dto->oldRender !== null) {
-            $post->oldRender = $dto->oldRender;
-        }
+        if ($dto->oldRender !== null) $post->oldRender = $dto->oldRender;
 
         // Meta
         if ($dto->metaTitle !== null || $dto->metaDescription !== null) {
