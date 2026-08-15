@@ -6,6 +6,7 @@ use App\Modules\Auth\Application\Actions\User\ChangeUserCredentialsUseCase;
 use App\Modules\Auth\Application\Actions\User\RegisterUserClientUseCase;
 use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Application\Interfaces\FreelanceRepositoryInterface;
+use App\Modules\Auth\Application\Interfaces\PasswordResetTokenRepositoryInterface;
 use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
 use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Database\Seeders\AuthRoleSeeder;
@@ -17,6 +18,7 @@ use App\Modules\Auth\Domain\Services\PermissionProviderInterface;
 use App\Modules\Auth\Domain\Services\RoleRepositoryInterface;
 use App\Modules\Auth\Infrastructure\Persistence\ClientRepository;
 use App\Modules\Auth\Infrastructure\Persistence\FreelanceRepository;
+use App\Modules\Auth\Infrastructure\Persistence\PasswordResetTokenRepository;
 use App\Modules\Auth\Infrastructure\Persistence\RoleRepository;
 use App\Modules\Auth\Infrastructure\Persistence\StaffRepository;
 use App\Modules\Auth\Infrastructure\Persistence\UserRepository;
@@ -155,6 +157,11 @@ class AuthServiceProvider extends ServiceProvider
             PermissionProviderInterface::class,
             PermissionProvider::class
         );
+        $this->app->bind(
+            PasswordResetTokenRepositoryInterface::class,
+            PasswordResetTokenRepository::class
+        );
+
         $this->app->bind(
             MailServiceInterface::class,
             $this->app->environment('local')

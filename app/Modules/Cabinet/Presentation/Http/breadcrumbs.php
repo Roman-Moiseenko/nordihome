@@ -73,8 +73,13 @@ Breadcrumbs::for('register', function (BreadcrumbTrail $trail) {
 
 
 Breadcrumbs::for('password.request', function (BreadcrumbTrail $trail) {
-    $trail->parent('login');
-    $trail->push('Reset Password', route('password.request'));
+    $trail->parent('shop.home');
+    $trail->push('Запрос на сброс пароля', route('password.request'));
+});
+
+Breadcrumbs::for('password.reset', function (BreadcrumbTrail $trail, string $token) {
+    $trail->parent('shop.home');
+    $trail->push('Сбросить пароль', route('password.reset', $token));
 });
 
 Breadcrumbs::for('other', function (BreadcrumbTrail $trail, $caption) {

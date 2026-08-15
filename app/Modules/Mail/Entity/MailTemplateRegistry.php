@@ -29,6 +29,11 @@ class MailTemplateRegistry
                 subject: 'Новый заказ с сайта',
                 view: 'mail.lead.order',
             ),
+            'user.password-reset' => new MailTemplate(
+                code: 'user.password-reset',
+                subject: 'Восстановление пароя',
+                view: 'mail.user.password-reset',
+            ),
         ];
     }
 

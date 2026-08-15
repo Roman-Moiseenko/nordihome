@@ -12,6 +12,7 @@
 use App\Modules\Auth\Presentation\Http\Controllers\Web\AuthController;
 use App\Modules\Auth\Presentation\Http\Controllers\Web\ClientController;
 use App\Modules\Auth\Presentation\Http\Controllers\Web\FreelanceController;
+use App\Modules\Auth\Presentation\Http\Controllers\Web\PasswordController;
 use App\Modules\Auth\Presentation\Http\Controllers\Web\RoleController;
 use App\Modules\Auth\Presentation\Http\Controllers\Web\StaffController;
 use App\Modules\User\Controllers\Auth\ForgotPasswordController;
@@ -65,15 +66,24 @@ Route::group(
         'middleware' => ['user_cookie_id'],
     ],
     function () {
-
-
         //Без доступа
         //Аутентификация или регистрация
         Route::any('/login-client', [AuthController::class, 'loginClient'])->name('login');
-        //TODO Переделать
-        Route::any('/password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+
+        //Route::any('/password/request', [ForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
         Route::get('/register/verify', [AuthController::class, 'verify'])->name('register.verify');
+        // Восстановление пароля
+        Route::group([
+            'prefix' => 'password',
+            'as' => 'password.',
+        ], function () {
+            Route::get('/request', [PasswordController::class, 'showRequestForm'])->name('request'); //-> форма запроса email (показ)
+            Route::post('/request', [PasswordController::class, 'sendResetEmail'])->name('email'); //-> обработка запроса email (отправка письма)
+            Route::get('/request/{token}', [PasswordController::class, 'showResetForm'])->name('reset'); //-> форма ввода нового пароля (показ)
+            Route::post('/request/{token}', [PasswordController::class, 'updatePassword'])->name('update'); //-> установка нового пароля
+        });
         ///Регистрация клиента восстановление пароля
+        ///
         Route::group([
             'prefix' => 'client',
         ], function () {
