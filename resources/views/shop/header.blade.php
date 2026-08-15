@@ -1,8 +1,6 @@
 @php
     /** @var App\Modules\Shop\Application\DTOs\Menu\MenuData[] $menus */
 /** @var  App\Modules\Shop\Application\DTOs\Menu\ContactData[] $contacts*/
-
-
 @endphp
 
 <header>
@@ -26,7 +24,11 @@
                         @foreach($contacts as $item)
                             <div class="ms-2">
                                 <a href="{{ $item->url }}" target="_blank" title="{{ $item->name }}">
-                                    <i class="{{ $item->icon }} fs-3" style="color: {{ $item->color }}"></i>
+                                    @if(is_null($item->svg))
+                                        <i class="{{ $item->icon }} fs-3" style="color: {{ $item->color }}"></i>
+                                    @else
+                                        {!! $item->svg !!}
+                                    @endif
                                 </a>
                             </div>
                         @endforeach
@@ -54,7 +56,11 @@
                     @foreach($contacts as $item)
                         <div class="ms-2">
                             <a href="{{ $item->url }}" target="_blank" title="{{ $item->name }}">
-                                <i class="{{ $item->icon }} fs-3" style="color: {{ $item->color }}"></i>
+                                @if(is_null($item->svg))
+                                    <i class="{{ $item->icon }} fs-3" style="color: {{ $item->color }}"></i>
+                                @else
+                                    {!! $item->svg !!}
+                                @endif
                             </a>
                         </div>
                     @endforeach
@@ -94,7 +100,7 @@
                     </button>
                 </div>
                 <div class="header-menu-mobile-btn" id="menuToggle">
-                    <button class="menu-toggle" >
+                    <button class="menu-toggle">
                         <span></span>
                         <span></span>
                         <span></span>
@@ -202,7 +208,7 @@
                         <span class="fs-8">Войти</span>
                     </a>
                 </li>
-            @endclient
+                @endclient
         </ul>
     </nav>
 

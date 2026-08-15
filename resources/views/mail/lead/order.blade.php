@@ -3,7 +3,7 @@
 <x-mail::panel>
 #Новый заказ с сайта
 </x-mail::panel>
-@if(!is_null($orderId()))
+@if(!is_null($orderId))
 <a href="{{ route('admin.order.edit', $orderId) }}">Заказ</a>
 @endif
 @component('mail::table')

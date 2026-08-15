@@ -16,9 +16,14 @@ class CreateMaxNotificationUseCase
 
     public function execute(LeadSourceData $leadData)
     {
-        $form = $leadData->data['form'];
-        unset($leadData->data['form']);
-        unset($leadData->data['agreement']);
+
+        if (!is_null($leadData->orderId)) {
+            $form = $leadData->data['form'];
+            unset($leadData->data['form']);
+            unset($leadData->data['agreement']);
+        } else {
+            $form = 'Заказ на сайте ' . '<a href="' . route('admin.order.edit', $leadData->orderId) . '">Перейти</a>';
+        }
         $message = '<p><b>' . $form . '</b></p>';
         foreach ($leadData->data as $key => $value)
             $message .= '<p>' . $key . ': ' . $value . '</p>';

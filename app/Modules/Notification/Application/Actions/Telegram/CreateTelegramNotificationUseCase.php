@@ -21,9 +21,16 @@ class CreateTelegramNotificationUseCase
 
         $chatId = config('shop.telegram-chat-id');
 
-        $form = $leadData->data['form'];
-        unset($leadData->data['form']);
-        unset($leadData->data['agreement']);
+        if (!is_null($leadData->orderId)) {
+            $form = $leadData->data['form'];
+            unset($leadData->data['form']);
+            unset($leadData->data['agreement']);
+        } else {
+            $form = 'Заказ на сайте ' . '<a href="' . route('admin.order.edit', $leadData->orderId) . '">Перейти</a>';
+        }
+
+
+
         $message = $form . '\n\r';
         foreach ($leadData->data as $key => $value)
             $message .= $key . ': ' . $value . '\n\r';
