@@ -29,6 +29,8 @@ readonly class CreateNotificationsFromFormBack
      */
     public function handle(LeadCollected $form): void
     {
+        //MAINDO Включить перед запуском
+        return;
 
         $leadData = $form->leadData;
 
@@ -47,7 +49,7 @@ readonly class CreateNotificationsFromFormBack
             ],
             new Recipient(email: config('mail.notification.address'), clientId: null)
         );
-        return;
+
 
         //Уведомления в рабочие чаты
         if (config('app.env') == 'production') {

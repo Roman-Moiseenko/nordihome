@@ -9,7 +9,7 @@ use NotificationChannels\Max\MaxMessage;
 class CreateMaxNotificationUseCase
 {
     public function __construct(
-        //MAINDO Сервис или репозитории с адресами
+        //TODO Сервис или репозитории с адресами
         // Сервис отправки
     )
     {}

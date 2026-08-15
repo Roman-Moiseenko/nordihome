@@ -11,7 +11,8 @@ use NotificationChannels\Telegram\TelegramMessage;
 class CreateTelegramNotificationUseCase
 {
     public function __construct(private Settings $settings
-
+        //TODO Сервис или репозитории с адресами
+        // Сервис отправки
     )
     {}
 
@@ -26,16 +27,20 @@ class CreateTelegramNotificationUseCase
             unset($leadData->data['form']);
             unset($leadData->data['agreement']);
         } else {
-            $form = 'Заказ на сайте ' . '<a href="' . route('admin.order.edit', $leadData->orderId) . '">Перейти</a>';
+            $form = 'Заказ на сайте ';
         }
-
-
 
         $message = $form . '\n\r';
         foreach ($leadData->data as $key => $value)
             $message .= $key . ': ' . $value . '\n\r';
 
-        TelegramMessage::create()->content($message)->to($chatId)->send();
+        $tg =TelegramMessage::create()->content($message);
+        if (!is_null($leadData->orderId)) {
+            $url = route('admin.order.edit', $leadData->orderId);
+            $tg->button('Перейти', $url, 1);
+        }
+
+        $tg->to($chatId)->send();
 
 /*
         Notification::route('telegram', $chatId)
