@@ -123,7 +123,7 @@ return [
         'name' => env('MAIL_FROM_NAME', 'НОРДИ ХОУМ'),
     ],
     'notification' => [
-        'address' => env('MAIL_NOTIFICATION', 'info@nordihome.ru'),
+        'address' => env('MAIL_NOTIFICATION', ''),
       //  'name' => env('MAIL_FROM_NAME', 'НОРДИ ХОУМ'),
     ],
     /*

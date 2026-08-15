@@ -41,7 +41,7 @@ readonly class ViewOrderUseCase
 
     }
 
-    public function execute(int $id, UserPermission $permission): OrderViewData
+    public function execute(int $id): OrderViewData
     {
 
        // if ($permission->can('order.order.edit')) throw new \DomainException('Нет доступа к редактированию заказов');
