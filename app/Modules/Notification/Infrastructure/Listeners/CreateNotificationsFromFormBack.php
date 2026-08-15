@@ -32,7 +32,7 @@ readonly class CreateNotificationsFromFormBack
     public function handle(LeadCollected $form): void
     {
         //MAINDO Включить перед запуском
-      //  return;
+        return;
 
         $leadData = $form->leadData;
 
@@ -55,7 +55,7 @@ readonly class CreateNotificationsFromFormBack
                 'data' => $data,
                 'orderId' => $leadData->orderId,
             ],
-            new Recipient(email: 'saint_johnny@mail.ru', clientId: null)
+            new Recipient(email: config('mail.notification.address'), clientId: null)
         );
 
         return;

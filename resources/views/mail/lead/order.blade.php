@@ -1,8 +1,8 @@
-<x-mail::message>
 @php
-use App\Modules\Order\Application\DTOs\OrderViewData;
-/** @var OrderViewData $data */
+    use App\Modules\Order\Application\DTOs\OrderViewData;
+    /** @var OrderViewData $data */
 @endphp
+<x-mail::message>
 <x-mail::panel>
 #Новый заказ с сайта
 </x-mail::panel>
@@ -10,7 +10,7 @@ use App\Modules\Order\Application\DTOs\OrderViewData;
 <a href="{{ route('admin.order.edit', $orderId) }}">Заказ #{{ $data->id }}</a>
 @endif
 @component('mail::table')
-| Товар       | Артикул | Значение  |
+| Товар       | Артикул | Кол-во  |
 |:----------- |:-------:| ------:|
 @foreach($data->items as  $item)
 | {{ $item->product->name }}       | {{ $item->product->code }}   | {{ $item->quantity }} |
@@ -26,7 +26,9 @@ use App\Modules\Order\Application\DTOs\OrderViewData;
 ##Клиент
 
 Email:    {{ $data->client->email }}
+
 Тел:    {{ $data->client->phone }}
+
 Коментарий :    {{ $data->commentClient }}
 
 </x-mail::message>
