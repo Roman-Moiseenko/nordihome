@@ -119,10 +119,13 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'info@nordihome.ru'),
+        'address' => env('MAIL_FROM_ADDRESS', 'system@vjob39.ru'),
         'name' => env('MAIL_FROM_NAME', 'НОРДИ ХОУМ'),
     ],
-
+    'notification' => [
+        'address' => env('MAIL_NOTIFICATION', 'info@nordihome.ru'),
+      //  'name' => env('MAIL_FROM_NAME', 'НОРДИ ХОУМ'),
+    ],
     /*
     |--------------------------------------------------------------------------
     | Markdown Mail Settings

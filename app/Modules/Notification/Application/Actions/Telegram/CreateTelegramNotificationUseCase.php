@@ -21,7 +21,7 @@ class CreateTelegramNotificationUseCase
 
         $chatId = config('shop.telegram-chat-id');
 
-        if (!is_null($leadData->orderId)) {
+        if (is_null($leadData->orderId)) {
             $form = $leadData->data['form'];
             unset($leadData->data['form']);
             unset($leadData->data['agreement']);

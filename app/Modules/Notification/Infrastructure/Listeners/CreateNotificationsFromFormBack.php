@@ -29,6 +29,7 @@ readonly class CreateNotificationsFromFormBack
      */
     public function handle(LeadCollected $form): void
     {
+
         $leadData = $form->leadData;
 
         //Готовим письмо
@@ -44,8 +45,9 @@ readonly class CreateNotificationsFromFormBack
                 'data' => $leadData->data,
                 'orderId' => $leadData->orderId,
             ],
-            new Recipient(email: config('mail.from.address'), clientId: null)
+            new Recipient(email: config('mail.notification.address'), clientId: null)
         );
+        return;
 
         //Уведомления в рабочие чаты
         if (config('app.env') == 'production') {
