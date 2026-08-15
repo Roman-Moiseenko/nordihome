@@ -58,7 +58,13 @@
                         {{ $item->product->name }}
                     </a>
                 @else
-                    {{ $item->product->name }}
+                    @if(!is_null($item->product->parser))
+                        <a href="{{ route('shop.ikea.product', $item->product->parser->code) }}" target="_blank">
+                            {{ $item->product->name }}
+                        </a>
+                    @else
+                        {{ $item->product->name }}
+                    @endif
                 @endif
             </div>
             <div class="price">
