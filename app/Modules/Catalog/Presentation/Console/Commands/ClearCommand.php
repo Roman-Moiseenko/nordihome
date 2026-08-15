@@ -6,7 +6,10 @@ namespace App\Modules\Catalog\Presentation\Console\Commands;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
+use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Shared\Infrastructure\Models\Photo;
+use App\Modules\Shop\Infrastructure\Models\CartCookie;
+use App\Modules\Shop\Infrastructure\Models\CartStorage;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 
@@ -77,6 +80,20 @@ class ClearCommand extends Command
     private function clear_product(): void
     {
         $this->warn('Очистка товаров');
+        //
+        $orders = Order::getModels();
+        if (count($orders) > 0) {
+            $this->warn('Очистка Заказов');
+            Order::where('id', '>', 0)->forceDelete();
+        }
+        $cart1 = CartStorage::getModels();
+        $cart2 = CartCookie::getModels();
+        if (count($cart1) > 0 || count($cart2) > 0) {
+            $this->warn('Очистка Корзины');
+            CartStorage::where('id', '>', 0)->forceDelete();
+            CartCookie::where('id', '>', 0)->forceDelete();
+        }
+
         $products = Product::getModels();
         $this->info('Товаров - ' . count($products));
         foreach ($products as $product) {
