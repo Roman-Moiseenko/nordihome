@@ -1,0 +1,37 @@
+#cookie_notification {
+    display: none;
+    justify-content: space-between;
+    align-items: flex-end;
+    position: fixed;
+    bottom: 0;
+    width: 70%;
+    padding: 20px 15px;
+    background-color: white;
+    z-index: 99;
+    box-shadow: 0 2px 8px 6px rgb(0 0 0 / 10%);
+    >div {
+        display: flex;
+        flex-wrap: wrap;
+
+        p {
+            margin: 0;
+            font-size: 13px;
+            margin-right: 10px;
+            width: calc(100% - 130px);
+        }
+        button {
+            background: black;
+            color: white;
+            border: 0;
+            padding: 10px 15px;
+            cursor: pointer;
+            text-transform: uppercase;
+            width: 110px;
+        }
+    }
+
+    &.show {
+        display: block;
+    }
+
+}

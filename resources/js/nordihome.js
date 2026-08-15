@@ -25,4 +25,5 @@ import './nordihome/e-commerce.js';
 import  './nordihome/wish.js'
 import  './nordihome/login.js'
 import  './nordihome/search.js'
+import './nordihome/cookie.js'
 

@@ -95,7 +95,7 @@
 <!--livewire:shop.popup.buy-click :user="$user" /-->
 @include('shop.pop-up.buy-click')
 @include('shop.pop-up.notification')
-
+<div id="cookie_notification"></div>
 <!--FOOTER-->
 
 @include('shop.footer')
