@@ -3,6 +3,7 @@
 return [
     App\Modules\Auth\Providers\AuthServiceProvider::class,
     App\Modules\Cabinet\Providers\CabinetServiceProvider::class,
+    App\Modules\Cart\Providers\CartServiceProvider::class,
     App\Modules\Catalog\Providers\CatalogServiceProvider::class,
     App\Modules\Content\Providers\ContentServiceProvider::class,
     App\Modules\Feedback\Providers\FeedbackServiceProvider::class,

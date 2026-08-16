@@ -4,7 +4,6 @@ namespace App\Livewire\Products;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\User\Entity\User;
 use App\Modules\User\Service\WishService;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -46,7 +45,7 @@ class ProductCard extends Component
 
     public function to_cart()
     {
-        $cart = app()->make('\App\Modules\Shop\Cart\Cart');
+        $cart = app()->make('\App\Modules\Cart\Domain\Entities\Cart');
         //$cart->add($this->product, 1, []);
         $this->dispatch('update-header-cart');
     }

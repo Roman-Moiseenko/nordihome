@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Entity;
 
-use App\Modules\Shop\Cart\CartItem;
 use App\Modules\Shop\CartItemInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

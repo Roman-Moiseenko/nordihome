@@ -4,9 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
+use App\Modules\Cart\Infrastructure\Models\CartStorage;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
-use App\Modules\Shop\Infrastructure\Models\CartStorage;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use JetBrains\PhpStorm\Deprecated;

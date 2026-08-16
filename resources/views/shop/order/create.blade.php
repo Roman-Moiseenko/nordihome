@@ -1,5 +1,5 @@
 @php
-    /** @var \App\Modules\Shop\Application\DTOs\Cart\CartInfoData $cartInfo */
+    /** @var \App\Modules\Cart\Application\DTOs\CartInfoData $cartInfo */
     $amountCommon = $cartInfo->amountCheck + $cartInfo->delivery + $cartInfo->deliveryParser - $cartInfo->discountCheck;
 @endphp
 @extends('shop.layouts.main')
@@ -65,8 +65,10 @@
                     <form id="form-order-create" method="POST" action="{{ route('shop.order.create') }}">
                         @method('PUT')
                         @csrf
-                        <textarea class="form-control p-2" name="commentClient" placeholder="Комментарий к заказу"></textarea>
-                        <input type="text" class="form-control mt-2 p-2" name="coupon" autocomplete="off" placeholder="Купон на скидку"/>
+                        <textarea class="form-control p-2" name="commentClient"
+                                  placeholder="Комментарий к заказу"></textarea>
+                        <input type="text" class="form-control mt-2 p-2" name="coupon" autocomplete="off"
+                               placeholder="Купон на скидку"/>
                     </form>
                     <div class="coupon-info" style="display:none;">
                         <div>Скидка по купону:</div>

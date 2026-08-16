@@ -3,13 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Presentation\Console\Commands;
 
+use App\Modules\Cart\Infrastructure\Models\CartCookie;
+use App\Modules\Cart\Infrastructure\Models\CartStorage;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Shared\Infrastructure\Models\Photo;
-use App\Modules\Shop\Infrastructure\Models\CartCookie;
-use App\Modules\Shop\Infrastructure\Models\CartStorage;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 

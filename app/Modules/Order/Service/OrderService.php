@@ -12,6 +12,7 @@ use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Bank\Service\BankService;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
+use App\Modules\Cart\Domain\Entities\Cart;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Discount\Entity\Coupon;
@@ -35,9 +36,6 @@ use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Calculate\CalculatorOrder;
-use App\Modules\Shop\Cart\Cart;
-use App\Modules\Shop\Parser\ParserCart;
-use App\Modules\Shop\Parser\ParserService;
 use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\User\Entity\User;
 use Carbon\Carbon;
@@ -56,12 +54,10 @@ class OrderService
     private Cart $cart;
     private ShopRepository $repository;
     private CouponService $coupons;
-    private ParserCart $parserCart;
     private CalculatorOrder $calculator;
     private LoggerService $logger;
     private MovementService $movementService;
     private OrderReserveService $reserveService;
-    private ParserService $parserService;
 
     private \App\Modules\Setting\Entity\Coupon $coupon_set;
     private Parser $parser_set;
@@ -72,8 +68,6 @@ class OrderService
     public function __construct(
         DeliveryService     $deliveries,
         Cart                $cart,
-        ParserCart          $parserCart,
-        ParserService       $parserService,
         ShopRepository      $repository,
         CouponService       $coupons,
         CalculatorOrder     $calculator,
@@ -92,12 +86,10 @@ class OrderService
         $this->cart = $cart;
         $this->repository = $repository;
         $this->coupons = $coupons;
-        $this->parserCart = $parserCart;
         $this->calculator = $calculator;
         $this->logger = $logger;
         $this->movementService = $movementService;
         $this->reserveService = $reserveService;
-        $this->parserService = $parserService;
         $this->invoiceReport = $invoiceReport;
         $this->bankService = $bankService;
     }
@@ -141,7 +133,7 @@ class OrderService
             $order->refresh();
             $this->recalculation($order);
 
-            event(new OrderHasCreated($order));
+            event(new OrderHasCreated($order->id));
         });
         return $order;
     }
@@ -284,7 +276,7 @@ class OrderService
             $order->refresh();
             $this->recalculation($order);
 
-            event(new OrderHasCreated($order));
+            event(new OrderHasCreated($order->id));
 
         });
         return $order;
@@ -336,7 +328,7 @@ class OrderService
 
             $this->addProduct($order, $product->id, 1);
             $this->recalculation($order);
-            event(new OrderHasCreated($order));
+            event(new OrderHasCreated($order->id));
         });
         return $order;
     }

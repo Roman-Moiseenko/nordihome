@@ -2,13 +2,11 @@
 
 namespace App\Livewire\Cabinet\Cart;
 
-use App\Modules\Shop\Application\Actions\Cart\GetCartUseCase;
-use App\Modules\User\Entity\User;
+use App\Modules\Cart\Application\Actions\GetCartUseCase;
+use App\Modules\Cart\Domain\Entities\Cart as CartEntity;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Livewire\Attributes\On;
 use Livewire\Component;
-
-use \App\Modules\Shop\Cart\Cart as CartEntity;
 
 class CartPage extends Component
 {
@@ -35,7 +33,7 @@ class CartPage extends Component
     public int $renderKey = 0; // счётчик изменений
     public function boot()
     {
-        $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
+        $this->cart = app()->make('\App\Modules\Cart\Domain\Entities\Cart');
     }
 
     public function mount(bool $preorder = false)

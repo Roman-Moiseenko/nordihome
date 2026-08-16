@@ -2,9 +2,7 @@
 
 namespace App\Livewire\Cabinet\Cart;
 
-use App\Modules\Auth\Domain\Entities\ClientEntity;
 use App\Modules\Auth\Infrastructure\Models\Client;
-use App\Modules\User\Entity\User;
 use App\Modules\User\Service\WishService;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -13,7 +11,7 @@ class CartItem extends Component
 {
 
     /**
-     * @var \App\Modules\Shop\Cart\Cart|mixed
+     * @var \App\Modules\Cart\Domain\Entities\Cart|mixed
      */
     private mixed $cart;
     public array $item;
@@ -25,7 +23,7 @@ class CartItem extends Component
 
     public function boot(): void
     {
-        $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
+        $this->cart = app()->make('\App\Modules\Cart\Domain\Entities\Cart');
     }
 
     public function mount(array $item, int|null $clientId): void

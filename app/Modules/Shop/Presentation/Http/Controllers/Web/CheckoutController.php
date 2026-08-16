@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
+use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Order\Application\Services\CreateOrderFromCartService;
 use App\Modules\Order\Application\Services\CreateOrderOneClickService;
 use App\Modules\Order\Service\OrderService;
-use App\Modules\Shop\Application\Actions\Cart\GetCartUseCase;
 use App\Modules\Shop\Application\DTOs\Checkout\OneClickOrderData;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;

@@ -2,11 +2,9 @@
 
 namespace App\Livewire\Header;
 
-use App\Modules\Shop\Application\Actions\Cart\GetCartUseCase;
-use App\Modules\Shop\Application\DTOs\Cart\CartItemData;
-use App\Modules\Shop\Cart\Cart as CartEntity;
-use App\Modules\Shop\Cart\CartItem;
-use Livewire\Attributes\Computed;
+use App\Modules\Cart\Application\Actions\GetCartUseCase;
+use App\Modules\Cart\Application\DTOs\CartItemData;
+use App\Modules\Cart\Domain\Entities\Cart as CartEntity;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -24,13 +22,13 @@ class Cart extends Component
 
     public function boot(): void
     {
-        $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
+        $this->cart = app()->make('\App\Modules\Cart\Domain\Entities\Cart');
     }
 
 
     public function mount(): void
     {
-        $this->cart = app()->make('\App\Modules\Shop\Cart\Cart');
+        $this->cart = app()->make('\App\Modules\Cart\Domain\Entities\Cart');
         $this->refresh_fields();
     }
 

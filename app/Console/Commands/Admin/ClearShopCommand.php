@@ -2,6 +2,8 @@
 
 namespace App\Console\Commands\Admin;
 
+use App\Modules\Cart\Infrastructure\Models\CartCookie;
+use App\Modules\Cart\Infrastructure\Models\CartStorage;
 use App\Modules\Catalog\Entity\Series;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Category;
@@ -9,8 +11,6 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Catalog\Infrastructure\Models\Tag;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Shop\Infrastructure\Models\CartCookie;
-use App\Modules\Shop\Infrastructure\Models\CartStorage;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 

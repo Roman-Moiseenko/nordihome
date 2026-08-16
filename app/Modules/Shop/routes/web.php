@@ -1,16 +1,14 @@
 <?php
 
-use App\Modules\Shop\Controllers\CartController;
 use App\Modules\Shop\Controllers\ECommerceController;
 use App\Modules\Shop\Controllers\FeedXMLController;
 use App\Modules\Shop\Controllers\GroupController;
 use App\Modules\Shop\Controllers\PageController;
-use App\Modules\Shop\Controllers\ParserController;
 use App\Modules\Shop\Controllers\PromotionController;
 use App\Modules\Shop\Controllers\SitemapXmlController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\CatalogController;
-use App\Modules\Shop\Presentation\Http\Controllers\Web\IkeaController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\CheckoutController;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\IkeaController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\PostController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ProductController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\RoomController;
@@ -96,28 +94,17 @@ Route::group(
 
         });
 
-        Route::get('/cart', [CartController::class, 'view'])->name('cart.view');
 
         Route::get('/novelty', [CatalogController::class, 'novelty'])->name('novelty');
 
         Route::get('/promotion/{slug}', [PromotionController::class, 'view'])->name('promotion.view');
         Route::get('/group/{slug}', [GroupController::class, 'view'])->name('group.view');
 
+        //Корзина
 
-        //Корзина AJAX
-        Route::group([
-            'as' => 'cart.',
-            'prefix' => 'cart_post',
-        ], function () {
-            Route::post('/cart', [CartController::class, 'cart'])->name('all');
-            Route::post('/add', [CartController::class, 'add'])->name('add');
-            //     Route::post('/sub/{product}', [CartController::class, 'sub'])->name('sub');
-            //     Route::post('/set/{product}', [CartController::class, 'set'])->name('set');
-            //      Route::post('/check/{product}', [CartController::class, 'check'])->name('check');
-            //    Route::post('/check-all', [CartController::class, 'check_all'])->name('check-all');
-            Route::post('/remove/{product}', [CartController::class, 'remove'])->name('remove');
-            Route::post('/clear', [CartController::class, 'clear'])->name('clear');
-        });
+
+
+
 
         //CHECKOUT
         Route::group([
@@ -135,42 +122,12 @@ Route::group(
                 Route::post('/checkorder', [CheckoutController::class, 'checkorder'])->name('checkorder');
                 Route::post('/coupon', [CheckoutController::class, 'coupon'])->name('coupon');
             });
-
-            //Route::post('/create-parser', [OrderController::class, 'create_parser'])->name('create-parser');
-          //  Route::post('/create-cart', [CheckoutController::class, 'create_cart'])->name('create-cart');
             Route::get('/create-click', function () {
                 abort(404);
             });
 
-
-            //Route::put('/create-parser', [OrderController::class, 'store_parser']);
-
-            //ajax
-            //Route::post('/payment', [OrderController::class, 'payment'])->name('payment');
-
         });
 
-        Route::group([
-            'as' => 'parser.',
-            'prefix' => 'parser',
-        ],
-            function () {
-                Route::get('/catalog', [ParserController::class, 'index'])->name('view');
-                /// Route::get('/find', [ParserController::class, 'find'])->name('find');
-                Route::post('/search', [ParserController::class, 'search'])->name('search');
-                Route::get('/catalog/{slug}', [ParserController::class, 'catalog'])->name('catalog');
-                Route::get('/product/{slug}', [ParserController::class, 'product'])->name('product');
-
-                /*    Route::get('/calculate', [ParserController::class, 'view'])->name('view');
-                    Route::post('/parser/search', [ParserController::class, 'search'])->name('search');
-                    Route::post('/parser/clear', [ParserController::class, 'clear'])->name('clear');
-                    Route::post('/parser/{product}/remove', [ParserController::class, 'remove'])->name('remove');
-                    Route::post('/parser/{product}/add', [ParserController::class, 'add'])->name('add');
-                    Route::post('/parser/{product}/sub', [ParserController::class, 'sub'])->name('sub');
-                    Route::post('/parser/{product}/set', [ParserController::class, 'set'])->name('set');
-                    */
-            }
-        );
     }
 
 );
