@@ -18,7 +18,7 @@ class CartItem extends Component
  //   private mixed $cart;
     public array $item;
     public int $quantity;
-    private Client|null $client = null;
+    public ?Client $client = null;
 
     public bool $wish;
     public bool $check;
@@ -30,7 +30,6 @@ class CartItem extends Component
 
     public function mount(array $item, int|null $clientId): void
     {
-        \Log::warning($clientId);
         $this->item = $item;
         $this->quantity = $item['quantity'];
         $this->check = $item['check'];
