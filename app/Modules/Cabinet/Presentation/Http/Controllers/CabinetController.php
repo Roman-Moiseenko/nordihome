@@ -24,7 +24,7 @@ class CabinetController extends ShopController
 
     public function view(Request $request)
     {
-        return view('shop.cabinet.view');
+        return view('cabinet.view');
     }
 
     public function profile(Client $client)

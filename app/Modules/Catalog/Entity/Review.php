@@ -3,38 +3,38 @@
 
 namespace App\Modules\Catalog\Entity;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Base\Traits\PhotoField;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\DiscountReview;
-use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
  * @property int $product_id
- * @property int $user_id
+ * @property int $client_id
  * @property string $text
  * @property int $rating
- * @property int $status
+ * @property string $status
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Video $video
  * @property DiscountReview $discount
  *
- * @property User $user
+ * @property Client $client
  * @property Product $product
  */
 class Review extends Model
 {
     use PhotoField;
 
-    const STATUS_DRAFT = 5501;
-    const STATUS_MODERATED = 5502;
-    const STATUS_PUBLISHED = 5503;
-    const STATUS_BLOCKED = 5504;
-    const STATUSES = [
+    const string STATUS_DRAFT = 'draft';
+    const string STATUS_MODERATED = 'moderated';
+    const string STATUS_PUBLISHED = 'published';
+    const string STATUS_BLOCKED = 'blocked';
+    const array STATUSES = [
         self::STATUS_DRAFT => 'Черновик',
         self::STATUS_MODERATED => 'На модерации',
         self::STATUS_PUBLISHED => 'Опубликован',
@@ -44,7 +44,7 @@ class Review extends Model
     protected $table = 'product_reviews';
     protected $fillable = [
         'product_id',
-        'user_id',
+        'client_id',
         'text',
         'rating',
         'status'
@@ -55,22 +55,22 @@ class Review extends Model
         'updated_at' => 'datetime',
     ];
 
-    public static function empty(int $product_id, int $user_id):self
+    public static function empty(int $product_id, int $client_id):self
     {
         return self::create([
             'product_id' => $product_id,
-            'user_id' => $user_id,
+            'client_id' => $client_id,
             'text' => '',
             'rating' => 5,
             'status' => self::STATUS_DRAFT,
         ]);
     }
 
-    public static function register(int $product_id, int $user_id, string $text, int $rating): self
+    public static function register(int $product_id, int $client_id, string $text, int $rating): self
     {
         return self::create([
             'product_id' => $product_id,
-            'user_id' => $user_id,
+            'client_id' => $client_id,
             'text' => $text,
             'rating' => $rating,
             'status' => self::STATUS_MODERATED,
@@ -116,9 +116,9 @@ class Review extends Model
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function user()
+    public function client()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 
 

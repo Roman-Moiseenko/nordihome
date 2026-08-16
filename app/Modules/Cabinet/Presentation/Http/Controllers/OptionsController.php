@@ -26,7 +26,7 @@ class OptionsController extends ShopController
     public function index(Request $request)
     {
         $subscriptions = Subscription::orderBy('name')->active()->get();
-        return view('shop.cabinet.options', compact('subscriptions'));
+        return view('cabinet.options', compact('subscriptions'));
     }
 
     //AJAX

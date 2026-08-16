@@ -7,6 +7,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\DimensionsData;
 use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
 use App\Modules\Shop\Application\DTOs\Elements\PromotionProductData;
@@ -23,7 +24,7 @@ class ProductViewQueryRepository
     {
     }
 
-    public function getProductBySlug(string $slug, $typePrice): ProductData
+    public function getProductBySlug(string $slug, ClientContext $client): ProductData
     {
         $now = now();
         // Single comprehensive query with subqueries for:
@@ -32,7 +33,8 @@ class ProductViewQueryRepository
         //   - active promotion
         //   - published reviews count
         //   - brand logo (image)
-        $row = DB::table('products')
+        //   - wish and cart flags for the client
+        $query = DB::table('products')
             ->where('products.slug', $slug)
             ->join('categories', 'products.main_category_id', '=', 'categories.id')
             ->join('brands', 'products.brand_id', '=', 'brands.id')
@@ -44,7 +46,31 @@ class ProductViewQueryRepository
                             ->where('promotions.start_at', '<=', $now)
                             ->where('promotions.finish_at', '>=', $now);
                     });
-            })
+            });
+
+        $isWishSelect = '0 as is_wish';
+        $inCartSelect = '0 as in_cart';
+        if ($client->id !== null) {
+            $query->leftJoin('wishes', function ($join) use ($client) {
+                $join->on('products.id', '=', 'wishes.product_id')
+                    ->where('wishes.client_id', '=', $client->id);
+            });
+            $isWishSelect = 'CASE WHEN wishes.id IS NOT NULL THEN 1 ELSE 0 END as is_wish';
+
+            $query->leftJoin('cart_storage', function ($join) use ($client) {
+                $join->on('products.id', '=', 'cart_storage.product_id')
+                    ->where('cart_storage.client_id', '=', $client->id);
+            });
+            $inCartSelect = 'CASE WHEN cart_storage.id IS NOT NULL THEN 1 ELSE 0 END as in_cart';
+        } elseif ($client->uuid !== null) {
+            $query->leftJoin('cart_cookie', function ($join) use ($client) {
+                $join->on('products.id', '=', 'cart_cookie.product_id')
+                    ->where('cart_cookie.user_ui', '=', $client->uuid);
+            });
+            $inCartSelect = 'CASE WHEN cart_cookie.id IS NOT NULL THEN 1 ELSE 0 END as in_cart';
+        }
+
+        $row = $query
             ->select(
                 'products.id',
                 'products.name',
@@ -70,7 +96,7 @@ class ProductViewQueryRepository
                 DB::raw("(
                     SELECT pp.amount FROM product_prices pp
                     WHERE pp.product_id = products.id
-                      AND pp.type = '" . $typePrice . "'
+                      AND pp.type = '" . $client->priceType . "'
                     ORDER BY pp.set_at DESC, pp.id DESC
                     LIMIT 1
                 ) as price"),
@@ -78,11 +104,11 @@ class ProductViewQueryRepository
                 DB::raw("(
                     SELECT pp.amount FROM product_prices pp
                     WHERE pp.product_id = products.id
-                      AND pp.type = '" . $typePrice . "'
+                      AND pp.type = '" . $client->priceType . "'
                       AND pp.id < (
                           SELECT MAX(pp2.id) FROM product_prices pp2
                           WHERE pp2.product_id = products.id
-                            AND pp2.type = '" . $typePrice. "'
+                            AND pp2.type = '" . $client->priceType . "'
                       )
                     ORDER BY pp.set_at DESC, pp.id DESC
                     LIMIT 1
@@ -104,6 +130,8 @@ class ProductViewQueryRepository
                       AND type = 'image'
                     LIMIT 1
                 ) as brand_logo_file"),
+                DB::raw($isWishSelect),
+                DB::raw($inCartSelect),
             )
             ->first();
 
@@ -196,7 +224,8 @@ class ProductViewQueryRepository
             code: $row->code,
             categoryName: $row->category_name,
             images: $images,
-            is_wish: false,
+            is_wish: (bool)$row->is_wish,
+            in_cart: (bool)$row->in_cart,
             count_reviews: (int)$row->count_reviews,
             rating: (float)($row->current_rating ?? 0),
             is_sale: !(bool)$row->not_sale,

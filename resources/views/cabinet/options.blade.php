@@ -1,4 +1,4 @@
-@extends('shop.cabinet.cabinet')
+@extends('cabinet.layout')
 
 
 @section('title', 'Мой кабинет - NORDI HOME')
@@ -11,9 +11,10 @@
     <div class="box-card view-option">
         @foreach($subscriptions as $subscription)
             <div>
-                <x-widget.check id="subscription-{{ $subscription->id }}" name="subscription" class="mt-3 subscription-check"
+                <x-widget.check id="subscription-{{ $subscription->id }}" name="subscription"
+                                class="mt-3 subscription-check"
                                 route="{{ route('cabinet.options.subscription', $subscription) }}"
-                                checked="{{ $user->isSubscription($subscription) }}" >
+                                checked="{{ $user->isSubscription($subscription) }}">
                     {{ $subscription->title }}
                 </x-widget.check>
             </div>

@@ -30,7 +30,7 @@ readonly class ProductViewQuery
     public function execute(string $slug, ClientContext $clientContext): ProductViewPageData
     {
 
-        $product = $this->repository->getProductBySlug($slug, $clientContext->priceType);
+        $product = $this->repository->getProductBySlug($slug, $clientContext);
 
         $attributes = $this->repository->getAttributes($product);
 

@@ -205,14 +205,13 @@
     }
 
 }
-
+.to-cart.in-cart {
+    background: $green;
+}
 //КАРТОЧКА ТОВАРА В СПИСКЕ
 .product-card {
     overflow: hidden;
     text-align: center;
-    .to-cart.in-cart {
-        background:$green;
-    }
 }
 .product-card-review {
     margin-top: 10px;

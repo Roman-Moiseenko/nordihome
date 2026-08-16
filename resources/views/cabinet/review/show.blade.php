@@ -1,4 +1,4 @@
-@extends('shop.cabinet.cabinet')
+@extends('cabinet.layout')
 @section('body')
     @parent
     review
@@ -10,6 +10,6 @@
 
 @section('subcontent')
     <div class="box-card">
-        <livewire:cabinet.review :review="$review" />
+        <livewire:cabinet.review :review="$review"/>
     </div>
 @endsection

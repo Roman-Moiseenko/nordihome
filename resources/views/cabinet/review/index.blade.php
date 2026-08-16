@@ -1,4 +1,9 @@
-@extends('shop.cabinet.cabinet')
+@php
+    use App\Modules\Cabinet\Application\DTOs\ReviewClientData;
+
+    /** @var ReviewClientData[] $reviews */
+@endphp
+@extends('cabinet.layout')
 @section('body')
     @parent
     review
@@ -9,14 +14,15 @@
 @section('h1', 'Отзывы')
 
 @section('subcontent')
-    @foreach($client->reviews as $review)
+    @foreach($reviews as $review)
         <div class="box-card d-flex review-item">
             <div class="product-img">
                 <a href="{{ route('shop.product.view', $review->product->slug) }}" target="_blank"><img
                         src="{{ $review->product->getImage('mini') }}"/></a>
             </div>
             <div class="product-info">
-                <a href="{{ route('shop.product.view', $review->product->slug) }}" target="_blank">{{ $review->product->name }}</a>
+                <a href="{{ route('shop.product.view', $review->product->slug) }}"
+                   target="_blank">{{ $review->product->name }}</a>
             </div>
 
             <div class="review-info">
@@ -30,13 +36,13 @@
                 <span class="date">{{ $review->htmlDate() }}</span>
             </div>
             <div class="review-button">
-                <a href="{{ route('cabinet.review.show', $review) }}" class="btn btn-primary">
+                <a href="{{ route('cabinet.review.show', $review->id) }}" class="btn btn-primary">
                     <i class="fa-light fa-right-to-bracket"></i>
                 </a>
             </div>
         </div>
     @endforeach
-    @if($client->reviews()->count() == 0)
+    @if(count($reviews) == 0)
         <div class="fs-5 m-3 mb-5">
             У вас еще нет отзывов на товары.
         </div>

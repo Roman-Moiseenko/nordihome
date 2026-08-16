@@ -1,4 +1,4 @@
-@extends('shop.cabinet.cabinet')
+@extends('cabinet.layout')
 @section('body')
     @parent
     wish

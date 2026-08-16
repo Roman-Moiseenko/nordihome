@@ -25,7 +25,7 @@ class OrderController extends ShopController
     public function view(Order $order): View
     {
 
-        return view('shop.cabinet.order.view', compact('order'));
+        return view('cabinet.order.view', compact('order'));
     }
 
     public function index(Request $request): View
@@ -33,7 +33,7 @@ class OrderController extends ShopController
         $client = $this->getClient($request);
 
         $orders = $this->getOrdersClientQuery->execute($client->id);
-        return view('shop.cabinet.order.index', [
+        return view('cabinet.order.index', [
             'orders' => $orders
         ]);
     }
@@ -52,7 +52,7 @@ class OrderController extends ShopController
                 'quantity' => $item->quantity,
             ];
         }
-        return view('shop.cabinet.order.new', compact('order', 'e_array'));
+        return view('cabinet.order.new', compact('order', 'e_array'));
     }
 
     public function copy(Order $order)

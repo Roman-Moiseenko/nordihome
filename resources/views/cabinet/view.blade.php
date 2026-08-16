@@ -3,7 +3,7 @@
     /** @var ClientInfoWebData $client */
 @endphp
 
-@extends('shop.cabinet.cabinet')
+@extends('cabinet.layout')
 
 @section('title', 'Мой кабинет - NORDI HOME')
 

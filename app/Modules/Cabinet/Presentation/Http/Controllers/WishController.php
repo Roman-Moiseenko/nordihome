@@ -30,7 +30,7 @@ class WishController extends ShopController
         $products = Product::whereHas('wishes', function ($query) use ($client) {
             $query->where('client_id', $client->id);
         })->get();*/
-        return view('shop.cabinet.wish');
+        return view('cabinet.wish');
     }
 
     //Ajax

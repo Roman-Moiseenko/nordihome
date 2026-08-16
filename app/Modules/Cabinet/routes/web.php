@@ -55,7 +55,7 @@ Route::group([
             'prefix' => 'review',
         ], function() {
             Route::get('/', [ReviewController::class, 'index'])->name('index');
-            Route::get('/show/{review}', [ReviewController::class, 'show'])->name('show');
+            Route::get('/show/{id}', [ReviewController::class, 'show'])->name('show');
 
         });
     }

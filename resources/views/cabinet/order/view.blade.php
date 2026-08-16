@@ -1,4 +1,4 @@
-@extends('shop.cabinet.cabinet')
+@extends('cabinet.layout')
 @section('body')
     @parent
     order
@@ -30,12 +30,12 @@
             </div>
             <div class="col-sm-6">
                 @if(!is_null($order->delivery))
-                <div class="fs-7">{{ $order->delivery->typeHTML() }}<br>{{ $order->delivery->address }}</div>
-                <div class="fs-7 mt-1">Стоимость доставки
-                    - {{ ($order->delivery->cost == 0) ? 'Рассчитывается' : price($order->delivery->cost)}}</div>
-                <div class="fs-7 mt-1">
+                    <div class="fs-7">{{ $order->delivery->typeHTML() }}<br>{{ $order->delivery->address }}</div>
+                    <div class="fs-7 mt-1">Стоимость доставки
+                        - {{ ($order->delivery->cost == 0) ? 'Рассчитывается' : price($order->delivery->cost)}}</div>
+                    <div class="fs-7 mt-1">
 
-                </div>
+                    </div>
                 @endif
             </div>
         </div>
@@ -75,7 +75,8 @@
                 @else
                     <div class="fs-7"> {{ price($item->base_cost) }} /шт.</div>
                     <div class="fs-7 red"> {{ $item->discountName() }}</div>
-                    <div class="fs-6"> {{ $item->quantity }} шт х <span class="red">{{ price($item->sell_cost) }}</span></div>
+                    <div class="fs-6"> {{ $item->quantity }} шт х <span class="red">{{ price($item->sell_cost) }}</span>
+                    </div>
                 @endif
             </div>
         </div>

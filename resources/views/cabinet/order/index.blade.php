@@ -1,10 +1,8 @@
 @php
     use App\Modules\Cabinet\Application\DTOs\OrderClientData;
     /** @var OrderClientData[] $orders */
-
-
 @endphp
-@extends('shop.cabinet.cabinet')
+@extends('cabinet.layout')
 @section('body')
     @parent
     order

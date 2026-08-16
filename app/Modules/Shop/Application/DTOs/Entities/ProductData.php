@@ -20,6 +20,7 @@ class ProductData
         public array $images = [],
 
         public bool $is_wish,
+        public bool $in_cart = false,
         public int $count_reviews,
         public float $rating,
         public bool $is_sale,

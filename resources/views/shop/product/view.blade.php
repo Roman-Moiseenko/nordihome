@@ -104,10 +104,9 @@
                     </div>
                     <div class="product-card-to-cart">
                         @if($product->is_sale)
-                            <button class="to-cart btn btn-black e-add" data-product="{{ $product->id }}">В Корзину
+                            <button class="to-cart btn btn-black e-add{{ $product->in_cart ? ' in-cart' : '' }}" data-product="{{ $product->id }}">
+                                {{ $product->in_cart ? 'В Корзине' : 'В Корзину' }}
                             </button>
-
-
                             <button class="one-click btn btn-orange"
                                     type="button" data-bs-toggle="modal"
                                     data-bs-target="#buy-click"
