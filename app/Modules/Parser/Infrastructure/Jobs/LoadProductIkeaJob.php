@@ -25,7 +25,6 @@ class LoadProductIkeaJob implements ShouldQueue
         CreateParserLogUseCase $createParserLogUseCase,
     ): void
     {
-        //\Log::warning(json_encode($this->productData));
         try {
             $entity = $service->CreateParserProduct($this->productData);
             if (is_null($entity)) return; //Товар уже был спарсен ранее

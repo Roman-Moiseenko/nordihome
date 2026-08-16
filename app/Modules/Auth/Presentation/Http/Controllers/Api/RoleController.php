@@ -45,7 +45,7 @@ class RoleController extends Controller
 
     public function store(Request $request, UserPermission $userPermission): JsonResponse
     {
-        \Log::warning(json_encode($request->all()));
+
         try {
             $dto = RoleCreateData::validateAndCreate($request);
         } catch (ValidationException $e) {

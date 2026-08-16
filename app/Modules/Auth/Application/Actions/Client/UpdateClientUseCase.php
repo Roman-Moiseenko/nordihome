@@ -87,7 +87,7 @@ class UpdateClientUseCase
         // Адрес
         if ($dto->country !== null || $dto->city !== null ||
             $dto->region !== null || $dto->regionCode !== null || $dto->street !== null) {
-            \Log::info(json_encode($dto->toArray()));
+
             $client->address = new Address(
                 $dto->country ?? '',
                 $dto->city ?? '',

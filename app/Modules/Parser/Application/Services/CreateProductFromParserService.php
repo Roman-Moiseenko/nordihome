@@ -51,7 +51,6 @@ readonly class CreateProductFromParserService
 
         $parserEntity = $this->parserProductRepository->getById($id);
 
-        \Log::info(json_encode($parserEntity));
         $category = $this->findOrCreateTempCategory->execute(); //Найти временную Категорию
         $brandId = $this->brandRepository->getIkeaId(); //Бренд ИКЕА
         $dto = new ProductFastCreateData(
@@ -165,7 +164,6 @@ readonly class CreateProductFromParserService
             }
 
         }
-        \Log::info(json_encode([$width, $height, $depth, $weight]));
         return Dimensions::create(
             width: $this->getValue($width),
             height: $this->getValue($height),

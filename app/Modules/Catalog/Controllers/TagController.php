@@ -65,7 +65,6 @@ class TagController extends Controller
 
     public function update(int $id, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        \Log::info(json_encode($request->all()));
         $dto = TagUpdateData::validateAndCreate($request->all());
         $this->updateTagUseCase->execute($id, $dto, $userPermission);
 

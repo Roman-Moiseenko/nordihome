@@ -190,15 +190,13 @@ class ViewRepository
         $query = $this->repository->filter($request, $product_ids); //0.0015 сек
         $count_in_category = $query->count();
         $products = $query->paginate($this->web->paginate);
-        // $title = $category->title;
+
 
 
         $products = $products->withQueryString()
             ->through(fn(Product $product) => $this->product_card_cache($product));
 
 
-        //  $end = now();
-        //     \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
         return view('shop.product.index',
             compact('category', 'products', 'prod_attributes', 'tags',
                 'minPrice', 'maxPrice', 'brands', 'request', 'title', 'description', 'tag_id',
@@ -445,15 +443,10 @@ class ViewRepository
 
         $count_in_category = $query->count();
         $products = $query->paginate($this->web->paginate);
-        //$title = $category->title;
-
 
         $products = $products->withQueryString()
             ->through(fn(ParserProduct $product) => $this->parser_product_card_cache($product));
 
-
-        //  $end = now();
-        //     \Log::info('Для категории ' . $category->name . ' обсчет =  ' . $begin->diffInMilliseconds($end) / 1000);
         return view(
             $this->route('parser.product.index'),
             compact('category', 'products', 'request', 'title', 'description',

@@ -46,7 +46,6 @@ class ProductController extends ShopController
         $search = $request->string('search')->trim()->value();
         $client = $this->getClient($request);
         $data = $this->productSearchQuery->execute($search, $request->all(), $client);
-       // \Log::warning(json_encode($data));
         return view('shop.product.search', [
             'pageData' => $data,
             'request' => $request->all(),
@@ -63,7 +62,6 @@ class ProductController extends ShopController
 
 
         $result = $this->repository->search($request['search']);
-       // \Log::warning(json_encode($data));
         return \response()->json($data);
     }
 

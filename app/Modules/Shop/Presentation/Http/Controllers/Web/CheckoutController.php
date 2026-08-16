@@ -82,16 +82,7 @@ class CheckoutController extends ShopController
 
     public function create_click(Request $request)
     {
-        \Log::info(json_encode($request->all()));
-//try {
-            $dto = OneClickOrderData::validateAndCreate($request->all());
-           \Log::info(json_encode($dto));
-     //   } catch (\Throwable $e) {
-      //      \Log::info($e->getMessage());
-      //  }
-
-
-
+        $dto = OneClickOrderData::validateAndCreate($request->all());
         $order = $this->createOrderOneClickService->execute($dto);
         if (!is_null($order)) {
             return redirect()->back()->with('success', "Ваш заказ успешно создан! № $order->number");
@@ -118,14 +109,6 @@ class CheckoutController extends ShopController
         return redirect()->route('cabinet.order.new_order', ['id' => $order->id, 'from' => 'store'])->with('success', 'Ваш заказ успешно создан!');
     }
 
-
-    //AJAX
-    public function checkorder(Request $request)
-    {
-        \Log::info(json_encode($request->all()));
-        $result = $this->service->checkorder($request['data']);
-        return \response()->json($result);
-    }
 
     public function coupon(Request $request)
     {

@@ -123,7 +123,7 @@ class LoadParserProductIkeaService
         $dataPage = $this->ikeaProductApi->getProductPage($product['pipUrl']);
 
         $dataProduct = $dataPage['product'];
-        // \Log::info(json_encode($dataProduct));
+
         if (is_null($dataProduct))
             throw new \DomainException('Ошибка получения данных по урлу ' . $product['pipUrl']);
 

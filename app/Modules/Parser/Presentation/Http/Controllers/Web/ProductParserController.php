@@ -43,7 +43,6 @@ class ProductParserController extends Controller
 
     public function toCatalog(int $id, UserPermission $userPermission): RedirectResponse
     {
-        \Log::info($id);
         $product = $this->createProductFromParserService->execute($id, $userPermission);
 
         return redirect()->route('admin.catalog.product.edit', $product->id);

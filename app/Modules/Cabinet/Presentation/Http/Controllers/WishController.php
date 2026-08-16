@@ -20,7 +20,6 @@ class WishController extends ShopController
 
     public function __construct(WishService $service, UserRepository $repository)
     {
-      //  $this->middleware(['auth:user'])->except('get');
         $this->service = $service;
         $this->repository = $repository;
     }
@@ -39,7 +38,6 @@ class WishController extends ShopController
     {
         $client = $this->getClient($request);
         $result = $this->service->toggle($client->id, $product->id);
-        //$products = $this->repository->getWish($user);
 
         return response()->json([
             'items' => [],
@@ -64,7 +62,6 @@ class WishController extends ShopController
     public function clear(Request $request)
     {
         /** @var User $user */
-        //$user = Auth::guard('web')->user();
        // $this->service->clear($user->id);
 
         return response()->json(true);

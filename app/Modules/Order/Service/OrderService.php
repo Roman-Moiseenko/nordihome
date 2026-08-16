@@ -282,32 +282,22 @@ class OrderService
         float $quantity, bool $preorder = false,
         bool  $assemblage = false, bool $packing = false): void
     {
-    //    \Log::info('$quantity = ' . $quantity);
-    //    \Log::info('$product_id = ' .$product_id);
         /** @var Product $product */
         $product = Product::find($product_id);
         $quantity_preorder = 0;
- //       \Log::info('$preorder = ' .$preorder);
         //По предзаказу
         if ($preorder) {
             $quantity_preorder = $quantity;
             $quantity = 0;
-    //        \Log::info('1');
-
         }
-   //     \Log::info('getQuantitySell = ' . $product->getQuantitySell());
 
         if ($quantity > 0 && $product->getQuantitySell() <= $quantity) {
             $quantity_preorder = $quantity - $product->getQuantitySell(); //По предзаказу
             $quantity = $product->getQuantitySell(); //в наличии
-      //      \Log::info('2');
         }
 
         $last_price = $product->getPrice(false, $order->client);
-  //      \Log::info('$quantity = ' . $quantity);
-  //      \Log::info('$quantity_preorder = ' . $quantity_preorder);
         if ($quantity > 0) {
-   //         \Log::info('3');
             $orderItem = OrderItem::new($product->id, $quantity, false);
             if ($last_price == 0) throw new \DomainException('Нельзя добавить товар без цены ' . $product->name);
             $orderItem->setCost($last_price, $last_price);
@@ -326,7 +316,6 @@ class OrderService
         }
 
         if ($quantity_preorder > 0) {
-            \Log::info('4');
             $orderItemPre = OrderItem::new($product->id, $quantity_preorder, true);
             $pre_price = ($product->getPricePre() == 0) ? $last_price : $product->getPricePre();
             if ($last_price == 0) {
@@ -334,14 +323,12 @@ class OrderService
                 $parser = $product->parser;
                 if (is_null($parser)) throw new \DomainException('Нельзя добавить товар без цены - ' . $product->name);
                 $last_price = ceil($parser->price_sell * $product->brand->currency->fixed);
-                //$parser->price_sell;
                 $pre_price = $last_price;
             }
             $orderItemPre->setCost($last_price, $pre_price);
             $orderItemPre->assemblage = $assemblage;
             $orderItemPre->packing = $packing;
             $order->items()->save($orderItemPre);
-            \Log::info('4-end');
         }
 
         $order->refresh();

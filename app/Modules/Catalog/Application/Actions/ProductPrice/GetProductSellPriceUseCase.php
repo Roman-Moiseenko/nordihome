@@ -28,7 +28,7 @@ readonly class GetProductSellPriceUseCase
         $product = Product::find($id);
 
         $prices = $this->pricesUseCase->execute($id, new UserPermission(null, [] , ['catalog.product.price.view']));
-        \Log::info(json_encode($prices));
+
         $discountId = null;
         $discountType = null;
         if ($product->promotion() != null) {
