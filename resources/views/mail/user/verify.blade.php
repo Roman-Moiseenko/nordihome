@@ -5,11 +5,11 @@
 
 Укажите на сайте ваш код активации
 
-# {{ $verify_token }}
+# {{ $token }}
 
 
 Или перейдите по ссылке:
-@component('mail::button', ['url' => route('register.verify', ['token' => $verify_token])])
+@component('mail::button', ['url' => route('register.verify', ['token' => $token])])
 Подтвердить почту
 @endcomponent
 
