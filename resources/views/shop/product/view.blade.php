@@ -12,7 +12,7 @@
 
 @endphp
 
-@extends('shop.layouts.main')
+@extends('layouts.main')
 @section('body', 'product')
 @section('main', 'container-xl product-page')
 @section('bottom-class', '')

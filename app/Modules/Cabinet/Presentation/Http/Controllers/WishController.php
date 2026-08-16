@@ -26,11 +26,11 @@ class WishController extends ShopController
 
     public function index(Request $request)
     {
-        $client = $this->getClient($request);
+      /*  $client = $this->getClient($request);
         $products = Product::whereHas('wishes', function ($query) use ($client) {
             $query->where('client_id', $client->id);
-        })->get();
-        return view('shop.cabinet.wish', compact('products'));
+        })->get();*/
+        return view('shop.cabinet.wish');
     }
 
     //Ajax

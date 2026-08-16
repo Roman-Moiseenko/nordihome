@@ -2,8 +2,8 @@
     use App\Modules\Shop\Application\DTOs\Search\ProductSearchPageData;
     /** @var ProductSearchPageData $pageData */
 @endphp
-@extends('shop.layouts.main')
-@section('body', 'products seach')
+@extends('layouts.main')
+@section('body', 'products search')
 @section('main', 'container-xl products-page')
 @section('title', $pageData->meta->title)
 @section('description', $pageData->meta->description)

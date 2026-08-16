@@ -1,5 +1,5 @@
 <!--template:Страница Кухни Икеа под заказ-->
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('main')
     pages

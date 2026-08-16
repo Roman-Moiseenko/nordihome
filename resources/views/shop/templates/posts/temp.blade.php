@@ -10,7 +10,7 @@
     *
  */
 @endphp
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('main')
     posts container-xl

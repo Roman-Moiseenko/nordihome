@@ -3,7 +3,7 @@
     /** @var CatalogIndexPageData $pageData */
 @endphp
 
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('body', 'category')
 @section('main', 'container-xl categories-page')

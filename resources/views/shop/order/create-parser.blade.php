@@ -1,4 +1,4 @@
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('body', 'order')
 @section('main', 'container-xl order-page-create-parser')

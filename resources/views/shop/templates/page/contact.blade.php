@@ -1,5 +1,5 @@
 <!--template:Страница контакты-->
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('main')
     pages

@@ -1,4 +1,4 @@
-@extends('shop.layouts.blank')
+@extends('layouts.blank')
 @section('title', 'Страница 500')
 @section('main', 'error')
 @section('content')

@@ -1,5 +1,5 @@
 <!--template:Пустая Главная-->
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('breadcrumbs')
 @endsection

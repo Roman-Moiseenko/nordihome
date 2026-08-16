@@ -1,5 +1,5 @@
 <!--template:Страница О компании-->
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('main')
     pages

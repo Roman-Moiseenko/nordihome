@@ -104,7 +104,7 @@ class ShopServiceProvider extends ServiceProvider
         View::composer('*', CategoryComposer::class);
         View::composer('*', ClientComposer::class); //shop.*
         View::composer('*', RoomComposer::class);
-        View::composer('shop.*', WebComposer::class);
+        View::composer('*', WebComposer::class);
         View::composer('shop.ikea.*', IkeaComposer::class);
         View::composer('shop.*', MenuComposer::class);
 

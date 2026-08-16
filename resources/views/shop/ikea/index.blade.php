@@ -2,7 +2,7 @@
     use App\Modules\Shop\Application\DTOs\Pages\IkeaIndexPageData;
     /** @var IkeaIndexPageData $pageData */
 @endphp
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('body', 'ikea')
 @section('main', 'container-xl ikea-index')

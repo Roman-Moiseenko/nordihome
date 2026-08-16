@@ -3,7 +3,7 @@
     /** @var \App\Modules\Content\Infrastructure\Models\Post $post */
     $photo = photo_std('main_001', 'card');
 @endphp
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('main')
     post container-xl

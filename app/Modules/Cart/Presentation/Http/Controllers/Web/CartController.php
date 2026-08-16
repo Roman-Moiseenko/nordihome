@@ -27,7 +27,7 @@ class CartController extends ShopController
     public function view(Request $request)
     {
             $cart = $this->cart->getCartToFront($request['tz']);
-            return view($this->route('cart'), compact('cart'));
+            return view('shop.cart.index', compact('cart'));
     }
 
     //AJAX

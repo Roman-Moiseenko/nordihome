@@ -1,5 +1,5 @@
 <!--template:Страница Хиты продаж -->
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('main')
     pages

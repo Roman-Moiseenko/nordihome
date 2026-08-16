@@ -2,7 +2,7 @@
     use App\Modules\Shop\Application\DTOs\Pages\IkeaViewPageData;
     /** @var IkeaViewPageData $pageData */
 @endphp
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('body', 'ikea')
 @section('main', 'container-xl ikea-view')

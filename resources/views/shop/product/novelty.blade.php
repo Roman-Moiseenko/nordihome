@@ -2,7 +2,7 @@
 @php
     /** @var ProductIndexPageData $pageData */
 @endphp
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('body', 'products novelty')
 @section('main', 'container-xl products-page')

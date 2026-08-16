@@ -12,7 +12,7 @@
     }
 
 @endphp
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('body', 'ikea')
 @section('main', 'container-xl ikea-product')

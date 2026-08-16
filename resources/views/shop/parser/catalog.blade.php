@@ -1,4 +1,4 @@
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('body', 'category parser')
 @section('main', 'container-xl catalogs-page')

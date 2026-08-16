@@ -1,4 +1,4 @@
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('body', 'products')
 @section('main', 'container-xl products-page')

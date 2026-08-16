@@ -2,7 +2,7 @@
     /** @var \App\Modules\Cart\Application\DTOs\CartInfoData $cartInfo */
     $amountCommon = $cartInfo->amountCheck + $cartInfo->delivery + $cartInfo->deliveryParser - $cartInfo->discountCheck;
 @endphp
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('body', 'order')
 @section('main', 'container-xl order-page-create')

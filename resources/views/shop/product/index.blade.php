@@ -6,7 +6,7 @@ $from = ($pageData->paginator->currentPage - 1) * $pageData->paginator->perPage 
 $to = $from + $pageData->paginator->perPage - 1;
 $total = $pageData->paginator->total;
 @endphp
-@extends('shop.layouts.main')
+@extends('layouts.main')
 @section('body', 'products')
 @section('main', 'container-xl products-page')
 @section('title', $pageData->meta->title)

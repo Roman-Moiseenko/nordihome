@@ -1,5 +1,5 @@
 <!--template:Страница Тарифы и условия доставки-->
-@extends('shop.layouts.main')
+@extends('layouts.main')
 
 @section('main')
     pages

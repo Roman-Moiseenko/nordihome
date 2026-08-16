@@ -2,7 +2,7 @@
     use App\Modules\Shop\Application\DTOs\Pages\PostViewPageData;
     /** @var PostViewPageData  $pageData */
 @endphp
-@extends('shop.layouts.main')
+@extends('layouts.main')
 @section('title', $pageData->meta->title)
 @section('description', $pageData->meta->description)
 @section('body', 'post')
