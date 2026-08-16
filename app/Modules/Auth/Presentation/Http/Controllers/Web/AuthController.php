@@ -81,7 +81,7 @@ class AuthController extends Controller
 
     public function verify(Request $request)
     {
-        $this->confirmEmailUseCase->execute($request->input('token', ''));
+        $this->confirmEmailUseCase->execute($request->input('token'), $request->boolean('agreement'));
 
         //TODO Возможно сделать страницу приветсвия
         return redirect('/')->with('success', 'Верификация прошла успешно');
