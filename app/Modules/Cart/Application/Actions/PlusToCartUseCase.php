@@ -2,29 +2,29 @@
 
 namespace App\Modules\Cart\Application\Actions;
 
+use App\Modules\Cart\Application\DTOs\UpdateProductCartData;
 use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
+use Illuminate\Contracts\Container\BindingResolutionException;
 
-/**
- * Возвращает кол-во удаленных
- */
-class RemoveCartItemUseCase
+class PlusToCartUseCase
 {
     public function __construct(
         private HybridStorage $storage
     )
     {
-
     }
-    public function execute(int $productId): int
+
+    /**
+     * @throws BindingResolutionException
+     */
+    public function execute(int $productId, int $quantity): void
     {
         $items = $this->storage->load();
         foreach ($items as $current) {
             if ($current->isProduct($productId)) {
-                $quantity = $current->getQuantity();
-                $this->storage->remove($current->id);
-                return $quantity;
+                $this->storage->plus($current, $quantity);
+                return;
             }
         }
-        return 0;
     }
 }

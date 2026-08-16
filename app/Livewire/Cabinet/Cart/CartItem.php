@@ -3,6 +3,11 @@
 namespace App\Livewire\Cabinet\Cart;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
+use App\Modules\Cart\Application\Actions\CheckToCartUseCase;
+use App\Modules\Cart\Application\Actions\PlusToCartUseCase;
+use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
+use App\Modules\Cart\Application\Actions\SetToCartUseCase;
+use App\Modules\Cart\Application\Actions\SubToCartUseCase;
 use App\Modules\User\Service\WishService;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -10,24 +15,22 @@ use Livewire\Component;
 class CartItem extends Component
 {
 
-    /**
-     * @var \App\Modules\Cart\Domain\Entities\Cart|mixed
-     */
-    private mixed $cart;
+ //   private mixed $cart;
     public array $item;
     public int $quantity;
-    private Client|null $client;
+    private Client|null $client = null;
 
     public bool $wish;
     public bool $check;
 
     public function boot(): void
     {
-        $this->cart = app()->make('\App\Modules\Cart\Domain\Entities\Cart');
+     //   $this->cart = app()->make('\App\Modules\Cart\Domain\Entities\Cart');
     }
 
     public function mount(array $item, int|null $clientId): void
     {
+        \Log::warning($clientId);
         $this->item = $item;
         $this->quantity = $item['quantity'];
         $this->check = $item['check'];
@@ -69,52 +72,54 @@ class CartItem extends Component
         }
     }
 
-    public function sub_item(): void
+    public function sub_item(SubToCartUseCase $useCase): void
     {
-        $this->cart->sub($this->item['productId'], 1);
+        $useCase->execute($this->item['productId'], 1);
+
         $this->dispatch('update-header-cart');
         $this->dispatch('update-item-cart')->self();
         $this->dispatch('e-cart', product_id: $this->item['productId'], e_type: 'remove', quantity: 1);
     }
 
-    public function plus_item(): void
+    public function plus_item(PlusToCartUseCase $useCase): void
     {
-        $this->cart->plus($this->item['productId'], 1);
+        $useCase->execute($this->item['productId'], 1);
+       // $this->cart->plus($this->item['productId'], 1);
         $this->dispatch('update-header-cart');
         $this->dispatch('update-item-cart')->self();
         $this->dispatch('e-cart', product_id: $this->item['productId'], e_type: 'add', quantity: 1);
     }
 
-    public function set_item(): void
+    public function set_item(SetToCartUseCase $useCase): void
     {
-        $old_quantity = $this->item['quantity'];
-        if ($old_quantity < $this->quantity) {
-            $this->dispatch('e-cart',
-                product_id: $this->item['productId'],
-                e_type: 'add',
-                quantity: $this->quantity - $old_quantity);
-        } else {
-            $this->dispatch('e-cart',
-                product_id: $this->item['productId'],
-                e_type: 'remove',
-                quantity: $old_quantity - $this->quantity);
-        }
+        $result = $useCase->execute($this->item['productId'], $this->quantity);
 
-        $this->cart->set($this->item['productId'], $this->quantity);
+        if ($result > 0)
+            $this->dispatch('e-cart', product_id: $this->item['productId'], e_type: 'add', quantity: $result);
+
+        if ($result < 0)
+            $this->dispatch('e-cart', product_id: $this->item['productId'], e_type: 'remove', quantity: -1 * $result);
+
+        if ($result = 0)
+            $this->dispatch('e-cart', product_id: $this->item['productId'], e_type: 'remove', quantity: $this->quantity);
+
+
         $this->dispatch('update-header-cart');
         $this->dispatch('update-item-cart')->self();
     }
 
-    public function check_item(): void
+    public function check_item(CheckToCartUseCase  $useCase): void
     {
-        $this->cart->check($this->item['productId']);
+        $useCase->execute($this->item['productId']);
+        //$this->cart->check($this->item['productId']);
         $this->dispatch('update-header-cart');
     }
 
-    public function del_item(): void
+    public function del_item(RemoveCartItemUseCase $useCase): void
     {
         $this->dispatch('e-cart', product_id: $this->item['productId'], e_type: 'remove', quantity: $this->quantity);
-        $this->cart->remove($this->item['productId']);
+        $useCase->execute($this->item['productId']);
+        //$this->cart->remove($this->item['productId']);
         $this->dispatch('update-header-cart');
     }
 

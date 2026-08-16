@@ -2,29 +2,24 @@
 
 namespace App\Modules\Cart\Application\Actions;
 
+use App\Modules\Cart\Application\DTOs\UpdateProductCartData;
 use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
 
-/**
- * Возвращает кол-во удаленных
- */
-class RemoveCartItemUseCase
+class SubToCartUseCase
 {
     public function __construct(
         private HybridStorage $storage
     )
     {
-
     }
-    public function execute(int $productId): int
+    public function execute(int $productId, int $quantity): void
     {
         $items = $this->storage->load();
         foreach ($items as $current) {
             if ($current->isProduct($productId)) {
-                $quantity = $current->getQuantity();
-                $this->storage->remove($current->id);
-                return $quantity;
+                $this->storage->sub($current, $quantity);
+                return;
             }
         }
-        return 0;
     }
 }

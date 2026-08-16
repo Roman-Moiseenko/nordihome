@@ -36,19 +36,19 @@ class Cart
         $this->itemsPreOrder = [];
         $this->pre_order =  false;
     }
-
+    #[Deprecated]
     public function getItems(): array
     {
         $this->loadItems();
         return $this->items;
     }
-
+    #[Deprecated]
     public function getOrderItems(): array
     {
         $this->loadItems();
         return $this->itemsOrder;
     }
-
+    #[Deprecated]
     public function getPreOrderItems(): array
     {
         $this->loadItems();
@@ -72,7 +72,7 @@ class Cart
 
         $this->storage->add(CartItem::create($product->id, $quantity, $is_parser));
     }
-
+    #[Deprecated]
     public function plus(int $product_id, $quantity)
     {
         $this->loadItems();
@@ -83,7 +83,7 @@ class Cart
             }
         }
     }
-
+    #[Deprecated]
     public function sub(int $product_id, $quantity)
     {
         $this->loadItems();
@@ -95,7 +95,7 @@ class Cart
         }
         throw new \DomainException('Элемент не найден');
     }
-
+    #[Deprecated]
     public function set(int $product_id, $quantity)
     {
         if ($quantity == 0) {
@@ -316,6 +316,7 @@ class Cart
         }
     }
 
+    #[Deprecated]
     public function check(int $product_id)
     {
         $this->loadItems();
@@ -352,7 +353,7 @@ class Cart
         }
         return $result;
     }
-
+    #[Deprecated]
     public function check_all(bool $all)
     {
         $this->loadItems();
@@ -361,7 +362,7 @@ class Cart
             $this->storage->check($current);
         }
     }
-
+    #[Deprecated]
     public function setAvailability()
     {
         $this->loadItems();

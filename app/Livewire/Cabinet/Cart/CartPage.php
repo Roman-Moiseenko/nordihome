@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Cabinet\Cart;
 
+use App\Modules\Cart\Application\Actions\CheckAllToCartUseCase;
 use App\Modules\Cart\Application\Actions\GetCartUseCase;
+use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
 use App\Modules\Cart\Domain\Entities\Cart as CartEntity;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Livewire\Attributes\On;
@@ -10,8 +12,6 @@ use Livewire\Component;
 
 class CartPage extends Component
 {
-
-    private CartEntity $cart;
 
    // public Product $product;
 
@@ -33,7 +33,6 @@ class CartPage extends Component
     public int $renderKey = 0; // счётчик изменений
     public function boot()
     {
-        $this->cart = app()->make('\App\Modules\Cart\Domain\Entities\Cart');
     }
 
     public function mount(bool $preorder = false)
@@ -79,22 +78,24 @@ class CartPage extends Component
 
     }
 
-    public function check_items()
+    public function check_items(CheckAllToCartUseCase $useCase)
     {
-        $this->cart->check_all($this->check_all);
-
+        //$this->cart->check_all($this->check_all);
+        $useCase->execute($this->check_all);
         $this->dispatch('update-header-cart');
-      //  $this->dispatch('update-item-cart');
+
     }
 
-    public function del_select(): void
+    public function del_select(GetCartUseCase $cartUseCase, RemoveCartItemUseCase $useCase): void
     {
-        $items = $this->cart->get_check_items();
+        $items = $cartUseCase->execute()->items;
         foreach ($items as $item) {
-            $this->dispatch('e-cart', product_id: $item['product_id'], e_type: 'remove', quantity: $item['quantity']);
+            if ($item->check) {
+                $this->dispatch('e-cart', product_id: $item->productId, e_type: 'remove', quantity: $item->quantity);
+                $useCase->execute($item->productId);
+            }
         }
 
-        $this->cart->clear_check();
         $this->dispatch('update-header-cart');
     }
 

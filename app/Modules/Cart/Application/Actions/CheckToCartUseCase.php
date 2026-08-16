@@ -2,12 +2,11 @@
 
 namespace App\Modules\Cart\Application\Actions;
 
-use App\Modules\Cart\Application\DTOs\AddProductToCartData;
-use App\Modules\Cart\Domain\Entities\CartItem;
+use App\Modules\Cart\Application\DTOs\UpdateProductCartData;
 use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
-readonly class AddToCartUseCase
+class CheckToCartUseCase
 {
     public function __construct(
         private HybridStorage $storage
@@ -18,19 +17,15 @@ readonly class AddToCartUseCase
     /**
      * @throws BindingResolutionException
      */
-    public function execute(AddProductToCartData $dto): void
+    public function execute(int $id): void
     {
-
         $items = $this->storage->load();
-
         foreach ($items as $current) {
-            if ($current->isProduct($dto->id)) {
-                $this->storage->plus($current, $dto->quantity);
+            if ($current->isProduct($id)) {
+                $current->check();
+                $this->storage->check($current);
                 return;
             }
         }
-
-        $this->storage->add(CartItem::create($dto->id, $dto->quantity, $dto->isParser));
-
     }
 }
