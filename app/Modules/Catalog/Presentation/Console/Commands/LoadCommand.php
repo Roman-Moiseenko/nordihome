@@ -67,7 +67,7 @@ class LoadCommand extends Command
             foreach ($products as $product) {
                 JobLoadProductWP::dispatch($product);
                 $count++;
-                if ($count > 0) break; //Временное для теста
+               // if ($count > 0) break; //Временное для теста
             }
             $this->info('Загружено товаров ' . $count);
         }

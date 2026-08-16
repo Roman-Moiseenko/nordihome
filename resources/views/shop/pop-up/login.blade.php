@@ -45,7 +45,7 @@
                         </div>
                     </div>
                     <div class="modal-footer justify-content-center">
-                        <img src="/images/logo-nordi-home-2.svg" alt="NORDI Home" class="img-fluid img-logo">
+                        <img src="/uploads/gallery/7/nordi-home-rus.svg" alt="Логотип Норди Хоум" class="img-fluid img-logo">
                     </div>
                 </div>
 
