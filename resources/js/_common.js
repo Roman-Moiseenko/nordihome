@@ -50,6 +50,14 @@ upButton.on('click', function () {
     $('html, body').stop().animate({scrollTop: 0}, 700);
 });
 
+$('.mob-bottom').click(function() {
+    $('.mob-bottom-open').toggleClass('show');
+    $('.mob-bottom').toggleClass('close');
+});
+$('.mob-bottom-open .close').click(function() {
+    $('.mob-bottom-open').removeClass('show');
+    $('.mob-bottom').removeClass('close');
+});
 
 //Показать скрыть пароль
 let showHidePassword = $('#show-hide-password');

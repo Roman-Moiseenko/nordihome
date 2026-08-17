@@ -1,6 +1,6 @@
 <div class="container-xl mt-3 mb-3">
     <div class="row">
-        <div class="col-lg-8">
+        <div class="col-lg-12">
             @if(Session::has('danger'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
                     <i class="fa-light fa-triangle-exclamation"></i>

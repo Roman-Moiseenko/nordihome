@@ -21,13 +21,13 @@
                     <div class="m-t_50 m-b_50">
                         <p class="m-b_20">Заказ формируется на основе артикулов из <a href="https://www.ikea.com/pl/pl/" target="_blank" class="t-color_orange">каталога ИКЕА</a>, предварительно включите VPN.</p>
                         <p class="m-b_20">Чем больше вес заказа, тем дешевле доставка<br>От 60 рублей за килограмм</p>
-                        <p class="m-b_20">Срок доставки от 10 дней</p>
+                        <p class="m-b_20">Срок доставки от 15 дней</p>
                         <p class="m-b_20">Оплата 100% на банковский счет организации по договору<br>Предоставляем кассовый чек об оплате с товарами и услугами</p>
                     </div>
-                    <a href="/calculate/" class="btn btn-big btn-orange f-z_14 m-b_20">Сделать заказ</a>
+                    <a href="/ikea/" class="btn btn-big btn-orange f-z_14 m-b_20">Сделать заказ</a>
                 </div>
                 <div class="col-lg-6">
-                    <img src="/images/pages/tariff.jpg" alt="Условия доставки">
+                    <img src="/images/pages/tariff.jpg" alt="Условия доставки" class="b-radius_12">
                 </div>
             </div>
         </div>
@@ -86,14 +86,35 @@
                         </div>
                     </div>
                     <div class="t-color_orange">ДЛЯ ОПТОВЫХ ЗАКАЗЧИКОВ<br>ИНДИВИДУАЛЬНЫЕ УСЛОВИЯ</div>
+                    <div class="heading m-t_20">ТАРИФЫ НА ОТПРАВКУ В РФ</div>
+                    <div>МИНИМАЛЬНАЯ СТОИМОСТЬ ОТПРАВКИ 1000 РУБ<br>ориентировочная стоимость</div>
+                    <div class="tariffs-items">
+                        <div class="item">
+                            <div>10 КГ</div>
+                            <div>от 4000₽</div>
+                        </div>
+                        <div class="item">
+                            <div>20 КГ</div>
+                            <div>от 8000₽</div>
+                        </div>
+                        <div class="item">
+                            <div>30 КГ</div>
+                            <div>от 13000₽</div>
+                        </div>
+                        <div class="item">
+                            <div>Возможны корректировки стоимости в зависимости от места назначения и способа доставки</div>
+                            <div></div>
+                        </div>
+                    </div>
+                    <div class="t-color_orange m-t_20 m-b_20">Отправления свыше 30 кг или более 150 см рассчитываются по индивидуальному тарифу, как негабаритные грузы.<br>Связаться с нами можно на странице <a href="/kontakty/" class="t-color_orange">КОНТАКТЫ</a></div>
                 </div>
                 <div class="col-lg-4">
                     <div class="heading">ДОСТАВКА ПО ГОРОДУ И ОБЛАСТИ</div>
+                    <div class="m-b_10 t-a_left">Доставка по городу и в пределах 5км от окружной, объемом не более 5.6м3 - <span class="t-color_orange">1600₽</span>.</div>
+                    <div class="m-b_10 t-a_left">Доставка по городу и в пределах 5км от окружной, от 5.6м3 до 11м3 - <span class="t-color_orange">3200₽</span>.</div>
+                    <div class="m-b_10 t-a_left">Доставка по городу и в пределах 5км от окружной, от 11м3 - обговаривается индивидуально при формировании заказа</div>
+                    <div class="m-b_10 t-a_left">Доставка по городу и в пределах 5км от окружной, весом более 300кг - <span class="t-color_orange">к тарифу +1000₽</span>.</div>
                     <div class="tariffs-items">
-                        <div class="item m-t_20">
-                            <div class="t-a_left">Доставка в пределах<br>окружной дороги</div>
-                            <div>1600₽</div>
-                        </div>
                         <div class="item m-t_20">
                             <div>Доставка за город</div>
                             <div>40₽/км.</div>
@@ -197,32 +218,11 @@
                     <div class="t-color_orange m-t_10">Доставка осуществляется в течение дня. Перед приездом с Вами связывается заранее курьер.</div>
                 </div>
                 <div class="col-lg-4">
-                    <div class="heading">ТАРИФЫ НА ОТПРАВКУ В РФ</div>
-                    <div>МИНИМАЛЬНАЯ СТОИМОСТЬ ОТПРАВКИ 1000 РУБ<br>ориентировочная стоимость</div>
-                    <div class="tariffs-items">
-                        <div class="item">
-                            <div>10 КГ</div>
-                            <div>от 4000₽</div>
-                        </div>
-                        <div class="item">
-                            <div>20 КГ</div>
-                            <div>от 8000₽</div>
-                        </div>
-                        <div class="item">
-                            <div>30 КГ</div>
-                            <div>от 13000₽</div>
-                        </div>
-                        <div class="item">
-                            <div>Возможны корректировки стоимости в зависимости от места назначения и способа доставки</div>
-                            <div></div>
-                        </div>
-                    </div>
-                    <div class="t-color_orange m-t_20 m-b_20">Отправления свыше 30 кг или более 150 см рассчитываются по индивидуальному тарифу, как негабаритные грузы.<br>Связаться с нами можно на странице <a href="/kontakty/" class="t-color_orange">КОНТАКТЫ</a></div>
                     <div class="heading">ДОПОЛНИТЕЛЬНЫЕ УСЛУГИ</div>
                     <div class="tariffs-items">
                         <div class="item">
                             <div>СБОРКА МЕБЕЛИ</div>
-                            <div>15%, не менее 600₽</div>
+                            <div>15% от стоимости<br>товара, не менее 600₽</div>
                         </div>
                     </div>
                     <div class="tariffs-items">
@@ -232,35 +232,86 @@
                         </div>
                         <div class="t-color_orange m-t_10"> *Необходимо указать время в комментарии к заказу или менеджеру по телефону.</div>
                     </div>
-                    <div class="m-t_20">ЗАНОС В КВАРТИРУ:</div>
+                    <div class="m-t_20 m-b_10">ТАРИФ ЗА УСЛУГУ ПОДЪЕМА ГРУЗА (1 ЧЕЛОВЕК):</div>
+                    <div class="m-b_10">1 этаж и подъем на лифте:</div>
+                    <div class="tariffs-items">
+                        <div class="item m-b_10">
+                            <div>Вес груза</div>
+                            <div>Стоимость</div>
+                        </div>
+                        <div class="item">
+                            <div>0 - 49 кг</div>
+                            <div>450₽</div>
+                        </div>
+                        <div class="item">
+                            <div>50 - 99 кг</div>
+                            <div>550₽</div>
+                        </div>
+                        <div class="item">
+                            <div>100 - 199 кг</div>
+                            <div>750₽</div>
+                        </div>
+                        <div class="item">
+                            <div>200 - 500 кг</div>
+                            <div>900₽</div>
+                        </div>
+                        <div class="item">
+                            <div>от 500 кг</div>
+                            <div>1 000₽</div>
+                        </div>
+                    </div>
+                    <div class="m-b_10 m-t_10">2 этаж и выше (без лифта):</div>
                     <div class="tariffs-items">
                         <div class="item">
-                            <div>НА ЛИФТЕ ДО 200 КГ</div>
+                            <div>0 - 49 кг</div>
+                            <div>тариф + 100 руб./этаж</div>
+                        </div>
+                        <div class="item">
+                            <div>50 - 99 кг</div>
+                            <div>тариф + 100 руб./этаж</div>
+                        </div>
+                        <div class="item">
+                            <div>100 - 199 кг</div>
+                            <div>тариф + 150 руб./этаж</div>
+                        </div>
+                        <div class="item">
+                            <div>200 - 500 кг</div>
+                            <div>тариф + 200 руб./этаж</div>
+                        </div>
+                        <div class="item">
+                            <div>от 500 кг</div>
+                            <div>тариф + 300 руб./этаж</div>
+                        </div>
+                    </div>
+                    <div class="m-t_20 m-b_10">ПРОНОС ГРУЗА ОТ МАШИНЫ ДО ПОДЪЕЗДА (ДО 20М ВХОДИТ В ОБЩИЙ ТАРИФ):</div>
+                    <div class="tariffs-items">
+                        <div class="item m-b_10">
+                            <div>Вес груза</div>
+                            <div>От 20 до 100 м</div>
+                        </div>
+                        <div class="item">
+                            <div>0 - 49 кг</div>
+                            <div>200₽</div>
+                        </div>
+                        <div class="item">
+                            <div>50 - 99 кг</div>
+                            <div>300₽</div>
+                        </div>
+                        <div class="item">
+                            <div>100 - 199 кг</div>
+                            <div>400₽</div>
+                        </div>
+                        <div class="item">
+                            <div>200 - 500 кг</div>
                             <div>500₽</div>
                         </div>
                         <div class="item">
-                            <div>НА ЛИФТЕ ДО 500 КГ</div>
-                            <div>700₽</div>
-                        </div>
-                        <div class="item">
-                            <div>НА ЛИФТЕ ОТ 500 КГ</div>
-                            <div>1000₽</div>
-                        </div>
-                        <div class="item">
-                            <div>ПО ЛЕСТНИЦЕ ДО 200 КГ</div>
-                            <div>300₽/ЭТАЖ</div>
-                        </div>
-                        <div class="item">
-                            <div>ПО ЛЕСТНИЦЕ ДО 500 КГ</div>
-                            <div>400₽/ЭТАЖ</div>
-                        </div>
-                        <div class="item">
-                            <div>ПО ЛЕСТНИЦЕ ОТ 500 КГ</div>
-                            <div>500₽/ЭТАЖ</div>
+                            <div>от 500 кг</div>
+                            <div>600₽</div>
                         </div>
                     </div>
-                    <div class="t-color_orange m-t_10">МИНИМАЛЬНАЯ СТОИМОСТЬ<br>ЗАНОСА - 500₽</div>
-                    <div class="t-color_orange m-t_10">*При доставке крупногабаритных товаров добавляется коэффициент сложности 1,5</div>
+                    <div class="m-b_10 m-t_10">Cвыше 100м стоимость проноса груза обговаривается индивидуально с курьером</div>
+                    <div class="t-color_orange m-t_10">*Доставка и подъем крупногабаритных товаров: диваны, шкафы РАХ, матрасы - тариф х 2</div>
                 </div>
             </div>
         </div>

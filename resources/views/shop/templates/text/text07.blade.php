@@ -27,7 +27,7 @@
                         <li class="one"></li>
                         <li class="one"></li>
                         <li class="one"></li>
-                        <li>4.7 из 5</li>
+                        <li>4.9 из 5</li>
                     </ul>
                     <img src="https://nordihome.ru/wp-content/themes/euroikea/images/logo-yandex.svg"
                          alt="Яндекс каталог Nordihome">
@@ -68,7 +68,7 @@
                         <li class="one"></li>
                         <li class="one"></li>
                         <li class="one"></li>
-                        <li>1025 отзывов</li>
+                        <li>1266 отзывов</li>
                     </ul>
                     <img src="https://nordihome.ru/wp-content/themes/euroikea/images/avito_logo.svg"
                          alt="Лого Авито Nordihome">

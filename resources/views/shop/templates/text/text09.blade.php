@@ -17,11 +17,11 @@
 @endphp
 <div class="main-catalog-mini">
     <div class="">
-        <a href="/shop/" class="c-mini-item">
+        <a href="/catalog/" class="c-mini-item">
             <img src="/images/nordihome/t-nalichie-1-min.jpg" alt="Товары Икеа в наличии">
             <div class="heading">Каталог товаров</div>
         </a>
-        <a href="/calculate/" class="c-mini-item">
+        <a href="/ikea/" class="c-mini-item">
             <img src="/images/nordihome/t-zakaz-1-min.jpg" alt="Товары Икеа под заказ">
             <div class="heading">Весь ассортимент под заказ</div>
         </a>
