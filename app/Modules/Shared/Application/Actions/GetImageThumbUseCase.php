@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Application\Actions;
 
-use App\Modules\Shared\Application\DTOs\Photo\PhotoThumbData;
 use App\Modules\Shared\Application\Interfaces\PhotoRepositoryInterface;
-use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\PhotoType;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 
-readonly class GetPhotoThumbUseCase
+readonly class GetImageThumbUseCase
 {
     public function __construct(
         private PhotoRepositoryInterface $photoRepository,
-        private PhotoService $photoService,
+        private PhotoService             $photoService,
     )
     {
     }
@@ -24,24 +22,24 @@ readonly class GetPhotoThumbUseCase
      * Если thumb == null — возвращает url оригинального файла (getUploadUrl).
      * Если thumb задан — возвращает url копии (getThumbUrl).
      */
-    public function execute(PhotoThumbData $dto): array|string
+    public function execute(int $imageableId, string $modelType, ?string $thumb = null): string
     {
         // Без проверки прав доступа
-
         $photo = $this->photoRepository->findByEntity(
-            (int) $dto->imageableId,
-            $dto->modelType,
-            new PhotoType($dto->type),
+            $imageableId,
+            $modelType,
+            new PhotoType(PhotoType::IMAGE),
         );
-
-        if ($photo === null) {
-            throw new \DomainException('Изображение не найдено');
-        }
+        if ($photo === null) return '';
 
         // Если thumb не передан — возвращаем url оригинального файла
-        if ($dto->thumb === null || $dto->thumb === '') {
-            return $photo->uploadUrl;
-        }
+        if ($thumb === null)
+            return $this->photoService->getUploadUrl(
+                $photo->modelType,
+                $photo->imageableId,
+                $photo->file
+            );
+        //TODO проверка, если thumb нет, то пересоздать
 
         // Возвращаем url thumb (копии)
         return $this->photoService->getThumbUrl(
@@ -49,7 +47,7 @@ readonly class GetPhotoThumbUseCase
             $photo->modelType,
             $photo->imageableId,
             $photo->file,
-            $dto->thumb,
+            $thumb,
         );
     }
 }

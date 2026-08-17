@@ -14,7 +14,7 @@
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <ContentBlockEditor
                 :blocks="blocks || []"
-                :container-id="category.id"
+                :container-id="room.id"
                 container-type="category"
             />
         </div>

@@ -104,19 +104,17 @@ class PhotoService
      * Возвращает URL thumb (копии).
      * Если createThumbsOnRequest включён — создаёт thumbs на лету.
      */
-    public function getThumbUrl(int $photoId, string $modelType, int $imageableId, string $fileName, string $thumb, bool $isThumbEnabled): string
+    public function getThumbUrl(int $photoId, string $modelType, int $imageableId, string $fileName, string $thumb): string
     {
-        if (!$isThumbEnabled) {
-            return '';
-        }
-
         $path = $this->patternGeneratePath($modelType, $imageableId);
 
-        if ($this->createThumbsOnRequest) {
-            $this->createThumbs($photoId, $modelType, $imageableId, $fileName);
-        }
+        $file = self::URL_THUMB . $path . $this->nameFileThumb($photoId, $fileName, $thumb);
 
-        return self::URL_THUMB . $path . $this->nameFileThumb($photoId, $fileName, $thumb);
+        //if (!is_file($file)) { //$this->createThumbsOnRequest
+            $this->createThumbs($photoId, $modelType, $imageableId, $fileName);
+        //}
+
+        return $file; //self::URL_THUMB . $path . $this->nameFileThumb($photoId, $fileName, $thumb);
     }
 
     /**
@@ -139,7 +137,6 @@ class PhotoService
             $thumbFile = $this->catalogThumb
                 . $this->patternGeneratePath($modelType, $imageableId)
                 . $this->nameFileThumb($photoId, $fileName, $params['name']);
-
             if (is_file($thumbFile)) {
                 continue; // уже есть
             }

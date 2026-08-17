@@ -6,6 +6,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\DimensionsData;
@@ -19,7 +20,8 @@ class ProductViewQueryRepository
     private const string PHOTO_MODEL_TYPE = 'catalog.product';
 
     public function __construct(
-        private readonly PhotoService $photoService,
+        private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
+
     )
     {
     }
@@ -145,47 +147,23 @@ class ProductViewQueryRepository
             ->where('model_type', self::PHOTO_MODEL_TYPE)
             ->where('type', 'gallery')
             ->orderBy('sort')
-            ->get(['id', 'file', 'alt', 'title', 'description', 'thumb']);
+            ->get(['id', 'file', 'alt', 'title', 'description', 'model_type']);
 
         // Build ImageInfoData array
         $images = [];
         foreach ($photoRows as $photo) {
-            $src = '/images/no-image.jpg';
-            if (!empty($photo->file) && $photo->id) {
-                $src = $this->photoService->getThumbUrl(
-                    photoId: (int)$photo->id,
-                    modelType: self::PHOTO_MODEL_TYPE,
-                    imageableId: (int)$row->id,
-                    fileName: $photo->file,
-                    thumb: 'card',
-                    isThumbEnabled: (bool)$photo->thumb,
-                );
-            }
 
-            $mini = ''; $full = '';
-            if (!empty($photo->file) && $photo->id) {
+            // Подготавливаем stdClass для UseCase
+            $photoRow = new \StdClass();
+            $photoRow->id = (int)$row->id;        // ID товара
+            $photoRow->photo_id = (int)$photo->id;
+            $photoRow->photo_file = $photo->file;
+            $photoRow->model_type = self::PHOTO_MODEL_TYPE;
 
-
-                $mini = $this->photoService->getThumbUrl(
-                    photoId: (int)$photo->id,
-                    modelType: self::PHOTO_MODEL_TYPE,
-                    imageableId: (int)$row->id,
-                    fileName: $photo->file,
-                    thumb: 'mini',
-                    isThumbEnabled: (bool)$photo->thumb,
-                );
-
-                $full = $this->photoService->getThumbUrl(
-                    photoId: (int)$photo->id,
-                    modelType: self::PHOTO_MODEL_TYPE,
-                    imageableId: (int)$row->id,
-                    fileName: $photo->file,
-                    thumb: 'original',
-                    isThumbEnabled: (bool)$photo->thumb,
-                );
-            }
-
-
+            // Используем UseCase для получения трёх вариантов URL
+            $src = $this->imageThumbUseCase->execute($photoRow, 'card');
+            $mini = $this->imageThumbUseCase->execute($photoRow, 'mini');
+            $full = $this->imageThumbUseCase->execute($photoRow, 'original');
 
 
             $images[] = ImageInfoData::fromArray([

@@ -119,7 +119,7 @@ class PhotoController
     public function getThumb(Request $request, UserPermission $userPermission): JsonResponse
     {
         $dto = PhotoThumbData::validateAndCreate($request->all());
-        $thumbUrl = $this->getPhotoThumbUseCase->execute($dto, $userPermission);
+        $thumbUrl = $this->getPhotoThumbUseCase->execute($dto);
         return response()->json(['url' => $thumbUrl], Response::HTTP_OK);
     }
 

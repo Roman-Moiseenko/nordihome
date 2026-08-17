@@ -2,8 +2,8 @@
 
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
+use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shop\Application\DTOs\IkeaTreeClientData;
-use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Support\Facades\DB;
 
 class IkeaTreeQueryRepository
@@ -11,7 +11,7 @@ class IkeaTreeQueryRepository
     private const string MODEL_TYPE = 'parser.category';
 
     public function __construct(
-        private readonly PhotoService $photoService,
+        private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
     )
     {
     }
@@ -33,7 +33,7 @@ class IkeaTreeQueryRepository
                 'parser_categories.parent_id',
                 'photos.id as photo_id',
                 'photos.file as photo_file',
-                'photos.thumb as photo_thumb',
+                'photos.model_type as model_type',
             )
             ->orderBy('parser_categories._lft')
             ->get();
@@ -51,7 +51,7 @@ class IkeaTreeQueryRepository
                     id: $item->id,
                     name: $item->name,
                     slug: $item->slug,
-                    image: $this->buildImageUrl($item),
+                    image: $this->imageThumbUseCase->execute($item),
                     children: $children
                 );
             }
@@ -59,19 +59,4 @@ class IkeaTreeQueryRepository
         return $tree;
     }
 
-    private function buildImageUrl(\stdClass $item): string
-    {
-        if (empty($item->photo_file)) {
-            return '';
-        }
-
-        return $this->photoService->getThumbUrl(
-            photoId: (int) $item->photo_id,
-            modelType: self::MODEL_TYPE,
-            imageableId: (int) $item->id,
-            fileName: $item->photo_file,
-            thumb: 'catalog',
-            isThumbEnabled: (bool) $item->photo_thumb,
-        );
-    }
 }

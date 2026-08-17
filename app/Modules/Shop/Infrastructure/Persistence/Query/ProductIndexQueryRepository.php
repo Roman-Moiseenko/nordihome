@@ -4,6 +4,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -14,7 +15,8 @@ class ProductIndexQueryRepository
     private const string PHOTO_MODEL_TYPE = 'catalog.product';
     public function __construct(
         private readonly AttributeQueryRepository $attributeQueryRepository,
-        private readonly PhotoService             $photoService,
+        private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
+
     )
     {
     }
@@ -112,13 +114,12 @@ class ProductIndexQueryRepository
                 'product_prices.amount as price',
                 DB::raw("(SELECT id FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_id"),
                 DB::raw("(SELECT file FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_file"),
-                DB::raw("(SELECT thumb FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_thumb"),
+                DB::raw("(SELECT model_type FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' LIMIT 1) as model_type"),
                 DB::raw("(SELECT alt FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_alt"),
                 DB::raw("(SELECT title FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_title"),
                 DB::raw("(SELECT description FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_description"),
                 DB::raw("(SELECT id FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_id"),
                 DB::raw("(SELECT file FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_file"),
-                DB::raw("(SELECT thumb FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_thumb"),
                 DB::raw("(SELECT alt FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_alt"),
                 DB::raw("(SELECT title FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_title"),
                 DB::raw("(SELECT description FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_description"),
@@ -252,7 +253,7 @@ class ProductIndexQueryRepository
                 'product_prices.amount as price',
                 DB::raw("(SELECT id FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo_id"),
                 DB::raw("(SELECT file FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo_file"),
-                DB::raw("(SELECT thumb FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo_thumb"),
+                DB::raw("(SELECT model_type FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' LIMIT 1) as model_type"),
             )
             ->get();
 
@@ -263,7 +264,7 @@ class ProductIndexQueryRepository
                 'name' => $row->name,
                 'url' => route('shop.product.view', $row->slug),
                 'code' => $row->code,
-                'image' => $this->buildSearchImageUrl($row),
+                'image' => $this->imageThumbUseCase->execute($row, 'catalog'),
                 'price' => $row->price !== null ? (float) $row->price : null,
             ];
         }
@@ -271,42 +272,21 @@ class ProductIndexQueryRepository
         return $result;
     }
 
-    private function buildSearchImageUrl(\stdClass $row): ?string
-    {
-        if (empty($row->photo_file) || empty($row->photo_id)) {
-            return null;
-        }
-
-        return $this->photoService->getThumbUrl(
-            photoId: (int) $row->photo_id,
-            modelType: self::PHOTO_MODEL_TYPE,
-            imageableId: (int) $row->id,
-            fileName: $row->photo_file,
-            thumb: 'catalog',
-            isThumbEnabled: (bool) $row->photo_thumb,
-        );
-    }
-
     private function buildImageDataFromRow(\stdClass $row, string $suffix = '1'): array
     {
         $id = $row->{"photo{$suffix}_id"} ?? null;
         $file = $row->{"photo{$suffix}_file"} ?? '';
-        $thumb = $row->{"photo{$suffix}_thumb"} ?? '';
         $alt = $row->{"photo{$suffix}_alt"} ?? '';
         $title = $row->{"photo{$suffix}_title"} ?? '';
         $description = $row->{"photo{$suffix}_description"} ?? '';
 
-        $src = '/images/no-image.jpg';
-        if (!empty($file) && $id) {
-            $src = $this->photoService->getThumbUrl(
-                photoId: (int)$id,
-                modelType: self::PHOTO_MODEL_TYPE,
-                imageableId: (int)$row->id,
-                fileName: $file,
-                thumb: 'catalog',
-                isThumbEnabled: (bool)$thumb,
-            );
-        }
+        $photoRow = new \stdClass();
+        $photoRow->photo_id      = $id;
+        $photoRow->photo_file    = $file;
+        $photoRow->model_type    = $row->model_type;
+        $photoRow->id  = (int) $row->id;
+
+        $src = $this->imageThumbUseCase->execute($photoRow, 'catalog');
 
         return [
             'src' => $src,

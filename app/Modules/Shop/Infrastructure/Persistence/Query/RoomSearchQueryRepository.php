@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
+use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use Illuminate\Support\Facades\DB;
@@ -20,7 +21,7 @@ class RoomSearchQueryRepository
     ];
 
     public function __construct(
-        private readonly PhotoService $photoService,
+        private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
     )
     {
     }
@@ -85,7 +86,7 @@ class RoomSearchQueryRepository
                 'rooms.slug',
                 'photos.id as photo_id',
                 'photos.file as photo_file',
-                'photos.thumb as photo_thumb',
+                'photos.model_type as model_type',
             )
             ->get();
 
@@ -96,7 +97,7 @@ class RoomSearchQueryRepository
                 'name' => $row->name,
                 'url' => route('shop.room.view', $row->slug),
                 'code' => null,
-                'image' => $this->buildImageUrl($row),
+                'image' => $this->imageThumbUseCase->execute($row, 'catalog'),
                 'price' => null,
             ];
         }
@@ -134,19 +135,4 @@ class RoomSearchQueryRepository
             ->toArray();
     }
 
-    private function buildImageUrl(\stdClass $item): ?string
-    {
-        if (empty($item->photo_file) || empty($item->photo_id)) {
-            return null;
-        }
-
-        return $this->photoService->getThumbUrl(
-            photoId: (int) $item->photo_id,
-            modelType: self::MODEL_TYPE,
-            imageableId: (int) $item->id,
-            fileName: $item->photo_file,
-            thumb: 'catalog',
-            isThumbEnabled: (bool) $item->photo_thumb,
-        );
-    }
 }

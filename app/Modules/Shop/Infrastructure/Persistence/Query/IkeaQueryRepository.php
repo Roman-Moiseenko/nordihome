@@ -4,6 +4,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
+use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shop\Application\DTOs\Elements\IkeaVariantData;
 use App\Modules\Shop\Application\DTOs\Entities\IkeaCategoryMainData;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
@@ -15,7 +16,7 @@ class IkeaQueryRepository
     private const string PHOTO_MODEL_TYPE = 'parser.product';
 
     public function __construct(
-        private readonly PhotoService $photoService,
+        private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
     )
     {
     }
@@ -72,13 +73,12 @@ class IkeaQueryRepository
                 'parser_products.*',
                 DB::raw("(SELECT id FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_id"),
                 DB::raw("(SELECT file FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_file"),
-                DB::raw("(SELECT thumb FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_thumb"),
+                DB::raw("(SELECT model_type FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' LIMIT 1) as model_type"),
                 DB::raw("(SELECT alt FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_alt"),
                 DB::raw("(SELECT title FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_title"),
                 DB::raw("(SELECT description FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_description"),
                 DB::raw("(SELECT id FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_id"),
                 DB::raw("(SELECT file FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_file"),
-                DB::raw("(SELECT thumb FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_thumb"),
                 DB::raw("(SELECT alt FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_alt"),
                 DB::raw("(SELECT title FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_title"),
                 DB::raw("(SELECT description FROM photos WHERE imageable_id = parser_products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_description"),
@@ -138,22 +138,18 @@ class IkeaQueryRepository
     {
         $id = $row->{"photo{$suffix}_id"} ?? null;
         $file = $row->{"photo{$suffix}_file"} ?? '';
-        $thumb = $row->{"photo{$suffix}_thumb"} ?? '';
+
         $alt = $row->{"photo{$suffix}_alt"} ?? '';
         $title = $row->{"photo{$suffix}_title"} ?? '';
         $description = $row->{"photo{$suffix}_description"} ?? '';
 
-        $src = '/images/no-image.jpg';
-        if (!empty($file) && $id) {
-            $src = $this->photoService->getThumbUrl(
-                photoId: (int)$id,
-                modelType: self::PHOTO_MODEL_TYPE,
-                imageableId: (int)$row->id,
-                fileName: $file,
-                thumb: 'catalog',
-                isThumbEnabled: (bool)$thumb,
-            );
-        }
+        $photoRow = new \stdClass();
+        $photoRow->photo_id      = $id;
+        $photoRow->photo_file    = $file;
+        $photoRow->model_type    = $row->model_type;
+        $photoRow->id  = (int) $row->id;
+
+        $src = $this->imageThumbUseCase->execute($photoRow, 'catalog');
 
         return [
             'src' => $src,
@@ -190,39 +186,21 @@ class IkeaQueryRepository
             ->where('model_type', self::PHOTO_MODEL_TYPE)
             ->where('type', 'gallery')
             ->orderBy('sort')
-            ->get(['id', 'file', 'thumb', 'alt', 'title', 'description']);
+            ->get(['id', 'file', 'model_type', 'alt', 'title', 'description']);
 
         $images = [];
         foreach ($photos as $photo) {
-            $full = '/images/no-image.jpg';
-            $src = '/images/no-image.jpg';
-            $mini = '/images/no-image.jpg';
-            if (!empty($photo->file) && $photo->id) {
-                $src = $this->photoService->getThumbUrl(
-                    photoId: (int)$photo->id,
-                    modelType: self::PHOTO_MODEL_TYPE,
-                    imageableId: (int)$row->id,
-                    fileName: $photo->file,
-                    thumb: 'catalog',
-                    isThumbEnabled: (bool)$photo->thumb,
-                );
-                $mini = $this->photoService->getThumbUrl(
-                    photoId: (int)$photo->id,
-                    modelType: self::PHOTO_MODEL_TYPE,
-                    imageableId: (int)$row->id,
-                    fileName: $photo->file,
-                    thumb: 'mini',
-                    isThumbEnabled: (bool)$photo->thumb,
-                );
-                $full = $this->photoService->getThumbUrl(
-                    photoId: (int)$photo->id,
-                    modelType: self::PHOTO_MODEL_TYPE,
-                    imageableId: (int)$row->id,
-                    fileName: $photo->file,
-                    thumb: 'original',
-                    isThumbEnabled: (bool)$photo->thumb,
-                );
-            }
+            // Подготавливаем stdClass для UseCase
+            $photoRow = new \StdClass();
+            $photoRow->id          = (int) $row->id;        // ID товара
+            $photoRow->photo_id    = (int) $photo->id;
+            $photoRow->photo_file  = $photo->file;
+            $photoRow->model_type  = self::PHOTO_MODEL_TYPE;
+
+            // Используем UseCase для получения трёх вариантов URL
+            $src  = $this->imageThumbUseCase->execute($photoRow, 'card');
+            $mini = $this->imageThumbUseCase->execute($photoRow, 'mini');
+            $full = $this->imageThumbUseCase->execute($photoRow, 'original');
 
             $images[] = [
                 'src' => $src,
@@ -280,19 +258,15 @@ class IkeaQueryRepository
             ->where('model_type', self::PHOTO_MODEL_TYPE)
             ->where('type', 'gallery')
             ->orderBy('sort')
-            ->first(['id', 'file', 'thumb']);
+            ->first(['id', 'file', 'model_type']);
 
-        $image_mini = '/images/no-image.jpg';
-        if ($photo && !empty($photo->file) && $photo->id) {
-            $image_mini = $this->photoService->getThumbUrl(
-                photoId: (int)$photo->id,
-                modelType: self::PHOTO_MODEL_TYPE,
-                imageableId: (int)$row->id,
-                fileName: $photo->file,
-                thumb: 'mini',
-                isThumbEnabled: (bool)$photo->thumb,
-            );
-        }
+        $photoRow = new \StdClass();
+        $photoRow->id          = (int) $row->id;        // ID товара
+        $photoRow->photo_id    = (int) $photo->id;
+        $photoRow->photo_file  = $photo->file;
+        $photoRow->model_type  = self::PHOTO_MODEL_TYPE;
+
+        $image_mini = $this->imageThumbUseCase->execute($photoRow, 'mini');
 
         return new IkeaVariantData(
             id: $row->id,

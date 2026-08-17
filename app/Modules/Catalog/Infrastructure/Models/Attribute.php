@@ -25,7 +25,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Attribute extends Model
 {
     use ImageField;
-
     const int TYPE_STRING = 101;
     const int TYPE_INTEGER = 103;
     const int TYPE_BOOL = 102;
@@ -44,14 +43,25 @@ class Attribute extends Model
 
     //public array $variants;
     public $timestamps = false;
-    public $thumbs = false;
+    public bool $thumbs = false;
+
+    protected $casts = [
+        'filter' => 'bool',
+        'multiple' => 'bool',
+        'show_in' => 'bool',
+    ];
 
     protected $attributes = [
         'multiple' => false, 'filter' => true, 'show_in' => true,
     ];
 
     protected $fillable = [
-        'name', 'type', 'multiple', 'filter', 'group_id', 'show_in',
+        'name',
+        'type',
+        'multiple',
+        'filter',
+        'group_id',
+        'show_in',
     ];
 
     public static function register(string $name, int $group_id, int $type): self
@@ -61,7 +71,6 @@ class Attribute extends Model
             'group_id' => $group_id,
             'type' => $type,
         ]);
-
     }
 
     public function isVariant(): bool

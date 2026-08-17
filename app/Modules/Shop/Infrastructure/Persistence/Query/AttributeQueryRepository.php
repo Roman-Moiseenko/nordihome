@@ -6,7 +6,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
-use App\Modules\Shared\Infrastructure\Services\PhotoService;
+use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameImageData;
 use App\Modules\Shop\Application\DTOs\Entities\AttributeFilterData;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +17,7 @@ class AttributeQueryRepository
     private const string ATTRIBUTE_VARIANT_PHOTO_MODEL_TYPE = 'catalog.attribute-variant';
 
     public function __construct(
-        private readonly PhotoService $photoService,
+        private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
     )
     {
     }
@@ -135,18 +135,19 @@ class AttributeQueryRepository
                                 ->where('photos.model_type', '=', self::ATTRIBUTE_VARIANT_PHOTO_MODEL_TYPE)
                                 ->where('photos.type', '=', 'image');
                         })
-                        ->select('attribute_variants.id', 'attribute_variants.name', 'photos.id as photo_id', 'photos.file as photo_file')
+                        ->select('attribute_variants.id',
+                            'attribute_variants.name',
+                            'photos.id as photo_id',
+                            'photos.file as photo_file',
+                            'photos.model_type as model_type'
+                        )
                         ->orderBy('attribute_variants.name')
                         ->get();
 
                     $variantDtoList = $variants->map(function ($v) {
                         $image = '';
                         if (!empty($v->photo_file) && !empty($v->photo_id)) {
-                            $image = $this->photoService->getUploadUrl(
-                                modelType: self::ATTRIBUTE_VARIANT_PHOTO_MODEL_TYPE,
-                                imageableId: (int)$v->id,
-                                fileName: $v->photo_file,
-                            );
+                            $image = $this->imageThumbUseCase->execute($v);
                         }
                         return new IdNameImageData(id: (int)$v->id, name: $v->name, image: $image);
                     })->toArray();
@@ -208,7 +209,7 @@ class AttributeQueryRepository
                 'brands.name',
                 'photos.id as photo_id',
                 'photos.file as photo_file',
-                'photos.thumb as photo_thumb',
+                'photos.model_type as model_type'
             )
             ->distinct()
             ->orderBy('brands.name')
@@ -220,14 +221,7 @@ class AttributeQueryRepository
         foreach ($brands as $item) {
             $image = '';
             if (!empty($item->photo_file) && !empty($item->photo_id)) {
-                $image = $this->photoService->getThumbUrl(
-                    photoId: (int)$item->photo_id,
-                    modelType: self::BRAND_PHOTO_MODEL_TYPE,
-                    imageableId: (int)$item->id,
-                    fileName: $item->photo_file,
-                    thumb: 'catalog',
-                    isThumbEnabled: (bool)($item->photo_thumb ?? false),
-                );
+                $image = $this->imageThumbUseCase->execute($item);
             }
 
             $brandDtos[] = new IdNameImageData(

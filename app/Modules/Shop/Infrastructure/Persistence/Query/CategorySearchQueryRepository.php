@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
-use App\Modules\Shared\Infrastructure\Services\PhotoService;
+use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use Illuminate\Support\Facades\DB;
 
@@ -20,7 +20,7 @@ class CategorySearchQueryRepository
     ];
 
     public function __construct(
-        private readonly PhotoService $photoService,
+        private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
     )
     {
     }
@@ -68,7 +68,6 @@ class CategorySearchQueryRepository
         if (empty($ids)) {
             return [];
         }
-
         $orderedIds = implode(',', array_map('intval', $ids));
 
         $rows = DB::table('categories')
@@ -85,18 +84,19 @@ class CategorySearchQueryRepository
                 'categories.slug',
                 'photos.id as photo_id',
                 'photos.file as photo_file',
-                'photos.thumb as photo_thumb',
+                'photos.model_type as model_type',
             )
             ->get();
 
         $result = [];
         foreach ($rows as $row) {
+
             $result[] = [
                 'id' => (int) $row->id,
                 'name' => $row->name,
                 'url' => route('shop.category.view', $row->slug),
                 'code' => null,
-                'image' => $this->buildImageUrl($row),
+                'image' => $this->imageThumbUseCase->execute($row),
                 'price' => null,
             ];
         }
@@ -146,7 +146,7 @@ class CategorySearchQueryRepository
             imageableId: (int) $item->id,
             fileName: $item->photo_file,
             thumb: 'catalog',
-            isThumbEnabled: (bool) $item->photo_thumb,
         );
     }
+
 }

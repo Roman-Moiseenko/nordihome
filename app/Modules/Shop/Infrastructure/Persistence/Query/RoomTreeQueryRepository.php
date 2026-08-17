@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
+use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shop\Application\DTOs\RoomTreeClientData;
-use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Support\Facades\DB;
 
 class RoomTreeQueryRepository
@@ -13,7 +13,8 @@ class RoomTreeQueryRepository
     private const string MODEL_TYPE = 'catalog.room';
 
     public function __construct(
-        private readonly PhotoService $photoService,
+        private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
+
     )
     {
     }
@@ -36,7 +37,7 @@ class RoomTreeQueryRepository
                 'rooms.parent_id',
                 'photos.id as photo_id',
                 'photos.file as photo_file',
-                'photos.thumb as photo_thumb',
+                'photos.model_type as model_type',
             )
             ->orderBy('rooms._lft')
             ->get();
@@ -55,28 +56,12 @@ class RoomTreeQueryRepository
                     name: $item->name,
                     slug: $item->slug,
                     svg: $item->svg ?? '',
-                    image: $this->buildImageUrl($item),
+                    image: $this->imageThumbUseCase->execute($item, 'catalog'),
                     children: $children
                 );
             }
         }
         return $tree;
-    }
-
-    private function buildImageUrl(\stdClass $item): string
-    {
-        if (empty($item->photo_file)) {
-            return '';
-        }
-
-        return $this->photoService->getThumbUrl(
-            photoId: (int) $item->photo_id,
-            modelType: self::MODEL_TYPE,
-            imageableId: (int) $item->id,
-            fileName: $item->photo_file,
-            thumb: 'catalog',
-            isThumbEnabled: (bool) $item->photo_thumb,
-        );
     }
 
 
@@ -101,7 +86,7 @@ class RoomTreeQueryRepository
                 'rooms.parent_id',
                 'photos.id as photo_id',
                 'photos.file as photo_file',
-                'photos.thumb as photo_thumb',
+                'photos.model_type as model_type',
             )
             ->orderBy('rooms._lft');
 
@@ -119,7 +104,7 @@ class RoomTreeQueryRepository
             name: $row->name,
             slug: $row->slug,
             svg: $row->svg ?? '',
-            image: $this->buildImageUrl($row),
+            image: $this->imageThumbUseCase->execute($row, 'catalog'),
             children: [],
         ))->all();
     }

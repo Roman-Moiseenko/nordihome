@@ -119,7 +119,8 @@ class PhotoRepository implements PhotoRepositoryInterface
 
     public function findAllByEntity(int $imageableId, string $modelType, PhotoType $type): array
     {
-        $models = Photo::where('imageable_id', $imageableId)
+        $models = Photo::orderBy('sort')
+            ->where('imageable_id', $imageableId)
             ->where('model_type', $modelType)
             ->where('type', $type->getValue())
             ->get();

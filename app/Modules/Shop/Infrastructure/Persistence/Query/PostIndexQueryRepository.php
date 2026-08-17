@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
+use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\Entities\PostCardData;
 use App\Modules\Shop\Application\DTOs\Entities\PostCategoryData;
@@ -13,7 +14,7 @@ class PostIndexQueryRepository
 
     private const string MODEL_TYPE = 'content.post';
     public function __construct(
-        private readonly PhotoService $photoService,
+        private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
     )
     {
     }
@@ -53,7 +54,7 @@ class PostIndexQueryRepository
                 'posts.fragment',
                 'photos.id as photo_id',
                 'photos.file as photo_file',
-                'photos.thumb as photo_thumb',
+                'photos.model_type as model_type',
             );
 
         $paginator = $query->paginate($perPage, ['*'], 'page', $page);
@@ -66,7 +67,7 @@ class PostIndexQueryRepository
                 slug: $item->slug,
                 caption: $item->caption ?? '',
                 fragment: $item->fragment ?? '',
-                image: $this->buildImageUrl($item),
+                image: $this->imageThumbUseCase->execute($item),
             );
         });
 
@@ -82,19 +83,4 @@ class PostIndexQueryRepository
         );
     }
 
-    private function buildImageUrl(\stdClass $item): string
-    {
-        if (empty($item->photo_file)) {
-            return '';
-        }
-
-        return $this->photoService->getThumbUrl(
-            photoId: (int) $item->photo_id,
-            modelType: self::MODEL_TYPE,
-            imageableId: (int) $item->id,
-            fileName: $item->photo_file,
-            thumb: 'post',
-            isThumbEnabled: (bool) $item->photo_thumb,
-        );
-    }
 }
