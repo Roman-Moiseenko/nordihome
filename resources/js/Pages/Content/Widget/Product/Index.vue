@@ -96,6 +96,7 @@ const props = defineProps({
         type: String,
         default: 'Сайт. Виджеты товаров',
     },
+    models: Array,
     templates: Array,
 })
 const catalogStore = useCatalogStore()

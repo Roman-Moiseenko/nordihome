@@ -25,11 +25,6 @@ abstract class Widget extends Model
     use ImageField, IconField;
 
     public $timestamps = false;
-    const array MODELS = [
-        'category' => Category::class,
-        'room' => Room::class,
-        'group' => Group::class,
-    ];
 
     public function __construct(array $attributes = [])
     {

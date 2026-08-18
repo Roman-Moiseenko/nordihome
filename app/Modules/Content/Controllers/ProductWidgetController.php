@@ -41,6 +41,7 @@ class ProductWidgetController extends Controller
         return Inertia::render('Content/Widget/Product/Index', [
             'widgets' => $widgets,
             'templates' => $templates,
+            'models' => ProductWidget::MODELS
         ]);
     }
 

@@ -6,6 +6,7 @@ namespace App\Modules\Content\Entity\Widgets;
 use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Catalog\Infrastructure\Models\Room;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -19,6 +20,11 @@ class ProductWidget extends Widget
 {
 
     protected $table = "widget_products";
+    const array MODELS = [
+        'categories' => Category::class,
+        'rooms' => Room::class,
+        'groups' => Group::class,
+    ];
 
     public $fillable = [
         'modelable_id',
