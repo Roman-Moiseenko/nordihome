@@ -197,7 +197,6 @@ class Photo extends Model
 
     final public function getThumbUrl(string $thumb): string
     {
-        if (!$this->thumb) return '';
         if ($this->createThumbsOnRequest) $this->createThumbs();
         return self::URL_THUMB . $this->patternGeneratePath() . $this->nameFileThumb($thumb);
     }

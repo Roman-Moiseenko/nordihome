@@ -13,14 +13,19 @@ class ProductWidgetRepository
 
     public function getIndex(\Illuminate\Http\Request $request): Arrayable
     {
-        return ProductWidget::get()->map(fn(ProductWidget $widget) => $this->WidgetToArray($widget));
+        return ProductWidget::with('modelable')->get()->map(fn(ProductWidget $widget) => $this->WidgetToArray($widget));
     }
 
     private function WidgetToArray(ProductWidget $widget): array
     {
+        $modelable = $widget->modelable;
+        $modelableKey = array_search($widget->modelable_type, ProductWidget::MODELS, true);
+
         return array_merge($widget->toArray(), [
             'image' => $widget->getImage(),
             'icon' => $widget->getIcon(),
+            'modelable_name' => $modelable?->name,
+            'modelable_key' => $modelableKey !== false ? $modelableKey : null,
         ]);
     }
 

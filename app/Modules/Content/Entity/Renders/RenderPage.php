@@ -60,6 +60,8 @@ abstract class RenderPage extends Model
         $this->field = empty($this->field) ? $this->getField() : $this->field;
 
         $this->text = $this->renderTags($this->text);
+        $this->text  = $this->renderRoots($this->text);
+
         $this->text = Template::renderClasses($this->text);
 
         $url_page = route('shop.' . $this->field . '.view', $this->slug);
@@ -76,6 +78,18 @@ abstract class RenderPage extends Model
                 'description' => $description,
                 'url_page' => $url_page])
             ->render();
+    }
+
+    private function renderRoots(string $text): string
+    {
+        $pattern = '/\[root=\"(.+?)\"(.*?)\]/su';
+        preg_match_all($pattern, $text, $matches);
+        $replaces = $matches[0]; //шот-коды вида [root="file"]
+        $template = $matches[1]; //значение template
+        $add = $matches[2];
+
+
+        return $text;
     }
 
     private function renderTags(string $text): string

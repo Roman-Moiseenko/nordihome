@@ -15,10 +15,12 @@
                 @row-click="editWidget"
             >
                 <el-table-column prop="name" label="Виджет" width="280" show-overflow-tooltip/>
-                <el-table-column prop="count" label="Кол-во элементов" width="180" />
-                <el-table-column prop="published" label="Модель" align="center">
-
+                <el-table-column prop="modelable_name" label="Модель" align="center">
+                    <template #default="scope">
+                        {{ scope.row.modelable_name }} ({{ scope.row.modelable_key }})
+                    </template>
                 </el-table-column>
+                <el-table-column prop="count" label="Кол-во элементов" width="180" />
 
                 <el-table-column prop="template" label="Шаблон"  align="center" />
                 <el-table-column prop="published" label="Опубликован" align="center">

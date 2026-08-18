@@ -46,15 +46,25 @@ class ProductWidget extends Widget
         if ($this->modelable instanceof Group) {
             return route('shop.group.view', $this->modelable->slug);
         }
+        if ($this->modelable instanceof Room) {
+            return route('shop.room.view', $this->modelable->slug);
+        }
         return '';
     }
+
 
     /**
      * @return Product[]
      */
-    public function products(): array
+    public function products(?int $quantity = null): array
     {
-        return $this->modelable->products;
+        $products = $this->modelable?->products?->all() ?? [];
+
+        if ($quantity === null) {
+            return $products;
+        }
+
+        return array_slice($products, 0, $quantity);
     }
 
 }

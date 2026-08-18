@@ -36,6 +36,7 @@ trait GalleryField
     {
         /** @var Photo $image */
         $image = $this->photos()->where('sort', $sort)->first();
+
         if (is_null($image)) return '/images/no-image.jpg';
         return is_null($thumb) ? $image->getUploadUrl() : $image->getThumbUrl($thumb);
     }
