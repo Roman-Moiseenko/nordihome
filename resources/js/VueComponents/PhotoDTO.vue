@@ -87,7 +87,7 @@ const props = defineProps({
     type: { type: String, default: 'image' },
     mini: { type: Boolean, default: false },
 })
-const csrf = document.querySelector('meta[name="csrf-token]')?.getAttribute('content') || ''
+const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
 
 const uploadRef = ref()
 const fileList = ref<UploadUserFile[]>([])
@@ -258,6 +258,15 @@ onMounted(() => {
         setTimeout(initDragSort, 500)
     }
 })
+
+// Перезагрузка изображений при смене entityId (например, при открытии окна для другого элемента)
+watch(
+    () => [props.entityId, props.modelType, props.type],
+    () => {
+        fileList.value = []
+        loadImages()
+    }
+)
 
 watch(fileList, () => {
     if (props.type === 'gallery') {

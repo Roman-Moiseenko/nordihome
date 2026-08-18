@@ -108,6 +108,8 @@ const common = {
         if (_str === null || _str === '') return '';
         return _str.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ") + '  ₽';
     },
+
+
 }
 
 export default common

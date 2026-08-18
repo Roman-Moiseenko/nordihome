@@ -28,7 +28,6 @@ use function public_path;
  * @property string $description
  * @property int $sort
  * @property string $type
- * @property bool $thumb
  */
 class Photo extends Model
 {
@@ -43,15 +42,11 @@ class Photo extends Model
     private string $catalogUpload;
     private string $catalogThumb;
 
-    protected $attributes = [
-        'thumb' => true,
-    ];
     protected $fillable = [
         'file',
         'sort',
         'alt',
         'type',
-        'thumb',
         'title',
         'description',
         'model_type',
@@ -103,7 +98,6 @@ class Photo extends Model
             'sort' => $sort,
             'type' => $type,
             'alt' => $alt,
-            'thumb' => $thumb,
         ]);
         $photo->fileForUpload = $file;
         return $photo;

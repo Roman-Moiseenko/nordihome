@@ -64,11 +64,6 @@ final class PhotoEntity
         set => $this->type = $value;
     }
 
-    public bool $thumb = true {
-        get => $this->thumb;
-        set => $this->thumb = $value;
-    }
-
     public ?string $uploadUrl = null {
         get => $this->uploadUrl;
         set => $this->uploadUrl = $value;

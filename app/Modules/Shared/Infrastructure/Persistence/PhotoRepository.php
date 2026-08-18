@@ -80,11 +80,10 @@ class PhotoRepository implements PhotoRepositoryInterface
         $model->description = $photo->description;
         // $model->sort = $photo->sort;
         $model->type = (string)$photo->type;
-        $model->thumb = $photo->thumb;
-
         $model->save();
 
         // Создаём thumbs при сохранении, если включено
+        /*
         if ($photo->thumb && $this->photoService->createThumbsOnSave) {
             $this->photoService->createThumbs(
                 $model->id,
@@ -93,7 +92,7 @@ class PhotoRepository implements PhotoRepositoryInterface
                 $model->file,
             );
         }
-
+*/
         return $this->hydrate($model->fresh());
     }
 
@@ -259,7 +258,6 @@ class PhotoRepository implements PhotoRepositoryInterface
         $entity->title = $model->title ?? '';
         $entity->description = $model->description ?? '';
         $entity->sort = $model->sort ?? 0;
-        $entity->thumb = (bool)($model->thumb ?? true);
 
         // Генерируем uploadUrl
         $entity->uploadUrl = $this->photoService->getUploadUrl(

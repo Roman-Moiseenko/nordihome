@@ -26,11 +26,12 @@ readonly class GetContactsQuery
         $contacts = $this->repository->getPublishedContacts();
 
         $indexed = [];
-        foreach ($contacts as $contact) {
-            $indexed[$contact->slug] = $contact;
+        foreach ($contacts as $i => $contact) {
+            $index = empty($contact->slug) ? $i : $contact->slug;
+            $indexed[$index] = $contact;
         }
 
-        return $contacts;
+        return $indexed;
         /*
         return Cache::remember(
             CacheInvalidationRegistry::CONTACTS,

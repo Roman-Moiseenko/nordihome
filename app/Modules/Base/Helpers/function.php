@@ -71,7 +71,13 @@ if (!function_exists('modules_callback')){
 if (!function_exists('phone')) {
     function phone($value): string
     {
-        if (empty($value) || !is_numeric($value)) return '';
+        if (empty($value)) return '';
+
+        $value = preg_replace('/[^0-9+]/', '', $value);
+        if (str_starts_with($value, '+7')) {
+            $value = '8' . substr($value, 2);
+        }
+        if (!is_numeric($value)) return '';
         return mb_substr($value, 0, 1) . ' (' . mb_substr($value, 1, 3) . ') ' .
             mb_substr($value, 4, 3) . '-' . mb_substr($value, 7, 2) . '-' . mb_substr($value, 9, 2);
     }

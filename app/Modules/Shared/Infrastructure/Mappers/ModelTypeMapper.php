@@ -5,9 +5,6 @@ declare(strict_types=1);
 namespace App\Modules\Shared\Infrastructure\Mappers;
 
 
-
-use App\Modules\Catalog\Infrastructure\Models\AttributeVariant;
-
 /**
  * Маппинг model_type ({модуль}.{сущность}) в полное имя класса (FQCN) для imageable_type
  */
@@ -25,6 +22,7 @@ class ModelTypeMapper
         'parser.product' => \App\Modules\Parser\Infrastructure\Models\ParserProduct::class,
 
         'content.post' => \App\Modules\Content\Infrastructure\Models\Post::class,
+        'content.banner-widget-item' => \App\Modules\Content\Entity\Widgets\BannerWidgetItem::class,
 
     ];
 

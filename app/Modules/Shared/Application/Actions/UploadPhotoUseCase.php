@@ -49,7 +49,7 @@ readonly class UploadPhotoUseCase
         $photo = $this->photoRepository->save($photo);
 
         //Для не одиночных (gallery) делаем нарезку
-       if (!$photo->type->isSingle()) {
+  /*     if (!$photo->type->isSingle()) {
             $this->photoService->createThumbs(
                 $photo->id,
                 $photo->modelType,
@@ -57,7 +57,7 @@ readonly class UploadPhotoUseCase
                 $photo->file,
             );
         }
-
+*/
         return $photo;
     }
 }
