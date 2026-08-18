@@ -82,12 +82,18 @@ abstract class RenderPage extends Model
 
     private function renderRoots(string $text): string
     {
-        $pattern = '/\[root=\"(.+?)\"(.*?)\]/su';
+        $pattern = '/\[root=\"(.+?)\"]/su';
         preg_match_all($pattern, $text, $matches);
         $replaces = $matches[0]; //шот-коды вида [root="file"]
-        $template = $matches[1]; //значение template
-        $add = $matches[2];
+        $templates = $matches[1]; //значение template
 
+        foreach ($templates as $key => $template) {
+            $text = str_replace(
+                $replaces[$key],
+                view('shop.templates.' . $template)->render(),
+                $text
+            );
+        }
 
         return $text;
     }
