@@ -15,7 +15,6 @@ return new class extends Migration
             $table->integer('modelable_id');
             $table->string('modelable_type');
             $table->string('button_name')->default('');
-            $table->string('url')->nullable();
             $table->dropColumn('params');
             $table->dropForeign('widgets_banner_id_foreign');
         });
@@ -35,7 +34,6 @@ return new class extends Migration
             $table->dropColumn('modelable_id');
             $table->dropColumn('modelable_type');
             $table->dropColumn('button_name');
-            $table->dropColumn('url');
             $table->json('params')->nullable();
         });
 
