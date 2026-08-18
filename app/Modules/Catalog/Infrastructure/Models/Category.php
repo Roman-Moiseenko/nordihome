@@ -77,11 +77,6 @@ class Category extends Model
     }
 
 
-    public static function noParseCategory(): self
-    {
-        return Category::where('slug', 'no_parse')->first();
-    }
-
     public function getChildrenIdAll(): array
     {
         return Category::orderBy('id')->where('_lft', '>=', $this->_lft)->where('_rgt', '<=', $this->_rgt)->pluck('id')->toArray();
