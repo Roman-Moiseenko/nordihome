@@ -26,7 +26,6 @@
 
         </el-table-column>
         <el-table-column label="Действия" align="right" width="200">
-
             <template #default="scope">
                 <el-button size="small" type="primary" dark @click="onUp(scope.row)">
                     <i class="fa-light fa-chevron-up"></i>
@@ -131,50 +130,6 @@ function handleEdit(row) {
     form.caption = row.caption
     form.description = row.description
     showDialog.value = true
-}
-
-function getRow(row) {
-    form.slug = row.slug
-    form.button = row.button
-    form.url = row.url
-    form.caption = row.caption
-    form.description = row.description
-}
-
-function setSlug(row, val) {
-    getRow(row)
-    form.slug = val
-    setItem(row)
-}
-
-function setButton(row, val) {
-    getRow(row)
-    form.button = val
-    setItem(row)
-}
-
-function setUrl(row, val) {
-    getRow(row)
-    form.url = val
-    setItem(row)
-}
-
-function setCaption(row, val) {
-    getRow(row)
-    form.caption = val
-    setItem(row)
-}
-
-function setMarking(row, val) {
-    getRow(row)
-    form.marking = val
-    setItem(row)
-}
-
-function setDescription(row, val) {
-    getRow(row)
-    form.description = val
-    setItem(row)
 }
 
 function setItem() {

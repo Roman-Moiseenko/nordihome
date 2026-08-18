@@ -37,7 +37,7 @@
         </el-upload>
 
         <!-- Диалог предпросмотра и редактирования данных -->
-        <el-dialog v-model="dialogVisible" width="90%">
+        <el-dialog v-model="dialogVisible" width="90%" append-to-body>
             <div class="flex">
                 <div style="width: 80%; height: 90vh">
                     <img :src="dialogImageUrl" alt="Preview Image" class="mx-auto" style="height: 100%; width: auto" />
