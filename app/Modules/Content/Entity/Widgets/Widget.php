@@ -57,7 +57,15 @@ abstract class Widget extends Model
 
         ]);
     }
+    public static function new(string $name, string $template): static
+    {
+        return self::make([
+            'name' => $name,
+            'active' => false,
+            'template' => $template,
 
+        ]);
+    }
     public function isActive(): bool
     {
         return $this->active == true;

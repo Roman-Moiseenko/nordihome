@@ -21,7 +21,6 @@ export const useCatalogStore = defineStore('catalog', () => {
             axios.get(route('admin.catalog.brand.list')),
             axios.get(route('admin.catalog.group.list')),
         ])
-
         rooms.value = roomsRes.data
         categories.value = categoriesRes.data
         brands.value = brandsRes.data

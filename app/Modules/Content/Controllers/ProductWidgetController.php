@@ -53,9 +53,9 @@ class ProductWidgetController extends Controller
         //route('admin.content.widget.product.show', $widget)
     }
 
-    public function show(ProductWidget $widget): Response
+    public function show(ProductWidget $widget)
     {
-        $groups = $this->repository->getGroups($widget);
+       /* $groups = $this->repository->getGroups($widget);
 
         $banners = BannerWidget::orderBy('name')->getModels();
         $templates = $this->templates->getTemplates('product');
@@ -65,7 +65,7 @@ class ProductWidgetController extends Controller
             'groups' => $groups,
             'banners' => $banners,
         ]);
-
+*/
         //return view('admin.content.widget.show', compact('widget'));
     }
 

@@ -19,9 +19,6 @@ class ProductWidgetRepository
     private function WidgetToArray(ProductWidget $widget): array
     {
         return array_merge($widget->toArray(), [
-            'items' => $widget->items,
-            'banner' => $widget->banner()->first(),
-            'count' => $widget->items()->count(),
             'image' => $widget->getImage(),
             'icon' => $widget->getIcon(),
         ]);

@@ -8,7 +8,7 @@ class ListGroupUseCase
 {
     public function execute(): array
     {
-        $groups = Group::orderBy('name')->get();
+        $groups = Group::orderBy('name')->getModels();
 
         return array_map(fn($group) => [
             'id' => $group->id,

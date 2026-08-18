@@ -29,7 +29,8 @@ class ProductWidget extends Widget
     public $fillable = [
         'modelable_id',
         'modelable_type',
-        'button_name'
+        'button_name',
+        'url'
     ];
     public function modelable()
     {
@@ -39,10 +40,10 @@ class ProductWidget extends Widget
     public function getUrl(): string
     {
         if (!empty($this->url)) return $this->url;
-        if ($this->modelable instanceof Category::class) {
+        if ($this->modelable instanceof Category) {
             return route('shop.category.view', $this->modelable->slug);
         }
-        if ($this->modelable instanceof Group::class) {
+        if ($this->modelable instanceof Group) {
             return route('shop.group.view', $this->modelable->slug);
         }
         return '';
