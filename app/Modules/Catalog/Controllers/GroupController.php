@@ -3,6 +3,7 @@
 namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Catalog\Application\Actions\Group\ListGroupUseCase;
 use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Repository\GroupRepository;
 use App\Modules\Catalog\Repository\ProductRepository;
@@ -19,7 +20,12 @@ class GroupController extends Controller
     private ProductRepository $products;
     private GroupRepository $repository;
 
-    public function __construct(GroupService $service, ProductRepository $products, GroupRepository $repository)
+    public function __construct(
+        GroupService $service,
+        ProductRepository $products,
+        GroupRepository $repository,
+        private readonly ListGroupUseCase $listGroupUseCase,
+    )
     {
         $this->service = $service;
         $this->products = $products;
@@ -89,5 +95,11 @@ class GroupController extends Controller
         } catch (\Throwable $e) {
             return \response()->json(['error' => $e->getMessage()]);
         }
+    }
+
+    public function list(): JsonResponse
+    {
+        $list = $this->listGroupUseCase->execute();
+        return response()->json($list);
     }
 }

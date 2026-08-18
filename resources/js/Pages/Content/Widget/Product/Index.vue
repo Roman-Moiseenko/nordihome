@@ -88,6 +88,7 @@ import {defineProps, inject, reactive, ref} from "vue";
 
 import {route} from "ziggy-js";
 import axios from "axios";
+import {useCatalogStore} from "@Res/catalogStore";
 
 const props = defineProps({
     widgets: Array,
@@ -97,6 +98,7 @@ const props = defineProps({
     },
     templates: Array,
 })
+const catalogStore = useCatalogStore()
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.widgets])
@@ -104,6 +106,11 @@ const form = reactive({
     id: null,
     name: null,
     templates: null,
+    modelable_id: null,
+    modelable_type: null,
+    caption: null,
+    description: null,
+    button_name: null,
 })
 function copyBuffer(row) {
     navigator.clipboard.writeText('[product="' + row.id + '" name="' + row.name + '"]');

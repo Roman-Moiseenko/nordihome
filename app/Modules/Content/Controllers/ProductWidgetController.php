@@ -47,7 +47,9 @@ class ProductWidgetController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $widget = $this->service->create($request);
-        return redirect()->route('admin.content.widget.product.show', $widget)->with('success', 'Виджет сохранен');
+        return redirect()
+            ->back()->with('success', 'Виджет сохранен');
+        //route('admin.content.widget.product.show', $widget)
     }
 
     public function show(ProductWidget $widget): Response

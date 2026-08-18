@@ -10,19 +10,22 @@ export const useCatalogStore = defineStore('catalog', () => {
     const rooms = ref<any[]>([])
     const categories = ref<any[]>([])
     const brands = ref<any[]>([])
+    const groups = ref<any[]>([])
 
     async function fetchData() {
         const [
-            roomsRes, categoriesRes, brandsRes
+            roomsRes, categoriesRes, brandsRes, groupsRes
         ] = await Promise.all([
             axios.get(route('admin.catalog.room.tree')),
             axios.get(route('admin.catalog.category.tree')),
             axios.get(route('admin.catalog.brand.list')),
+            axios.get(route('admin.catalog.group.list')),
         ])
 
         rooms.value = roomsRes.data
         categories.value = categoriesRes.data
         brands.value = brandsRes.data
+        groups.value = groupsRes.data
     }
 
     ;(async () => {
@@ -66,6 +69,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         reload,
         rooms,
         brands,
+        groups,
         categories,
         categoriesForFilters,
         roomsForFilters,

@@ -114,6 +114,8 @@ Route::group([
         'prefix' => 'group',
         'as' => 'group.',
     ], function () {
+        Route::get('/list', [GroupController::class, 'list'])->name('list');
+
         Route::post('/add-products/{group}', [GroupController::class, 'add_products'])->name('add-products');
         Route::post('/add-product/{group}', [GroupController::class, 'add_product'])->name('add-product');
         Route::post('/set-info/{group}', [GroupController::class, 'set_info'])->name('set-info');

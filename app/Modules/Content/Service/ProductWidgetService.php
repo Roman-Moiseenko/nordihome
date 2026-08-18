@@ -12,18 +12,22 @@ class ProductWidgetService extends WidgetService
 
     public function create(Request $request): ProductWidget
     {
-        return ProductWidget::register(
+        $widget = ProductWidget::register(
             $request->string('name')->trim()->value(),
             $request->string('template')->trim()->value(),
         );
+
+
+
+        return $widget;
     }
 
     public function setWidget(ProductWidget $widget, Request $request): void
     {
         $this->setBase($widget, $request);
 
-        $widget->banner_id = $request->input('banner_id');
-        $widget->params = $request['params'] ?? [];
+   //     $widget->banner_id = $request->input('banner_id');
+     //   $widget->params = $request['params'] ?? [];
 
         $widget->save();
     }
