@@ -1,13 +1,12 @@
 <?php
 
 use App\Modules\Order\Controllers\ExpenseController;
-use App\Modules\Order\Controllers\OrderController;
 use App\Modules\Order\Controllers\PaymentController;
 use App\Modules\Order\Controllers\ProductController;
 use App\Modules\Order\Controllers\RefundController;
 use App\Modules\Order\Controllers\ReserveController;
+use App\Modules\Order\Presentation\Http\Controllers\Web\OrderController;
 use Illuminate\Support\Facades\Route;
-
 
 
 //Заказы

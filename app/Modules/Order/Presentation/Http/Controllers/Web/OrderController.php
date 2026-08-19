@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Modules\Order\Controllers;
+namespace App\Modules\Order\Presentation\Http\Controllers\Web;
 
 
 use App\Http\Controllers\Controller;

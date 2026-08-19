@@ -21,7 +21,7 @@
 
 
     //FancyBox
-
+/*
     const galleryItems = window.productGalleryData;
     console.log(galleryItems)
     // Клик по главному изображению – открываем Fancybox
@@ -41,6 +41,7 @@
             },
         });
     });
+    */
     let main = $('main');
     /** СТРАНИЦА ТОВАРА **/
     if (main.hasClass('product-page') || main.hasClass('ikea-product')) {

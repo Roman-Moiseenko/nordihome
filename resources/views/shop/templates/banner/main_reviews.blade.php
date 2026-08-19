@@ -12,17 +12,26 @@
     * $item->description - string
     */
     /** @var \App\Modules\Content\Entity\Widgets\BannerWidget $widget */
+    $galleryItems = [];
+    foreach ($widget->items as $item) {
+        $galleryItems[] = [
+            'src' => $item->getImage(),
+            'caption' => '',
+        ];
+    }
+
 @endphp
 <div class="main-reviews p-t_50 p-b_50" id="reviews-tab">
     <div class="container-fluid">
         <div id="main-slider-reviews" class="owl-carousel owl-theme">
-            @foreach($widget->items as $item)
-                <div>
-                    <a href="{{ $item->url }}" data-fancybox="reviews-gallery">
-                        <img src="{{ $item->getImage() }}"/>
-                    </a>
-                </div>
+            @foreach($widget->items as $index => $item)
+                <img src="{{ $item->getImage('slide') }}" class="review-image" data-index="{{ $index }}"/>
             @endforeach
         </div>
     </div>
 </div>
+{{-- Передаём данные из PHP в JavaScript --}}
+<script>
+    window.reviewGalleryData = @json($galleryItems);
+</script>
+
