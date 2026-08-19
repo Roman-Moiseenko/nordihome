@@ -44,26 +44,30 @@
 }
 .scrollup {
     position: fixed;
-    top: 0;
-    right: 25px;
-    width: 42px;
-    height: 42px;
+    bottom: 0;
+    right: 15px;
+    width: 60px;
+    height: 60px;
     line-height: 42px;
     padding: 0;
     font-size: 20px;
     text-align: center;
     cursor: pointer;
-    color: #fff;
-    background-color: var(--bs-gray-900);
-    border: 1px solid var(--bs-gray-100);
+    color: $white;
+    background-color: $black;
+    border: 1px solid $white;
     outline: none;
-    border-radius: 50% 0 50% 50%;
-    box-shadow: 0 0 12px 0 rgba(0,0,0,.2);
+    border-radius: 50%;
+    text-align: center;
+    font-size: 33px;
+    font-weight: 500;
+    transform: rotate(-90deg);
     -webkit-transition: .9s;
     transition: .9s;
     z-index: 99;
     visibility: hidden;
     opacity: 0;
+    padding: 0px 0px 4px 0;
     i {
         display: inline-block;
         -webkit-transition: all .5s;
@@ -71,25 +75,55 @@
         transition: all .5s;
     }
     &.is-active {
-        top: 98%;
-        -webkit-transform: translateY(-95%);
-        transform: translateY(-95%);
+        bottom:140px;
         opacity: 1;
         visibility: visible;
 
         &:hover {
-            @extend %scrollup_hover_focus;
+            background: $dark-gray;
         }
         &:focus {
-            @extend %scrollup_hover_focus;
+            background: $dark-gray;
         }
     }
+}
+.mob-bottom {
+    position: fixed;
+    bottom: 72px;
+    z-index: 99;
+    width: 60px;
+    justify-content: center;
+    padding: 5px 0;
+    height: 60px;
+    right: 15px;
+    background: url(/public/images/pages/home/in-touch01.svg) no-repeat center center  / 60px, $blue;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 20px 0 rgb(0 0 0 / 30%);
+    transition: all 0.3s ease-in-out;
+}
+.mob-bottom.close {
+    background: url(/public/images/pages/home/icon-close.svg) no-repeat center center  / 20px, white;
+}
+.mob-bottom-open {
+    overflow: hidden;
+    position: fixed;
+    z-index: 99;
+    transition: all 0.6s;
+    right: 26px;
+    visibility: hidden;
+    bottom: 75px;
+    right: -100%;
+}
+.mob-bottom-open.show {
+    visibility: visible;
+    right: 90px;
+    bottom: 75px;
 }
 @media screen and (max-width: 991px) {
     .scrollup {
         &.is-active {
-            top: unset;
-            bottom: 16px;
+
         }
     }
 }

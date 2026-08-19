@@ -20,3 +20,10 @@
     border-radius: $border-radius_12;
     border: 1px solid $black;
 }
+.form-control {
+    height: auto;
+    border-radius: $border-radius_12;
+    border: 1px solid $black;
+    font-size: 14px;
+    min-height: auto;
+}

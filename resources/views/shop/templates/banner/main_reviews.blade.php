@@ -18,7 +18,7 @@
         <div id="main-slider-reviews" class="owl-carousel owl-theme">
             @foreach($widget->items as $item)
                 <div>
-                    <a href="{{ $item->url }}">
+                    <a href="{{ $item->url }}" data-fancybox="reviews-gallery">
                         <img src="{{ $item->getImage() }}"/>
                     </a>
                 </div>

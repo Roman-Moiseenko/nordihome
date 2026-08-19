@@ -18,7 +18,7 @@
 <div class="p-t_50 p-b_50 bg-blue f-z_23 t-a_center t-t_uppercase f-w_600">
     @foreach($widget->items as $item)
         <div class="container-fluid">
-            {{$item->caption}}<br><a href="/usloviya-i-tarify/"
+            {{$item->caption}}<br><a href="/page/tarify-i-usloviia-dostavki"
                                      class="btn btn-white t-t_uppercase f-z_14 m-t_20">{{$item->description}}</a>
         </div>
     @endforeach
