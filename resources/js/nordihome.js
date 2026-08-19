@@ -26,4 +26,5 @@ import  './nordihome/wish.js'
 import  './nordihome/login.js'
 import  './nordihome/search.js'
 import './nordihome/cookie.js'
+import './nordihome/fancybox.js'
 

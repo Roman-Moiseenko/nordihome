@@ -25,7 +25,7 @@
     <div class="container-fluid">
         <div id="main-slider-reviews" class="owl-carousel owl-theme">
             @foreach($widget->items as $index => $item)
-                <img src="{{ $item->getImage('slide') }}" class="review-image" data-index="{{ $index }}"/>
+                <img src="{{ $item->getImage('slide') }}" class="review-image" data-index="{{ $index }}" style="cursor: pointer;"/>
             @endforeach
         </div>
     </div>
