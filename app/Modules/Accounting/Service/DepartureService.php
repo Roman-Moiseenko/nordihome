@@ -125,7 +125,7 @@ class DepartureService extends AccountingService
     {
         $files = $request->file('files') ?? [];
         foreach ($files as $file) {
-            $departure->photos()->save(Photo::upload(file: $file, thumb: false));
+            $departure->photos()->save(Photo::upload(file: $file));
         }
     }
 

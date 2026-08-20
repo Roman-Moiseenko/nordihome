@@ -21,7 +21,7 @@ trait IconField
             $this->icon->delete();
 
         if (empty($file)) return;
-        $this->icon->newUploadFile($file, 'icon', false);
+        $this->icon->newUploadFile($file, 'icon');
     }
 
     public function getIcon(string $thumb = ''): ?string
@@ -33,7 +33,7 @@ trait IconField
     public function addIconByUrl(string $url): ?Photo
     {
         if (empty($url)) return null;
-        $icon = Photo::uploadByUrl(url: $url, thumb: false);
+        $icon = Photo::uploadByUrl(url: $url );
         $this->icon()->save($icon);
         $icon->refresh();
         return $icon;

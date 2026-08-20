@@ -99,7 +99,7 @@ trait GalleryField
         if (empty($file)) throw new \DomainException('Нет файла');
 
         $sort = count($this->gallery);
-        $photo = Photo::upload(file: $file, sort: $sort, thumb: $this->is_thumb);
+        $photo = Photo::upload(file: $file, sort: $sort);
         $this->gallery()->save($photo);
         $photo->refresh();
         return $photo;
@@ -110,7 +110,7 @@ trait GalleryField
         if (empty($url)) return null;
 
         $sort = count($this->gallery);
-        $photo = Photo::uploadByUrl(url: $url, sort: $sort, thumb: $this->is_thumb);
+        $photo = Photo::uploadByUrl(url: $url, sort: $sort);
         $this->gallery()->save($photo);
         $photo->refresh();
         return $photo;
@@ -179,7 +179,7 @@ trait GalleryField
     public function copyImage(Photo $image): void
     {
         $sort = count($this->gallery);
-        $photo = Photo::copyByPath(path: $image->getUploadFile(), sort: $sort, thumb: $this->is_thumb);
+        $photo = Photo::copyByPath(path: $image->getUploadFile(), sort: $sort);
         $this->gallery()->save($photo);
     }
 

@@ -58,7 +58,6 @@ abstract class RenderPage extends Model
     {
 
         $this->field = empty($this->field) ? $this->getField() : $this->field;
-
         $this->text = $this->renderTags($this->text);
         $this->text  = $this->renderRoots($this->text);
 

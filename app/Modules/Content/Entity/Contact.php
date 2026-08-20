@@ -33,7 +33,7 @@ class Contact extends Model
     ];
 
     public static function register(string $name, string $icon, string $color, string $url,
-                                    int $type, string $slug, string $svg): self
+                                    int $type, string $slug, ?string $svg = null): self
     {
         $sort = self::count();
         return self::create([

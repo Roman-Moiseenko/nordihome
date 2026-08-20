@@ -32,9 +32,9 @@
                         <Active :active="scope.row.published" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="svg" label="SVG" width="180" align="center">
+                <el-table-column prop="svg" label="SVG" width="80" align="center">
                     <template #default="scope">
-                        <Active :active="scope.row.svg !== null" />
+                        <div v-html="scope.row.svg"></div>
                     </template>
                 </el-table-column>
                 <el-table-column label="Действия" align="right">
@@ -164,12 +164,23 @@ function saveContact() {
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {
+            const errors = page.props.errors || {}
+            const flash = page.props.flash || {}
+            if (Object.keys(errors).length > 0 || flash.error) {
+                // Ошибка на беке: оставляем диалог открытым,
+                // сообщение покажет FlashMessages
+                dialogCreate.value = true
+                return
+            }
             tableData.value = [...page.props.contacts]
+            dialogCreate.value = false
+        },
+        onError: () => {
+            // Ошибка валидации: диалог остаётся открытым,
+            // сообщение покажет FlashMessages из shared props errors
+            dialogCreate.value = true
         }
     })
-
-
-    dialogCreate.value = false
 }
 
 function routeClick(row) {

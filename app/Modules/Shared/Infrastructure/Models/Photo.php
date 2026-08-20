@@ -91,7 +91,7 @@ class Photo extends Model
 
     }
 
-    public static function upload(UploadedFile $file, string $type = '', int $sort = 0, string $alt = '', bool $thumb = true): self
+    public static function upload(UploadedFile $file, string $type = '', int $sort = 0, string $alt = ''): self
     {
         $photo = self::make([
             'file' => $file->getClientOriginalName(),
@@ -109,7 +109,7 @@ class Photo extends Model
         return self::uploadByUrl($url, $type, $sort, $alt);
     }
 
-    public static function uploadByUrl(string $url, string $type = '', int $sort = 0, string $alt = '', bool $thumb = true): self
+    public static function uploadByUrl(string $url, string $type = '', int $sort = 0, string $alt = ''): self
     {
         //Настройка парсера
         $settings = app()->make(Settings::class);
@@ -145,23 +145,22 @@ class Photo extends Model
             null, null, true);
 
         ClearTempFile::dispatch($full_filename)->delay(now()->addMinutes(10)); //Удаление временного файла через 30 минут
-        return self::upload($upload, $type, $sort, $alt, $thumb);
+        return self::upload($upload, $type, $sort, $alt);
     }
 
-    public static function copyByPath(string $path, string $type = '', int $sort = 0, string $alt = '', bool $thumb = true): Photo
+    public static function copyByPath(string $path, string $type = '', int $sort = 0, string $alt = ''): Photo
     {
         $upload = new UploadedFile(
             $path,
             basename($path),
             null, null, true);
-        return self::upload($upload, $type, $sort, $alt, $thumb);
+        return self::upload($upload, $type, $sort, $alt);
     }
 
-    public function newUploadFile(UploadedFile $file, string $type = null, bool $thumb = true): void
+    public function newUploadFile(UploadedFile $file, ?string $type = null): void
     {
-        if ($type) $this->type = $type;
+        if (!is_null($type)) $this->type = $type;
         $this->fileForUpload = $file;
-        $this->thumb = $thumb;
         $this->uploadFile();
         $this->save();
     }
@@ -177,16 +176,7 @@ class Photo extends Model
         $this->type = $type;
     }
 
-    public function isId(int $id): bool
-    {
-        return $this->id == $id;
-    }
 
-    public function setThumb(bool $isThumb): void
-    {
-        $this->thumb = $isThumb;
-        $this->save();
-    }
 
     //ВЫВОД для Фронтенда получаем URL
     final public function getUploadUrl(): string
@@ -299,12 +289,14 @@ class Photo extends Model
         if (!file_exists($path)) {
             mkdir($path, 0777, true);
         }
+        /*
         if ($this->thumb) {
             $pathThumbs = $this->catalogThumb . $this->patternGeneratePath();
             if (!file_exists($pathThumbs)) {
                 mkdir($pathThumbs, 0777, true);
             }
         }
+        */
         //dd($path);
         //dd($this->fileForUpload->getPath());
         //TODO Копирование вместо Переносим Файл??
@@ -318,8 +310,6 @@ class Photo extends Model
 
     private function clearThumbs(): void
     {
-        if (!$this->thumb) return;
-
         foreach ($this->thumbs as $params) {
             $thumb_file = $this->getThumbFile($params['name']);
             if (is_file($thumb_file)) {
@@ -369,7 +359,7 @@ class Photo extends Model
 
     }
 
-    public static function get_photo(int|string $id, string $thumb = null): string
+    public static function get_photo(int|string $id, ?string $thumb = null): string
     {
         /** @var Photo $photo */
         if (is_numeric($id)) $photo = Photo::find($id);

@@ -22,7 +22,7 @@ trait PhotoField
             $this->photo->delete();
 
         if (empty($file)) return;
-        $this->photo->newUploadFile($file, 'photo', false);
+        $this->photo->newUploadFile($file, 'photo');
     }
 
     public function getPhoto(string $thumb = ''): ?string
@@ -35,7 +35,7 @@ trait PhotoField
     public function addPhotoByUrl(string $url): ?Photo
     {
         if (empty($url)) return null;
-        $photo = Photo::uploadByUrl(url: $url, thumb: false);
+        $photo = Photo::uploadByUrl(url: $url);
         $this->photo()->save($photo);
         $photo->refresh();
         return $photo;
