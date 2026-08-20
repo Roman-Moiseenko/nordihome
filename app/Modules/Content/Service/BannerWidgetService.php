@@ -33,7 +33,6 @@ class BannerWidgetService extends WidgetService
             $item = BannerWidgetItem::register($widget->id);
             $item->saveImage($file);
             $item->refresh();
-            $item->image->thumb = false;
             $item->image->save();
         });
     }
