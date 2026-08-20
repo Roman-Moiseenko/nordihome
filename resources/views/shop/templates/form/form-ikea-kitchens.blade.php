@@ -20,7 +20,7 @@ use App\Modules\Content\Entity\FormWidget;
        /** @var FormWidget $widget  */
 @endphp
 <div class="main-kitchen">
-    <img src="/uploads/gallery/1/main-kuhni-min.jpg" class="width_100" alt="Кухни икеа под заказ">
+    <img src="/uploads/gallery/1/main-kuhni-min.jpg" class="width_100 b-radius_16" alt="Кухни икеа под заказ">
     <div class="main-kitchen-form bg-white">
         <div class="t-t_uppercase f-w_600 t-a_center f-z_23 m-b_10">Получите <span class="t-color_orange">дизайн-проект в подарок!*</span></div>
         <div class="t-a_center m-b_10">Наш дизайнер с опытом работы более 10 лет в ИКЕА разработает дизайн-проект вашей кухни!</div>
@@ -43,7 +43,15 @@ use App\Modules\Content\Entity\FormWidget;
                         </label>
                     </div>
                     <div class="col-md-6 col-lg-6 m-b_5">
-                        <label><button class="btn-form" type="button">ОСТАВИТЬ ЗАЯВКУ</button></label>
+                        <label>
+                            <input name="telegram" class="width_100" placeholder="Ник в Телеграм: @username"/>
+                        </label>
+                    </div>
+                    <div class="col-md-6 col-lg-6 m-b_5">
+                        <label><select class="width_100"><option value="">—Выберите вариант—</option><option value="Позвонить по телефону">Позвонить по телефону</option><option value="Написать в Телеграм">Написать в Телеграм</option><option value="Написать в Макс">Написать в Макс</option></select></label>
+                    </div>
+                    <div class="col-md-6 col-lg-6 m-b_5">
+                        <label><button class="btn-form" type="button">Оставить заявку</button></label>
                     </div>
                     <div class="col-12">
                         <label class="f-z_14">
