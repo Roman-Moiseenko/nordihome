@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Infrastructure\Persistence;
 
 use App\Modules\Auth\Domain\ValueObjects\Address;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderAdditionEntity;
 use App\Modules\Order\Domain\Entities\OrderEntity;
@@ -62,6 +63,7 @@ class OrderRepository implements OrderRepositoryInterface
         $model->comment = $order->comment ?? '';
         $model->comment_client = $order->commentClient ?? '';
         $model->is_pickup = $order->isPickup;
+        $model->price_type = $order->priceType ?? PriceType::default();
 
         if ($order->address !== null) {
             $model->country = $order->address->country;
@@ -284,6 +286,7 @@ class OrderRepository implements OrderRepositoryInterface
         $entity->comment = $model->comment;
         $entity->commentClient = $model->comment_client;
         $entity->isPickup = (bool) $model->is_pickup;
+        $entity->priceType = new PriceType($model->price_type);
 
         if (!empty($model->city) || !empty($model->street)) {
             $entity->address = new Address(

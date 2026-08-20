@@ -13,6 +13,7 @@ readonly class OrderViewData
         public ?int $staffId,
         public int $traderId,
 
+        public string $priceType,
         //Данные о суммах
         public ?float $discountAmount,
         public ?float $couponAmount,

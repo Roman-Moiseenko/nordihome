@@ -30,7 +30,7 @@ Route::group(
         Route::post('/reserve-collect/{item}', [OrderController::class, 'reserve_collect'])->name('reserve-collect');
         //    Route::post('/set-info/{order}', 'OrderController@set_info')->name('set-info');
         Route::post('/add-products/{order}', [OrderController::class, 'add_products'])->name('add-products');
-        Route::post('/add-product/{order}', [OrderController::class, 'add_product'])->name('add-product');
+        Route::post('/add-product/{id}', [OrderController::class, 'add_product'])->name('add-product');
 
         Route::post('/set-item/{item}', [OrderController::class, 'set_item'])->name('set-item');
         Route::delete('/del-item/{item}', [OrderController::class, 'del_item'])->name('del-item');

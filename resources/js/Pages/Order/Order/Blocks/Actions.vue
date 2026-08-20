@@ -2,7 +2,7 @@
 
     <template v-if="is_new">
         <SearchAddProduct
-            :route="route('admin.order.add-product', {order: order.id})"
+            :route="route('admin.order.add-product', {id: order.id})"
             :quantity="true"
             :preorder="true"
             :create="true"

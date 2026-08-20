@@ -163,6 +163,7 @@ const form = reactive({
     product_id: null,
     quantity: 1,
     preorder: null,
+    productId: null,
 })
 const useCatalog = useCatalogStore()
 function onSelect() {
@@ -178,6 +179,7 @@ function onQuantity() {
 }
 function onAdd() {
     if (form.product_id === null) return;
+    form.productId = form.product_id //Для новых UseCase
     router.visit(props.route, {
         method: "post",
         data: {...form, ...props.params},

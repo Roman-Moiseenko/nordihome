@@ -6,6 +6,7 @@ use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Auth\Application\Queries\GetInfoWebClientQuery;
 use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Guide\Entity\Addition;
@@ -44,7 +45,7 @@ readonly class CreateOrderFromCartService
         $this->transactionManager->execute(function () use ($clientContext, $code, $commentClient, &$orderEntity) {
             //Создаем пустой заказ
             $trader_id = Trader::default()->organization->id;
-            $orderEntity = new OrderEntity($trader_id, new OrderSellType(Order::ONLINE), $clientContext->id);
+            $orderEntity = new OrderEntity($trader_id, new OrderSellType(Order::ONLINE), $clientContext->id, new PriceType($clientContext->priceType));
 
             $isParser = false;
             $cartData = $this->cartUseCase->execute();

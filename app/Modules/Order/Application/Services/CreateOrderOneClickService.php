@@ -44,7 +44,7 @@ readonly class CreateOrderOneClickService
             $product = $this->sellPriceUseCase->execute($dto->productId, $client->priceType);
             //Создаем заказ с клиентом
             $trader_id = Trader::default()->organization->id;
-            $orderEntity = new OrderEntity($trader_id, new OrderSellType(Order::ONLINE), $client->id);
+            $orderEntity = new OrderEntity($trader_id, new OrderSellType(Order::ONLINE), $client->id, $client->priceType);
 
             $orderEntity->isPickup = $dto->isPickup;
             if (!$dto->isPickup) {

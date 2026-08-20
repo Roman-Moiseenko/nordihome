@@ -50,6 +50,7 @@ use JetBrains\PhpStorm\Pure;
  * @property string $comment
  * @property Carbon $created_at
  * @property Carbon $updated_at
+ * @property string $price_type //Тип цены для заказа, берется от клиента, но может меняться
  *
  * @property string $comment_client
  * @property bool $is_pickup
@@ -109,6 +110,7 @@ class Order extends Model
         'staff_id',
         'trader_id',
         'number',
+        'price_type',
     ];
     protected $casts = [
         'created_at' => 'datetime',

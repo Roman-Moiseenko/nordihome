@@ -6,6 +6,7 @@ use App\Modules\Cart\Application\DTOs\CartInfoData;
 use App\Modules\Cart\Application\DTOs\CartItemData;
 use App\Modules\Cart\Domain\Entities\CartItem;
 use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
+use App\Modules\Parser\Application\Actions\Product\GetParserPriceByProductUseCase;
 use App\Modules\Setting\Entity\Settings;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
@@ -25,7 +26,12 @@ readonly class GetCartUseCase
         ['min' => 400, 'max' => 600, 'value' => 63, 'slug' => 'parser_delivery_9'],
         ['min' => 600, 'max' => 9999999, 'value' => 60, 'slug' => 'parser_delivery_10'],
     ];
-    public function __construct(private HybridStorage $storage, private Settings $settings)
+    public function __construct(
+        private HybridStorage $storage,
+                                private Settings $settings,
+    private GetParserPriceByProductUseCase $getParserPriceByProductUseCase,
+
+    )
     {
 
     }
@@ -35,11 +41,11 @@ readonly class GetCartUseCase
      */
     public function execute(): CartInfoData
     {
-        $parser = $this->settings->getParser();
+       // $parser = $this->settings->getParser();
 
 
-        $ratio =$parser->parser_coefficient;
-        $sanctioned = $parser->cost_sanctioned;
+        //$ratio = $parser->parser_coefficient;
+        //$sanctioned = $parser->cost_sanctioned;
         $cartItems = $this->storage->load();
         $items = [];
         $amount = 0;
@@ -56,7 +62,7 @@ readonly class GetCartUseCase
 
             if ($item->is_parser) {
                 $url = route('shop.ikea.product', $item->getProduct()->parser->code);
-                $price = $item->base_cost * (1 + (int)$item->product->parser->sanctioned * $sanctioned / 100) * $ratio;
+                $price = $this->getParserPriceByProductUseCase->execute($item->productId); // $item->base_cost * (1 + (int)$item->product->parser->sanctioned * $sanctioned / 100) * $ratio;
             } else {
                 $url = route('shop.product.view', $item->getProduct()->slug);
                 if (!is_null($item->product->promotion())) {

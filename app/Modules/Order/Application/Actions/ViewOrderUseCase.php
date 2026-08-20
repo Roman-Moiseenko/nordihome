@@ -176,6 +176,7 @@ readonly class ViewOrderUseCase
             number: $orderEntity->number,
             staffId: $orderEntity->staffId,
             traderId: $orderEntity->traderId,
+            priceType: $orderEntity->priceType->value,
             discountAmount: $orderEntity->discountAmount,
             couponAmount: $orderEntity->couponAmount,
             manual: $orderEntity->manual,

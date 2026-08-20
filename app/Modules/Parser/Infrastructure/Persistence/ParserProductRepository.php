@@ -76,6 +76,14 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         return $this->hydrate($model);
     }
 
+    public function getByProductId(int $productId): ?ParserProductEntity
+    {
+        $model = ParserProduct::where('product_id', $productId)->first();
+        if (is_null($model)) return null;
+        return $this->hydrate($model);
+    }
+
+
     public function delete(int $id): void
     {
         $model = ParserProduct::findOrFail($id);

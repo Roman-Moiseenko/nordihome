@@ -14,6 +14,14 @@ final class PriceType
 
     public const string PREORDER = 'preorder';
 
+    public const array TYPES = [
+        self::RETAIL => 'Розничная',
+        self::BULK => 'Оптовая',
+        self::MINIMAL => 'Минимальная',
+        self::SPECIAL => 'Специальная',
+        self::COST => 'Закупочная',
+        self::PREORDER => 'Под заказ',
+    ];
     private const array ALLOWED_VALUES = [
         self::RETAIL,
         self::BULK,
@@ -29,14 +37,13 @@ final class PriceType
         }
     }
 
-    public function __construct(string $value)
+    public function __construct(?string $value)
     {
-        if (!in_array($value, self::ALLOWED_VALUES, true)) {
-            throw new InvalidArgumentException(
-                sprintf('Invalid price type "%s". Allowed values: %s', $value, implode(', ', self::ALLOWED_VALUES))
-            );
+        if (is_null($value)) {
+            $this->value = self::RETAIL;
+        }  else {
+            $this->value = $value;
         }
-        $this->value = $value;
     }
 
     // --- Именованные фабрики ---

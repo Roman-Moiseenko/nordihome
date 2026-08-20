@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Order\Domain\Entities;
 
 use App\Modules\Auth\Domain\ValueObjects\Address;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Order\Application\DTOs\OrderItemData;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
@@ -101,6 +102,11 @@ class OrderEntity
         set => $this->updatedAt = $value;
     }
 
+    public ?PriceType $priceType = null {
+        get => $this->priceType;
+        set => $this->priceType = $value;
+    }
+
     /** @var OrderHistoryStatusEntity|null */
     public mixed $status = null;
 
@@ -117,7 +123,7 @@ class OrderEntity
         int $traderId,
         OrderSellType $type,
         ?int $clientId = null,
-
+        ?PriceType $priceType = null,
     ) {
         $this->traderId = $traderId;
         $this->type = $type;

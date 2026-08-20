@@ -29,4 +29,6 @@ interface ParserProductRepositoryInterface
 
     /** @return array{products: LengthAwarePaginator, filters: array} */
     public function getFilteredPaginated(ParserProductFilterData $filter): LengthAwarePaginator;
+
+    public function getByProductId(int $productId): ?ParserProductEntity;
 }

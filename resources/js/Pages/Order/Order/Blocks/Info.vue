@@ -36,7 +36,11 @@
                         </template>
                     </el-descriptions-item>
                 </el-descriptions>
-
+                <el-descriptions  :column="1" border class="mb-5" :size="small ? 'small' : 'default'">
+                    <el-descriptions-item label="Тип цен">
+                        {{ order.priceType }}
+                    </el-descriptions-item>
+                </el-descriptions>
 
                 <el-button type="warning" plain @click="toUserInfo(order.client.id)">Перейти в Карточку</el-button>
             </div>

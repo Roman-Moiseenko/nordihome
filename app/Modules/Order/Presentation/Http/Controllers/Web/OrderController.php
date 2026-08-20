@@ -9,7 +9,9 @@ use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+use App\Modules\Order\Application\Actions\AddProductOrderUseCase;
 use App\Modules\Order\Application\Actions\ViewOrderUseCase;
+use App\Modules\Order\Application\DTOs\OrderAddProductData;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
@@ -44,6 +46,7 @@ class OrderController extends Controller
         private readonly ListStaffByPositionUseCase $positionUseCase,
         private readonly ViewOrderUseCase $viewOrderUseCase,
         private readonly ViewClientUseCase $clientUseCase,
+        private readonly AddProductOrderUseCase $addProductOrderUseCase,
     )
     {
     }
@@ -208,14 +211,20 @@ class OrderController extends Controller
     }
 
     /** РАБОТА С ТОВАРОМ В ЗАКАЗЕ */
-    public function add_product(Request $request, Order $order): RedirectResponse
+    public function add_product(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
+
+        $dto = OrderAddProductData::validateAndCreate($request->all());
+
+        $this->addProductOrderUseCase->execute($id, $dto, $permission);
+/*
         $this->service->addProduct(
             $order,
             $request->integer('product_id'),
             $request->float('quantity'),
             $request->boolean('preorder')
         );
+        */
         return redirect()->back()->with('success', 'Товар добавлен');
     }
 
