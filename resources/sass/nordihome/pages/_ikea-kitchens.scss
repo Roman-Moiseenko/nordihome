@@ -5,18 +5,17 @@
         z-index:98;
         right:20px;
         padding:20px;
-        border-radius:8px;
+        border-radius:$border-radius_8;
         max-width:500px;
         top: 50%;
         transform: translateY(-50%);
-        input {
+        input:not([type="checkbox"]) {
             width:100%;
         }
         input[type="submit"] {
             background:$orange;
             color:black;
             border:1px solid $orange;
-            font-weight:600;
         }
     }
 }
@@ -25,13 +24,9 @@
         background: $orange;
         color: black;
         border: 1px solid $orange;
-        font-weight: 600;
     }
 }
 .main-kitchen {
-    .main-kitchen-form input {
-        width: 100%;
-    }
     .main-kitchen-form label {
         width: 100%;
     }

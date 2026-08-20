@@ -2,7 +2,7 @@
     use App\Modules\Shop\Application\DTOs\IkeaTreeClientData;
     /** @var IkeaTreeClientData $category */
 @endphp
-<div class="col-12 col-sm-6 col-md-4">
+<div class="col-12 col-sm-6 col-md-4 col-lg-3">
     <div class="ikea-card m-b_20">
 
         <img src="{{ (empty($category->image)) ? '\images\no-image.jpg' : $category->image }}" class="b-radius_12"/>

@@ -51,6 +51,7 @@ h1 {
 }
 h2 {font-size: 32px;font-weight: bold;margin: 0.80em 0;}
 h3 {font-size: 28px;font-weight: bold;}
+h4 {font-size: 23px;font-weight: bold;}
 p {margin-top: 1rem;margin-bottom: 1rem;}
 ul li, ol li {list-style-position: inside;}
 .home h2 {margin:25px 0;}
@@ -124,6 +125,8 @@ ul li, ol li {list-style-position: inside;}
 .justify-content-between {justify-content:space-between;}
 .justify-content-center {justify-content:center;}
 .justify-content-end {justify-content:end;}
+.height_stretch {height: stretch;}
+.flex-direction_column {flex-direction: column;}
 .t-t_uppercase {text-transform:uppercase;}
 .t-a_center {text-align:center;}
 .p-relative {position:relative;}
@@ -189,6 +192,14 @@ img {
 .btn-b-orange {
 
 }
+.btn-orange_1 {
+    background: $orange;
+    color: $black;
+}
+.btn-orange_1:hover {
+    background: $white;
+    color: $black;
+}
 .btn-white {
     background:white;
     color:$black;
@@ -249,6 +260,7 @@ input[type="submit"], button[type="submit"], .feedback button[type="button"] {
     background:black;
     color:white;
     cursor:pointer;
+    font-size: 16px;
 }
 input[type="submit"]:hover, .feedback button[type="button"]:hover {
     background:white;
@@ -268,6 +280,7 @@ select {
     max-width: 100%;
     color:$dark-gray;
 }
+
 .h-menu {
     display: flex;
     flex-wrap: wrap;

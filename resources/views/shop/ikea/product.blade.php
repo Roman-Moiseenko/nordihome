@@ -52,7 +52,7 @@
                     <div class="col-lg-4">
                         <div>
                             <h1>{{ $product->name }} </h1>
-                            <div>
+                            <div class="product-code">
                                 Артикул: {{ codeIkea($product->code) }}
                             </div>
                             <div>

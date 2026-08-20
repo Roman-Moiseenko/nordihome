@@ -25,23 +25,31 @@ use App\Modules\Content\Entity\FormWidget;
         <div class="m-t_10 m-b_20">Мы готовы ответить на Ваши вопросы и помочь с выбором кухни мечты. Заполните форму ниже, и наш менеджер перезвонит Вам в ближайшее время.</div>
         <div id="{{ $widget->id }}" class="feedback" not-hide>
             <div class="row">
-                <div class="col-md-6 col-lg-2">
+                <div class="col-md-6 col-lg-4">
                     <label>
                         <input name="name" type="text" required placeholder="{{ $widget->fields["name"] }}"/>
                     </label>
                 </div>
-                <div class="col-md-6 col-lg-3">
+                <div class="col-md-6 col-lg-4">
                     <label>
                     <input name="phone" type="tel" required placeholder="{{ $widget->fields["phone"] }}"/>
                     </label>
                 </div>
-                <div class="col-md-9 col-lg-5">
+                <div class="col-md-6 col-lg-4">
+                    <label>
+                        <input name="telegram" placeholder="Ник в Телеграм: @username"/>
+                    </label>
+                </div>
+                <div class="col-12"><label class="fos-sert-lable-gray f-z_13">Выберите удобный способ для связи с Вами
+                        <span class="wpcf7-form-control-wrap" data-name="menu-487"><select class="wpcf7-form-control wpcf7-select width_100" aria-invalid="false" name="menu-487"><option value="">—Выберите вариант—</option><option value="Позвонить по телефону">Позвонить по телефону</option><option value="Написать в Телеграм">Написать в Телеграм</option><option value="Написать в Макс">Написать в Макс</option></select></span>
+                    </label></div>
+                <div class="col-md-9 col-lg-8">
                     <label>
                         <textarea placeholder="{{ $widget->fields["question"] }}"></textarea>
                     </label>
                 </div>
-                <div class="col-md-3 col-lg-2">
-                    <label><button class="btn-form" type="button">ОТПРАВИТЬ</button></label>
+                <div class="col-md-3 col-lg-4">
+                    <label><button class="btn-form" type="button">Отправить</button></label>
                 </div>
                 <div class="col-12">
                     <label class="f-z_14">
