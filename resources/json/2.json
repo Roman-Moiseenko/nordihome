@@ -1,37 +1,723 @@
-[
-    {
-        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray-1.webp",
-        "alt": ""
-    },
-    {
-        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/iw-backup\/2026\/07\/shablon_interer_v_kartochku_uh12-lq.png",
-        "alt": ""
-    },
-    {
-        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/iw-backup\/2026\/07\/shablon_interer_v_kartochku-1_9m6r-bv.png",
-        "alt": ""
-    },
-    {
-        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray-1.webp",
-        "alt": ""
-    },
-    {
-        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray1-1.webp",
-        "alt": ""
-    },
-    {
-        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray2-1.webp",
-        "alt": ""
-    },
-    {
-        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray5-1.webp",
-        "alt": ""
-    },
-    {
-        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/stol-niki-kruglyj-stoleshnica-keramika-italian-light-grey-800-gray6-1.webp",
-        "alt": ""
-    },
-    {
-        "url": "https:\/\/nordihome.ru\/wp-content\/uploads\/2026\/07\/sajt_razmery_x0h4-3p-1.webp",
-        "alt": ""
-    },
+{
+    "usergroup": "[]",
+    "testActivationTriggers": {},
+    "searchResultPage": {
+        "searchPhrase": "504.126.83",
+        "storeWindow": [],
+        "storeCount": 0,
+        "didYouMean": [],
+        "relatedSearches": [],
+        "retiredProducts": [],
+        "products": {
+            "badge": 1,
+            "filters": [
+                {
+                    "selected": false,
+                    "values": [
+                        {
+                            "name": "Łóżka",
+                            "id": "bm003",
+                            "count": 1,
+                            "selected": false,
+                            "enabled": true
+                        }
+                    ],
+                    "id": "CATEGORIES",
+                    "name": "Kategoria",
+                    "collapsed": false,
+                    "type": "CLASS_FILTER",
+                    "parameter": "f-subcategories",
+                    "eventAction": "filter_by_category",
+                    "enabled": true,
+                    "actionTokens": []
+                }
+            ],
+            "sortOrders": {
+                "name": "Sortuj",
+                "values": [
+                    {
+                        "id": "RELEVANCE",
+                        "name": "Dopasowanie",
+                        "eventAction": "sort_by_relevance",
+                        "selected": true
+                    },
+                    {
+                        "id": "PRICE_LOW_TO_HIGH",
+                        "name": "Cena: od najniższej",
+                        "eventAction": "sort_by_price_low",
+                        "selected": false
+                    },
+                    {
+                        "id": "PRICE_HIGH_TO_LOW",
+                        "name": "Cena: od najwyższej",
+                        "eventAction": "sort_by_price_high",
+                        "selected": false
+                    },
+                    {
+                        "id": "RATING",
+                        "name": "Ocena",
+                        "eventAction": "sort_by_rating",
+                        "selected": false
+                    },
+                    {
+                        "id": "NAME_ASCENDING",
+                        "name": "Nazwa",
+                        "eventAction": "sort_by_name",
+                        "selected": false
+                    },
+                    {
+                        "id": "MOST_POPULAR",
+                        "name": "Najpopularniejsze",
+                        "eventAction": "sort_by_most_popular",
+                        "selected": false
+                    },
+                    {
+                        "id": "WIDTH",
+                        "name": "Szerokość",
+                        "eventAction": "sort_by_width",
+                        "selected": false
+                    },
+                    {
+                        "id": "HEIGHT",
+                        "name": "Wysokość",
+                        "eventAction": "sort_by_height",
+                        "selected": false
+                    },
+                    {
+                        "id": "LENGTH",
+                        "name": "Długość",
+                        "eventAction": "sort_by_length",
+                        "selected": false
+                    }
+                ]
+            },
+            "main": {
+                "items": [
+                    {
+                        "metadata": "v1;1;PRODUCT;50412683;products_main;",
+                        "product": {
+                            "name": "MALM",
+                            "typeName": "Łóżko z pojemnikiem",
+                            "itemMeasureReferenceText": "160x200 cm",
+                            "mainImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0749128_pe745497_s5.jpg",
+                            "pipUrl": "https://www.ikea.com/pl/pl/p/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo-50412683/",
+                            "filterClass": "bed frames",
+                            "allProductImage": [
+                                {
+                                    "altText": "Jasnobrązowe drewniane łóżko MALM z białym materacem, klasyczny prostokątny kształt, czysty nowoczesny design.",
+                                    "type": "MAIN_PRODUCT_IMAGE",
+                                    "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0749128_pe745497_s5.jpg"
+                                },
+                                {
+                                    "altText": "Łóżko z jasnego drewna z niebieską kołdrą i otwartą pokrywą, odsłaniającą złożoną pościel i schowki.",
+                                    "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                    "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154457_pe886063_s5.jpg"
+                                },
+                                {
+                                    "altText": "Nowoczesna sypialnia z łóżkiem MALM z jasnego drewna, szarą pościelą, dużym oknem, grafiką ścienną, szafką nocną i wiszącą lampą. Wezgłowie jest wysokie, a łóżko przestronne.",
+                                    "type": "CONTEXT_PRODUCT_IMAGE",
+                                    "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154399_pe886047_s5.jpg"
+                                },
+                                {
+                                    "altText": "Jasna, brzoskwiniowa sypialnia z łóżkiem MALM, białą pościelą, kwiecistą narzutą, białymi poduszkami, czerwonymi zasłonami, okrągłym lustrem i czerwonym stolikiem.",
+                                    "type": "CONTEXT_PRODUCT_IMAGE",
+                                    "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0800106_ph165860_s5.jpg"
+                                },
+                                {
+                                    "altText": "Schludne łóżko z drewnianym wezgłowiem, dwiema szarymi poduszkami, złożonym kocem i zasłoniętym oknem wpuszczającym naturalne światło.",
+                                    "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                    "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154456_pe886062_s5.jpg"
+                                },
+                                {
+                                    "altText": "Zbliżenie panelu z jasnego forniru drewnianego; gładka, naturalna faktura słojów; Wysokiej jakości wykończenie.",
+                                    "type": "QUALITY_PRODUCT_IMAGE",
+                                    "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0861053_pe676191_s5.jpg"
+                                }
+                            ],
+                            "id": "50412683",
+                            "itemNoGlobal": "50412683",
+                            "onlineSellable": true,
+                            "lastChance": false,
+                            "gprDescription": {
+                                "numberOfVariants": 5,
+                                "variants": [
+                                    {
+                                        "id": "00404812",
+                                        "pipUrl": "https://www.ikea.com/pl/pl/p/malm-lozko-z-pojemnikiem-bialy-00404812/",
+                                        "imageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0749127_pe745496_s5.jpg",
+                                        "imageAlt": "MALM Łóżko z pojemnikiem, biały, 180x200 cm",
+                                        "quickFacts": [],
+                                        "availability": [],
+                                        "ratingValue": 4.8,
+                                        "ratingCount": 473,
+                                        "name": "MALM",
+                                        "typeName": "Łóżko z pojemnikiem",
+                                        "itemMeasureReferenceText": "180x200 cm",
+                                        "mainImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0749127_pe745496_s5.jpg",
+                                        "mainImageAlt": "Białe łóżko MALM z ikea. Ma prostą, prostokątną konstrukcję z wysokim wezgłowiem, oferującym miejsce do przechowywania pod łóżkiem.",
+                                        "contextualImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__1154392_pe886041_s5.jpg",
+                                        "contextualImageAlt": "Nowoczesna sypialnia z łóżkiem MALM, dużymi zasłonami, wiszącym światłem i grafiką ścienną. Przestronne łóżko z neutralną pościelą i naturalnym światłem.",
+                                        "itemNoGlobal": "00404812",
+                                        "onlineSellable": true,
+                                        "lastChance": false,
+                                        "badge": {
+                                            "type": "TOP_SELLER",
+                                            "text": "Top Seller"
+                                        },
+                                        "itemNo": "00404812",
+                                        "itemType": "ART",
+                                        "salesPrice": {
+                                            "currencyCode": "PLN",
+                                            "numeral": 2299.0,
+                                            "current": {
+                                                "prefix": "",
+                                                "wholeNumber": "2 299",
+                                                "separator": "",
+                                                "decimals": "",
+                                                "suffix": ",-",
+                                                "isRegularCurrency": false,
+                                                "style": "SUPER"
+                                            },
+                                            "isBreathTaking": false,
+                                            "discount": "",
+                                            "tag": "NONE",
+                                            "priceText": "Cena",
+                                            "tags": [],
+                                            "tagWithText": {
+                                                "tag": "NONE"
+                                            }
+                                        },
+                                        "optimizelyAttributes": {
+                                            "PRODUCT_TYPE": "standard"
+                                        },
+                                        "validDesignText": "biały",
+                                        "allProductImage": [
+                                            {
+                                                "altText": "Białe łóżko MALM z ikea. Ma prostą, prostokątną konstrukcję z wysokim wezgłowiem, oferującym miejsce do przechowywania pod łóżkiem.",
+                                                "type": "MAIN_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0749127_pe745496_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Łóżko z podnoszoną podstawą odsłania schowek wypełniony złożoną pościelą. W tle widoczne szare zasłony i balkon.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__1154455_pe886061_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Nowoczesna sypialnia z łóżkiem MALM, dużymi zasłonami, wiszącym światłem i grafiką ścienną. Przestronne łóżko z neutralną pościelą i naturalnym światłem.",
+                                                "type": "CONTEXT_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__1154392_pe886041_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Nowoczesne białe łóżko MALM z szarą pościelą jest podnoszone, odsłaniając schowek pod spodem.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0734398_pe739459_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Nowoczesna sypialnia z łóżkiem MALM w kolorze białym, szara; lampa, sztuka, dywan i krzesło.",
+                                                "type": "CONTEXT_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0738514_pe741472_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Oszczędzające miejsce łóżko z podnoszoną podstawą do przechowywania pod łóżkiem, widoczne z jasną pościelą i poduszkami.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__1154454_pe886060_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Sąsiedni róg białej ramy łóżka MALM, o eleganckim i nowoczesnym designie.",
+                                                "type": "QUALITY_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0860987_pe676174_s5.jpg"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "20404806",
+                                        "pipUrl": "https://www.ikea.com/pl/pl/p/malm-lozko-z-pojemnikiem-bialy-20404806/",
+                                        "imageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0749127_pe745496_s5.jpg",
+                                        "imageAlt": "MALM Łóżko z pojemnikiem, biały, 160x200 cm",
+                                        "quickFacts": [],
+                                        "availability": [],
+                                        "ratingValue": 4.8,
+                                        "ratingCount": 473,
+                                        "name": "MALM",
+                                        "typeName": "Łóżko z pojemnikiem",
+                                        "itemMeasureReferenceText": "160x200 cm",
+                                        "mainImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0749127_pe745496_s5.jpg",
+                                        "mainImageAlt": "Białe łóżko na platformie MALM z wysokim wezgłowiem i schowkiem.",
+                                        "contextualImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__1154392_pe886041_s5.jpg",
+                                        "contextualImageAlt": "Nowoczesna sypialnia z łóżkiem MALM, pluszową pościelą, wezgłowiem, kinkietem, sztuką i dużym oknem z zasłonami.",
+                                        "itemNoGlobal": "20404806",
+                                        "onlineSellable": true,
+                                        "lastChance": false,
+                                        "badge": {
+                                            "type": "TOP_SELLER",
+                                            "text": "Top Seller"
+                                        },
+                                        "itemNo": "20404806",
+                                        "itemType": "ART",
+                                        "salesPrice": {
+                                            "currencyCode": "PLN",
+                                            "numeral": 1999.0,
+                                            "current": {
+                                                "prefix": "",
+                                                "wholeNumber": "1 999",
+                                                "separator": "",
+                                                "decimals": "",
+                                                "suffix": ",-",
+                                                "isRegularCurrency": false,
+                                                "style": "SUPER"
+                                            },
+                                            "isBreathTaking": false,
+                                            "discount": "",
+                                            "tag": "NONE",
+                                            "priceText": "Cena",
+                                            "tags": [],
+                                            "tagWithText": {
+                                                "tag": "NONE"
+                                            }
+                                        },
+                                        "optimizelyAttributes": {
+                                            "PRODUCT_TYPE": "standard"
+                                        },
+                                        "validDesignText": "biały",
+                                        "allProductImage": [
+                                            {
+                                                "altText": "Białe łóżko na platformie MALM z wysokim wezgłowiem i schowkiem.",
+                                                "type": "MAIN_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0749127_pe745496_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Łóżko z podnoszonym schowkiem, pokazującym uporządkowaną pościel. Wezgłowie przy ścianie, okno z widokiem na balkon. Biały z jasnym dekorem.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__1154455_pe886061_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Nowoczesna sypialnia z łóżkiem MALM, pluszową pościelą, wezgłowiem, kinkietem, sztuką i dużym oknem z zasłonami.",
+                                                "type": "CONTEXT_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__1154392_pe886041_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Nowoczesna, minimalistyczna sypialnia, białe łóżko MALM z szarą pościelą, szare ściany i ruchoma lampa. Kolorowy dywan leży na drewnianej podłodze.",
+                                                "type": "CONTEXT_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0738514_pe741472_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Nowoczesne białe łóżko z szarą kołdrą, szarą narzutą i schowkiem pod łóżkiem, mechanizmem podnoszenia.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0734398_pe739459_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Czyste, minimalistyczne łóżko z jasnobeżową pościelą i dwiema poduszkami; Wysokie wezgłowie i wbudowany schowek.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__1154454_pe886060_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Wyraźny narożnik białej ramy łóżka MALM, elegancki i nowoczesny design, prezentujący czyste linie i wysokiej jakości wykończenie.",
+                                                "type": "QUALITY_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0860987_pe676174_s5.jpg"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "90404799",
+                                        "pipUrl": "https://www.ikea.com/pl/pl/p/malm-lozko-z-pojemnikiem-bialy-90404799/",
+                                        "imageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0749127_pe745496_s5.jpg",
+                                        "imageAlt": "MALM Łóżko z pojemnikiem, biały, 140x200 cm",
+                                        "quickFacts": [],
+                                        "availability": [],
+                                        "ratingValue": 4.8,
+                                        "ratingCount": 473,
+                                        "name": "MALM",
+                                        "typeName": "Łóżko z pojemnikiem",
+                                        "itemMeasureReferenceText": "140x200 cm",
+                                        "mainImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0749127_pe745496_s5.jpg",
+                                        "mainImageAlt": "Białe łóżko MALM ze schowkiem, wysokie wezgłowie, minimalistyczny design.",
+                                        "contextualImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__1154392_pe886041_s5.jpg",
+                                        "contextualImageAlt": "Nowoczesna sypialnia z łóżkiem MALM, jasnym wystrojem, drewnianą lampą i stolikiem nocnym.",
+                                        "itemNoGlobal": "90404799",
+                                        "onlineSellable": true,
+                                        "lastChance": false,
+                                        "badge": {
+                                            "type": "TOP_SELLER",
+                                            "text": "Top Seller"
+                                        },
+                                        "itemNo": "90404799",
+                                        "itemType": "ART",
+                                        "salesPrice": {
+                                            "currencyCode": "PLN",
+                                            "numeral": 1799.0,
+                                            "current": {
+                                                "prefix": "",
+                                                "wholeNumber": "1 799",
+                                                "separator": "",
+                                                "decimals": "",
+                                                "suffix": ",-",
+                                                "isRegularCurrency": false,
+                                                "style": "SUPER"
+                                            },
+                                            "isBreathTaking": false,
+                                            "discount": "",
+                                            "tag": "NONE",
+                                            "priceText": "Cena",
+                                            "tags": [],
+                                            "tagWithText": {
+                                                "tag": "NONE"
+                                            }
+                                        },
+                                        "optimizelyAttributes": {
+                                            "PRODUCT_TYPE": "standard"
+                                        },
+                                        "validDesignText": "biały",
+                                        "allProductImage": [
+                                            {
+                                                "altText": "Białe łóżko MALM ze schowkiem, wysokie wezgłowie, minimalistyczny design.",
+                                                "type": "MAIN_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0749127_pe745496_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Łóżko z podnoszoną platformą do przechowywania odsłania starannie złożoną pościel i kołdrę w zorganizowanych przegródkach.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__1154455_pe886061_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Nowoczesna sypialnia z łóżkiem MALM, jasnym wystrojem, drewnianą lampą i stolikiem nocnym.",
+                                                "type": "CONTEXT_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__1154392_pe886041_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Nowoczesne białe łóżko MALM z szarą pościelą podnosi się, odsłaniając przestrzeń do przechowywania pod spodem, idealną do kompaktowych pomieszczeń.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0734398_pe739459_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Nowoczesna sypialnia z białym łóżkiem MALM, szarą pościelą, czarnym kinkietem, krzesłem, dywanikiem i stolikiem.",
+                                                "type": "CONTEXT_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0738514_pe741472_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Zbliżenie na róg białej ramy łóżka MALM, podkreślające jego elegancki, gładki i nowoczesny design.",
+                                                "type": "QUALITY_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-bialy__0860987_pe676174_s5.jpg"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "00412685",
+                                        "pipUrl": "https://www.ikea.com/pl/pl/p/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo-00412685/",
+                                        "imageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0749128_pe745497_s5.jpg",
+                                        "imageAlt": "MALM Łóżko z pojemnikiem, okleina dębowa bejcowana na biało, 140x200 cm",
+                                        "quickFacts": [],
+                                        "availability": [],
+                                        "ratingValue": 4.8,
+                                        "ratingCount": 473,
+                                        "name": "MALM",
+                                        "typeName": "Łóżko z pojemnikiem",
+                                        "itemMeasureReferenceText": "140x200 cm",
+                                        "mainImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0749128_pe745497_s5.jpg",
+                                        "mainImageAlt": "Łóżko MALM z jasnego drewna z białym materacem; Prosty, nowoczesny design.",
+                                        "contextualImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154399_pe886047_s5.jpg",
+                                        "contextualImageAlt": "Nowoczesna sypialnia z łóżkiem MALM, ramą z jasnego drewna, szarą pościelą. Ozdobiony minimalistyczną sztuką, dużym oknem i naturalnym światłem. Obok dywan i lampa.",
+                                        "itemNoGlobal": "00412685",
+                                        "onlineSellable": true,
+                                        "lastChance": false,
+                                        "itemNo": "00412685",
+                                        "itemType": "ART",
+                                        "salesPrice": {
+                                            "currencyCode": "PLN",
+                                            "numeral": 1999.0,
+                                            "current": {
+                                                "prefix": "",
+                                                "wholeNumber": "1 999",
+                                                "separator": "",
+                                                "decimals": "",
+                                                "suffix": ",-",
+                                                "isRegularCurrency": false,
+                                                "style": "SUPER"
+                                            },
+                                            "isBreathTaking": false,
+                                            "discount": "",
+                                            "tag": "NONE",
+                                            "priceText": "Cena",
+                                            "tags": [],
+                                            "tagWithText": {
+                                                "tag": "NONE"
+                                            }
+                                        },
+                                        "optimizelyAttributes": {
+                                            "PRODUCT_TYPE": "standard"
+                                        },
+                                        "validDesignText": "okleina dębowa bejcowana na biało",
+                                        "allProductImage": [
+                                            {
+                                                "altText": "Łóżko MALM z jasnego drewna z białym materacem; Prosty, nowoczesny design.",
+                                                "type": "MAIN_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0749128_pe745497_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Łóżko z jasnego drewna z odchylaną podstawą odsłaniającą miejsce do przechowywania starannie złożonych i poduszek. Łóżko posiada szarą kołdrę na górze.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154457_pe886063_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Nowoczesna sypialnia z łóżkiem MALM, ramą z jasnego drewna, szarą pościelą. Ozdobiony minimalistyczną sztuką, dużym oknem i naturalnym światłem. Obok dywan i lampa.",
+                                                "type": "CONTEXT_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154399_pe886047_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Brzoskwiniowa sypialnia z białym łóżkiem, złotym kocem, kolorowymi poduszkami, czerwonym stołkiem, półkami, roślinami, dużym oknem z czerwonymi zasłonami.",
+                                                "type": "CONTEXT_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0800106_ph165860_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Przytulne łóżko z szarymi poduszkami i kocem, drewniane wezgłowie, przy oknie.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154456_pe886062_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Mały detal słojów drewna z jasnobrązowego panelu fornirowego.",
+                                                "type": "QUALITY_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0861053_pe676191_s5.jpg"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "70412682",
+                                        "pipUrl": "https://www.ikea.com/pl/pl/p/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo-70412682/",
+                                        "imageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0749128_pe745497_s5.jpg",
+                                        "imageAlt": "MALM Łóżko z pojemnikiem, okleina dębowa bejcowana na biało, 180x200 cm",
+                                        "quickFacts": [],
+                                        "availability": [],
+                                        "ratingValue": 4.8,
+                                        "ratingCount": 473,
+                                        "name": "MALM",
+                                        "typeName": "Łóżko z pojemnikiem",
+                                        "itemMeasureReferenceText": "180x200 cm",
+                                        "mainImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0749128_pe745497_s5.jpg",
+                                        "mainImageAlt": "Lekkie drewniane łóżko MALM z wysokim wezgłowiem i białym materacem. Wykonany z forniru dębowego, ma czysty, prostokątny design ze schowkiem pod spodem.",
+                                        "contextualImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154399_pe886047_s5.jpg",
+                                        "contextualImageAlt": "Nowoczesna sypialnia z łóżkiem MALM, szarą pościelą, dużym oknem, szafkami nocnymi i wiszącym światłem. Wezgłowie przy ścianie, ramki artystyczne powyżej, miękki dywan.",
+                                        "itemNoGlobal": "70412682",
+                                        "onlineSellable": true,
+                                        "lastChance": false,
+                                        "itemNo": "70412682",
+                                        "itemType": "ART",
+                                        "salesPrice": {
+                                            "currencyCode": "PLN",
+                                            "numeral": 2499.0,
+                                            "current": {
+                                                "prefix": "",
+                                                "wholeNumber": "2 499",
+                                                "separator": "",
+                                                "decimals": "",
+                                                "suffix": ",-",
+                                                "isRegularCurrency": false,
+                                                "style": "SUPER"
+                                            },
+                                            "isBreathTaking": false,
+                                            "discount": "",
+                                            "tag": "NONE",
+                                            "priceText": "Cena",
+                                            "tags": [],
+                                            "tagWithText": {
+                                                "tag": "NONE"
+                                            }
+                                        },
+                                        "optimizelyAttributes": {
+                                            "PRODUCT_TYPE": "standard"
+                                        },
+                                        "validDesignText": "okleina dębowa bejcowana na biało",
+                                        "allProductImage": [
+                                            {
+                                                "altText": "Lekkie drewniane łóżko MALM z wysokim wezgłowiem i białym materacem. Wykonany z forniru dębowego, ma czysty, prostokątny design ze schowkiem pod spodem.",
+                                                "type": "MAIN_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0749128_pe745497_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Łóżko ze schowkiem MALM z otwartą przestrzenią i składaną pościelą.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154457_pe886063_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Nowoczesna sypialnia z łóżkiem MALM, szarą pościelą, dużym oknem, szafkami nocnymi i wiszącym światłem. Wezgłowie przy ścianie, ramki artystyczne powyżej, miękki dywan.",
+                                                "type": "CONTEXT_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154399_pe886047_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Przytulna sypialnia z brzoskwiniowymi ścianami, białym łóżkiem MALM, kwiecistą pościelą, czerwonym stolikiem. Duże okno z czerwonymi zasłonami.",
+                                                "type": "CONTEXT_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0800106_ph165860_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Drewniane łóżko MALM z dwiema szarymi poduszkami na tle jasnoszarego wezgłowia. Podnoszona podstawa łóżka do przechowywania pod łóżkiem.",
+                                                "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154456_pe886062_s5.jpg"
+                                            },
+                                            {
+                                                "altText": "Zbliżenie na panel z jasnego drewna, prezentujący gładką fakturę forniru i detale o naturalnym usłojeniu.",
+                                                "type": "QUALITY_PRODUCT_IMAGE",
+                                                "url": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__0861053_pe676191_s5.jpg"
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "variations": [
+                                    {
+                                        "id": "colour",
+                                        "name": "Kolor",
+                                        "count": 2,
+                                        "label": "2 kolory/kolorów",
+                                        "values": [
+                                            {
+                                                "name": "biały",
+                                                "products": [
+                                                    "20404806",
+                                                    "90404799",
+                                                    "00404812"
+                                                ]
+                                            },
+                                            {
+                                                "name": "okleina dębowa bejcowana na biało",
+                                                "products": [
+                                                    "00412685",
+                                                    "70412682",
+                                                    "50412683"
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "id": "size",
+                                        "name": "Rozmiar",
+                                        "count": 3,
+                                        "label": "3 rozmiary/rozmiarów",
+                                        "values": [
+                                            {
+                                                "name": "140x200 cm",
+                                                "products": [
+                                                    "00412685",
+                                                    "90404799"
+                                                ]
+                                            },
+                                            {
+                                                "name": "160x200 cm",
+                                                "products": [
+                                                    "20404806",
+                                                    "50412683"
+                                                ]
+                                            },
+                                            {
+                                                "name": "180x200 cm",
+                                                "products": [
+                                                    "70412682",
+                                                    "00404812"
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            "colors": [
+                                {
+                                    "name": "beżowy",
+                                    "id": "10003",
+                                    "hex": "f4f3d7"
+                                }
+                            ],
+                            "tag": "NONE",
+                            "quickFacts": [],
+                            "features": [],
+                            "availability": [],
+                            "ratingValue": 4.8,
+                            "ratingCount": 473,
+                            "itemNo": "50412683",
+                            "itemType": "ART",
+                            "salesPrice": {
+                                "currencyCode": "PLN",
+                                "numeral": 2299.0,
+                                "current": {
+                                    "prefix": "",
+                                    "wholeNumber": "2 299",
+                                    "separator": "",
+                                    "decimals": "",
+                                    "suffix": ",-",
+                                    "isRegularCurrency": false,
+                                    "style": "SUPER"
+                                },
+                                "isBreathTaking": false,
+                                "discount": "",
+                                "tag": "NONE",
+                                "priceText": "Cena",
+                                "tags": [],
+                                "tagWithText": {
+                                    "tag": "NONE"
+                                }
+                            },
+                            "contextualImageUrl": "https://www.ikea.com/pl/pl/images/products/malm-lozko-z-pojemnikiem-okleina-debowa-bejcowana-na-bialo__1154399_pe886047_s5.jpg",
+                            "contextualImageAlt": "Nowoczesna sypialnia z łóżkiem MALM z jasnego drewna, szarą pościelą, dużym oknem, grafiką ścienną, szafką nocną i wiszącą lampą. Wezgłowie jest wysokie, a łóżko przestronne.",
+                            "mainImageAlt": "Jasnobrązowe drewniane łóżko MALM z białym materacem, klasyczny prostokątny kształt, czysty nowoczesny design.",
+                            "businessStructure": {
+                                "homeFurnishingBusinessName": "Beds \u0026 Mattresses",
+                                "homeFurnishingBusinessNo": "05",
+                                "productAreaName": "Bed frames and beds with non upholstered headboards",
+                                "productAreaNo": "0521",
+                                "productRangeAreaName": "Beds",
+                                "productRangeAreaNo": "052"
+                            },
+                            "categoryPath": [
+                                {
+                                    "name": "Łóżka i materace",
+                                    "key": "bm001"
+                                },
+                                {
+                                    "name": "Łóżka",
+                                    "key": "bm003"
+                                },
+                                {
+                                    "name": "Łóżka z pojemnikami",
+                                    "key": "25205"
+                                }
+                            ],
+                            "validDesignText": "okleina dębowa bejcowana na biało",
+                            "heroBackoffData": {},
+                            "optimizelyAttributes": {
+                                "PRODUCT_TYPE": "standard"
+                            }
+                        },
+                        "type": "PRODUCT",
+                        "label": "Produkt",
+                        "actionTokens": [],
+                        "isBreakout": false
+                    }
+                ],
+                "start": 0,
+                "end": 1,
+                "max": 1
+            },
+            "shelves": [],
+            "pageMessages": [
+                {
+                    "text": "15 rat 0% na wszystkie produkty i usługi (RRSO 0%) Oferta dla Klubowiczów IKEA Family dostępna przy zakupach za min. 2500 zł w okresie 4.08 - 1.09.2026 r. RRSO – Rzeczywista Roczna Stopa Oprocentowania dla reprezentatywnego przykładu. Więcej na ikanobank.pl i w regulaminie na IKEA.pl",
+                    "linkTo": "https://www.ikea.com/pl/pl/customer-service/services/finance-options/",
+                    "type": "promotion",
+                    "start": "20260804T00:05:00.000Z",
+                    "end": "20260901T23:50:00.000Z"
+                }
+            ]
+        },
+        "content": {
+            "badge": 0,
+            "filters": [],
+            "sortOrders": {
+                "name": "Sortuj",
+                "values": []
+            },
+            "main": {
+                "items": [],
+                "start": 0,
+                "end": 0,
+                "max": 0
+            },
+            "shelves": [],
+            "pageMessages": []
+        }
+    }
+}

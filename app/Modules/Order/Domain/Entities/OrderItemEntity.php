@@ -102,4 +102,35 @@ class OrderItemEntity
         $this->baseCost = $baseCost;
         $this->sellCost = $sellCost;
     }
+
+    public function update(
+        ?float $sellPrice = null,
+        ?float $discountPercent = null,
+        ?int $quantity = null,
+        ?bool $assemblage = null,
+        ?bool $packing = null,
+        ?string $comment = null,
+    ): void
+    {
+        //Цену можно устанавливаеть, если товар не по акции
+        if ($sellPrice !== null && is_null($this->discountId))
+            $this->sellCost = $sellPrice;
+
+        if ($discountPercent !== null && is_null($this->discountId))
+            $this->sellCost = $this->baseCost * (1 - $discountPercent / 100);
+
+
+        if ($quantity !== null)
+            $this->quantity = $quantity;
+
+        if ($assemblage !== null)
+            $this->assemblage = $assemblage;
+
+        if ($packing !== null)
+            $this->packing = $packing;
+
+        if ($comment !== null)
+            $this->comment = $comment;
+
+    }
 }

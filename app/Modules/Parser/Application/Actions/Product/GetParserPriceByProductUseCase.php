@@ -25,8 +25,15 @@ readonly class GetParserPriceByProductUseCase
 
         //Если товар не найден, то запустить парсер
         if (is_null($parser)) {
-            $productEntity = $this->productRepository->getById($productId);
-            $parser = $this->ikeaService->FindByCode($productEntity->code);
+            try {
+                set_time_limit(300); //Увеличиваем время, т.к. парсинг может занять ресурсы
+                $productEntity = $this->productRepository->getById($productId);
+                $parser = $this->ikeaService->FindByCode($productEntity->code);
+                set_time_limit(30);
+            } catch (\Throwable $e) {
+                \Log::info($e->getMessage());
+            }
+
         }
 
         //Товар нельзя спарсить

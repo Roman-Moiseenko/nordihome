@@ -1,6 +1,8 @@
 <?php
 
-namespace App\Modules\Order\Application\DTOs;
+namespace App\Modules\Order\Application\DTOs\OrderItem;
+
+use App\Modules\Order\Application\DTOs\ProductItemData;
 
 readonly class OrderItemViewData
 {

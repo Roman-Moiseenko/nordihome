@@ -134,19 +134,30 @@
 </template>
 
 <script setup lang="ts">
-import {computed, inject, ref} from "vue"
+import {computed, inject, reactive, ref} from "vue"
 import {func} from "@Res/func.js"
 import Active from "@Comp/Elements/Active.vue";
 import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
     items: Array,
+    orderId: Number,
 })
 //console.log(props.items)
 const $delete_entity = inject("$delete_entity")
 const iSaving = ref(false)
 const {is_new, is_issued, is_view} = inject('$status')
 const tableData = ref([...props.items])
+
+const form = reactive({
+    id: null,
+    sellPrice: null,
+    discountPercent: null,
+    quantity: null,
+    assemblage: null,
+    packing: null,
+    comment: null,
+})
 
 function setAssemblage(val, row) {
     row.assemblage = val

@@ -302,7 +302,8 @@ class LoadParserProductIkeaService
 
     public function FindByCode(string $code): ?ParserProductEntity
     {
-        if (is_null($productData = $this->ikeaProductApi->getProductByCode($code))) return null;
+        $productData = $this->ikeaProductApi->getProductByCode($code);
+        if (is_null($productData)) return null;
 
         return $this->CreateParserProduct($productData);
     }

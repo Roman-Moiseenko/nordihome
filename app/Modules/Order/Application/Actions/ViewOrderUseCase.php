@@ -3,30 +3,19 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Application\Actions;
 
-use App\Modules\Accounting\Entity\MovementDocument;
-use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
-use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Guide\Entity\Addition;
-use App\Modules\Order\Application\DTOs\AdditionData;
 use App\Modules\Order\Application\DTOs\AmountOrderData;
 use App\Modules\Order\Application\DTOs\ClientOrderData;
 use App\Modules\Order\Application\DTOs\OrderAdditionViewData;
-use App\Modules\Order\Application\DTOs\OrderItemViewData;
+use App\Modules\Order\Application\DTOs\OrderItem\OrderItemViewData;
 use App\Modules\Order\Application\DTOs\OrderStatusViewData;
 use App\Modules\Order\Application\DTOs\OrderViewData;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
-use App\Modules\Order\Domain\Entities\OrderAdditionEntity;
 use App\Modules\Order\Domain\Entities\OrderHistoryStatusEntity;
-use App\Modules\Order\Domain\Entities\OrderItemEntity;
-use App\Modules\Order\Entity\Order\OrderExpense;
-use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
-use App\Modules\Shared\Domain\Entities\UserPermission;
 
 readonly class ViewOrderUseCase
 {
@@ -38,7 +27,6 @@ readonly class ViewOrderUseCase
         private GetAdditionDataUseCase    $getAdditionDataUseCase,
     )
     {
-
     }
 
     public function execute(int $id): OrderViewData

@@ -5,7 +5,8 @@ namespace App\Modules\Order\Domain\Entities;
 
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
-use App\Modules\Order\Application\DTOs\OrderItemData;
+use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
+use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use DateTimeImmutable;
@@ -181,29 +182,36 @@ class OrderEntity
      * Обновляет элемент заказа по его id.
      * Поля productId и baseCost неизменяемы после создания элемента.
      */
-    public function updateItem(int $id, OrderItemData $data): void
+    public function updateItem(OrderItemUpdateData $dto): void
+    {
+
+        $item = $this->getItem($dto->id);
+        $item->update(
+            sellPrice: $dto->sellPrice,
+            discountPercent: $dto->discountPercent,
+            quantity: $dto->quantity,
+            assemblage: $dto->assemblage,
+            packing: $dto->packing,
+            comment: $dto->comment,
+        );
+        $this->recalculateTotals();
+
+    }
+    public function getItem(int $id): OrderItemEntity
     {
         foreach ($this->items as $item) {
-            if ($item->id === $id) {
-                if ($data->quantity !== null) $item->quantity = $data->quantity;
-                if ($data->sellPrice !== null) $item->sellCost = $data->sellPrice;
-                if ($data->discountId !== null) $item->discountId = $data->discountId;
-                if ($data->discountType !== null) $item->discountType = $data->discountType;
-                if ($data->preorder !== null) $item->preorder = $data->preorder;
-                if ($data->fixManual !== null) $item->fixManual = $data->fixManual;
-                if ($data->options !== null) $item->options = $data->options;
-                if ($data->comment !== null) $item->comment = $data->comment;
-                if ($data->assemblage !== null) $item->assemblage = $data->assemblage;
-                if ($data->packing !== null) $item->packing = $data->packing;
-
-                $this->recalculateTotals();
-                return;
-            }
+            if ($item->id === $id) return $item;
         }
+        throw new \InvalidArgumentException('Неверный id для элемента заказа');
     }
 
     public function addAddition($additionId, $amount = 0, $quantity = 1): void
     {
+        //Услуга может быть только одна каждого вида
+        if (array_any($this->additions, fn($addition) => $addition->additionId == $additionId)) {
+            return;
+        }
+
         $orderAddition = new OrderAdditionEntity($additionId);
         $orderAddition->amount = $amount;
         $orderAddition->quantity = $quantity;

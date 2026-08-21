@@ -6,8 +6,8 @@ use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Auth\Application\Services\FindOrCreateClientService;
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Catalog\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
-use App\Modules\Guide\Entity\Addition;
-use App\Modules\Order\Application\DTOs\OrderItemData;
+use App\Modules\Order\Application\Actions\AdditionGuide\GetDeliveryAdditionUseCase;
+use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
@@ -31,6 +31,7 @@ readonly class CreateOrderOneClickService
         private FindOrCreateClientService   $findOrCreateClientService,
         private GetProductSellPriceUseCase  $sellPriceUseCase,
         private OrderRepositoryInterface    $repository,
+        private GetDeliveryAdditionUseCase $deliveryAdditionUseCase,
     )
     {
 
@@ -54,12 +55,7 @@ readonly class CreateOrderOneClickService
                     regionCode: $dto->regionCode,
                 );
                 //По доставке или нет, добавляем Доставку по региону или РФ, и вносим данные
-                //FIXME Сделать Query GetAdditionData какой нибудь
-                if ($orderEntity->address->regionCode == 39) {
-                    $addition = Addition::where('slug', 'koenig')->first();
-                } else {
-                    $addition = Addition::where('slug', 'russia')->first();
-                }
+                $addition = $this->deliveryAdditionUseCase->execute($orderEntity->address->regionCode);
                 $orderEntity->addAddition($addition->id);
             }
 

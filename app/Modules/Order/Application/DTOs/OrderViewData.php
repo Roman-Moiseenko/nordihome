@@ -2,6 +2,8 @@
 
 namespace App\Modules\Order\Application\DTOs;
 
+use App\Modules\Order\Application\DTOs\OrderItem\OrderItemViewData;
+
 readonly class OrderViewData
 {
 

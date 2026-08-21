@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Modules\Order\Application\Actions;
+namespace App\Modules\Order\Application\Actions\OrderItem;
 
 use App\Modules\Catalog\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
+use App\Modules\Order\Application\Actions\AdditionGuide\GetPolandAdditionUseCase;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
-use App\Modules\Order\Application\DTOs\OrderItemData;
+use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Parser\Application\Actions\Product\GetParserPriceByProductUseCase;
@@ -19,6 +20,7 @@ readonly class AddProductOrderUseCase
         private OrderCalculateService          $orderCalculateService,
         private GetProductSellPriceUseCase     $getProductSellPriceUseCase,
         private GetParserPriceByProductUseCase $getParserProductPriceUseCase,
+        private GetPolandAdditionUseCase       $polandAdditionUseCase,
     )
     {
     }
@@ -41,6 +43,11 @@ readonly class AddProductOrderUseCase
         );
 
         $orderEntity->addItem($itemDto);
+
+        if ($dto->preorder) {
+            $addition = $this->polandAdditionUseCase->execute();
+            $orderEntity->addAddition($addition->id);
+        }
 
         $orderEntity = $this->repository->save($orderEntity);
         $this->orderCalculateService->execute($orderEntity->id);

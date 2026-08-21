@@ -662,7 +662,7 @@ class OrderService
      */
     public function deleteAddition(OrderAddition $addition): void
     {
-        if (!$addition->order->isManager()) throw new \DomainException('Нельзя удалить услугу');
+       // if (!$addition->order->isManager()) throw new \DomainException('Нельзя удалить услугу');
         $this->logger->logOrder(order: $addition->order, action: 'Удалена услуга ', object: $addition->addition->name,
             old: price($addition->getAmount()));
         $addition->delete();

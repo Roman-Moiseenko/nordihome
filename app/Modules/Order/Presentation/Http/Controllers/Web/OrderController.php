@@ -9,9 +9,11 @@ use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
-use App\Modules\Order\Application\Actions\AddProductOrderUseCase;
+use App\Modules\Order\Application\Actions\OrderItem\AddProductOrderUseCase;
+use App\Modules\Order\Application\Actions\OrderItem\UpdateOrderItemUseCase;
 use App\Modules\Order\Application\Actions\ViewOrderUseCase;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
+use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
@@ -47,6 +49,7 @@ class OrderController extends Controller
         private readonly ViewOrderUseCase $viewOrderUseCase,
         private readonly ViewClientUseCase $clientUseCase,
         private readonly AddProductOrderUseCase $addProductOrderUseCase,
+        private readonly UpdateOrderItemUseCase $updateOrderItemUseCase,
     )
     {
     }
@@ -186,6 +189,7 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Клиент назначен');
     }
 
+
     public function set_info(Request $request, Order $order): RedirectResponse
     {
         $this->service->setInfo($order, $request);
@@ -213,19 +217,16 @@ class OrderController extends Controller
     /** РАБОТА С ТОВАРОМ В ЗАКАЗЕ */
     public function add_product(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-
         $dto = OrderAddProductData::validateAndCreate($request->all());
-
         $this->addProductOrderUseCase->execute($id, $dto, $permission);
-/*
-        $this->service->addProduct(
-            $order,
-            $request->integer('product_id'),
-            $request->float('quantity'),
-            $request->boolean('preorder')
-        );
-        */
         return redirect()->back()->with('success', 'Товар добавлен');
+    }
+
+    public function updateItem(int $id, Request $request, UserPermission $permissions)
+    {
+        $dto = OrderItemUpdateData::validateAndCreate($request->all());
+        $this->updateOrderItemUseCase->execute($id, $dto, $permissions);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function set_item(Request $request, OrderItem $item): RedirectResponse

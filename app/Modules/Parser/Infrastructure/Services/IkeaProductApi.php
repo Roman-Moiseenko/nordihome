@@ -50,13 +50,16 @@ class IkeaProductApi implements IkeaProductApiInterface
      */
     public function getProductByCode(string $code): ?array
     {
+      //  \Log::warning($code);
         $url = sprintf(self::API_URL_PRODUCT, $code);
+       // \Log::warning($url);
         $jsonData = $this->httpPage->getPage($url);
+
         if (is_null($jsonData)) return null;
 
         $jsonData = json_decode($jsonData, true);
         if (empty($jsonData['searchResultPage']['products']['main']['items'])) return null;
-
+      //  \Log::warning(json_encode($jsonData['searchResultPage']['products']['main']['items'][0]['product']));
         return $jsonData['searchResultPage']['products']['main']['items'][0]['product'];
     }
 

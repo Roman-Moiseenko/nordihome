@@ -12,7 +12,7 @@
             <span v-else>
                 {{ func.date(order.created_at)}}
             </span>
-            
+
             <el-tooltip content="История заказа" placement="right-start" effect="dark">
                 <el-button size="small" type="primary" class="ml-2" plain @click="handleLogOrder">
                     <i class="fa-light fa-rectangle-history"></i>
@@ -31,11 +31,11 @@
         <div v-if="is_new || is_awaiting">
             <div v-if="order.inStock.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
                 <h2 class="font-medium text-cyan-800">Товары в наличии</h2>
-                <OrderItemsNew :items=[...order.inStock] />
+                <OrderItemsNew :items=[...order.inStock] :order-id="order.id"/>
             </div>
             <div v-if="order.preOrder.length > 0" class="mt-1 px-3 py-1 bg-white rounded-md">
                 <h2 class="font-medium text-orange-800">Товары под заказ</h2>
-                <OrderItemsNew :items=[...order.preOrder]  />
+                <OrderItemsNew :items=[...order.preOrder] :order-id="order.id"/>
             </div>
         </div>
         <div v-if="is_issued">

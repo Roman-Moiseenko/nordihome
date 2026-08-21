@@ -7,6 +7,7 @@ use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Discount\Service\CouponService;
+use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Shop\CartItemInterface;
@@ -14,13 +15,30 @@ use App\Modules\Shop\CartItemInterface;
 class OrderCalculateService
 {
 
-    public function __construct(private CouponService $coupons)
+    public function __construct(
+        private CouponService $coupons,
+        private OrderRepositoryInterface $orderRepository,
+    )
     {
 
     }
 
     public function execute(int $orderId): void
     {
+        $orderEntity = $this->orderRepository->getById($orderId);
+
+        foreach ($orderEntity->items as $item) {
+
+            //TODO Пересчет для всех позиций
+        }
+
+
+        foreach ($orderEntity->additions as $addition) {
+            //TODO Пересчет для всех позиций
+        }
+        $this->orderRepository->save($orderEntity);
+        //Выход =>
+
         /** @var Order $order */
         $order = Order::find($orderId);
         /** @var OrderItem[] $items */

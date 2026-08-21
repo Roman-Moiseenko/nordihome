@@ -9,8 +9,9 @@ use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Promotion;
-use App\Modules\Guide\Entity\Addition;
-use App\Modules\Order\Application\DTOs\OrderItemData;
+use App\Modules\Order\Application\Actions\AdditionGuide\GetDeliveryAdditionUseCase;
+use App\Modules\Order\Application\Actions\AdditionGuide\GetPolandAdditionUseCase;
+use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
@@ -34,6 +35,8 @@ readonly class CreateOrderFromCartService
         private OrderCalculateService       $orderCalculateService,
         private Dispatcher                  $dispatcher,
         private OrderRepositoryInterface    $repository,
+        private GetPolandAdditionUseCase $polandAdditionUseCase,
+        private GetDeliveryAdditionUseCase $deliveryAdditionUseCase,
     )
     {
 
@@ -73,18 +76,13 @@ readonly class CreateOrderFromCartService
             $clientInfo = $this->getInfoClientQuery->execute($clientContext->id);
             //Добавляем базовые услуги //доставка из польши
             if ($isParser) {
-                $addition = Addition::where('slug', 'poland')->first();
+                $addition = $this->polandAdditionUseCase->execute();
                 $orderEntity->addAddition($addition->id);
             }
 
             //Добавляем доставку до региона или по региону
             if (!$clientInfo->isPickup) {
-                //FIXME Сделать Query GetAdditionData какой нибудь
-                if ($clientInfo->address->regionCode == 39) {
-                    $addition = Addition::where('slug', 'koenig')->first();
-                } else {
-                    $addition = Addition::where('slug', 'russia')->first();
-                }
+                $addition = $this->deliveryAdditionUseCase->execute($clientInfo->address->regionCode);
                 $orderEntity->addAddition($addition->id);
             }
 
