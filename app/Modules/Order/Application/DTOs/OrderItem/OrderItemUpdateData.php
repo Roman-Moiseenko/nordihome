@@ -8,8 +8,8 @@ class OrderItemUpdateData extends Data
 {
     public function __construct(
         public int $id,
-        public ?float $sellPrice = null,
-        public ?float $discountPercent = null,
+        public ?float $sellCost = null,
+        public ?float $percentDiscount = null,
         public ?int $quantity = null,
         public ?bool $assemblage = null,
         public ?bool $packing = null,

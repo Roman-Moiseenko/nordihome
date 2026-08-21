@@ -187,8 +187,8 @@ class OrderEntity
 
         $item = $this->getItem($dto->id);
         $item->update(
-            sellPrice: $dto->sellPrice,
-            discountPercent: $dto->discountPercent,
+            sellCost: $dto->sellCost,
+            percentDiscount: $dto->percentDiscount,
             quantity: $dto->quantity,
             assemblage: $dto->assemblage,
             packing: $dto->packing,

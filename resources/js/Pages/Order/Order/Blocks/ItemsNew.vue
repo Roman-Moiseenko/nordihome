@@ -30,7 +30,7 @@
                     <el-input
                         v-model="scope.row.sellCost"
                         :formatter="val => func.MaskInteger(val)"
-                        @change="setProduct(scope.row)"
+                        @change="setSellCost(scope.row)"
                         :disabled="iSaving || isProm(scope.row)"
                         style="width: 86px;">
                     </el-input>
@@ -48,7 +48,7 @@
                 <el-input
                     v-model="scope.row.percentDiscount"
                     :formatter="val => func.MaskFloat(val, 0, 100)"
-                    @change="setProduct(scope.row)"
+                    @change="setPercentDiscount(scope.row)"
                     :disabled="iSaving || isProm(scope.row)"
                     :class="(scope.row.percentDiscount > 0 ? 'bg-red-100' : '') + ' m-0'" style="width: 60px;">
                 </el-input>
@@ -60,7 +60,7 @@
                     <el-input
                         v-model="scope.row.quantity"
                         :formatter="val => func.MaskFloat(val)"
-                        @change="setProduct(scope.row)"
+                        @change="setQuantity(scope.row)"
                         :disabled="iSaving"
                         style="width: 50px;">
                         <!--template #append>{{ scope.row.product.measuring }}</template-->
@@ -113,7 +113,7 @@
             <template #default="scope">
                 <el-input v-if="is_new"
                           v-model="scope.row.comment"
-                          @change="setProduct(scope.row)"
+                          @change="setComment(scope.row)"
                           :disabled="iSaving"
                 />
                 <span v-else>{{ scope.row.comment }}</span>
@@ -151,36 +151,50 @@ const tableData = ref([...props.items])
 
 const form = reactive({
     id: null,
-    sellPrice: null,
-    discountPercent: null,
+    sellCost: null,
+    percentDiscount: null,
     quantity: null,
     assemblage: null,
     packing: null,
     comment: null,
 })
 
+function setSellCost(row) {
+    setProduct(row, 'sellCost', row.sellCost)
+}
+function setPercentDiscount(row) {
+    setProduct(row, 'percentDiscount', row.percentDiscount)
+}
+function setQuantity(row) {
+    setProduct(row, 'quantity', row.quantity)
+}
+function setComment(row) {
+    setProduct(row, 'comment', row.comment)
+}
 function setAssemblage(val, row) {
     row.assemblage = val
-    setProduct(row)
+    setProduct(row, 'assemblage', val)
 }
 function setPacking(val, row) {
     row.packing = val
-    setProduct(row)
+    setProduct(row, 'packing', val)
 }
 
-function setProduct(row) {
-   // console.log('row', row)
+function setProduct(row, field, value) {
     iSaving.value = true;
-    router.visit(route('admin.order.set-item', {item: row.id}), {
+
+    form.id = row.id;
+    form.sellCost = null;
+    form.percentDiscount = null;
+    form.quantity = null;
+    form.assemblage = null;
+    form.packing = null;
+    form.comment = null;
+    form[field] = value;
+
+    router.visit(route('admin.order.update-item', {id: props.orderId}), {
         method: "post",
-        data: {
-            quantity: row.quantity,
-            sell_cost: row.sellCost,
-            percent: row.percent,
-            comment: row.comment,
-            assemblage: row.assemblage,
-            packing: row.packing,
-        },
+        data: {...form},
         preserveScroll: true,
         preserveState: false,
         onSuccess: page => {

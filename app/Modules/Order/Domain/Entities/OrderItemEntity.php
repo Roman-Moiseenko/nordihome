@@ -104,8 +104,8 @@ class OrderItemEntity
     }
 
     public function update(
-        ?float $sellPrice = null,
-        ?float $discountPercent = null,
+        ?float $sellCost = null,
+        ?float $percentDiscount = null,
         ?int $quantity = null,
         ?bool $assemblage = null,
         ?bool $packing = null,
@@ -113,11 +113,11 @@ class OrderItemEntity
     ): void
     {
         //Цену можно устанавливаеть, если товар не по акции
-        if ($sellPrice !== null && is_null($this->discountId))
-            $this->sellCost = $sellPrice;
+        if ($sellCost !== null && is_null($this->discountId))
+            $this->sellCost = $sellCost;
 
-        if ($discountPercent !== null && is_null($this->discountId))
-            $this->sellCost = $this->baseCost * (1 - $discountPercent / 100);
+        if ($percentDiscount !== null && is_null($this->discountId))
+            $this->sellCost = $this->baseCost * (1 - $percentDiscount / 100);
 
 
         if ($quantity !== null)
