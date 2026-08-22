@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Modules\Auth\Tests\Unit\Application\Actions\User;
+
 use App\Modules\Auth\Application\Actions\User\ChangeUserCredentialsUseCase;
 use App\Modules\Auth\Application\DTOs\User\ChangeUserCredentialsData;
 use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
@@ -10,6 +11,8 @@ use App\Modules\Auth\Domain\Exceptions\UserAlreadyExistsException;
 use App\Modules\Auth\Domain\Services\PasswordHasherInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\HashedPassword;
+use App\Modules\Auth\Domain\ValueObjects\ProfileType;
+use App\Modules\Mail\Entity\MailTemplate;
 use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;
 use Illuminate\Support\Str;
 use Mockery;
@@ -23,6 +26,7 @@ class ChangeUserCredentialsUseCaseTest extends TestCase
     private UserEntity $user;
     private string $frontendUrl = 'https://example.com';
     private PasswordHasherInterface $passwordHasher;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -34,7 +38,6 @@ class ChangeUserCredentialsUseCaseTest extends TestCase
             ->andReturnUsing(function ($plain, $hash) {
                 return $hash === 'hashed_' . $plain;
             });
-
 
         $strMock = Mockery::mock('alias:' . Str::class);
         $strMock->shouldReceive('random')->andReturn('change_token');
@@ -48,12 +51,12 @@ class ChangeUserCredentialsUseCaseTest extends TestCase
             $this->passwordHasher
         );
 
-        // Создаем тестового пользователя
         $this->user = new UserEntity(
             new Email('old@example.com'),
             HashedPassword::fromPlainText('correct_pass', $this->passwordHasher),
         );
         $this->user->id = 42;
+        $this->user->setProfile(ProfileType::CLIENT, 99);
     }
 
     protected function tearDown(): void
@@ -86,13 +89,13 @@ class ChangeUserCredentialsUseCaseTest extends TestCase
         $this->userRepo->shouldReceive('emailExists')->with(Mockery::any(), 42)->once()->andReturn(false);
         $this->userRepo->shouldReceive('saveEmailVerification')->once()->with(
             42,
-            Mockery::on(fn(Email $e) => (string)$e === 'new@example.com'),
+            Mockery::on(fn(Email $e) => (string) $e === 'new@example.com'),
             'change_token'
         );
         $this->mailService->shouldReceive('send')->once()->with(
-            'auth.verify_email',
+            Mockery::type(MailTemplate::class),
             Mockery::on(function ($data) {
-                return isset($data['verificationUrl']) && strpos($data['verificationUrl'], 'change_token') !== false;
+                return isset($data['token']) && $data['token'] === 'change_token';
             }),
             Mockery::on(fn($r) => $r->email === 'new@example.com')
         );
@@ -107,7 +110,7 @@ class ChangeUserCredentialsUseCaseTest extends TestCase
 
         $this->assertEquals('На новый email отправлено письмо для подтверждения', $result['message']);
         $this->assertTrue($result['needsEmailConfirmation']);
-        $this->assertEquals('old@example.com', (string)$this->user->email); // не изменился
+        $this->assertEquals('old@example.com', (string) $this->user->email);
     }
 
     public function test_throws_on_wrong_password(): void

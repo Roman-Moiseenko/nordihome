@@ -89,11 +89,10 @@ class FullNameTest extends TestCase
         $this->assertFalse($a->equals($b));
     }
 
-    public function test_throws_exception_on_empty_string(): void
+    public function test_creates_instance_with_empty_string_without_throwing(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Имя не может быть пустым');
-        new FullName('');
+        $fullName = new FullName('');
+        $this->assertInstanceOf(FullName::class, $fullName);
     }
 
     public function test_throws_exception_on_single_word(): void

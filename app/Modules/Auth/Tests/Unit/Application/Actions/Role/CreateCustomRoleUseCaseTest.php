@@ -54,7 +54,7 @@ class CreateCustomRoleUseCaseTest extends TestCase
             ->once()
             ->with([
                 'name' => 'Test',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'is_system' => false,
                 'description' => 'desc',
             ])
@@ -77,7 +77,7 @@ class CreateCustomRoleUseCaseTest extends TestCase
             ->once()
             ->with([
                 'name' => 'Manager',
-                'guard_name' => 'api',
+                'guard_name' => 'web',
                 'is_system' => false,
                 'description' => '',
             ])

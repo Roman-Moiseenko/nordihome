@@ -7,20 +7,28 @@ use App\Modules\Auth\Application\DTOs\Staff\StaffCreateData;
 use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\StaffEntity;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\TestCase;
 use Tests\Trait\MockPermission;
 
-
 class CreateStaffUseCaseTest extends TestCase
 {
     use MockPermission;
+
     private StaffRepositoryInterface $staffRepo;
     private CreateStaffUseCase $useCase;
 
-    function getModuleName(): string { return  'auth'; }
-    function getEntityName(): string { return 'employee'; }
+    public function getModuleName(): string
+    {
+        return 'auth';
+    }
+
+    public function getEntityName(): string
+    {
+        return 'employee';
+    }
 
     protected function setUp(): void
     {
@@ -35,15 +43,12 @@ class CreateStaffUseCaseTest extends TestCase
         parent::tearDown();
     }
 
-    /**
-     * @throws \Throwable
-     */
     public function test_creates_staff_from_dto_and_saves(): void
     {
         $dto = new StaffCreateData(
             lastName: 'Иванов',
             firstName: 'Иван',
-            position: 'Разработчик',
+            positions: [StaffPosition::CUSTOMER_MANAGER],
             middleName: 'Иванович',
         );
 
@@ -54,25 +59,25 @@ class CreateStaffUseCaseTest extends TestCase
                 $staff->id = 42;
                 return $staff;
             });
+
         $permission = $this->mockUserPermission(create: true);
         $result = $this->useCase->execute($dto, $permission);
 
         $this->assertInstanceOf(StaffEntity::class, $result);
         $this->assertEquals(42, $result->id);
-        $fullName = $result->fullName; // предположим, что геттер существует
-        $this->assertInstanceOf(FullName::class, $fullName);
-        $this->assertSame('Иванов Иван Иванович', (string) $fullName);
-        $this->assertSame('Разработчик', $result->position);
+        $this->assertInstanceOf(FullName::class, $result->fullName);
+        $this->assertSame('Иванов Иван Иванович', (string) $result->fullName);
+        $this->assertSame([StaffPosition::CUSTOMER_MANAGER], $result->positions->toArrayOfStrings());
     }
+
     public function test_throws_access_denied_when_missing_permission(): void
     {
         $dto = new StaffCreateData(
             lastName: 'Иванов',
             firstName: 'Иван',
-            position: 'Разработчик',
+            positions: [StaffPosition::CUSTOMER_MANAGER],
         );
 
-        // Мок UserPermission – запрещаем создание
         $permission = $this->mockUserPermission();
 
         $this->staffRepo->shouldNotReceive('save');
@@ -80,15 +85,13 @@ class CreateStaffUseCaseTest extends TestCase
         $this->expectException(AccessDeniedException::class);
         $this->useCase->execute($dto, $permission);
     }
-    /**
-     * @throws \Throwable
-     */
+
     public function test_creates_staff_without_middle_name(): void
     {
         $dto = new StaffCreateData(
             lastName: 'Петров',
             firstName: 'Пётр',
-            position: 'Менеджер',
+            positions: [StaffPosition::DRIVER],
             middleName: null,
         );
 
@@ -99,6 +102,7 @@ class CreateStaffUseCaseTest extends TestCase
                 $staff->id = 1;
                 return $staff;
             });
+
         $permission = $this->mockUserPermission(create: true);
         $result = $this->useCase->execute($dto, $permission);
 
@@ -111,7 +115,7 @@ class CreateStaffUseCaseTest extends TestCase
         $dto = new StaffCreateData(
             lastName: 'Иванов',
             firstName: 'Иван',
-            position: 'Разработчик',
+            positions: [StaffPosition::CUSTOMER_MANAGER],
             middleName: null,
         );
 
@@ -124,5 +128,4 @@ class CreateStaffUseCaseTest extends TestCase
         $permission = $this->mockUserPermission(create: true);
         $this->useCase->execute($dto, $permission);
     }
-
 }

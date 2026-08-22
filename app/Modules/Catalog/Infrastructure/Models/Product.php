@@ -602,7 +602,7 @@ class Product extends Model
     /**
      * Кол-во товара на складах
      */
-    public function getQuantity(int $storage_id = null): float
+    public function getQuantity(?int $storage_id = null): float
     {
         $query = StorageItem::selectRaw('SUM(quantity * 1) AS total')->where('product_id', $this->id);
 

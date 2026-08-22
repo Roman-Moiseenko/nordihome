@@ -18,7 +18,7 @@ class UpdateUserData extends Data
         public string  $email,
         public ?string $password = null,
         #[ArrayType]
-        public array $roleNames,
+        public array $roleNames = [],
     )
     {
     }

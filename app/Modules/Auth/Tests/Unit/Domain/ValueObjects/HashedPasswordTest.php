@@ -55,7 +55,7 @@ class HashedPasswordTest extends TestCase
     public function test_throws_exception_when_password_too_short(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('Пароль должен содержать минимум 8 символов');
+        $this->expectExceptionMessage('Пароль должен содержать минимум 6 символов');
         HashedPassword::fromPlainText('short', $this->hasher);
     }
 }

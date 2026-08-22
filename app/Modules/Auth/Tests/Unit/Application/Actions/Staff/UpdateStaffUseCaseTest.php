@@ -9,6 +9,8 @@ use App\Modules\Auth\Domain\Entities\StaffEntity;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
+use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+use App\Modules\Auth\Domain\ValueObjects\StaffPositions;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use DateTimeImmutable;
 use InvalidArgumentException;
@@ -19,15 +21,16 @@ use Tests\Trait\MockPermission;
 class UpdateStaffUseCaseTest extends TestCase
 {
     use MockPermission;
+
     private StaffRepositoryInterface $staffRepo;
     private UpdateStaffUseCase $useCase;
 
-    function getModuleName(): string
+    public function getModuleName(): string
     {
-        return  'auth';
+        return 'auth';
     }
 
-    function getEntityName(): string
+    public function getEntityName(): string
     {
         return 'employee';
     }
@@ -47,7 +50,7 @@ class UpdateStaffUseCaseTest extends TestCase
     {
         $staff = new StaffEntity(
             new FullName('Иванов Иван Иванович'),
-            'Старая должность'
+            new StaffPositions([StaffPosition::DRIVER]),
         );
         $staff->id = 1;
         $staff->department = 'Старый отдел';
@@ -77,7 +80,7 @@ class UpdateStaffUseCaseTest extends TestCase
         $dto = new StaffUpdateData(
             lastName: 'Петров',
             firstName: 'Пётр',
-            position: 'Новая должность',
+            positions: [StaffPosition::SUPERVISOR],
             middleName: 'Петрович',
             department: 'Новый отдел',
             workPhone: '+79001112233',
@@ -94,7 +97,7 @@ class UpdateStaffUseCaseTest extends TestCase
         $result = $this->useCase->execute(1, $dto, $permission);
 
         $this->assertSame('Петров Пётр Петрович', (string) $result->fullName);
-        $this->assertSame('Новая должность', $result->position);
+        $this->assertSame([StaffPosition::SUPERVISOR], $result->positions->toArrayOfStrings());
         $this->assertSame('Новый отдел', $result->department);
         $this->assertEquals(new PhoneNumber('+79001112233'), $result->workPhone);
         $this->assertEquals(new PhoneNumber('+79004445566'), $result->personalPhone);
@@ -104,7 +107,7 @@ class UpdateStaffUseCaseTest extends TestCase
         $this->assertSame('new_telegram', $result->telegramChatId);
         $this->assertSame('new_max', $result->maxChatId);
         $this->assertSame('Новые заметки', $result->notes);
-        $this->assertFalse(!$result->isActive);
+        $this->assertTrue($result->isActive);
     }
 
     public function test_throws_access_denied_when_missing_permission(): void
@@ -113,22 +116,18 @@ class UpdateStaffUseCaseTest extends TestCase
         $this->staffRepo->shouldReceive('findById')->with(1)->andReturn($existing);
         $this->staffRepo->shouldNotReceive('save');
 
-        // Запрещаем edit
         $permission = $this->mockUserPermission();
 
         $dto = new StaffUpdateData(
             lastName: 'Иванов',
             firstName: 'Иван',
-            position: 'Без прав',
+            positions: [StaffPosition::DRIVER],
         );
 
         $this->expectException(AccessDeniedException::class);
         $this->useCase->execute(1, $dto, $permission);
     }
 
-    /**
-     * @throws \DateMalformedStringException
-     */
     public function test_clearing_optional_fields(): void
     {
         $existing = $this->createExistingStaff();
@@ -139,7 +138,7 @@ class UpdateStaffUseCaseTest extends TestCase
         $dto = new StaffUpdateData(
             lastName: 'Иванов',
             firstName: 'Иван',
-            position: 'Должность',
+            positions: [StaffPosition::DRIVER],
             middleName: 'Иванович',
         );
 
@@ -168,20 +167,20 @@ class UpdateStaffUseCaseTest extends TestCase
         $dto = new StaffUpdateData(
             lastName: 'Иванов',
             firstName: 'Иван',
-            position: 'Должность',
+            positions: [StaffPosition::DRIVER],
             middleName: null,
             terminated: true,
         );
 
         $permission = $this->mockUserPermission(edit: true);
         $result = $this->useCase->execute(1, $dto, $permission);
-        $this->assertTrue(!$result->isActive);
+        $this->assertFalse($result->isActive);
         $this->assertInstanceOf(DateTimeImmutable::class, $result->terminationDate);
 
         $dto2 = new StaffUpdateData(
             lastName: 'Иванов',
             firstName: 'Иван',
-            position: 'Должность',
+            positions: [StaffPosition::DRIVER],
             middleName: null,
             terminated: false,
         );
@@ -190,7 +189,7 @@ class UpdateStaffUseCaseTest extends TestCase
         $this->staffRepo->shouldReceive('save')->once()->andReturn($result);
 
         $result2 = $this->useCase->execute(1, $dto2, $permission);
-        $this->assertFalse(!$result2->isActive);
+        $this->assertTrue($result2->isActive);
         $this->assertNull($result2->terminationDate);
     }
 
@@ -206,7 +205,7 @@ class UpdateStaffUseCaseTest extends TestCase
         $dto = new StaffUpdateData(
             lastName: 'Иванов',
             firstName: 'Иван',
-            position: 'Должность',
+            positions: [StaffPosition::DRIVER],
             middleName: null,
         );
 

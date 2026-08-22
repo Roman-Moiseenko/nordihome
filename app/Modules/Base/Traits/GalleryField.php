@@ -32,7 +32,7 @@ trait GalleryField
         return $this->gallery();
     }
 
-    public function getImageBySort(int $sort, string $thumb = null): string
+    public function getImageBySort(int $sort, ?string $thumb = null): string
     {
         /** @var Photo $image */
         $image = $this->photos()->where('sort', $sort)->first();
@@ -41,31 +41,31 @@ trait GalleryField
         return is_null($thumb) ? $image->getUploadUrl() : $image->getThumbUrl($thumb);
     }
 
-    public function getImage(string $thumb = null): string
+    public function getImage(?string $thumb = null): string
     {
         return $this->getImageBySort(0, $thumb);
     }
 
-    public function getImageNext(string $thumb = null): string
+    public function getImageNext(?string $thumb = null): string
     {
         return $this->getImageBySort(1, $thumb);
     }
 
-    public function getImageData(string $thumb = null): array
+    public function getImageData(?string $thumb = null): array
     {
         $image = $this->photos()->first();
         return $this->ImageToData($image, $thumb);
 
     }
 
-    public function getImageNextData(string $thumb = null): array
+    public function getImageNextData(?string $thumb = null): array
     {
         $image = $this->photos()->skip(1)->first();
         if (is_null($image)) $image = $this->photos()->first();
         return $this->ImageToData($image, $thumb);
     }
 
-    private function ImageToData(Photo|null $image, string $thumb = null): array
+    private function ImageToData(Photo|null $image, ?string $thumb = null): array
     {
         if (is_null($image)) return [
             'src' => '/images/no-image.jpg',
