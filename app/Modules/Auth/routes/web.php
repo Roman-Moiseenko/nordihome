@@ -50,10 +50,6 @@ Route::group([
         Route::Resource('staff', StaffController::class);
         Route::post('/staff/{id}/user', [StaffController::class, 'user'])->name('staff.user');
 
-        //Внештатные сотрудники Freelance
-        Route::Resource('freelance', FreelanceController::class);
-        Route::post('/freelance/{id}/user', [FreelanceController::class, 'user']);
-
         //Управление ролями
         Route::Resource('role', RoleController::class)->except(['create', 'edit']);
 

@@ -5,10 +5,10 @@ namespace App\Modules\Catalog\Application\Actions\Attribute;
 use App\Modules\Catalog\Application\DTOs\Attribute\AttributeCategoryData;
 use App\Modules\Catalog\Application\Interfaces\AttributeRepositoryInterface;
 
-class ListAttributeByCategoryUseCase
+readonly class ListAttributeByCategoryUseCase
 {
     public function __construct(
-        private readonly AttributeRepositoryInterface $attributeRepository,
+        private AttributeRepositoryInterface $attributeRepository,
     )
     {
     }

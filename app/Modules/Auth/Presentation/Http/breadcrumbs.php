@@ -70,29 +70,6 @@ Breadcrumbs::for('admin.client.edit', function (BreadcrumbTrail $trail, mixed $c
     $trail->push('Редактировать', route('admin.client.edit', $client));
 });
 
-// ============================================================
-// FREELANCE (Внештатные сотрудники)
-// ============================================================
-Breadcrumbs::for('admin.freelance.index', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.home');
-    $trail->push('Внештатные сотрудники', route('admin.freelance.index'));
-});
-
-Breadcrumbs::for('admin.freelance.show', function (BreadcrumbTrail $trail, mixed $freelance) {
-    if (!$freelance instanceof \App\Modules\Auth\Infrastructure\Models\Freelance) {
-        $freelance = \App\Modules\Auth\Infrastructure\Models\Freelance::findOrFail($freelance);
-    }
-    $trail->parent('admin.freelance.index');
-    $trail->push($freelance->fullName ?? $freelance->id, route('admin.freelance.show', $freelance));
-});
-
-Breadcrumbs::for('admin.freelance.edit', function (BreadcrumbTrail $trail, mixed $freelance) {
-    if (!$freelance instanceof \App\Modules\Auth\Infrastructure\Models\Freelance) {
-        $freelance = \App\Modules\Auth\Infrastructure\Models\Freelance::findOrFail($freelance);
-    }
-    $trail->parent('admin.freelance.show', $freelance);
-    $trail->push('Редактировать', route('admin.freelance.edit', $freelance));
-});
 
 // ============================================================
 // ROLE (Управление ролями)
