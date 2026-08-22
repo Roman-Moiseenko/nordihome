@@ -128,4 +128,13 @@ final class ParserProductEntity
         $this->code = $code;
         $this->slug = new Slug($name);
     }
+
+    public function weight(): float
+    {
+        $weight = 0;
+        foreach ($this->packages as $package) {
+            $weight += $package->weight * $package->quantity;
+        }
+        return $weight;
+    }
 }

@@ -9,13 +9,13 @@ use App\Modules\Order\Infrastructure\Models\Order;
 
 class LoggerService
 {
-    public function logOrder(Order $order, string $action, $object = '', $value = '', $old = '', $link = null): void
+    public function logOrder(int $orderId, string $action, $object = '', $value = '', $old = '', $link = null): void
     {
 
         if (!auth()->check()) return;
         /** @var Staff $staff */
-        $staff = auth()->user()->profileable;
-        $logger = LoggerOrder::register($order->id, $staff->id, $action, (string)$object, (string)$value, (string)$old, $link);
+        $staffId = auth()->user()->profileable_id;
+        $logger = LoggerOrder::register($orderId, $staffId, $action, (string)$object, (string)$value, (string)$old, $link);
         if (empty($logger)) throw new \DomainException('Ошибка записи лога учета действий по Заказу');
     }
 }

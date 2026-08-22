@@ -9,6 +9,7 @@ use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
 use App\Modules\Catalog\Infrastructure\Models\CategoryProduct;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Parser\Domain\ValueObjects\Package;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -52,16 +53,16 @@ class ProductRepository implements ProductRepositoryInterface
         $model->hide_price = $product->hidePrice;
         $model->published_at = $product->publishedAt?->format('Y-m-d H:i:s');
 
+        $model->complexity = $product->complexity;
+
         if ($product->dimensions !== null) {
             $model->dimensions = $product->dimensions;
         }
-
+        $model->packages = array_map(
+            fn(Package $p) => $p->toArray(),
+            $product->packages
+        );
         $model->save();
-/*
-        if ($product->id === null) {
-            $product->id = $model->id;
-        }
-*/
         return $this->hydrate($model);
     }
 
@@ -181,10 +182,15 @@ class ProductRepository implements ProductRepositoryInterface
         $entity->fractional = (bool)$model->fractional;
         $entity->hidePrice = (bool)$model->hide_price;
 
+        $entity->complexity = $model->complexity;
+
         if ($model->dimensions !== null) {
             $entity->dimensions = $model->dimensions;
         }
-
+        $entity->packages = array_map(
+            fn(array $item) => Package::fromArray($item),
+            $model->packages ?? []
+        );
         if ($model->published_at !== null) {
             $entity->publishedAt = \DateTimeImmutable::createFromInterface($model->published_at);
         }

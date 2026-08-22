@@ -81,9 +81,10 @@ import Active from "@Comp/Elements/Active.vue";
 import {func} from "@Res/func.js"
 import {computed, inject, ref} from "vue";
 import {router} from "@inertiajs/vue3";
-//MAINDO заменить calculate на amount
+
 const props = defineProps({
     additions: Array,
+    orderId: Number,
 })
 const $delete_entity = inject("$delete_entity")
 const iSaving = ref(false)
@@ -91,9 +92,10 @@ const {is_new, is_issued, is_view} = inject('$status')
 
 function setAddition(row) {
     iSaving.value = true;
-    router.visit(route('admin.order.set-addition', {addition: row.id}), {
+    router.visit(route('admin.order.update-addition', {id: props.orderId}), {
         method: "post",
         data: {
+            id: row.id,
             quantity: row.quantity,
             amount: row.amount,
             comment: row.comment,
@@ -107,7 +109,7 @@ function setAddition(row) {
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.order.del-addition', {addition: row.id}), {name: 'addition'});
+    $delete_entity.show(route('admin.order.del-addition', {id: props.orderId, addition: row.id}), {name: 'addition'});
 }
 </script>
 

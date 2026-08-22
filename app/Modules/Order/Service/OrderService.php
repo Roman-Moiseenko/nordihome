@@ -130,7 +130,7 @@ class OrderService
             $order->setManager($staff->id);
             $order->setClient($user_id);
             $order->refresh();
-            $this->logger->logOrder(order: $order, action: 'Заказ создан менеджером');
+            $this->logger->logOrder(orderId: $order->id, action: 'Заказ создан менеджером');
         });
 
         event(new OrderHasCreated($order));
@@ -148,7 +148,7 @@ class OrderService
         if (empty($staff)) throw new \DomainException('Менеджер под ID ' . $staff_id . ' не существует!');
         $order->setStatus(OrderHistoryStatus::DRAFT);
         $order->setManager($staff->id);
-        $this->logger->logOrder(order: $order, action: 'Назначен менеджер',
+        $this->logger->logOrder(orderId: $order->id, action: 'Назначен менеджер',
             value: $staff->fullname->getFullName(), old: $old);
         //if (is_null($order->lead->staff_id)) {
 
@@ -175,7 +175,7 @@ class OrderService
                 $payment->save();
             }
             event(new OrderHasCanceled($order));
-            $this->logger->logOrder(order: $order, action: 'Заказ отменен менеджером',
+            $this->logger->logOrder(orderId: $order->id, action: 'Заказ отменен менеджером',
                 object: $comment);
 
         });
@@ -214,7 +214,7 @@ class OrderService
             $order->setNumber();
             $order->setStatus(OrderHistoryStatus::AWAITING);
             $order->refresh();
-            $this->logger->logOrder(order: $order, action: 'Заказ отправлен на оплату');
+            $this->logger->logOrder(orderId: $order->id, action: 'Заказ отправлен на оплату');
 
             //Пересоздать отчет и отправить письмо клиенту.
             //Создаем счет на оплату
@@ -252,7 +252,7 @@ class OrderService
                 }
             }
             event(new OrderHasWork($order));
-            $this->logger->logOrder(order: $order, action: 'Заказ вернулся в работу');
+            $this->logger->logOrder(orderId: $order->id, action: 'Заказ вернулся в работу');
         });
 
         //TODO event  Lead
@@ -266,7 +266,7 @@ class OrderService
         $old = $order->getReserveTo();
         $new_reserve = Carbon::parse($request->date('reserve_at'));
         $order->setReserve($new_reserve);
-        $this->logger->logOrder(order: $order, action: 'Новое время резерва',
+        $this->logger->logOrder(orderId: $order->id, action: 'Новое время резерва',
             value: $request->string('reserve')->trim()->value(),
             old: $old->toString()
         );
@@ -333,7 +333,7 @@ class OrderService
 
         $order->refresh();
         $this->recalculation($order);
-        $this->logger->logOrder(order: $order, action: 'Добавлен товар',
+        $this->logger->logOrder(orderId: $order->id, action: 'Добавлен товар',
             object: $product->name, value: $quantity . ' шт.');
     }
 
@@ -372,7 +372,7 @@ class OrderService
                 $old = $item->sell_cost;
                 if ($item->product->getPriceMin() > $sell_cost) event(new PriceHasMinimum($item));
                 $item->sell_cost = $sell_cost;
-                $this->logger->logOrder(order: $order, action: 'Изменена цена товара',
+                $this->logger->logOrder(orderId: $order->id, action: 'Изменена цена товара',
                     object: $item->product->name, value: price($sell_cost), old: $old);
             }
             ///*** 2. Изменилось Кол-во
@@ -388,7 +388,7 @@ class OrderService
                     }
                 }
                 $item->quantity += $delta;
-                $this->logger->logOrder(order: $order, action: 'Изменено кол-во товара',
+                $this->logger->logOrder(orderId: $order->id, action: 'Изменено кол-во товара',
                     object: $item->product->name, value: (string)$quantity . ' шт.', old: $old);
             }
             ///*** 3. Изменился комментарий
@@ -397,13 +397,13 @@ class OrderService
             ///*** 4. Изменилась сборка
             if ($item->assemblage != $assemblage) {
                 $item->assemblage = $assemblage;
-                $this->logger->logOrder(order: $order, action: 'Изменена сборка товара',
+                $this->logger->logOrder(orderId: $order->id, action: 'Изменена сборка товара',
                     object: $item->product->name, value: $assemblage ? 'Установлена' : 'Отменена');
             }
             ///*** 5. Изменилась упаковка
             if ($item->packing != $packing) {
                 $item->packing = $packing;
-                $this->logger->logOrder(order: $order, action: 'Изменена упаковка товара',
+                $this->logger->logOrder(orderId: $order->id, action: 'Изменена упаковка товара',
                     object: $item->product->name, value: $packing ? 'Установлена' : 'Отменена');
             }
             $item->save();
@@ -418,7 +418,7 @@ class OrderService
     public function deleteItem(OrderItem $item): void
     {
         $order = $item->order;
-        $this->logger->logOrder(order: $order, action: 'Удален товар из заказа',
+        $this->logger->logOrder(orderId: $order->id, action: 'Удален товар из заказа',
             object: $item->product->name, value: (string)$item->quantity);
         foreach ($item->reserves as $reserve) {
             $reserve->delete();
@@ -487,7 +487,7 @@ class OrderService
         $orderAddition = OrderAddition::new($addition_id);
         $order->additions()->save($orderAddition);
         $orderAddition->refresh();
-        $this->logger->logOrder(order: $order, action: 'Добавлена услуга',
+        $this->logger->logOrder(orderId: $order->id, action: 'Добавлена услуга',
             object: $orderAddition->addition->name, value: price($orderAddition->getAmount()));
         return $orderAddition;
     }
@@ -498,7 +498,7 @@ class OrderService
         $new_quantity = $request->integer('quantity');
         $new_comment = $request->string('comment')->trim()->value();
         if ($orderAddition->addition->manual && $orderAddition->amount != $new_amount) {
-            $this->logger->logOrder(order: $orderAddition->order, action: 'Изменена Сумма услуги',
+            $this->logger->logOrder(orderId: $orderAddition->order->id, action: 'Изменена Сумма услуги',
                 object: $orderAddition->addition->name,
                 value: $new_amount,
                 old: $orderAddition->amount);
@@ -506,7 +506,7 @@ class OrderService
         }
 
         if ($orderAddition->addition->is_quantity && $orderAddition->quantity != $new_quantity){
-            $this->logger->logOrder(order: $orderAddition->order, action: 'Изменено Кол-во услуги',
+            $this->logger->logOrder(orderId: $orderAddition->order->id, action: 'Изменено Кол-во услуги',
                 object: $orderAddition->addition->name,
                 value: $new_quantity,
                 old: $orderAddition->quantity);
@@ -514,7 +514,7 @@ class OrderService
         }
 
         if ($orderAddition->comment != $new_comment){
-            $this->logger->logOrder(order: $orderAddition->order, action: 'Изменено Коментарий услуги',
+            $this->logger->logOrder(orderId: $orderAddition->order->id, action: 'Изменено Коментарий услуги',
                 object: $orderAddition->addition->name,
                 value: $new_comment,
                 old: $orderAddition->comment);
@@ -555,7 +555,7 @@ class OrderService
             }
             $movement->refresh();
             $this->movementService->completed($movement);
-            $this->logger->logOrder(order: $order, action: 'Создано перемещение для заказа',
+            $this->logger->logOrder(orderId: $order->id, action: 'Создано перемещение для заказа',
                 value: $movement->storageOut->name . ' -> ' . $movement->storageIn->name,
                 link: route('admin.accounting.movement.show', $movement)
             );
@@ -600,7 +600,7 @@ class OrderService
             }
 
             $new_order->refresh();
-            $this->logger->logOrder(order: $new_order, action: 'Создан заказ копированием',
+            $this->logger->logOrder(orderId: $new_order->id, action: 'Создан заказ копированием',
                 value: $order->htmlNumDate());
         });
 
@@ -652,7 +652,7 @@ class OrderService
 
         $order->refresh();
         $this->recalculation($order);
-        $this->logger->logOrder(order: $order, action: 'Добавлен товар через Парсер',
+        $this->logger->logOrder(orderId: $order->id, action: 'Добавлен товар через Парсер',
             object: $product->name, value: $quantity . ' шт.');
     }
 
@@ -663,7 +663,7 @@ class OrderService
     public function deleteAddition(OrderAddition $addition): void
     {
        // if (!$addition->order->isManager()) throw new \DomainException('Нельзя удалить услугу');
-        $this->logger->logOrder(order: $addition->order, action: 'Удалена услуга ', object: $addition->addition->name,
+        $this->logger->logOrder(orderId: $addition->order->id, action: 'Удалена услуга ', object: $addition->addition->name,
             old: price($addition->getAmount()));
         $addition->delete();
     }
@@ -681,7 +681,7 @@ class OrderService
         if ($action == 'coupon') {
             if (empty($code)) {
                 if (!is_null($order->coupon_id)) {
-                    $this->logger->logOrder(order: $order, action: 'Удалена скидка по купону',
+                    $this->logger->logOrder(orderId: $order->id, action: 'Удалена скидка по купону',
                         object: $order->coupon->code, old: $order->coupon->bonus);
 
                     $order->coupon_id = null;
@@ -693,7 +693,7 @@ class OrderService
                 if ($coupon->started_at->gt(now())) throw new \DomainException('Купон еще не действует');
                 if ($coupon->finished_at->lt(now())) throw new \DomainException('Купон уже не действует');
                 $order->coupon_id = $coupon->id;
-                $this->logger->logOrder(order: $order, action: 'Скидка по купону',
+                $this->logger->logOrder(orderId: $order->id, action: 'Скидка по купону',
                     object: 'Установлена',
                     value: $coupon->bonus);
             }
@@ -730,7 +730,7 @@ class OrderService
             }
             //$order->save();
             $this->recalculation($order);
-            $this->logger->logOrder(order: $order, action: 'Установлена общая скидка',
+            $this->logger->logOrder(orderId: $order->id, action: 'Установлена общая скидка',
                 value: price($manual), old: price($old_manual));
         }
 
@@ -755,7 +755,7 @@ class OrderService
             $order->trader_id = $request->integer('trader_id');
             $order->save();
             $order->refresh();
-            $this->logger->logOrder(order: $order, action: 'Изменена организация Продавец',
+            $this->logger->logOrder(orderId: $order->id, action: 'Изменена организация Продавец',
                 value: $order->trader->short_name, old: $old);
             return;
         }
@@ -765,12 +765,12 @@ class OrderService
             $order->shopper_id = $request->input('shopper_id');
             $order->save();
             $order->refresh();
-            $this->logger->logOrder(order: $order, action: 'Изменена организация Покупатель',
+            $this->logger->logOrder(orderId: $order->id, action: 'Изменена организация Покупатель',
                 value: is_null($order->shopper) ? 'Физ.лицо' : $order->shopper->short_name, old: $old);
             return;
         }
         $order->comment = $request->string('comment')->trim()->value();
-        $this->logger->logOrder(order: $order, action: 'Добавлен комментарий',
+        $this->logger->logOrder(orderId: $order->id, action: 'Добавлен комментарий',
             value: $order->comment);
         $order->save();
     }
@@ -819,7 +819,7 @@ class OrderService
     {
         $old = $order->comment;
         $order->comment = $request->string('comment')->trim()->value();
-        $this->logger->logOrder(order: $order, action: 'Изменен комментарий',
+        $this->logger->logOrder(orderId: $order->id, action: 'Изменен комментарий',
             value: $order->comment, old: $old
         );
         $order->save();

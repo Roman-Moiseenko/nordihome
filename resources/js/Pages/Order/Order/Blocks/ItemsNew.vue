@@ -121,7 +121,16 @@
         </el-table-column>
         <el-table-column label="Действия" width="" align="right">
             <template #default="scope">
+
                 <div v-if="is_new">
+
+                                <el-tooltip :content="scope.row.preorder ? 'Перенести в наличие' : 'Перенести под заказ' ">
+                                    <el-button type="warning" @click="handleChangePre(scope.row)">
+                                        <i class="fa-light fa-rotate"></i>
+                                    </el-button>
+                                </el-tooltip>
+
+
                     <el-button type="danger" @click="handleDeleteItem(scope.row)">
                         <i class="fa-light fa-trash"></i>
                     </el-button>
@@ -129,6 +138,9 @@
             </template>
         </el-table-column>
     </el-table>
+
+
+
     <DeleteEntityModal name_entity="Товар из заказа" />
 
 </template>
@@ -138,6 +150,8 @@ import {computed, inject, reactive, ref} from "vue"
 import {func} from "@Res/func.js"
 import Active from "@Comp/Elements/Active.vue";
 import {router} from "@inertiajs/vue3";
+import { ElMessage, ElMessageBox } from 'element-plus'
+import {route} from "ziggy-js";
 
 const props = defineProps({
     items: Array,
@@ -158,6 +172,44 @@ const form = reactive({
     packing: null,
     comment: null,
 })
+
+
+const handleChangePre = (row: any) => {
+    ElMessageBox.prompt('Укажите кол-во для переноса', 'Tip', {
+        confirmButtonText: 'Перенести',
+        cancelButtonText: 'Отмена',
+        inputPattern:
+            /[0-9]+/,
+        inputErrorMessage: 'Неверное число',
+    })
+        .then(({ value }) => {
+            iSaving.value = true;
+            router.visit(route('admin.order.change-item', {id: props.orderId}), {
+                method: "post",
+                data: {
+                    id: row.id,
+                    quantity: value,
+                    preorder: !row.preorder
+                },
+                preserveScroll: true,
+                preserveState: false,
+                onSuccess: page => {
+                    iSaving.value = false;
+                }
+            })
+
+            ElMessage({
+                type: 'success',
+                message: `Сохраняется .... `,
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: 'Отмена переноса',
+            })
+        })
+}
 
 function setSellCost(row) {
     setProduct(row, 'sellCost', row.sellCost)
@@ -192,6 +244,7 @@ function setProduct(row, field, value) {
     form.comment = null;
     form[field] = value;
 
+
     router.visit(route('admin.order.update-item', {id: props.orderId}), {
         method: "post",
         data: {...form},
@@ -204,7 +257,7 @@ function setProduct(row, field, value) {
 }
 
 function handleDeleteItem(row) {
-    $delete_entity.show(route('admin.order.del-item', {item: row.id}));
+    $delete_entity.show(route('admin.order.del-item', {id: props.orderId, item: row.id}));
 }
 function isProm(row) {
     return row.product.has_promotion && !row.preorder

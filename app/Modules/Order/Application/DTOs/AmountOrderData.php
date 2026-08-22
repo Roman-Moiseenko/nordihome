@@ -9,6 +9,7 @@ class AmountOrderData
 
         public float $addition,
         public float $manual,
+        public float $percent,
         public float $promotions,
         public float $coupon,
         public float $discount,

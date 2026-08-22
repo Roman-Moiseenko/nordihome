@@ -8,13 +8,13 @@ class Packages
     /** @var Package[] $packages */
     public array $packages = [];
 
-    public int $complexity = 1;
+    public string $complexity = self::STANDARD;
 
-    const STANDARD = 1;
-    const DIFFICULT = 2;
-    const REPACKING = 3;
-    const FRAGILE = 4;
-    const MIRROR = 5;
+    const STANDARD = 'standard';
+    const DIFFICULT = 'difficult';
+    const REPACKING = 'repacking';
+    const FRAGILE = 'fragile';
+    const MIRROR = 'mirror';
 
     const COMPLEXITIES = [
         self::STANDARD => 'Стандарт',
@@ -82,7 +82,7 @@ class Packages
             $packages->complexity = $data['complexity'];
         } else { //Старый формат, без сложности
             $array = $data;
-            $packages->complexity = 1;
+            $packages->complexity = self::STANDARD;
         }
 
         foreach ($array as $item) {

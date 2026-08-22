@@ -101,8 +101,10 @@ class UserRepository
         ]);
     }
 
-    public function getWish(int $clientId): array
+    public function getWish(?int $clientId): array
     {
+        if (is_null($clientId)) return [];
+
         $client = Client::find($clientId);
         return array_map(function (Wish $wish) {
             return [

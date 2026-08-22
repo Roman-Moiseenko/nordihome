@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Addition;
 
+use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Infrastructure\Models\Order;
 
@@ -25,8 +26,15 @@ class LiftingCalculate extends CalculateAddition
 
     public static function calculateEntity(OrderEntity $order, int $base): int
     {
-        //MAINDO Переделать на UseCase под OrderEntity
-        $order = Order::find($order->id);
-        return self::calculate($order, $base);
+        $repository = app()->make(ProductRepositoryInterface::class);
+        $result = 0;
+
+        foreach ($order->items as $item) {
+          $productEntity = $repository->find($item->productId);
+            $result += $productEntity->weight() * $item->quantity;
+
+        }
+        if ($result < 1) $result = 1;
+        return (int)ceil($result * $base);
     }
 }

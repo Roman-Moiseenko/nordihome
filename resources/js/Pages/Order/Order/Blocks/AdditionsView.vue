@@ -42,6 +42,7 @@ import {Link, router} from "@inertiajs/vue3";
 
 const props = defineProps({
     additions: Array,
+    orderId: Number,
 })
 const tableDate = [...props.additions]
 

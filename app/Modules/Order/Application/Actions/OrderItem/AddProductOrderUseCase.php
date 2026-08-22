@@ -42,7 +42,7 @@ readonly class AddProductOrderUseCase
             preorder: $dto->preorder,
         );
 
-        $orderEntity->addItem($itemDto);
+        $orderEntity->addItem($itemDto, $dto->increase);
 
         if ($dto->preorder) {
             $addition = $this->polandAdditionUseCase->execute();

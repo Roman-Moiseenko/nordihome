@@ -12,7 +12,6 @@ use Illuminate\Http\Request;
 use function response;
 use function view;
 
-//MAINDO Сделать Избранное
 class WishController extends ShopController
 {
     private WishService $service;
@@ -26,10 +25,6 @@ class WishController extends ShopController
 
     public function index(Request $request)
     {
-      /*  $client = $this->getClient($request);
-        $products = Product::whereHas('wishes', function ($query) use ($client) {
-            $query->where('client_id', $client->id);
-        })->get();*/
         return view('cabinet.wish');
     }
 
@@ -47,11 +42,6 @@ class WishController extends ShopController
 
     public function get(Request $request)
     {
-        if (!auth()->check())
-            return response()->json([
-                'items' => [],
-            ]);
-        /** @var User $user */
         $client = $this->getClient($request);
         $products = $this->repository->getWish($client->id);
         return response()->json([

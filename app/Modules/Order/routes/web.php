@@ -32,17 +32,18 @@ Route::group(
         Route::post('/add-products/{order}', [OrderController::class, 'add_products'])->name('add-products');
         Route::post('/add-product/{id}', [OrderController::class, 'add_product'])->name('add-product');
         Route::post('/update-item/{id}', [OrderController::class, 'updateItem'])->name('update-item');
-        Route::post('/set-item/{item}', [OrderController::class, 'set_item'])->name('set-item');
-        Route::delete('/del-item/{item}', [OrderController::class, 'del_item'])->name('del-item');
+        Route::post('/change-item/{id}', [OrderController::class, 'changeItem'])->name('change-item');
+        //Route::post('/set-item/{item}', [OrderController::class, 'set_item'])->name('set-item');
+        Route::delete('/del-item/{id}/{item}', [OrderController::class, 'removeItem'])->name('del-item');
         Route::post('/set-user/{order}', [OrderController::class, 'set_user'])->name('set-user');
         Route::post('/set-assemblage', [OrderController::class, 'set_assemblage'])->name('set-assemblage');
         Route::post('/set-packing', [OrderController::class, 'set_packing'])->name('set-packing');
 
         Route::post('/set-discount/{order}', [OrderController::class, 'set_discount'])->name('set-discount');
 
-        Route::post('/add-addition/{order}', [OrderController::class, 'add_addition'])->name('add-addition');
-        Route::post('/set-addition/{addition}', [OrderController::class, 'set_addition'])->name('set-addition');
-        Route::delete('/del-addition/{addition}', [OrderController::class, 'del_addition'])->name('del-addition');
+        Route::post('/add-addition/{id}', [OrderController::class, 'addAddition'])->name('add-addition');
+        Route::post('/update-addition/{id}', [OrderController::class, 'updateAddition'])->name('update-addition');
+        Route::delete('/del-addition/{id}/{addition}', [OrderController::class, 'removeAddition'])->name('del-addition');
 
 
         Route::post('/set-manager/{order}', [OrderController::class, 'set_manager'])->name('set-manager');

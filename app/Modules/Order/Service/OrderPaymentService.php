@@ -58,7 +58,7 @@ class OrderPaymentService
         $order->refresh();
         $this->checkPayment($order);
         $payment->completed();
-        $this->logger->logOrder(order: $order, action: 'Внесена оплата',
+        $this->logger->logOrder(orderId: $order->id, action: 'Внесена оплата',
             object: $payment->methodText(), value: price($payment->amount),
             link: route('admin.order.payment.show', $payment));
 
@@ -86,7 +86,7 @@ class OrderPaymentService
             $payment->save();
             $order->refresh();
             $this->checkPayment($order);
-            $this->logger->logOrder(order: $order, action: 'Разнесена оплата',
+            $this->logger->logOrder(orderId: $order->id, action: 'Разнесена оплата',
                 object: $payment->methodText(), value: price($payment->amount),
                 link: route('admin.order.payment.show', $payment));
         });

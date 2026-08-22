@@ -5,6 +5,7 @@ namespace App\Modules\Order\Domain\Entities;
 
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Order\Application\DTOs\OrderAddition\OrderAdditionUpdateData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
@@ -132,18 +133,19 @@ class OrderEntity
     }
 
 
-    public function addItem(OrderItemData $data): void
+    public function addItem(OrderItemData $data, bool $increase = false): void
     {
         //При добавлении товара, добавляем, даже дубли, без изменения кол-ва
-        /*
-        foreach ($this->items as &$item) {
-            //Если такой товар уже есть и тип заказа совпадает
-            if ($item->productId == $data->productId && $item->preorder == $data->preorder) {
-                $item->quantity += $data->quantity;
-                return;
+        if ($increase) {
+            foreach ($this->items as &$item) {
+                //Если такой товар уже есть и тип заказа совпадает
+                if ($item->productId == $data->productId && $item->preorder == $data->preorder) {
+                    $item->quantity += $data->quantity;
+                    $this->recalculateTotals();
+                    return;
+                }
             }
         }
-        */
         if (is_null($data->productId) || is_null($data->basePrice))
             throw new \InvalidArgumentException('productId или basePrice не доджны быть null');
         $orderItem = new OrderItemEntity(
@@ -240,31 +242,19 @@ class OrderEntity
     /**
      * Обновляет дополнение заказа по его id.
      *
-     * @param int $id
-     * @param int|null $additionId
-     * @param float|null $amount
-     * @param int|null $quantity
-     * @param string|null $comment
+     * @param OrderAdditionUpdateData $dto
      * @return void
      */
     public function updateAddition(
-        int $id,
-        ?int $additionId = null,
-        ?float $amount = null,
-        ?int $quantity = null,
-        ?string $comment = null,
+        OrderAdditionUpdateData $dto
     ): void {
-        foreach ($this->additions as $addition) {
-            if ($addition->id === $id) {
-                if ($additionId !== null) $addition->additionId = $additionId;
-                if ($amount !== null) $addition->amount = $amount;
-                if ($quantity !== null) $addition->quantity = $quantity;
-                if ($comment !== null) $addition->comment = $comment;
-
-                $this->recalculateTotals();
-                return;
-            }
-        }
+        $addition = $this->getAddition($dto->id);
+        $addition->update(
+            amount: $dto->amount,
+            quantity: $dto->quantity,
+            comment: $dto->comment,
+        );
+        $this->recalculateTotals();
     }
 
     public function addStatus(OrderStatus $status): void
@@ -278,5 +268,13 @@ class OrderEntity
     public function recalculateTotals()
     {
 
+    }
+
+    private function getAddition(int $id): OrderAdditionEntity
+    {
+        foreach ($this->additions as $addition) {
+            if ($addition->id === $id) return $addition;
+        }
+        throw new \InvalidArgumentException('Неверный id для услуги заказа');
     }
 }

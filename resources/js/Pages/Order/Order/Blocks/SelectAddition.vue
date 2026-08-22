@@ -23,7 +23,7 @@ const props = defineProps({
 
 const addition = ref(null)
 function handleSelect() {
-    router.post(route('admin.order.add-addition', {order: props.order.id}), {addition_id: addition.value})
+    router.post(route('admin.order.add-addition', {id: props.order.id}), {additionId: addition.value})
     addition.value = null
 }
 </script>

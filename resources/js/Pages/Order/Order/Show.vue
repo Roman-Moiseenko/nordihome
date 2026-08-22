@@ -53,9 +53,9 @@
         </div>
         <div v-if="order.additions.length > 0" class="mt-1 py-1 bg-white rounded-md">
             <h2 class="font-medium text-green-800">Услуги</h2>
-            <OrderAdditions v-if="is_new || is_awaiting" :additions=[...order.additions] />
-            <OrderAdditionsIssued v-if="is_issued" :additions=[...order.additions] />
-            <OrderAdditionsView v-if="is_view" :additions=[...order.additions] />
+            <OrderAdditions v-if="is_new || is_awaiting" :additions=[...order.additions] :order-id="order.id" />
+            <OrderAdditionsIssued v-if="is_issued" :additions=[...order.additions]  :order-id="order.id"/>
+            <OrderAdditionsView v-if="is_view" :additions=[...order.additions] :order-id="order.id" />
 
         </div>
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Parser\Domain\ValueObjects;
 
-class Package
+final class Package
 {
     public function __construct(
         public float $height = 0.0,

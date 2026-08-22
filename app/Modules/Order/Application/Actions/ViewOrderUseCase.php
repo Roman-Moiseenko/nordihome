@@ -31,8 +31,9 @@ readonly class ViewOrderUseCase
 
     public function execute(int $id): OrderViewData
     {
+        //MAINDO Убрать расчеты, данные должны пересчитываться при изменении Item и Addition
 
-       // if ($permission->can('order.order.edit')) throw new \DomainException('Нет доступа к редактированию заказов');
+        // if ($permission->can('order.order.edit')) throw new \DomainException('Нет доступа к редактированию заказов');
 
         $orderEntity = $this->repository->getById($id);
 
@@ -95,7 +96,7 @@ readonly class ViewOrderUseCase
             $baseAmount += $item->baseCost * $item->quantity;
 
             // Промо-скидки
-            if (!is_null($item->discountId)){
+            if (!is_null($item->discountId)) {
                 $promotionsAmount += ($item->baseCost - $item->sellCost) * $item->quantity;
             }
             $totalWeight += (float)$productItemData->weight * $item->quantity;
@@ -106,6 +107,8 @@ readonly class ViewOrderUseCase
         $additions = [];
         $additionsAmount = 0.0;
         foreach ($orderEntity->additions as $orderAddition) {
+
+            //MAINDO Получаем данные из базы, не пересчитывая
             $addition = $this->getAdditionDataUseCase->execute($orderAddition->additionId, $orderEntity);
 
             $additionAmount = $orderAddition->amount;
@@ -150,6 +153,7 @@ readonly class ViewOrderUseCase
             base: $baseAmount,
             addition: $additionsAmount,
             manual: $manualAmount,
+            percent: $manualAmount / $baseAmount * 100,
             promotions: $promotionsAmount,
             coupon: $couponAmount,
             discount: $discountAmount,
@@ -207,7 +211,7 @@ readonly class ViewOrderUseCase
             ],
             'emails' => is_null($order->shopper_id) ? [] : array_select($order->shopper->getEmails()),
             'shoppers' => [], //is_null($order->client) ? [] : $order->client->organizations,
-        //    'reserve' => $order->getReserveTo(),
+            //    'reserve' => $order->getReserveTo(),
             /*
             'payments' => $order->payments()->get()->map(fn(OrderPayment $payment) => [
                 'id' => $payment->id,
@@ -215,13 +219,13 @@ readonly class ViewOrderUseCase
                 'method_text' => $payment->methodText(),
             ]),
             */
-                /*
-            'movements' => $order->movements()->get()->map(fn(MovementDocument $movement) => [
-                'id' => $movement->id,
-                'number' => $movement->number,
-                'status_text' => $movement->statusHTML(),
-            ]),
-            */
+            /*
+        'movements' => $order->movements()->get()->map(fn(MovementDocument $movement) => [
+            'id' => $movement->id,
+            'number' => $movement->number,
+            'status_text' => $movement->statusHTML(),
+        ]),
+        */
             /*
             'expenses' => $order->expenses()->get()->map(fn(OrderExpense $expense) => [
                 'id' => $expense->id,
@@ -336,8 +340,8 @@ readonly class ViewOrderUseCase
             'manual' => $orderAddition->addition->manual,
             'base' => $orderAddition->addition->base,
             'is_quantity' => $orderAddition->addition->is_quantity,
-           // 'remains' => $orderAddition->getRemains(),
-           // 'refund' => $refund == 0 ? null : $refund,
+            // 'remains' => $orderAddition->getRemains(),
+            // 'refund' => $refund == 0 ? null : $refund,
         ]);
     }
 }

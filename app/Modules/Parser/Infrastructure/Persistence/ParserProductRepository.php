@@ -150,10 +150,9 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         $entity->composite = $model->composite ?? [];
 
         // packages
-        $packagesData = $model->packages ?? [];
         $entity->packages = array_map(
             fn(array $item) => Package::fromArray($item),
-            $packagesData
+            $model->packages ?? []
         );
 
         // colors

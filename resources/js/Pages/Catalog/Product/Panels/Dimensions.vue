@@ -138,14 +138,15 @@ const props = defineProps({
     dimensions: Array,
     complexities: Array,
 })
+console.log(props.product)
 const autoSave = ref(true)
 const isSaving = ref(false)
 const form = reactive({
     dimensions: props.product.dimensions,
-    packages: [...props.product.packages.packages],
+    packages: [...props.product.packages],
     local: props.product.local,
     delivery: props.product.delivery,
-    complexity: props.product.packages.complexity,
+    complexity: props.product.complexity,
     modification: props.product.modification,
 })
 
@@ -162,7 +163,7 @@ function onSave() {
         preserveScroll: true,
         onSuccess: page => {
             isSaving.value = false
-            form.packages = [...page.props.product.packages.packages]
+            form.packages = [...page.props.product.packages]
         },
         onError: page => {
             isSaving.value = false

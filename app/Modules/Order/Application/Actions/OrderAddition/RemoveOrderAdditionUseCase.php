@@ -1,32 +1,29 @@
 <?php
 
-namespace App\Modules\Order\Application\Actions\OrderItem;
+namespace App\Modules\Order\Application\Actions\OrderAddition;
 
-use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
-readonly class UpdateOrderItemUseCase
+readonly class RemoveOrderAdditionUseCase
 {
-    public function __construct(
-        private OrderRepositoryInterface $repository,
-        private OrderCalculateService    $orderCalculateService,
+
+    public function __construct(private OrderRepositoryInterface $repository,
+                                private OrderCalculateService    $orderCalculateService,
     )
     {
     }
 
-    public function execute(int $orderId, OrderItemUpdateData $dto, UserPermission $permission): void
+    public function execute(int $orderId, int $additionId, UserPermission $permission): void
     {
         if (!$permission->can('order.order.edit')) throw new AccessDeniedException();
-
         $orderEntity = $this->repository->getById($orderId);
 
-        $orderEntity->updateItem($dto);
+        $orderEntity->removeAddition($additionId);
 
         $orderEntity = $this->repository->save($orderEntity);
         $this->orderCalculateService->execute($orderEntity->id);
-
     }
 }

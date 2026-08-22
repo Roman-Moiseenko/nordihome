@@ -16,6 +16,8 @@ class OrderAddProductData extends Data
         #[Required, Numeric]
         public int $quantity,
         #[Nullable, BooleanType]
-        public ?bool $preorder = false
+        public ?bool $preorder = false,
+        #[Nullable, BooleanType]
+        public ?bool $increase = false, //Увеличение имеющегося (true) или добавление новой позиции (false)
     ) {}
 }

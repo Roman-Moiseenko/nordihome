@@ -7,6 +7,7 @@ use App\Modules\Order\Entity\Addition\CalculateAddition;
 use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Str;
 use JetBrains\PhpStorm\ExpectedValues;
 
 /**
@@ -49,22 +50,21 @@ class Addition extends Model
 
     public static function register(
         string $name,
-        string $slug,
         #[ExpectedValues(valuesFromClass: Addition::class)]int $type,
         bool $manual,
         int $base,
-        string $class = null,
+        ?string $class = null,
         bool $is_quantity = false,
     ): self
     {
         return self::create([
             'name' => $name,
-            'slug' => $slug,
+            'slug' => Str::slug($name),
             'manual' => $manual,
             'type' => $type,
             'base' => $base,
             'class' => $class,
-            'is_quantity' => false,
+            'is_quantity' => $is_quantity,
         ]);
     }
 

@@ -18,6 +18,7 @@ use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Repository\TagRepository;
+use App\Modules\Parser\Domain\ValueObjects\Package;
 use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Settings;
@@ -377,14 +378,15 @@ class ProductService
         $products = $this->list($product, $request->boolean('modification'));
         foreach ($products as $product) {
             $product->dimensions = Dimensions::create(params: $request->input('dimensions'));
-            $product->packages->clear();
+           //
+            $packages = [];
             foreach ($request->input('packages') as $array) {
-                $product->packages->create(params: $array);
-                Log::info(json_encode($array));
+                $packages[] = Package::fromArray($array);
             }
+            $product->packages = $packages;
             $product->delivery = $request->boolean('delivery');
             $product->local = $request->boolean('local');
-            $product->packages->complexity = $request->integer('complexity');
+            $product->complexity = $request->string('complexity')->trim()->value();
             $product->save();
         }
     }

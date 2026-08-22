@@ -763,7 +763,7 @@ class Order extends Model
         }
     }
 
-    public function delStatus(#[ExpectedValues(valuesFromClass: OrderHistoryStatus::class)] int $value): void
+    public function delStatus(#[ExpectedValues(valuesFromClass: OrderHistoryStatus::class)] string $value): void
     {
         foreach ($this->statuses as $status) {
             if ($status->value == $value) $status->delete();

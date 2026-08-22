@@ -16,12 +16,13 @@ class GetAdditionDataUseCase
         /** @var Addition $additionModel */
         $additionModel = Addition::find($id);
 
+
         if (is_null($additionModel->class)) {
             $calculate = null;
         } else {
             $calculate = $additionModel->class::calculateEntity($orderEntity, $additionModel->base);
         }
-
+        \Log::info($calculate);
         return new AdditionData(
             baseRatio: $additionModel->base,
             name: $additionModel->name,

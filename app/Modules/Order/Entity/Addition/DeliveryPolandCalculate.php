@@ -6,17 +6,19 @@ namespace App\Modules\Order\Entity\Addition;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Setting\Entity\Settings;
+use JetBrains\PhpStorm\Deprecated;
 
 class DeliveryPolandCalculate extends CalculateAddition
 {
+    #[Deprecated]
     public static function calculate(Order $order, int $base): int
     {
         $settings = app()->make(Settings::class);
         $parser = $settings->parser;
-        //Первично поиск по brand = 'Икеа'
-        //В дальнейшем ?? перейти на список из ProductParser
         $ikea = Brand::IkeaID();
+
         //Считаем вес
         $weight = 0;
         $fragile = 0; //Хрупкий
@@ -35,10 +37,11 @@ class DeliveryPolandCalculate extends CalculateAddition
                 }
             }
         }
+        \Log::warning($weight);
         if ($weight == 0) return 0;
         //Коэффициент к стоимости
 
-        $coef = self::getCoef($weight, $parser);
+        $coef = self::getRatio($weight, $parser);
 
         $cost = $weight * $coef + $fragile * $parser->cost_weight_fragile + $sanctioned;
 
@@ -48,12 +51,40 @@ class DeliveryPolandCalculate extends CalculateAddition
 
     public static function calculateEntity(OrderEntity $order, int $base): int
     {
-        //MAINDO Переделать на UseCase под OrderEntity
-        $order = Order::find($order->id);
-        return self::calculate($order, $base);
+        $settings = app()->make(Settings::class);
+        $repository = app()->make(ParserProductRepositoryInterface::class);
+        $parser = $settings->parser;
+       // $ikea = Brand::IkeaID();
+
+        //Считаем вес
+        $weight = 0;
+        $fragile = 0; //Хрупкий
+        $sanctioned = 0; //Санкционный
+
+        foreach ($order->items as $item) {
+            if ($item->preorder) {
+                $parserEntity = $repository->getByProductId($item->productId);
+                if (!is_null($parserEntity)) {
+                    $weight += $parserEntity->weight() * $item->quantity;
+
+                    if ($parserEntity->sanctioned)
+                        $sanctioned += ($item->sellCost * $parser->cost_sanctioned / 100) * $item->quantity;
+                    if ($parserEntity->fragile)
+                        $fragile += $parserEntity->weight() * $item->quantity;
+                }
+            }
+        }
+
+        $ratioWeight = self::getRatio($weight, $parser);
+
+        $cost = $weight * $ratioWeight + $fragile * $parser->cost_weight_fragile + $sanctioned;
+        return $cost < 1000 ? 1000 : (int)ceil($cost);
+
+      //  $order = Order::find($order->id);
+     //   return self::calculate($order, $base);
     }
 
-    private static function getCoef(float $weight, $parser)
+    private static function getRatio(float $weight, $parser)
     {
         if ($weight <= 5.0) return $parser->parser_delivery_0;
         if ($weight <= 10.0) return $parser->parser_delivery_1;

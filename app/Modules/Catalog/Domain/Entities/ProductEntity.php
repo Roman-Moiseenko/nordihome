@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Domain\Entities;
 
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
+use App\Modules\Parser\Domain\ValueObjects\Package;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 final class ProductEntity
@@ -33,6 +34,11 @@ final class ProductEntity
     public string $namePrint {
         get => $this->namePrint;
         set => $this->namePrint = $value;
+    }
+
+    public ?string $complexity = null {
+        get => $this->complexity;
+        set => $this->complexity = $value;
     }
 
     public string $oldSlug = '' {
@@ -179,7 +185,11 @@ final class ProductEntity
         get => $this->dimensions;
         set => $this->dimensions = $value;
     }
-
+    /** @var Package[] $packages */
+    public array $packages = [] {
+        get => $this->packages;
+        set => $this->packages = $value;
+    }
     public function __construct(
         string $name,
         Code $code,
@@ -212,5 +222,23 @@ final class ProductEntity
     public function isPublished(): bool
     {
         return $this->published;
+    }
+
+    public function weight(): float
+    {
+        $weight = 0;
+        foreach ($this->packages as $package) {
+            $weight += $package->weight * $package->quantity;
+        }
+        return $weight;
+    }
+
+    public function volume(): float
+    {
+        $volume = 0;
+        foreach ($this->packages as $package) {
+            $volume += ($package->height * $package->width * $package->length) / 1000000 * $package->quantity;
+        }
+        return ceil($volume * 1000) / 1000;
     }
 }

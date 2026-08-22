@@ -9,11 +9,18 @@ use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+use App\Modules\Order\Application\Actions\OrderAddition\AddAdditionOrderUseCase;
+use App\Modules\Order\Application\Actions\OrderAddition\RemoveOrderAdditionUseCase;
+use App\Modules\Order\Application\Actions\OrderAddition\UpdateOrderAdditionUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\AddProductOrderUseCase;
+use App\Modules\Order\Application\Actions\OrderItem\RemoveOrderItemUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\UpdateOrderItemUseCase;
 use App\Modules\Order\Application\Actions\ViewOrderUseCase;
+use App\Modules\Order\Application\DTOs\OrderAddition\OrderAdditionUpdateData;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
+use App\Modules\Order\Application\DTOs\OrderItem\OrderItemPreData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
+use App\Modules\Order\Application\Services\ChangePreOrderItemService;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
@@ -28,6 +35,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use JetBrains\PhpStorm\Deprecated;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
@@ -40,16 +48,21 @@ class OrderController extends Controller
 {
 
     public function __construct(
-        private readonly OrderService           $service,
-        private readonly OrderRepository        $repository,
-        private readonly InvoiceReport          $report,
-        private readonly OrganizationRepository $organizations,
-        private readonly OrderReserveService    $reserveService,
+        private readonly OrderService               $service,
+        private readonly OrderRepository            $repository,
+        private readonly InvoiceReport              $report,
+        private readonly OrganizationRepository     $organizations,
+        private readonly OrderReserveService        $reserveService,
         private readonly ListStaffByPositionUseCase $positionUseCase,
-        private readonly ViewOrderUseCase $viewOrderUseCase,
-        private readonly ViewClientUseCase $clientUseCase,
-        private readonly AddProductOrderUseCase $addProductOrderUseCase,
-        private readonly UpdateOrderItemUseCase $updateOrderItemUseCase,
+        private readonly ViewOrderUseCase           $viewOrderUseCase,
+        private readonly ViewClientUseCase          $clientUseCase,
+        private readonly AddProductOrderUseCase     $addProductOrderUseCase,
+        private readonly UpdateOrderItemUseCase     $updateOrderItemUseCase,
+        private readonly RemoveOrderItemUseCase     $removeOrderItemUseCase,
+        private readonly AddAdditionOrderUseCase    $addAdditionOrderUseCase,
+        private readonly ChangePreOrderItemService  $changePreOrderItemService,
+        private readonly UpdateOrderAdditionUseCase $updateOrderAdditionUseCase,
+        private readonly RemoveOrderAdditionUseCase $removeOrderAdditionUseCase,
     )
     {
     }
@@ -78,12 +91,12 @@ class OrderController extends Controller
         $additions = $this->repository->guideAddition();
         return Inertia::render('Order/Order/Show', [
             'order' => $order, //$this->repository->OrderWithToArray($order),
-          //  'storages' => $storages,
-           // 'mainStorage' => $mainStorage,
+            //  'storages' => $storages,
+            // 'mainStorage' => $mainStorage,
             'staffs' => $staffs,
             'additions' => $additions,
             'traders' => $this->organizations->getTraders(),
-           // 'order_related' => $order->relatedDocuments(),
+            // 'order_related' => $order->relatedDocuments(),
         ]);
     }
 
@@ -164,19 +177,24 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Заказ в работе');
     }
 
+
     /** РАБОТА С ЗАКАЗОМ */
+    #[Deprecated]
     public function movement(Request $request, Order $order): RedirectResponse
     {
         $movement = $this->service->movement($order, (int)$request['storage_out'], (int)$request['storage_in']);
         return redirect()->route('admin.accounting.movement.show', $movement);
     }
 
+    #[Deprecated]
     public function set_reserve(Request $request, Order $order): RedirectResponse
     {
         $this->service->setReserveService($order, $request);
         return redirect()->back()->with('success', 'Время резерва установлено');
     }
 
+    ///////////////////////////////////////
+    /// Возможно в общий UseCase      ////
     public function set_discount(Request $request, Order $order): RedirectResponse
     {
         $this->service->setDiscount($order, $request);
@@ -189,12 +207,19 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Клиент назначен');
     }
 
-
     public function set_info(Request $request, Order $order): RedirectResponse
     {
         $this->service->setInfo($order, $request);
         return redirect()->back()->with('success', 'Сохранено');
     }
+
+    public function set_comment(Request $request, Order $order): RedirectResponse
+    {
+        $this->service->setComment($order, $request);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+    ///                                ////
+    ///////////////////////////////////////
 
     public function set_assemblage(Request $request): RedirectResponse
     {
@@ -208,11 +233,6 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function set_comment(Request $request, Order $order): RedirectResponse
-    {
-        $this->service->setComment($order, $request);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
 
     /** РАБОТА С ТОВАРОМ В ЗАКАЗЕ */
     public function add_product(int $id, Request $request, UserPermission $permission): RedirectResponse
@@ -229,16 +249,17 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function set_item(Request $request, OrderItem $item): RedirectResponse
+    public function removeItem(int $id, int $item, UserPermission $permissions): RedirectResponse
     {
-        $this->service->setItem($item, $request);
-        return redirect()->back()->with('success', 'Сохранено');
+        $this->removeOrderItemUseCase->execute($id, $item, $permissions);
+        return redirect()->back()->with('success', 'Товар удален');
     }
 
-    public function del_item(OrderItem $item): RedirectResponse
+    public function changeItem(int $id, Request $request, UserPermission $permissions)
     {
-        $this->service->deleteItem($item);
-        return redirect()->back()->with('success', 'Товар удален');
+        $dto = OrderItemPreData::validateAndCreate($request->all());
+        $this->changePreOrderItemService->execute($id, $dto, $permissions);
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
     public function add_products(Request $request, Order $order): RedirectResponse
@@ -247,6 +268,7 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Товары добавлены');
     }
 
+    #[Deprecated]
     public function reserve_collect(Request $request, OrderItem $item): RedirectResponse
     {
         $this->reserveService->CollectReserve($item, $request->integer('storage_id'), $request->float('quantity'));
@@ -254,27 +276,24 @@ class OrderController extends Controller
     }
 
     /** РАБОТА С УСЛУГАМИ В ЗАКАЗЕ */
-    public function add_addition(Request $request, Order $order): RedirectResponse
+    public function addAddition(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->service->addAddition(
-            $order,
-            $request->integer('addition_id'),
-        );
+        $this->addAdditionOrderUseCase->execute($id, $request->integer('additionId'), $permission);
         return redirect()->back()->with('success', 'Услуга добавлена');
     }
 
-    public function set_addition(Request $request, OrderAddition $addition): RedirectResponse
+    public function updateAddition(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->service->setAddition($addition, $request);
+        $dto = OrderAdditionUpdateData::validateAndCreate($request->all());
+        $this->updateOrderAdditionUseCase->execute($id, $dto, $permission);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function del_addition(OrderAddition $addition): RedirectResponse
+    public function removeAddition(int $id, int $addition, UserPermission $permission): RedirectResponse
     {
-        $this->service->deleteAddition($addition);
+        $this->removeOrderAdditionUseCase->execute($id, $addition, $permission);
         return redirect()->back()->with('success', 'Услуга удалена');
     }
-
 
 
     /**  НОВЫЕ ACTIONS  **/

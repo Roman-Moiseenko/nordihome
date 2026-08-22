@@ -8,8 +8,9 @@ class ProductItemData
         public int     $id,
         public string  $name,
         public string  $code,
-        public string  $volume,
-        public string  $weight,
+        public float  $volume,
+        public float  $weight,
+
     )
     {
 

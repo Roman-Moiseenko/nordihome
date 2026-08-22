@@ -77,7 +77,7 @@ class DeliveryService
         $expense->save();
         $expense->refresh();
         event(new ExpenseHasDelivery($expense)); //Уведомляем клиента с трек-номером
-        $this->logger->logOrder(order: $expense->order, action: 'Распоряжение в пути',
+        $this->logger->logOrder(orderId: $expense->order_id, action: 'Распоряжение в пути',
             value: !empty($track) ? ('Трек посылки ' . $track) : '',
             link: route('admin.order.expense.show', $expense)
         );

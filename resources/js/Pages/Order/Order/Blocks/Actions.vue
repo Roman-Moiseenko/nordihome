@@ -246,7 +246,7 @@ const props = defineProps({
     storages: Array,
 })
 
-
+console.log(props.order.amount)
 const iSaving = ref(false)
 const form = reactive({
     coupon: null,

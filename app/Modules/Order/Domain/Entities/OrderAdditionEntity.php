@@ -52,4 +52,16 @@ class OrderAdditionEntity
     ) {
         $this->additionId = $additionId;
     }
+
+    public function update(?int $amount, ?int $quantity, ?string $comment): void
+    {
+        if ($amount !== null)
+            $this->amount = $amount;
+
+        if ($quantity !== null)
+            $this->quantity = $quantity;
+
+        if ($comment !== null)
+            $this->comment = $comment;
+    }
 }

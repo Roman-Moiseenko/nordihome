@@ -83,11 +83,12 @@ use JetBrains\PhpStorm\Pure;
  * @property bool $only_on_order Только под заказ
  *
  * @property Dimensions $dimensions Габариты товара (+ вес),
- * @property Packages $packages Упаковки + вес + кол-во пачек
+ * @property array $packages Упаковки + вес + кол-во пачек
  * @property string $model Модель товара, не для всех товаров, опционо
  * @property string $barcode Штрих-код
  * @property bool $fractional  Дробное кол-во при учете
  * @property bool $hide_price Не указывать в прайс листах
+ * @property string $complexity Сложность упаковки
  *
  * @property int $vat_id НДС
  * @property int $country_id Страна
@@ -165,7 +166,7 @@ class Product extends Model
         'updated_at' => 'datetime',
         'published_at' => 'datetime',
         'dimensions' => DimensionsCast::class,
-        'packages' => PackagesCast::class,
+        'packages' => 'json',
         'published' => 'boolean',
         'not_sale' => 'boolean',
     ];
@@ -208,6 +209,7 @@ class Product extends Model
         'priority',
         'packages',
         'fractional',
+        'complexity',
     ];
     protected $hidden = [
 
@@ -397,14 +399,15 @@ class Product extends Model
 
     public function weight(): float|int
     {
-        $weight = 0;
+        return 0;
+   /*     $weight = 0;
         if ($this->composites()->count() > 0) {
             foreach ($this->composites as $composite)
             $weight += $composite->weight() * $composite->pivot->quantity;
         } else {
             $weight = $this->packages->weight();
         }
-        return ceil($weight * 1000) /1000;
+        return ceil($weight * 1000) /1000;*/
     }
 
     public function volume(): float|int
