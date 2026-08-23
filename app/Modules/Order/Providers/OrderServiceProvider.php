@@ -2,10 +2,14 @@
 
 namespace App\Modules\Order\Providers;
 
+use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
+use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Database\Seeders\AdditionSeeder;
 use App\Modules\Order\Database\Seeders\OrderRoleSeeder;
 use App\Modules\Order\Infrastructure\Events\OrderHasCreated;
 use App\Modules\Order\Infrastructure\Listeners\SendClientOrderNew;
+use App\Modules\Order\Infrastructure\Persistence\OrderRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -88,8 +92,13 @@ class OrderServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            \App\Modules\Order\Application\Interfaces\OrderRepositoryInterface::class,
-            \App\Modules\Order\Infrastructure\Persistence\OrderRepository::class
+            OrderRepositoryInterface::class,
+            OrderRepository::class
+        );
+
+        $this->app->bind(
+            OrderLoggerServiceInterface::class,
+            OrderLoggerService::class
         );
     }
 

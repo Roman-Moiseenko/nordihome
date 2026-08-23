@@ -6,13 +6,13 @@ namespace App\Modules\Order\Service;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\BatchSaleService;
 use App\Modules\Admin\Entity\Worker;
-use App\Modules\Analytics\LoggerService;
 use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Helpers\NotificationHelper;
 use App\Modules\Notification\Helpers\TelegramParams;
 use App\Modules\Notification\Message\StaffMessage;
+use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
@@ -22,8 +22,8 @@ use App\Modules\Order\Events\ExpenseHasCanceled;
 use App\Modules\Order\Events\ExpenseHasCompleted;
 use App\Modules\Order\Events\OrderHasCompleted;
 use App\Modules\Order\Infrastructure\Models\Order;
-use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Order\Infrastructure\Models\OrderHistoryStatus;
+use App\Modules\Order\Infrastructure\Models\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -31,9 +31,9 @@ use Illuminate\Support\Facades\DB;
 class ExpenseService
 {
     public function __construct(
-        private readonly OrderReserveService $reserveService,
-        private readonly LoggerService       $logger,
-        private readonly BatchSaleService    $batchSaleService,
+        private readonly OrderReserveService      $reserveService,
+        private readonly OrderLoggerService       $logger,
+        private readonly BatchSaleService         $batchSaleService,
         //private readonly StaffRepository     $staffs,
        // private readonly YookassaService     $yookassaService,
         private readonly StaffRepositoryInterface $staffRepository
@@ -82,7 +82,7 @@ class ExpenseService
             }
             $expense->refresh();
 
-            $this->logger->logOrder(orderId: $expense->order_id, action: 'Создано распоряжение на выдачу',
+            $this->logger->log(orderId: $expense->order_id, action: 'Создано распоряжение на выдачу',
                 value: $expense->htmlNumDate(),
                 link: route('admin.order.expense.show', $expense)
             );
@@ -124,7 +124,7 @@ class ExpenseService
         if ($method == 'shop') {
             $this->completed($expense);
             $expense->refresh();
-            $this->logger->logOrder(orderId: $expense->order_id, action: 'Выдать товар с магазина',
+            $this->logger->log(orderId: $expense->order_id, action: 'Выдать товар с магазина',
                 value: $expense->htmlNumDate());
         }
         if ($method == 'warehouse') {
@@ -165,7 +165,7 @@ class ExpenseService
             }
             //Удаляем назначенных рабочих
             $expense->workers()->detach();
-            $this->logger->logOrder(orderId: $expense->order_id, action: 'Отмена распоряжения на выдачу',
+            $this->logger->log(orderId: $expense->order_id, action: 'Отмена распоряжения на выдачу',
                 value: $expense->htmlNumDate(),
                 link: route('admin.order.expense.show', $expense));
             $expense->status = OrderExpense::STATUS_CANCELED;
@@ -190,7 +190,7 @@ class ExpenseService
 
         event(new ExpenseHasAssembling($expense)); //Уведомление на склад на выдачу
 
-        $this->logger->logOrder(orderId: $expense->order_id, action: 'Распоряжение отправлено на сборку',
+        $this->logger->log(orderId: $expense->order_id, action: 'Распоряжение отправлено на сборку',
             value: $expense->htmlNumDate(),
             link: route('admin.order.expense.show', $expense));
     }
@@ -203,7 +203,7 @@ class ExpenseService
 
         $message = 'Список товаров на сборку';
         $expense->status = OrderExpense::STATUS_ASSEMBLING;
-        $this->logger->logOrder(orderId: $expense->order_id, action: 'Назначен грузчик распоряжению',
+        $this->logger->log(orderId: $expense->order_id, action: 'Назначен грузчик распоряжению',
             object: $expense->htmlNumDate(),
             value: $expense->getWorker(Worker::WORK_LOADER)->fullname->getFullName(),
             link: route('admin.order.expense.show', $expense));
@@ -263,7 +263,7 @@ class ExpenseService
         $expense->refresh();
 
         $expense->status = OrderExpense::STATUS_DELIVERY;
-        $this->logger->logOrder(orderId:$expense->order_id, action:'Назначен доставщик распоряжению',
+        $this->logger->log(orderId:$expense->order_id, action:'Назначен доставщик распоряжению',
             object: $expense->htmlNumDate(),
             value: $expense->getWorker(Worker::WORK_DRIVER)->fullname->getFullName(),
             link: route('admin.order.expense.show', $expense));
@@ -280,7 +280,7 @@ class ExpenseService
         $expense->push();
         $expense->refresh();
 
-        $this->logger->logOrder(orderId: $expense->order_id, action: 'Назначен сборщик(и) мебели',
+        $this->logger->log(orderId: $expense->order_id, action: 'Назначен сборщик(и) мебели',
             object: $expense->htmlNumDate(),
             value: implode(', ', $_workers),
             link: route('admin.order.expense.show', $expense));
@@ -356,14 +356,14 @@ class ExpenseService
                 if ($check) {
                     $expense->order->setStatus(OrderHistoryStatus::COMPLETED);
                     event(new OrderHasCompleted($expense->order));
-                    $this->logger->logOrder(orderId: $expense->order_id, action:  'Заказ завершен');
+                    $this->logger->log(orderId: $expense->order_id, action:  'Заказ завершен');
                 } else {
-                    $this->logger->logOrder(orderId:$expense->order_id, action: 'Товар выдан по распоряжению',
+                    $this->logger->log(orderId:$expense->order_id, action: 'Товар выдан по распоряжению',
                         value:$expense->htmlNumDate(),
                         link: route('admin.order.expense.show', $expense));
                 }
             } else {
-                $this->logger->logOrder(orderId: $expense->order_id, action: 'Товар выдан по распоряжению',
+                $this->logger->log(orderId: $expense->order_id, action: 'Товар выдан по распоряжению',
                     value: $expense->htmlNumDate(),
                     link: route('admin.order.expense.show', $expense));
             }

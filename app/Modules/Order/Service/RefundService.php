@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Order\Service;
 
 use App\Modules\Accounting\Service\BatchSaleService;
-use App\Modules\Analytics\LoggerService;
 use App\Modules\Auth\Infrastructure\Models\Staff;
+use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderExpenseRefundAddition;
@@ -16,10 +16,10 @@ use Illuminate\Support\Facades\DB;
 class RefundService
 {
 
-    private LoggerService $logger;
+    private OrderLoggerService $logger;
     private BatchSaleService $batchSaleService;
 
-    public function __construct(LoggerService $logger, BatchSaleService $batchSaleService)
+    public function __construct(OrderLoggerService $logger, BatchSaleService $batchSaleService)
     {
         $this->logger = $logger;
         $this->batchSaleService = $batchSaleService;
@@ -42,7 +42,7 @@ class RefundService
             }
 
             $order = $refund->expense->order;
-            $this->logger->logOrder(order: $order, action: 'Создан документ на возврат',
+            $this->logger->log(order: $order, action: 'Создан документ на возврат',
                 link: route('admin.order.refund.show', $refund)
             );
         });

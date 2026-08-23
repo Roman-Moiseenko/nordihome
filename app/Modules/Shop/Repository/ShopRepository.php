@@ -529,7 +529,7 @@ class ShopRepository
         if (is_null($user_id)) $user_id = Auth::guard('web')->user()->id;
 
         $coupon = Coupon::where('code', $code)
-            ->where('user_id', $user_id)
+            ->where('client_id', $user_id)
             ->where('started_at', '<', Carbon::now())
             ->where('finished_at', '>', Carbon::now())
             ->where('status', Coupon::NEW)

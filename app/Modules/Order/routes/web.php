@@ -39,7 +39,8 @@ Route::group(
         Route::post('/set-assemblage', [OrderController::class, 'set_assemblage'])->name('set-assemblage');
         Route::post('/set-packing', [OrderController::class, 'set_packing'])->name('set-packing');
 
-        Route::post('/set-discount/{order}', [OrderController::class, 'set_discount'])->name('set-discount');
+        Route::post('/set-discount/{id}', [OrderController::class, 'setDiscount'])->name('set-discount');
+        Route::post('/set-coupon/{id}', [OrderController::class, 'setCoupon'])->name('set-coupon');
 
         Route::post('/add-addition/{id}', [OrderController::class, 'addAddition'])->name('add-addition');
         Route::post('/update-addition/{id}', [OrderController::class, 'updateAddition'])->name('update-addition');

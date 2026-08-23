@@ -15,7 +15,7 @@
             <el-input v-model="form.manual"
                       clearable
                       :formatter="val => func.MaskCount(val, 0)"
-                      @change="setDiscount('manual')"
+                      @change="setManualDiscount"
                       :disabled="iSaving"
                       style="width: 110px">
                 <template #append>₽</template>
@@ -24,13 +24,13 @@
                       :formatter="val => func.MaskFloat(val)"
                       clearable
                       class="ml-1" style="width: 90px"
-                      @change="setDiscount('percent')"
+                      @change="setPercentDiscount"
                       :disabled="iSaving"
             >
                 <template #append>%</template>
             </el-input>
             <el-input v-model="form.coupon" clearable class="ml-2" style="width: 80px" placeholder="Купон"
-                      @change="setDiscount('coupon')"
+                      @change="setCoupon"
                       :disabled="iSaving"/>
 
         </div>
@@ -63,78 +63,9 @@
             </el-dropdown-menu>
         </template>
     </el-dropdown>
-    <!--template v-if="!is_new && order.payments.length > 0">
-        <el-dropdown>
-            <el-button type="success" class="mr-2">
-                Платежи
-                <el-icon class="el-icon--right">
-                    <arrow-down/>
-                </el-icon>
-            </el-button>
-            <template #dropdown>
-                <div v-for="item in order.payments" class="p-2">
-                    <Link type="primary" :href="route('admin.order.payment.show', {payment: item.id})">Платеж на сумму
-                        {{ func.price(item.amount) }} [{{ item.method_text }}]
-                    </Link>
-                </div>
-            </template>
-        </el-dropdown>
-    </template-->
-    <!--template v-if="!is_new && !is_awaiting">
-
-        <el-dropdown v-if="order.movements.length > 0">
-            <el-button type="warning" class="mr-2">
-                Перемещения
-                <el-icon class="el-icon--right">
-                    <arrow-down/>
-                </el-icon>
-            </el-button>
-            <template #dropdown>
-                <div v-for="item in order.movements" class="p-2">
-                    <Link type="warning"
-                          :href="route('admin.accounting.movement.show', {movement: item.id})">Перемещение
-                        №{{ item.number }} [{{ item.status_text }}]
-                    </Link>
-                </div>
-            </template>
-        </el-dropdown>
-
-        <el-dropdown v-if="order.expenses.length > 0">
-            <el-button type="success" plain class="mr-2">
-                Распоряжения на выдачу
-                <el-icon class="el-icon--right">
-                    <arrow-down/>
-                </el-icon>
-            </el-button>
-            <template #dropdown>
-                <div v-for="item in order.expenses" class="p-2">
-                    <Link :type="typeExpense(item)"
-                          :href="route('admin.order.expense.show', {expense: item.id})">Распоряжение
-                        №{{ item.number }} от {{ func.date(item.created_at) }} [{{ item.status_text }}]
-                    </Link>
-                </div>
-            </template>
-        </el-dropdown>
-
-    </template-->
     <template v-if="is_view">
         <el-button type="warning" class="ml-5" @click="onCopy">Скопировать</el-button>
     </template>
-
-    <template v-if="order.status.is_prepaid">
-
-    </template>
-    <template v-if="order.status.is_paid">
-
-    </template>
-    <template v-if="order.status.is_completed">
-
-    </template>
-    <template v-if="order.status.is_canceled">
-
-    </template>
-
-    <!--OrderRelatedDocuments  v-if="!is_new" /-->
 
     <el-dialog v-model="dialogFindPayment" title="Выбрать платеж" width="400">
         <el-select v-model="payment_id">
@@ -150,7 +81,6 @@
             </div>
         </template>
     </el-dialog>
-
     <el-dialog v-model="dialogIssued" title="Распоряжение на выдачу товара">
 
         <el-radio-group v-model="issued.method">
@@ -245,23 +175,19 @@ const props = defineProps({
     additions: Array,
     storages: Array,
 })
-
-console.log(props.order.amount)
 const iSaving = ref(false)
 const form = reactive({
     coupon: null,
     manual: props.order.amount.manual,
     percent: props.order.amount.percent,
-    action: null,
 })
 const {is_new, is_awaiting, is_issued, is_view} = inject('$status')
 
-function setDiscount(action) {
-    form.action = action
+function setPercentDiscount() {
     iSaving.value = true
-    router.visit(route('admin.order.set-discount', {order: props.order.id}), {
+    router.visit(route('admin.order.set-discount', {id: props.order.id}), {
         method: "post",
-        data: form,
+        data: {percent: form.percent},
         preserveScroll: true,
         preserveState: false,
         onSuccess: page => {
@@ -269,6 +195,33 @@ function setDiscount(action) {
         }
     })
 }
+function setManualDiscount() {
+    iSaving.value = true
+    router.visit(route('admin.order.set-discount', {id: props.order.id}), {
+        method: "post",
+        data: {manual: form.manual},
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: page => {
+            iSaving.value = false;
+        }
+    })
+}
+
+function setCoupon() {
+
+    iSaving.value = true
+    router.visit(route('admin.order.set-coupon', {id: props.order.id}), {
+        method: "post",
+        data: {coupon: form.coupon},
+        preserveScroll: true,
+        preserveState: false,
+        onSuccess: page => {
+            iSaving.value = false;
+        }
+    })
+}
+
 
 function onPayment(val) {
     const loading = ElLoading.service({

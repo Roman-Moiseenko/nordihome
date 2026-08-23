@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Analytics;
+namespace App\Modules\Order\Application\Services;
 
-use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Auth\Infrastructure\Models\Staff;
-use App\Modules\Order\Infrastructure\Models\Order;
+use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
+use App\Modules\Order\Infrastructure\Models\LoggerOrder;
 
-class LoggerService
+class OrderLoggerService implements OrderLoggerServiceInterface
 {
-    public function logOrder(int $orderId, string $action, $object = '', $value = '', $old = '', $link = null): void
+    public function log(int $orderId, string $action, $object = '', $value = '', $old = '', $link = null): void
     {
 
         if (!auth()->check()) return;

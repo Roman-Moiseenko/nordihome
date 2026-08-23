@@ -4,23 +4,22 @@ declare(strict_types=1);
 namespace App\Modules\Delivery\Service;
 
 use App\Modules\Admin\Entity\Worker;
-use App\Modules\Analytics\LoggerService;
 use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Modules\Delivery\Entity\DeliveryTruck;
+use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseWorker;
 use Carbon\Carbon;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\DB;
 use JetBrains\PhpStorm\Deprecated;
 
 class CalendarService
 {
 
-    private LoggerService $logger;
+    private OrderLoggerService $logger;
 
-    public function __construct(LoggerService $logger)
+    public function __construct(OrderLoggerService $logger)
     {
         $this->logger = $logger;
     }
@@ -138,7 +137,7 @@ class CalendarService
             $this->check_full($calendarPeriod);
             //Если есть Доставщик и сборщик, отменить
             OrderExpenseWorker::where('expense_id', $expense->id)->where('work', '<>', Worker::WORK_LOADER)->delete();
-            $this->logger->logOrder(orderId: $expense->order_id, action: 'Установлена дата отгрузки',
+            $this->logger->log(orderId: $expense->order_id, action: 'Установлена дата отгрузки',
                 object: $calendarPeriod->calendar->htmlDate(), value: $calendarPeriod->timeHtml(),
                 old: $old);
         });

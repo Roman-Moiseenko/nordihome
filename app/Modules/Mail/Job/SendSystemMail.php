@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace App\Modules\Mail\Job;
 
 
-use App\Modules\Analytics\LoggerService;
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Mail\Mailable\AbstractMailable;
 use App\Modules\Mail\Service\SystemMailService;
+use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Infrastructure\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -42,7 +42,7 @@ class SendSystemMail implements ShouldQueue
         $this->systemable_id = $systemable_id;
     }
 
-    public function handle(SystemMailService $service, LoggerService $logger): void
+    public function handle(SystemMailService $service, OrderLoggerService $logger): void
     {
         if (empty($this->emails)) $this->emails[] = $this->client->email;
         //Сохраняем данные об отправленном письме
@@ -53,7 +53,7 @@ class SendSystemMail implements ShouldQueue
 
         if ($this->systemable_type == Order::class) {
             $order = Order::find($this->systemable_id);
-            $logger->logOrder(orderId: $order->id, action: 'Письмо отправлено', value: $this->mail->getName(),
+            $logger->log(orderId: $order->id, action: 'Письмо отправлено', value: $this->mail->getName(),
                 link: route('admin.mail.system.show', $system_mail));
         }
 

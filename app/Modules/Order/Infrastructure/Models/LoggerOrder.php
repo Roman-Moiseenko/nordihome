@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Analytics\Entity;
+namespace App\Modules\Order\Infrastructure\Models;
 
 use App\Modules\Auth\Infrastructure\Models\Staff;
-use App\Modules\Order\Infrastructure\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 

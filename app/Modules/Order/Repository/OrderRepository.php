@@ -140,7 +140,7 @@ class OrderRepository
             'status_out' => $status_out,
         ]);
     }
-
+/*
     public function OrderWithToArray(Order $order): array
     {
         return array_merge($this->OrderToArray($order), [
@@ -186,7 +186,7 @@ class OrderRepository
             'volume' => $order->getVolume(),
         ]);
     }
-
+*/
     public function OrderLogToArray(Order $order): array
     {
         return array_merge($order->toArray(), [

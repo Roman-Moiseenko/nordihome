@@ -6,9 +6,10 @@ namespace App\Modules\Order\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Repository\OrganizationRepository;
-use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+use App\Modules\Order\Application\Actions\Order\SetCouponOrderUseCase;
+use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\AddAdditionOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\RemoveOrderAdditionUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\UpdateOrderAdditionUseCase;
@@ -16,13 +17,14 @@ use App\Modules\Order\Application\Actions\OrderItem\AddProductOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\RemoveOrderItemUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\UpdateOrderItemUseCase;
 use App\Modules\Order\Application\Actions\ViewOrderUseCase;
+use App\Modules\Order\Application\DTOs\Order\DiscountOrderData;
 use App\Modules\Order\Application\DTOs\OrderAddition\OrderAdditionUpdateData;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemPreData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
 use App\Modules\Order\Application\Services\ChangePreOrderItemService;
 use App\Modules\Order\Infrastructure\Models\Order;
-use App\Modules\Order\Infrastructure\Models\OrderAddition;
+
 use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\OrderReserveService;
@@ -55,7 +57,6 @@ class OrderController extends Controller
         private readonly OrderReserveService        $reserveService,
         private readonly ListStaffByPositionUseCase $positionUseCase,
         private readonly ViewOrderUseCase           $viewOrderUseCase,
-        private readonly ViewClientUseCase          $clientUseCase,
         private readonly AddProductOrderUseCase     $addProductOrderUseCase,
         private readonly UpdateOrderItemUseCase     $updateOrderItemUseCase,
         private readonly RemoveOrderItemUseCase     $removeOrderItemUseCase,
@@ -63,10 +64,12 @@ class OrderController extends Controller
         private readonly ChangePreOrderItemService  $changePreOrderItemService,
         private readonly UpdateOrderAdditionUseCase $updateOrderAdditionUseCase,
         private readonly RemoveOrderAdditionUseCase $removeOrderAdditionUseCase,
+        private readonly SetDiscountOrderUseCase $setDiscountOrderUseCase,
+        private readonly SetCouponOrderUseCase $setCouponOrderUseCase,
     )
     {
     }
-
+//MAINDO загрузка параметров через useStore
     public function index(Request $request, UserPermission $permissions): Response
     {
         $orders = $this->repository->getIndex($request, $filters);
@@ -79,7 +82,7 @@ class OrderController extends Controller
             'staffs' => $staffs,
         ]);
     }
-
+//MAINDO загрузка параметров через useStore
     public function show(Request $request, Order $order, UserPermission $permissions): Response
     {
         $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
@@ -100,12 +103,15 @@ class OrderController extends Controller
         ]);
     }
 
+    //MAINDO !
     public function store(Request $request): RedirectResponse
     {
+
         $order = $this->service->create_sales($request->input('user_id'));
         return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
     }
 
+    //MAINDO !
     public function log(Order $order): Response
     {
         return Inertia::render('Order/Order/Log', [
@@ -130,12 +136,14 @@ class OrderController extends Controller
         }
     }
 
+    //MAINDO !
     public function copy(Order $order)
     {
         $order = $this->service->copy($order);
         return redirect()->route('admin.order.show', $order);
     }
 
+    //MAINDO !
     /** СМЕНА СОСТОЯНИЯ (СТАТУСА) ЗАКАЗА */
     public function take(Order $order): RedirectResponse
     {
@@ -145,6 +153,7 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Вы взяли заказ в работу');
     }
 
+    //MAINDO !
     public function set_manager(Request $request, Order $order): RedirectResponse
     {
         $this->service->setManager($order, (int)$request['staff_id']);
@@ -152,6 +161,7 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Менеджер назначен');
     }
 
+    //MAINDO !
     public function cancel(Request $request, Order $order): RedirectResponse
     {
         $this->service->cancel($order, $request->string('comment')->trim()->value());
@@ -161,6 +171,7 @@ class OrderController extends Controller
     /**
      * На оплату
      */
+    //MAINDO !
     public function awaiting(Order $order, Request $request): mixed
     {
         //dd($request->input('emails', []));
@@ -171,6 +182,7 @@ class OrderController extends Controller
     /**
      * Вернуть в работу
      */
+    //MAINDO !
     public function work(Order $order): mixed
     {
         $this->service->work($order);
@@ -195,24 +207,31 @@ class OrderController extends Controller
 
     ///////////////////////////////////////
     /// Возможно в общий UseCase      ////
-    public function set_discount(Request $request, Order $order): RedirectResponse
+    public function setDiscount(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->service->setDiscount($order, $request);
+        $dto = DiscountOrderData::validateAndCreate($request->all());
+        $this->setDiscountOrderUseCase->execute($id, $dto, $permission);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+    public function setCoupon(int $id, Request $request, UserPermission $permission): RedirectResponse
+    {
+        $this->setCouponOrderUseCase->execute($id, $request->string('coupon')->trim()->value(), $permission);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
+    //MAINDO !
     public function set_user(Request $request, Order $order): RedirectResponse
     {
         $this->service->setUser($order, $request);
         return redirect()->back()->with('success', 'Клиент назначен');
     }
-
+//MAINDO !
     public function set_info(Request $request, Order $order): RedirectResponse
     {
         $this->service->setInfo($order, $request);
         return redirect()->back()->with('success', 'Сохранено');
     }
-
+//MAINDO !
     public function set_comment(Request $request, Order $order): RedirectResponse
     {
         $this->service->setComment($order, $request);
@@ -220,13 +239,13 @@ class OrderController extends Controller
     }
     ///                                ////
     ///////////////////////////////////////
-
+//MAINDO !
     public function set_assemblage(Request $request): RedirectResponse
     {
         $this->service->setAssemblage($request);
         return redirect()->back()->with('success', 'Сохранено');
     }
-
+//MAINDO !
     public function set_packing(Request $request): RedirectResponse
     {
         $this->service->setPacking($request);
@@ -262,6 +281,7 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
+    //MAINDO !
     public function add_products(Request $request, Order $order): RedirectResponse
     {
         $this->service->addProducts($order, $request->input('products'));
@@ -302,18 +322,19 @@ class OrderController extends Controller
     /**
      * Смена текущей даты
      */
+    //MAINDO !
     public function set_created(Request $request, Order $order)
     {
         $new_date = $this->service->setCreated($order, $request->input('created_at'));
         return response()->json($new_date);
     }
-
+//MAINDO !
     public function expense_calculate(Request $request, Order $order)
     {
         $result = $this->service->expenseCalculate($order, $request['data']);
         return response()->json($result);
     }
-
+//MAINDO !
     public function search_user(Request $request)
     {
         //TODO В Репозиторий

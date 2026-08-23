@@ -22,7 +22,6 @@ class GetAdditionDataUseCase
         } else {
             $calculate = $additionModel->class::calculateEntity($orderEntity, $additionModel->base);
         }
-        \Log::info($calculate);
         return new AdditionData(
             baseRatio: $additionModel->base,
             name: $additionModel->name,

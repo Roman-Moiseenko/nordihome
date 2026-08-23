@@ -205,7 +205,7 @@ readonly class ViewOrderUseCase
                 'addition' => $order->getAdditionsAmount(),
                 'promotions' => $order->getDiscountPromotions(),
                 'coupon' => $order->getCoupon(),
-                'percent' => ($order->getBaseAmountNotDiscount() == 0) ? 0 : ceil($order->manual / $order->getBaseAmountNotDiscount() * 100 * 10) / 10,
+              //  'percent' => ($order->getBaseAmountNotDiscount() == 0) ? 0 : ceil($order->manual / $order->getBaseAmountNotDiscount() * 100 * 10) / 10,
                 'payment' => $order->getPaymentAmount(),
                 'refund' => $order->getRefundAmount(),
             ],

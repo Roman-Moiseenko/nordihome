@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Service;
 
-use App\Modules\Analytics\LoggerService;
 use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Delivery\Entity\Local\Tariff;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Notification\Events\TelegramHasReceived;
+use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Events\ExpenseHasDelivery;
 use App\Modules\Order\Service\ExpenseService;
@@ -19,10 +19,10 @@ use Illuminate\Http\Request;
 class DeliveryService
 {
 
-    private LoggerService $logger;
+    private OrderLoggerService $logger;
     private ExpenseService $expenseService;
 
-    public function __construct(LoggerService $logger, ExpenseService $expenseService)
+    public function __construct(OrderLoggerService $logger, ExpenseService $expenseService)
     {
         $this->logger = $logger;
         $this->expenseService = $expenseService;
@@ -77,7 +77,7 @@ class DeliveryService
         $expense->save();
         $expense->refresh();
         event(new ExpenseHasDelivery($expense)); //Уведомляем клиента с трек-номером
-        $this->logger->logOrder(orderId: $expense->order_id, action: 'Распоряжение в пути',
+        $this->logger->log(orderId: $expense->order_id, action: 'Распоряжение в пути',
             value: !empty($track) ? ('Трек посылки ' . $track) : '',
             link: route('admin.order.expense.show', $expense)
         );

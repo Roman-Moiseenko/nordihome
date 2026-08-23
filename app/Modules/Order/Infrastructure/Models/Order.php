@@ -5,7 +5,6 @@ namespace App\Modules\Order\Infrastructure\Models;
 
 use App\Modules\Accounting\Entity\MovementDocument;
 use App\Modules\Accounting\Entity\Organization;
-use App\Modules\Analytics\Entity\LoggerOrder;
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Catalog\Infrastructure\Models\Product;
