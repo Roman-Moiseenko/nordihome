@@ -109,8 +109,8 @@ class OrderEntity
         set => $this->priceType = $value;
     }
 
-    /** @var OrderHistoryStatusEntity|null */
-    public mixed $status = null;
+
+    public ?OrderHistoryStatusEntity $status = null;
 
     /** @var OrderHistoryStatusEntity[] */
     public array $statuses = [];

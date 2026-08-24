@@ -47,7 +47,7 @@ Route::group(
         Route::delete('/del-addition/{id}/{addition}', [OrderController::class, 'removeAddition'])->name('del-addition');
 
 
-        Route::post('/set-manager/{order}', [OrderController::class, 'set_manager'])->name('set-manager');
+        Route::post('/set-manager/{id}', [OrderController::class, 'setManager'])->name('set-manager');
         Route::post('/set-reserve/{order}', [OrderController::class, 'set_reserve'])->name('set-reserve');
         Route::post('/set-comment/{order}', [OrderController::class, 'set_comment'])->name('set-comment');
 
@@ -58,7 +58,7 @@ Route::group(
         Route::post('/search-user', [OrderController::class, 'search_user'])->name('search-user');
 
         Route::get('/log/{order}', [OrderController::class, 'log'])->name('log');
-        Route::post('/take/{order}', [OrderController::class, 'take'])->name('take');
+        Route::post('/take/{id}', [OrderController::class, 'take'])->name('take');
 
         //Распоряжения
         Route::group(

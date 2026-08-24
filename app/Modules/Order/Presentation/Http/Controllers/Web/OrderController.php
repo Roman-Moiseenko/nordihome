@@ -12,6 +12,7 @@ use App\Modules\Order\Application\Actions\Order\CreateOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetCouponOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
+use App\Modules\Order\Application\Actions\Order\SetManagerOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetPackingsOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\AddAdditionOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\RemoveOrderAdditionUseCase;
@@ -74,6 +75,7 @@ class OrderController extends Controller
         private readonly SetAssemblagesOrderUseCase $setAssemblagesOrderUseCase,
         private readonly SetPackingsOrderUseCase    $setPackingsOrderUseCase,
         private readonly CreateOrderFromCopyService $createOrderFromCopyService,
+        private readonly SetManagerOrderUseCase $setManagerOrderUseCase,
     )
     {
     }
@@ -156,21 +158,18 @@ class OrderController extends Controller
         return redirect()->route('admin.order.show', $orderEntity->id);
     }
 
-    //MAINDO !
     /** СМЕНА СОСТОЯНИЯ (СТАТУСА) ЗАКАЗА */
-    public function take(Order $order): RedirectResponse
+    public function take(int $id, UserPermission $permission): RedirectResponse
     {
         $staff = auth()->user()->profileable;
-        $this->service->setManager($order, $staff->id);
-
+        $this->setManagerOrderUseCase->execute($id, $staff->id, $permission);
         return redirect()->back()->with('success', 'Вы взяли заказ в работу');
     }
 
-    //MAINDO !
-    public function set_manager(Request $request, Order $order): RedirectResponse
-    {
-        $this->service->setManager($order, (int)$request['staff_id']);
 
+    public function setManager(int $id, Request $request, UserPermission $permission): RedirectResponse
+    {
+        $this->setManagerOrderUseCase->execute($id, $request->integer('staff_id'), $permission);
         return redirect()->back()->with('success', 'Менеджер назначен');
     }
 
