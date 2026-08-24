@@ -50,6 +50,7 @@ class Addition extends Model
 
     public static function register(
         string $name,
+        string $slug,
         #[ExpectedValues(valuesFromClass: Addition::class)]int $type,
         bool $manual,
         int $base,
@@ -59,7 +60,7 @@ class Addition extends Model
     {
         return self::create([
             'name' => $name,
-            'slug' => Str::slug($name),
+            'slug' => $slug,
             'manual' => $manual,
             'type' => $type,
             'base' => $base,

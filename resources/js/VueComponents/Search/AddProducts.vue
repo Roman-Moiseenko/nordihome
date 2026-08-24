@@ -60,6 +60,7 @@ interface IProduct {
     product_id: Number,
     quantity: Number,
     price: Number,
+    productId: Number,
 }
 
 const products = ref([])
@@ -123,6 +124,7 @@ function findProducts(data) {
                         quantity: product.quantity,
                         price: product.price,
                         price2: product.price2,
+                        productId: response.data,
                     })
                 } else  {
                     console.log('response', response.data.error)

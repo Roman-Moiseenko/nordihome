@@ -280,7 +280,7 @@ const checkedPacking = computed( () => {
 function checkAssemblage() {
    // console.log([...props.items.map(i => i.id)])
     iSaving.value = true;
-    router.visit(route('admin.order.set-assemblage'), {
+    router.visit(route('admin.order.set-assemblage', {id: props.orderId}), {
         method: "post",
         data: {
             assemblage: !checkedAssemblage.value,
@@ -296,7 +296,7 @@ function checkAssemblage() {
 function checkPacking() {
    // console.log([...props.items.map(i => i.id)])
     iSaving.value = true;
-    router.visit(route('admin.order.set-packing'), {
+    router.visit(route('admin.order.set-packing', {id: props.orderId}), {
         method: "post",
         data: {
             packing: !checkedPacking.value,

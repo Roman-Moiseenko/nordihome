@@ -109,29 +109,6 @@ class OrderService
     }
 
 
-
-    /**
-     * Создание пустого заказа менеджером из Продаж
-     */
-    public function create_sales(int $user_id = null): Order
-    {
-        DB::transaction(function () use (&$order, $user_id) {
-            $order = $this->createOrder(type: Order::MANUAL); //Создаем пустой заказ
-
-
-            $staff = auth()->user()->profileable;
-            $order->setStatus(OrderHistoryStatus::DRAFT);
-            $order->setManager($staff->id);
-            $order->setClient($user_id);
-            $order->refresh();
-            $this->logger->log(orderId: $order->id, action: 'Заказ создан менеджером');
-        });
-
-        event(new OrderHasCreated($order));
-        return $order;
-    }
-
-
     //**** ФУНКЦИИ РАБОТЫ С ЗАКАЗОМ МЕНЕДЖЕРОМ
 
     public function setManager(Order $order, int $staff_id): void
@@ -329,16 +306,6 @@ class OrderService
         $this->recalculation($order);
         $this->logger->log(orderId: $order->id, action: 'Добавлен товар',
             object: $product->name, value: $quantity . ' шт.');
-    }
-
-    public function addProducts(Order $order, array $products): void
-    {
-        foreach ($products as $product) {
-            $this->addProduct($order,
-                $product['product_id'],
-                $product['quantity'],
-            );
-        }
     }
 
     /**

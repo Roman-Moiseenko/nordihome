@@ -244,7 +244,7 @@ function onCopy() {
         text: 'Идет копирование заказа',
         background: 'rgba(0, 0, 0, 0.7)',
     })
-    router.visit(route('admin.order.copy', {order: props.order.id}), {
+    router.visit(route('admin.order.copy', {id: props.order.id}), {
         method: "post",
         onSuccess: page => {
             loading.close()

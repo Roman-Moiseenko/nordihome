@@ -140,10 +140,10 @@ function handleCreate() {
     router.post(route('admin.order.store'))
 }
 function routeClick(row) {
-    router.get(route('admin.order.show', {order: row.id}))
+    router.get(route('admin.order.show', {id: row.id}))
 }
 function handleCopy(row) {
-    router.post(route('admin.order.copy', {order: row.id}))
+    router.post(route('admin.order.copy', {id: row.id}))
 }
 function onFilter(_check) {
     if (_check == 'canceled') filter.canceled = !filter.canceled

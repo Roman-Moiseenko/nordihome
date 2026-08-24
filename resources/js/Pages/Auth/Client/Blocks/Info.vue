@@ -174,15 +174,17 @@ const form = reactive({
 })
 
 function onActive() {
+    /*
     router.visit(route('admin.user.verify', {user: props.client.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,
     })
+    */
 }
 
 function createOrder() {
-    router.post(route('admin.order.store', {user_id: props.client.id}))
+    router.post(route('admin.order.store', {client_id: props.client.id}))
 }
 
 function detachOrganization(id) {

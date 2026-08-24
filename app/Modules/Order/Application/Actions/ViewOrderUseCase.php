@@ -153,7 +153,7 @@ readonly class ViewOrderUseCase
             base: $baseAmount,
             addition: $additionsAmount,
             manual: $manualAmount,
-            percent: $manualAmount / $baseAmount * 100,
+            percent: $baseAmount == 0 ? 0 : $manualAmount / $baseAmount * 100,
             promotions: $promotionsAmount,
             coupon: $couponAmount,
             discount: $discountAmount,

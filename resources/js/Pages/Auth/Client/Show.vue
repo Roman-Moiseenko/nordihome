@@ -1,7 +1,7 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <h1 class="font-medium text-xl">
-        {{ client.fullName }}
+        {{ client.lastName }} {{ client.firstName }} {{ client.middleName }}
     </h1>
     <div class="mt-3 p-3 bg-white rounded-lg">
         <ClientInfo :client="client" :organizations="organizations" :deliveries="deliveries" :type_pricing="type_pricing"/>

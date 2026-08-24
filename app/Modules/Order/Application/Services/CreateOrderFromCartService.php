@@ -2,7 +2,7 @@
 
 namespace App\Modules\Order\Application\Services;
 
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Application\Actions\Trader\GetDefaultTraderIdUseCase;
 use App\Modules\Auth\Application\Queries\GetInfoWebClientQuery;
 use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
@@ -12,6 +12,7 @@ use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetDeliveryAdditionUseCase;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetPolandAdditionUseCase;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
+use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
@@ -37,6 +38,8 @@ readonly class CreateOrderFromCartService
         private OrderRepositoryInterface    $repository,
         private GetPolandAdditionUseCase $polandAdditionUseCase,
         private GetDeliveryAdditionUseCase $deliveryAdditionUseCase,
+        private GetDefaultTraderIdUseCase $traderIdUseCase,
+        private OrderLoggerServiceInterface $logger,
     )
     {
 
@@ -47,8 +50,11 @@ readonly class CreateOrderFromCartService
         //FIXME Каждую задачу из // вынести в UseCase
         $this->transactionManager->execute(function () use ($clientContext, $code, $commentClient, &$orderEntity) {
             //Создаем пустой заказ
-            $trader_id = Trader::default()->organization->id;
-            $orderEntity = new OrderEntity($trader_id, new OrderSellType(Order::ONLINE), $clientContext->id, new PriceType($clientContext->priceType));
+            $orderEntity = new OrderEntity(
+                traderId: $this->traderIdUseCase->execute(),
+                type: new OrderSellType(Order::ONLINE),
+                clientId: $clientContext->id,
+                priceType: new PriceType($clientContext->priceType));
 
             $isParser = false;
             $cartData = $this->cartUseCase->execute();
@@ -111,6 +117,7 @@ readonly class CreateOrderFromCartService
             );
             $this->dispatcher->dispatch(new LeadCollected($leadData));
             $this->dispatcher->dispatch(new OrderHasCreated($orderEntity->id));
+            $this->logger->log($orderEntity->id, 'Заказ создан из корзины');
         });
         return $orderEntity;
     }

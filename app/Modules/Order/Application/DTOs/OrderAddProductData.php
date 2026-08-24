@@ -13,8 +13,8 @@ class OrderAddProductData extends Data
     public function __construct(
         #[Required, Numeric]
         public int $productId,
-        #[Required, Numeric]
-        public int $quantity,
+        #[Nullable, Numeric]
+        public ?int $quantity = 1,
         #[Nullable, BooleanType]
         public ?bool $preorder = false,
         #[Nullable, BooleanType]

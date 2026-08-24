@@ -8,8 +8,11 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+use App\Modules\Order\Application\Actions\Order\CreateOrderUseCase;
+use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetCouponOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
+use App\Modules\Order\Application\Actions\Order\SetPackingsOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\AddAdditionOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\RemoveOrderAdditionUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\UpdateOrderAdditionUseCase;
@@ -23,6 +26,7 @@ use App\Modules\Order\Application\DTOs\OrderAddProductData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemPreData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
 use App\Modules\Order\Application\Services\ChangePreOrderItemService;
+use App\Modules\Order\Application\Services\CreateOrderFromCopyService;
 use App\Modules\Order\Infrastructure\Models\Order;
 
 use App\Modules\Order\Infrastructure\Models\OrderItem;
@@ -64,11 +68,16 @@ class OrderController extends Controller
         private readonly ChangePreOrderItemService  $changePreOrderItemService,
         private readonly UpdateOrderAdditionUseCase $updateOrderAdditionUseCase,
         private readonly RemoveOrderAdditionUseCase $removeOrderAdditionUseCase,
-        private readonly SetDiscountOrderUseCase $setDiscountOrderUseCase,
-        private readonly SetCouponOrderUseCase $setCouponOrderUseCase,
+        private readonly SetDiscountOrderUseCase    $setDiscountOrderUseCase,
+        private readonly SetCouponOrderUseCase      $setCouponOrderUseCase,
+        private readonly CreateOrderUseCase         $createOrderUseCase,
+        private readonly SetAssemblagesOrderUseCase $setAssemblagesOrderUseCase,
+        private readonly SetPackingsOrderUseCase    $setPackingsOrderUseCase,
+        private readonly CreateOrderFromCopyService $createOrderFromCopyService,
     )
     {
     }
+
 //MAINDO загрузка параметров через useStore
     public function index(Request $request, UserPermission $permissions): Response
     {
@@ -82,6 +91,7 @@ class OrderController extends Controller
             'staffs' => $staffs,
         ]);
     }
+
 //MAINDO загрузка параметров через useStore
     public function show(Request $request, Order $order, UserPermission $permissions): Response
     {
@@ -103,12 +113,13 @@ class OrderController extends Controller
         ]);
     }
 
-    //MAINDO !
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $permission): RedirectResponse
     {
-
-        $order = $this->service->create_sales($request->input('user_id'));
-        return redirect()->route('admin.order.show', $order)->with('success', 'Новый заказ');
+        $orderEntity = $this->createOrderUseCase->execute(
+            $request->input('client_id'),
+            auth()->user()->profileable_id,
+            $permission);
+        return redirect()->route('admin.order.show', $orderEntity->id)->with('success', 'Новый заказ');
     }
 
     //MAINDO !
@@ -119,7 +130,7 @@ class OrderController extends Controller
         ]);
     }
 
-    //Документы
+    //MAINDO !    Документы
     public function invoice(Order $order): BinaryFileResponse|JsonResponse
     {
         try {
@@ -136,14 +147,14 @@ class OrderController extends Controller
         }
     }
 
-    //MAINDO !
-    public function copy(Order $order)
+    public function copy(int $id, UserPermission $permission)
     {
-        $order = $this->service->copy($order);
-        return redirect()->route('admin.order.show', $order);
+        $orderEntity = $this->createOrderFromCopyService->execute($id, $permission);
+        return redirect()->route('admin.order.show', $orderEntity->id);
     }
 
     //MAINDO !
+
     /** СМЕНА СОСТОЯНИЯ (СТАТУСА) ЗАКАЗА */
     public function take(Order $order): RedirectResponse
     {
@@ -213,6 +224,7 @@ class OrderController extends Controller
         $this->setDiscountOrderUseCase->execute($id, $dto, $permission);
         return redirect()->back()->with('success', 'Сохранено');
     }
+
     public function setCoupon(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
         $this->setCouponOrderUseCase->execute($id, $request->string('coupon')->trim()->value(), $permission);
@@ -225,12 +237,14 @@ class OrderController extends Controller
         $this->service->setUser($order, $request);
         return redirect()->back()->with('success', 'Клиент назначен');
     }
+
 //MAINDO !
     public function set_info(Request $request, Order $order): RedirectResponse
     {
         $this->service->setInfo($order, $request);
         return redirect()->back()->with('success', 'Сохранено');
     }
+
 //MAINDO !
     public function set_comment(Request $request, Order $order): RedirectResponse
     {
@@ -239,52 +253,65 @@ class OrderController extends Controller
     }
     ///                                ////
     ///////////////////////////////////////
-//MAINDO !
-    public function set_assemblage(Request $request): RedirectResponse
+
+    public function setAssemblage(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->service->setAssemblage($request);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
-//MAINDO !
-    public function set_packing(Request $request): RedirectResponse
-    {
-        $this->service->setPacking($request);
+        $this->setAssemblagesOrderUseCase->execute(
+            $id,
+            $request->boolean('assemblage'),
+            $request->array('items'),
+            $permission
+        );
         return redirect()->back()->with('success', 'Сохранено');
     }
 
+    public function setPacking(int $id, Request $request, UserPermission $permission): RedirectResponse
+    {
+        $this->setPackingsOrderUseCase->execute(
+            $id,
+            $request->boolean('packing'),
+            $request->array('items'),
+            $permission
+        );
+        return redirect()->back()->with('success', 'Сохранено');
+    }
 
     /** РАБОТА С ТОВАРОМ В ЗАКАЗЕ */
-    public function add_product(int $id, Request $request, UserPermission $permission): RedirectResponse
+    public function addProduct(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
         $dto = OrderAddProductData::validateAndCreate($request->all());
         $this->addProductOrderUseCase->execute($id, $dto, $permission);
         return redirect()->back()->with('success', 'Товар добавлен');
     }
 
-    public function updateItem(int $id, Request $request, UserPermission $permissions)
+    public function updateItem(int $id, Request $request, UserPermission $permission)
     {
         $dto = OrderItemUpdateData::validateAndCreate($request->all());
-        $this->updateOrderItemUseCase->execute($id, $dto, $permissions);
+        $this->updateOrderItemUseCase->execute($id, $dto, $permission);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function removeItem(int $id, int $item, UserPermission $permissions): RedirectResponse
+    public function removeItem(int $id, int $item, UserPermission $permission): RedirectResponse
     {
-        $this->removeOrderItemUseCase->execute($id, $item, $permissions);
+        $this->removeOrderItemUseCase->execute($id, $item, $permission);
         return redirect()->back()->with('success', 'Товар удален');
     }
 
-    public function changeItem(int $id, Request $request, UserPermission $permissions)
+    public function changeItem(int $id, Request $request, UserPermission $permission)
     {
         $dto = OrderItemPreData::validateAndCreate($request->all());
-        $this->changePreOrderItemService->execute($id, $dto, $permissions);
+        $this->changePreOrderItemService->execute($id, $dto, $permission);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    //MAINDO !
-    public function add_products(Request $request, Order $order): RedirectResponse
+
+    public function addProducts(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->service->addProducts($order, $request->input('products'));
+        $array = $request->input('products', []);
+        foreach ($array as $item) {
+            $dto = OrderAddProductData::validateAndCreate($item);
+            $this->addProductOrderUseCase->execute($id, $dto, $permission);
+        }
         return redirect()->back()->with('success', 'Товары добавлены');
     }
 
@@ -328,12 +355,14 @@ class OrderController extends Controller
         $new_date = $this->service->setCreated($order, $request->input('created_at'));
         return response()->json($new_date);
     }
+
 //MAINDO !
     public function expense_calculate(Request $request, Order $order)
     {
         $result = $this->service->expenseCalculate($order, $request['data']);
         return response()->json($result);
     }
+
 //MAINDO !
     public function search_user(Request $request)
     {

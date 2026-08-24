@@ -8,7 +8,7 @@ use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
-class SetDiscountOrderUseCase
+readonly class SetDiscountOrderUseCase
 {
 
     public function __construct(

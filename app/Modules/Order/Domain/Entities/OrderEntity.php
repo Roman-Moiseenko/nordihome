@@ -239,6 +239,17 @@ class OrderEntity
         }
     }
 
+    public function removeAdditionBy(int $additionId): void
+    {
+        foreach ($this->additions as $index => $addition) {
+            if ($addition->additionId === $additionId) {
+                array_splice($this->additions, $index, 1);
+                $this->recalculateTotals();
+                return;
+            }
+        }
+    }
+
     /**
      * Обновляет дополнение заказа по его id.
      *

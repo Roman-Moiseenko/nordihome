@@ -18,7 +18,7 @@ Route::group(
     ],
     function () {
         Route::post('/set-created/{order}', [OrderController::class, 'set_created'])->name('set-created');
-        Route::post('/copy/{order}', [OrderController::class, 'copy'])->name('copy');
+        Route::post('/copy/{id}', [OrderController::class, 'copy'])->name('copy');
 
         Route::post('/movement/{order}', [OrderController::class, 'movement'])->name('movement');
         Route::post('/expense-calculate/{order}', [OrderController::class, 'expense_calculate'])->name('expense-calculate');
@@ -29,15 +29,15 @@ Route::group(
 
         Route::post('/reserve-collect/{item}', [OrderController::class, 'reserve_collect'])->name('reserve-collect');
         //    Route::post('/set-info/{order}', 'OrderController@set_info')->name('set-info');
-        Route::post('/add-products/{order}', [OrderController::class, 'add_products'])->name('add-products');
-        Route::post('/add-product/{id}', [OrderController::class, 'add_product'])->name('add-product');
+        Route::post('/add-products/{order}', [OrderController::class, 'addProducts'])->name('add-products');
+        Route::post('/add-product/{id}', [OrderController::class, 'addProduct'])->name('add-product');
         Route::post('/update-item/{id}', [OrderController::class, 'updateItem'])->name('update-item');
         Route::post('/change-item/{id}', [OrderController::class, 'changeItem'])->name('change-item');
         //Route::post('/set-item/{item}', [OrderController::class, 'set_item'])->name('set-item');
         Route::delete('/del-item/{id}/{item}', [OrderController::class, 'removeItem'])->name('del-item');
         Route::post('/set-user/{order}', [OrderController::class, 'set_user'])->name('set-user');
-        Route::post('/set-assemblage', [OrderController::class, 'set_assemblage'])->name('set-assemblage');
-        Route::post('/set-packing', [OrderController::class, 'set_packing'])->name('set-packing');
+        Route::post('/set-assemblage/{id}', [OrderController::class, 'setAssemblage'])->name('set-assemblage');
+        Route::post('/set-packing/{id}', [OrderController::class, 'setPacking'])->name('set-packing');
 
         Route::post('/set-discount/{id}', [OrderController::class, 'setDiscount'])->name('set-discount');
         Route::post('/set-coupon/{id}', [OrderController::class, 'setCoupon'])->name('set-coupon');

@@ -54,7 +54,7 @@ class GuideCommand extends Command
         $this->info('Справочник - guide_marking_type');
         MarkingType::create(['name' => 'Фототехника']);
         MarkingType::create(['name' => 'Одежда и другие товары лёгкой промышленности']);
-
+/*
         $this->info('Справочник - guide_marking_type');
         Addition::register('Сборка мебели 15%', Addition::ASSEMBLY, false, 15, AssemblyCalculate::class);
         Addition::register('Упаковка товара', Addition::PACKING, false, 1, PackingCalculate::class);
@@ -64,7 +64,7 @@ class GuideCommand extends Command
         Addition::register('Доставка по городу', Addition::DELIVERY, false, 500);
         Addition::register('Доставка по региону', Addition::DELIVERY, true, 0);
         Addition::register('Доставка по России', Addition::DELIVERY, true, 0);
-
+*/
         return true;
     }
 }

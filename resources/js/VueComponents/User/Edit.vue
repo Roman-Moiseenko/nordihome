@@ -1,7 +1,7 @@
 <template>
     <el-descriptions v-if="!editUser" :column="1" border class="mb-5" :size="small ? 'small' : 'default'">
         <el-descriptions-item label="ФИО">
-            {{ client.fullName }}
+            {{ client.lastName }} {{ client.firstName }} {{ client.middleName }}
         </el-descriptions-item>
         <el-descriptions-item label="Телефон">
             {{ client.phone }}

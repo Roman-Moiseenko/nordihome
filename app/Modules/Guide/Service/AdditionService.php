@@ -5,6 +5,7 @@ namespace App\Modules\Guide\Service;
 
 use App\Modules\Guide\Entity\Addition;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 
 class AdditionService
@@ -18,8 +19,10 @@ class AdditionService
 
     public function create(Request $request): Addition
     {
+        $name = $request->string('name')->trim()->value();
         $addition = Addition::register(
-            $request->string('name')->trim()->value(),
+            $name,
+            Str::slug($name),
             $request->integer('type'),
             $request->boolean('manual'),
             $request->integer('base')

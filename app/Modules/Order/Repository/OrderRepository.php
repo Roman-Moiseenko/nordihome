@@ -116,7 +116,7 @@ class OrderRepository
             }
         }
         return array_merge($order->toArray(), [
-            'staff' => is_null($order->staff_id) ? 'Не назначен' : $order->staff->fullname->getShortname(),
+            'staff' => is_null($order->staff_id) ? 'Не назначен' : $order->staff->fullName,
             'user' => [
                 'name' => $order->client->fullName,
                 'phone' => $order->client->phone,

@@ -21,7 +21,8 @@ final class OrderStatus
     public const string COMPLETED = 'completed'; //Выдан (завершен)
     public const string COMPLETED_REFUND = 'partially_returned'; //Выдан частично, с возвратом части товара (завершен)
     public const string RETURNED = 'returned'; //Полный возврат денег (завершен)
-public const array STATUSES = [
+
+    public const array STATUSES = [
         self::NEW => 'Сформирован',
         self::DRAFT => 'В работе у менеджера',
         self::AWAITING => 'Ожидает оплаты',
@@ -48,6 +49,7 @@ public const array STATUSES = [
         self::RETURNED,
     ];
     private ?string $value;
+
     public function __construct(string $value)
     {
         $normalized = strtolower(trim($value));
@@ -57,11 +59,23 @@ public const array STATUSES = [
         $this->value = $normalized;
     }
 
-    public function getValue(): ?string { return $this->value; }
-    public function __toString(): string { return $this->value ?? ''; }
+    public function getValue(): ?string
+    {
+        return $this->value;
+    }
+
+    public function __toString(): string
+    {
+        return $this->value ?? '';
+    }
 
     public static function new(): self
     {
         return new self(OrderStatus::NEW);
+    }
+
+    public static function draft(): self
+    {
+        return new self(OrderStatus::DRAFT);
     }
 }
