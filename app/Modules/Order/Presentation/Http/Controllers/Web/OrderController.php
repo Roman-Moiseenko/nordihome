@@ -149,12 +149,14 @@ class OrderController extends Controller
 
     public function copy(int $id, UserPermission $permission)
     {
-        $orderEntity = $this->createOrderFromCopyService->execute($id, $permission);
+        $orderEntity = $this->createOrderFromCopyService->execute(
+            $id,
+            auth()->user()->profileable_id,
+            $permission);
         return redirect()->route('admin.order.show', $orderEntity->id);
     }
 
     //MAINDO !
-
     /** СМЕНА СОСТОЯНИЯ (СТАТУСА) ЗАКАЗА */
     public function take(Order $order): RedirectResponse
     {

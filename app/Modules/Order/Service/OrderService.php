@@ -527,48 +527,6 @@ class OrderService
 
 
     /**
-     * Копируем заказ
-     * LoggerOrder::class
-     */
-    public function copy(Order $order): Order
-    {
-        //TODO Переделать под новые данные (+ организации, упаковка/сборка товара, кол-во и цена услуг)
-        DB::transaction(function () use ($order, &$new_order) {
-            $new_order = $order->replicate();
-
-            $new_order->created_at = Carbon::now();
-            $new_order->number = null;
-            $new_order->paid = false;
-            $new_order->finished = false;
-            $new_order->save();
-            $new_order->statuses()->create(['value' => OrderHistoryStatus::NEW]);
-            $new_order->setStatus(OrderHistoryStatus::DRAFT);
-            $new_order->refresh();
-
-            foreach ($order->items as $item) {
-                if ($item->product->isSale()) {
-                    //dd($item->assemblage);
-
-                    $this->addProduct($new_order, $item->product_id, $item->quantity, $item->preorder, $item->assemblage, $item->packing);
-                }
-            }
-
-            foreach ($order->additions as $addition) {
-                $orderAddition = $this->addAddition($new_order, $addition->addition_id);
-                if ($addition->addition->is_quantity) $orderAddition->quantity = $addition->quantity;
-                if ($addition->addition->manual) $orderAddition->amount = $addition->amount;
-                $orderAddition->save();
-            }
-
-            $new_order->refresh();
-            $this->logger->log(orderId: $new_order->id, action: 'Создан заказ копированием',
-                value: $order->htmlNumDate());
-        });
-
-        return $new_order;
-    }
-
-    /**
      * Пересчет суммы для выдачи товара по распоряжению.
      * Остаток неизрасходованного лимита денег должен быть выше
      * стоимости товаров и услуг для нового распоряжения

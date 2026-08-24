@@ -37,7 +37,6 @@ class DeliveryPolandCalculate extends CalculateAddition
                 }
             }
         }
-        \Log::warning($weight);
         if ($weight == 0) return 0;
         //Коэффициент к стоимости
 
