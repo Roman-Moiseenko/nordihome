@@ -7,4 +7,6 @@ use App\Modules\Lead\Domain\Entities\LeadEntity;
 interface LeadRepositoryInterface
 {
     public function save(LeadEntity $lead): LeadEntity;
+
+    public function findByOrderId(int $orderId):? LeadEntity;
 }

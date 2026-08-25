@@ -45,8 +45,13 @@ class OrderHistoryStatusEntity
 
     public function __construct(
         OrderStatus $orderStatus,
+        ?string $comment = null,
+        ?string $numberDocument = null,
+        ?string $dateDocument = null,
     ) {
         $this->value = $orderStatus;
-
+        $this->comment = $comment;
+        $this->numberDocument = $numberDocument;
+        $this->dateDocument = $dateDocument;
     }
 }

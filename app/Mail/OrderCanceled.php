@@ -41,7 +41,7 @@ class OrderCanceled extends Mailable
     public function content(): Content
     {
         return new Content(
-            markdown: 'mail.order.canceled',
+            markdown: 'mail.order.cancelled',
         );
     }
 
@@ -58,6 +58,6 @@ class OrderCanceled extends Mailable
     public function build()
     {
         return $this
-            ->markdown('mail.order.canceled')->with([ 'order' => $this->order, 'comment' => $this->comment]);
+            ->markdown('mail.order.cancelled')->with([ 'order' => $this->order, 'comment' => $this->comment]);
     }
 }

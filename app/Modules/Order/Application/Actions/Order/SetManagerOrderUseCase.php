@@ -15,6 +15,7 @@ readonly class SetManagerOrderUseCase
         private OrderRepositoryInterface    $repository,
         private OrderLoggerServiceInterface $logger,
         private ViewStaffUseCase $staffUseCase,
+        private SetStatusOrderUseCase $setStatusOrderUseCase,
     )
     {
     }
@@ -25,12 +26,14 @@ readonly class SetManagerOrderUseCase
 
         $orderEntity = $this->repository->getById($orderId);
 
-        if ($orderEntity->status->value === OrderStatus::new()) {
-            $orderEntity->addStatus(OrderStatus::draft());
-        }
+
         $orderEntity->staffId = $staffId;
 
         $this->repository->save($orderEntity);
+
+        if ($orderEntity->status->value === OrderStatus::new()) {
+            $this->setStatusOrderUseCase->execute($orderEntity->id, OrderStatus::draft());
+        }
 
         //Нужно ФИО менеджера для логирования
         $staffEntity = $this->staffUseCase->execute($staffId, new UserPermission(permissions: ['auth.employee.view']));

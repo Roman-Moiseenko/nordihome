@@ -64,6 +64,12 @@ class LeadRepository implements LeadRepositoryInterface
         return $this->hydrate($model->fresh()->load(['items', 'statuses']));
     }
 
+    public function findByOrderId(int $orderId):? LeadEntity
+    {
+        $model = Lead::where('order_id', $orderId)->first();
+        if (is_null($model)) return null;
+        return $this->hydrate($model->load(['items', 'statuses']));
+    }
     private function hydrate(Lead $model): LeadEntity
     {
         $data = array_map(function ($item) {
@@ -122,4 +128,6 @@ class LeadRepository implements LeadRepositoryInterface
 
         return $entity;
     }
+
+
 }

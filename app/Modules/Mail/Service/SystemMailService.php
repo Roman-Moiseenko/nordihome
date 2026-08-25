@@ -43,7 +43,6 @@ class SystemMailService implements MailServiceInterface
         });
     }
 
-    //TODO сделать через useCase
     public function send(MailTemplate $template, array $data, Recipient $recipient): void
     {
 

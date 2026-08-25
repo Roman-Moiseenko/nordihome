@@ -48,15 +48,29 @@ final class OrderStatus
         self::CANCELLED,
         self::RETURNED,
     ];
-    private ?string $value;
+    private string $value;
 
-    public function __construct(string $value)
+
+
+    public function __construct(
+        string $value,
+    )
     {
         $normalized = strtolower(trim($value));
         if (!in_array($normalized, self::ALLOWED, true)) {
             throw new InvalidArgumentException("Недопустимое значение пола: {$value}");
         }
         $this->value = $normalized;
+    }
+
+    public static function awaiting(): OrderStatus
+    {
+        return new self(OrderStatus::AWAITING);
+    }
+
+    public static function cancelled(): OrderStatus
+    {
+        return new self(OrderStatus::CANCELLED);
     }
 
     public function getValue(): ?string

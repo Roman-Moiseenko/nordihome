@@ -97,7 +97,7 @@ class LeadService
     public function canceled(Lead $lead, int $reason): void
     {
         $lead->canceled = $reason;
-        $lead->setStatus(LeadStatus::CANCELED);
+        $lead->setStatus(LeadStatus::CANCELLED);
         $lead->finished_at = null;
         $lead->save();
     }

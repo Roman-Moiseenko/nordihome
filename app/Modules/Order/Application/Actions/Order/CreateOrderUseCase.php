@@ -4,7 +4,6 @@ namespace App\Modules\Order\Application\Actions\Order;
 
 use App\Modules\Accounting\Application\Actions\Trader\GetDefaultTraderIdUseCase;
 use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
-use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
@@ -14,16 +13,13 @@ use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class CreateOrderUseCase
 {
-
     public function __construct(
         private OrderRepositoryInterface $repository,
         private ViewClientUseCase        $viewClientUseCase,
         private GetDefaultTraderIdUseCase $traderIdUseCase,
-        private OrderLoggerServiceInterface $logger,
-    )
-    {
-    }
 
+    ) {
+    }
     public function execute(int|null $clientId, int $staffId, UserPermission $permission): OrderEntity
     {
         if (!$permission->can('order.order.create')) throw new AccessDeniedException();
@@ -41,14 +37,8 @@ readonly class CreateOrderUseCase
             $orderEntity->address = $client->address;
             $orderEntity->isPickup = $client->isPickup;
         }
-        $orderEntity->staffId = $staffId;
-
+        $orderEntity->staffId = $staffId; //Ставим себя менеджером
         $orderEntity->addStatus(OrderStatus::new());
-
-        $orderEntity->addStatus(OrderStatus::draft());
-        $orderEntity = $this->repository->save($orderEntity);
-        $this->logger->log(orderId: $orderEntity->id, action: 'Заказ создан менеджером');
-        return $orderEntity;
+        return $this->repository->save($orderEntity);
     }
-
 }

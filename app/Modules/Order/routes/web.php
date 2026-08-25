@@ -51,8 +51,8 @@ Route::group(
         Route::post('/set-reserve/{order}', [OrderController::class, 'set_reserve'])->name('set-reserve');
         Route::post('/set-comment/{order}', [OrderController::class, 'set_comment'])->name('set-comment');
 
-        Route::post('/cancel/{order}', [OrderController::class, 'cancel'])->name('cancel');
-        Route::post('/awaiting/{order}', [OrderController::class, 'awaiting'])->name('awaiting');
+        Route::post('/cancel/{id}', [OrderController::class, 'statusCancel'])->name('cancel');
+        Route::post('/awaiting/{id}', [OrderController::class, 'statusAwaiting'])->name('awaiting');
         Route::post('/work/{order}', [OrderController::class, 'work'])->name('work');
 
         Route::post('/search-user', [OrderController::class, 'search_user'])->name('search-user');

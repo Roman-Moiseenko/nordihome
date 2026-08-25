@@ -108,7 +108,7 @@ class LeadRepository
         $result = [];
         foreach (LeadStatus::STATUSES as $key => $label)
         {
-            if ($key < LeadStatus::CANCELED) {
+            if ($key < LeadStatus::CANCELLED) {
                 $result[$key] = $label;
             }
         }

@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
-use App\Modules\Order\Application\Actions\Order\CreateOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetCouponOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
@@ -28,8 +27,10 @@ use App\Modules\Order\Application\DTOs\OrderItem\OrderItemPreData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
 use App\Modules\Order\Application\Services\ChangePreOrderItemService;
 use App\Modules\Order\Application\Services\CreateOrderFromCopyService;
+use App\Modules\Order\Application\Services\CreateOrderByManagerService;
+use App\Modules\Order\Application\Services\StatusAwaitingOrderService;
+use App\Modules\Order\Application\Services\StatusCancelOrderService;
 use App\Modules\Order\Infrastructure\Models\Order;
-
 use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\OrderReserveService;
@@ -61,21 +62,23 @@ class OrderController extends Controller
         private readonly OrganizationRepository     $organizations,
         private readonly OrderReserveService        $reserveService,
         private readonly ListStaffByPositionUseCase $positionUseCase,
-        private readonly ViewOrderUseCase           $viewOrderUseCase,
-        private readonly AddProductOrderUseCase     $addProductOrderUseCase,
-        private readonly UpdateOrderItemUseCase     $updateOrderItemUseCase,
-        private readonly RemoveOrderItemUseCase     $removeOrderItemUseCase,
-        private readonly AddAdditionOrderUseCase    $addAdditionOrderUseCase,
-        private readonly ChangePreOrderItemService  $changePreOrderItemService,
-        private readonly UpdateOrderAdditionUseCase $updateOrderAdditionUseCase,
-        private readonly RemoveOrderAdditionUseCase $removeOrderAdditionUseCase,
-        private readonly SetDiscountOrderUseCase    $setDiscountOrderUseCase,
-        private readonly SetCouponOrderUseCase      $setCouponOrderUseCase,
-        private readonly CreateOrderUseCase         $createOrderUseCase,
-        private readonly SetAssemblagesOrderUseCase $setAssemblagesOrderUseCase,
-        private readonly SetPackingsOrderUseCase    $setPackingsOrderUseCase,
-        private readonly CreateOrderFromCopyService $createOrderFromCopyService,
-        private readonly SetManagerOrderUseCase $setManagerOrderUseCase,
+        private readonly ViewOrderUseCase            $viewOrderUseCase,
+        private readonly AddProductOrderUseCase      $addProductOrderUseCase,
+        private readonly UpdateOrderItemUseCase      $updateOrderItemUseCase,
+        private readonly RemoveOrderItemUseCase      $removeOrderItemUseCase,
+        private readonly AddAdditionOrderUseCase     $addAdditionOrderUseCase,
+        private readonly ChangePreOrderItemService   $changePreOrderItemService,
+        private readonly UpdateOrderAdditionUseCase  $updateOrderAdditionUseCase,
+        private readonly RemoveOrderAdditionUseCase  $removeOrderAdditionUseCase,
+        private readonly SetDiscountOrderUseCase     $setDiscountOrderUseCase,
+        private readonly SetCouponOrderUseCase       $setCouponOrderUseCase,
+        private readonly CreateOrderByManagerService $createOrderUseCase,
+        private readonly SetAssemblagesOrderUseCase  $setAssemblagesOrderUseCase,
+        private readonly SetPackingsOrderUseCase     $setPackingsOrderUseCase,
+        private readonly CreateOrderFromCopyService  $createOrderFromCopyService,
+        private readonly SetManagerOrderUseCase      $setManagerOrderUseCase,
+        private readonly StatusAwaitingOrderService  $statusAwaitingOrderService,
+        private readonly StatusCancelOrderService    $statusCancelOrderService,
     )
     {
     }
@@ -166,28 +169,24 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Вы взяли заказ в работу');
     }
 
-
     public function setManager(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
         $this->setManagerOrderUseCase->execute($id, $request->integer('staff_id'), $permission);
         return redirect()->back()->with('success', 'Менеджер назначен');
     }
 
-    //MAINDO !
-    public function cancel(Request $request, Order $order): RedirectResponse
+    public function statusCancel(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->service->cancel($order, $request->string('comment')->trim()->value());
+        $this->statusCancelOrderService->execute($id, $request->string('comment')->trim()->value(), $permission);
         return redirect()->back()->with('success', 'Заказ отменен');
     }
 
     /**
      * На оплату
      */
-    //MAINDO !
-    public function awaiting(Order $order, Request $request): mixed
+    public function statusAwaiting(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        //dd($request->input('emails', []));
-        $this->service->awaiting($order, $request);
+        $this->statusAwaitingOrderService->execute($id, $request->input('emails'), $permission);
         return redirect()->back()->with('success', 'Заказ ожидает оплаты');
     }
 

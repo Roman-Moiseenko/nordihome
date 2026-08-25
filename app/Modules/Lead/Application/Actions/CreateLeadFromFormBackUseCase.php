@@ -8,13 +8,15 @@ use App\Modules\Lead\Application\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Domain\Entities\LeadEntity;
 use App\Modules\Lead\Domain\ValueObjects\LeadDataField;
 use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
+use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Application\DTOs\Lead\LeadSourceData;
 
 readonly class CreateLeadFromFormBackUseCase
 {
     public function __construct(
-        private LeadRepositoryInterface $leadRepository,
+        private LeadRepositoryInterface    $leadRepository,
         private FindClientByContactUseCase $findClientByContactUseCase,
+        private OrderRepositoryInterface   $orderRepository,
     ) {}
 
     public function execute(LeadSourceData $dto): LeadEntity
@@ -29,7 +31,9 @@ readonly class CreateLeadFromFormBackUseCase
         $email = null;
         if (!is_null($dto->orderId)) {
             $lead->orderId = $dto->orderId;
-            //$lead->clientId;
+            //Проверяем, еть ли у заказа Менеджер, тогда отдаем ему лид
+            $order = $this->orderRepository->getById($dto->orderId);
+            $lead->staffId = $order->staffId;
         }
 
 

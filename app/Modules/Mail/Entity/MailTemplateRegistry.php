@@ -18,6 +18,12 @@ class MailTemplateRegistry
                 subject: 'Ваш заказ принят',
                 view: 'mail.order.new',
             ),
+            'order.cancelled' => new MailTemplate(
+                code: 'order.cancelled',
+                subject: 'Ваш заказ отменен',
+                view: 'mail.order.cancelled',
+            ),
+
 
             'lead.form' => new MailTemplate(
                 code: 'lead.form',

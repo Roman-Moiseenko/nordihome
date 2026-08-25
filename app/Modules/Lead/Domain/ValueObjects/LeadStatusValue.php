@@ -6,14 +6,14 @@ use InvalidArgumentException;
 
 final class LeadStatusValue
 {
-    const string NEW_LEAD = 'new_lead';
-    const string IN_WORK = 'in_work';
+    const string NEW_LEAD = 'new';
+    const string IN_WORK = 'draft';
     const string NOT_DECIDED = 'not_decide';
-    const string INVOICE = 'invoice';
+    const string INVOICE = 'awaiting';
     const string PAID = 'paid';
     const string ASSEMBLY = 'assembly';
     const string DELIVERY = 'delivery';
-    const string CANCELED = 'canceled';
+    const string CANCELLED = 'cancelled';
     const string COMPLETED = 'completed';
 
     const array STATUSES = [
@@ -24,7 +24,7 @@ final class LeadStatusValue
         self::PAID => 'Оплачен',
         self::ASSEMBLY => 'На сборке',
         self::DELIVERY => 'На доставке',
-        self::CANCELED => 'Отменен',
+        self::CANCELLED => 'Отменен',
         self::COMPLETED => 'Завершен',
     ];
 

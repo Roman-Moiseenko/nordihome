@@ -122,11 +122,12 @@ class OrderEntity
     public array $items = [];
 
     public function __construct(
-        int $traderId,
+        int           $traderId,
         OrderSellType $type,
-        ?int $clientId = null,
-        ?PriceType $priceType = null,
-    ) {
+        ?int          $clientId = null,
+        ?PriceType    $priceType = null,
+    )
+    {
         $this->traderId = $traderId;
         $this->type = $type;
         $this->clientId = $clientId;
@@ -199,6 +200,7 @@ class OrderEntity
         $this->recalculateTotals();
 
     }
+
     public function getItem(int $id): OrderItemEntity
     {
         foreach ($this->items as $item) {
@@ -258,7 +260,8 @@ class OrderEntity
      */
     public function updateAddition(
         OrderAdditionUpdateData $dto
-    ): void {
+    ): void
+    {
         $addition = $this->getAddition($dto->id);
         $addition->update(
             amount: $dto->amount,
@@ -268,12 +271,18 @@ class OrderEntity
         $this->recalculateTotals();
     }
 
-    public function addStatus(OrderStatus $status): void
+    public function addStatus(
+        OrderStatus $status,
+        ?string     $comment = null,
+        ?string     $numberDocument = null,
+        ?string     $dateDocument = null,
+
+    ): void
     {
-        $statusHistory = new OrderHistoryStatusEntity($status);
+        $statusHistory = new OrderHistoryStatusEntity($status, $comment, $numberDocument, $dateDocument);
         $statusHistory->createdAt = new DateTimeImmutable();
         $this->statuses[] = $statusHistory;
-        $this->status = $status->getValue();
+        $this->status = $statusHistory;
     }
 
     public function recalculateTotals()
