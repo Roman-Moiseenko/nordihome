@@ -4,10 +4,7 @@
 @endphp
 @extends('cabinet.layout')
 @section('body')
-    @parent
-    order
-@endsection
-
+ @parent order @endsection
 
 @section('h1', 'Мои заказы')
 
@@ -33,22 +30,24 @@
                     <div class="fs-8 mt-1">{{ '' }}</div>
                 </div>
                 <div class="row position-relative">
-                    @foreach($order->items as $item)
+                    @for($i = 0; $i < min(4, count($order->items)); $i++)
                         <div class="col-6 col-lg-3 ">
                             <div class="order-item-block">
-                                <img src="{{ $item->image }}" title="{{ $item->name }}">
-                                <span class="order-item-container"><span class="order-item-quantity fs-8">{{ $item->quantity }} шт.</span></span>
+                                <img src="{{ $order->items[$i]->image }}" title="{{ $order->items[$i]->name }}">
+                                <span class="order-item-container"><span class="order-item-quantity fs-8">{{ $order->items[$i]->quantity }} шт.</span></span>
                             </div>
                         </div>
-                    @endforeach
+                    @endfor
                     @if(count($order->items) > 4)
                         <span class="order-item-quantity--4"
-                              title="В заказе {{ count($order->items) }} товаров">...</span>
+                              title="В заказе {{ count($order->items) }} товаров"><a href="{{ route('cabinet.order.view', $order->id) }}">...</a></span>
                     @endif
                 </div>
             </div>
             <div class="order-footer">
-                {{ $order->info->status }}
+                <span class="badge bg-secondary">
+                {{ $order->info->statusName }}
+                </span>
             </div>
         </div>
     @endforeach

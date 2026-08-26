@@ -1,9 +1,6 @@
 @extends('layouts.main')
 
-@section('body')
-    cabinet
-@endsection
-
+@section('body', 'cabinet')
 @section('main', 'container-xl cabinet')
 
 @section('content')

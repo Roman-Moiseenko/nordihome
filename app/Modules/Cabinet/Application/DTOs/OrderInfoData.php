@@ -9,6 +9,7 @@ class OrderInfoData
         public string $number,
         public float $totalAmount,
         public string $status,
+        public string $statusName,
         public float $delivery,
         public string $address,
     )

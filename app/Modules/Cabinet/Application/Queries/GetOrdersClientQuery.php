@@ -46,6 +46,7 @@ class GetOrdersClientQuery
                 number: $order->number,
                 totalAmount: $order->getTotalAmount(),
                 status: $order->status->value,
+                statusName: $order->status->name(),
                 delivery: 0.0,
                 address: '',
             );

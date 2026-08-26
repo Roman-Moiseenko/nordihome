@@ -86,6 +86,10 @@ class OrderHistoryStatus extends Model
     {
         return self::STATUSES[$this->value];
     }
+    public function name(): string
+    {
+        return self::STATUSES[$this->value];
+    }
 
     protected static function boot()
     {
