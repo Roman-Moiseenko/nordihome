@@ -102,7 +102,7 @@ const form = reactive({
     title: '',
     description: '',
 })
-
+console.log(props.modelType)
 const uploadAction = computed(() => {
     return route('admin.photo.upload')
 })

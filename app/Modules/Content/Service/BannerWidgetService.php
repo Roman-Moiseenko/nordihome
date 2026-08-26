@@ -25,17 +25,6 @@ class BannerWidgetService extends WidgetService
         $this->setBase($widget, $request);
     }
 
-    public function addItem(BannerWidget $widget, Request $request): void
-    {
-        $file = $request->file('file');
-        if (empty($file)) throw new \DomainException('Нет изображения');
-        DB::transaction(function () use ($widget, $file) {
-            $item = BannerWidgetItem::register($widget->id);
-            $item->saveImage($file);
-            $item->refresh();
-            $item->image->save();
-        });
-    }
 
     public function delItem(BannerWidgetItem|WidgetItem $item): void
     {

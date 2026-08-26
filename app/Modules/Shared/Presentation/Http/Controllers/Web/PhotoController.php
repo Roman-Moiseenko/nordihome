@@ -27,14 +27,14 @@ use Symfony\Component\HttpFoundation\Response;
 class PhotoController
 {
     public function __construct(
-        public readonly ViewPhotoUseCase              $viewPhotoUseCase,
-        public readonly GetPhotoByEntityUseCase       $getPhotoByEntityUseCase,
-        public readonly GetPhotoByEntityListUseCase   $getPhotoByEntityListUseCase,
-        public readonly SavePhotoDataUseCase          $savePhotoDataUseCase,
-        public readonly UploadPhotoUseCase            $uploadPhotoUseCase,
-        public readonly GetPhotoThumbUseCase          $getPhotoThumbUseCase,
-        public readonly SortPhotoUseCase              $sortPhotoUseCase,
-        public readonly RemovePhotoUseCase            $removePhotoUseCase,
+        private readonly ViewPhotoUseCase              $viewPhotoUseCase,
+        private readonly GetPhotoByEntityUseCase       $getPhotoByEntityUseCase,
+        private readonly GetPhotoByEntityListUseCase   $getPhotoByEntityListUseCase,
+        private readonly SavePhotoDataUseCase          $savePhotoDataUseCase,
+        private readonly UploadPhotoUseCase            $uploadPhotoUseCase,
+        private readonly GetPhotoThumbUseCase          $getPhotoThumbUseCase,
+        private readonly SortPhotoUseCase              $sortPhotoUseCase,
+        private readonly RemovePhotoUseCase            $removePhotoUseCase,
     )
     {
     }
@@ -67,6 +67,7 @@ class PhotoController
      */
     public function upload(Request $request, UserPermission $userPermission): JsonResponse
     {
+        \Log::warning(json_encode($request->all()));
         $dto = PhotoUploadData::validateAndCreate($request->all());
         $dto->file  = $request->file('file');
         $photo = $this->uploadPhotoUseCase->execute($dto, $userPermission);

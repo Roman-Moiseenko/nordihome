@@ -9,6 +9,9 @@ use App\Modules\Content\Entity\Widgets\BannerWidgetItem;
 use App\Modules\Content\Repository\BannerWidgetRepository;
 use App\Modules\Content\Repository\TemplateRepository;
 use App\Modules\Content\Service\BannerWidgetService;
+use App\Modules\Shared\Application\Actions\UploadPhotoUseCase;
+use App\Modules\Shared\Application\DTOs\Photo\PhotoUploadData;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,7 +26,9 @@ class BannerWidgetController extends Controller
     public function __construct(
         BannerWidgetService    $service,
         TemplateRepository     $templates,
+
         BannerWidgetRepository $repository,
+        private readonly UploadPhotoUseCase            $uploadPhotoUseCase,
     )
     {
         $this->service = $service;
@@ -69,9 +74,16 @@ class BannerWidgetController extends Controller
         return redirect()->back()->with('success', 'Баннер удален');
     }
 
-    public function add_item(BannerWidget $widget, Request $request): RedirectResponse
+    public function add_item(BannerWidget $widget, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->addItem($widget, $request);
+        $item = BannerWidgetItem::register($widget->id);
+        $dto = new PhotoUploadData(
+            imageableId: $item->id,
+            modelType: 'content.banner-widget-item',
+            type: 'image',
+        );
+        $dto->file  = $request->file('file');
+        $this->uploadPhotoUseCase->execute($dto, $userPermission);
         return redirect()->back()->with('success', 'Элемент добавлен');
     }
 
