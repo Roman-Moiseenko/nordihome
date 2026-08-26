@@ -8,10 +8,12 @@ class OrderInfoData
         public string $date,
         public string $number,
         public float $totalAmount,
+        public float $baseAmount,
         public string $status,
         public string $statusName,
         public float $delivery,
         public string $address,
+        public ?string $coupon = null,
     )
     {
 

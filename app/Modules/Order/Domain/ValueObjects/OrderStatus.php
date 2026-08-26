@@ -78,6 +78,11 @@ final class OrderStatus
         return $this->value;
     }
 
+    public function getName()
+    {
+        return self::STATUSES[$this->value];
+    }
+
     public function __toString(): string
     {
         return $this->value ?? '';

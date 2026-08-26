@@ -22,4 +22,6 @@ interface OrderRepositoryInterface
 
     /** @return LengthAwarePaginator<OrderEntity> */
     public function getByClientId(int $clientId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
+    /** @return LengthAwarePaginator<int> */
+    public function getIdsByClientId(int $clientId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
 }

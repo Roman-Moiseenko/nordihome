@@ -1,4 +1,4 @@
-<textarea name="{{ $name }}" class="editor">
+<textarea name="{{ $productName }}" class="editor">
     {{ $slot }}
 </textarea>
 

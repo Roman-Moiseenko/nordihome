@@ -119,6 +119,18 @@ class OrderRepository implements OrderRepositoryInterface
             ->through(fn(Order $model) => $this->hydrate($model));
     }
 
+    /** @return LengthAwarePaginator<int> */
+    public function getIdsByClientId(int $clientId, int $perPage = 15, int $page = 1): LengthAwarePaginator
+    {
+        $paginator = Order::query()
+            ->where('client_id', $clientId)
+            ->orderByDesc('created_at')
+            ->paginate($perPage, ['id'], 'page', $page);
+
+        $paginator->setCollection($paginator->getCollection()->pluck('id'));
+
+        return $paginator;
+    }
     // ====================== Sync ======================
 
     /**

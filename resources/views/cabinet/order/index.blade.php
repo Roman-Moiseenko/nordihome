@@ -1,16 +1,21 @@
 @php
     use App\Modules\Cabinet\Application\DTOs\OrderClientData;
+    use App\Modules\Cabinet\Application\DTOs\OrdersClientPageData;
     /** @var OrderClientData[] $orders */
+    /** @var OrdersClientPageData[] $pageData */
 @endphp
 @extends('cabinet.layout')
 @section('body')
- @parent order @endsection
+    @parent order
+@endsection
+@section('title', $pageData->meta->title)
+@section('description', $pageData->meta->description)
 
 @section('h1', 'Мои заказы')
 
 
 @section('subcontent')
-    @foreach($orders as $order)
+    @foreach($pageData->orders as $order)
         <div class="box-card">
             <div class="order-header" onclick="window.location.href='{{ route('cabinet.order.view', $order->id) }}'">
                 <div>
@@ -33,14 +38,16 @@
                     @for($i = 0; $i < min(4, count($order->items)); $i++)
                         <div class="col-6 col-lg-3 ">
                             <div class="order-item-block">
-                                <img src="{{ $order->items[$i]->image }}" title="{{ $order->items[$i]->name }}">
+                                <img src="{{ $order->items[$i]->productImage }}"
+                                     title="{{ $order->items[$i]->productName }}">
                                 <span class="order-item-container"><span class="order-item-quantity fs-8">{{ $order->items[$i]->quantity }} шт.</span></span>
                             </div>
                         </div>
                     @endfor
                     @if(count($order->items) > 4)
                         <span class="order-item-quantity--4"
-                              title="В заказе {{ count($order->items) }} товаров"><a href="{{ route('cabinet.order.view', $order->id) }}">...</a></span>
+                              title="В заказе {{ count($order->items) }} товаров"><a
+                                href="{{ route('cabinet.order.view', $order->id) }}">...</a></span>
                     @endif
                 </div>
             </div>
@@ -52,7 +59,7 @@
         </div>
     @endforeach
 
-    @if(count($orders) == 0 )
+    @if(count($pageData->orders) == 0 )
         <div class="fs-5 m-3 mb-5">
             У вас еще нет заказов.
         </div>
@@ -60,4 +67,9 @@
                                                                         class="btn btn-dark">Каталоге</a>
         </div>
     @endif
+
+    <div class="products-page-list--bottom">
+        @include('shop.widgets.paginator', ['paginator' => $pageData->paginator])
+    </div>
+
 @endsection

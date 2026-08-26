@@ -28,6 +28,7 @@ class GetAdditionDataUseCase
             isQuantity: $additionModel->is_quantity,
             isManual: $additionModel->manual,
             calculate: $calculate,
+            type: $additionModel->type,
         );
     }
 }

@@ -2,62 +2,50 @@
 
 namespace App\Modules\Cabinet\Application\Queries;
 
-use App\Modules\Cabinet\Application\DTOs\OrderClientData;
-use App\Modules\Cabinet\Application\DTOs\OrderInfoData;
-use App\Modules\Cabinet\Application\DTOs\OrderInfoItemData;
-use App\Modules\Order\Infrastructure\Models\Order;
-use App\Modules\Order\Infrastructure\Models\OrderItem;
+use App\Modules\Cabinet\Application\Actions\GetOrderClientData;
+use App\Modules\Cabinet\Application\DTOs\OrdersClientPageData;
+use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
+use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-class GetOrdersClientQuery
+readonly class GetOrdersClientQuery
 {
-    public function __construct()
+    public function __construct(
+        private OrderRepositoryInterface $repository,
+        private PaginatorBuilder            $paginatorBuilder,
+        private GetOrderClientData $getOrderClientData,
+    )
     {
     }
 
-    /**
-     * @param int $clientId
-     * @return OrderClientData[]
-     */
-    public function execute(int $clientId): array
+    public function execute(int $clientId, array $params): OrdersClientPageData
     {
-        //MAINDO Возвращаем список заказов с пагинацией
+        $perPage = 10;
+        $page = (int)($params['page'] ?? 1);
 
-        $ordersRaw = Order::orderBy('created_at')->where('client_id', $clientId)->paginate(15);
-        $orders = [];
-        /** @var Order $order */
-        foreach ($ordersRaw as $order) {
+        /** @var LengthAwarePaginator<int> $idsPaginator */
+        $idsPaginator = $this->repository->getIdsByClientId($clientId, $perPage, $page);
 
-            $items = [];
+        $orders = array_map(
+            fn(int $id) => $this->getOrderClientData->execute($id),
+            $idsPaginator->items(),
+        );
 
-            /** @var OrderItem $item */
-            foreach ($order->items as $item) {
-                $items[] = new OrderInfoItemData(
-                    productId: $item->product_id,
-                    name: $item->product->name,
-                    image: $item->product->getImage('mini'),
-                    quantity: $item->quantity,
-                    priceProduct: $item->product->getPrice(),
-                    priceSell: $item->sell_cost,
-                );
-            }
+        $paginator = $this->paginatorBuilder->build(
+            total: $idsPaginator->total(),
+            perPage: $perPage,
+            currentPage: $page,
+            options: [
+                'path' => '/' . request()->path(),
+                'query' => array_diff_key(request()->query(), ['page' => null]),
+            ]
+        );
 
-            $info = new OrderInfoData(
-                date: $order->created_at->translatedFormat('d F Y'),
-                number: $order->number,
-                totalAmount: $order->getTotalAmount(),
-                status: $order->status->value,
-                statusName: $order->status->name(),
-                delivery: 0.0,
-                address: '',
-            );
-            $orders[] = new OrderClientData(
-                id: $order->id,
-                info: $info,
-                items: $items,
-                additions: []
-            );
-        }
-
-        return $orders;
+        return new OrdersClientPageData(
+            orders: $orders,
+            paginator: $paginator,
+            meta: new SeoData('Мои Заказы', ''),
+        );
     }
 }

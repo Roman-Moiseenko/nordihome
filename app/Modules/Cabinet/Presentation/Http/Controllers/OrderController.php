@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
 
+use App\Modules\Cabinet\Application\Queries\GetOrderClientQuery;
 use App\Modules\Cabinet\Application\Queries\GetOrdersClientQuery;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
@@ -18,23 +19,28 @@ class OrderController extends ShopController
 {
     public function __construct(
         public GetOrdersClientQuery $getOrdersClientQuery,
+        public GetOrderClientQuery $getOrderClientQuery,
     )
     {
     }
 
-    public function view(Order $order): View
+    public function view(int $id, Request $request): View
     {
-
-        return view('cabinet.order.view', compact('order'));
+       // $client = $this->getClient($request);
+        $pageData = $this->getOrderClientQuery->execute($id);
+        return view('cabinet.order.view', [
+            'pageData' => $pageData,
+        ]);
     }
 
     public function index(Request $request): View
     {
         $client = $this->getClient($request);
 
-        $orders = $this->getOrdersClientQuery->execute($client->id);
+        $pageData = $this->getOrdersClientQuery->execute($client->id, $request->query());
+
         return view('cabinet.order.index', [
-            'orders' => $orders
+            'pageData' => $pageData,
         ]);
     }
 
