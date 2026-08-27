@@ -124,6 +124,13 @@ class ProductViewQueryRepository
                 // Promotion data
                 'promotions_products.price as promotion_price',
                 'promotions.title as promotion_title',
+
+                'promotions.color_class as color_class',
+                'promotions.position_class as position_class',
+                'promotions.text_tag as text_tag',
+                'promotions.show_tag as show_tag',
+                'promotions.show_discount as show_discount',
+
                 // Brand logo
                 DB::raw("(
                     SELECT file FROM photos
@@ -184,6 +191,11 @@ class ProductViewQueryRepository
             has: $row->promotion_price !== null,
             title: $row->promotion_title ?? '',
             price: (float)($row->promotion_price ?? 0),
+            color: $row->color_class ?? '',
+            position: $row->position_class ?? '',
+            text: $row->text_tag ?? '',
+            showTag: $row->show_tag ?? false,
+            showDiscount: $row->show_discount ?? false,
         );
 
         // Dimensions
@@ -211,13 +223,14 @@ class ProductViewQueryRepository
             price: $price,
             price_previous: (float)($row->price_previous ?? 0),
             public: 0,
+            is_new: $row->published_at && \Carbon\Carbon::parse($row->published_at)->gte(now()->subMonths(2)),
             brandLogo: $brandLogo,
             brandName: $row->brand_name ?? '',
             description: $row->description ?? '',
             dimensions: $dimensions,
             isRegion: (bool)$row->local,
-            isDelivery: (bool)$row->delivery,
-            short: $row->short, //TODO Кол-во товаров на складах
+            isDelivery: (bool)$row->delivery, //TODO Кол-во товаров на складах
+            short: $row->short,
             care: $row->care,
         );
     }

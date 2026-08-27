@@ -10,36 +10,36 @@ class ProductData
 {
 
     public function __construct(
-        public int $id,
-        public string $name,
-        public string $slug,
-        public string $code,
+        public int                  $id,
+        public string               $name,
+        public string               $slug,
+        public string               $code,
 
-        public string $categoryName,
+        public string               $categoryName,
         /** @var ImageInfoData $images */
-        public array $images = [],
+        public array                $images = [],
 
-        public bool $is_wish,
-        public bool $in_cart = false,
-        public int $count_reviews,
-        public float $rating,
-        public bool $is_sale,
+        public bool                 $is_wish,
+        public bool                 $in_cart = false,
+        public int                  $count_reviews,
+        public float                $rating,
+        public bool                 $is_sale,
         public PromotionProductData $promotion,
-        public float $price,
-        public float $price_previous,
-        public float $public,
+        public float                $price,
+        public float                $price_previous,
+        public float                $public,
+        public bool                 $is_new, // новый
+        public string               $brandLogo,
+        public string               $brandName,
 
-        public string $brandLogo,
-        public string $brandName,
+        public string               $description,
 
-        public string $description,
-
-        public DimensionsData $dimensions,
-        public bool $isRegion,
-        public bool $isDelivery,
-        public string $short,
-        public string $care, //Уход
-        public int $quantity = 1,
+        public DimensionsData       $dimensions,
+        public bool                 $isRegion,
+        public bool                 $isDelivery,
+        public string               $short,
+        public string               $care, //Уход
+        public int                  $quantity = 1,
 
     )
     {
