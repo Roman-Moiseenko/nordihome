@@ -1,9 +1,27 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
+        <div class="flex">
         <h1 class="font-medium text-xl">Акция {{ promotion.name }}</h1>
+            <el-tooltip  content="Помощь" placement="bottom-start" effect="dark">
+                <el-button circle class="ml-2" @click="showHelp = !showHelp">
+                    <i class="fa-light fa-lightbulb-on text-orange-500"></i>
+                </el-button>
+            </el-tooltip>
+        </div>
         <div class="p-5 bg-white rounded-md">
             <PromotionInfo :promotion="promotion"/>
+
+            <HelpBlock v-if="showHelp">
+                <p>Параметры <b>Начало акции</b> и <b>Конец акции</b> нужны для автоматического запуска и завершения
+                    акции.</p>
+                <p>В ином случае акцию можно запускать в ручную.</p>
+                <p><b>Базовая скидка</b> используется для автоматического расчета стоимости товара при его
+                    добавлении в
+                    акцию. Далее, для каждого товара из акции можно вручную задать цену.</p>
+                <p>При изменении <b>базовой скидки</b> будет произведен перерасчет стоимости уже добавленных товаров
+                </p>
+            </HelpBlock>
         </div>
         <div class="flex mt-5">
             <SearchAddProduct :route="route('admin.discount.promotion.add-product', {promotion: promotion.id})"/>
@@ -58,6 +76,7 @@ import SearchAddProduct from "@Comp/Search/AddProduct.vue";
 import SearchAddProducts from "@Comp/Search/AddProducts.vue";
 import {inject, ref} from "vue";
 import { func } from "@Res/func"
+import HelpBlock from "@Comp/HelpBlock.vue";
 
 const props = defineProps({
     promotion: Object,
@@ -69,6 +88,7 @@ const props = defineProps({
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.promotion.products])
 const isSaving = ref(false)
+const showHelp = ref(false);
 function setProduct(row, val) {
     isSaving.value = true
     router.visit(route('admin.discount.promotion.set-product', {promotion: props.promotion.id}), {

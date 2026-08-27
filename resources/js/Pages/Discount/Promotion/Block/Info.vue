@@ -93,16 +93,7 @@
 
             </el-col>
             <el-col :span="8">
-                <HelpBlock>
-                    <p>Параметры <b>Начало акции</b> и <b>Конец акции</b> нужны для автоматического запуска и завершения
-                        акции.</p>
-                    <p>В ином случае акцию можно запускать в ручную.</p>
-                    <p><b>Базовая скидка</b> используется для автоматического расчета стоимости товара при его
-                        добавлении в
-                        акцию. Далее, для каждого товара из акции можно вручную задать цену.</p>
-                    <p>При изменении <b>базовой скидки</b> будет произведен перерасчет стоимости уже добавленных товаров
-                    </p>
-                </HelpBlock>
+
             </el-col>
         </el-row>
         <el-button type="info" @click="showEdit = false" style="margin-left: 4px">
@@ -157,13 +148,4 @@ function onSetInfo() {
     );
 }
 
-function onSelectImage(val) {
-    info.clear_image = val.clear_file;
-    info.image = val.file
-}
-
-function onSelectIcon(val) {
-    info.clear_icon = val.clear_file;
-    info.icon = val.file
-}
 </script>
