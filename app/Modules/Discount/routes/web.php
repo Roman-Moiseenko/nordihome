@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Modules\Discount\Controllers\DiscountController;
-use App\Modules\Discount\Controllers\PromotionController;
+use App\Modules\Discount\Presentation\Http\Controllers\Web\PromotionController;
+use Illuminate\Support\Facades\Route;
 
 Route::group([
     'middleware' => 'role:admin|staff',

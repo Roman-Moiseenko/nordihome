@@ -30,12 +30,13 @@ use Illuminate\Support\Str;
  * @property string $position_class
  * @property string $text_tag
  * @property bool $show_tag
+ * @property string $svg
  * @property bool $show_discount
  * @property Product[] $products
  */
 class Promotion extends Model
 {
-    use ImageField, IconField;
+    use ImageField;
 
     const string DRAFT = 'draft';
     const string WAITING = 'waiting';
@@ -54,6 +55,10 @@ class Promotion extends Model
     protected $casts = [
         'start_at' => 'datetime',
         'finish_at' => 'datetime',
+        'published' => 'boolean',
+        'active' => 'boolean',
+        'show_tag' => 'boolean',
+        'show_discount' => 'boolean',
     ];
 
 
@@ -72,6 +77,7 @@ class Promotion extends Model
         'discount',
         'published',
         'active',
+        'svg',
     ];
 
     public static function register(string $name): self

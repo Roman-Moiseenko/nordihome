@@ -1,12 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Discount\Controllers;
+namespace App\Modules\Discount\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Discount\Repository\PromotionRepository;
 use App\Modules\Discount\Service\PromotionService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -26,7 +27,7 @@ class PromotionController extends Controller
         $this->repository = $repository;
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request, UserPermission $permission): Response
     {
         $promotions = $this->repository->getIndex($request, $filters);
         return Inertia::render('Discount/Promotion/Index', [
@@ -36,7 +37,7 @@ class PromotionController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $permission): RedirectResponse
     {
         $request->validate([
             'name' => 'required|string'
@@ -45,7 +46,7 @@ class PromotionController extends Controller
         return redirect()->route('admin.discount.promotion.show', compact('promotion'));
     }
 
-    public function show(Promotion $promotion): Response
+    public function show(Promotion $promotion, UserPermission $permission): Response
     {
         return Inertia::render('Discount/Promotion/Show', [
             'promotion' => $this->repository->PromotionWithToArray($promotion),
@@ -53,13 +54,13 @@ class PromotionController extends Controller
         ]);
     }
 
-    public function set_info(Request $request, Promotion $promotion): RedirectResponse
+    public function set_info(Request $request, Promotion $promotion, UserPermission $permission): RedirectResponse
     {
         $this->service->setInfo($request, $promotion);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function add_product(Request $request, Promotion $promotion): RedirectResponse
+    public function add_product(Request $request, Promotion $promotion, UserPermission $permission): RedirectResponse
     {
         $request->validate([
             'product_id' => 'required|integer|gt:0',
@@ -68,32 +69,32 @@ class PromotionController extends Controller
         return redirect()->back()->with('success', 'Товар добавлен');
     }
 
-    public function add_products(Request $request, Promotion $promotion): RedirectResponse
+    public function add_products(Request $request, Promotion $promotion, UserPermission $permission): RedirectResponse
     {
         $this->service->addProducts($promotion, $request['products']);
         return redirect()->back()->with('success', 'Товары добавлены');
     }
 
-    public function del_product(Promotion $promotion, Request $request): RedirectResponse
+    public function del_product(Promotion $promotion, Request $request, UserPermission $permission): RedirectResponse
     {
         $this->service->delProduct($request, $promotion);
         return redirect()->back()->with('success', 'Товар удален');
     }
 
-    public function set_product(Request $request, Promotion $promotion): RedirectResponse
+    public function set_product(Request $request, Promotion $promotion, UserPermission $permission): RedirectResponse
     {
         $this->service->setProduct($request, $promotion);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function destroy(Promotion $promotion): RedirectResponse
+    public function destroy(Promotion $promotion, UserPermission $permission): RedirectResponse
     {
         $this->service->delete($promotion);
         return redirect()->back()->with('success', 'Акция удалена');
     }
 
     //Команды
-    public function toggle(Promotion $promotion): RedirectResponse
+    public function toggle(Promotion $promotion, UserPermission $permission): RedirectResponse
     {
         if ($promotion->isPublished()) {
             $this->service->draft($promotion);
@@ -105,13 +106,13 @@ class PromotionController extends Controller
         return redirect()->back()->with('success', $success);
     }
 
-    public function stop(Promotion $promotion): RedirectResponse
+    public function stop(Promotion $promotion, UserPermission $permission): RedirectResponse
     {
         $this->service->stop($promotion);
         return redirect()->back()->with('success', 'Акция остановлена в ручную');
     }
 
-    public function start(Promotion $promotion): RedirectResponse
+    public function start(Promotion $promotion, UserPermission $permission): RedirectResponse
     {
         $this->service->start($promotion);
         return redirect()->back()->with('success', 'Акция запущена в ручную');

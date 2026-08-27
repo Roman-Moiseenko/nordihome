@@ -151,6 +151,7 @@ final class Slug
 - `save(Entity $entity)` — сохраняет (create/update), возвращает сохранённую сущность
 - `delete(int $id)` — удаляет
 - Специфические методы пишем по необходимости
+- Метод получения списка с пагинацией возвращает `Illuminate\Pagination\LengthAwarePaginator`, например `findAllByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator`
 
 **Пример:**
 
@@ -455,6 +456,20 @@ private function hydrate(RoomModel $model): RoomEntity
 }
 ```
 
+**Пример получения списка с пагинацией:**
+
+```php
+use Illuminate\Pagination\LengthAwarePaginator;
+
+public function findAllByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator
+{
+    return Product::where('main_category_id', $categoryId)
+        ->orderBy('name')
+        ->paginate($perPage, ['*'], 'page', $page)
+        ->through(fn(Product $model) => $this->hydrate($model));
+}
+```
+
 ---
 
 ## 8. ServiceProvider (биндинги)
@@ -533,6 +548,45 @@ Route::group([
     Route::resource('room', RoomController::class)->except(['create', 'edit']);
 });
 ```
+
+---
+
+## 11. Связи многие-ко-многим (pivot)
+
+**Назначение:** Отношение «многие-ко-многим» (например, `Category` ↔ `Product`, `Promotion` ↔ `Product`) оформляется как отдельный под-модуль внутри модуля. В Domain Entity родительская сущность НЕ хранит коллекцию связанных сущностей — связи получаются через отдельные UseCase.
+
+**Структура (на примере CategoryProduct):**
+
+- **Pivot Model** — `Infrastructure/Models/{A}{B}.php` (например, `CategoryProduct`), `$timestamps = false`, `protected $table` — pivot-таблица
+- **RepositoryInterface** — `Application/Interfaces/{A}{B}RepositoryInterface.php`
+- **Repository** — `Infrastructure/Persistence/{A}{B}Repository.php`
+- **UseCase** — `Application/Actions/{A}{B}/` (Attach / Assign(sync) / Detach / List)
+- **DTO** для списка — `Application/DTOs/.../`
+
+**Пример RepositoryInterface:**
+
+```php
+interface CategoryProductRepositoryInterface
+{
+    public function getProductIdsByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
+
+    /** @param int[] $productIds */
+    public function attachProducts(int $categoryId, array $productIds): void;
+
+    /** @param int[] $productIds */
+    public function syncProducts(int $categoryId, array $productIds): void;
+
+    /** @param int[] $productIds */
+    public function detachProducts(int $categoryId, array $productIds): void;
+}
+```
+
+**Правила:**
+- `attach` — дополняет существующие связи (с проверкой на дубли)
+- `sync` — заменяет весь набор связей
+- `detach` — удаляет указанные связи
+- `List...UseCase` — сначала получает ID связанных сущностей через pivot-репозиторий (с пагинацией), затем сущности через основной репозиторий (`findByIds`), затем маппит в DTO
+- Дополнительные колонки pivot (например, `price` в `promotions_products`) пробрасываются в сигнатурах методов: `attachProducts(int $promotionId, array $products)`, где `$products = [product_id => price]`
 
 ---
 

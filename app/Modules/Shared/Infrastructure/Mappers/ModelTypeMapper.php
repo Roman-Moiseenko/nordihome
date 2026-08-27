@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Shared\Infrastructure\Mappers;
 
 
+
+
 /**
  * Маппинг model_type ({модуль}.{сущность}) в полное имя класса (FQCN) для imageable_type
  */
@@ -23,6 +25,8 @@ class ModelTypeMapper
 
         'content.post' => \App\Modules\Content\Infrastructure\Models\Post::class,
         'content.banner-widget-item' => \App\Modules\Content\Entity\Widgets\BannerWidgetItem::class,
+
+        'discount.promotion' => \App\Modules\Discount\Infrastructure\Models\Promotion::class,
 
     ];
 

@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('text_tag')->default('Акция');
             $table->boolean('show_tag')->default(true);
             $table->boolean('show_discount')->default(true);
-
             $table->string('status')->nullable();
+            $table->text('svg')->nullable();
         });
     }
 
@@ -34,6 +34,7 @@ return new class extends Migration
             $table->dropColumn('show_tag');
             $table->dropColumn('show_discount');
             $table->dropColumn('status');
+            $table->dropColumn('svg');
         });
     }
 };

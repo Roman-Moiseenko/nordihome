@@ -2,7 +2,11 @@
 
 namespace App\Modules\Discount\Providers;
 
+use App\Modules\Discount\Application\Interfaces\PromotionProductRepositoryInterface;
+use App\Modules\Discount\Application\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Discount\Database\Seeders\DiscountRoleSeeder;
+use App\Modules\Discount\Infrastructure\Persistence\PromotionProductRepository;
+use App\Modules\Discount\Infrastructure\Persistence\PromotionRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -84,7 +88,15 @@ class DiscountServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register module-specific services
+        $this->app->bind(
+            PromotionRepositoryInterface::class,
+            PromotionRepository::class
+        );
+
+        $this->app->bind(
+            PromotionProductRepositoryInterface::class,
+            PromotionProductRepository::class
+        );
     }
 
     // =====================================================================
