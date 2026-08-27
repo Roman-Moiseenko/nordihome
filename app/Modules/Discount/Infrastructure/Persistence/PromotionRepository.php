@@ -67,6 +67,11 @@ class PromotionRepository implements PromotionRepositoryInterface
             ->through(fn(Promotion $model) => $this->hydrate($model));
     }
 
+    public function delete(int $id): void
+    {
+        Promotion::where('id', $id)->delete();
+    }
+
     private function hydrate(Promotion $model): PromotionEntity
     {
         $entity = new PromotionEntity(

@@ -4,6 +4,10 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Discount\Application\Actions\Promotion\CreatePromotionUseCase;
+use App\Modules\Discount\Application\Actions\Promotion\UpdatePromotionUseCase;
+use App\Modules\Discount\Application\DTOs\Promotion\PromotionCreateData;
+use App\Modules\Discount\Application\DTOs\Promotion\PromotionUpdateData;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Discount\Repository\PromotionRepository;
 use App\Modules\Discount\Service\PromotionService;
@@ -21,6 +25,8 @@ class PromotionController extends Controller
     public function __construct(
         PromotionService    $service,
         PromotionRepository $repository,
+        private CreatePromotionUseCase $createPromotionUseCase,
+        private UpdatePromotionUseCase $updatePromotionUseCase,
     )
     {
         $this->service = $service;
@@ -39,11 +45,12 @@ class PromotionController extends Controller
 
     public function store(Request $request, UserPermission $permission): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string'
-        ]);
-        $promotion = $this->service->create($request);
-        return redirect()->route('admin.discount.promotion.show', compact('promotion'));
+        $dto = PromotionCreateData::validateAndCreate($request->all());
+
+        $promotion = $this->createPromotionUseCase->execute($dto, $permission);
+
+       // $promotion = $this->service->create($request);
+        return redirect()->route('admin.discount.promotion.show', $promotion->id);
     }
 
     public function show(Promotion $promotion, UserPermission $permission): Response
@@ -54,9 +61,11 @@ class PromotionController extends Controller
         ]);
     }
 
-    public function set_info(Request $request, Promotion $promotion, UserPermission $permission): RedirectResponse
+    public function set_info(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->service->setInfo($request, $promotion);
+        $dto = PromotionUpdateData::validateAndCreate($request->all());
+        $this->updatePromotionUseCase->execute($id, $dto, $permission);
+        //$this->service->setInfo($request, $promotion);
         return redirect()->back()->with('success', 'Сохранено');
     }
 

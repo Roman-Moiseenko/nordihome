@@ -59,7 +59,6 @@ class PromotionRepository
     public function PromotionWithToArray(Promotion $promotion): array
     {
         return array_merge($this->PromotionToArray($promotion), [
-            'icon' => $promotion->getIcon(),
             'products' => $promotion->products()->get()->map(function (Product $product) {
                 return [
                     'id' => $product->id,

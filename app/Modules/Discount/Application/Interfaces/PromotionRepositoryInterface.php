@@ -40,4 +40,11 @@ interface PromotionRepositoryInterface
      * @return LengthAwarePaginator<PromotionEntity>
      */
     public function getAll(int $perPage = 15, int $page = 1): LengthAwarePaginator;
+
+    /**
+     * Удалить акцию по ID.
+     *
+     * @param int $id
+     */
+    public function delete(int $id): void;
 }
