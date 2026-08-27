@@ -54,4 +54,12 @@ interface PromotionProductRepositoryInterface
      * @param float $price
      */
     public function setPrice(int $promotionId, int $productId, float $price): void;
+
+    /**
+     * Получить количество товаров акции.
+     *
+     * @param int $promotionId
+     * @return int
+     */
+    public function countProductsByPromotionId(int $promotionId): int;
 }

@@ -5,23 +5,22 @@
         <div class="flex">
             <el-popover :visible="visible_create" placement="bottom-start" :width="246">
                 <template #reference>
-                    <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create" ref="buttonRef">
+                    <el-button type="primary" class="p-4 my-3" @click="visible_create = !visible_create"
+                               ref="buttonRef">
                         Новая акция
-                        <el-icon class="ml-1"><ArrowDown /></el-icon>
+                        <el-icon class="ml-1">
+                            <ArrowDown/>
+                        </el-icon>
                     </el-button>
                 </template>
                 <el-input v-model="new_promotion" placeholder="Название акции" class="mt-1"/>
                 <div class="mt-2">
-                    <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
+                    <el-button @click="visible_create = false">Отмена</el-button>
+                    <el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
 
-            <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
-                <el-input v-model="filter.name" placeholder="Товар, акция"/>
-                <el-select v-model="filter.status" placeholder="Статус" class="mt-1">
-                    <el-option v-for="item in statuses" :key="item.value" :value="item.value" :label="item.label"/>
-                </el-select>
-            </TableFilter>
+
         </div>
         <div class="mt-2 p-5 bg-white rounded-md">
             <el-table
@@ -39,43 +38,46 @@
                 <el-table-column prop="name" label="Название" width="280" show-overflow-tooltip/>
                 <el-table-column prop="" label="Начало-Конец" width="300" align="center">
                     <template #default="scope">
-                        {{ scope.row.start_at ? func.date(scope.row.start_at) : 'ручной запуск'}}
+                        {{ scope.row.start_at ? func.date(scope.row.start_at) : 'ручной запуск' }}
                         -
-                        {{ scope.row.finish_at ? func.date(scope.row.finish_at) : 'бессрочная'}}
+                        {{ scope.row.finish_at ? func.date(scope.row.finish_at) : 'бессрочная' }}
                     </template>
                 </el-table-column>
                 <el-table-column label="Статус">
                     <template #default="scope">
-                        <el-tag :type="statusType(scope.row.status)" >{{ statusText(scope.row.status) }}</el-tag>
+                        <el-tag :type="statusType(scope.row.status)">{{ statusText(scope.row.status) }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="quantity" label="Товары" />
+                <el-table-column prop="quantity" label="Товары"/>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        <span v-if="scope.row.active && !scope.row.is_finished">
-                            <el-button size="small" type="danger" @click.stop="handleFinish(scope.row)">
-                                Stop
-                            </el-button>
-                        </span>
-                        <span v-else>
-                            <span v-if="scope.row.published">
-                                <el-button v-if="!scope.row.is_finished" size="small" type="warning" @click.stop="handleToggle(scope.row)">
-                                    Hide
-                                </el-button>
-                                <el-button size="small" type="primary" @click.stop="handleStart(scope.row)">
-                                    Start
-                                </el-button>
-                            </span>
-                            <span v-if="!scope.row.published">
-                                <el-button size="small" type="success" @click.stop="handleToggle(scope.row)">
+
+                        <el-button v-if="scope.row.status === 'started'" size="small" type="danger"
+                                   @click.stop="handleFinish(scope.row)">
+                            Stop
+                        </el-button>
+
+
+                        <el-button v-if="scope.row.status === 'waiting'" size="small" type="warning"
+                                   @click.stop="handleDraft(scope.row)">
+                            Hide
+                        </el-button>
+                        <el-button v-if="scope.row.status === 'finished' || scope.row.status === 'waiting'" size="small"
+                                   type="primary" @click.stop="handleStart(scope.row)">
+                            Start
+                        </el-button>
+
+                        <span v-if="scope.row.status === 'draft'">
+                                <el-button size="small" type="success" @click.stop="handleWaiting(scope.row)">
                                     Show
                                 </el-button>
-                            </span>
-                            <el-button size="small" type="danger" class="ml-2"
-                                       @click.stop="handleDeleteEntity(scope.row)">
+                              <el-button size="small" type="danger" class="ml-2"
+                                         @click.stop="handleDeleteEntity(scope.row)">
                                 Delete
                             </el-button>
-                        </span>
+                            </span>
+
+
                     </template>
                 </el-table-column>
             </el-table>
@@ -94,7 +96,7 @@
             <div class="text-red-600 text-md mt-2">
                 Повторный запуск будет невозможен
             </div>
-            <slot />
+            <slot/>
             <template #footer>
                 <div class="dialog-footer">
                     <el-button @click="dialogStop = false">Отмена</el-button>
@@ -122,7 +124,7 @@ import {Head, router} from "@inertiajs/vue3";
 import {defineProps, inject, reactive, ref} from "vue";
 import {route} from "ziggy-js";
 import axios from "axios";
-import { func } from "@Res/func"
+import {func} from "@Res/func"
 
 
 const props = defineProps({
@@ -131,35 +133,41 @@ const props = defineProps({
         type: String,
         default: 'Список акций',
     },
-    filters: Array,
+   // filters: Array,
     statuses: Array,
 })
+console.log(props.promotions)
 const dialogStop = ref(false)
 const stopPromotionId = ref(null)
 const visible_create = ref(false)
 const new_promotion = ref(null)
 const store = useStore();
 const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.promotions.data])
+const tableData = ref([...props.promotions])
+/*
 const filter = reactive({
     name: props.filters.name,
     status: props.filters.status,
 })
-
+*/
 function createButton() {
     router.post(route('admin.discount.promotion.store', {name: new_promotion.value}))
 }
+
 function routeClick(row) {
-    router.get(route('admin.discount.promotion.show', {promotion: row.id}))
+    router.get(route('admin.discount.promotion.show', {id: row.id}))
 }
+
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.discount.promotion.destroy', {promotion: row.id}));
+    $delete_entity.show(route('admin.discount.promotion.destroy', {id: row.id}));
 }
+
 function handleStart(row) {
-    router.visit(route('admin.discount.promotion.start', {promotion: row.id}), {
+    router.visit(route('admin.discount.promotion.start', {id: row.id}), {
         method: 'post'
     });
 }
+
 function handleFinish(row) {
     if (row.quantity > 0) {
         stopPromotionId.value = row.id
@@ -169,17 +177,25 @@ function handleFinish(row) {
     }
 
 }
+
 function stopAction(id) {
-    router.visit(route('admin.discount.promotion.stop', {promotion: id}), {
+    router.visit(route('admin.discount.promotion.stop', {id: id}), {
         method: 'post'
     });
 }
 
-function handleToggle(row) {
-    router.visit(route('admin.discount.promotion.toggle', {promotion: row.id}), {
+function handleDraft(row) {
+    router.visit(route('admin.discount.promotion.draft', {id: row.id}), {
         method: 'post'
     });
 }
+
+function handleWaiting(row) {
+    router.visit(route('admin.discount.promotion.waiting', {id: row.id}), {
+        method: 'post'
+    });
+}
+
 
 function statusText(val) {
     let status = 'error';
@@ -188,6 +204,7 @@ function statusText(val) {
     })
     return status
 }
+
 function statusType(val) {
     if (val === 104) return 'primary'
     if (val === 103) return 'success'

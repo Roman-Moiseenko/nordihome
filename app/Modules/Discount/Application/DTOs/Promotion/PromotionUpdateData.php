@@ -33,10 +33,6 @@ class PromotionUpdateData extends Data
         public readonly ?bool $showTitle,
         #[Nullable, Numeric]
         public readonly ?int $discount,
-        #[Nullable, BooleanType]
-        public readonly ?bool $published,
-        #[Nullable, BooleanType]
-        public readonly ?bool $active,
         #[Nullable, StringType]
         public readonly ?string $startAt,
         #[Nullable, StringType]

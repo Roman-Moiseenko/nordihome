@@ -22,14 +22,14 @@ final class PromotionStatus
     public const string STARTED = 'started';
     public const string FINISHED = 'finished';
 
-    public const array ALLOWED = [
+    private const array ALLOWED = [
         self::DRAFT,
         self::WAITING,
         self::STARTED,
         self::FINISHED,
     ];
 
-    private const array LABELS = [
+    public const array STATUSES = [
         self::DRAFT => 'Черновик',
         self::WAITING => 'В ожидании',
         self::STARTED => 'Запущена',
@@ -63,6 +63,14 @@ final class PromotionStatus
         return new self(self::FINISHED);
     }
 
+    /**
+     * Статус по умолчанию (для новых акций, у которых ещё нет статуса).
+     */
+    public static function default(): self
+    {
+        return self::draft();
+    }
+
     public function value(): string
     {
         return $this->value;
@@ -70,7 +78,7 @@ final class PromotionStatus
 
     public function label(): string
     {
-        return self::LABELS[$this->value];
+        return self::STATUSES[$this->value];
     }
 
     public function isDraft(): bool

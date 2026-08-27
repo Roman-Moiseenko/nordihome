@@ -83,4 +83,12 @@ class PromotionProductRepository implements PromotionProductRepositoryInterface
             $pivot->save();
         }
     }
+
+    /**
+     * @inheritDoc
+     */
+    public function countProductsByPromotionId(int $promotionId): int
+    {
+        return PromotionProduct::where('promotion_id', $promotionId)->count();
+    }
 }

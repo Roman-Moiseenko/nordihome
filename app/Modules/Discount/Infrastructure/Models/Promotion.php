@@ -180,6 +180,6 @@ class Promotion extends Model
 
     public function scopeActive($query)
     {
-        return $query->where('active', true);
+        return $query->where('status', 'started');
     }
 }

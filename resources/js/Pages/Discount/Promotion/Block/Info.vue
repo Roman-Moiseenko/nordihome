@@ -1,151 +1,148 @@
 <template>
-    <el-row :gutter="10" v-if="!showEdit">
-        <el-col :span="6">
-            <PhotoDTO model-type="discount.promotion" :entity-id="promotion.id" type="image"/>
-            <el-tooltip content="Изображение для карточек" placement="top-start" effect="dark">
-            </el-tooltip>
-        </el-col>
-        <el-col :span="12">
-            <el-descriptions :column="1" border class="mb-5">
-                <el-descriptions-item label="Внутреннее имя">
-                    {{ promotion.name }}
-                </el-descriptions-item>
-                <el-descriptions-item label="Ссылка">
-                    {{ promotion.slug }}
-                </el-descriptions-item>
-
-                <el-descriptions-item label="Заголовок для клиента">
-                    {{ promotion.title }}
-                </el-descriptions-item>
-                <el-descriptions-item label="Ссылка на условия акции">
-                    {{ promotion.condition_url }}
-                </el-descriptions-item>
-                <el-descriptions-item label="Описание">
-                    {{ promotion.description }}
-                </el-descriptions-item>
-            </el-descriptions>
-        </el-col>
-        <el-col :span="6">
-            <el-descriptions :column="1" border class="mb-5">
-                <el-descriptions-item label="Показывать в меню">
-                    <Active :active="promotion.menu"/>
-                </el-descriptions-item>
-                <el-descriptions-item label="Показывать заголовок">
-                    <Active :active="promotion.show_title"/>
-                </el-descriptions-item>
-                <el-descriptions-item label="Базовая скидка">
-                    {{ promotion.discount }}%
-                </el-descriptions-item>
-                <el-descriptions-item label="Начало акции">
-                    {{ func.date(promotion.start_at) }}
-                </el-descriptions-item>
-                <el-descriptions-item label="Окончание акции">
-                    {{ func.date(promotion.finish_at) }}
-                </el-descriptions-item>
-            </el-descriptions>
-        </el-col>
-    </el-row>
-    <el-button v-if="!showEdit" type="warning" @click="showEdit = true">
-        <i class="fa-light fa-pen-to-square"></i>&nbsp;Редактировать
-    </el-button>
     <el-form label-width="auto">
-        <el-row :gutter="10" v-if="showEdit">
-            <el-col :span="8">
-
-                <el-form-item label="Внутреннее имя">
+        <el-row :gutter="10">
+            <el-col :span="3">
+                <el-tooltip content="Изображение для карточек" placement="top-start" effect="dark">
+                    <PhotoDTO model-type="discount.promotion" :entity-id="promotion.id" type="image"/>
+                </el-tooltip>
+            </el-col>
+            <el-col :span="7">
+                <el-form-item label="Внутр.имя">
                     <el-input v-model="info.name"/>
                 </el-form-item>
                 <el-form-item label="Ссылка">
-                    <el-input v-model="info.slug"/>
-                </el-form-item>
-                <el-form-item label="Показывать в меню">
-                    <el-checkbox v-model="info.menu" :checked="info.menu"/>
+                    <el-input v-model="info.slug" clearable placeholder="Slug"/>
                 </el-form-item>
                 <el-form-item label="Заголовок для клиента">
                     <el-input v-model="info.title"/>
+                </el-form-item>
+                <el-form-item label="Ссылка на условия акции">
+                    <el-input v-model="info.conditionUrl"/>
                 </el-form-item>
                 <el-form-item label="Базовая скидка">
                     <el-input v-model="info.discount" :formatter="val => func.MaskInteger(val)">
                         <template #append>%</template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="Показывать заголовок">
-                    <el-checkbox v-model="info.show_title" :checked="info.show_title"/>
-                </el-form-item>
-                <el-form-item label="Ссылка на условия акции">
-                    <el-input v-model="info.condition_url"/>
-                </el-form-item>
-
                 <el-form-item label="Описание">
-                    <el-input v-model="info.description" type="textarea" :rows="5"/>
+                    <el-input v-model="info.description" type="textarea" :rows="1"/>
                 </el-form-item>
+            </el-col>
+            <el-col :span="7">
                 <el-form-item label="Начало акции">
-                    <el-date-picker v-model="info.start_at" type="date" placeholder="Ручной запуск" clearable/>
+                    <el-date-picker v-model="info.startAt" type="date" value-format="YYYY-MM-DD" placeholder="Ручной запуск" clearable/>
                 </el-form-item>
-
                 <el-form-item label="Конец акции">
-                    <el-date-picker v-model="info.finish_at" type="date" placeholder="Бессрочная акция" clearable/>
+                    <el-date-picker v-model="info.finishAt" type="date" value-format="YYYY-MM-DD" placeholder="Бессрочная акция" clearable/>
                 </el-form-item>
-
+                <el-form-item label="Показывать в меню">
+                    <el-switch v-model="info.menu"/>
+                </el-form-item>
+                <el-form-item label="Показывать заголовок">
+                    <el-switch v-model="info.showTitle"/>
+                </el-form-item>
+                <el-form-item label="SVG">
+                    <el-input v-model="info.svg" type="textarea" :rows="1"/>
+                </el-form-item>
             </el-col>
-            <el-col :span="8">
-                <el-divider >Метка на карточке</el-divider>
-
-            </el-col>
-            <el-col :span="8">
+            <el-col :span="7">
+                <el-divider>Метка на карточке</el-divider>
+                <el-form-item label="Цвет">
+                    <el-select v-model="info.colorClass">
+                        <el-option v-for="color in colors" :key="color" :label="color" :value="color"/>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Позиция">
+                    <el-select v-model="info.positionClass">
+                        <el-option v-for="position in positions" :key="position" :label="position" :value="position"/>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="Текст">
+                    <el-input v-model="info.textTag"/>
+                </el-form-item>
+                <el-form-item label="Показывать метку">
+                    <el-switch v-model="info.showTag"/>
+                </el-form-item>
+                <el-form-item label="Показывать скидку">
+                    <el-switch v-model="info.showDiscount"/>
+                </el-form-item>
 
             </el-col>
         </el-row>
-        <el-button type="info" @click="showEdit = false" style="margin-left: 4px">
+        <el-button v-if="hasChanges" type="info" @click="onCancel" style="margin-left: 4px">
             Отмена
         </el-button>
-        <el-button type="success" @click="onSetInfo">
+        <el-button v-if="hasChanges" type="success" @click="onSetInfo">
             Сохранить
         </el-button>
     </el-form>
 </template>
 
 <script setup>
-import {reactive, ref} from "vue";
+import {reactive, computed} from "vue";
 import {router} from "@inertiajs/vue3";
-import UploadImageFile from '@Comp/UploadImageFile.vue'
-import HelpBlock from "@Comp/HelpBlock.vue";
-import Active from "@Comp/Elements/Active.vue";
-import {func} from "@Res/func.js"
+import {func} from '@Res/func.js'
 import PhotoDTO from "@Comp/PhotoDTO.vue";
 
 const props = defineProps({
     promotion: Object,
 })
 
-const iSavingInfo = ref(false)
-const info = reactive({
-    name: props.promotion.name,
-    title: props.promotion.title,
-    description: props.promotion.description,
-    slug: props.promotion.slug,
-    menu: props.promotion.menu,
-    show_title: props.promotion.show_title,
-    condition_url: props.promotion.condition_url,
-    discount: props.promotion.discount,
-    start_at: props.promotion.start_at,
-    finish_at: props.promotion.finish_at,
+const colors = ['red', 'green', 'yellow', 'gray', 'black']
+const positions = ['top-left', 'top-right', 'bottom-left', 'bottom-right']
 
+// --- Исходные данные из пропсов (эталон для отмены) ---
+const initialInfo = {
+    name: props.promotion.name,
+    title: props.promotion.title ?? '',
+    slug: props.promotion.slug ?? '',
+    description: props.promotion.description ?? '',
+    conditionUrl: props.promotion.condition_url ?? '',
+    menu: !!props.promotion.menu,
+    showTitle: !!props.promotion.show_title,
+    discount: props.promotion.discount ?? 0,
+    published: !!props.promotion.published,
+    active: !!props.promotion.active,
+    startAt: props.promotion.start_at ? func.date(props.promotion.start_at) : null,
+    finishAt: props.promotion.finish_at ? func.date(props.promotion.finish_at) : null,
+    colorClass: props.promotion.color_class ?? 'red',
+    positionClass: props.promotion.position_class ?? 'top-right',
+    textTag: props.promotion.text_tag ?? 'Акция',
+    showTag: !!props.promotion.show_tag,
+    showDiscount: !!props.promotion.show_discount,
+    svg: props.promotion.svg ?? null,
+}
+
+const info = reactive({...initialInfo})
+
+// --- Отслеживание изменений ---
+const hasChanges = computed(() => {
+    for (const key of Object.keys(initialInfo)) {
+        const a = JSON.stringify(info[key])
+        const b = JSON.stringify(initialInfo[key])
+        if (a !== b) return true
+    }
+    return false
 })
-const showEdit = ref(false)
+
+function onCancel() {
+    Object.assign(info, {...initialInfo})
+}
 
 function onSetInfo() {
-    if (info.start_at) info.start_at = func.date(info.start_at)
-    if (info.finish_at) info.finish_at = func.date(info.finish_at)
     router.visit(
         route('admin.discount.promotion.set-info', {id: props.promotion.id}), {
             method: "post",
-            data: info,
+            data: {...info},
             onSuccess: page => {
-                showEdit.value = false;
+                Object.assign(initialInfo, JSON.parse(JSON.stringify(info)))
             }
         }
     );
 }
 
 </script>
+
+<style scoped>
+
+</style>

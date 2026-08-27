@@ -70,6 +70,11 @@ final class PromotionEntity
         set => $this->active = $value;
     }
 
+    public ?PromotionStatus $status = null {
+        get => $this->status;
+        set => $this->status = $value;
+    }
+
     public ?\DateTimeImmutable $startAt = null {
         get => $this->startAt;
         set => $this->startAt = $value;
@@ -143,43 +148,23 @@ final class PromotionEntity
         return $this->published;
     }
 
-    /**
-     * Вычисляет текущий статус акции на основе её состояния.
-     */
-    public function status(): PromotionStatus
-    {
-        if ($this->active) {
-            return PromotionStatus::started();
-        }
-
-        if (!$this->published) {
-            return PromotionStatus::draft();
-        }
-
-        if ($this->finishAt !== null && $this->finishAt < new \DateTimeImmutable()) {
-            return PromotionStatus::finished();
-        }
-
-        return PromotionStatus::waiting();
-    }
-
     public function isStarted(): bool
     {
-        return $this->status()->isStarted();
+        return $this->status?->isStarted() ?? false;
     }
 
     public function isDraft(): bool
     {
-        return $this->status()->isDraft();
+        return $this->status?->isDraft() ?? false;
     }
 
     public function isWaiting(): bool
     {
-        return $this->status()->isWaiting();
+        return $this->status?->isWaiting() ?? false;
     }
 
     public function isFinished(): bool
     {
-        return $this->status()->isFinished();
+        return $this->status?->isFinished() ?? false;
     }
 }

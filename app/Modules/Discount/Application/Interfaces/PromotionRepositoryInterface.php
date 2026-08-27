@@ -33,13 +33,20 @@ interface PromotionRepositoryInterface
     public function getAllStarted(): array;
 
     /**
+     * Получить все акции.
+     *
+     * @return PromotionEntity[]
+     */
+    public function getAll(): array;
+
+    /**
      * Получить все акции с пагинацией.
      *
      * @param int $perPage
      * @param int $page
      * @return LengthAwarePaginator<PromotionEntity>
      */
-    public function getAll(int $perPage = 15, int $page = 1): LengthAwarePaginator;
+    public function getAllPaginated(int $perPage = 15, int $page = 1): LengthAwarePaginator;
 
     /**
      * Удалить акцию по ID.

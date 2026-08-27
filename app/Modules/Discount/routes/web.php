@@ -17,11 +17,12 @@ Route::group([
         Route::post('/add-products/{promotion}', [PromotionController::class, 'add_products'])->name('add-products');
         Route::post('/set-product/{promotion}', [PromotionController::class, 'set_product'])->name('set-product');
         Route::delete('/del-product/{promotion}', [PromotionController::class, 'del_product'])->name('del-product');
-        Route::post('/set-info/{id}', [PromotionController::class, 'set_info'])->name('set-info');
+        Route::post('/set-info/{id}', [PromotionController::class, 'setInfo'])->name('set-info');
 
-        Route::post('/toggle/{promotion}', [PromotionController::class, 'toggle'])->name('toggle');
-        Route::post('/stop/{promotion}', [PromotionController::class, 'stop'])->name('stop');
-        Route::post('/start/{promotion}', [PromotionController::class, 'start'])->name('start');
+        Route::post('/draft/{id}', [PromotionController::class, 'draft'])->name('draft');
+        Route::post('/waiting/{id}', [PromotionController::class, 'waiting'])->name('waiting');
+        Route::post('/stop/{id}', [PromotionController::class, 'stop'])->name('stop');
+        Route::post('/start/{id}', [PromotionController::class, 'start'])->name('start');
     });
     Route::group([
         'prefix' => 'discount',
