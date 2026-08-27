@@ -17,8 +17,13 @@
 
                 @if($product->is_new)
                     <div class="product-label new"><span>NEW</span></div>
-                @elseif($product->promotion->has)
-                    <div class="product-label promotion {{ $product->promotion->color }}">
+                @elseif($product->promotion->has && $product->promotion->showTag)
+                    @if($product->promotion->showDiscount)
+                    <div class="promotion-label discount {{ $product->promotion->position }}">
+                        <span>{{ $product->price - $product->promotion->price }}</span>
+                    </div>
+                    @endif
+                    <div class="product-label promotion {{ $product->promotion->color }} {{ $product->promotion->position }}">
                         <span>{{ $product->promotion->text }}</span>
                     </div>
                 @endif
