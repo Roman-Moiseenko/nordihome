@@ -4,6 +4,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\ClientContext;
@@ -140,7 +141,7 @@ class ProductIndexQueryRepository
         $promotions = DB::table('promotions_products')
             ->join('promotions', 'promotions_products.promotion_id', '=', 'promotions.id')
             ->whereIn('promotions_products.product_id', $ids)
-            ->where('promotions.active', true)
+            ->where('promotions.status', PromotionStatus::STARTED)
             ->where('promotions.start_at', '<=', $now)
             ->where(function ($query) use ($now) {
                 $query->where('promotions.finish_at', '>=', $now)
@@ -150,6 +151,11 @@ class ProductIndexQueryRepository
                 'promotions_products.product_id',
                 'promotions_products.price',
                 'promotions.title',
+                'promotions.color_class',
+                'promotions.position_class',
+                'promotions.text_tag',
+                'promotions.show_tag',
+                'promotions.show_discount',
             )
             ->get()
             ->keyBy('product_id');
@@ -210,13 +216,17 @@ class ProductIndexQueryRepository
                 'image' => $imageData,
                 'image_next' => $imageNextData,
                 'promotion' => $promo
-                    ? ['has' => true, 'price' => (float)$promo->price, 'title' => $promo->title]
-                    : ['has' => false, 'price' => 0.0, 'title' => ''],
+                    ? [
+                        'has' => true, 'price' => (float)$promo->price, 'title' => $promo->title,
+                        'color' => $promo->color_class, 'position' => $promo->position_class, 'text' => $promo->text_tag,
+                        'show_tag' => $promo->show_tag, 'show_discount' => $promo->show_discount ]
+                    : ['has' => false, 'price' => 0.0, 'title' => '',
+                        'color' => '', 'position' => '', 'text' => '',
+                        'show_tag' => '', 'show_discount' => ''],
                 'is_wish' => (bool)$item->is_wish,
                 'in_cart' => (bool)$item->in_cart,
             ];
         }
-
         return $result;
     }
 

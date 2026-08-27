@@ -24,11 +24,11 @@ class PromotionProductData
             has: $data['has'],
             title: $data['title'],
             price: (float)$data['price'],
-            color: $data['color'] ?? '',
-            position: $data['position'] ?? '',
-            text: $data['text'] ?? '',
-            showTag: $data['showTag'] ?? true,
-            showDiscount: $data['showDiscount'] ?? true,
+            color: $data['color'],
+            position: $data['position'],
+            text: $data['text'],
+            showTag: $data['show_tag'],
+            showDiscount: $data['show_discount'],
         );
     }
 }
