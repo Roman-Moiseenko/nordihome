@@ -695,7 +695,7 @@ class Product extends Model
     public function promotion(): ?Promotion
     {
         foreach ($this->promotions as $promotion) {
-            if ($promotion->isStarted()) return $promotion;
+            if ($promotion->status == 'started') return $promotion;
         }
         return null;
     }

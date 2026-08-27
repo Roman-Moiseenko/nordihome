@@ -21,10 +21,9 @@ use Illuminate\Support\Str;
  * @property bool $menu
  * @property bool $show_title //Показывать заголовок акции на карточках
  * @property string $title
- * @property bool $published //Опубликовать из черновиков. Опубликованные запускаются автоматически по Cron-у
- * @property bool $active // по Cron if ($start_at > time() && $published) $active = true;
  * @property string $slug  //По title, если существует, добавляем год
  * @property string $template
+ * @property string $status
  * @property int $discount
  * @property string $color_class
  * @property string $position_class
@@ -78,6 +77,7 @@ class Promotion extends Model
         'published',
         'active',
         'svg',
+        'status',
     ];
 
     public static function register(string $name): self
@@ -92,67 +92,6 @@ class Promotion extends Model
         ]);
     }
 
-    public function status(): string
-    {
-        if ($this->active) return self::STARTED; //'Активна';
-        if (!$this->published) return self::DRAFT;
-        if (!is_null($this->finish_at) && $this->finish_at->lt(now())) return self::FINISHED;
-        if (empty($this->start_at) || $this->start_at->gte(now())) return self::WAITING;
-
-        return self::WAITING;
-        //throw new \DomainException('Неучтенная комбинация!!!');
-    }
-
-    public function isStarted(): bool
-    {
-        if (
-            $this->active
-            && $this->start_at->lte(now())
-            && (is_null($this->finish_at) || $this->finish_at->gte(now()))
-        ) return true;
-        return false;
-    }
-
-    public function isFinished(): bool
-    {
-        if (!is_null($this->finish_at) && $this->finish_at->lt(now()) && !$this->active) return true;
-        return false;
-    }
-
-    public function isWaiting(): bool
-    {
-        if (
-            $this->published &&
-            (empty($this->start_at) || $this->start_at->gte(now()))
-        ) return true;
-        return false;
-    }
-
-    public function isDraft(): bool
-    {
-        return !$this->published;
-    }
-
-    public function finish(): void
-    {
-        $this->active = false;
-    }
-
-    public function start(): void
-    {
-        $this->active = true;
-    }
-
-    public function published(): void
-    {
-        $this->published = true;
-    }
-
-    public function draft(): void
-    {
-        $this->published = false;
-    }
-
     public function isProduct(int $product_id): bool
     {
         foreach ($this->products as $product) {
@@ -161,15 +100,6 @@ class Promotion extends Model
         return false;
     }
 
-    public function isPublished(): bool
-    {
-        return $this->published == true;
-    }
-
-    public function countProducts(): int
-    {
-        return $this->products()->count();
-    }
 
     public function products(): BelongsToMany//: array
     {

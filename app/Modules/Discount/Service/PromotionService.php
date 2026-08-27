@@ -19,7 +19,7 @@ class PromotionService
             $request->get('name'),
         );
     }
-
+/*
     public function setInfo(Request $request, Promotion $promotion): void
     {
         $promotion->update([
@@ -55,7 +55,7 @@ class PromotionService
             }
         }
     }
-
+*/
     public function addProduct(Promotion $promotion, int $product_id): void
     {
         $product = Product::find($product_id);
@@ -96,80 +96,6 @@ class PromotionService
         $promotion->refresh();
     }
 
-    public function icon(Promotion $promotion, $file): void
-    {
-        $promotion->saveIcon($file);
-        $promotion->refresh();
-    }
-
-    public function stop(Promotion $promotion): void
-    {
-        if ($promotion->status() == Promotion::STARTED) {
-            $promotion->finish();
-            $promotion->finish_at = now();
-            $promotion->save();
-            return;
-        }
-        throw new \DomainException('Нельзя остановить акцию');
-    }
-
-    public function published(Promotion $promotion): void
-    {
-        if ($promotion->products()->count() == 0) {
-            throw new \DomainException('В Акции нет товаров');
-        }
-
-        if ($promotion->status() == Promotion::DRAFT) {
-            $promotion->published();
-            $promotion->save();
-            return;
-        }
-        throw new \DomainException('Нельзя опубликовать акцию');
-    }
-
-    public function start(Promotion $promotion): void
-    {
-        if ($promotion->status() == Promotion::WAITING) {
-            $promotion->start();
-            if ($promotion->start_at == null || $promotion->start_at < now())
-                $promotion->start_at = now();
-            $promotion->save();
-            event(new PromotionHasMoved($promotion));
-            return;
-        }
-
-        //Запускаем раннее отсановленную акцию
-        if ($promotion->status() == Promotion::FINISHED) {
-            $promotion->start();
-            $promotion->finish_at = null;
-            $promotion->start_at = now();
-            $promotion->save();
-            event(new PromotionHasMoved($promotion));
-            return;
-        }
-        throw new \DomainException('Нельзя запустить акцию');
-    }
-
-    public function finish(Promotion $promotion): void
-    {
-        if ($promotion->status() == Promotion::STARTED) {
-            $promotion->finish();
-            $promotion->save();
-            event(new PromotionHasMoved($promotion));
-            return;
-        }
-        throw new \DomainException('Ошибка завершения акции');
-    }
-
-    public function draft(Promotion $promotion): void
-    {
-        if ($promotion->status() == Promotion::WAITING) {
-            $promotion->draft();
-            $promotion->save();
-            return;
-        }
-        throw new \DomainException('Нельзя отправить акцию в черновики');
-    }
 
     public function setProduct(Request $request, Promotion $promotion): void
     {

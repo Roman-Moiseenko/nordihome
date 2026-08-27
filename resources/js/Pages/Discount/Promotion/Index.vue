@@ -126,7 +126,6 @@ import {route} from "ziggy-js";
 import axios from "axios";
 import {func} from "@Res/func"
 
-
 const props = defineProps({
     promotions: Object,
     title: {

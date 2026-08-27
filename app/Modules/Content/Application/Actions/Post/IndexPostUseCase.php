@@ -7,6 +7,7 @@ namespace App\Modules\Content\Application\Actions\Post;
 use App\Modules\Content\Application\Interfaces\PostRepositoryInterface;
 use App\Modules\Content\Domain\Entities\PostEntity;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class IndexPostUseCase
 {
@@ -17,9 +18,8 @@ readonly class IndexPostUseCase
     /** @return PostEntity[] */
     public function execute(UserPermission $userPermission): array
     {
-        if (!$userPermission->can('content.post.view')) {
-            throw new \DomainException('Доступ запрещён');
-        }
+        if (!$userPermission->can('content.post.view')) throw new AccessDeniedException();
+
 
         return $this->postRepository->getAll();
     }

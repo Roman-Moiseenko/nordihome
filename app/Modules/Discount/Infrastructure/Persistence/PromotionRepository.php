@@ -34,8 +34,6 @@ class PromotionRepository implements PromotionRepositoryInterface
         $model->menu = $promotion->menu;
         $model->show_title = $promotion->showTitle;
         $model->discount = $promotion->discount;
-        $model->published = $promotion->published;
-        $model->active = $promotion->active;
         $model->start_at = $promotion->startAt?->format('Y-m-d');
         $model->finish_at = $promotion->finishAt?->format('Y-m-d');
         $model->color_class = $promotion->colorClass;
@@ -96,8 +94,6 @@ class PromotionRepository implements PromotionRepositoryInterface
         $entity->menu = (bool) $model->menu;
         $entity->showTitle = (bool) $model->show_title;
         $entity->discount = (int) $model->discount;
-        $entity->published = (bool) $model->published;
-        $entity->active = (bool) $model->active;
         $entity->colorClass = $model->color_class ?? 'red';
         $entity->positionClass = $model->position_class ?? 'top-right';
         $entity->textTag = $model->text_tag ?? 'Акция';

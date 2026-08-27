@@ -34,6 +34,9 @@ class NotificationPromotionMoved
      */
     public function handle(PromotionHasMoved $event): void
     {
+        //FIXME Рассылка по акциям
+
+        /*
         //Определяем тип Акции
         if ($event->promotion->status() == Promotion::WAITING && $event->promotion->start_at->toDateString() == Carbon::now()->addDays(3)->toDateString()) {
             //За три дня до начала
@@ -59,6 +62,6 @@ class NotificationPromotionMoved
                 Mail::to($user->email)->queue(new PromotionFinished($event->promotion));
             }
         }
-
+*/
     }
 }

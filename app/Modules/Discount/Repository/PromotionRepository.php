@@ -11,47 +11,12 @@ use Illuminate\Http\Request;
 class PromotionRepository
 {
 
-    public function getIndex(Request $request, &$filters): Arrayable
-    {
-        $query = Promotion::orderBy('finish_at', 'DESC')->orderBy('start_at');
-        $filters = [];
-        if ($request->has('product')) {
-            $product = $request->string('product');
-            $filters['product'] = $product;
-            $query->whereHas('products', function ($query) use ($product) {
-                $query->where(function ($q) use ($product) {
-                    $q->whereRaw("LOWER(name) like LOWER('%$product%')")
-                        ->orWhere('code', 'like', "%$product%")
-                        ->orWhere('code_search', 'like', "%$product%");
-                });
-            });
-        }
-
-        if (($status = $request->integer('status')) > 0) {
-            $filters['status'] = $status;
-            if ($status == Promotion::DRAFT) $query->where('published', false);
-            if ($status == Promotion::WAITING)
-                $query->where('published', true)->where('active', false)->where(function ($query) {
-                    $query->where('start_at', null)->orWhere('start_at', '>', now());
-                });
-            if ($status == Promotion::STARTED)
-                $query->where('published', true)->where('active', true);
-            if ($status == Promotion::FINISHED)
-                $query->where('published', true)->where('active', false)->where('finish_at', '<', now());
-        }
-
-        if (count($filters) > 0) $filters['count'] = count($filters);
-        return $query->paginate($request->input('size', 20))
-            ->withQueryString()
-            ->through(fn(Promotion $promotion) => $this->PromotionToArray($promotion));
-    }
-
     private function PromotionToArray(Promotion $promotion): array
     {
         return array_merge($promotion->toArray(), [
-            'status' => $promotion->status(),
+            'status' => $promotion->status,
             'image' => $promotion->getImage(),
-            'is_finished' => $promotion->isFinished(),
+            'is_finished' => $promotion->status == 'finished',
             'quantity' => $promotion->products()->count(),
         ]);
     }
@@ -72,14 +37,4 @@ class PromotionRepository
         ]);
     }
 
-    public function getActive()
-    {
-        $promotions = [];
-        /** @var Promotion $promotion */
-        foreach (Promotion::where('published', true)->get() as $promotion) {
-             if ($promotion->status() == Promotion::STARTED)
-             $promotions[] = $promotion;
-         }
-        return $promotions;
-    }
 }
