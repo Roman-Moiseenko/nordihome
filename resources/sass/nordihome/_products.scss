@@ -255,6 +255,22 @@
     }
     &.promotion {
         background: var(--bs-discount-color);
+        .red {
+            background: var(--bs-discount-color);
+        }
+        .green {
+            background: $green;
+        }
+        .black {
+
+        }
+        .gray {
+
+        }
+
+        .top-left {
+
+        }
     }
     &.new {
         background: $green;

@@ -5,12 +5,16 @@ namespace App\Modules\Catalog\Service;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
 
+//TODO Переделать на UseCase
 class OnOrderService
 {
     public function setOnOrderProduct(int $product_id): void
     {
+        /** @var Product $product */
         $product = Product::find($product_id);
-        $product->setOnOrder(true);
+        $product->only_on_order = true;
+        $product->save();
+
     }
 
     public function setOnOrderProducts(array $products): void
@@ -22,6 +26,7 @@ class OnOrderService
 
     public function delOnOrderProduct($product): void
     {
-        $product->setOnOrder(false);
+        $product->only_on_order = false;
+        $product->save();
     }
 }

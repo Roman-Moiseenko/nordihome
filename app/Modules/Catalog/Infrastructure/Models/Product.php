@@ -8,9 +8,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Casts\DimensionsCast;
-use App\Modules\Base\Casts\PackagesCast;
 use App\Modules\Base\Entity\Dimensions;
-use App\Modules\Base\Entity\Packages;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Base\Traits\GalleryField;
 use App\Modules\Cart\Infrastructure\Models\CartCookie;
@@ -29,7 +27,7 @@ use App\Modules\Catalog\Entity\ProductPriceRetail;
 use App\Modules\Catalog\Entity\ProductPriceSpecial;
 use App\Modules\Catalog\Entity\Review;
 use App\Modules\Catalog\Entity\Series;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;
 use App\Modules\Guide\Entity\Measuring;
@@ -79,7 +77,6 @@ use JetBrains\PhpStorm\Pure;
  * @property bool $local Доставка по региону
  * @property bool $priority Приоритетный показ
  * @property bool $not_sale Снят с продажи
- * @property bool $price_reduced Цена снижена
  * @property bool $only_on_order Только под заказ
  *
  * @property Dimensions $dimensions Габариты товара (+ вес),
@@ -169,6 +166,7 @@ class Product extends Model
         'packages' => 'json',
         'published' => 'boolean',
         'not_sale' => 'boolean',
+        'only_on_order' => 'boolean',
     ];
     protected $attributes = [
         'short' => '',
@@ -210,6 +208,8 @@ class Product extends Model
         'packages',
         'fractional',
         'complexity',
+        'only_on_order',
+
     ];
     protected $hidden = [
 

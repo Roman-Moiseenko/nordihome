@@ -62,11 +62,13 @@ return [
                 'route_name' => 'admin.catalog.priority.index',
                 'font_awesome' => 'fa-light fa-flag-pennant',
             ],
+                /*
             'price_reduced' => [
                 'title' => 'Цена снижена',
                 'route_name' => 'admin.catalog.reduced.index',
                 'font_awesome' => 'fa-light fa-money-check-dollar-pen',
             ],
+            */
             'only_on_order' => [
                 'title' => 'Только под заказ',
                 'route_name' => 'admin.catalog.on-order.index', //

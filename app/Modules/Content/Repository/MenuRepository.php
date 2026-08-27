@@ -9,7 +9,7 @@ use App\Modules\Content\Entity\MenuItem;
 use App\Modules\Content\Entity\Page;
 use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Infrastructure\Models\Post;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 

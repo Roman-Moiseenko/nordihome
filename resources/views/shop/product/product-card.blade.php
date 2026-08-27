@@ -15,12 +15,14 @@
                      src="{{ $product->image_next->src }}"
                      alt="{{ $product->image_next->alt }}">
 
-                @if($product->promotion->has)
-                    <div class="product-label promotion"><span>Акция</span></div>
-                @endif
                 @if($product->is_new)
                     <div class="product-label new"><span>NEW</span></div>
+                @elseif($product->promotion->has)
+                    <div class="product-label promotion {{ $product->promotion->color }}">
+                        <span>{{ $product->promotion->text }}</span>
+                    </div>
                 @endif
+
             </a>
         </div>
         <div class="product-card-review">

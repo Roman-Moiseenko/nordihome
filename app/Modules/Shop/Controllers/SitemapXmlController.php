@@ -6,8 +6,8 @@ namespace App\Modules\Shop\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Content\Entity\Page;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 
 class SitemapXmlController extends Controller
 {

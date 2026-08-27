@@ -5,7 +5,7 @@ namespace App\Modules\Shop\Calculate;
 
 use App\Modules\Catalog\Entity\Bonus;
 use App\Modules\Discount\Entity\Discount;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Shop\CartItemInterface;
 
 class CalculatorOrder

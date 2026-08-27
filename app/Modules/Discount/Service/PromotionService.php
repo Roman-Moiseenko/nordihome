@@ -5,7 +5,7 @@ namespace App\Modules\Discount\Service;
 
 use App\Events\PromotionHasMoved;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -44,9 +44,8 @@ class PromotionService
                 'finish_at' => is_null($finish) ? null : $finish->format('Y-m-d'),
             ]);
 
-        } else {
-           throw new \DomainException('Акция завершена, нельзя менять даты');
         }
+
         //Если изменилась скидка, пересчитать на весь товар
         if ($promotion->discount != $request->integer('discount')) {
             $promotion->discount = $request->integer('discount');
@@ -105,7 +104,7 @@ class PromotionService
 
     public function stop(Promotion $promotion): void
     {
-        if ($promotion->status() == Promotion::STATUS_STARTED) {
+        if ($promotion->status() == Promotion::STARTED) {
             $promotion->finish();
             $promotion->finish_at = now();
             $promotion->save();
@@ -120,7 +119,7 @@ class PromotionService
             throw new \DomainException('В Акции нет товаров');
         }
 
-        if ($promotion->status() == Promotion::STATUS_DRAFT) {
+        if ($promotion->status() == Promotion::DRAFT) {
             $promotion->published();
             $promotion->save();
             return;
@@ -130,10 +129,20 @@ class PromotionService
 
     public function start(Promotion $promotion): void
     {
-        if ($promotion->status() == Promotion::STATUS_WAITING) {
+        if ($promotion->status() == Promotion::WAITING) {
             $promotion->start();
             if ($promotion->start_at == null || $promotion->start_at < now())
                 $promotion->start_at = now();
+            $promotion->save();
+            event(new PromotionHasMoved($promotion));
+            return;
+        }
+
+        //Запускаем раннее отсановленную акцию
+        if ($promotion->status() == Promotion::FINISHED) {
+            $promotion->start();
+            $promotion->finish_at = null;
+            $promotion->start_at = now();
             $promotion->save();
             event(new PromotionHasMoved($promotion));
             return;
@@ -143,7 +152,7 @@ class PromotionService
 
     public function finish(Promotion $promotion): void
     {
-        if ($promotion->status() == Promotion::STATUS_STARTED) {
+        if ($promotion->status() == Promotion::STARTED) {
             $promotion->finish();
             $promotion->save();
             event(new PromotionHasMoved($promotion));
@@ -154,7 +163,7 @@ class PromotionService
 
     public function draft(Promotion $promotion): void
     {
-        if ($promotion->status() == Promotion::STATUS_WAITING) {
+        if ($promotion->status() == Promotion::WAITING) {
             $promotion->draft();
             $promotion->save();
             return;

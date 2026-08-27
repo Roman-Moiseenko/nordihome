@@ -5,7 +5,7 @@ namespace App\Modules\Order\Application\Services;
 use App\Modules\Catalog\Entity\Bonus;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\Discount;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Discount\Service\CouponService;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Infrastructure\Models\Order;

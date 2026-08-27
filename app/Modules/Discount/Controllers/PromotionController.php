@@ -4,10 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Discount\Repository\PromotionRepository;
 use App\Modules\Discount\Service\PromotionService;
-
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

@@ -3,12 +3,12 @@
 namespace App\Modules\Content\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Discount\Entity\Promotion;
 use App\Modules\Content\Entity\Widgets\BannerWidget;
 use App\Modules\Content\Entity\Widgets\PromotionWidget;
 use App\Modules\Content\Repository\PromotionWidgetRepository;
 use App\Modules\Content\Repository\TemplateRepository;
 use App\Modules\Content\Service\PromotionWidgetService;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

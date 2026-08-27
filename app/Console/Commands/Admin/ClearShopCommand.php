@@ -10,7 +10,7 @@ use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Catalog\Infrastructure\Models\Tag;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 

@@ -6,6 +6,7 @@ return [
     App\Modules\Cart\Providers\CartServiceProvider::class,
     App\Modules\Catalog\Providers\CatalogServiceProvider::class,
     App\Modules\Content\Providers\ContentServiceProvider::class,
+    App\Modules\Discount\Providers\DiscountServiceProvider::class,
     App\Modules\Feedback\Providers\FeedbackServiceProvider::class,
     App\Modules\Lead\Providers\LeadServiceProvider::class,
     App\Modules\Notification\Providers\NotificationServiceProvider::class,

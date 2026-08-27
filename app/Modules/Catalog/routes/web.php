@@ -142,6 +142,7 @@ Route::group([
         Route::delete('/del-product/{product}', [PriorityController::class, 'del_product'])->name('del-product');
     });
     //Снижение цен
+    /*
     Route::group([
         'prefix' => 'reduced',
         'as' => 'reduced.',
@@ -151,6 +152,7 @@ Route::group([
         Route::post('/add-products', [ReducedController::class, 'add_products'])->name('add-products');
         Route::delete('/del-product/{product}', [ReducedController::class, 'del_product'])->name('del-product');
     });
+    */
     //Только под заказ
     Route::group([
         'prefix' => 'on-order',

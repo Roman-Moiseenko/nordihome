@@ -5,7 +5,7 @@ namespace App\Modules\Catalog\Application\Actions\ProductPrice;
 use App\Modules\Catalog\Application\DTOs\ProductPrice\ProductSellPriceData;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
 /**

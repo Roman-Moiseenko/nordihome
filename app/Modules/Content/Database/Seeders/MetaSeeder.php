@@ -11,7 +11,7 @@ use App\Modules\Content\Application\DTOs\MetaTemplateCreateData;
 use App\Modules\Content\Entity\Page;
 use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Infrastructure\Models\Post;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use Illuminate\Database\Seeder;

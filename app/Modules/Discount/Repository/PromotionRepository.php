@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Repository;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -29,14 +29,14 @@ class PromotionRepository
 
         if (($status = $request->integer('status')) > 0) {
             $filters['status'] = $status;
-            if ($status == Promotion::STATUS_DRAFT) $query->where('published', false);
-            if ($status == Promotion::STATUS_WAITING)
+            if ($status == Promotion::DRAFT) $query->where('published', false);
+            if ($status == Promotion::WAITING)
                 $query->where('published', true)->where('active', false)->where(function ($query) {
                     $query->where('start_at', null)->orWhere('start_at', '>', now());
                 });
-            if ($status == Promotion::STATUS_STARTED)
+            if ($status == Promotion::STARTED)
                 $query->where('published', true)->where('active', true);
-            if ($status == Promotion::STATUS_FINISHED)
+            if ($status == Promotion::FINISHED)
                 $query->where('published', true)->where('active', false)->where('finish_at', '<', now());
         }
 
@@ -78,7 +78,7 @@ class PromotionRepository
         $promotions = [];
         /** @var Promotion $promotion */
         foreach (Promotion::where('published', true)->get() as $promotion) {
-             if ($promotion->status() == Promotion::STATUS_STARTED)
+             if ($promotion->status() == Promotion::STARTED)
              $promotions[] = $promotion;
          }
         return $promotions;

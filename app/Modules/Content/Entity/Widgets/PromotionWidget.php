@@ -4,7 +4,7 @@ namespace App\Modules\Content\Entity\Widgets;
 
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**

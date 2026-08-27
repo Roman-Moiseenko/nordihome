@@ -6,7 +6,7 @@ namespace App\Console\Commands\Cron;
 use App\Events\PromotionHasMoved;
 use App\Events\ThrowableHasAppeared;
 use App\Modules\Analytics\Entity\LoggerCron;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
 

@@ -57,9 +57,9 @@
                                 Stop
                             </el-button>
                         </span>
-                        <span v-else-if="!scope.row.is_finished">
+                        <span v-else>
                             <span v-if="scope.row.published">
-                                <el-button size="small" type="warning" @click.stop="handleToggle(scope.row)">
+                                <el-button v-if="!scope.row.is_finished" size="small" type="warning" @click.stop="handleToggle(scope.row)">
                                     Hide
                                 </el-button>
                                 <el-button size="small" type="primary" @click.stop="handleStart(scope.row)">

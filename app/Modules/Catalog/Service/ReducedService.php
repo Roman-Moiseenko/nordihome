@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Service;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use JetBrains\PhpStorm\Deprecated;
 
+#[Deprecated]
 class ReducedService
 {
     public function setReducedProduct(int $product_id): void

@@ -182,10 +182,12 @@ Breadcrumbs::for('admin.catalog.priority.index', function (BreadcrumbTrail $trai
     $trail->push('Приоритетный показ товаров', route('admin.catalog.priority.index'));
 });
 //REDUCED
+/*
 Breadcrumbs::for('admin.catalog.reduced.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.catalog.product.index');
     $trail->push('Цена снижена на товар', route('admin.catalog.reduced.index'));
 });
+*/
 //ON-ORDER
 Breadcrumbs::for('admin.catalog.on-order.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.catalog.product.index');

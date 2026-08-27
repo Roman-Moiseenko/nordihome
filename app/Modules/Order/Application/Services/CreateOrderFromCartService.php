@@ -8,7 +8,7 @@ use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Discount\Entity\Coupon;
-use App\Modules\Discount\Entity\Promotion;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetDeliveryAdditionUseCase;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetPolandAdditionUseCase;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;

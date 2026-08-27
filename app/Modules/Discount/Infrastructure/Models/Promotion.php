@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Discount\Entity;
+namespace App\Modules\Discount\Infrastructure\Models;
 
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
@@ -26,21 +26,26 @@ use Illuminate\Support\Str;
  * @property string $slug  //По title, если существует, добавляем год
  * @property string $template
  * @property int $discount
+ * @property string $color_class
+ * @property string $position_class
+ * @property string $text_tag
+ * @property bool $show_tag
+ * @property bool $show_discount
  * @property Product[] $products
  */
 class Promotion extends Model
 {
     use ImageField, IconField;
 
-    const int STATUS_DRAFT = 101;
-    const int STATUS_WAITING = 102;
-    const int STATUS_STARTED = 103;
-    const int STATUS_FINISHED = 104;
+    const string DRAFT = 'draft';
+    const string WAITING = 'waiting';
+    const string STARTED = 'started';
+    const string FINISHED = 'finished';
     const array STATUSES = [
-        self::STATUS_DRAFT => 'Черновик',
-        self::STATUS_WAITING => 'В ожидании',
-        self::STATUS_STARTED => 'Запущена',
-        self::STATUS_FINISHED => 'Завершена',
+        self::DRAFT => 'Черновик',
+        self::WAITING => 'В ожидании',
+        self::STARTED => 'Запущена',
+        self::FINISHED => 'Остановлена',
     ];
 
     const TYPE = 'Акция';
@@ -81,14 +86,14 @@ class Promotion extends Model
         ]);
     }
 
-    public function status(): int
+    public function status(): string
     {
-        if ($this->active) return self::STATUS_STARTED; //'Активна';
-        if (!$this->published) return self::STATUS_DRAFT;
-        if (!is_null($this->finish_at) && $this->finish_at->lt(now())) return self::STATUS_FINISHED;
-        if (empty($this->start_at) || $this->start_at->gte(now())) return self::STATUS_WAITING;
+        if ($this->active) return self::STARTED; //'Активна';
+        if (!$this->published) return self::DRAFT;
+        if (!is_null($this->finish_at) && $this->finish_at->lt(now())) return self::FINISHED;
+        if (empty($this->start_at) || $this->start_at->gte(now())) return self::WAITING;
 
-        return self::STATUS_WAITING;
+        return self::WAITING;
         //throw new \DomainException('Неучтенная комбинация!!!');
     }
 
