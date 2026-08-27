@@ -17,8 +17,8 @@ class PromotionIndexData extends Data
         public readonly int    $id,
         public readonly string $image,
         public readonly string $name,
-        public readonly string $start,
-        public readonly string $finish,
+        public readonly ?string $start,
+        public readonly ?string $finish,
         public readonly string $status,
         public readonly int    $quantity,
     )
@@ -31,8 +31,8 @@ class PromotionIndexData extends Data
             id: $promotion->id ?? 0,
             image: $image,
             name: $promotion->name,
-            start: $promotion->startAt?->format('d.m.Y') ?? 'ручной запуск',
-            finish: $promotion->finishAt?->format('d.m.Y') ?? 'бессрочная',
+            start: $promotion->startAt?->format('d.m.Y') ?? null,
+            finish: $promotion->finishAt?->format('d.m.Y') ?? null,
             status: $promotion->status?->value() ?? PromotionStatus::default()->value(),
             quantity: $quantity,
         );

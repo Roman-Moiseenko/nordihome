@@ -34,6 +34,8 @@ readonly class IndexPromotionUseCase
 
         $promotions = $this->promotionRepository->getAll();
 
+        \Log::info(json_encode($promotions));
+
         return array_map(
             fn(PromotionEntity $promotion) => PromotionIndexData::fromEntity(
                 $promotion,

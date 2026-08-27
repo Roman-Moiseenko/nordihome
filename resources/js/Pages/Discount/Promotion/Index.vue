@@ -38,9 +38,9 @@
                 <el-table-column prop="name" label="Название" width="280" show-overflow-tooltip/>
                 <el-table-column prop="" label="Начало-Конец" width="300" align="center">
                     <template #default="scope">
-                        {{ scope.row.start_at ? func.date(scope.row.start_at) : 'ручной запуск' }}
+                        {{ scope.row.start ?? 'ручной запуск' }}
                         -
-                        {{ scope.row.finish_at ? func.date(scope.row.finish_at) : 'бессрочная' }}
+                        {{ scope.row.finish ?? 'бессрочная' }}
                     </template>
                 </el-table-column>
                 <el-table-column label="Статус">
@@ -133,10 +133,8 @@ const props = defineProps({
         type: String,
         default: 'Список акций',
     },
-   // filters: Array,
     statuses: Array,
 })
-console.log(props.promotions)
 const dialogStop = ref(false)
 const stopPromotionId = ref(null)
 const visible_create = ref(false)
@@ -206,9 +204,9 @@ function statusText(val) {
 }
 
 function statusType(val) {
-    if (val === 104) return 'primary'
-    if (val === 103) return 'success'
-    if (val === 102) return 'warning'
-    if (val === 101) return 'info'
+    if (val === 'finished') return 'primary'
+    if (val === 'started') return 'success'
+    if (val === 'waiting') return 'warning'
+    if (val === 'draft') return 'info'
 }
 </script>

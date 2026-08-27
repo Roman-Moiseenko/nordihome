@@ -44,9 +44,9 @@ readonly class UpdatePromotionUseCase
 
         if ($dto->discount !== null) $promotion->discount = $dto->discount;
 
-        if ($dto->startAt !== null && $dto->startAt !== '') $promotion->startAt = new \DateTimeImmutable($dto->startAt);
+        $promotion->startAt = is_null($dto->startAt) ? null : new \DateTimeImmutable($dto->startAt);
 
-        if ($dto->finishAt !== null && $dto->finishAt !== '') $promotion->finishAt = new \DateTimeImmutable($dto->finishAt);
+        $promotion->finishAt = is_null($dto->finishAt) ? null : new \DateTimeImmutable($dto->finishAt);
 
         if ($dto->colorClass !== null) $promotion->colorClass = $dto->colorClass;
 
