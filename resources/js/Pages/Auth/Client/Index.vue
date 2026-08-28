@@ -30,7 +30,7 @@
                 <el-table-column prop="name" label="Клиент" width="" show-overflow-tooltip>
                     <template #default="scope">
                         <div class="font-medium text-sm">{{ scope.row.fullName }}</div>
-                        <div class="text-slate-700 text-xs">{{ func.phone(scope.row.phone) }}</div>
+                        <div class="text-slate-700 text-xs">{{ scope.row.phone }}</div>
                         <div class="text-slate-700 text-xs">{{ scope.row.email }}</div>
                     </template>
                 </el-table-column>

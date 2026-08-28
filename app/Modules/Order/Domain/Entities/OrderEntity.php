@@ -297,4 +297,38 @@ class OrderEntity
         }
         throw new \InvalidArgumentException('Неверный id для услуги заказа');
     }
+
+    public function getBaseItemsAmount(): float
+    {
+        $result = 0;
+        foreach ($this->items as $item) {
+            $result += $item->baseCost * $item->quantity;
+        }
+        return $result;
+    }
+
+    public function getSellItemsAmount(): float
+    {
+        $result = 0;
+        foreach ($this->items as $item) {
+            $result += $item->sellCost * $item->quantity;
+        }
+        return $result;
+    }
+
+    public function getAdditionAmount(): float
+    {
+        $result = 0;
+        foreach ($this->additions as $addition) {
+            $result += $addition->amount * ($addition->quantity ?? 1);
+        }
+        return $result;
+    }
+
+    public function getTotalAmount(): float
+    {
+        return $this->getAdditionAmount() + $this->getSellItemsAmount();
+    }
+
+
 }

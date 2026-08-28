@@ -75,7 +75,7 @@ class ClientRepository implements ClientRepositoryInterface
         return $this->hydrate($model);
     }
 
-    public function findById(int $id): ?ClientEntity
+    public function findById(?int $id): ?ClientEntity
     {
         $model = Client::find($id);
         return $model ? $this->hydrate($model) : null;

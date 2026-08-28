@@ -8,6 +8,9 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
+use App\Modules\Auth\Infrastructure\Models\Client;
+use App\Modules\Guide\Entity\Addition;
+use App\Modules\Order\Application\Actions\Order\IndexOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetCouponOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
@@ -21,6 +24,7 @@ use App\Modules\Order\Application\Actions\OrderItem\RemoveOrderItemUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\UpdateOrderItemUseCase;
 use App\Modules\Order\Application\Actions\ViewOrderUseCase;
 use App\Modules\Order\Application\DTOs\Order\DiscountOrderData;
+use App\Modules\Order\Application\DTOs\Order\FilterOrderIndexData;
 use App\Modules\Order\Application\DTOs\OrderAddition\OrderAdditionUpdateData;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemPreData;
@@ -79,6 +83,7 @@ class OrderController extends Controller
         private readonly SetManagerOrderUseCase      $setManagerOrderUseCase,
         private readonly StatusAwaitingOrderService  $statusAwaitingOrderService,
         private readonly StatusCancelOrderService    $statusCancelOrderService,
+        private readonly IndexOrderUseCase $indexOrderUseCase,
     )
     {
     }
@@ -86,13 +91,12 @@ class OrderController extends Controller
 //MAINDO загрузка параметров через useStore
     public function index(Request $request, UserPermission $permissions): Response
     {
-        $orders = $this->repository->getIndex($request, $filters);
-
+        $filterDto = FilterOrderIndexData::validateAndCreate($request->all());
         $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
-
+        $orders = $this->indexOrderUseCase->execute($filterDto, $permissions);
         return Inertia::render('Order/Order/Index', [
             'orders' => $orders,
-            'filters' => $filters,
+            'filters' => $filterDto,
             'staffs' => $staffs,
         ]);
     }
@@ -100,20 +104,30 @@ class OrderController extends Controller
 //MAINDO загрузка параметров через useStore
     public function show(Request $request, Order $order, UserPermission $permissions): Response
     {
-        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
 
         $order = $this->viewOrderUseCase->execute($order->id, $permissions);
 
         //$storages = Storage::orderBy('name')->getModels();
         //$mainStorage = Storage::where('default', true)->first();
-        $additions = $this->repository->guideAddition();
+
+        //FIXME Через useStore
+        $additions = array_map(
+            fn($type) => [
+                'label'     => Addition::TYPES[$type],
+                'additions' => Addition::orderBy('name')->where('type', $type)->getModels(),
+            ],
+            array_keys(Addition::TYPES)
+        );
+        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
+        $traders = $this->organizations->getTraders();
+
         return Inertia::render('Order/Order/Show', [
             'order' => $order, //$this->repository->OrderWithToArray($order),
             //  'storages' => $storages,
             // 'mainStorage' => $mainStorage,
             'staffs' => $staffs,
             'additions' => $additions,
-            'traders' => $this->organizations->getTraders(),
+            'traders' => $traders,
             // 'order_related' => $order->relatedDocuments(),
         ]);
     }
@@ -356,13 +370,12 @@ class OrderController extends Controller
         return response()->json($new_date);
     }
 
-//MAINDO !
-    public function expense_calculate(Request $request, Order $order)
+ /*   public function expense_calculate(Request $request, Order $order)
     {
         $result = $this->service->expenseCalculate($order, $request['data']);
         return response()->json($result);
     }
-
+*/
 //MAINDO !
     public function search_user(Request $request)
     {
@@ -370,22 +383,22 @@ class OrderController extends Controller
 
         $data = preg_replace("/[^0-9]/", "", $request['data']);
 
-        /** @var User $user */
-        $user = User::where('phone', $data)->OrWhere('email', $data)->first();
+        /** @var Client $client */
+        $client = Client::where('phone', $data)->OrWhere('email', $data)->first();
 
-        if (empty($user)) {
+        if (empty($client)) {
             return response()->json(false);
         } else {
             $result = [
-                'id' => $user->id,
-                'phone' => phone($user->phone),
-                'email' => $user->email,
-                'name' => $user->fullname->firstname,
-                'delivery' => $user->delivery, //->type,
-                'storage' => $user->StorageDefault(),
-                'local' => $user->address->address,
-                'region' => $user->address->address,
-                'payment' => $user->payment->class_payment,
+                'id' => $client->id,
+                'phone' => phone($client->phone),
+                'email' => $client->email,
+                'name' => $client->first_name,
+                'delivery' => '',
+                'storage' => '',
+                'local' => '',
+                'region' => '',
+                'payment' => '',
             ];
             return response()->json($result);
         }

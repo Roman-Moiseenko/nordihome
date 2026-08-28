@@ -5,6 +5,7 @@ namespace App\Modules\Order\Infrastructure\Persistence;
 
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Order\Application\DTOs\Order\FilterOrderIndexData;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderAdditionEntity;
 use App\Modules\Order\Domain\Entities\OrderEntity;
@@ -130,6 +131,56 @@ class OrderRepository implements OrderRepositoryInterface
         $paginator->setCollection($paginator->getCollection()->pluck('id'));
 
         return $paginator;
+    }
+
+    /** @return LengthAwarePaginator<OrderEntity> */
+    public function getFilteredPaginated(FilterOrderIndexData &$filter): LengthAwarePaginator
+    {
+        $query = Order::with(['status', 'statuses', 'items', 'additions'])
+            ->orderByDesc('created_at');
+
+        $filter->count = 0;
+        if (!is_null($filter->dateFrom) && $filter->dateFrom !== '') {
+            $query->whereDate('created_at', '>=', $filter->dateFrom);
+            $filter->count++;
+        }
+
+        if (!is_null($filter->dateTo) && $filter->dateTo !== '') {
+            $query->whereDate('created_at', '<=', $filter->dateTo);
+            $filter->count++;
+        }
+
+        if (!is_null($filter->client) && trim($filter->client) !== '') {
+            $client = trim($filter->client);
+            $query->whereHas('client', function ($q) use ($client) {
+                $q->where('phone', 'like', "%$client%")
+                    ->orWhere('email', 'like', "%$client%")
+                    ->orWhereRaw("CONCAT_WS(' ', last_name, first_name, middle_name) LIKE ?", ["%$client%"]);
+            });
+            $filter->count++;
+        }
+
+        if (!is_null($filter->comment) && trim($filter->comment) !== '') {
+            $comment = trim($filter->comment);
+            $query->where('comment', 'like', "%$comment%");
+            $filter->count++;
+        }
+
+        if (!is_null($filter->staffId)) {
+            $query->where('staff_id', $filter->staffId);
+            $filter->count++;
+        }
+
+        if (!is_null($filter->status) && $filter->status !== '') {
+            $query->whereHas('status', function ($q) use ($filter) {
+                $q->where('value', $filter->status);
+            });
+            $filter->count++;
+        }
+
+        return $query->paginate($filter->perPage)
+            ->withQueryString()
+            ->through(fn(Order $model) => $this->hydrate($model));
     }
     // ====================== Sync ======================
 

@@ -43,7 +43,7 @@ class StaffRepository implements StaffRepositoryInterface
         return $this->hydrate($model);
     }
 
-    public function findById(int $id): ?StaffEntity
+    public function findById(?int $id): ?StaffEntity
     {
         $model = Staff::find($id);
         return $model ? $this->hydrate($model) : null;

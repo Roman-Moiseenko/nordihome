@@ -11,7 +11,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 interface ClientRepositoryInterface
 {
     public function save(ClientEntity $client): ClientEntity;
-    public function findById(int $id): ?ClientEntity;
+    public function findById(?int $id): ?ClientEntity;
     public function findByPhone(PhoneNumber $phone): ?ClientEntity;
     public function findByEmail(Email $email): ?ClientEntity;
     public function findByUserId(int $userId): ?ClientEntity;

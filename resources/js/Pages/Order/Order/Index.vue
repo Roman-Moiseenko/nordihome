@@ -11,22 +11,22 @@
             </div-->
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-date-picker
-                    v-model="filter.date_from"
+                    v-model="filter.dateFrom"
                     type="date"
                     class="mt-1"
                     placeholder="Выберите дату с"
                     value-format="YYYY-MM-DD"
                 />
                 <el-date-picker
-                    v-model="filter.date_to"
+                    v-model="filter.dateTo"
                     type="date"
                     class="mt-1"
                     placeholder="Выберите дату по"
                     value-format="YYYY-MM-DD"
                 />
-                <el-input v-model="filter.user" placeholder="Клиент" class="mt-1"/>
+                <el-input v-model="filter.client" placeholder="Клиент" class="mt-1"/>
                 <el-input v-model="filter.comment" placeholder="Комментарий" class="mt-1"/>
-                <el-select v-model="filter.staff_id" placeholder="Ответственный" class="mt-1">
+                <el-select v-model="filter.staffId" placeholder="Ответственный" class="mt-1">
                     <el-option v-for="item in staffs" :key="item.id" :label="func.fullName(item.fullname)"
                                :value="item.id"/>
 
@@ -45,24 +45,21 @@
             >
                 <el-table-column label="ОПЛ" width="40" class-name="no-space-cell" align="center">
                     <template #default="scope">
-                        <StatusGraph :value="scope.row.status_pay" type="pay"/>
+                        <StatusGraph :value="scope.row.statusPay" type="pay"/>
                     </template>
                 </el-table-column>
                 <el-table-column label="ОТГ" width="40" class-name="no-space-cell" align="center">
                     <template #default="scope">
-                        <StatusGraph :value="scope.row.status_out" type="out"/>
+                        <StatusGraph :value="scope.row.statusOut" type="out"/>
                     </template>
                 </el-table-column>
-                <el-table-column label="Дата" width="120">
-                    <template #default="scope">
-                        {{ func.date(scope.row.created_at) }}
-                    </template>
-                </el-table-column>
+                <el-table-column prop="createdAt" label="Дата" width="120"/>
+
                 <el-table-column prop="number" label="Номер" width="160"/>
                 <el-table-column prop="distributor_name" label="Клиент" width="260" show-overflow-tooltip>
                     <template #default="scope">
-                        <div class="font-medium text-sm">{{ scope.row.user.name }}</div>
-                        <div class="text-slate-700 text-xs">{{ func.phone(scope.row.user.phone) }}</div>
+                        <div class="font-medium text-sm">{{ scope.row.clientName }}</div>
+                        <div class="text-slate-700 text-xs">{{ scope.row.clientPhone }}</div>
                     </template>
                 </el-table-column>
 
@@ -76,7 +73,7 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="status_text" label="Статус" show-overflow-tooltip/>
+                <el-table-column prop="statusText" label="Статус" show-overflow-tooltip/>
                 <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
                 <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
                 <el-table-column label="Действия" align="right">
@@ -123,15 +120,18 @@ const props = defineProps({
 
     staffs: Array,
 })
+
+console.log(props.orders)
 const store = useStore();
 const tableData = ref([...props.orders.data])
 const filter = reactive({
-    condition: props.filters.condition,
-    staff_id: props.filters.staff_id,
+    dateFrom: props.filters.dateFrom,
+    dateTo: props.filters.dateFo,
+    client: props.filters.client,
     comment: props.filters.comment,
-    user: props.filters.user,
-    date_from: props.filters.date_from,
-    date_to: props.filters.date_to,
+    staffId: props.filters.staffId,
+
+    status: props.filters.status,
     canceled: props.filters.canceled,
     completed: props.filters.completed,
 })

@@ -47,8 +47,8 @@ class OrderRepository
 
         if ($request->string('user') != '') {
             $user = $request->string('user')->trim()->value();
-            $filters['user'] = $user;
-            $query->whereHas('user', function ($q) use ($user) {
+            $filters['client'] = $user;
+            $query->whereHas('client', function ($q) use ($user) {
                 $q->where('phone', 'LIKE', "%$user%")
                     ->orWhere('email', 'like', "%$user%")
                     ->orWhereRaw("LOWER(fullname) like LOWER('%$user%')")
@@ -68,24 +68,7 @@ class OrderRepository
         }
 
         if (count($filters) > 0) $filters['count'] = count($filters);
-        /*
-        if (!$request->boolean('canceled')) {
-            $filters['canceled'] = false;
-            $query->whereHas('status', function ($query) {
-                $query->whereNotIn('value', [OrderStatus::CANCEL, OrderStatus::CANCEL_BY_CUSTOMER, OrderStatus::REFUND]);
-            });
-        } else {
-            $filters['canceled'] = true;
-        }
-        if (!$request->boolean('completed')) {
-            $filters['completed'] = false;
-            $query->whereHas('status', function ($query) {
-                $query->whereNotIn('value', [OrderStatus::COMPLETED, OrderStatus::COMPLETED_REFUND]);
-            });
-        } else {
-            $filters['completed'] = true;
-        }
-        */
+
 
         return $query->paginate($request->input('size', 20))
             ->withQueryString()
@@ -261,18 +244,6 @@ class OrderRepository
         return $query->orderBy('number')->get();
     }
 
-    public function guideAddition(): array
-    {
-        $array = [];
-        foreach (Addition::TYPES as $type => $label) {
-            $array[] = [
-                'label' => $label,
-                'additions' => Addition::orderBy('name')->where('type', $type)->getModels(),
-            ];
-
-        }
-        return $array;
-    }
 
     public function ExpenseWithToArray(OrderExpense $expense): array
     {

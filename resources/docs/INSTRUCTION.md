@@ -590,6 +590,179 @@ interface CategoryProductRepositoryInterface
 
 ---
 
+## 12. Фильтрация и передача данных на фронтенд
+
+**Назначение:** Единый подход к фильтрации списков (`index()`) и передаче данных на фронтенд через Inertia. Пример — [`IndexOrderUseCase`](app/Modules/Order/Application/Actions/Order/IndexOrderUseCase.php:15).
+
+**Поток данных:**
+
+1. **Controller** создаёт Filter DTO из запроса через `validateAndCreate()`
+2. **Controller** передаёт Filter DTO в UseCase **по ссылке** (`&$filter`) и одновременно кладёт его в Inertia-ответ как `filters`
+3. **UseCase** проверяет права, вызывает `getFilteredPaginated($filter)` и маппит сущности в Index DTO через `->through()`
+4. **Repository** применяет к запросу только непустые поля фильтра, **пишет обратно** в DTO счётчик применённых фильтров (`$filter->count`) и возвращает `LengthAwarePaginator`
+5. **Фронтенд** получает `orders` (пагинатор с DTO) и `filters` (исходный Filter DTO с обновлённым `count`)
+
+### 12.1 Filter DTO
+
+Фильтр — это DTO (`Spatie\LaravelData\Data`) с полями, допускающими `null`, и мутабельным полем-счётчиком:
+
+```php
+class FilterOrderIndexData extends Data
+{
+    public function __construct(
+        public readonly ?string $dateFrom = null,
+        public readonly ?string $dateTo = null,
+        public readonly ?string $client = null,
+        public readonly ?string $comment = null,
+        public readonly ?int    $staffId = null,
+        public readonly ?string $status = null,
+        public readonly int     $perPage = 20,
+        public ?int    $count = 0,   // мутабельное — репозиторий пишет сюда число применённых фильтров
+    ) {}
+}
+```
+
+**Правила Filter DTO:**
+- Все поля фильтра — `public readonly` с дефолтным значением `null`
+- `$perPage` — количество элементов на страницу (дефолт)
+- `$count` — **НЕ** `readonly`, мутабельное поле. Репозиторий увеличивает его на 1 за каждый применённый фильтр, чтобы фронтенд знал, сколько фильтров активно.
+
+### 12.2 Controller
+
+```php
+public function index(Request $request, UserPermission $permissions): Response
+{
+    $filterDto = FilterOrderIndexData::validateAndCreate($request->all());
+    $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
+    $orders = $this->indexOrderUseCase->execute($filterDto, $permissions);
+
+    return Inertia::render('Order/Order/Index', [
+        'orders' => $orders,      // LengthAwarePaginator с OrderIndexData
+        'filters' => $filterDto,  // исходный фильтр + обновлённый count
+        'staffs' => $staffs,
+    ]);
+}
+```
+
+### 12.3 UseCase
+
+UseCase принимает Filter DTO **по ссылке** (`&$filter`), чтобы Repository мог писать в него `count`:
+
+```php
+readonly class IndexOrderUseCase
+{
+    public function execute(FilterOrderIndexData &$filter, UserPermission $permission): LengthAwarePaginator
+    {
+        if (!$permission->can('order.order.view')) throw new AccessDeniedException();
+
+        $paginator = $this->orderRepository->getFilteredPaginated($filter);
+
+        return $paginator->through(function (OrderEntity $order) {
+            $client = $this->clientRepository->findById($order->clientId);
+            $staff  = $this->staffRepository->findById($order->staffId);
+
+            return new OrderIndexData(
+                id: $order->id,
+                createdAt: $order->createdAt->format('Y-m-d H:i:s'),
+                number: $order->number,
+                clientName: is_null($client) ? '-' : $client->fullName->getValue(),
+                clientPhone: is_null($client) ? '' : $client->phone->getValue(),
+                amount: $order->getTotalAmount(),
+                status: $order->status->value->getValue(),
+                statusName: $order->status->value->getName(),
+                comment: $order->comment,
+                staff: is_null($staff) ? 'Не назначен' : $staff->fullName->getValue(),
+                // ...
+            );
+        });
+    }
+}
+```
+
+### 12.4 RepositoryInterface
+
+Фильтр объявляется с `&` в сигнатуре — по ссылке:
+
+```php
+/** @return LengthAwarePaginator<OrderEntity> */
+public function getFilteredPaginated(FilterOrderIndexData &$filter): LengthAwarePaginator;
+```
+
+### 12.5 Repository (реализация)
+
+Репозиторий строит запрос условно: применяет только непустые поля фильтра и увеличивает `$filter->count` на каждый применённый фильтр:
+
+```php
+public function getFilteredPaginated(FilterOrderIndexData &$filter): LengthAwarePaginator
+{
+    $query = Order::with(['status', 'statuses', 'items', 'additions'])
+        ->orderByDesc('created_at');
+
+    $filter->count = 0;
+
+    if (!is_null($filter->dateFrom) && $filter->dateFrom !== '') {
+        $query->whereDate('created_at', '>=', $filter->dateFrom);
+        $filter->count++;
+    }
+
+    if (!is_null($filter->dateTo) && $filter->dateTo !== '') {
+        $query->whereDate('created_at', '<=', $filter->dateTo);
+        $filter->count++;
+    }
+
+    if (!is_null($filter->client) && trim($filter->client) !== '') {
+        $client = trim($filter->client);
+        $query->whereHas('client', function ($q) use ($client) {
+            $q->where('phone', 'like', "%$client%")
+                ->orWhere('email', 'like', "%$client%")
+                ->orWhereRaw("CONCAT_WS(' ', last_name, first_name, middle_name) LIKE ?", ["%$client%"]);
+        });
+        $filter->count++;
+    }
+
+    // ... остальные фильтры (comment, staffId, status)
+
+    return $query->paginate($filter->perPage)
+        ->withQueryString()
+        ->through(fn(Order $model) => $this->hydrate($model));
+}
+```
+
+**Правила фильтрации:**
+- Базовый запрос — с нужными отношениями (`with`) и сортировкой
+- Каждое условие добавляется только если поле фильтра не `null` и не пустое
+- Сначала обнуляем `$filter->count = 0`, затем инкрементируем на каждый применённый фильтр
+- `paginate($filter->perPage)` — размер страницы берётся из DTO
+- `->withQueryString()` — сохраняет query-параметры фильтра в ссылках пагинации
+- `->through(hydrate())` — превращает каждую модель в Domain Entity
+
+### 12.6 Index DTO (вывода)
+
+Index DTO — это **обычный `readonly` класс** (не `Spatie\LaravelData\Data`), т.к. валидация для вывода не нужна. Создаётся напрямую в UseCase внутри `through()`:
+
+```php
+readonly class OrderIndexData
+{
+    public function __construct(
+        public int $id,
+        public float $statusPay,
+        public float $statusOut,
+        public string $createdAt,
+        public string $number,
+        public string $clientName,
+        public string $clientPhone,
+        public float $amount,
+        public string $status,
+        public string $statusName,
+        public string $comment,
+        public string $staff,
+        public float $refund,
+    ) {}
+}
+```
+
+---
+
 ## Общий порядок создания нового модуля
 
 1. **Domain Entity** — бизнес-сущность с property hooks

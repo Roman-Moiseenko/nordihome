@@ -10,7 +10,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 interface StaffRepositoryInterface
 {
     public function save(StaffEntity $staff): StaffEntity;
-    public function findById(int $id): ?StaffEntity;
+    public function findById(?int $id): ?StaffEntity;
 
     /**
      * @return StaffEntity[]

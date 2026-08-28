@@ -27,7 +27,8 @@
             <div class="col-lg-6">
                 <div class="view-image-product">
                     @if(!empty($product->images))
-                        <img id="main-image-product" src="{{ $product->images[0]->src }}" style="width: 100%; cursor: pointer" data-index="0">
+                        <img id="main-image-product" src="{{ $product->images[0]->src }}"
+                             style="width: 100%; cursor: pointer" data-index="0">
 
                         @if($product->is_new)
                             <div class="product-label new"><span>NEW</span></div>
@@ -37,7 +38,8 @@
                                     <span>{{ $product->price - $product->promotion->price }}</span>
                                 </div>
                             @endif
-                            <div class="product-label promotion {{ $product->promotion->color }} {{ $product->promotion->position }}">
+                            <div
+                                class="product-label promotion {{ $product->promotion->color }} {{ $product->promotion->position }}">
                                 <span>{{ $product->promotion->text }}</span>
                             </div>
                         @endif
@@ -117,7 +119,8 @@
                     </div>
                     <div class="product-card-to-cart">
                         @if($product->is_sale)
-                            <button class="to-cart btn btn-black e-add{{ $product->in_cart ? ' in-cart' : '' }}" data-product="{{ $product->id }}">
+                            <button class="to-cart btn btn-black e-add{{ $product->in_cart ? ' in-cart' : '' }}"
+                                    data-product="{{ $product->id }}">
                                 {{ $product->in_cart ? 'В Корзине' : 'В Корзину' }}
                             </button>
                             <button class="one-click btn btn-orange"
@@ -176,10 +179,10 @@
     </div>
 
     @if(!empty($product->care))
-    <div class="box-card">
-        <h2 id="care">Материалы и уход за товаром</h2>
-        {!! $product->care !!}
-    </div>
+        <div class="box-card">
+            <h2 id="care">Материалы и уход за товаром</h2>
+            {!! $product->care !!}
+        </div>
     @endif
 
     @include('shop.product._attribute', [
@@ -192,9 +195,9 @@
     <section class="related-products">
         <h2 id="с-этим-товаром-часто-покупают">С этим товаром часто покупают</h2>
         <div id="" class="owl-carousel owl-theme slider-images-product">
-                <div>
-                    тут товар 1
-                </div>
+            <div>
+                тут товар 1
+            </div>
             <div>
                 тут товар 1
             </div>
@@ -237,10 +240,10 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12 padding_0">
-                    <div class="map-yandex" id="map-yandex">	</div>
+                    <div class="map-yandex" id="map-yandex"></div>
                     <script>
                         let ok = false;
-                        window.addEventListener('scroll', function() {
+                        window.addEventListener('scroll', function () {
                             if (ok === false) {
                                 ok = true;
                                 setTimeout(() => {

@@ -6,6 +6,7 @@ use App\Modules\Parser\Application\DTOs\Product\ParserProductCategoryData;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductFilterData;
 use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 readonly class IndexParserProductUseCase
@@ -15,11 +16,10 @@ readonly class IndexParserProductUseCase
     ) {}
 
 
-    public function execute(ParserProductFilterData $filter, UserPermission $userPermission): LengthAwarePaginator
+    public function execute(ParserProductFilterData &$filter, UserPermission $userPermission): LengthAwarePaginator
     {
-        if (!$userPermission->can('parser.product.view')) {
-            throw new \DomainException('Доступ запрещён');
-        }
+        if (!$userPermission->can('parser.product.view')) throw new AccessDeniedException();
+
 
         $products = $this->productRepository->getFilteredPaginated($filter);
 

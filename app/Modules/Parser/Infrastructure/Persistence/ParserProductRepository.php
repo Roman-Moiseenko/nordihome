@@ -161,16 +161,17 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         return $entity;
     }
 
-    public function getFilteredPaginated(ParserProductFilterData $filter): LengthAwarePaginator
+    public function getFilteredPaginated(ParserProductFilterData &$filter): LengthAwarePaginator
     {
         $query = ParserProduct::orderBy('name');
-
+        $filter->count = 0;
         if ($filter->code !== null) {
             $code = $filter->code;
             $query->where(function ($q) use ($code) {
                 $q->whereRaw("LOWER(name) like LOWER('%$code%')")
                     ->orWhere('code', 'like', "%$code%");
             });
+            $filter->count++;
         }
 
         if ($filter->show !== null) {
@@ -181,6 +182,7 @@ class ParserProductRepository implements ParserProductRepositoryInterface
                 'sanctioned' => $query->where('sanctioned', true),
                 default => null,
             };
+            $filter->count++;
         }
 
         return $query->paginate($filter->perPage)

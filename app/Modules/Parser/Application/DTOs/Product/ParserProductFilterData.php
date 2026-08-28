@@ -13,6 +13,7 @@ class ParserProductFilterData extends Data
         public readonly ?string $code = null,
         public readonly ?string $show = null,
         public readonly int $perPage = 20,
+        public int $count = 0,
     ) {}
 
     public static function fromRequest(Request $request): self
