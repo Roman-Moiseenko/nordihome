@@ -72,11 +72,11 @@ readonly class GetOrderClientData
             $additionGuide = $this->getAdditionDataUseCase->execute($addition->additionId, $orderEntity);
             if ($additionGuide->type == Addition::DELIVERY) {
                 $delivery += $addition->amount;
-                if (!is_null($additionGuide->calculate)) $delivery += $additionGuide->calculate;
+                //if (!is_null($additionGuide->calculate)) $delivery += $additionGuide->calculate;
             }
             $additions[] = [];
             $amountAddition += $addition->amount;
-            if (!is_null($additionGuide->calculate)) $amountAddition += $additionGuide->calculate;
+            //if (!is_null($additionGuide->calculate)) $amountAddition += $additionGuide->calculate;
         }
 
         $info = new OrderInfoData(

@@ -5,6 +5,7 @@ namespace App\Modules\Order\Application\Actions\Order;
 use App\Modules\Order\Application\DTOs\Order\DiscountOrderData;
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
@@ -14,6 +15,7 @@ readonly class SetDiscountOrderUseCase
     public function __construct(
         private OrderRepositoryInterface    $repository,
         private OrderLoggerServiceInterface $logger,
+        private OrderCalculateService $calculateService,
     )
     {
     }
@@ -28,7 +30,7 @@ readonly class SetDiscountOrderUseCase
 
         $baseAmount = 0; //База для скидки
         foreach ($orderEntity->items as $item) {
-            if (is_null($item->discountId))
+            if (is_null($item->discountId) && !$item->preorder) //TODO условия расчета, исключил подзаказ
                 $baseAmount += $item->baseCost * $item->quantity;
         }
         if ($baseAmount == 0) throw new \DomainException('В заказе нет товаров для установки ручной скидки');
@@ -40,18 +42,17 @@ readonly class SetDiscountOrderUseCase
             $percentItem = $dto->manual / $baseAmount;
         }
         foreach ($orderEntity->items as $item) {
-            if (is_null($item->discountId)) {
+            if (is_null($item->discountId) && !$item->preorder) {
                 $sellCost = ($item->baseCost * (1 - $percentItem));
                 $item->update(sellCost: $sellCost);
             }
         }
-        $orderEntity->manual = $dto->isPercent()
-            ? ($dto->percent * $baseAmount / 100)
-            : $dto->manual;
 
         $orderEntity->recalculateTotals();
 
-        $this->repository->save($orderEntity);
+        $orderEntity = $this->repository->save($orderEntity);
+        $this->calculateService->execute($orderEntity->id);
+
         $value = $dto->isPercent() ? "$dto->percent %" : price($dto->manual);
 
         $this->logger->log(orderId: $orderEntity->id, action: 'Установлена общая скидка',

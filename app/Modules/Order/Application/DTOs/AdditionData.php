@@ -10,7 +10,7 @@ class AdditionData
         public string $name,
         public bool   $isQuantity,
         public bool   $isManual,
-        public ?float $calculate,
+        public ?string $calculate,
         public int    $type,
     )
     {

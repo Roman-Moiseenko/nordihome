@@ -108,24 +108,18 @@ readonly class ViewOrderUseCase
         $additionsAmount = 0.0;
         foreach ($orderEntity->additions as $orderAddition) {
 
-            //MAINDO Получаем данные из базы, не пересчитывая
-            $addition = $this->getAdditionDataUseCase->execute($orderAddition->additionId, $orderEntity);
-
-            $additionAmount = $orderAddition->amount;
-            if ($additionAmount == 0) {
-                $additionAmount = $addition->calculate ?? $addition->baseRatio;
-            }
+            $addition = $this->getAdditionDataUseCase->execute($orderAddition->additionId);
 
             $additionDto = new OrderAdditionViewData(
                 id: $orderAddition->id,
-                amount: $additionAmount,
+                amount: $orderAddition->amount,
                 comment: $orderAddition->comment,
                 quantity: $orderAddition->quantity,
                 addition: $addition,
             );
 
             $additions[] = $additionDto;
-            $additionsAmount += $additionAmount * $orderAddition->quantity;
+            $additionsAmount += $orderAddition->amount;
         }
 
         // --- statuses ---
