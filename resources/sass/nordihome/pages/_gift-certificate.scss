@@ -1,0 +1,39 @@
+.block-sert-01 {padding:0 0 0 50px;border-radius: 16px;}
+.block-sert-01 .list {padding:0 30px;}
+.sert-rules-item {margin-bottom: 15px;}
+.sert-rules-item .img {
+    background:$sert-gray;
+    border-radius:12px;
+    text-align: center;
+    padding: 40px 0;
+    margin-bottom:5px;
+    min-height: 188px;
+}
+.sert-gift img {margin-top: -50px;}
+.block-sert-03 h3 {margin:0 0 10px 0;}
+.cert-tab-item{display: none;}
+.cert-tab-item.active{display: block;}
+.cert-nav-tabs {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+.cert-nav-tabs .cert-nav-tab:hover, .cert-nav-tabs .cert-nav-tab.active {
+    text-decoration: underline;
+    color: $orange;
+}
+.cert-nav-tabs .cert-nav-tab {
+    cursor: pointer;
+}
+.fos-cert {padding:10px 0 30px 0;}
+.fos-cert input {width:100%;}
+.fos-cert .btn-red {background:#7b1616; width:250px;border:1px solid #7b1616;color:$white;}
+.fos-cert .btn-red:hover {background:white;color:$black;}
+.fos-sert-korp textarea {height:75px;min-height:75px;}
+.fos-sert-korp select {min-width:120px;}
+.fos-sert-lable-gray {font-size: 15px;color: #B0B0B0;}
+
+@media (max-width: 990px) {
+    .block-sert-01 {padding: 20px;}
+    .block-sert-01 .m-t_50 {margin-top: 0;}
+}

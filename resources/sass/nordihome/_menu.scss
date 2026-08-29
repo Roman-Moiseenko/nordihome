@@ -141,9 +141,12 @@
 body.no-scroll {
     overflow: hidden;
 }
-
+.menu-top {
+    background: $f2f2f2;
+    padding: 7px 0;
+}
 .menu-bottom {
-    height: 75px;
+    height: auto;
     box-sizing: content-box;
     transition: $transition;
     box-shadow: var(--bs-box-shadow-sm);

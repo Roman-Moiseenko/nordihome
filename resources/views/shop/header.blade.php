@@ -37,13 +37,13 @@
             </div>
         </div>
     </div>
-    <div class="menu-top container-xl mt-2 hide-mobile">
-        <div class="d-flex justify-content-between">
-            <div class="d-flex">
+    <div class="menu-top hide-mobile">
+        <div class="container-xl">
+            <div class="d-flex justify-content-end">
                 <div>
-                    @if(isset($menus['menu-header01']))
-                        <ul id="menu-menyu-v-shapke" class="h-menu">
-                            @foreach($menus['menu-header01']->items as $item)
+                    @if(isset($menus['menu-header02']))
+                        <ul id="menu-menyu-v-shapke02" class="h-menu">
+                            @foreach($menus['menu-header02']->items as $item)
                                 <li><a href="{{ $item->url }}">{{ $item->name }}</a></li>
                             @endforeach
                         </ul>
@@ -51,24 +51,39 @@
                         Меню не найдено
                     @endif
                 </div>
-{{--<div class="d-flex ms-2">
+                <div class="col-auto mob-phone-8800">
+                    <a href="tel:88007008179" class="f-z_16"><b>8 (800) 700-81-79</b></a><br><span class="f-z_13">по России бесплатно</span>
+                </div>
+                <div class="d-flex ms-2 h-social">
 
-    @foreach($contacts as $item)
-        <div class="ms-2">
-            <a href="{{ $item->url }}" target="_blank" title="{{ $item->name }}">
-                @if(is_null($item->svg))
-                    <i class="{{ $item->icon }} fs-3" style="color: {{ $item->color }}"></i>
-                @else
-                    {!! $item->svg !!}
-                @endif
-            </a>
+                    {{-- @foreach($contacts as $item)
+                         <div class="ms-2">
+                             <a href="{{ $item->url }}" target="_blank" title="{{ $item->name }}">
+                                 @if(is_null($item->svg))
+                                     <i class="{{ $item->icon }} fs-3" style="color: {{ $item->color }}"></i>
+                                 @else
+                                     {!! $item->svg !!}
+                                 @endif
+                             </a>
+                         </div>
+                     @endforeach --}}
+                    @if(isset($contacts['phone']))
+                        <a href="{{ $contacts['phone']->url }}" target="_blank" class="m-r_5">{!! $contacts['phone']->svg !!}</a>
+                    @endif
+                    @if(isset($contacts['telegram']))
+                        <a href="{{ $contacts['telegram']->url }}" target="_blank" class="m-r_5">{!! $contacts['telegram']->svg !!}</a>
+                    @endif
+                    @if(isset($contacts['max_bot_1']))
+                        <a href="{{ $contacts['max_bot_1']->url }}" target="_blank" class="m-r_5">{!! $contacts['max_bot_1']->svg !!}</a>
+                    @endif
+                    @if(isset($contacts['vk']))
+                        <a href="{{ $contacts['vk']->url }}" target="_blank">{!! $contacts['vk']->svg !!}</a>
+                    @endif
+
+                </div>
+            </div>
         </div>
-    @endforeach
-         {!! $contacts['vk']->url !!}
-</div>--}}
-</div>
-</div>
-</div>
+    </div>
 
 <nav class="menu-bottom navbar navbar-expand-md navbar-light bg-white">
 <div class="menu-container container-xl">
@@ -155,6 +170,17 @@
 </ul>
 </div>
 </div>
+    <div class="top-menu m-t_10 m-b_10">
+        @if(isset($menus['menu-header01']))
+            <ul id="menu-menyu-v-shapke" class="h-menu">
+                @foreach($menus['menu-header01']->items as $item)
+                    <li><a href="{{ $item->url }}">{{ $item->name }}</a></li>
+                @endforeach
+            </ul>
+        @else
+            Меню не найдено
+        @endif
+    </div>
 </nav>
 
 

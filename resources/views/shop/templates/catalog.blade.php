@@ -11,16 +11,16 @@
     @endforeach
 </div>
 <div class="row">
-<div class="col-6 col-sm-6 col-md-4 col-lg-3">
-    <div class="catalog-card">
-        <a href="/>
-            <div>
-                <img
-                    src="{{ $category->image }}"
-                    alt="{{ $category->name }}">
-                <span>{{ $category->name }}</span>
-            </div>
-        </a>
+    <div class="col-6 col-sm-6 col-md-4 col-lg-3">
+        <div class="catalog-card">
+            <a href="/">
+                <div>
+                    <img
+                        src="/"
+                        alt="алт картинки">
+                    <span>Название категории</span>
+                </div>
+            </a>
+        </div>
     </div>
-</div>
 </div>
