@@ -135,7 +135,7 @@ ul li, ol li {list-style-position: inside;}
 .bg-white {background:white;}
 .bg-black {background:$black; color:white;}
 .bg-blue {background:$blue; color:white;}
-.bg-sert-gray {background:var(--sert-gray);}
+.bg-sert-gray {background:$sert-gray;}
 .bg-orange {background:$orange;color:white;}
 .bg-515151 {background:#515151;color:white;}
 .bg-faf7f4 {background:#FAF7F4;}
@@ -290,7 +290,7 @@ select {
 }
 .h-menu li, #menu-menyu-katalog li {
     list-style: none;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     padding-right: 15px;
 }
@@ -306,12 +306,12 @@ select {
 .h-menu li a, #menu-menyu-katalog li a {text-decoration:none;}
 .h-menu li a:hover {color:$dark-gray;}
 .h-menu li a {padding-top:5px;padding-bottom:5px;}
-.h-menu li:first-child a {color: $blue;}
-.h-menu li:nth-child(2) a {
+#menu-menyu-v-shapke.h-menu li:first-child a {color: $blue;}
+#menu-menyu-v-shapke.h-menu li:nth-child(2) a {
     background: url(/uploads/gallery/7/svg-hot-50.svg) no-repeat center left / 17px;
     padding-left: 20px;
 }
-.h-menu li:nth-child(2) a:after {content:'до -50%';background:$orange;text-transform:none;color:white;border-radius: 13px;padding: 2px 9px 4px 9px;margin-left: 5px;font-weight: 500;}
+#menu-menyu-v-shapke.h-menu li:nth-child(2) a:after {content:'до -50%';background:$orange;text-transform:none;color:white;border-radius: 13px;padding: 2px 9px 4px 9px;margin-left: 5px;font-weight: 500;}
 .h-menu li .sub-menu, #menu-menyu-katalog .sub-menu {display:none;}
 .h-menu li:hover .sub-menu, #menu-menyu-katalog li:hover .sub-menu {
     display:block;
@@ -350,6 +350,17 @@ select {
     top: 0;
 }
 .h-menu li .sub-menu li:hover .sub-menu {display:block;}
+#menu-menyu-v-shapke02.h-menu li a {
+    padding-top: 0;
+    padding-bottom: 0;
+    color:$dark-gray;
+}
+#menu-menyu-v-shapke02.h-menu li a:hover {
+    color:$black;
+}
+.mob-phone-8800 {
+    line-height: 16px;
+}
 .h-city-text {
     font-size: 11px;
     text-align: left;

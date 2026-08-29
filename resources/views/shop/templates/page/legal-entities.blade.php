@@ -69,55 +69,58 @@
                 <h3 class="m-t_0">Не нашли свой формат бизнеса?</h3>
                 <div class="m-b_30">Подберем решение под ваш проект за 24 часа</div>
                 <a href="#" class="btn btn-orange_1 m-t_20" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#ur-licam-modal">Получить бесплатную консультацию</a>
-                <div class="modal fade show" id="ur-licam-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content f-z_16">
-                            <h4 class="t-a_center m_0">Оставить заявку</h4>
-                            <p class="t-a_center">Приглашаем Вас к сотрудничеству и предлагаем гибкие начальные условия.</p>
-                            <div id="legal-entities-form" class="feedback-form">
-                                <form>
-                                    <input type="hidden" name="form" value="Заявка со страницы юридическим лицам"/>
-                                    <div>
-                                        <label>
-                                            <input name="name" type="text" required placeholder="Имя*"/>
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label>
-                                            <input name="phone" type="tel" required placeholder="Телефон*"/>
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label>
-                                            <input name="mail" type="email" required placeholder="Email*"/>
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label>
-                                            <input name="telegram" placeholder="Ник в Телеграм: @username"/>
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label><select class="width_100"><option value="">—Выберите вариант—</option><option value="Позвонить по телефону">Позвонить по телефону</option><option value="Написать на почту">Написать на почту</option><option value="Написать в Телеграм">Написать в Телеграм</option><option value="Написать в Макс">Написать в Макс</option></select></label>
-                                    </div>
-                                    <div>
-                                        <label>
-                                            <textarea placeholder="Комментарий"></textarea>
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label class="f-z_14">
-                                            <input type="checkbox" name="agreement" value="Принимаю согласие"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
-                                        </label>
-                                    </div>
-                                    <div>
-                                        <label><button class="btn-form btn btn-black" type="button">Оставить заявку</button></label>
-                                    </div>
-                                </form>
-                            </div>
-                            <div id="legal-entities-form-callback" class="form-send-message" style="display: none">
-                                Ваше сообщение отправлено. Менеджер скоро свяжется с Вами.
-                            </div>
+            </div>
+            <div class="modal fade" id="ur-licam-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content f-z_16 modal-body">
+                        <div class="d-flex justify-content-between p-2 text-center mb-4 align-items-center">
+                            <h4 class="modal-title fs-4" id="exampleModalLabel">Оставить заявку</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <p class="t-a_center">Приглашаем Вас к сотрудничеству и предлагаем гибкие начальные условия.</p>
+                        <div id="legal-entities-form" class="feedback-form">
+                            <form>
+                                <input type="hidden" name="form" value="Заявка со страницы юридическим лицам"/>
+                                <div>
+                                    <label>
+                                        <input name="name" type="text" class="width_100" required placeholder="Имя*"/>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <input name="phone" type="tel" class="width_100" required placeholder="Телефон*"/>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <input name="mail" type="email" class="width_100" required placeholder="Email*"/>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <input name="telegram" class="width_100" placeholder="Ник в Телеграм: @username"/>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label><select class="width_100"><option value="">—Выберите вариант—</option><option value="Позвонить по телефону">Позвонить по телефону</option><option value="Написать на почту">Написать на почту</option><option value="Написать в Телеграм">Написать в Телеграм</option><option value="Написать в Макс">Написать в Макс</option></select></label>
+                                </div>
+                                <div>
+                                    <label>
+                                        <textarea placeholder="Комментарий"></textarea>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label class="f-z_14">
+                                        <input type="checkbox" name="agreement" value="Принимаю согласие"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
+                                    </label>
+                                </div>
+                                <div>
+                                    <label><button class="btn-form btn btn-black" type="button">Оставить заявку</button></label>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="legal-entities-form-callback" class="form-send-message" style="display: none">
+                            Ваше сообщение отправлено. Менеджер скоро свяжется с Вами.
                         </div>
                     </div>
                 </div>
@@ -228,7 +231,65 @@
                     </div>
                 </div>
             </div>
-            <div>тут подключить вывод рейтинга</div>
+            <div class="main-reviews">
+                    <div class="row justify-content-center">
+                        <div class="col-sm-6 col-md-6 col-lg-4">
+                            <a href="https://yandex.ru/profile/3616123262" target="_blank" class="main-rating-item">
+                                <ul class="star">
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li>4.9 из 5</li>
+                                </ul>
+                                <img src="https://nordihome.ru/wp-content/themes/euroikea/images/logo-yandex.svg"
+                                     alt="Яндекс каталог Nordihome">
+                            </a>
+                        </div>
+                        <!-- <div class="col-sm-6 col-md-6 col-lg-3">
+                            <div class="main-rating-item">
+                                <ul class="star">
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li>4.4 из 5</li>
+                                </ul>
+                                <img src="/wp-content/themes/euroikea/images/logo-2gis.svg" alt="2гис Nordihome">
+                            </div>
+                        </div> -->
+                        <!-- <div class="col-sm-6 col-md-6 col-lg-3">
+                            <div class="main-rating-item">
+                                <ul class="star">
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li>5 из 5</li>
+                                </ul>
+                                <img src="/wp-content/themes/euroikea/images/logo-google.svg" alt="Гугл карты Nordihome">
+                            </div>
+                        </div> -->
+                        <div class="col-sm-6 col-md-6 col-lg-4">
+                            <a href="https://www.avito.ru/brands/nordihome.ru/all?sellerId=77c3371d8da225e083f29aea5b416174"
+                               target="_blank" class="main-rating-item">
+                                <ul class="star">
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li class="one"></li>
+                                    <li>1266 отзывов</li>
+                                </ul>
+                                <img src="https://nordihome.ru/wp-content/themes/euroikea/images/avito_logo.svg"
+                                     alt="Лого Авито Nordihome">
+                            </a>
+                        </div>
+                    </div>
+            </div>
             <div class="bg-black b-radius_15 m-t_50 m-b_50 p-block_30">
                 <div class="row">
                     <div class="col-md-12 col-lg-6">
