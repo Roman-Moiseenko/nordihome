@@ -89,8 +89,6 @@ class CacheInvalidationRegistry
     {
         foreach (self::PROMOTION_PRODUCTS_KEYS as $key) {
             $resolvedKey = str_replace('{id}', $promotionId, $key);
-            \Log::info($resolvedKey);
-
             Cache::forget($resolvedKey);
         }
     }

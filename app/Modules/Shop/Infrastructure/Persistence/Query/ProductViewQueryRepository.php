@@ -6,6 +6,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\ClientContext;
@@ -44,7 +45,7 @@ class ProductViewQueryRepository
                 $join->on('products.id', '=', 'promotions_products.product_id')
                     ->join('promotions', function ($join) use ($now) {
                         $join->on('promotions_products.promotion_id', '=', 'promotions.id')
-                            ->where('promotions.active', true)
+                            ->where('promotions.status', PromotionStatus::STARTED)
                             ->where('promotions.start_at', '<=', $now)
                             ->where('promotions.finish_at', '>=', $now);
                     });
@@ -119,8 +120,9 @@ class ProductViewQueryRepository
                 DB::raw("(
                     SELECT COUNT(*) FROM product_reviews
                     WHERE product_reviews.product_id = products.id
-                      AND product_reviews.status = 5503
+                      AND product_reviews.status = '". \App\Modules\Catalog\Entity\Review::STATUS_PUBLISHED . "'
                 ) as count_reviews"),
+
                 // Promotion data
                 'promotions_products.price as promotion_price',
                 'promotions.name as promotion_name',
