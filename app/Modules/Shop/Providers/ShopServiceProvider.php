@@ -7,6 +7,7 @@ use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Contact;
 use App\Modules\Content\Entity\Menu;
 use App\Modules\Content\Entity\MenuItem;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Shop\Application\Interfaces\BreadcrumbProviderInterface;
 use App\Modules\Shop\Infrastructure\Observers\CategoryCacheObserver;
@@ -14,6 +15,7 @@ use App\Modules\Shop\Infrastructure\Observers\ContactCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\IkeaCategoryCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\MenuCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\MenuItemCacheObserver;
+use App\Modules\Shop\Infrastructure\Observers\PromotionProductCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\RoomCacheObserver;
 use App\Modules\Shop\Infrastructure\Services\BreadcrumbService;
 use App\Modules\Shop\Presentation\Http\Middlewares\InjectClientContextMiddleware;
@@ -114,6 +116,7 @@ class ShopServiceProvider extends ServiceProvider
         Menu::observe(MenuCacheObserver::class);
         MenuItem::observe(MenuItemCacheObserver::class);
         Contact::observe(ContactCacheObserver::class);
+        Promotion::observe(PromotionProductCacheObserver::class);
     }
 
     /**

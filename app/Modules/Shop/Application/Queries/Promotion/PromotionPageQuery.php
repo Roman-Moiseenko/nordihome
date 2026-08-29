@@ -3,7 +3,10 @@
 namespace App\Modules\Shop\Application\Queries\Promotion;
 
 use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
+use App\Modules\Shop\Application\DTOs\Elements\UrlData;
+use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
@@ -14,6 +17,7 @@ use App\Modules\Shop\Infrastructure\Persistence\Query\AttributeQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ContentBlockQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\PromotionPageQueryRepository;
+use App\Modules\Shop\Infrastructure\Persistence\Query\RoomPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
 use Illuminate\Support\Facades\Cache;
 
@@ -27,6 +31,7 @@ readonly class PromotionPageQuery
         private AttributeQueryRepository    $attributeQueryRepository,
         private SchemaBuilder               $schemaBuilder,
         private ContentBlockQueryRepository   $blockRepository,
+        private RoomPageQueryRepository     $roomRepository,
     )
     {
     }
@@ -45,7 +50,17 @@ readonly class PromotionPageQuery
         $idPaginator = $this->productIndexQueryRepository->getFilterSortPaginationProducts($params, $allProductIds, $page, $perPage);
 
         $mainInfo->totalProducts = $idPaginator->total();
-        //TODO secondInfo - категории
+
+        $categories = [];
+        if ($allProductIds) {
+            $categoriesRaw = $this->roomRepository->getCategoriesByProductIds($allProductIds, $params);
+            $categories = array_map(
+                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug),
+                $categoriesRaw,
+            );
+        }
+
+
         $productIds = $idPaginator->items();
 
         $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds, $clientContext);
@@ -53,6 +68,12 @@ readonly class PromotionPageQuery
         $productCards = array_map(
             fn(array $item) => ProductCardData::fromArray($item),
             $productCardsRaw
+        );
+
+        $secondInfo = new CategoryRoomSecondData(
+            children: $categories,
+            back: new UrlData(url: route('shop.category.index'), name: 'По категориям'),
+            entity: 'category',
         );
 
         $paginator = $this->paginatorBuilder->build(
@@ -65,7 +86,10 @@ readonly class PromotionPageQuery
             ]
         );
 
-        $filters = $this->getCachedFilters($mainInfo->id, $allProductIds);
+        $filters = $this->getCachedFilters($mainInfo->id,
+            array_map(fn(ChildrenData $cat) => $cat->id, $categories),
+            $allProductIds,
+        );
         $filtersWithOrder = new FilterData(
             minPrice: $filters->minPrice,
             maxPrice: $filters->maxPrice,
@@ -101,13 +125,15 @@ readonly class PromotionPageQuery
             schema: $schema,
         );
     }
-    private function getCachedFilters(int $categoryId, array $allProductIds): FilterData
+    private function getCachedFilters(int $promotionId, array $categoryIds, array $productIds): FilterData
     {
+        $key_cache = str_replace('{id}', (string)$promotionId, CacheInvalidationRegistry::PROMOTION_FILTERS_ID);
+
         return Cache::remember(
-            "promotion_filters_{$categoryId}",
+            $key_cache,
             now()->addDay(),
-            function () use ($categoryId, $allProductIds) {
-                $aggr = $this->attributeQueryRepository->getFilterAggregates([$categoryId], $allProductIds);
+            function () use ($productIds, $categoryIds) {
+                $aggr = $this->attributeQueryRepository->getFilterAggregates($categoryIds, $productIds);
 
                 $tags = array_map(
                     fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),

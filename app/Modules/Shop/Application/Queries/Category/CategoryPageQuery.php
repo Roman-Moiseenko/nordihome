@@ -224,8 +224,10 @@ readonly class CategoryPageQuery
 
     private function getCachedFilters(int $categoryId, array $allProductIds): FilterData
     {
+        $key_cache = str_replace('{id}', (string)$categoryId, CacheInvalidationRegistry::CATEGORY_FILTERS_ID);
+
         return Cache::remember(
-            "category_filters_{$categoryId}",
+            $key_cache,
             now()->addDay(),
             function () use ($categoryId, $allProductIds) {
                 $aggr = $this->attributeQueryRepository->getFilterAggregates([$categoryId], $allProductIds);

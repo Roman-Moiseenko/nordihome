@@ -140,10 +140,12 @@ readonly class RoomPageQuery
 
     private function getCachedFilters(int $roomId, array $categoryIds, array $productIds): FilterData
     {
+        $key_cache = str_replace('{id}', (string)$roomId, CacheInvalidationRegistry::ROOM_FILTERS_ID);
+
         return Cache::remember(
-            "room_filters_{$roomId}",
+            $key_cache,
             now()->addDay(),
-            function () use ($productIds, $categoryIds, $roomId) {
+            function () use ($productIds, $categoryIds) {
                 $aggr = $this->attributeQueryRepository->getFilterAggregates($categoryIds, $productIds);
 
                 $tags = array_map(
