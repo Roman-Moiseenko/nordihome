@@ -2,6 +2,7 @@
 
 use App\Modules\Discount\Controllers\DiscountController;
 use App\Modules\Discount\Presentation\Http\Controllers\Web\PromotionController;
+use App\Modules\Discount\Presentation\Http\Controllers\Web\PromotionProductController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -18,6 +19,13 @@ Route::group([
         Route::post('/set-product/{promotion}', [PromotionController::class, 'set_product'])->name('set-product');
         Route::delete('/del-product/{promotion}', [PromotionController::class, 'del_product'])->name('del-product');
         Route::post('/set-info/{id}', [PromotionController::class, 'setInfo'])->name('set-info');
+
+        // Связь Promotion → Products
+        Route::get('/{id}/products', [PromotionProductController::class, 'promotionProducts'])->name('products');
+        Route::post('/{id}/products/sync', [PromotionProductController::class, 'assignPromotionProducts'])->name('products.sync');
+        Route::post('/{id}/products/attach', [PromotionProductController::class, 'attachPromotionProducts'])->name('products.attach');
+        Route::delete('/{id}/products/detach', [PromotionProductController::class, 'detachPromotionProducts'])->name('products.detach');
+        Route::post('/{id}/products/price', [PromotionProductController::class, 'setPromotionProductPrice'])->name('products.price');
 
         Route::post('/draft/{id}', [PromotionController::class, 'draft'])->name('draft');
         Route::post('/waiting/{id}', [PromotionController::class, 'waiting'])->name('waiting');

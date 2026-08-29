@@ -7,11 +7,13 @@ class CacheInvalidationRegistry
     public const string CATEGORY_PRODUCTS_ID = 'category_products_{id}';
     public const string CATEGORY_INDEX_PAGE = 'category_index_page';
 
+    public const string PROMOTION_PRODUCTS_ID = 'promotion_products_{id}';
 
     private const array CATEGORY_KEYS = [
         self::CATEGORY_TREE,
         self::CATEGORY_PRODUCTS_ID,
         self::CATEGORY_INDEX_PAGE,
+        self::PROMOTION_PRODUCTS_ID,
     ];
     public const string ROOM_TREE = 'room_tree';
     public const string ROOM_PRODUCTS_ID = 'room_products_{id}';

@@ -20,11 +20,12 @@ class PromotionUpdateData extends Data
         #[Nullable, StringType, Max(255)]
         public readonly ?string $name,
         #[Nullable, StringType, Max(255)]
-        public readonly ?string $title,
-        #[Nullable, StringType, Max(255)]
         public readonly ?string $slug,
-        #[Nullable, StringType]
-        public readonly ?string $description,
+        // Meta
+        #[Nullable, StringType, Max(255)]
+        public readonly ?string $metaTitle,
+        #[Nullable, StringType, Max(500)]
+        public readonly ?string $metaDescription,
         #[Nullable, StringType, Max(255)]
         public readonly ?string $conditionUrl,
         #[Nullable, BooleanType]

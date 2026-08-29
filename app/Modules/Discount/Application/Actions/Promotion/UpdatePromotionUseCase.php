@@ -9,6 +9,7 @@ use App\Modules\Discount\Application\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Discount\Domain\Entities\PromotionEntity;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
+use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 readonly class UpdatePromotionUseCase
@@ -30,11 +31,16 @@ readonly class UpdatePromotionUseCase
 
         if ($dto->name !== null) $promotion->name = $dto->name;
 
-        if ($dto->title !== null) $promotion->title = $dto->title;
-
         if ($dto->slug !== null) $promotion->slug = new Slug($dto->slug);
 
-        if ($dto->description !== null) $promotion->description = $dto->description;
+        // Обновляем Meta
+        if ($dto->metaTitle !== null || $dto->metaDescription !== null) {
+            $currentMeta = $promotion->meta ?? Meta::default();
+            $promotion->meta = new Meta(
+                title: $dto->metaTitle ?? $currentMeta->getTitle(),
+                description: $dto->metaDescription ?? $currentMeta->getDescription(),
+            );
+        }
 
         if ($dto->conditionUrl !== null) $promotion->conditionUrl = $dto->conditionUrl;
 

@@ -123,7 +123,7 @@ class ProductViewQueryRepository
                 ) as count_reviews"),
                 // Promotion data
                 'promotions_products.price as promotion_price',
-                'promotions.title as promotion_title',
+                'promotions.name as promotion_name',
 
                 'promotions.color_class as color_class',
                 'promotions.position_class as position_class',
@@ -189,7 +189,7 @@ class ProductViewQueryRepository
         // Promotion data
         $promotion = new PromotionProductData(
             has: $row->promotion_price !== null,
-            title: $row->promotion_title ?? '',
+            title: $row->promotion_name ?? '',
             price: (float)($row->promotion_price ?? 0),
             color: $row->color_class ?? '',
             position: $row->position_class ?? '',

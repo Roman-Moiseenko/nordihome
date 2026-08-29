@@ -8,6 +8,7 @@ use App\Modules\Discount\Application\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Discount\Domain\Entities\PromotionEntity;
 use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
+use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -27,9 +28,11 @@ class PromotionRepository implements PromotionRepositoryInterface
             : new Promotion();
 
         $model->name = $promotion->name;
-        $model->title = $promotion->title;
         $model->slug = (string) $promotion->slug;
-        $model->description = $promotion->description;
+        $model->meta = $promotion->meta ? [
+            'title' => $promotion->meta->getTitle(),
+            'description' => $promotion->meta->getDescription(),
+        ] : [];
         $model->condition_url = $promotion->conditionUrl;
         $model->menu = $promotion->menu;
         $model->show_title = $promotion->showTitle;
@@ -88,8 +91,12 @@ class PromotionRepository implements PromotionRepositoryInterface
         );
 
         $entity->id = $model->id;
-        $entity->title = $model->title ?? '';
-        $entity->description = $model->description ?? '';
+        // Meta
+        $metaData = is_array($model->meta) ? $model->meta : [];
+        $entity->meta = new Meta(
+            title: $metaData['title'] ?? '',
+            description: $metaData['description'] ?? '',
+        );
         $entity->conditionUrl = $model->condition_url ?? '';
         $entity->menu = (bool) $model->menu;
         $entity->showTitle = (bool) $model->show_title;

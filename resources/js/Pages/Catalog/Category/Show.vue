@@ -9,15 +9,9 @@
             <PanelChildren :category="category" />
             <PanelAttributes :category-id="category.id" />
             <PanelProducts :category-id="category.id" />
+            <PanelBlocks :blocks="blocks || []" :category-id="category.id"/>
         </el-tabs>
-        <!-- ContentBlock Editor -->
-        <div class="mt-3 p-3 bg-white rounded-lg ">
-            <ContentBlockEditor
-                :blocks="blocks || []"
-                :container-id="category.id"
-                container-type="category"
-            />
-        </div>
+
     </el-config-provider>
 </template>
 
@@ -25,13 +19,12 @@
 import {inject, ref, defineProps, reactive} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {Head, router} from "@inertiajs/vue3";
+
 import CategoryInfo from "./Block/Info.vue";
-
-
 import PanelChildren from './Panels/Children.vue'
 import PanelAttributes from './Panels/Attributes.vue'
 import PanelProducts from  './Panels/Products.vue'
-import ContentBlockEditor from "@Comp/Content/ContentBlock/ContentBlockEditor.vue";
+import PanelBlocks from "./Panels/Blocks.vue";
 
 const props = defineProps({
     category: Object,

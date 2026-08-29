@@ -34,6 +34,15 @@ interface ProductPriceRepositoryInterface
     public function findCurrentPrices(int $productId): array;
 
     /**
+     * Получить последние по дате цены указанного типа для списка товаров.
+     * Возвращает ассоциативный массив [product_id => price, ...]
+     *
+     * @param int[] $productIds
+     * @return array<int, float>
+     */
+    public function getLatestPricesByType(array $productIds, string $type): array;
+
+    /**
      * Сохранить (создать или обновить) цену
      */
     public function save(ProductPriceEntity $price): ProductPriceEntity;

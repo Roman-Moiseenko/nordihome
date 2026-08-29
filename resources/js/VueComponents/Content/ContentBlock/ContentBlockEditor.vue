@@ -92,6 +92,7 @@ const props = defineProps<{
     containerType: string
 }>()
 
+console.log(props)
 const { loading, createBlock: apiCreateBlock, updateBlock: apiUpdateBlock, deleteBlock: apiDeleteBlock, sortBlock: apiSortBlock, toggleBlock: apiToggleBlock, createWidgetInstance, deleteWidgetInstance } = useContentBlock()
 const contentStore = useContentStore()
 

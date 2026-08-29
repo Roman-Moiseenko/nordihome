@@ -70,7 +70,6 @@ const props = defineProps({
 })
 const useCatalog = useCatalogStore()
 const iSavingInfo = ref(false)
-
 // --- Исходные данные из пропсов (эталон для отмены) ---
 const initialInfo = {
     name: props.category?.name ?? '',
@@ -78,7 +77,7 @@ const initialInfo = {
     metaDescription: props.category?.meta?.description ?? '',
     slug: props.category?.slug ?? '',
     parentId: props.category?.parent_id ?? null,
-    svgIcon: props.category?.svg ?? '',
+    svgIcon: props.category?.svgIcon ?? '',
 }
 
 const info = reactive({...initialInfo})

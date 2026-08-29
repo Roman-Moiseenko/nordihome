@@ -28,16 +28,16 @@ readonly class RoomController
 {
 
     public function __construct(
-        public IndexRoomUseCase  $indexRoomUseCase,
-        public CreateRoomUseCase $createRoomUseCase,
-        public ViewRoomUseCase   $viewRoomUseCase,
-        public UpdateRoomUseCase $updateRoomUseCase,
-        public RemoveRoomUseCase $removeRoomUseCase,
-        public TreeRoomUseCase   $treeRoomUseCase,
-        public UpRoomUseCase     $upRoomUseCase,
-        public DownRoomUseCase   $downRoomUseCase,
-        public ToggleRoomUseCase $toggleRoomUseCase,
-        private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
+        private IndexRoomUseCase  $indexRoomUseCase,
+        private CreateRoomUseCase $createRoomUseCase,
+        private ViewRoomUseCase   $viewRoomUseCase,
+        private UpdateRoomUseCase $updateRoomUseCase,
+        private RemoveRoomUseCase $removeRoomUseCase,
+        private TreeRoomUseCase   $treeRoomUseCase,
+        private UpRoomUseCase     $upRoomUseCase,
+        private DownRoomUseCase   $downRoomUseCase,
+        private ToggleRoomUseCase $toggleRoomUseCase,
+        private ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
     )
     {
     }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
+use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
+use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Discount\Application\Actions\Promotion\CreatePromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\IndexPromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\StatusDraftPromotionUseCase;
@@ -11,9 +14,11 @@ use App\Modules\Discount\Application\Actions\Promotion\StatusFinishedPromotionUs
 use App\Modules\Discount\Application\Actions\Promotion\StatusStartedPromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\StatusWaitingPromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\UpdatePromotionUseCase;
+use App\Modules\Discount\Application\Actions\Promotion\ViewPromotionUseCase;
 use App\Modules\Discount\Application\DTOs\Promotion\PromotionCreateData;
 use App\Modules\Discount\Application\DTOs\Promotion\PromotionIndexData;
 use App\Modules\Discount\Application\DTOs\Promotion\PromotionUpdateData;
+use App\Modules\Discount\Application\DTOs\Promotion\PromotionViewData;
 use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Discount\Repository\PromotionRepository;
@@ -39,6 +44,8 @@ class PromotionController extends Controller
         private StatusStartedPromotionUseCase $startedPromotionUseCase,
         private StatusDraftPromotionUseCase $draftPromotionUseCase,
         private StatusWaitingPromotionUseCase $waitingPromotionUseCase,
+        private ViewPromotionUseCase $viewPromotionUseCase,
+        private ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
     )
     {
         $this->service = $service;
@@ -62,12 +69,16 @@ class PromotionController extends Controller
         return redirect()->route('admin.discount.promotion.show', $promotion->id);
     }
 
-    //MAINDO useCase
-    public function show(Promotion $promotion, UserPermission $permission): Response
+    public function show(int $id, UserPermission $permission): Response
     {
+        $promotion = $this->viewPromotionUseCase->execute($id, $permission);
+        $dto = new ContentBlockContainerData($promotion->id, ContainerType::PROMOTION);
+        $blocks = $this->listContentBlockByContainerUseCase->execute($dto);
+
         return Inertia::render('Discount/Promotion/Show', [
-            'promotion' => $this->repository->PromotionWithToArray($promotion),
-            'statuses' => array_select(Promotion::STATUSES),
+            'promotion' => PromotionViewData::fromEntity($promotion),
+            'statuses' => array_select(PromotionStatus::STATUSES),
+            'blocks' => $blocks,
         ]);
     }
 
@@ -77,6 +88,8 @@ class PromotionController extends Controller
         $this->updatePromotionUseCase->execute($id, $dto, $permission);
         return redirect()->back()->with('success', 'Сохранено');
     }
+
+/*
 
     //MAINDO useCase
     public function add_product(Request $request, Promotion $promotion, UserPermission $permission): RedirectResponse
@@ -101,7 +114,7 @@ class PromotionController extends Controller
         $this->service->delProduct($request, $promotion);
         return redirect()->back()->with('success', 'Товар удален');
     }
-
+*/
     //MAINDO useCase
     public function set_product(Request $request, Promotion $promotion, UserPermission $permission): RedirectResponse
     {

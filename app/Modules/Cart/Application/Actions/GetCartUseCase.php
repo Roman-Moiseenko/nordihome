@@ -67,7 +67,7 @@ readonly class GetCartUseCase
                 $url = route('shop.product.view', $item->getProduct()->slug);
                 if (!is_null($item->product->promotion())) {
                     $item->discount_cost = $item->product->promotion()->pivot->price;
-                    $item->discount_name = $item->product->promotion()->title;
+                    $item->discount_name = $item->product->promotion()->name;
                     $item->discount_id = $item->product->promotion()->id;
                 }
 

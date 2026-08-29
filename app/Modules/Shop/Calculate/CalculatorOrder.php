@@ -25,7 +25,7 @@ class CalculatorOrder
             //Проверка на Акции
             if (!$item->getPreorder() && $item->getProduct()->hasPromotion()) {
                 $item->setSellCost($item->getProduct()->promotion()->pivot->price);
-                $item->setDiscountName($item->getProduct()->promotion()->title);
+                $item->setDiscountName($item->getProduct()->promotion()->name);
                 $item->setDiscount($item->getProduct()->promotion()->id);
                 $item->setDiscountType(Promotion::class); //$item->getProduct()->promotion()::class
             }

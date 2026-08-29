@@ -19,11 +19,13 @@ class PromotionProductViewData extends Data
         public readonly string  $slug,
         public readonly ?string $image,
         public readonly float   $price,
+        public readonly float   $discount,
+        public readonly int     $quantity,
     )
     {
     }
 
-    public static function fromEntity(ProductEntity $product, float $price): self
+    public static function fromEntity(ProductEntity $product, float $price, float $discount, int $quantity): self
     {
         return new self(
             id: $product->id ?? 0,
@@ -32,6 +34,8 @@ class PromotionProductViewData extends Data
             slug: $product->slug->getValue(),
             image: null,
             price: $price,
+            discount: $discount,
+            quantity: $quantity,
         );
     }
 }

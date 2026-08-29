@@ -150,7 +150,7 @@ class ProductIndexQueryRepository
             ->select(
                 'promotions_products.product_id',
                 'promotions_products.price',
-                'promotions.title',
+                'promotions.name',
                 'promotions.color_class',
                 'promotions.position_class',
                 'promotions.text_tag',
@@ -217,7 +217,7 @@ class ProductIndexQueryRepository
                 'image_next' => $imageNextData,
                 'promotion' => $promo
                     ? [
-                        'has' => true, 'price' => (float)$promo->price, 'title' => $promo->title,
+                        'has' => true, 'price' => (float)$promo->price, 'title' => $promo->name,
                         'color' => $promo->color_class, 'position' => $promo->position_class, 'text' => $promo->text_tag,
                         'show_tag' => $promo->show_tag, 'show_discount' => $promo->show_discount ]
                     : ['has' => false, 'price' => 0.0, 'title' => '',

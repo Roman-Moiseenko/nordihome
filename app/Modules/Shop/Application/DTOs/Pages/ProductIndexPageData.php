@@ -16,7 +16,7 @@ class ProductIndexPageData
 {
     public function __construct(
         public CategoryRoomMainData $mainInfo,
-        public CategoryRoomSecondData $secondInfo,
+        public ?CategoryRoomSecondData $secondInfo,
         /** @var ContentBlockPageData[] $blocks */
         public array $blocks,
         /** @var ProductCardData[] */

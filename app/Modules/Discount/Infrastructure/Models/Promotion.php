@@ -6,6 +6,7 @@ namespace App\Modules\Discount\Infrastructure\Models;
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -14,13 +15,12 @@ use Illuminate\Support\Str;
 /**
  * @property int $id
  * @property string $name //Имя для внутреннего использования
- * @property string $description
  * @property string $condition_url //Ссылка на страницу с условиями и правилами
  * @property Carbon $start_at
  * @property Carbon $finish_at
  * @property bool $menu
  * @property bool $show_title //Показывать заголовок акции на карточках
- * @property string $title
+ * @property array $meta
  * @property string $slug  //По title, если существует, добавляем год
  * @property string $template
  * @property string $status
@@ -37,47 +37,29 @@ class Promotion extends Model
 {
     use ImageField;
 
-    const string DRAFT = 'draft';
-    const string WAITING = 'waiting';
-    const string STARTED = 'started';
-    const string FINISHED = 'finished';
-    const array STATUSES = [
-        self::DRAFT => 'Черновик',
-        self::WAITING => 'В ожидании',
-        self::STARTED => 'Запущена',
-        self::FINISHED => 'Остановлена',
+    protected $attributes = [
+        'meta' => '[]',
     ];
-
-    const TYPE = 'Акция';
-
-    //////////////////////////////////////////////
     protected $casts = [
         'start_at' => 'datetime',
         'finish_at' => 'datetime',
-        'published' => 'boolean',
-        'active' => 'boolean',
         'show_tag' => 'boolean',
         'show_discount' => 'boolean',
+        'meta' => 'array',
     ];
-
-
     public $timestamps = false;
-
     protected $fillable = [
         'name',
-        'title',
         'slug',
         'finish_at',
         'start_at',
         'show_title',
-        'description',
         'menu',
         'condition_url',
         'discount',
-        'published',
-        'active',
         'svg',
         'status',
+        'meta',
     ];
 
     public static function register(string $name): self
@@ -85,10 +67,7 @@ class Promotion extends Model
         return self::create([
             'name' => $name,
             'slug' => Str::slug($name),
-            'active' => false,
-            'published' => false,
-            'description' => '',
-            'title' => '',
+            'status' => PromotionStatus::DRAFT,
         ]);
     }
 

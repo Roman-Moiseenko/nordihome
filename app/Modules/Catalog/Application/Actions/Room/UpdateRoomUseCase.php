@@ -24,7 +24,6 @@ readonly class UpdateRoomUseCase
         // Проверка прав доступа
         if (!$userPermission->can('catalog.category.edit')) throw new \DomainException('Доступ запрещён');
 
-
         $room = $this->roomRepository->getById($id);
 
         // Обновляем поля, если переданы

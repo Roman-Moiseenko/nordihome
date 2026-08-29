@@ -65,6 +65,35 @@ class ProductPriceRepository implements ProductPriceRepositoryInterface
         return $prices;
     }
 
+    public function getLatestPricesByType(array $productIds, string $type): array
+    {
+        if (empty($productIds)) {
+            return [];
+        }
+
+        $sub = DB::table('product_prices')
+            ->selectRaw('MAX(set_at) as latest_date, product_id')
+            ->where('type', $type)
+            ->whereIn('product_id', $productIds)
+            ->groupBy('product_id');
+
+        $rows = DB::table('product_prices')
+            ->joinSub($sub, 'latest', function ($join) {
+                $join->on('product_prices.product_id', '=', 'latest.product_id')
+                    ->on('product_prices.set_at', '=', 'latest.latest_date');
+            })
+            ->where('product_prices.type', $type)
+            ->whereIn('product_prices.product_id', $productIds)
+            ->get();
+
+        $prices = [];
+        foreach ($rows as $row) {
+            $prices[$row->product_id] = (float) $row->amount;
+        }
+
+        return $prices;
+    }
+
     public function save(ProductPriceEntity $price): ProductPriceEntity
     {
         $model = $price->id

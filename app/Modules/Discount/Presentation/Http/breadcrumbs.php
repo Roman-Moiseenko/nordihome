@@ -33,7 +33,8 @@ Breadcrumbs::for('admin.discount.promotion.create', function (BreadcrumbTrail $t
     $trail->parent('admin.discount.promotion.index');
     $trail->push('Добавить новую', route('admin.discount.promotion.create'));
 });
-Breadcrumbs::for('admin.discount.promotion.show', function (BreadcrumbTrail $trail, Promotion $promotion) {
+Breadcrumbs::for('admin.discount.promotion.show', function (BreadcrumbTrail $trail, int $id) {
+    $promotion = Promotion::find($id);
     $trail->parent('admin.discount.promotion.index');
     $trail->push($promotion->name, route('admin.discount.promotion.show', $promotion));
 });

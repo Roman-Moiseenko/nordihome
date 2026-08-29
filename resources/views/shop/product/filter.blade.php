@@ -11,7 +11,9 @@
     <div class="base-filter">
         @if(!is_null($mainInfo))
         <div class="children">
+            @if(!is_null($mainInfo->back))
             <a href="{{ $mainInfo->back->url }}" class="heading">{{ $mainInfo->back->name }}</a>
+            @endif
             <div>
                 <b>{{ $mainInfo->name }}</b>
             </div>

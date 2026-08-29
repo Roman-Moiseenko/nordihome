@@ -2,10 +2,10 @@
     <el-row :gutter="10">
         <el-col :span="4">
             <el-tooltip content="Изображение для каталога" placement="top-start" effect="dark">
-                <PhotoDTO model-type="catalog.room" :entity-id="room.id" type="image" />
+                <PhotoDTO model-type="catalog.room" :entity-id="room.id" type="image"/>
             </el-tooltip>
             <el-tooltip content="Иконка для меню" placement="top-start" effect="dark">
-                <PhotoDTO model-type="catalog.room" :entity-id="room.id" type="icon" />
+                <PhotoDTO model-type="catalog.room" :entity-id="room.id" type="icon"/>
             </el-tooltip>
         </el-col>
         <el-col :span="9">
@@ -13,7 +13,7 @@
                 <el-form-item label="Родительская комната">
                     <el-select v-model="info.parentId">
                         <template v-for="item in useCatalog.roomsForFilters" :key="item.id">
-                            <el-option  v-if="item.id !== room.id" :value="item.id" :label="item.name" />
+                            <el-option v-if="item.id !== room.id" :value="item.id" :label="item.name"/>
                         </template>
                     </el-select>
                 </el-form-item>
@@ -27,10 +27,10 @@
                     <el-input v-model="info.svgIcon" clearable type="textarea" :rows="3"/>
                 </el-form-item>
                 <el-form-item label="Meta-Title">
-                    <el-input v-model="info.title" />
+                    <el-input v-model="info.metaTitle"/>
                 </el-form-item>
                 <el-form-item label="Meta-Description">
-                    <el-input v-model="info.description" type="textarea" :rows="5"/>
+                    <el-input v-model="info.metaDescription" type="textarea" :rows="5"/>
                 </el-form-item>
 
                 <el-button v-if="hasChanges" type="info" @click="onCancel" style="margin-left: 4px">
@@ -45,10 +45,13 @@
         <el-col :span="8">
             <HelpBlock>
                 <p><b>Название комнаты</b> является обязательным полем.</p>
-                <p>Поле <b>Slug</b> (ссылка на категорию) можно не заполнять, тогда оно заполнится автоматически. При заполнении использовать латинский алфавит.</p>
+                <p>Поле <b>Slug</b> (ссылка на категорию) можно не заполнять, тогда оно заполнится автоматически. При
+                    заполнении использовать латинский алфавит.</p>
                 <p>Рекомендуемое разрешение для <b>картинок</b> в карточку категории 700х700.</p>
-                <p><b>Иконки</b> для меню рекомендуется сохранять в форматах разрешающие прозрачный цвет - png, svg. Разрешение не более 200х200.</p>
-                <p>Поля <b>Meta</b> используются в SEO. Для того, чтоб они заполнялись автоматически, оставьте их пустыми.</p>
+                <p><b>Иконки</b> для меню рекомендуется сохранять в форматах разрешающие прозрачный цвет - png, svg.
+                    Разрешение не более 200х200.</p>
+                <p>Поля <b>Meta</b> используются в SEO. Для того, чтоб они заполнялись автоматически, оставьте их
+                    пустыми.</p>
             </HelpBlock>
         </el-col>
     </el-row>
@@ -69,12 +72,12 @@ const props = defineProps({
 })
 const useCatalog = useCatalogStore()
 const iSavingInfo = ref(false)
-
+console.log(props.room)
 // --- Исходные данные из пропсов (эталон для отмены) ---
 const initialInfo = {
     name: props.room?.name ?? '',
-    title: props.room?.title ?? '',
-    description: props.room?.description ?? '',
+    metaTitle: props.room?.meta?.title ?? '',
+    metaDescription: props.room?.meta?.description ?? '',
     slug: props.room?.slug ?? '',
     parentId: props.room?.parentId ?? null,
     svgIcon: props.room?.svgIcon ?? '',
@@ -91,6 +94,7 @@ const hasChanges = computed(() => {
     }
     return false
 })
+
 function onCancel() {
     Object.assign(info, {...initialInfo})
 }
@@ -116,7 +120,7 @@ function onSetInfo() {
 </script>
 
 <style scoped>
-    span.svg-category::v-deep>svg {
-        max-height: 50px;
-    }
+span.svg-category::v-deep > svg {
+    max-height: 50px;
+}
 </style>

@@ -838,7 +838,7 @@ class ShopRepository
             'promotion' => [  //Акции
                 'has' => $product->hasPromotion(), //Акционные
                 'price' => $product->hasPromotion() ? $product->promotion()->pivot->price : 0, //Акционная цена
-                'title' => is_null($product->promotion()) ? null : $product->promotion()->title, //Название акции
+                'title' => is_null($product->promotion()) ? null : $product->promotion()->name, //Название акции
             ],
         ];
     }

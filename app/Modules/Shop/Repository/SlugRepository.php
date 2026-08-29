@@ -10,6 +10,7 @@ use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Page;
 use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Infrastructure\Models\Post;
+use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
@@ -62,7 +63,7 @@ class SlugRepository
 
     public function getPromotionBySlug($slug): Promotion
     {
-        return Promotion::where('slug', $slug)->where('published', true)->firstOrFail();
+        return Promotion::where('slug', $slug)->where('status', PromotionStatus::STARTED)->firstOrFail();
     }
 
     public function getGroupBySlug(string $slug): Group

@@ -7,15 +7,13 @@
                 </el-tooltip>
             </el-col>
             <el-col :span="7">
-                <el-form-item label="Внутр.имя">
+                <el-form-item label="Название акции">
                     <el-input v-model="info.name"/>
                 </el-form-item>
                 <el-form-item label="Ссылка">
                     <el-input v-model="info.slug" clearable placeholder="Slug"/>
                 </el-form-item>
-                <el-form-item label="Заголовок для клиента">
-                    <el-input v-model="info.title"/>
-                </el-form-item>
+
                 <el-form-item label="Ссылка на условия акции">
                     <el-input v-model="info.conditionUrl"/>
                 </el-form-item>
@@ -24,8 +22,11 @@
                         <template #append>%</template>
                     </el-input>
                 </el-form-item>
-                <el-form-item label="Описание">
-                    <el-input v-model="info.description" type="textarea" :rows="1"/>
+                <el-form-item label="meta Title">
+                    <el-input v-model="info.metaTitle"/>
+                </el-form-item>
+                <el-form-item label="meta Description">
+                    <el-input v-model="info.metaDescription" type="textarea" :rows="1"/>
                 </el-form-item>
             </el-col>
             <el-col :span="7">
@@ -94,22 +95,22 @@ const positions = ['top-left', 'top-right', 'bottom-left', 'bottom-right']
 // --- Исходные данные из пропсов (эталон для отмены) ---
 const initialInfo = {
     name: props.promotion.name,
-    title: props.promotion.title ?? '',
     slug: props.promotion.slug ?? '',
-    description: props.promotion.description ?? '',
-    conditionUrl: props.promotion.condition_url ?? '',
+    metaTitle: props.category?.meta?.title ?? '',
+    metaDescription: props.category?.meta?.description ?? '',
+    conditionUrl: props.promotion.conditionUrl ?? '',
     menu: !!props.promotion.menu,
-    showTitle: !!props.promotion.show_title,
+    showTitle: !!props.promotion.showTitle,
     discount: props.promotion.discount ?? 0,
     published: !!props.promotion.published,
     active: !!props.promotion.active,
-    startAt: props.promotion.start_at ? func.date(props.promotion.start_at) : null,
-    finishAt: props.promotion.finish_at ? func.date(props.promotion.finish_at) : null,
-    colorClass: props.promotion.color_class ?? 'red',
-    positionClass: props.promotion.position_class ?? 'top-right',
-    textTag: props.promotion.text_tag ?? 'Акция',
-    showTag: !!props.promotion.show_tag,
-    showDiscount: !!props.promotion.show_discount,
+    startAt: props.promotion.startAt ? func.date(props.promotion.startAt) : null,
+    finishAt: props.promotion.finishAt ? func.date(props.promotion.finishAt) : null,
+    colorClass: props.promotion.colorClass ?? 'red',
+    positionClass: props.promotion.positionClass ?? 'top-right',
+    textTag: props.promotion.textTag ?? 'Акция',
+    showTag: !!props.promotion.showTag,
+    showDiscount: !!props.promotion.showDiscount,
     svg: props.promotion.svg ?? null,
 }
 

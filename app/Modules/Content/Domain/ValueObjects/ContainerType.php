@@ -11,12 +11,13 @@ final class ContainerType
     public const string CATEGORY = 'category';
     public const string ROOM = 'room';
     //public const string PRODUCT = 'product';
-
+    public const string PROMOTION = 'promotion';
     private const array ALLOWED = [
         self::PAGE,
         self::POST,
         self::CATEGORY,
         self::ROOM,
+        self::PROMOTION,
         ];
 
     private string $value;

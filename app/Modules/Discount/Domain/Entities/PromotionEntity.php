@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Domain\Entities;
 
 use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
+use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 /**
@@ -25,19 +26,15 @@ final class PromotionEntity
         set => $this->name = $value;
     }
 
-    public string $title = '' {
-        get => $this->title;
-        set => $this->title = $value;
+
+    public ?Meta $meta  = null {
+        get => $this->meta;
+        set => $this->meta = $value;
     }
 
     public Slug $slug {
         get => $this->slug;
         set => $this->slug = $value;
-    }
-
-    public string $description = '' {
-        get => $this->description;
-        set => $this->description = $value;
     }
 
     public string $conditionUrl = '' {
@@ -121,50 +118,5 @@ final class PromotionEntity
     ) {
         $this->name = $name;
         $this->slug = $slug;
-    }
-
-    public function publish(): void
-    {
-        $this->published = true;
-    }
-
-    public function draft(): void
-    {
-        $this->published = false;
-    }
-
-    public function start(): void
-    {
-        $this->active = true;
-    }
-
-    public function finish(): void
-    {
-        $this->active = false;
-    }
-
-    public function isPublished(): bool
-    {
-        return $this->published;
-    }
-
-    public function isStarted(): bool
-    {
-        return $this->status?->isStarted() ?? false;
-    }
-
-    public function isDraft(): bool
-    {
-        return $this->status?->isDraft() ?? false;
-    }
-
-    public function isWaiting(): bool
-    {
-        return $this->status?->isWaiting() ?? false;
-    }
-
-    public function isFinished(): bool
-    {
-        return $this->status?->isFinished() ?? false;
     }
 }
