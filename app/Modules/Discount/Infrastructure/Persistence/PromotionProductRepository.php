@@ -74,14 +74,9 @@ class PromotionProductRepository implements PromotionProductRepositoryInterface
      */
     public function setPrice(int $promotionId, int $productId, float $price): void
     {
-        $pivot = PromotionProduct::where('promotion_id', $promotionId)
+        PromotionProduct::where('promotion_id', $promotionId)
             ->where('product_id', $productId)
-            ->first();
-
-        if ($pivot !== null) {
-            $pivot->price = $price;
-            $pivot->save();
-        }
+            ->update(['price' => $price]);
     }
 
     /**

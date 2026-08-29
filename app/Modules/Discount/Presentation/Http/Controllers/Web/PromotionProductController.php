@@ -9,6 +9,7 @@ use App\Modules\Discount\Application\Actions\PromotionProduct\AttachProductsToPr
 use App\Modules\Discount\Application\Actions\PromotionProduct\DetachProductsFromPromotionUseCase;
 use App\Modules\Discount\Application\Actions\PromotionProduct\ListProductByPromotionUseCase;
 use App\Modules\Discount\Application\Actions\PromotionProduct\SetProductPriceUseCase;
+use App\Modules\Discount\Application\DTOs\PromotionProduct\PromotionProductPriceData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -101,10 +102,9 @@ readonly class PromotionProductController
      */
     public function setPromotionProductPrice(int $id, Request $request, UserPermission $userPermission): JsonResponse
     {
-        $productId = $request->integer('product_id');
-        $price = (float)$request->input('price', 0);
+        $dto = PromotionProductPriceData::validateAndCreate($request->all());
 
-        $this->setProductPriceUseCase->execute($id, $productId, $price, $userPermission);
+        $this->setProductPriceUseCase->execute($id, $dto, $userPermission);
 
         return response()->json(['message' => 'Цена сохранена'], Response::HTTP_OK);
     }

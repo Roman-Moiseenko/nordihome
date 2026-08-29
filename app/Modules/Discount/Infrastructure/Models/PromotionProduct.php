@@ -13,5 +13,8 @@ use Illuminate\Database\Eloquent\Model;
 class PromotionProduct extends Model
 {
     public $timestamps = false;
+
+    public $incrementing = false;
+
     protected $table = 'promotions_products';
 }

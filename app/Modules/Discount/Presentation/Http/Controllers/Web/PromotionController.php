@@ -9,6 +9,7 @@ use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Discount\Application\Actions\Promotion\CreatePromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\IndexPromotionUseCase;
+use App\Modules\Discount\Application\Actions\Promotion\RemovePromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\StatusDraftPromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\StatusFinishedPromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\StatusStartedPromotionUseCase;
@@ -31,25 +32,21 @@ use Inertia\Response;
 
 class PromotionController extends Controller
 {
-    private PromotionService $service;
-    private PromotionRepository $repository;
 
     public function __construct(
-        PromotionService    $service,
-        PromotionRepository $repository,
-        private CreatePromotionUseCase $createPromotionUseCase,
-        private IndexPromotionUseCase $indexPromotionUseCase,
-        private UpdatePromotionUseCase $updatePromotionUseCase,
-        private StatusFinishedPromotionUseCase $finishedPromotionUseCase,
-        private StatusStartedPromotionUseCase $startedPromotionUseCase,
-        private StatusDraftPromotionUseCase $draftPromotionUseCase,
-        private StatusWaitingPromotionUseCase $waitingPromotionUseCase,
-        private ViewPromotionUseCase $viewPromotionUseCase,
-        private ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
+        private PromotionService                            $service,
+        private readonly CreatePromotionUseCase             $createPromotionUseCase,
+        private readonly IndexPromotionUseCase              $indexPromotionUseCase,
+        private readonly UpdatePromotionUseCase             $updatePromotionUseCase,
+        private readonly StatusFinishedPromotionUseCase     $finishedPromotionUseCase,
+        private readonly StatusStartedPromotionUseCase      $startedPromotionUseCase,
+        private readonly StatusDraftPromotionUseCase        $draftPromotionUseCase,
+        private readonly StatusWaitingPromotionUseCase      $waitingPromotionUseCase,
+        private readonly ViewPromotionUseCase               $viewPromotionUseCase,
+        private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
+        private readonly RemovePromotionUseCase $removePromotionUseCase,
     )
     {
-        $this->service = $service;
-        $this->repository = $repository;
     }
 
     public function index(Request $request, UserPermission $permission): Response
@@ -89,43 +86,16 @@ class PromotionController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-/*
-
     //MAINDO useCase
-    public function add_product(Request $request, Promotion $promotion, UserPermission $permission): RedirectResponse
-    {
-        $request->validate([
-            'product_id' => 'required|integer|gt:0',
-        ]);
-        $this->service->addProduct($promotion, (int)$request['product_id']);
-        return redirect()->back()->with('success', 'Товар добавлен');
-    }
-
-    //MAINDO useCase
-    public function add_products(Request $request, Promotion $promotion, UserPermission $permission): RedirectResponse
-    {
-        $this->service->addProducts($promotion, $request['products']);
-        return redirect()->back()->with('success', 'Товары добавлены');
-    }
-
-    //MAINDO useCase
-    public function del_product(Promotion $promotion, Request $request, UserPermission $permission): RedirectResponse
-    {
-        $this->service->delProduct($request, $promotion);
-        return redirect()->back()->with('success', 'Товар удален');
-    }
-*/
-    //MAINDO useCase
-    public function set_product(Request $request, Promotion $promotion, UserPermission $permission): RedirectResponse
+    public function set_product(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
         $this->service->setProduct($request, $promotion);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    //MAINDO useCase
-    public function destroy(Promotion $promotion, UserPermission $permission): RedirectResponse
+    public function destroy(int $id, Promotion $promotion, UserPermission $permission): RedirectResponse
     {
-        $this->service->delete($promotion);
+        $this->removePromotionUseCase->execute($id, $permission);
         return redirect()->back()->with('success', 'Акция удалена');
     }
 

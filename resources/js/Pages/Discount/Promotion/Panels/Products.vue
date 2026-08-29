@@ -104,7 +104,6 @@ function fetchProducts(page: number = 1) {
             pagination.value = response.data
             tableData.value = response.data.data
 
-            console.log(response.data.data)
             // Загружаем изображения для полученных товаров
             const ids = response.data.data.map((p: Product) => p.id)
             if (ids.length > 0) {
@@ -129,14 +128,14 @@ function fetchProducts(page: number = 1) {
 
 function setProduct(row, val) {
     isSaving.value = true
-    router.visit(route('admin.discount.promotion.set-product', {id: props.promotionId}), {
+    router.visit(route('admin.discount.promotion.products.price', {id: props.promotionId}), {
         method: "post",
         data: {
-            product_id: row.id,
+            productId: row.id,
             price: val
         },
         preserveScroll: true,
-        preserveState: false,
+        preserveState: true,
         onSuccess: page => {
             isSaving.value = false
         }

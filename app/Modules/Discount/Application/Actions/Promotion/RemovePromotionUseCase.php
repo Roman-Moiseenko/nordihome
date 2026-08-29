@@ -23,6 +23,7 @@ readonly class RemovePromotionUseCase
     {
         if (!$permission->can('discount.promotion.delete')) throw new AccessDeniedException();
 
+        //TODO Сделать проверку есть ли OrderItem с текущей акцией
 
         $this->promotionRepository->delete($id);
     }
