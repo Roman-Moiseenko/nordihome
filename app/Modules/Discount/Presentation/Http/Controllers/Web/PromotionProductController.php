@@ -100,13 +100,13 @@ readonly class PromotionProductController
      * Установить цену товара в акции.
      * POST /admin/discount/promotion/{id}/products/price
      */
-    public function setPromotionProductPrice(int $id, Request $request, UserPermission $userPermission): JsonResponse
+    public function setPromotionProductPrice(int $id, Request $request, UserPermission $userPermission)
     {
         $dto = PromotionProductPriceData::validateAndCreate($request->all());
 
         $this->setProductPriceUseCase->execute($id, $dto, $userPermission);
-
-        return response()->json(['message' => 'Цена сохранена'], Response::HTTP_OK);
+        return redirect()->back();
+        //return response()->json(['message' => 'Цена сохранена'], Response::HTTP_OK);
     }
 
     /**

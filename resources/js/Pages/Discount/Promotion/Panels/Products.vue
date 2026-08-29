@@ -18,6 +18,7 @@
         <div class="p-5 bg-white rounded-md">
             <el-table
                 :data="tableData"
+                v-loading="loading"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%;"
             >
@@ -49,6 +50,15 @@
                     </template>
                 </el-table-column>
             </el-table>
+            <div class="flex justify-center mt-4" v-if="pagination.last_page > 1">
+                <el-pagination
+                    :current-page="pagination.current_page"
+                    :page-size="pagination.per_page"
+                    :total="pagination.total"
+                    layout="prev, pager, next"
+                    @current-change="onPageChange"
+                />
+            </div>
         </div>
         <DeleteEntityModal name_entity="Товар из акции"/>
     </el-tab-pane>
@@ -126,6 +136,10 @@ function fetchProducts(page: number = 1) {
         })
 }
 
+function onPageChange(page: number) {
+    fetchProducts(page)
+}
+
 function setProduct(row, val) {
     isSaving.value = true
     router.visit(route('admin.discount.promotion.products.price', {id: props.promotionId}), {
@@ -138,6 +152,7 @@ function setProduct(row, val) {
         preserveState: true,
         onSuccess: page => {
             isSaving.value = false
+            fetchProducts(pagination.value.current_page)
         }
     })
 }
