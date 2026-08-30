@@ -20,7 +20,7 @@
                 @elseif($product->promotion->has && $product->promotion->showTag)
                     @if($product->promotion->showDiscount)
                     <div class="promotion-label discount {{ $product->promotion->position }}">
-                        <span>{{ $product->price - $product->promotion->price }}</span>
+                        <span>{{ price($product->price - $product->promotion->price) }}</span>
                     </div>
                     @endif
                     <div class="product-label promotion {{ $product->promotion->color }} {{ $product->promotion->position }}">
