@@ -24,6 +24,7 @@ use App\Modules\Catalog\Infrastructure\Persistence\TagProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\TagRepository;
 use App\Modules\Catalog\Presentation\Console\Commands\ClearCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\LoadCommand;
+use App\Modules\Catalog\Presentation\Console\Commands\ResetPublishedCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -170,6 +171,7 @@ class CatalogServiceProvider extends ServiceProvider
         $this->commands([
             ClearCommand::class,
             LoadCommand::class,
+            ResetPublishedCommand::class,
         ]);
     }
 

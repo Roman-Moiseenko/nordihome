@@ -384,7 +384,7 @@ class Product extends Model
     public function setPublished(): void
     {
         $this->published = true;
-        if (is_null($this->published_at)) $this->published_at = now();
+        $this->published_at = now();
         $this->save();
     }
 
