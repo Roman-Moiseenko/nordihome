@@ -4,6 +4,7 @@ namespace App\Modules\Auth\Presentation\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Modules\Auth\Application\Actions\Client\CreateClientUseCase;
 use App\Modules\Auth\Application\Actions\Client\CreateClientWithConsentUseCase;
+use App\Modules\Auth\Application\Actions\Client\FindClientsByParamsUseCase;
 use App\Modules\Auth\Application\Actions\Client\IndexClientUseCase;
 use App\Modules\Auth\Application\Actions\Client\RemoveClientUseCase;
 use App\Modules\Auth\Application\Actions\Client\UpdateClientUseCase;
@@ -43,6 +44,7 @@ class ClientController extends Controller
         private readonly RemoveClientUseCase $removeClientUseCase,
         private readonly ViewClientUseCase  $viewClientUseCase,
         private readonly IndexClientUseCase $indexClientUseCase,
+        private readonly FindClientsByParamsUseCase $findClientsByParamsUseCase,
 
     ) {}
 
@@ -238,6 +240,12 @@ class ClientController extends Controller
         $client = $this->updateClientUseCase->execute($clientId, $dto, $userPermission);
 
         return response()->json(ClientViewData::fromEntity($client), Response::HTTP_CREATED);
+    }
+    public function findByParam(Request $request): JsonResponse
+    {
+        $searchString = $request->string('search')->trim()->value();
+        $clients = $this->findClientsByParamsUseCase->execute($searchString);
+        return response()->json(ClientIndexData::collect($clients), Response::HTTP_OK);
     }
 
 }

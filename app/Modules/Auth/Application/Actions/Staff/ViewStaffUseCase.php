@@ -19,9 +19,9 @@ readonly class ViewStaffUseCase
         if (!$permissions->can('auth.employee.view')) throw new AccessDeniedException();
 
         $staff = $this->staffRepository->findById($staffId);
-        if (!$staff) {
+        if (!$staff)
             throw new StaffNotFoundException('Сотрудник не найден');
-        }
+
         return $staff;
     }
 }

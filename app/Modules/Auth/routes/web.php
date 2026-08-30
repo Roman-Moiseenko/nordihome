@@ -41,6 +41,7 @@ Route::group([
         // Админские маршруты для управления клиентами
         Route::apiResource('client', ClientController::class);
         Route::post('/client/{id}/register', [ClientController::class, 'register']);
+        Route::post('/client/search', [ClientController::class, 'findByParam'])->name('client.search');
 
         // Маршруты для управления сотрудниками
         Route::get('staff/positions', [StaffController::class, 'positions'])->name('staff.positions');

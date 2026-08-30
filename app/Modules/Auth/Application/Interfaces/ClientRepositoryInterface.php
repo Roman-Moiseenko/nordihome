@@ -19,4 +19,5 @@ interface ClientRepositoryInterface
     public function phoneExists(PhoneNumber $phone, ?int $excludeId = null): bool;
     public function delete(int $id): bool;
     public function paginate(int $perPage = 20): LengthAwarePaginator;
+    public function findByParams(string $search): array;
 }

@@ -133,6 +133,16 @@ class ClientRepository implements ClientRepositoryInterface
             ->paginate($perPage)
             ->through(fn($model) => $this->hydrate($model)); // ← применяем hydrate к каждому элементу
     }
+    public function findByParams(string $search): array
+    {
+        //FIXME Добавить поиск организацию
+        return  Client::with('user')
+            ->where('phone', 'like', "%$search%")
+            ->orWhere('email', 'like', "%$search%")
+            ->orWhereRaw("LOWER(first_name) like LOWER('%$search%')")
+            ->get()
+            ->map(fn($model) => $this->hydrate($model))->toArray();
+    }
 
     /**
      * @throws \DateMalformedStringException

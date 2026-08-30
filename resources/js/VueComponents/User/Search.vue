@@ -2,7 +2,7 @@
     <div class="flex">
         <el-select
             id="select"
-            v-model="form.user_id"
+            v-model="form.clientId"
             filterable
             remote
             reserve-keyword
@@ -16,9 +16,9 @@
                 v-for="item in options"
                 :key="item.id"
                 :value="item.id"
-                :label="item.public_name"
+                :label="item.fullName"
             >
-                {{ item.public_name }} ({{ func.phone(item.phone) }})
+                {{ item.fullName }} ({{ item.phone }})
             </el-option>
             <template #loading>
                 Загрузка
@@ -34,7 +34,7 @@
             Выбрать
         </el-button>
     </div>
-    <AddUser :show="dialogCreate" @update:user="onCreateUser" />
+    <AddUser :show="dialogCreate" @update:client="onCreateUser" />
 </template>
 
 <script setup lang="ts">
@@ -47,11 +47,11 @@ import AddUser from "@Comp/User/Add.vue";
 import {func} from "@Res/func.js"
 
 const props = defineProps({
-    user_id: Number,
+    clientId: Number,
     route: String,
 })
 const form = reactive({
-    user_id: null,
+    clientId: null,
 })
 //Поиск Клиента
 const loading = ref(false)
@@ -59,7 +59,7 @@ const options = ref([])
 const remoteMethod = (query: string) => {
     if (query) {
         loading.value = true
-        axios.post(route('admin.user.search'), {search: query}).then(response => {
+        axios.post(route('admin.client.search'), {search: query}).then(response => {
             if (response.data.error !== undefined) console.log(response.data.error)
 
             options.value = response.data
@@ -78,14 +78,14 @@ function onSelect() {
 
 //Выбрать клиента
 function onAdd() {
-    if (form.user_id === null) return;
+    if (form.clientId === null) return;
     router.visit(props.route, {
         method: "post",
         data: form,
         preserveScroll: true,
         preserveState: false,
         onSuccess: page => {
-            form.user = null
+            form.clientId = null
             document.getElementById('select').focus()
         }
     })
@@ -94,15 +94,14 @@ function onAdd() {
 //Добавить и выбрать клиента ===>
 const dialogCreate = ref(false)
 function onCreateUser(val) {
-    console.log(props.route)
     if (val !== null) {
          router.visit(props.route, {
              method: "post",
-             data: {user_id: val},
+             data: {clientId: val},
              preserveScroll: true,
              preserveState: false,
              onSuccess: page => {
-                 form.user = null
+                 form.clientId = null
                  dialogCreate.value = false
              },
              onError: page => {

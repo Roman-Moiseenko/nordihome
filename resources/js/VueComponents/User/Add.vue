@@ -11,28 +11,29 @@
             </el-form-item>
             <el-form-item>
                 <div class="flex">
-                    <el-input v-model="formCreate.fullname.surname" placeholder="Фамилия"
+                    <el-input v-model="formCreate.lastName" placeholder="Фамилия"
                               @keydown.enter="handlerEnter(focusFirstname)" ref="focusSurname"/>
-                    <el-input v-model="formCreate.fullname.firstname" placeholder="Имя"
+                    <el-input v-model="formCreate.firstName" placeholder="Имя"
                               @keydown.enter="handlerEnter(focusSecondname)" ref="focusFirstname"/>
-                    <el-input v-model="formCreate.fullname.secondname" placeholder="Отчество"
-                              @keydown.enter="handlerEnter(focusINN)" ref="focusSecondname"/>
+                    <el-input v-model="formCreate.middleName" placeholder="Отчество"
+                              @keydown.enter="handlerEnter(null)" ref="focusSecondname"/>
+                    <!-- handlerEnter(focusINN)-->
                 </div>
             </el-form-item>
             <el-form-item>
                 <div class="flex">
                     <el-input v-model="formCreate.inn" placeholder="ИНН"
                               :formatter="val => func.MaskInteger(val, 12)"
-                              @keydown.enter="handlerEnter(focusBIK)" ref="focusINN"/>
+                              @keydown.enter="handlerEnter(focusBIK)" ref="focusINN" disabled/>
                     <el-input v-model="formCreate.bik" placeholder="БИК"
                               :formatter="val => func.MaskInteger(val, 9)"
-                              @keydown.enter="handlerEnter(focusAccount)" ref="focusBIK"/>
+                              @keydown.enter="handlerEnter(focusAccount)" ref="focusBIK" disabled/>
                 </div>
             </el-form-item>
             <el-form-item>
                 <el-input v-model="formCreate.account" placeholder="Р/счет"
                           :formatter="val => func.MaskPhone(val, 20)"
-                          @keydown.enter="handlerEnter(null)" ref="focusAccount"/>
+                          @keydown.enter="handlerEnter(null)" ref="focusAccount" disabled/>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -80,31 +81,28 @@ watch(() => props.show, (newValues, oldValues) => {
     dialogCreate.value = props.show
 
 });
-const $emit = defineEmits(['update:user'])
+const $emit = defineEmits(['update:client'])
 const formCreate = reactive({
     email: null,
     phone: null,
-    fullname: {
-        surname: null,
-        firstname: null,
-        secondname: null,
-    },
+    firstName: null,
+    lastName: null,
+    middleName: null,
     inn: null,
     bik: null,
     account: null,
 })
 
 function saveUser() {
-    axios.post(route('admin.user.create'), formCreate).then(response => {
-
+    axios.post(route('admin.client.store'), formCreate).then(response => {
         if (response.data.error !== undefined) console.log(response.data.error)
-        $emit('update:user', response.data)
+        $emit('update:client', response.data.id)
     }).catch(reason => {
         console.log('reason', reason)
     });
 }
 function onCancel() {
-    $emit('update:user', null)
+    $emit('update:client', null)
 }
 </script>
 

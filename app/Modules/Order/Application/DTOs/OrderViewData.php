@@ -13,6 +13,7 @@ readonly class OrderViewData
         public int $id,
         public ?int $number,
         public ?int $staffId,
+        public ?string $staffName,
         public int $traderId,
 
         public string $priceType,

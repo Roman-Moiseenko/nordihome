@@ -44,7 +44,7 @@
 
                 <el-button type="warning" plain @click="toUserInfo(order.client.id)">Перейти в Карточку</el-button>
             </div>
-            <SearchUser v-else :route="route('admin.order.set-user', {order: order.id})"/>
+            <SearchUser v-else :route="route('admin.order.set-client', {id: order.id})"/>
         </el-col>
         <!-- Суммы по заказу -->
         <el-col :span="8">
@@ -116,10 +116,13 @@
         <!-- Действия (кнопки) с заказом -->
         <el-col :span="8">
             <div class="inline-grid ">
-
-                <el-form-item v-if="is_new || is_awaiting" label="Резерв">
+                <div  class="mb-3">
+                    <el-tag v-if="order.staffId !== null" type="primary" size="large" effect="plain">{{ order.staffName }}</el-tag>
+                    <el-tag v-else type="warning" size="large" effect="dark">Менеджер не назначен</el-tag>
+                </div>
+                <!--el-form-item v-if="is_new || is_awaiting" label="Резерв">
                     <el-date-picker v-model="reserve" type="datetime" @change="handleReserve" :disabled="iSavingInfo"/>
-                </el-form-item>
+                </el-form-item-->
 
                 <el-popover v-if="is_issued" :visible="visible_movement" placement="bottom-start" :width="246">
                     <template #reference>

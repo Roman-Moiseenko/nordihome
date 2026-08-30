@@ -35,7 +35,7 @@ Route::group(
         Route::post('/change-item/{id}', [OrderController::class, 'changeItem'])->name('change-item');
         //Route::post('/set-item/{item}', [OrderController::class, 'set_item'])->name('set-item');
         Route::delete('/del-item/{id}/{item}', [OrderController::class, 'removeItem'])->name('del-item');
-        Route::post('/set-user/{order}', [OrderController::class, 'set_user'])->name('set-user');
+        Route::post('/set-client/{id}', [OrderController::class, 'setClient'])->name('set-client');
         Route::post('/set-assemblage/{id}', [OrderController::class, 'setAssemblage'])->name('set-assemblage');
         Route::post('/set-packing/{id}', [OrderController::class, 'setPacking'])->name('set-packing');
 

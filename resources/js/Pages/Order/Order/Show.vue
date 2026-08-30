@@ -77,7 +77,7 @@ import OrderAdditionsView from  "./Blocks/AdditionsView.vue"
 import EditField from "@Comp/Elements/EditField.vue";
 import {func} from '@Res/func.js'
 import axios from "axios";
-
+import { ElMessage, ElMessageBox } from 'element-plus'
 
 const props = defineProps({
     order: Object,
@@ -94,8 +94,36 @@ const props = defineProps({
     order_related: Array,
 })
 
-console.log(props.order)
+const open = () => {
+    ElMessageBox.confirm(
+        'Взять заказ в работу?',
+        'Менеджер не назначен',
+        {
+            confirmButtonText: 'Взять',
+            cancelButtonText: 'Отмена',
+            type: 'warning',
+        }
+    )
+        .then(() => {
+            router.visit(route('admin.order.take', {id: props.order.id}), {
+                method: "post",
+                data: {},
+                preserveScroll: true,
+                preserveState: false,
+            })
 
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: 'Менеджер не назначен',
+            })
+        })
+}
+
+if (props.order.staffId === null) {
+    open()
+}
 
 provide('$order_related', props.order_related)
 console.log(props.order.status)

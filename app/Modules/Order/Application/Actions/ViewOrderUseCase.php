@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Order\Application\Actions;
 
 use App\Modules\Accounting\Entity\Storage;
+use App\Modules\Auth\Application\Actions\Staff\ViewStaffUseCase;
 use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
+use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
 use App\Modules\Order\Application\DTOs\AmountOrderData;
 use App\Modules\Order\Application\DTOs\ClientOrderData;
 use App\Modules\Order\Application\DTOs\OrderAdditionViewData;
@@ -25,6 +27,7 @@ readonly class ViewOrderUseCase
         private ClientRepositoryInterface $clientRepository,
         private GetProductItemDataUseCase $getProductItemData,
         private GetAdditionDataUseCase    $getAdditionDataUseCase,
+        private StaffRepositoryInterface $staffRepository,
     )
     {
     }
@@ -161,6 +164,7 @@ readonly class ViewOrderUseCase
             id: $orderEntity->id,
             number: $orderEntity->number,
             staffId: $orderEntity->staffId,
+            staffName: is_null($orderEntity->staffId) ? null : $this->staffRepository->findById($orderEntity->staffId)->fullName->getValue(),
             traderId: $orderEntity->traderId,
             priceType: $orderEntity->priceType->value,
             discountAmount: $orderEntity->discountAmount,

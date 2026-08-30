@@ -12,6 +12,7 @@ use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Application\Actions\Order\IndexOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
+use App\Modules\Order\Application\Actions\Order\SetClientOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetCouponOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetManagerOrderUseCase;
@@ -84,6 +85,7 @@ class OrderController extends Controller
         private readonly StatusAwaitingOrderService  $statusAwaitingOrderService,
         private readonly StatusCancelOrderService    $statusCancelOrderService,
         private readonly IndexOrderUseCase $indexOrderUseCase,
+        private readonly SetClientOrderUseCase $setClientOrderUseCase,
     )
     {
     }
@@ -245,10 +247,10 @@ class OrderController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    //MAINDO !
-    public function set_user(Request $request, Order $order): RedirectResponse
+    public function setClient(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->service->setUser($order, $request);
+        $this->setClientOrderUseCase->execute($id, $request->integer('clientId'), $permission);
+        //$this->service->setUser($order, $request);
         return redirect()->back()->with('success', 'Клиент назначен');
     }
 
