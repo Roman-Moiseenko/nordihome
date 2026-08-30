@@ -6,14 +6,14 @@ class PromotionProductData
 {
 
     public function __construct(
-        public bool $has = false,
-        public string $title = '',
-        public float $price = 0.0,
+        public bool   $has = false,
+        public string $name = '',
+        public float  $price = 0.0,
         public string $color = '',
         public string $position = '',
         public string $text = '',
-        public bool $showTag = true,
-        public bool $showDiscount = true,
+        public bool   $showTag = true,
+        public bool   $showDiscount = true,
     )
     {
     }
@@ -22,7 +22,7 @@ class PromotionProductData
     {
         return new self(
             has: $data['has'],
-            title: $data['title'],
+            name: $data['name'],
             price: (float)$data['price'],
             color: $data['color'],
             position: $data['position'],

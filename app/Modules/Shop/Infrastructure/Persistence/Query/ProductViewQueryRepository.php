@@ -45,9 +45,9 @@ class ProductViewQueryRepository
                 $join->on('products.id', '=', 'promotions_products.product_id')
                     ->join('promotions', function ($join) use ($now) {
                         $join->on('promotions_products.promotion_id', '=', 'promotions.id')
-                            ->where('promotions.status', PromotionStatus::STARTED)
-                            ->where('promotions.start_at', '<=', $now)
-                            ->where('promotions.finish_at', '>=', $now);
+                            ->where('promotions.status', PromotionStatus::STARTED);
+                            //->where('promotions.start_at', '<=', $now)
+                            //->where('promotions.finish_at', '>=', $now);
                     });
             });
 
@@ -191,13 +191,13 @@ class ProductViewQueryRepository
         // Promotion data
         $promotion = new PromotionProductData(
             has: $row->promotion_price !== null,
-            title: $row->promotion_name ?? '',
+            name: $row->promotion_name ?? '',
             price: (float)($row->promotion_price ?? 0),
             color: $row->color_class ?? '',
             position: $row->position_class ?? '',
             text: $row->text_tag ?? '',
-            showTag: $row->show_tag ?? false,
-            showDiscount: $row->show_discount ?? false,
+            showTag: (bool)$row->show_tag ?? false,
+            showDiscount: (bool)$row->show_discount ?? false,
         );
 
         // Dimensions

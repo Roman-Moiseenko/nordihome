@@ -9,7 +9,6 @@
             'caption' => $img->alt ?? '',
         ];
     }
-
 @endphp
 
 @extends('layouts.main')
@@ -98,7 +97,7 @@
                                         {{ price($product->price) }}
                                     @endif
                                 @else
-                                    <div class="comment">* Цена по акции {{ $product->promotion->title }}</div>
+                                    <div class="comment">* Цена по акции {{ $product->promotion->name }}</div>
                                     <span class="discount-price">{{ price($product->promotion->price) }}</span>
                                     <span class="base-price">{{ price($product->price) }}</span>
                                 @endif

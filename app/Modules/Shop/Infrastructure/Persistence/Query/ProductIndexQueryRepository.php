@@ -217,10 +217,10 @@ class ProductIndexQueryRepository
                 'image_next' => $imageNextData,
                 'promotion' => $promo
                     ? [
-                        'has' => true, 'price' => (float)$promo->price, 'title' => $promo->name,
+                        'has' => true, 'price' => (float)$promo->price, 'name' => $promo->name,
                         'color' => $promo->color_class, 'position' => $promo->position_class, 'text' => $promo->text_tag,
                         'show_tag' => $promo->show_tag, 'show_discount' => $promo->show_discount ]
-                    : ['has' => false, 'price' => 0.0, 'title' => '',
+                    : ['has' => false, 'price' => 0.0, 'name' => '',
                         'color' => '', 'position' => '', 'text' => '',
                         'show_tag' => '', 'show_discount' => ''],
                 'is_wish' => (bool)$item->is_wish,
