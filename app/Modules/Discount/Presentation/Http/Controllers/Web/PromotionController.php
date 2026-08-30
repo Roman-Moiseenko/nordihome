@@ -22,8 +22,6 @@ use App\Modules\Discount\Application\DTOs\Promotion\PromotionUpdateData;
 use App\Modules\Discount\Application\DTOs\Promotion\PromotionViewData;
 use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
-use App\Modules\Discount\Repository\PromotionRepository;
-use App\Modules\Discount\Service\PromotionService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,7 +32,6 @@ class PromotionController extends Controller
 {
 
     public function __construct(
-        private PromotionService                            $service,
         private readonly CreatePromotionUseCase             $createPromotionUseCase,
         private readonly IndexPromotionUseCase              $indexPromotionUseCase,
         private readonly UpdatePromotionUseCase             $updatePromotionUseCase,
@@ -83,13 +80,6 @@ class PromotionController extends Controller
     {
         $dto = PromotionUpdateData::validateAndCreate($request->all());
         $this->updatePromotionUseCase->execute($id, $dto, $permission);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
-
-    //MAINDO useCase
-    public function set_product(int $id, Request $request, UserPermission $permission): RedirectResponse
-    {
-        $this->service->setProduct($request, $promotion);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
