@@ -52,12 +52,12 @@
                 <div class="row">
                     <div class="col-md-6 col-lg-2">
                         <label>
-                            <input name="name" type="text" required="" placeholder="Имя и Фамилия">
+                            <input name="name" type="text" required placeholder="Имя и Фамилия">
                         </label>
                     </div>
                     <div class="col-md-6 col-lg-3">
                         <label>
-                            <input name="phone" type="tel" required="" placeholder="Ваш телефон: +79097589135">
+                            <input name="phone" type="tel" required placeholder="Ваш телефон: +79097589135">
                         </label>
                     </div>
                     <div class="col-md-9 col-lg-5">
@@ -70,7 +70,10 @@
                     </div>
                     <div class="col-12">
                         <label class="f-z_14">
-                            <input type="checkbox" name="agreement" value="Согласие на обработку персональных данных"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
+                            <input type="checkbox" name="agreement" value="Согласие на обработку персональных данных" required>
+                            Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a>
+                            на обработку персональных данных. Подробнее об этом в
+                            <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
                         </label>
                     </div>
                 </div>

@@ -14,44 +14,6 @@ window.$ = jQuery;
         }
     });
 
-    //TODO Удалить
-    function feedback(feedback) {
-        let _id = feedback.attr('id');
-        $.post('/admin/feedback/form/get/' + _id, {}, function (data) {
-            let route = data;
-            let hideBlock = $('#' + _id + '-callback');
-            let button = feedback.find('button');
-            button.on('click', function () {
-                let fields = {
-                    id: _id,
-                    url: window.location.href,
-                };
-                let res = true;
-                feedback.find('[name]').each(function () {
-                    if ($(this).is(':required') && $(this).val() === '') {
-                        if (res) alert('Не заполнены поля');
-                        res = false;
-                        return;
-                    }
-                    if ($(this).attr('type') === 'checkbox' || $(this).attr('type') === 'radiobutton') {
-                        if ($(this).is(':checked')) {
-                            fields[$(this).attr('name')] = $(this).val();
-                        }
-                    } else {
-                        fields[$(this).attr('name')] = $(this).val();
-                    }
-                });
-                if (res === true) {
-                    $.post(route, fields, function () {
-                            hideBlock.show();
-                            if (!feedback.is('[not-hide]')) feedback.hide()
-                        }
-                    )
-                }
-            });
-        });
-    }
-
     function feedbackNew(feedback) {
         let _id = feedback.attr('id');
         const route = '/feedback/form/feedback'
@@ -64,20 +26,42 @@ window.$ = jQuery;
                 data: {},
             };
             let res = true;
+            feedback.find('[name]').removeClass('field-error');
+
             feedback.find('[name]').each(function () {
-                if ($(this).is(':required') && $(this).val() === '') {
-                    if (res) alert('Не заполнены поля');
-                    res = false;
-                    return;
+                const $field = $(this);
+                const type = $field.attr('type');
+                const isRequired = $field.is('[required]');
+
+                if (isRequired) {
+                    let isValid = true;
+
+                    if (type === 'checkbox' || type === 'radiobutton') {
+                        if (!$field.is(':checked')) {
+                            isValid = false;
+                        }
+
+                    } else {
+                        if ($field.val() === '') {
+                            isValid = false;
+                        }
+                    }
+                    if (!isValid) {
+                        $field.addClass('field-error');
+                        res = false;
+                        return;
+                    }
                 }
-                if ($(this).attr('type') === 'checkbox' || $(this).attr('type') === 'radiobutton') {
-                    if ($(this).is(':checked')) {
-                        fields.data[$(this).attr('name')] = $(this).val();
+                // --- Сбор данных (только если поле валидно или не required) ---
+                if (type === 'checkbox' || type === 'radiobutton') {
+                    if ($field.is(':checked')) {
+                        fields.data[$field.attr('name')] = $field.val();
                     }
                 } else {
-                    fields.data[$(this).attr('name')] = $(this).val();
+                    fields.data[$field.attr('name')] = $field.val();
                 }
             });
+            if (!res) alert('Не заполнены поля');
             if (res === true) {
                 $.post(route, fields, function () {
                         hideBlock.show();
