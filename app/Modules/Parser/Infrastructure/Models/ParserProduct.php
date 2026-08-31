@@ -47,6 +47,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class ParserProduct extends Model
 {
+    protected $touches = ['categories'];
 
     public $timestamps = true;
     protected $table = 'parser_products';

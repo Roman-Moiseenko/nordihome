@@ -124,7 +124,7 @@
                     <el-date-picker v-model="reserve" type="datetime" @change="handleReserve" :disabled="iSavingInfo"/>
                 </el-form-item-->
 
-                <el-popover v-if="is_issued" :visible="visible_movement" placement="bottom-start" :width="246">
+                <!--el-popover v-if="is_issued" :visible="visible_movement" placement="bottom-start" :width="246">
                     <template #reference>
                         <el-button type="primary" class="p-4 my-3" @click="visible_movement = !visible_movement"
                                    ref="buttonRef">
@@ -144,11 +144,11 @@
                         <el-button @click="visible_movement = false">Отмена</el-button>
                         <el-button @click="onMovement" type="primary">Создать</el-button>
                     </div>
-                </el-popover>
+                </el-popover-->
 
                 <el-button v-if="is_new" type="success" @click="dialogAwaiting = true">На оплату</el-button>
 
-                <el-button v-if="!is_view" type="success" plain @click="getInvoice">Скачать счет</el-button>
+                <!--el-button v-if="!is_view" type="success" plain @click="getInvoice">Скачать счет</el-button-->
                 <el-button v-if="is_awaiting" type="warning" plain @click="onWork">Вернуть в работу</el-button>
                 <el-button v-if="!is_view" type="info" plain @click="dialogCancel = true">Отменить</el-button>
             </div>
@@ -232,7 +232,7 @@ const props = defineProps({
 const iSavingInfo = ref(false)
 const info = reactive({
     traderId: props.order.traderId,
-    shopper_id: props.order.shopper_id,
+    shopperId: props.order.shopperId,
     comment: props.order.comment,
 })
 const reserve = ref(props.order.reserve)
@@ -248,12 +248,12 @@ function toUserInfo(id) {
 }
 function SaveComment(val) {
     //Сохраняем комментарий
-    router.post(route('admin.order.set-comment', {order: props.order.id}), {comment: val})
+    router.post(route('admin.order.set-info', {id: props.order.id}), {comment: val})
 
 }
 function setInfo() {
     iSavingInfo.value = true
-    router.visit(route('admin.order.set-info', {order: props.order.id}), {
+    router.visit(route('admin.order.set-info', {id: props.order.id}), {
         method: "post",
         data: info,
         preserveScroll: true,
@@ -263,7 +263,7 @@ function setInfo() {
         }
     })
 }
-
+/*
 function handleReserve() {
     iSavingInfo.value = true
     router.visit(route('admin.order.set-reserve', {order: props.order.id}), {
@@ -278,7 +278,8 @@ function handleReserve() {
         }
     })
 }
-
+*/
+/*
 function getInvoice() {
     const loading = ElLoading.service({
         lock: false,
@@ -305,7 +306,7 @@ function getInvoice() {
         loading.close()
     })
 }
-
+*/
 //На оплату
 const dialogAwaiting = ref(false)
 const formEmails = ref([]);
@@ -315,7 +316,7 @@ const formPayment = reactive({
 });
 
 function onAwaiting() {
-    router.visit(route('admin.order.awaiting', {order: props.order.id}), {
+    router.visit(route('admin.order.awaiting', {id: props.order.id}), {
         method: "post",
         data: {emails: formEmails.value, payment: formPayment},
         preserveScroll: true,
@@ -327,11 +328,11 @@ function onAwaiting() {
 }
 
 function onWork() {
-    router.post(route('admin.order.work', {order: props.order.id}))
+    router.post(route('admin.order.work', {id: props.order.id}))
 }
 
 function onCancel() {
-    router.visit(route('admin.order.cancel', {order: props.order.id}), {
+    router.visit(route('admin.order.cancel', {id: props.order.id}), {
         method: "post",
         data: {comment: cancel_comment.value},
         preserveScroll: true,
@@ -348,11 +349,11 @@ const movement = reactive({
     storage_out: null,
     storage_in: null
 })
-
+/*
 function onMovement() {
     router.post(route('admin.order.movement', {order: props.order.id}), movement)
 }
-
+*/
 </script>
 <style lang="scss" scoped>
 :deep(.bg-sell) {

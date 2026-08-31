@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Order\Application\Services;
+namespace App\Modules\Order\Application\Services\StatusServices;
 
 use App\Modules\Order\Application\Actions\Order\SendMailCancelOrderClientUseCase;
 use App\Modules\Order\Application\Actions\Order\SetStatusOrderUseCase;

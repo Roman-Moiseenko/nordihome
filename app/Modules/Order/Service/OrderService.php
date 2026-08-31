@@ -728,23 +728,6 @@ class OrderService
         }
     }
 
-    public function setCreated(Order $order, $created): \Illuminate\Support\Carbon|Carbon
-    {
-        $order->created_at = $created ?? now();
-        $order->save();
-        return $order->created_at;
-    }
-
-    public function setComment(Order $order, Request $request): void
-    {
-        $old = $order->comment;
-        $order->comment = $request->string('comment')->trim()->value();
-        $this->logger->log(orderId: $order->id, action: 'Изменен комментарий',
-            value: $order->comment, old: $old
-        );
-        $order->save();
-    }
-
     public function setAssemblage(Request $request): void
     {
         $items = $request->input('items');

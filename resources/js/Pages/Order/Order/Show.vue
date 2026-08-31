@@ -150,7 +150,7 @@ function handleLogOrder() {
     router.get(route('admin.order.log', {order: props.order.id}))
 }
 function setCreated(val) {
-    axios.post(route('admin.order.set-created', {order: props.order.id}), {created_at: func.datetime(val),}).then(result => {
+    axios.post(route('admin.order.set-info', {id: props.order.id}), {createdAt: func.datetime(val),}).then(result => {
         props.order.created_at = result.data;
     })
 }

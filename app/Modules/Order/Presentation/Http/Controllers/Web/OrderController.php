@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
-use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Application\Actions\Order\IndexOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
@@ -17,6 +16,7 @@ use App\Modules\Order\Application\Actions\Order\SetCouponOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetManagerOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetPackingsOrderUseCase;
+use App\Modules\Order\Application\Actions\Order\UpdateOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\AddAdditionOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\RemoveOrderAdditionUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\UpdateOrderAdditionUseCase;
@@ -26,30 +26,28 @@ use App\Modules\Order\Application\Actions\OrderItem\UpdateOrderItemUseCase;
 use App\Modules\Order\Application\Actions\ViewOrderUseCase;
 use App\Modules\Order\Application\DTOs\Order\DiscountOrderData;
 use App\Modules\Order\Application\DTOs\Order\FilterOrderIndexData;
+use App\Modules\Order\Application\DTOs\Order\OrderUpdateData;
 use App\Modules\Order\Application\DTOs\OrderAddition\OrderAdditionUpdateData;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemPreData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
 use App\Modules\Order\Application\Services\ChangePreOrderItemService;
-use App\Modules\Order\Application\Services\CreateOrderFromCopyService;
-use App\Modules\Order\Application\Services\CreateOrderByManagerService;
-use App\Modules\Order\Application\Services\StatusAwaitingOrderService;
-use App\Modules\Order\Application\Services\StatusCancelOrderService;
+use App\Modules\Order\Application\Services\CreatingServices\CreateOrderByManagerService;
+use App\Modules\Order\Application\Services\CreatingServices\CreateOrderFromCopyService;
+use App\Modules\Order\Application\Services\StatusServices\StatusAwaitingOrderService;
+use App\Modules\Order\Application\Services\StatusServices\StatusCancelOrderService;
+use App\Modules\Order\Application\Services\StatusServices\StatusCompletedOrderService;
+use App\Modules\Order\Application\Services\StatusServices\StatusReturnDraftOrderService;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\OrderReserveService;
-use App\Modules\Order\Service\OrderService;
-use App\Modules\Service\Report\InvoiceReport;
 use App\Modules\Shared\Domain\Entities\UserPermission;
-use App\Modules\User\Entity\User;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 use JetBrains\PhpStorm\Deprecated;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 /**
  * Общие операции с моделью Order. Все запросы POST или DELETE
@@ -61,9 +59,8 @@ class OrderController extends Controller
 {
 
     public function __construct(
-        private readonly OrderService               $service,
         private readonly OrderRepository            $repository,
-        private readonly InvoiceReport              $report,
+       // private readonly InvoiceReport              $report,
         private readonly OrganizationRepository     $organizations,
         private readonly OrderReserveService        $reserveService,
         private readonly ListStaffByPositionUseCase $positionUseCase,
@@ -86,6 +83,9 @@ class OrderController extends Controller
         private readonly StatusCancelOrderService    $statusCancelOrderService,
         private readonly IndexOrderUseCase $indexOrderUseCase,
         private readonly SetClientOrderUseCase $setClientOrderUseCase,
+        private readonly StatusReturnDraftOrderService $statusReturnDraftOrderService,
+        private readonly StatusCompletedOrderService $statusCompletedOrderService,
+        private readonly UpdateOrderUseCase $updateOrderUseCase,
     )
     {
     }
@@ -151,7 +151,7 @@ class OrderController extends Controller
         ]);
     }
 
-    //MAINDO !    Документы
+    /*
     public function invoice(Order $order): BinaryFileResponse|JsonResponse
     {
         try {
@@ -167,7 +167,7 @@ class OrderController extends Controller
             return response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
-
+*/
     public function copy(int $id, UserPermission $permission)
     {
         $orderEntity = $this->createOrderFromCopyService->execute(
@@ -205,32 +205,22 @@ class OrderController extends Controller
         $this->statusAwaitingOrderService->execute($id, $request->input('emails'), $permission);
         return redirect()->back()->with('success', 'Заказ ожидает оплаты');
     }
-
+    public function statusCompleted(int $id, Request $request, UserPermission $permission): RedirectResponse
+    {
+        $this->statusCompletedOrderService->execute($id, $request->input('emails'), $permission);
+        return redirect()->back()->with('success', 'Заказ ожидает оплаты');
+    }
     /**
      * Вернуть в работу
      */
-    //MAINDO !
-    public function work(Order $order): mixed
+    public function returnDraft(int $id, UserPermission $permission): mixed
     {
-        $this->service->work($order);
+        $this->statusReturnDraftOrderService->execute($id, $permission);
         return redirect()->back()->with('success', 'Заказ в работе');
     }
 
 
     /** РАБОТА С ЗАКАЗОМ */
-    #[Deprecated]
-    public function movement(Request $request, Order $order): RedirectResponse
-    {
-        $movement = $this->service->movement($order, (int)$request['storage_out'], (int)$request['storage_in']);
-        return redirect()->route('admin.accounting.movement.show', $movement);
-    }
-
-    #[Deprecated]
-    public function set_reserve(Request $request, Order $order): RedirectResponse
-    {
-        $this->service->setReserveService($order, $request);
-        return redirect()->back()->with('success', 'Время резерва установлено');
-    }
 
     ///////////////////////////////////////
     /// Возможно в общий UseCase      ////
@@ -250,25 +240,15 @@ class OrderController extends Controller
     public function setClient(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
         $this->setClientOrderUseCase->execute($id, $request->integer('clientId'), $permission);
-        //$this->service->setUser($order, $request);
         return redirect()->back()->with('success', 'Клиент назначен');
     }
 
-//MAINDO !
-    public function set_info(Request $request, Order $order): RedirectResponse
+    public function setInfo(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->service->setInfo($order, $request);
+        $dto = OrderUpdateData::validateAndCreate($request->all());
+        $this->updateOrderUseCase->execute($id, $dto, $permission);
         return redirect()->back()->with('success', 'Сохранено');
     }
-
-//MAINDO !
-    public function set_comment(Request $request, Order $order): RedirectResponse
-    {
-        $this->service->setComment($order, $request);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
-    ///                                ////
-    ///////////////////////////////////////
 
     public function setAssemblage(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
@@ -357,53 +337,4 @@ class OrderController extends Controller
         $this->removeOrderAdditionUseCase->execute($id, $addition, $permission);
         return redirect()->back()->with('success', 'Услуга удалена');
     }
-
-
-    /**  НОВЫЕ ACTIONS  **/
-    //AJAX
-
-    /**
-     * Смена текущей даты
-     */
-    //MAINDO !
-    public function set_created(Request $request, Order $order)
-    {
-        $new_date = $this->service->setCreated($order, $request->input('created_at'));
-        return response()->json($new_date);
-    }
-
- /*   public function expense_calculate(Request $request, Order $order)
-    {
-        $result = $this->service->expenseCalculate($order, $request['data']);
-        return response()->json($result);
-    }
-*/
-//MAINDO !
-    public function search_user(Request $request)
-    {
-        //TODO В Репозиторий
-
-        $data = preg_replace("/[^0-9]/", "", $request['data']);
-
-        /** @var Client $client */
-        $client = Client::where('phone', $data)->OrWhere('email', $data)->first();
-
-        if (empty($client)) {
-            return response()->json(false);
-        } else {
-            $result = [
-                'id' => $client->id,
-                'phone' => phone($client->phone),
-                'email' => $client->email,
-                'name' => $client->first_name,
-                'delivery' => '',
-                'storage' => '',
-                'local' => '',
-                'region' => '',
-                'payment' => '',
-            ];
-            return response()->json($result);
-        }
-    }
-
 }

@@ -17,19 +17,19 @@ Route::group(
         'as' => 'admin.order.',
     ],
     function () {
-        Route::post('/set-created/{order}', [OrderController::class, 'set_created'])->name('set-created');
+        //Route::post('/set-created/{order}', [OrderController::class, 'set_created'])->name('set-created');
         Route::post('/copy/{id}', [OrderController::class, 'copy'])->name('copy');
 
-        Route::post('/movement/{order}', [OrderController::class, 'movement'])->name('movement');
-        Route::post('/expense-calculate/{order}', [OrderController::class, 'expense_calculate'])->name('expense-calculate');
-        Route::post('/invoice/{order}', [OrderController::class, 'invoice'])->name('invoice');
+        //Route::post('/movement/{order}', [OrderController::class, 'movement'])->name('movement');
+        //Route::post('/expense-calculate/{order}', [OrderController::class, 'expense_calculate'])->name('expense-calculate');
+        //Route::post('/invoice/{order}', [OrderController::class, 'invoice'])->name('invoice');
         //Route::post('/send-invoice/{order}', [OrderController::class, 'send_invoice'])->name('send-invoice');
-        Route::post('/set-info/{order}', [OrderController::class, 'set_info'])->name('set-info');
+        Route::post('/set-info/{id}', [OrderController::class, 'setInfo'])->name('set-info');
         //Route::post('/resend-invoice/{order}', [OrderController::class, 'resend_invoice'])->name('resend-invoice');
 
         Route::post('/reserve-collect/{item}', [OrderController::class, 'reserve_collect'])->name('reserve-collect');
         //    Route::post('/set-info/{order}', 'OrderController@set_info')->name('set-info');
-        Route::post('/add-products/{order}', [OrderController::class, 'addProducts'])->name('add-products');
+        Route::post('/add-products/{id}', [OrderController::class, 'addProducts'])->name('add-products');
         Route::post('/add-product/{id}', [OrderController::class, 'addProduct'])->name('add-product');
         Route::post('/update-item/{id}', [OrderController::class, 'updateItem'])->name('update-item');
         Route::post('/change-item/{id}', [OrderController::class, 'changeItem'])->name('change-item');
@@ -48,14 +48,13 @@ Route::group(
 
 
         Route::post('/set-manager/{id}', [OrderController::class, 'setManager'])->name('set-manager');
-        Route::post('/set-reserve/{order}', [OrderController::class, 'set_reserve'])->name('set-reserve');
-        Route::post('/set-comment/{order}', [OrderController::class, 'set_comment'])->name('set-comment');
+        //Route::post('/set-reserve/{order}', [OrderController::class, 'set_reserve'])->name('set-reserve');
+       // Route::post('/set-comment/{order}', [OrderController::class, 'set_comment'])->name('set-comment');
 
         Route::post('/cancel/{id}', [OrderController::class, 'statusCancel'])->name('cancel');
         Route::post('/awaiting/{id}', [OrderController::class, 'statusAwaiting'])->name('awaiting');
-        Route::post('/work/{order}', [OrderController::class, 'work'])->name('work');
-
-        Route::post('/search-user', [OrderController::class, 'search_user'])->name('search-user');
+        Route::post('/completed/{id}', [OrderController::class, 'statusCompleted'])->name('completed');
+        Route::post('/work/{id}', [OrderController::class, 'returnDraft'])->name('work');
 
         Route::get('/log/{order}', [OrderController::class, 'log'])->name('log');
         Route::post('/take/{id}', [OrderController::class, 'take'])->name('take');

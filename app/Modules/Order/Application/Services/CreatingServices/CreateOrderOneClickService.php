@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Order\Application\Services;
+namespace App\Modules\Order\Application\Services\CreatingServices;
 
 use App\Modules\Accounting\Application\Actions\Trader\GetDefaultTraderIdUseCase;
 use App\Modules\Auth\Application\Services\FindOrCreateClientService;

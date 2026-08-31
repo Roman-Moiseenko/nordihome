@@ -144,7 +144,7 @@ use JetBrains\PhpStorm\Pure;
 class Product extends Model
 {
     use SoftDeletes, GalleryField;
-
+    protected $touches = ['categories', 'category', 'rooms'];
     const int FREQUENCY_MAJOR = 101;
     const int FREQUENCY_AVERAGE = 102;
     const int FREQUENCY_SMALL = 103;

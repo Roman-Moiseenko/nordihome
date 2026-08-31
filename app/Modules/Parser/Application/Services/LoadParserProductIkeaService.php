@@ -5,6 +5,7 @@ namespace App\Modules\Parser\Application\Services;
 use App\Modules\Parser\Application\Actions\CategoryProduct\AttachCategoriesToProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\FindAndAttachToProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\NewSellPriceParserProductUseCase;
+use App\Modules\Parser\Application\Actions\Product\SetDimensionsProductFromParserUseCase;
 use App\Modules\Parser\Application\Actions\Product\ToggleProductAvailabilityUseCase;
 use App\Modules\Parser\Application\Interfaces\IkeaProductApiInterface;
 use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
@@ -42,6 +43,8 @@ class LoadParserProductIkeaService
         private readonly NewSellPriceParserProductUseCase  $newSellPriceParserProductUseCase,
         private readonly IkeaProductDataMapper             $ikeaDataMapper,
         private readonly IkeaProductApiInterface           $ikeaProductApi,
+        private SetDimensionsProductFromParserUseCase $dimensionsProductFromParserUseCase,
+
     )
     {
         $this->userPermission = new UserPermission(
@@ -97,7 +100,6 @@ class LoadParserProductIkeaService
 
 
         $name = $this->translate->translate($product['name']);
-        //$short = $this->translate->translate($product['typeName'] . ' ' . $product['itemMeasureReferenceText']);
         //DTO из $product
         $dto = new ParserProductCreateData(
             name: $name,
@@ -142,7 +144,6 @@ class LoadParserProductIkeaService
             foreach ($dataPage['info']['paragraphs'] as $paragraph) {
                 $description .= '<p>' . $this->translate->translate($paragraph) . '</p>';
             }
-
 
             //Материалы
             $materials = [];
@@ -212,7 +213,11 @@ class LoadParserProductIkeaService
         $this->attachCategoriesToProductUseCase->execute($productEntity->id, $categories, $this->userPermission);
 
         //UseCase связать товары (UseCase сам ищет совпадение по $code)
-        $this->findAndAttachToProductUseCase->execute($productEntity->id, $productEntity->code);
+        $__product = $this->findAndAttachToProductUseCase->execute($productEntity->id, $productEntity->code);
+        //Если есть, заполняем габариты и упаковки
+        if (!is_null($__product)) {
+            $this->dimensionsProductFromParserUseCase->execute($__product->id, $productEntity->id);
+        }
 
         //Запус Job загрузки изображений
 

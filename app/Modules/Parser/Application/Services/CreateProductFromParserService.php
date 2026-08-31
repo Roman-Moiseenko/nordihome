@@ -15,12 +15,14 @@ use App\Modules\Catalog\Application\Services\AttachAttributeProductService;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Parser\Application\Actions\Product\AttachProductToParserUseCase;
+use App\Modules\Parser\Application\Actions\Product\SetDimensionsProductFromParserUseCase;
 use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
 use App\Modules\Setting\Repository\SettingRepository;
 use App\Modules\Shared\Application\DTOs\JobPhotoCopyData;
 use App\Modules\Shared\Application\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\PhotoType;
 use App\Modules\Shared\Infrastructure\Job\CopyPhotoByIdJob;
 
@@ -36,7 +38,7 @@ readonly class CreateProductFromParserService
         private AttachAttributeProductService    $attachAttributeProductService,
         private SetProductPriceUseCase           $setProductPriceUseCase,
         private AttachProductToParserUseCase $attachProductToParserUseCase,
-
+        private SetDimensionsProductFromParserUseCase $dimensionsProductFromParserUseCase,
         private PhotoRepositoryInterface $photoRepository,
         private SettingRepository $settingRepository,
     )
@@ -46,8 +48,7 @@ readonly class CreateProductFromParserService
 
     public function execute(int $id, UserPermission $userPermission): ProductEntity
     {
-        if (!$userPermission->can('catalog.product.create'))
-            throw new \DomainException('Отсутствует доступ');
+        if (!$userPermission->can('catalog.product.create')) throw new AccessDeniedException();
 
         $parserEntity = $this->parserProductRepository->getById($id);
 
@@ -74,9 +75,7 @@ readonly class CreateProductFromParserService
         if (!empty($parserEntity->materials)) $care .= '<h4>Уход</h4>' . $parserEntity->care;
         $productEntity->care = $care;
 
-        //Получаем габариты из Парсера
-        $dimensions = $this->getDimensions($parserEntity);
-
+        //Основные параметры
         $dtoUpdate = new ProductUpdateData(
             id: $productEntity->id,
             description: $parserEntity->description,
@@ -85,11 +84,11 @@ readonly class CreateProductFromParserService
             preOrder: true,
             delivery: true,
             local: true,
-            dimensions: $dimensions->toArray(),
         );
-
         $productEntity = $this->updateProductUseCase->execute($dtoUpdate, $userPermission);
 
+        //Обновить dimensions и package
+        $productEntity = $this->dimensionsProductFromParserUseCase->execute($productEntity->id, $parserEntity->id);
         //Атрибуты - цвет
         $this->attachAttributeProductService->SetColorAttribute($productEntity->id, $parserEntity->colors);
 

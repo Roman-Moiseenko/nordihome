@@ -73,6 +73,11 @@ final class OrderStatus
         return new self(OrderStatus::CANCELLED);
     }
 
+    public static function completed(): OrderStatus
+    {
+        return new self(OrderStatus::COMPLETED);
+    }
+
     public function getValue(): ?string
     {
         return $this->value;
