@@ -54,11 +54,11 @@ export const useCatalogStore = defineStore('catalog', () => {
     /**
      * Рекурсивно превращает дерево в плоский список для фильтров
      */
-    function flattenTree(tree: any[], depth: number = 0): { id: number, name: string }[] {
-        const result: { id: number, name: string }[] = []
+    function flattenTree(tree: any[], depth: number = 0): { id: number, name: string, published: boolean }[] {
+        const result: { id: number, name: string, published: boolean }[] = []
         for (const node of tree) {
             const prefix = depth > 0 ? '-'.repeat(depth) + ' ' : ''
-            result.push({id: node.id, name: prefix + node.name})
+            result.push({id: node.id, name: prefix + node.name, published: node.published})
             if (node.children && node.children.length > 0) {
                 result.push(...flattenTree(node.children, depth + 1))
             }

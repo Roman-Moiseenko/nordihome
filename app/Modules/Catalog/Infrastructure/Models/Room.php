@@ -7,6 +7,7 @@ namespace App\Modules\Catalog\Infrastructure\Models;
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -53,5 +54,10 @@ class Room extends Model
     public function parent()
     {
         return $this->belongsTo(self::class, 'parent_id', 'id');
+    }
+
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'rooms_products', 'room_id', 'product_id');
     }
 }

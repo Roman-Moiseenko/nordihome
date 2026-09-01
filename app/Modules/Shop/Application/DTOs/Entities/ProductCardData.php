@@ -30,6 +30,7 @@ readonly class ProductCardData
         public PromotionProductData $promotion = new PromotionProductData(),
         public bool                 $is_wish,
         public bool                 $in_cart,
+        public string $short,
     )
     {
     }
@@ -57,6 +58,7 @@ readonly class ProductCardData
             promotion: PromotionProductData::fromArray($item['promotion']),
             is_wish: $item['is_wish'],
             in_cart: $item['in_cart'],
+            short: $item['short'],
         );
     }
 }

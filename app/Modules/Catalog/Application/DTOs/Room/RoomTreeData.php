@@ -18,6 +18,7 @@ class RoomTreeData extends Data
         public readonly int $depth,
         /** @var RoomTreeData[] */
         public readonly array $children = [],
+        public readonly bool $published,
     )
     {
     }
@@ -36,6 +37,7 @@ class RoomTreeData extends Data
                 fn(RoomEntity $child) => self::fromEntity($child),
                 $entity->children
             ),
+            published: $entity->published,
         );
     }
 

@@ -73,7 +73,7 @@ class SeriesController extends Controller
     public function list(): JsonResponse
     {
         //MAINDO Список сейрий товаров
-        $list = [];
+        $list = []; // $this->listSeriesUseCase->execute();
         return response()->json($list);
     }
 }

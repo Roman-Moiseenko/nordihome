@@ -9,6 +9,7 @@ use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Discount\Application\Actions\Promotion\CreatePromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\IndexPromotionUseCase;
+use App\Modules\Discount\Application\Actions\Promotion\ListPromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\RemovePromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\StatusDraftPromotionUseCase;
 use App\Modules\Discount\Application\Actions\Promotion\StatusFinishedPromotionUseCase;
@@ -43,6 +44,7 @@ class PromotionController extends Controller
         private readonly ViewPromotionUseCase               $viewPromotionUseCase,
         private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
         private readonly RemovePromotionUseCase $removePromotionUseCase,
+        private readonly ListPromotionUseCase $listPromotionUseCase,
     )
     {
     }
@@ -116,8 +118,7 @@ class PromotionController extends Controller
 
     public function list(): JsonResponse
     {
-        //MAINDO Список дейстующих акций
-        $list = [];
+        $list = $this->listPromotionUseCase->execute();
         return response()->json($list);
     }
 

@@ -22,6 +22,7 @@ window.$ = jQuery;
         transitionStyle: "fade",
         touchDrag: true,
         mouseDrag: true,
+        dotsEach: 1,
 
     };
 
@@ -31,7 +32,6 @@ window.$ = jQuery;
         let slidersWidget= $('.widget-slider-common');
         slidersWidget.each(function (element) {
             let sliderWidget = $(this);
-            console.log("widget-slider-common")
             let mouseScroll = sliderWidget.data('mouse-scroll');
 
             let autoSpeed  = sliderWidget.data('auto-speed');
@@ -50,8 +50,6 @@ window.$ = jQuery;
             optionsSliderWidget.touchDrag = touchDrag;
             optionsSliderWidget.mouseDrag = mouseDrag;
 
-            console.log(mouseScroll);
-
             sliderWidget.owlCarousel(optionsSliderWidget);
             if (mouseScroll === 1) {
                 sliderWidget.on('mousewheel', '.owl-stage', function (e) {
@@ -63,6 +61,24 @@ window.$ = jQuery;
                     e.preventDefault();
                 });
             }
+        });
+    }
+
+
+    if (document.querySelectorAll('.widget-slider-products') !== null) {
+
+        let optionsSliderWidget = optionsSliderBase;
+        let slidersWidget= $('.widget-slider-products');
+        slidersWidget.each(function (element) {
+            let sliderWidget = $(this);
+            let items  = sliderWidget.data('items');
+            let dots  = sliderWidget.data('dots');
+            let nav  = sliderWidget.data('nav');
+            optionsSliderWidget.items = items;
+            optionsSliderWidget.dots = dots;
+            optionsSliderWidget.nav = nav;
+
+            sliderWidget.owlCarousel(optionsSliderWidget);
         });
     }
 

@@ -18,6 +18,7 @@ class CategoryTreeData extends Data
         public readonly int $depth,
         /** @var CategoryTreeData[] */
         public readonly array $children = [],
+        public readonly bool $published,
     )
     {
     }
@@ -36,6 +37,7 @@ class CategoryTreeData extends Data
                 fn(CategoryEntity $child) => self::fromEntity($child),
                 $entity->children
             ),
+            published: $entity->published,
         );
     }
 

@@ -14,8 +14,9 @@ use Illuminate\Support\Facades\DB;
 class ProductIndexQueryRepository
 {
     private const string PHOTO_MODEL_TYPE = 'catalog.product';
+
     public function __construct(
-        private readonly AttributeQueryRepository $attributeQueryRepository,
+        private readonly AttributeQueryRepository  $attributeQueryRepository,
         private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
 
     )
@@ -85,13 +86,13 @@ class ProductIndexQueryRepository
             });
             $isWishSelect = 'CASE WHEN wishes.id IS NOT NULL THEN 1 ELSE 0 END as is_wish';
 
-            $query->leftJoin('cart_storage', function($join) use ($client) {
+            $query->leftJoin('cart_storage', function ($join) use ($client) {
                 $join->on('products.id', '=', 'cart_storage.product_id')
                     ->where('cart_storage.client_id', '=', $client->id);
             });
             $inCartSelect = 'CASE WHEN cart_storage.id IS NOT NULL THEN 1 ELSE 0 END as in_cart';
         } elseif ($client->uuid !== null) {
-            $query->leftJoin('cart_cookie', function($join) use ($client) {
+            $query->leftJoin('cart_cookie', function ($join) use ($client) {
                 $join->on('products.id', '=', 'cart_cookie.product_id')
                     ->where('cart_cookie.user_ui', '=', $client->uuid);
             });
@@ -111,6 +112,7 @@ class ProductIndexQueryRepository
                 'products.only_on_order',
                 'products.pre_order',
                 'products.not_sale',
+                'products.short',
                 'brands.name as brand_name',
                 'product_prices.amount as price',
                 DB::raw("(SELECT id FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_id"),
@@ -219,12 +221,13 @@ class ProductIndexQueryRepository
                     ? [
                         'has' => true, 'price' => (float)$promo->price, 'name' => $promo->name,
                         'color' => $promo->color_class, 'position' => $promo->position_class, 'text' => $promo->text_tag,
-                        'show_tag' => $promo->show_tag, 'show_discount' => $promo->show_discount ]
+                        'show_tag' => $promo->show_tag, 'show_discount' => $promo->show_discount]
                     : ['has' => false, 'price' => 0.0, 'name' => '',
                         'color' => '', 'position' => '', 'text' => '',
                         'show_tag' => '', 'show_discount' => ''],
                 'is_wish' => (bool)$item->is_wish,
                 'in_cart' => (bool)$item->in_cart,
+                'short' => $item->short,
             ];
         }
         return $result;
@@ -270,16 +273,88 @@ class ProductIndexQueryRepository
         $result = [];
         foreach ($rows as $row) {
             $result[] = [
-                'id' => (int) $row->id,
+                'id' => (int)$row->id,
                 'name' => $row->name,
                 'url' => route('shop.product.view', $row->slug),
                 'code' => $row->code,
                 'image' => $this->imageThumbUseCase->execute($row, 'catalog'),
-                'price' => $row->price !== null ? (float) $row->price : null,
+                'price' => $row->price !== null ? (float)$row->price : null,
             ];
         }
 
         return $result;
+    }
+
+    /**
+     * Загрузка простых карточек товаров для виджета «Группа товаров».
+     * Формат совпадает с enrichProductValue() из GetWidgetInstanceFormUseCase:
+     * id, name, url, short, price, image_src, image_alt, image_next_src, image_next_alt.
+     *
+     * @param int[] $ids
+     * @return array<int, array<string, mixed>>
+     */
+    public function loadSimpleProductCards(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        $orderedIds = implode(',', array_map('intval', $ids));
+
+        $rows = DB::table('products')
+            ->whereIn('products.id', $ids)
+            ->orderByRaw("FIELD(products.id, $orderedIds)")
+            ->leftJoin('product_prices', function ($join) {
+                $join->on('products.id', '=', 'product_prices.product_id')
+                    ->where('product_prices.type', '=', PriceType::RETAIL)
+                    ->whereRaw('product_prices.id = (
+                        SELECT MAX(pp2.id) FROM product_prices pp2
+                        WHERE pp2.product_id = products.id AND pp2.type = \'' . PriceType::RETAIL . '\'
+                    )');
+            })
+            ->select(
+                'products.id',
+                'products.name',
+                'products.slug',
+                'products.short',
+                'product_prices.amount as price',
+                DB::raw("(SELECT id FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_id"),
+                DB::raw("(SELECT file FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_file"),
+                DB::raw("(SELECT alt FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 0 LIMIT 1) as photo1_alt"),
+                DB::raw("(SELECT id FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_id"),
+                DB::raw("(SELECT file FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_file"),
+                DB::raw("(SELECT alt FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' AND type = 'gallery' AND sort = 1 LIMIT 1) as photo2_alt"),
+                DB::raw("(SELECT model_type FROM photos WHERE imageable_id = products.id AND model_type = '" . self::PHOTO_MODEL_TYPE . "' LIMIT 1) as model_type"),
+            )
+            ->get();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $result[] = [
+                'id' => (int)$row->id,
+                'name' => $row->name,
+                'url' => route('shop.product.view', $row->slug),
+                'short' => $row->short,
+                'price' => $row->price !== null ? (float)$row->price : null,
+                'image_src' => $this->thumbUrl($row, 1),
+                'image_alt' => $row->photo1_alt ?? null,
+                'image_next_src' => !empty($row->photo2_file) ? $this->thumbUrl($row, 2) : $this->thumbUrl($row, 1),
+                'image_next_alt' => !empty($row->photo2_file) ? ($row->photo2_alt ?? null) : ($row->photo1_alt ?? null),
+            ];
+        }
+
+        return $result;
+    }
+
+    private function thumbUrl(\stdClass $row, int $suffix): string
+    {
+        $photoRow = new \stdClass();
+        $photoRow->photo_id = $row->{"photo{$suffix}_id"} ?? null;
+        $photoRow->photo_file = $row->{"photo{$suffix}_file"} ?? '';
+        $photoRow->model_type = $row->model_type ?? null;
+        $photoRow->id = (int)$row->id;
+
+        return $this->imageThumbUseCase->execute($photoRow, 'catalog');
     }
 
     private function buildImageDataFromRow(\stdClass $row, string $suffix = '1'): array
@@ -291,10 +366,10 @@ class ProductIndexQueryRepository
         $description = $row->{"photo{$suffix}_description"} ?? '';
 
         $photoRow = new \stdClass();
-        $photoRow->photo_id      = $id;
-        $photoRow->photo_file    = $file;
-        $photoRow->model_type    = $row->model_type;
-        $photoRow->id  = (int) $row->id;
+        $photoRow->photo_id = $id;
+        $photoRow->photo_file = $file;
+        $photoRow->model_type = $row->model_type;
+        $photoRow->id = (int)$row->id;
 
         $src = $this->imageThumbUseCase->execute($photoRow, 'catalog');
 

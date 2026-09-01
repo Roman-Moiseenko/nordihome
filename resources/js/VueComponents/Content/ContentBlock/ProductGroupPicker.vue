@@ -72,7 +72,7 @@
                     :class="{ selected: selectedEntityId === item.id }"
                     @click="selectEntity(item)"
                 >
-                    <div class="result-item-name">{{ item.name }}</div>
+                    <div class="result-item-name"><el-tag v-if="item.published == false" type="danger" round effect="dark">-</el-tag> {{ item.name }}</div>
                     <div class="result-item-check">
                         <el-icon v-if="selectedEntityId === item.id" color="#409eff" :size="20">
                             <Check />
@@ -113,7 +113,8 @@ export interface ProductGroupData {
 
 interface EntityItem {
     id: number
-    name: string
+    name: string,
+    published: boolean,
 }
 
 const props = defineProps<{
@@ -166,7 +167,7 @@ const typeLabel = computed(() => {
  */
 function sourceFor(type: string): EntityItem[] {
     const normalize = (list: any[]): EntityItem[] =>
-        (list || []).map((item) => ({ id: item.id, name: item.name }))
+        (list || []).map((item) => ({ id: item.id, name: item.name, published: item.published }))
 
     switch (type) {
         case 'room':
