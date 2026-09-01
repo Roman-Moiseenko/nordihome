@@ -22,7 +22,7 @@
                href="{{ route('shop.ikea.product', $product->code) }}"
                title="{{ $product->name }}">{{ $product->name }}</a>
         </div>
-        <div>
+        <div class="f-z_16 t-color_dark-gray m-b_5">
             <span>Артикул: <span>{{ $product->code }}</span></span>
         </div>
         <div>

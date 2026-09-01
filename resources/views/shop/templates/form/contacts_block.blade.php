@@ -21,7 +21,11 @@ use App\Modules\Content\Entity\Widgets\FormWidget;
 @endphp
 
 <div class="heading f-w_600 f-z_23 m-b_20">ФОРМА ОБРАТНОЙ СВЯЗИ</div>
-<div>По вопросам сотрудничества: <a href="mailto:partnership@nordihome.ru">partnership@nordihome.ru</a></div>
+<div>По вопросам сотрудничества:
+    @if(isset($contacts['mail_1']))
+        <a href="{{ $contacts['mail_1']->url }}">{{ $contacts['mail_1']->name }}</a>
+    @endif
+</div>
 <div>
     <div id="{{ $widget->id }}" class="feedback" not-hide>
         <div class="m-b_10 m-t_10">

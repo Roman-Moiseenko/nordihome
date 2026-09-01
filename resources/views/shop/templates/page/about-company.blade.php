@@ -29,4 +29,6 @@
             {!! $page->text !!}
         </div>
     </div>
+    @include('shop.widgets.contact')
+    @include('shop.widgets.map')
 @endsection
