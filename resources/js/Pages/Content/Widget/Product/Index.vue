@@ -148,6 +148,7 @@ const form = reactive({
 })
 
 
+
 const selectedModelKey = computed(() =>
     Object.keys(contentStore.types ?? {}).find(key => contentStore.types[key] === form.modelable) ?? null
 )
@@ -181,6 +182,7 @@ function createWidget() {
 }
 
 function editWidget(row) {
+    console.log(row)
     form.id = row.id
     form.name = row.name
     form.template = row.template

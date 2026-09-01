@@ -22,7 +22,16 @@ class ProductWidgetRepository
         $modelable = $widget->modelable;
         $modelableKey = array_search($widget->modelable_type, ProductWidget::MODELS, true);
 
-        return array_merge($widget->toArray(), [
+        return array_merge([
+            'id' => $widget->id,
+            'name' => $widget->name,
+            'template' => $widget->template,
+            'caption' => $widget->caption,
+            'description' => $widget->description,
+            'button_name' => $widget->button_name,
+            'url' => $widget->url,
+            'active' => $widget->active,
+
             'image' => $widget->getImage(),
             'icon' => $widget->getIcon(),
             'modelable_name' => $modelable?->name,
