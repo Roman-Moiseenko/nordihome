@@ -196,7 +196,7 @@ function openDialog() {
         catalogStore.reload()
     }
 
-    selectedType.value = props.modelValue?.entity_type || Object.keys(types.value)[0] || 'category'
+    selectedType.value = props.modelValue?.entity_type || Object.keys(contentStore.types)[0] || 'category'
     selectedEntityId.value = props.modelValue?.entity_id ?? null
     searchQuery.value = ''
     dialogVisible.value = true
