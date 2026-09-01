@@ -39,8 +39,9 @@ class ProductData
         public bool                 $isDelivery,
         public string               $short,
         public string               $care, //Уход
-        public int                  $quantity = 1,
         public bool                 $only_on_order,
+        public int                  $quantity = 1,
+
 
     )
     {
