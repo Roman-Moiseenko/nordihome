@@ -40,6 +40,7 @@ class ProductData
         public string               $short,
         public string               $care, //Уход
         public int                  $quantity = 1,
+        public bool                 $only_on_order,
 
     )
     {

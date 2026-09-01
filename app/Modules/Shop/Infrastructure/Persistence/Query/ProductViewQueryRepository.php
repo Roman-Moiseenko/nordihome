@@ -91,6 +91,7 @@ class ProductViewQueryRepository
                 'products.dimensions',
                 'products.packages',
                 'products.brand_id',
+                'products.only_on_order',
                 // Category
                 'categories.name as category_name',
                 // Brand
@@ -234,6 +235,7 @@ class ProductViewQueryRepository
             isDelivery: (bool)$row->delivery, //TODO Кол-во товаров на складах
             short: $row->short,
             care: $row->care,
+            only_on_order: $row->only_on_order,
         );
     }
 
