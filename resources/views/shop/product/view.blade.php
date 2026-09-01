@@ -29,6 +29,12 @@
                         <img id="main-image-product" src="{{ $product->images[0]->src }}"
                              style="width: 100%; cursor: pointer" data-index="0">
 
+                        @if($product->only_on_order)
+                            <div class="product-label on-order">
+                                <span>Только под заказ</span>
+                            </div>
+                        @endif
+
                         @if($product->is_new)
                             <div class="product-label new"><span>NEW</span></div>
                         @elseif($product->promotion->has && $product->promotion->showTag)

@@ -15,6 +15,12 @@
                      src="{{ $product->image_next->src }}"
                      alt="{{ $product->image_next->alt }}">
 
+                @if($product->only_on_order)
+                    <div class="product-label on-order">
+                        <span>Только под заказ</span>
+                    </div>
+                @endif
+
                 @if($product->is_new)
                     <div class="product-label new"><span>NEW</span></div>
                 @elseif($product->promotion->has && $product->promotion->showTag)
