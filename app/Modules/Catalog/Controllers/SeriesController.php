@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Catalog\Application\Actions\Series\ListSeriesUseCase;
 use App\Modules\Catalog\Entity\Series;
 use App\Modules\Catalog\Repository\SeriesRepository;
 use App\Modules\Catalog\Service\SeriesService;
@@ -18,7 +19,9 @@ class SeriesController extends Controller
     private SeriesService $service;
     private SeriesRepository $repository;
 
-    public function __construct(SeriesService $service, SeriesRepository $repository)
+    public function __construct(SeriesService $service, SeriesRepository $repository,
+    private readonly ListSeriesUseCase $listSeriesUseCase,
+    )
     {
         $this->service = $service;
         $this->repository = $repository;
@@ -72,8 +75,7 @@ class SeriesController extends Controller
 
     public function list(): JsonResponse
     {
-        //MAINDO Список сейрий товаров
-        $list = []; // $this->listSeriesUseCase->execute();
+        $list = $this->listSeriesUseCase->execute();
         return response()->json($list);
     }
 }
