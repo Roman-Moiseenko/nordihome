@@ -189,6 +189,21 @@
                                 @update:model-value="(val) => onProductFieldChange(field.name, val)"
                             />
                         </div>
+                        <div v-else-if="field.format === 'product_group'" class="product-group-field w-full">
+                            <ProductGroupPicker
+                                :model-value="formModel[field.name] || null"
+                                @update:model-value="(val) => onProductGroupFieldChange(field.name, val)"
+                            />
+                            <el-form-item label="Максимум товаров">
+                                <el-input-number
+                                    :model-value="formModel[field.name]?.limit ?? 0"
+                                    @update:model-value="(val) => onProductGroupLimitChange(field.name, val)"
+                                    :min="0"
+                                    :disabled="disabled"
+                                    placeholder="Максимум товаров"
+                                />
+                            </el-form-item>
+                        </div>
                         <div v-else class="composite-field-wrapper border rounded-lg bg-white shadow-sm w-full">
                             <!-- Шапка объекта -->
                             <div
@@ -301,6 +316,7 @@ import { ref, reactive, watch, computed } from 'vue'
 import type { WidgetFormFieldData } from '@Res/composables/useContentBlock'
 import ImagePicker from './ImagePicker.vue'
 import ProductPicker from './ProductPicker.vue'
+import ProductGroupPicker from './ProductGroupPicker.vue'
 import HtmlEditor from './HtmlEditor.vue'
 
 const props = defineProps<{
@@ -358,6 +374,10 @@ watch(() => props.fields, (fields) => {
             formModel[field.name] = field.value && typeof field.value === 'object' && !Array.isArray(field.value)
                 ? { ...field.value }
                 : {}
+            // Для product_group гарантируем наличие limit (максимум товаров)
+            if (field.format === 'product_group' && formModel[field.name].limit === undefined) {
+                formModel[field.name].limit = 0
+            }
         } else if (field.type === 'array' && field.nestedFields) {
             formModel[field.name] = Array.isArray(field.value) ? [...field.value] : []
             // Инициализируем коллапсы для каждого элемента массива (кроме image/product)
@@ -384,7 +404,7 @@ watch(() => props.fields, (fields) => {
         }
 
         // Инициализируем сворачивание для объектов и виджетов
-        if ((field.type === 'object' && field.nestedFields && field.format !== 'image' && field.format !== 'product') || field.format === 'widget') {
+        if ((field.type === 'object' && field.nestedFields && field.format !== 'image' && field.format !== 'product' && field.format !== 'product_group') || field.format === 'widget') {
             if (!(field.name in collapsedComposites)) {
                 collapsedComposites[field.name] = true
             }
@@ -594,6 +614,21 @@ function onArrayProductFieldChange(parentName: string, itemIndex: number, value:
     } else {
         formModel[parentName][itemIndex] = { ...value }
     }
+}
+
+function onProductGroupFieldChange(parentName: string, value: any) {
+    if (value === null) {
+        delete formModel[parentName]
+    } else {
+        formModel[parentName] = { ...value }
+    }
+}
+
+function onProductGroupLimitChange(parentName: string, value: number | null) {
+    if (!formModel[parentName] || typeof formModel[parentName] !== 'object') {
+        formModel[parentName] = { entity_type: null, entity_id: null, title: null }
+    }
+    formModel[parentName].limit = value ?? 0
 }
 
 /**

@@ -280,6 +280,7 @@ function addProperty() {
       propConfig.properties = {
         entity_type: { type: 'string', title: 'Тип сущности' },
         entity_id: { type: 'integer', title: 'ID сущности' },
+        title: { type: 'string', title: 'Заголовок' },
         limit: { type: 'integer', title: 'Максимум товаров', minimum: 0 },
       }
       break
