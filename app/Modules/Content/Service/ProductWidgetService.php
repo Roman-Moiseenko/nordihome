@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Service;
 
+use App\Modules\Content\Domain\ValueObjects\ProductGroupType;
 use App\Modules\Content\Entity\Widgets\ProductWidget;
 use App\Modules\Content\Entity\Widgets\ProductWidgetItem;
 use Illuminate\Http\Request;
@@ -18,7 +19,7 @@ class ProductWidgetService extends WidgetService
         );
 
         $widget->modelable_id = $request->integer('modelable_id');
-        $widget->modelable_type = $request->string('modelable_type')->trim()->value();
+        $widget->modelable_type = ProductGroupType::modelClass($request->string('modelable')->trim()->value());
         $widget->caption = $request->string('caption')->trim()->value();
         $widget->description = $request->string('description')->trim()->value();
         $widget->button_name = $request->string('button_name')->trim()->value();
@@ -33,7 +34,7 @@ class ProductWidgetService extends WidgetService
         $this->setBase($widget, $request);
 
         $widget->modelable_id = $request->integer('modelable_id');
-        $widget->modelable_type = $request->string('modelable_type')->trim()->value();
+        $widget->modelable_type = ProductGroupType::modelClass($request->string('modelable')->trim()->value());
         $widget->button_name = $request->string('button_name')->trim()->value();
         $widget->url = $request->string('url')->trim()->value();
 

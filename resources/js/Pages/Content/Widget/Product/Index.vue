@@ -67,7 +67,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Тип модели" label-position="top" class="mt-3">
-                    <el-radio-group v-model="form.modelable_type" @change="onModelTypeChange">
+                    <el-radio-group v-model="form.modelable" @change="onModelTypeChange">
                         <el-radio v-for="item in modelOptions" :key="item.value" :value="item.value">
                             {{ item.label }}
                         </el-radio>
@@ -119,6 +119,7 @@ import {computed, defineProps, inject, reactive, ref} from "vue";
 import {route} from "ziggy-js";
 import axios from "axios";
 import {useCatalogStore} from "@Res/catalogStore";
+import {useContentStore} from "@Res/contentStore";
 
 const props = defineProps({
     widgets: Array,
@@ -126,10 +127,11 @@ const props = defineProps({
         type: String,
         default: 'Сайт. Виджеты товаров',
     },
-    models: Object,
+ //   models: Object,
     templates: Array,
 })
 const catalogStore = useCatalogStore()
+const contentStore = useContentStore()
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.widgets])
@@ -138,7 +140,7 @@ const form = reactive({
     name: null,
     template: null,
     modelable_id: null,
-    modelable_type: null,
+    modelable: null,
     caption: null,
     description: null,
     button_name: null,
@@ -149,7 +151,7 @@ const modelOptions = computed(() =>
     Object.entries(props.models ?? {}).map(([key, value]) => ({label: key, value}))
 )
 const selectedModelKey = computed(() =>
-    Object.keys(props.models ?? {}).find(key => props.models[key] === form.modelable_type) ?? null
+    Object.keys(props.models ?? {}).find(key => props.models[key] === form.modelable) ?? null
 )
 const modelSelectOptions = computed(() => {
     switch (selectedModelKey.value) {

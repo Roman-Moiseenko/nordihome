@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Repository;
 
+use App\Modules\Content\Domain\ValueObjects\ProductGroupType;
 use App\Modules\Content\Entity\Widgets\ProductWidget;
 use App\Modules\Content\Entity\Widgets\ProductWidgetItem;
 use App\Modules\Catalog\Entity\Group;
@@ -26,6 +27,7 @@ class ProductWidgetRepository
             'icon' => $widget->getIcon(),
             'modelable_name' => $modelable?->name,
             'modelable_key' => $modelableKey !== false ? $modelableKey : null,
+            'modelable' => ProductGroupType::modelKey($widget->modelable_type),
         ]);
     }
 

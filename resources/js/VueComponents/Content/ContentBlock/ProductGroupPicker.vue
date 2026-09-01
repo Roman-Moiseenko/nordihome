@@ -36,12 +36,12 @@
         :close-on-click-modal="false"
         class="product-group-picker-dialog"
     >
-        <div v-loading="typesLoading" class="group-search-layout">
+        <div v-loading="!contentStore.loaded" class="group-search-layout">
             <!-- Радиокнопки типов сущностей (с бэкенда) -->
             <div class="type-selector">
                 <el-radio-group v-model="selectedType" size="small" @change="onTypeChange">
                     <el-radio-button
-                        v-for="(label, type) in types"
+                        v-for="(label, type) in contentStore.types"
                         :key="type"
                         :value="type"
                     >
@@ -103,6 +103,7 @@ import axios from 'axios'
 // @ts-ignore
 import { route } from 'ziggy-js'
 import { useCatalogStore } from '@Res/catalogStore'
+import {useContentStore} from "@Res/contentStore";
 
 export interface ProductGroupData {
     entity_type: string | null
@@ -126,11 +127,11 @@ const emit = defineEmits<{
 }>()
 
 const catalogStore = useCatalogStore()
+const contentStore = useContentStore()
 
 // --- Типы сущностей (с бэкенда: admin.content.widget.product-group-types) ---
-const types = ref<Record<string, string>>({})
-const typesLoading = ref(false)
 
+/*
 async function loadTypes() {
     if (Object.keys(types.value).length > 0) return
     typesLoading.value = true
@@ -143,7 +144,7 @@ async function loadTypes() {
         typesLoading.value = false
     }
 }
-
+*/
 // --- Состояние диалога ---
 const dialogVisible = ref(false)
 const selectedType = ref('category')
@@ -158,7 +159,7 @@ const groupData = computed<ProductGroupData | null>(() => {
 const typeLabel = computed(() => {
     const type = groupData.value?.entity_type
     if (!type) return ''
-    return types.value[type] ?? type
+    return contentStore.types[type] ?? type
 })
 
 /**
@@ -206,7 +207,7 @@ function selectEntity(item: EntityItem) {
 }
 
 function openDialog() {
-    loadTypes()
+  //  loadTypes()
     if (!catalogStore.loaded) {
         catalogStore.reload()
     }

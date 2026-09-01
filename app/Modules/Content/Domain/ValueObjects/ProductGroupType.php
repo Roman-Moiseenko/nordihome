@@ -106,6 +106,8 @@ final class ProductGroupType
         );
     }
 
+
+
     /**
      * @return class-string|null
      */
@@ -115,6 +117,20 @@ final class ProductGroupType
 
         return self::TYPES[$normalized]['model'] ?? null;
     }
+
+    /**
+     * @return string|null Код типа (например 'category') по классу модели.
+     */
+    public static function modelKey(string $modelClass): ?string
+    {
+        $key = array_search($modelClass, self::models(), true);
+
+        return $key !== false ? $key : null;
+    }
+
+    /**
+     * @return array<string, class-string> Карта [код => класс модели].
+     */
 
     public static function models(): array
     {

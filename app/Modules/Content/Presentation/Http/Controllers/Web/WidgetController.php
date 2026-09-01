@@ -106,6 +106,14 @@ class WidgetController extends Controller
         return response()->json(ProductGroupType::labels());
     }
 
+    /**
+     * Карта [код => класс модели] для типов сущностей «Группы товаров».
+     */
+    public function productGroupModels(): JsonResponse
+    {
+        return response()->json(ProductGroupType::models());
+    }
+
     public function widgets(UserPermission $userPermission): JsonResponse
     {
         $grouped = $this->listWidgetsGroupedUseCase->execute($userPermission);
