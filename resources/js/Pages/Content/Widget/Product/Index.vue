@@ -149,11 +149,11 @@ const form = reactive({
 
 
 
-const selectedModelKey = computed(() =>
-    Object.keys(contentStore.types ?? {}).find(key => contentStore.types[key] === form.modelable) ?? null
-)
+const selectedModelKey = computed(() => {
+    const type = form.modelable
+    return type && Object.prototype.hasOwnProperty.call(contentStore.types ?? {}, type) ? type : null
+})
 const modelSelectOptions = computed(() => {
-    console.log(selectedModelKey.value)
     switch (selectedModelKey.value) {
         case 'category': return catalogStore.categories
         case 'room': return catalogStore.rooms
