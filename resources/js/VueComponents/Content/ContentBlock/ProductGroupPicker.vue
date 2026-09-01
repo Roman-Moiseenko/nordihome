@@ -129,22 +129,6 @@ const emit = defineEmits<{
 const catalogStore = useCatalogStore()
 const contentStore = useContentStore()
 
-// --- Типы сущностей (с бэкенда: admin.content.widget.product-group-types) ---
-
-/*
-async function loadTypes() {
-    if (Object.keys(types.value).length > 0) return
-    typesLoading.value = true
-    try {
-        const res = await axios.get(route('admin.content.widget.product-group-types'))
-        types.value = res.data ?? {}
-    } catch (e) {
-        console.error('Ошибка загрузки типов групп товаров:', e)
-    } finally {
-        typesLoading.value = false
-    }
-}
-*/
 // --- Состояние диалога ---
 const dialogVisible = ref(false)
 const selectedType = ref('category')

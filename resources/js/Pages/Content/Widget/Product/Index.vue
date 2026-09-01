@@ -68,8 +68,8 @@
                 </el-form-item>
                 <el-form-item label="Тип модели" label-position="top" class="mt-3">
                     <el-radio-group v-model="form.modelable" @change="onModelTypeChange">
-                        <el-radio v-for="item in modelOptions" :key="item.value" :value="item.value">
-                            {{ item.label }}
+                        <el-radio v-for="(item, index) in contentStore.types" :key="index" :value="index">
+                            {{ item }}
                         </el-radio>
                     </el-radio-group>
                 </el-form-item>
@@ -147,13 +147,12 @@ const form = reactive({
     url: null,
 })
 
-const modelOptions = computed(() =>
-    Object.entries(props.models ?? {}).map(([key, value]) => ({label: key, value}))
-)
+
 const selectedModelKey = computed(() =>
-    Object.keys(props.models ?? {}).find(key => props.models[key] === form.modelable) ?? null
+    Object.keys(contentStore.types ?? {}).find(key => contentStore.types[key] === form.modelable) ?? null
 )
 const modelSelectOptions = computed(() => {
+    console.log(selectedModelKey.value)
     switch (selectedModelKey.value) {
         case 'category': return catalogStore.categories
         case 'room': return catalogStore.rooms
@@ -169,7 +168,7 @@ function resetForm() {
     form.name = null
     form.template = null
     form.modelable_id = null
-    form.modelable_type = null
+    form.modelable = null
     form.caption = null
     form.description = null
     form.button_name = null
@@ -186,7 +185,7 @@ function editWidget(row) {
     form.name = row.name
     form.template = row.template
     form.modelable_id = row.modelable_id
-    form.modelable_type = row.modelable_type
+    form.modelable = row.modelable
     form.caption = row.caption
     form.description = row.description
     form.button_name = row.button_name
