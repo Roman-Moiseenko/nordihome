@@ -7,7 +7,7 @@
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-input v-model="filter.product" placeholder="Товар" class="mt-1"/>
                 <el-select filterable v-model="filter.room" placeholder="Категория" class="mt-1">
-                    <el-option v-for="item in useCatalog.categoriesForFilters" :key="item.id" :label="item.name"
+                    <el-option v-for="item in useCatalog.categories" :key="item.id" :label="item.name"
                                :value="item.id"/>
                 </el-select>
 

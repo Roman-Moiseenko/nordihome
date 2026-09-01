@@ -23,6 +23,7 @@ use App\Modules\Discount\Application\DTOs\Promotion\PromotionViewData;
 use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -111,6 +112,13 @@ class PromotionController extends Controller
     {
         $this->startedPromotionUseCase->execute($id, $permission);
         return redirect()->back()->with('success', 'Акция запущена в ручную');
+    }
+
+    public function list(): JsonResponse
+    {
+        //MAINDO Список дейстующих акций
+        $list = [];
+        return response()->json($list);
     }
 
 }

@@ -105,7 +105,7 @@
                         <el-tree
                             class="!bg-green-50"
                             style="max-width: 600px"
-                            :data="useCatalog.categories"
+                            :data="useCatalog.categoriesTree"
                             show-checkbox
                             node-key="id"
                             :props="defaultProps"
@@ -117,7 +117,7 @@
                         <el-tree
                             class="!bg-red-50"
                             style="max-width: 600px"
-                            :data="useCatalog.categories"
+                            :data="useCatalog.categoriesTree"
                             show-checkbox
                             node-key="id"
                             :props="defaultProps"

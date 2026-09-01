@@ -12,7 +12,7 @@
             <el-form label-width="auto">
                 <el-form-item label="Родительская комната">
                     <el-select v-model="info.parentId">
-                        <template v-for="item in useCatalog.roomsForFilters" :key="item.id">
+                        <template v-for="item in useCatalog.rooms" :key="item.id">
                             <el-option v-if="item.id !== room.id" :value="item.id" :label="item.name"/>
                         </template>
                     </el-select>

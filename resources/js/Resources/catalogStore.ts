@@ -7,24 +7,30 @@ import {route} from "ziggy-js";
 export const useCatalogStore = defineStore('catalog', () => {
 
     const loaded = ref(false)
-    const rooms = ref<any[]>([])
-    const categories = ref<any[]>([])
+    const roomsTree = ref<any[]>([])
+    const categoriesTree = ref<any[]>([])
     const brands = ref<any[]>([])
     const groups = ref<any[]>([])
+    const promotions = ref<any[]>([])
+    const series = ref<any[]>([])
 
     async function fetchData() {
         const [
-            roomsRes, categoriesRes, brandsRes, groupsRes
+            roomsRes, categoriesRes, brandsRes, groupsRes, promotionsRes, seriesRes,
         ] = await Promise.all([
             axios.get(route('admin.catalog.room.tree')),
             axios.get(route('admin.catalog.category.tree')),
             axios.get(route('admin.catalog.brand.list')),
             axios.get(route('admin.catalog.group.list')),
+            axios.get(route('admin.discount.promotion.list')),
+            axios.get(route('admin.catalog.series.list')),
         ])
-        rooms.value = roomsRes.data
-        categories.value = categoriesRes.data
+        roomsTree.value = roomsRes.data
+        categoriesTree.value = categoriesRes.data
         brands.value = brandsRes.data
         groups.value = groupsRes.data
+        promotions.value = promotionsRes.data
+        series.value = seriesRes.data
     }
 
     ;(async () => {
@@ -60,17 +66,19 @@ export const useCatalogStore = defineStore('catalog', () => {
         return result
     }
 
-    const categoriesForFilters = computed(() => flattenTree(categories.value))
-    const roomsForFilters = computed(() => flattenTree(rooms.value))
+    const categories = computed(() => flattenTree(categoriesTree.value))
+    const rooms = computed(() => flattenTree(roomsTree.value))
 
     return {
         loaded,
         reload,
-        rooms,
+        roomsTree,
         brands,
         groups,
+        categoriesTree,
+        series,
+        promotions,
         categories,
-        categoriesForFilters,
-        roomsForFilters,
+        rooms,
     }
 })

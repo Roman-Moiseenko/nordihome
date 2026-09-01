@@ -16,6 +16,7 @@ use App\Modules\Content\Application\DTOs\Widget\WidgetCreateData;
 use App\Modules\Content\Application\DTOs\Widget\WidgetIndexData;
 use App\Modules\Content\Application\DTOs\Widget\WidgetUpdateData;
 use App\Modules\Content\Application\DTOs\Widget\WidgetViewData;
+use App\Modules\Content\Domain\ValueObjects\ProductGroupType;
 use App\Modules\Content\Domain\ValueObjects\WidgetCategory;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
@@ -97,11 +98,20 @@ class WidgetController extends Controller
         return response()->json(WidgetCategory::CATEGORIES);
     }
 
+    /**
+     * Список типов сущностей для поля «Группа товаров» в виде [код => название].
+     */
+    public function productGroupTypes(): JsonResponse
+    {
+        return response()->json(ProductGroupType::labels());
+    }
+
     public function widgets(UserPermission $userPermission): JsonResponse
     {
         $grouped = $this->listWidgetsGroupedUseCase->execute($userPermission);
         return response()->json($grouped);
     }
+
 
 
 

@@ -13,7 +13,7 @@
             <el-form label-width="auto">
                 <el-form-item label="Родительская категория">
                     <el-select v-model="info.parentId" >
-                        <template v-for="item in useCatalog.categoriesForFilters" :key="item.id">
+                        <template v-for="item in useCatalog.categories" :key="item.id">
                             <el-option  v-if="item.id !== category.id" :value="item.id" :label="item.name" />
                         </template>
                     </el-select>

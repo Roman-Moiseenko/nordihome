@@ -66,6 +66,7 @@
             <el-option label="Текст HTML (string + html)" value="html" />
             <el-option label="Изображение (image)" value="image" />
             <el-option label="Товар (product)" value="product" />
+            <el-option label="Группа товаров (product_group)" value="product_group" />
             <el-option label="Ссылка (string + uri)" value="uri" />
             <el-option label="Число целое (integer)" value="integer" />
             <el-option label="ID виджета (integer + widget)" value="widget" />
@@ -271,6 +272,15 @@ function addProperty() {
         image_alt: { type: 'string', title: 'Alt изображения' },
         image_next_src: { type: 'string', title: 'URL второго изображения' },
         image_next_alt: { type: 'string', title: 'Alt второго изображения' },
+      }
+      break
+    case 'product_group':
+      propConfig.type = 'object'
+      propConfig.format = 'product_group'
+      propConfig.properties = {
+        entity_type: { type: 'string', title: 'Тип сущности' },
+        entity_id: { type: 'integer', title: 'ID сущности' },
+        limit: { type: 'integer', title: 'Максимум товаров', minimum: 0 },
       }
       break
     case 'uri':

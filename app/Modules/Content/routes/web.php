@@ -300,6 +300,7 @@ Route::group(
             // API маршруты (должны быть до {id})
             Route::get('/categories', [WidgetController::class, 'categories'])->name('categories');
             Route::get('/widgets', [WidgetController::class, 'widgets'])->name('widgets');
+            Route::get('/product-group-types', [WidgetController::class, 'productGroupTypes'])->name('product-group-types');
             Route::get('/{id}/template', [WidgetController::class, 'template'])->name('template');
             Route::post('/{id}/template', [WidgetController::class, 'saveTemplate'])->name('save-template');
 

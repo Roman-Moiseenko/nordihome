@@ -14,10 +14,11 @@ Route::group([
         'prefix' => 'promotion',
         'as' => 'promotion.',
     ], function () {
-        Route::post('/add-product/{promotion}', [PromotionController::class, 'add_product'])->name('add-product');
-        Route::post('/add-products/{promotion}', [PromotionController::class, 'add_products'])->name('add-products');
-        Route::post('/set-product/{promotion}', [PromotionController::class, 'set_product'])->name('set-product');
-        Route::delete('/del-product/{promotion}', [PromotionController::class, 'del_product'])->name('del-product');
+        Route::get('/list', [PromotionController::class, 'list'])->name('list');
+     //   Route::post('/add-product/{promotion}', [PromotionController::class, 'add_product'])->name('add-product');
+  //      Route::post('/add-products/{promotion}', [PromotionController::class, 'add_products'])->name('add-products');
+   //     Route::post('/set-product/{promotion}', [PromotionController::class, 'set_product'])->name('set-product');
+     //   Route::delete('/del-product/{promotion}', [PromotionController::class, 'del_product'])->name('del-product');
         Route::post('/set-info/{id}', [PromotionController::class, 'setInfo'])->name('set-info');
 
         // Связь Promotion → Products

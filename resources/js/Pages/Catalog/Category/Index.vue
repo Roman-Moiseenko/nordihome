@@ -12,7 +12,7 @@
                 </template>
                 <el-input v-model="form.name" placeholder="Название"/>
                 <el-select v-model="form.parentId" placeholder="Родительская категория" class="mt-1" filterable clearable>
-                    <el-option v-for="item in useCatalog.categories" :value="item.id" :label="item.name" />
+                    <el-option v-for="item in useCatalog.categoriesTree" :value="item.id" :label="item.name" />
                 </el-select>
                 <div class="mt-2">
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>

@@ -12,7 +12,7 @@
                 </template>
                 <el-input v-model="form.name" placeholder="Название"/>
                 <el-select v-model="form.category_id" placeholder="Категория" class="mt-1" filterable>
-                    <el-option v-for="item in useCatalog.categoriesForFilters" :value="item.id" :label="item.name" />
+                    <el-option v-for="item in useCatalog.categories" :value="item.id" :label="item.name" />
                 </el-select>
                 <div class="mt-2">
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
@@ -23,7 +23,7 @@
                 <el-input v-model="filter.product" placeholder="Товар" class="mt-1"/>
                 <el-input v-model="filter.name" placeholder="Группа" class="mt-1"/>
                 <el-select v-model="filter.room" placeholder="Категория" class="mt-1">
-                    <el-option v-for="item in useCatalog.categoriesForFilters" :value="item.id" :label="item.name" :key="item.id" />
+                    <el-option v-for="item in useCatalog.categories" :value="item.id" :label="item.name" :key="item.id" />
                 </el-select>
             </TableFilter>
         </div>

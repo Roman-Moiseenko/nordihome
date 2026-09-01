@@ -12,7 +12,7 @@
                 </template>
                 <el-input v-model="form.name" placeholder="Название"/>
                 <el-select v-model="form.parentId" placeholder="Родительская комната" class="mt-1" filterable clearable>
-                    <el-option v-for="item in useCatalog.rooms" :value="item.id" :label="item.name" />
+                    <el-option v-for="item in useCatalog.roomsTree" :value="item.id" :label="item.name" />
                 </el-select>
                 <div class="mt-2">
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
@@ -44,7 +44,7 @@ const visible_create = ref(false)
 const $delete_entity = inject("$delete_entity")
 const useCatalog = useCatalogStore()
 
-console.log(useCatalog.rooms)
+console.log(useCatalog.roomsTree)
 const form = reactive({
     name: null,
     parentId: null,

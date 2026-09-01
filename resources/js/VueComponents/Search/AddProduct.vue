@@ -53,7 +53,7 @@
             </el-form-item>
             <el-form-item label="Категория">
                 <el-select v-model="formCreate.category_id" filterable>
-                    <el-option v-for="item in useCatalog.categoriesForFilters" :value="item.id" :label="item.name"/>
+                    <el-option v-for="item in useCatalog.categories" :value="item.id" :label="item.name"/>
                 </el-select>
             </el-form-item>
 

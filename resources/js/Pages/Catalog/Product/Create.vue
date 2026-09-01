@@ -30,7 +30,7 @@
                     <el-form label-width="auto">
                         <el-form-item label="Главная категория">
                             <el-select v-model="form.category_id" filterable>
-                                <el-option v-for="item in useCatalog.categoriesForFilters" :value="item.id" :label="item.name"/>
+                                <el-option v-for="item in useCatalog.categories" :value="item.id" :label="item.name"/>
                             </el-select>
                             <div v-if="errors.category_id" class="text-red-700">{{ errors.category_id }}</div>
                         </el-form-item>

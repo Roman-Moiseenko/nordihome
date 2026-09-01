@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Entity\Series;
 use App\Modules\Catalog\Repository\SeriesRepository;
 use App\Modules\Catalog\Service\SeriesService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -67,5 +68,12 @@ class SeriesController extends Controller
     {
         $this->service->remove($series);
         return redirect()->back()->with('success', 'Серия удалена');
+    }
+
+    public function list(): JsonResponse
+    {
+        //MAINDO Список сейрий товаров
+        $list = [];
+        return response()->json($list);
     }
 }

@@ -2,6 +2,7 @@
     //Глобальные данные
     /** @var \App\Modules\Shop\Application\DTOs\CategoryTreeClientData[] $categoryTree */
     /** @var \App\Modules\Shop\Application\DTOs\RoomTreeClientData[] $roomTree */
+
 @endphp
 
     <!-- 1. КАТАЛОГ -->

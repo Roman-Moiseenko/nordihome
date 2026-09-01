@@ -29,6 +29,7 @@
           <el-option label="html" value="html" />
           <el-option label="image (изображение)" value="image" />
           <el-option label="product (товар)" value="product" />
+          <el-option label="product_group (группа товаров)" value="product_group" />
           <el-option label="uri (ссылка)" value="uri" />
           <el-option label="date" value="date" />
           <el-option label="date-time" value="date-time" />
@@ -346,6 +347,22 @@ function initObjectProperties() {
         image_alt: { type: 'string', title: 'Alt изображения' },
         image_next_src: { type: 'string', title: 'URL второго изображения' },
         image_next_alt: { type: 'string', title: 'Alt второго изображения' },
+      }
+      for (const [key, cfg] of Object.entries(defaults)) {
+        if (!localConfig.properties[key]) {
+          localConfig.properties[key] = cfg
+        }
+      }
+    }
+
+    // Если format === 'product_group' — предзаполняем поля группы товаров
+    const isProductGroup = localConfig.format === 'product_group'
+    if (isProductGroup) {
+      if (!localConfig.properties) localConfig.properties = {}
+      const defaults: Record<string, any> = {
+        entity_type: { type: 'string', title: 'Тип сущности' },
+        entity_id: { type: 'integer', title: 'ID сущности' },
+        limit: { type: 'integer', title: 'Максимум товаров', minimum: 0 },
       }
       for (const [key, cfg] of Object.entries(defaults)) {
         if (!localConfig.properties[key]) {

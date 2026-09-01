@@ -62,7 +62,7 @@
                 </el-form-item>
                 <el-form-item label="Категория">
                     <el-select v-model="info.categories" filterable multiple>
-                        <el-option v-for="item in useCatalog.categoriesForFilters" :key="item.id" :value="item.id" :label="item.name"/>
+                        <el-option v-for="item in useCatalog.categories" :key="item.id" :value="item.id" :label="item.name"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Группа">

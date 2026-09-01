@@ -127,6 +127,7 @@ Route::group([
         'prefix' => 'series',
         'as' => 'series.',
     ], function () {
+        Route::get('/list', [SeriesController::class, 'list'])->name('list');
         Route::post('/add-product/{series}', [SeriesController::class, 'add_product'])->name('add-product');
         Route::post('/add-products/{series}', [SeriesController::class, 'add_products'])->name('add-products');
         Route::delete('/del-product/{series}', [SeriesController::class, 'del_product'])->name('del-product');
