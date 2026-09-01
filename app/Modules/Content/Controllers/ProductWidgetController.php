@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Content\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Content\Domain\ValueObjects\ProductGroupType;
 use App\Modules\Content\Entity\Widgets\BannerWidget;
 use App\Modules\Content\Entity\Widgets\ProductWidget;
 use App\Modules\Content\Entity\Widgets\ProductWidgetItem;
@@ -41,7 +42,7 @@ class ProductWidgetController extends Controller
         return Inertia::render('Content/Widget/Product/Index', [
             'widgets' => $widgets,
             'templates' => $templates,
-            'models' => ProductWidget::MODELS
+            'models' => ProductGroupType::models()
         ]);
     }
 

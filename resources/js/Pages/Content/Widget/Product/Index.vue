@@ -153,9 +153,11 @@ const selectedModelKey = computed(() =>
 )
 const modelSelectOptions = computed(() => {
     switch (selectedModelKey.value) {
-        case 'categories': return catalogStore.categories
-        case 'rooms': return catalogStore.rooms
-        case 'groups': return catalogStore.groups
+        case 'category': return catalogStore.categories
+        case 'room': return catalogStore.rooms
+        case 'group': return catalogStore.groups
+        case 'promotion': return catalogStore.promotions
+        case 'series': return catalogStore.series
         default: return []
     }
 })

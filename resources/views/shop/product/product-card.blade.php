@@ -65,7 +65,7 @@
                href="{{ route('shop.product.view', $product->slug) }}"
                title="{{ $product->name }}">{{ $product->name }}</a>
         </div>
-        <div class="short-description">{{ $product->short }}</div>
+        <div class="short-description">{!! $product->short !!}</div>
         <div class="product-card-info">
             @if($product->is_sale)
                 @if(!$product->promotion->has)

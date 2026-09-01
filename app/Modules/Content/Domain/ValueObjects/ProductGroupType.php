@@ -116,6 +116,13 @@ final class ProductGroupType
         return self::TYPES[$normalized]['model'] ?? null;
     }
 
+    public static function models(): array
+    {
+        return array_map(
+            static fn(array $type): string => $type['model'],
+            self::TYPES
+        );
+    }
     public static function label(string $value): ?string
     {
         $normalized = strtolower(trim($value));
