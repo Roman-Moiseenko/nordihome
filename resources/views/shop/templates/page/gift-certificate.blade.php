@@ -431,5 +431,6 @@
             </div>
         </div>
     </div>
-    <div>тут контакты внизу</div>
+    @include('shop.widgets.contact')
+    @include('shop.widgets.map')
 @endsection

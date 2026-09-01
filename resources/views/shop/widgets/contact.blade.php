@@ -1,69 +1,123 @@
-<div class="container-xl mt-5">
-    <div class="row">
-        <div class="col-lg-6">
-            <h2>Контакты</h2>
-            <div class="">Мы всегда рады ответить на все ваши вопросы,<br>принять пожелания и предложения по работе нашего сервиса</div>
-            <div class="my-4 d-flex justify-content-between">
-                <i class="fa-thin fa-phone-office fs-1"></i>
-                <div style="display:flex; margin: auto 0;">
-                    <a href="tel:+74012373730" class="fs-4 me-3">+7 (4012) 37-37-30</a>
-                    <a href="https://wa.me/+79062108505?text=Здравствуйте!%20Хочу%20мебель%20из%20ИКЕА!" class="me-3">
-                        <img src="/images/pages/whatsapp.png" style="width: 100%;">
-                    </a>
-                    <a href="https://t.me/nordi_home">
-                        <img src="/images/pages/telegram.png" style="width: 100%;">
-                    </a>
+<div class="block-contacts p-t_50 p-b_50" id="contacts-tab">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="heading f-w_600 f-z_23 m-b_20">КОНТАКТЫ</div>
+                <div class="m-b_30">Мы всегда рады ответить на все Ваши вопросы,<br>принять пожелания и предложения по работе нашего
+                    сервиса
+                </div>
+                <div class="contacts-items">
+                    <div class="item">
+                        <div class="item-img"><img src="/images/nordihome/icon-f-phone.svg" alt="Контакты Норди Хоум"></div>
+                        <div class="item-text">
+                            <div class="f-w_300 f-z_23 t-a_center m-b_10">Телефон/Мессенджеры</div>
+                            <div class="t-a_center f-z_23 m-b_20">
+                                @if(isset($contacts['phone']))
+                                    <a href="{{ $contacts['phone']->url }}" class="link">{{ phone($contacts['phone']->url) }}</a>
+                                @endif
+                            </div>
+                            <div class="item-social m-t_10">
+                                <div class="link t-t_uppercase f-w_600">нажми</div>
+                                <!-- <a href="https://wa.me/+79062108505?text=Здравствуйте!%20Хочу%20мебель%20из%20ИКЕА!" data-type="4"><img src="/wp-content/themes/euroikea/images/whatsapp-logo.png" alt="Лого востап"></a> -->
+                                @if(isset($contacts['telegram_bot']))
+                                    <a href="{{ $contacts['telegram_bot']->url }}" class="link" target="_blank"><img src="/uploads/gallery/7/telegram-logo.png" alt="Лого телеграм"></a>
+                                @endif
+                                @if(isset($contacts['max_bot_1']))
+                                    <a href="{{ $contacts['max_bot_1']->url }}" class="link" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 131 42" fill="none" width="129" height="40"><path fill="#000000" d="M21.47 41.88c-4.11 0-6.02-.6-9.34-3-2.1 2.7-8.75 4.81-9.04 1.2 0-2.71-.6-5-1.28-7.5C1 29.5.08 26.07.08 21.1.08 9.23 9.82.3 21.36.3c11.55 0 20.6 9.37 20.6 20.91a20.6 20.6 0 0 1-20.49 20.67Zm.17-31.32c-5.62-.29-10 3.6-10.97 9.7-.8 5.05.62 11.2 1.83 11.52.58.14 2.04-1.04 2.95-1.95a10.4 10.4 0 0 0 5.08 1.81 10.7 10.7 0 0 0 11.19-9.97 10.7 10.7 0 0 0-10.08-11.1Z"></path><path fill="#000000" d="M60.3 32.15h-4.44v-21h7.23l4.84 14.41h.65l5.05-14.41h7.07v21h-4.45v-15.6h-.64l-5.5 15.6H66.2l-5.25-15.6h-.65v15.6ZM94.59 32.55c-1.97 0-3.73-.46-5.3-1.37a9.99 9.99 0 0 1-3.67-3.88 12.15 12.15 0 0 1-1.29-5.65c0-2.1.43-3.98 1.3-5.62a9.63 9.63 0 0 1 3.67-3.88 10.04 10.04 0 0 1 5.29-1.4c1.75 0 3.3.37 4.64 1.12 1.35.73 2.45 1.62 3.31 2.67l.97-3.4H107v21h-3.47l-.97-3.39a11.45 11.45 0 0 1-3.32 2.7 9.62 9.62 0 0 1-4.64 1.1Zm1.13-4.16c1.97 0 3.55-.62 4.77-1.86a6.7 6.7 0 0 0 1.85-4.88c0-2-.62-3.61-1.85-4.85a6.3 6.3 0 0 0-4.77-1.9c-1.94 0-3.51.63-4.72 1.9a6.63 6.63 0 0 0-1.82 4.85c0 1.99.6 3.62 1.82 4.88a6.32 6.32 0 0 0 4.72 1.86ZM115.03 32.15h-5.25l6.66-10.75-5.9-10.25h5.26l3.91 7.06h.77l4.12-7.06h5.13l-5.9 9.97 6.67 11.03h-5.42l-4.48-7.96h-.77l-4.8 7.96Z"></path></svg></a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="item-img"><img src="/images/nordihome/icon-f-shop.svg" alt="Контакты Норди Хоум"></div>
+                        <div class="item-text">
+                            <div class="f-w_300 f-z_23 t-a_center">Другие площадки</div>
+                            <div class="item-social m-t_10">
+                                <div class="link">
+                                    @if(isset($contacts['instagram']))
+                                        <b>{{ $contacts['instagram']->url }}</b>
+                                    @endif
+                                </div>
+                                @if(isset($contacts['vk']))
+                                    <a href="{{ $contacts['vk']->url }}" class="link" target="_blank"><img src="/images/nordihome/logo-vk.png" alt="Лого вконтакте"></a>
+                                @endif
+                                @if(isset($contacts['telegram']))
+                                    <a href="{{ $contacts['telegram']->url }}" class="link" target="_blank"><img src="/images/nordihome/telegram-logo.png" alt="Лого телеграм"></a>
+                                @endif
+                                @if(isset($contacts['avito']))
+                                    <a href="{{ $contacts['avito']->url }}"
+                                       target="_blank" ><img src="/images/nordihome/avito-logo.png" alt="Лого авито"></a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="item-img"><img src="/images/nordihome/icon-f-mail.svg" alt="Контакты Евроикея"></div>
+                        <div class="item-text">
+                            <div class="f-w_300 f-z_16 t-a_center">По общим вопросам</div>
+                            <div class="item-mail">
+                                @if(isset($contacts['mail']))
+                                    <a href="{{ $contacts['mail']->url }}">{{ $contacts['mail']->name }}</a>
+                                @endif
+                                <div class="f-z_16">По вопросам сотрудничества</div>
+                                @if(isset($contacts['mail_1']))
+                                    <a href="{{ $contacts['mail_1']->url }}">{{ $contacts['mail_1']->name }}</a>
+                                @endif
+                                <div class="f-z_16">Отдел логистики</div>
+                                @if(isset($contacts['mail_2']))
+                                    <a href="{{ $contacts['mail_2']->url }}">{{ $contacts['mail_2']->name }}</a>
+                                @endif
+                                <div class="f-z_16">Претензии и спорные вопросы</div>
+                                @if(isset($contacts['mail_3']))
+                                    <a href="{{ $contacts['mail_3']->url }}">{{ $contacts['mail_3']->name }}</a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <hr/>
-            <div class="my-4 d-flex justify-content-between">
-                <i class="fa-thin fa-planet-ringed fs-1"></i>
-                <div style="display:flex; margin: auto 0;">
-                    <a href="https://vk.com/nordihome" class="me-3">
-                        <img src="/images/pages/vk.png" style="width: 100%;">
-                    </a>
-                    <a href="https://www.avito.ru/user/767a54a084b8b382bc26e36a914ec5f7/profile/all?sellerId=767a54a084b8b382bc26e36a914ec5f7">
-                        <img src="/images/pages/avito.png" style="width: 100%;">
-                    </a>
+            <div class="col-lg-6">
+                <div class="heading f-w_600 f-z_23 m-b_20">ФОРМА ОБРАТНОЙ СВЯЗИ</div>
+                <div>По вопросам сотрудничества:
+                    @if(isset($contacts['mail_1']))
+                        <a href="{{ $contacts['mail_1']->url }}">{{ $contacts['mail_1']->name }}</a>
+                    @endif
                 </div>
-            </div>
-            <hr/>
-
-            <div class="my-4 d-flex justify-content-between">
-                <i class="fa-thin fa-square-envelope fs-1"></i>
                 <div>
-                    <a href="mailto:info@nordihome.ru" class="btn btn-outline-dark rounded-pill">info@nordihome.ru</a>
+                    <div id="form-block-contacts" class="feedback">
+                        <div class="m-b_10 m-t_10">
+                            <label>Ваше имя <input name="name" class="width_100" required placeholder="Елена"/></label>
+                        </div>
+                        <div class="m-b_10">
+                            <label>Ваш телефон <input name="phone" class="width_100" required placeholder="+79097589135"/></label>
+                        </div>
+                        <div class="m-b_10">
+                            <label>Ваш вопрос <textarea class="width_100" placeholder="Мой вопрос"></textarea>
+                            </label>
+                        </div>
+                        <div class="m-b_10">
+                            <label>Ваш ник в Telegram <input name="telegram" class="width_100" required placeholder="Пример: @username"/></label>
+                        </div>
+                        <div class="m-b_10">
+                            <label>Выберите удобный способ для связи с Вами <select class="width_100"><option value="">—Выберите вариант—</option><option value="Позвонить по телефону">Позвонить по телефону</option><option value="Написать на почту">Написать на почту</option><option value="Написать в Телеграм">Написать в Телеграм</option><option value="Написать в Макс">Написать в Макс</option></select></label>
+                        </div>
+                        <div>
+                            <label class="f-z_14">
+                                <input type="checkbox" name="agreement" value="Принимаю согласие"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
+                            </label>
+                        </div>
+                        <div>
+                            <label><button class="btn-form width_100" type="button">Отправить</button></label>
+                        </div>
+                        <input type="hidden" name="form" value="Форма с блока контактов">
+                    </div>
+                    <div id="form-block-contacts-callback" style="display: none">
+                        Спасибо за Ваше сообщение. Оно успешно отправлено. Наш менеджер свяжется с Вами в ближайшее время.
+                    </div>
+
+
                 </div>
             </div>
-        </div>
-        <div class="col-lg-6">
-            <h2>Форма обратной связи</h2>
-            <form method="POST" action="{{ route('shop.page.email') }}">
-                @method('PUT')
-                @csrf
-                <div class="form-floating mt-2">
-                    <input type="email" class="form-control mask-email" name="email" placeholder="Электронная почта"
-                           required="" autocomplete="off">
-                    <label for="email">Электронная почта</label>
-                </div>
-                <div class="form-floating mt-3">
-                    <input type="text" class="form-control mask-phone" name="phone" placeholder="Телефон" required="" autocomplete="off">
-                    <label for="phone">Телефон</label>
-                </div>
-                <div class="form-floating mt-3">
-                    <textarea id="message" class="form-control" name="message" placeholder="Сообщение" required="" rows="8" style="height: 150px"></textarea>
-                    <label for="message">Сообщение</label>
-                </div>
-                <div class="form-check mt-2">
-                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"  required="">
-                    <label class="form-check-label" for="flexCheckDefault">
-                        Я согласен на обработку персональных данных
-                    </label>
-                </div>
-                <div class="d-flex justify-content-center mt-3">
-                    <button type="submit" class="btn btn-dark fs-5 py-2 px-3">Отправить</button>
-                </div>
-            </form>
         </div>
     </div>
 </div>

@@ -245,11 +245,11 @@
     right: 4px;
     top: 4px;
     border-radius: 50%;
-    font-size:14px;
-    width: 55px;
-    height: 55px;
+    width: 65px;
+    height: 65px;
     color: #fff;
     display: grid;
+    font-size: 13px;
     >span {
         margin: auto;
     }
@@ -260,6 +260,9 @@
         }
         .green {
             background: $green;
+        }
+        .yellow {
+            background: $yellow;
         }
         .black {
 
@@ -274,6 +277,17 @@
     }
     &.new {
         background: $green;
+    }
+    &.discount {
+        left: 10px;
+        top: 10px;
+        right: auto;
+        position: absolute;
+        background: $red;
+        color: white;
+        border-radius: 5px;
+        padding: 3px 8px;
+        font-size: 16px;
     }
 }
 
@@ -453,7 +467,6 @@
 
             >.base-price {
                 text-decoration: line-through;
-                font-size: 1.75rem;
                 color: var(--bs-gray-600);
             }
 

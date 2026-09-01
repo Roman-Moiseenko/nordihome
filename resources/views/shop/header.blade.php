@@ -52,7 +52,10 @@
                     @endif
                 </div>
                 <div class="col-auto mob-phone-8800">
-                    <a href="tel:88007008179" class="f-z_16"><b>8 (800) 700-81-79</b></a><br><span class="f-z_13">по России бесплатно</span>
+                    @if(isset($contacts['phone']))
+                        <a href="{{ $contacts['phone']->url }}" class="f-z_16"><b>{{ phone($contacts['phone']->url) }}</b></a>
+                    @endif
+                    <br><span class="f-z_13">по России бесплатно</span>
                 </div>
                 <div class="d-flex ms-2 h-social">
 

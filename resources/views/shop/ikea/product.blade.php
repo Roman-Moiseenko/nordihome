@@ -52,18 +52,18 @@
                     <div class="col-lg-4">
                         <div>
                             <h1>{{ $product->name }} </h1>
-                            <div class="product-code">
+                            <div class="product-code m-b_10">
                                 Артикул: {{ codeIkea($product->code) }}
                             </div>
-                            <div>
+                            <div class="m-b_10">
                                 {{ $product->short }}
                             </div>
                         </div>
                         <div>
                             @foreach($product->colors as $color) {{ $color }}, @endforeach
                         </div>
-                        <div>
-                            Цена {{ price($product->price, 'zł') }}
+                        <div class="m-b_10 m-t_10">
+                            Цена: {{ price($product->price, 'zł') }}
                         </div>
                         <div>
                             <button

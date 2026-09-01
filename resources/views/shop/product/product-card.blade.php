@@ -19,7 +19,7 @@
                     <div class="product-label new"><span>NEW</span></div>
                 @elseif($product->promotion->has && $product->promotion->showTag)
                     @if($product->promotion->showDiscount)
-                    <div class="promotion-label discount {{ $product->promotion->position }}">
+                    <div class="promotion-label discount">
                         <span>{{ price($product->price - $product->promotion->price) }}</span>
                     </div>
                     @endif

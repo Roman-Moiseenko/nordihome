@@ -27,6 +27,7 @@
             cursor: pointer;
             text-transform: uppercase;
             width: 110px;
+            font-size: 16px;
         }
     }
 
@@ -34,4 +35,23 @@
         display: block;
     }
 
+}
+@media (max-width: 990px) {
+    #cookie_notification {
+        width: calc(100% - 90px);
+        padding: 15px;
+        bottom: 50px;
+        >div{
+            p {
+                font-size: 12px;
+                margin-right: 0;
+                margin-bottom: 10px;
+                width: 100%;
+            }
+            .cookie_accept {
+                padding: 5px 25px;
+                font-size: 13px;
+            }
+        }
+    }
 }

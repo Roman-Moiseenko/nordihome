@@ -16,9 +16,21 @@
                     </div>
                     <div>
                         <div>
-                            <p>тел. <a href="tel:88007008179">8 (800) 700-81-79</a><br>тел. <a href="tel:+74012373730">+7(4012)37-37-30</a>
-                                <br>+7 906 210-85-05 - телефон для мессенджеров<br><a href="mailto:partnership@nordihome.ru">partnership@nordihome.ru</a> - по вопросам сотрудничества
-                                <br><a href="mailto:claim@nordihome.ru">claim@nordihome.ru</a> - написать директору</p>
+                            <p>тел. @if(isset($contacts['phone']))
+                                    <a href="{{ $contacts['phone']->url }}">{{ phone($contacts['phone']->url) }}</a>
+                                @endif<br>
+                                тел. @if(isset($contacts['phone_1']))
+                                    <a href="{{ $contacts['phone_1']->url }}">{{ phone($contacts['phone_1']->url) }}</a>
+                                @endif
+                                <br>@if(isset($contacts['phone_2']))
+                                    <a href="{{ $contacts['phone_2']->url }}">{{ phone($contacts['phone_2']->url) }}</a>
+                                @endif - телефон для мессенджеров<br>
+                                @if(isset($contacts['mail_1']))
+                                    <a href="{{ $contacts['mail_1']->url }}">{{ $contacts['mail_1']->name }}</a>
+                                @endif - по вопросам сотрудничества<br>
+                                @if(isset($contacts['mail_3']))
+                                    <a href="{{ $contacts['mail_3']->url }}">{{ $contacts['mail_3']->name }}</a>
+                                @endif - написать директору</p>
                             <p>ООО «Негоциант», ИНН 3906396090, КПП 390601001, ОГРН 1203900013602, 236023 Калининград, ул Советский проспект, 103А корпус 1</p>
                         </div>
                     </div>
