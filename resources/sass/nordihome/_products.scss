@@ -255,14 +255,16 @@
     }
     &.promotion {
         background: var(--bs-discount-color);
-        .red {
+        &.red {
             background: var(--bs-discount-color);
         }
-        .green {
+        &.green {
             background: $green;
         }
-        .yellow {
+        &.yellow {
             background: $yellow;
+            font-weight: 700;
+            color:$black;
         }
         .black {
 
@@ -271,13 +273,33 @@
 
         }
 
-        .top-left {
+        &.top-left {
 
         }
     }
     &.new {
         background: $green;
     }
+    &.on-order {
+        left: 10px;
+        top: 45px;
+        right: auto;
+        font-weight: 700;
+        line-height: 12px;
+        font-size: 14px;
+        box-sizing: border-box;
+        z-index: 99;
+        position: absolute;
+        color: white;
+        text-align: center;
+        background: $red;
+        width: auto;
+        height: auto;
+        border-radius: 5px;
+        padding: 6px 8px 7px 8px;
+    }
+}
+.promotion-label {
     &.discount {
         left: 10px;
         top: 10px;
@@ -290,7 +312,6 @@
         font-size: 16px;
     }
 }
-
 .product-card-name {
     height: 54px;
     margin: 5px 0 0 0;
