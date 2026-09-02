@@ -24,8 +24,6 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 
 import CatalogInfo from './Block/Info.vue'
 import CatalogItems from './Block/Items.vue'
-import UploadImageFile from "@Comp/UploadImageFile.vue";
-import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({
     widget: Object,
@@ -36,19 +34,18 @@ const props = defineProps({
     },
 })
 const form = reactive({
-    file: null,
-    clear_file: false,
+    modelId: null,
+    modelType: null,
+    caption: null,
+    description: null,
 })
 function onAddItem(val) {
-    form.clear_file = val.clear_file;
-    form.file = val.file
-    router.visit(route('admin.content.widget.banner.add-item', {widget: props.widget.id}), {
+    router.visit(route('admin.content.widget.catalog.add-item', {widget: props.widget.id}), {
         method: "post",
         data: form,
         preserveScroll: true,
         preserveState: false,
         onSuccess: page => {
-            //editBanner.value = false;
         }
     })
 }
