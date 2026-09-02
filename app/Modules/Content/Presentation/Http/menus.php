@@ -47,6 +47,12 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-film',
             ],
+            'catalogs' => [
+                'title' => 'Виджеты каталога',
+                'route_name' => 'admin.content.widget.catalog.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-folders',
+            ],
             /*   'maps' => [
                    'icon' => 'map-pinned',
                    'title' => 'Карты',

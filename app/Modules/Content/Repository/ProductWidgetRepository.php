@@ -36,7 +36,8 @@ class ProductWidgetRepository
             'icon' => $widget->getIcon(),
             'modelable_name' => $modelable?->name,
             'modelable_key' => $modelableKey !== false ? $modelableKey : null,
-            'modelable' => ProductGroupType::modelKey($widget->modelable_type),
+            //'modelable' => ProductGroupType::modelKey($widget->modelable_type),
+            'model_type' => $widget->model_type,
         ]);
     }
 

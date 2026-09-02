@@ -4,9 +4,11 @@ declare(strict_types=1);
 namespace App\Modules\Content\Entity\Widgets;
 
 use App\Modules\Catalog\Entity\Group;
+use App\Modules\Catalog\Entity\Series;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
+use App\Modules\Discount\Infrastructure\Models\Promotion;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -15,6 +17,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property int $modelable_id
  * @property string $modelable_type
  * @property string $button_name
+ * @property string $model_type,
  */
 class ProductWidget extends Widget
 {
@@ -30,7 +33,8 @@ class ProductWidget extends Widget
         'modelable_id',
         'modelable_type',
         'button_name',
-        'url'
+        'url',
+        'model_type',
     ];
     public function modelable()
     {
@@ -49,6 +53,13 @@ class ProductWidget extends Widget
         if ($this->modelable instanceof Room) {
             return route('shop.room.view', $this->modelable->slug);
         }
+        if ($this->modelable instanceof Promotion) {
+            return route('shop.promotion.view', $this->modelable->slug);
+        }
+        if ($this->modelable instanceof Series) {
+            return route('shop.series.view', $this->modelable->slug);
+        }
+
         return '';
     }
 

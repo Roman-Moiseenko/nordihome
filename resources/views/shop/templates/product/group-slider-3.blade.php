@@ -35,7 +35,7 @@
         </div>
     @endforeach
 
-
+    <div>
     <a href="{{ $widget->getUrl() }}">Все товары</a>
     </div>
 </div>

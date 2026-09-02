@@ -3,6 +3,7 @@
 namespace App\Modules\Content\Entity\Widgets;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Schema\Blueprint;
 
 /**
  * @property int $id
@@ -45,5 +46,16 @@ abstract class WidgetItem extends Model
             'widget_id' => $widget_id,
             'sort' => self::where('widget_id', $widget_id)->count(),
         ]);
+    }
+
+    final public static function columns(Blueprint $table, string $parentTable): void
+    {
+        $table->id();
+        $table->integer('sort')->default(0);
+        $table->string('slug');
+        $table->string('caption')->default('');
+        $table->string('description')->default('');
+
+        $table->foreignId('widget_id')->constrained($parentTable)->onDelete('cascade');
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Modules\Content\Controllers\BannerWidgetController;
 use App\Modules\Content\Controllers\CacheController;
+use App\Modules\Content\Controllers\CatalogWidgetController;
 use App\Modules\Content\Controllers\ContactController;
 use App\Modules\Content\Controllers\FormWidgetController;
 use App\Modules\Content\Controllers\GalleryController;
@@ -112,6 +113,25 @@ Route::group(
                 Route::delete('/{widget}', [BannerWidgetController::class, 'destroy'])->name('destroy');
                 Route::get('/', [BannerWidgetController::class, 'index'])->name('index');
             });
+
+            Route::group([
+                'prefix' => 'catalog',
+                'as' => 'catalog.'
+            ], function () {
+                Route::post('/set-widget/{widget}', [CatalogWidgetController::class, 'setWidget'])->name('set-widget');
+                Route::post('/add-item/{widget}', [CatalogWidgetController::class, 'addItem'])->name('add-item');
+                Route::post('/set-item/{item}', [CatalogWidgetController::class, 'setItem'])->name('set-item');
+                Route::delete('/del-item/{item}', [CatalogWidgetController::class, 'delItem'])->name('del-item');
+                Route::post('/toggle/{widget}', [CatalogWidgetController::class, 'toggle'])->name('toggle');
+                Route::post('/up-item/{item}', [CatalogWidgetController::class, 'upItem'])->name('up-item');
+                Route::post('/down-item/{item}', [CatalogWidgetController::class, 'downItem'])->name('down-item');
+
+                Route::get('/{widget}', [CatalogWidgetController::class, 'show'])->name('show');
+                Route::post('/', [CatalogWidgetController::class, 'store'])->name('store');
+                Route::delete('/{widget}', [CatalogWidgetController::class, 'destroy'])->name('destroy');
+                Route::get('/', [CatalogWidgetController::class, 'index'])->name('index');
+            });
+
             // Route::resource('banner', 'BannerWidgetController')->except(['create', 'edit', 'update']); //CRUD
 
             Route::group([

@@ -19,7 +19,8 @@ class ProductWidgetService extends WidgetService
         );
 
         $widget->modelable_id = $request->integer('modelable_id');
-        $widget->modelable_type = ProductGroupType::modelClass($request->string('modelable')->trim()->value());
+        $widget->model_type = $request->string('modelable')->trim()->value();
+        $widget->modelable_type = ProductGroupType::modelClass($widget->model_type);
         $widget->caption = $request->string('caption')->trim()->value();
         $widget->description = $request->string('description')->trim()->value();
         $widget->button_name = $request->string('button_name')->trim()->value();
@@ -34,7 +35,8 @@ class ProductWidgetService extends WidgetService
         $this->setBase($widget, $request);
 
         $widget->modelable_id = $request->integer('modelable_id');
-        $widget->modelable_type = ProductGroupType::modelClass($request->string('modelable')->trim()->value());
+        $widget->model_type = $request->string('modelable')->trim()->value();
+        $widget->modelable_type = ProductGroupType::modelClass($widget->model_type);
         $widget->button_name = $request->string('button_name')->trim()->value();
         $widget->url = $request->string('url')->trim()->value();
 

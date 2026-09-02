@@ -10,13 +10,21 @@ use App\Modules\Content\Service\TemplateService;
 class TemplateController extends Controller
 {
     private TemplateService $service;
-    private TemplateRepository $repository;
 
-    public function __construct(TemplateService $service, TemplateRepository $repository)
+
+    public function __construct(
+        TemplateService            $service,
+        private TemplateRepository $repository,
+    )
     {
         $this->service = $service;
-        $this->repository = $repository;
+
     }
 
-    //TODO *****
+    public function templates()
+    {
+        //TODO список всех шаблонов по папкам ['floder' => [...],]
+    }
+
+
 }

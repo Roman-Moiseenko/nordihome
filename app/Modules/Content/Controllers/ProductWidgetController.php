@@ -42,15 +42,13 @@ class ProductWidgetController extends Controller
         return Inertia::render('Content/Widget/Product/Index', [
             'widgets' => $widgets,
             'templates' => $templates,
-            'models' => ProductGroupType::models()
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $widget = $this->service->create($request);
-        return redirect()
-            ->back()->with('success', 'Виджет сохранен');
+        $this->service->create($request);
+        return redirect()->back()->with('success', 'Виджет сохранен');
         //route('admin.content.widget.product.show', $widget)
     }
 

@@ -67,7 +67,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Тип модели" label-position="top" class="mt-3">
-                    <el-radio-group v-model="form.modelable" @change="onModelTypeChange">
+                    <el-radio-group v-model="form.model_type" @change="onModelTypeChange">
                         <el-radio v-for="(item, index) in contentStore.types" :key="index" :value="index">
                             {{ item }}
                         </el-radio>
@@ -127,7 +127,6 @@ const props = defineProps({
         type: String,
         default: 'Сайт. Виджеты товаров',
     },
- //   models: Object,
     templates: Array,
 })
 const catalogStore = useCatalogStore()
@@ -140,7 +139,7 @@ const form = reactive({
     name: null,
     template: null,
     modelable_id: null,
-    modelable: null,
+    model_type: null,
     caption: null,
     description: null,
     button_name: null,
@@ -150,7 +149,7 @@ const form = reactive({
 
 
 const selectedModelKey = computed(() => {
-    const type = form.modelable
+    const type = form.model_type
     return type && Object.prototype.hasOwnProperty.call(contentStore.types ?? {}, type) ? type : null
 })
 const modelSelectOptions = computed(() => {
@@ -169,7 +168,7 @@ function resetForm() {
     form.name = null
     form.template = null
     form.modelable_id = null
-    form.modelable = null
+    form.model_type = null
     form.caption = null
     form.description = null
     form.button_name = null
@@ -187,7 +186,7 @@ function editWidget(row) {
     form.name = row.name
     form.template = row.template
     form.modelable_id = row.modelable_id
-    form.modelable = row.modelable
+    form.model_type = row.model_type
     form.caption = row.caption
     form.description = row.description
     form.button_name = row.button_name

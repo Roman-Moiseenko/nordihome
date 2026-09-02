@@ -18,9 +18,10 @@ class Template
         'post' => 'Страница записи',
         'form' => 'Форма обратной связи',
         'post_widget' => 'Виджет записей',
+        'catalog' => 'Виджет каталогов',
     ];
 
-    const RENDERS = [
+    const array RENDERS = [
         'product' => ProductWidget::class,
         'banner' => BannerWidget::class,
         'promotion' => PromotionWidget::class,
@@ -29,6 +30,7 @@ class Template
         'post' => Post::class,
         'form' => FormWidget::class,
         'post_widget' => PostWidget::class,
+        'catalog' => CatalogWidget::class,
     ];
 
     /**

@@ -7,6 +7,7 @@ use App\Modules\Content\Entity\News;
 use App\Modules\Content\Entity\Page;
 use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Entity\Widgets\BannerWidget;
+use App\Modules\Content\Entity\Widgets\CatalogWidget;
 use App\Modules\Content\Entity\Widgets\FormWidget;
 use App\Modules\Content\Entity\Widgets\PostWidget;
 use App\Modules\Content\Entity\Widgets\ProductWidget;
@@ -48,6 +49,15 @@ Breadcrumbs::for('admin.content.widget.banner.index', function (BreadcrumbTrail 
 Breadcrumbs::for('admin.content.widget.banner.show', function (BreadcrumbTrail $trail, BannerWidget $widget) {
     $trail->parent('admin.content.widget.banner.index', $widget);
     $trail->push($widget->name, route('admin.content.widget.banner.show', $widget));
+});
+//CATALOG
+Breadcrumbs::for('admin.content.widget.catalog.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Каталог (Виджет)', route('admin.content.widget.catalog.index'));
+});
+Breadcrumbs::for('admin.content.widget.catalog.show', function (BreadcrumbTrail $trail, CatalogWidget $widget) {
+    $trail->parent('admin.content.widget.catalog.index', $widget);
+    $trail->push($widget->name, route('admin.content.widget.catalog.show', $widget));
 });
 //PROMOTION
 Breadcrumbs::for('admin.content.widget.promotion.index', function (BreadcrumbTrail $trail) {
