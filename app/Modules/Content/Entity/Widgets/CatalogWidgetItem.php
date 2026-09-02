@@ -28,6 +28,7 @@ class CatalogWidgetItem extends WidgetItem
         $item = parent::new($widgetId);
         $item->model_id = $model_id;
         $item->model_type = $model_type;
+        $item->slug = "$model_type-$model_id";
         $item->save();
         return $item;
     }
@@ -48,10 +49,10 @@ class CatalogWidgetItem extends WidgetItem
         return route('shop.' . $this->model_type . '.view', $model->slug);
     }
 
-    public function image(): string
+    public function image():? string
     {
         $model = $this->getModel();
-        return $model->image->getImage();
+        return $model->getImage();
     }
 
     public function name(): string
