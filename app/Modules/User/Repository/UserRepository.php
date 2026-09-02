@@ -5,10 +5,10 @@ namespace App\Modules\User\Repository;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Entity\FileStorage;
+use App\Modules\Cabinet\Infrastructure\Models\Wish;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use App\Modules\User\Entity\Subscription;
-use App\Modules\User\Entity\Wish;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;

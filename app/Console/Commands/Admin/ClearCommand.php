@@ -14,6 +14,7 @@ use App\Modules\Accounting\Entity\RefundDocument;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyStack;
+use App\Modules\Cabinet\Infrastructure\Models\Wish;
 use App\Modules\Cart\Infrastructure\Models\CartCookie;
 use App\Modules\Cart\Infrastructure\Models\CartStorage;
 use App\Modules\Delivery\Entity\Calendar;
@@ -21,7 +22,6 @@ use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Service\Entity\Report;
 use App\Modules\User\Entity\ParserStorage;
-use App\Modules\User\Entity\Wish;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 

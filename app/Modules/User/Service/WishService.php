@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\User\Service;
 
-use App\Modules\User\Entity\Wish;
+use App\Modules\Cabinet\Infrastructure\Models\Wish;
 
 class WishService
 {

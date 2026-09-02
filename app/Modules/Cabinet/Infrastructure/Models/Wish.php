@@ -1,9 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\User\Entity;
+namespace App\Modules\Cabinet\Infrastructure\Models;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 

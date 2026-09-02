@@ -10,6 +10,7 @@ use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;
+use App\Modules\Cabinet\Infrastructure\Models\Wish;
 use App\Modules\Catalog\Entity\Review;
 use App\Modules\Lead\Infrastructure\Models\Lead;
 use App\Modules\Order\Entity\Order\OrderExpense;

@@ -2,25 +2,33 @@
 
 namespace App\Livewire\Cabinet\Wish;
 
+use App\Modules\Cabinet\Application\Actions\Wish\RemoveWishUseCase;
+use App\Modules\Cabinet\Infrastructure\Models\Wish;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\User\Entity\Wish;
 use Livewire\Component;
 
 class WishItem extends Component
 {
-    public Product $product;
-    public Wish $wish;
+    public array $wish;
+    private RemoveWishUseCase $removeWishUseCase;
+
+    public function boot(
+        RemoveWishUseCase $removeWishUseCase,
+    ): void
+    {
+        $this->removeWishUseCase = $removeWishUseCase;
+    }
 
     public function mount(mixed $wish)
     {
         $this->wish = $wish;
-        $this->product = $wish->product;
     }
 
-    public function remove()
+    public function remove(): void
     {
-        $this->wish->delete();
-        $this->dispatch('update-wish');
+        $productId = $this->removeWishUseCase->execute($this->wish['id']);
+
+        $this->dispatch('update-wish', product_id: $productId);
         $this->dispatch('update-header-wish');
     }
 

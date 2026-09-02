@@ -25,6 +25,8 @@ window.$ = jQuery;
             button.find('i').removeClass('fa-light')
             button.addClass('is-wish')
             button.find('i').addClass('fa-solid')
+            window.Livewire.dispatch('update-wish');
+            window.Livewire.dispatch('update-header-wish');
         })
     })
 
@@ -37,6 +39,8 @@ window.$ = jQuery;
             button.find('i').removeClass('fa-solid')
             button.addClass('to-wish')
             button.find('i').addClass('fa-light')
+            window.Livewire.dispatch('update-wish');
+            window.Livewire.dispatch('update-header-wish');
         })
     })
 

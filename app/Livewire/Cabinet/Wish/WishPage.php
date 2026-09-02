@@ -3,7 +3,10 @@
 namespace App\Livewire\Cabinet\Wish;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
+use App\Modules\Cabinet\Application\Actions\Wish\RemoveWishUseCase;
+use App\Modules\Cabinet\Application\Queries\ListWishClientQuery;
 use App\Modules\User\Entity\User;
+use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
@@ -12,10 +15,16 @@ class WishPage extends Component
 
     private ?Client $client;
     public mixed $wishes;
+    private  ListWishClientQuery $listWishClientQuery;
 
-    public function mount(int $clientId)
+    public function boot(ListWishClientQuery $listWishClientQuery): void
     {
-        $this->client = Client::find($clientId);
+        $this->listWishClientQuery = $listWishClientQuery;
+        $this->client = (auth()->check() && auth()->user()->isClient()) ? auth()->user()->profileable : null;
+    }
+
+    public function mount()
+    {
         $this->refresh_data();
     }
 
@@ -27,8 +36,8 @@ class WishPage extends Component
     #[On('update-wish')]
     public function refresh_data()
     {
-        $this->client->refresh();
-        $this->wishes = $this->client->wishes;
+        $items = $this->listWishClientQuery->execute($this->client->id);
+        $this->wishes = Collection::make($items)->toArray();
     }
 
     public function remove()

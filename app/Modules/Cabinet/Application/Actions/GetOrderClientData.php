@@ -18,7 +18,7 @@ readonly class GetOrderClientData
 {
     public function __construct(
         private OrderRepositoryInterface  $repository,
-        private GetProductItemDataUseCase $getProductItemData,
+        private GetProductItemDataUseCase $getProductItemDataUseCase,
         private GetPhotoThumbUseCase      $getPhotoThumbUseCase,
         private GetAdditionDataUseCase    $getAdditionDataUseCase,
     )
@@ -38,7 +38,7 @@ readonly class GetOrderClientData
 
         /** @var OrderItemEntity $item */
         foreach ($orderEntity->items as $item) {
-            $productItemData = $this->getProductItemData->execute($item->productId);
+            $productItemData = $this->getProductItemDataUseCase->execute($item->productId);
             $dto = new PhotoThumbData(
                 imageableId: $productItemData->id,
                 modelType: 'catalog.product',
