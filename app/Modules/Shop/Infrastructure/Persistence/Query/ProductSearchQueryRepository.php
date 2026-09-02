@@ -17,7 +17,7 @@ class ProductSearchQueryRepository
         'code_search',
         'short',
         'care',
-        'description',
+//        'description',
         'model',
     ];
 

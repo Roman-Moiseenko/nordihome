@@ -22,7 +22,9 @@ window.$ = jQuery;
         const id = button.data('product')
         $.post('/cabinet/wish/toggle/' + id, {}, function (data) {
             button.removeClass('to-wish')
+            button.find('i').removeClass('fa-light')
             button.addClass('is-wish')
+            button.find('i').addClass('fa-solid')
         })
     })
 
@@ -32,7 +34,9 @@ window.$ = jQuery;
         const id = button.data('product')
         $.post('/cabinet/wish/toggle/' + id, {}, function (data) {
             button.removeClass('is-wish')
+            button.find('i').removeClass('fa-solid')
             button.addClass('to-wish')
+            button.find('i').addClass('fa-light')
         })
     })
 
