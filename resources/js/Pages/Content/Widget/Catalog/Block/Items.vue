@@ -3,23 +3,17 @@
               header-cell-class-name="nordihome-header"
               style="width: 100%;"
     >
-        <el-table-column prop="url" label="Ссылка на страницу" width="200" align="center">
+        <el-table-column prop="image" label="IMG" width="40" align="center">
+            <template #default="scope">
+                <!-- тут изображение -->
+            </template>
+        </el-table-column>
+        <el-table-column prop="name" label="Название" align="center"/>
+        <el-table-column prop="model_type" label="Сущность" width="200" align="center"/>
 
-        </el-table-column>
-        <el-table-column prop="slug" label="Slug" width="100" align="center">
+        <el-table-column prop="caption" label="Заголовок" width="200" align="center" />
+        <el-table-column prop="description" label="Описание" align="center" width="300" show-overflow-tooltip />
 
-        </el-table-column>
-        <el-table-column prop="button" label="Кнопка" width="160" align="center">
-        </el-table-column>
-        <el-table-column prop="caption" label="Заголовок" width="240" align="center">
-
-        </el-table-column>
-        <el-table-column prop="marking" label="Маркировка" align="center">
-
-        </el-table-column>
-        <el-table-column prop="description" label="Описание" align="center" width="300" show-overflow-tooltip>
-
-        </el-table-column>
         <el-table-column label="Действия" align="right" width="200">
             <template #default="scope">
                 <el-button size="small" type="primary" dark @click="onUp(scope.row)">
@@ -43,23 +37,14 @@
 
     <el-dialog v-model="showDialog" title="Редактировать">
         <el-form label-width="auto">
-            <el-form-item label="Slug" class="mt-3">
-                <el-input v-model="form.slug"/>
-            </el-form-item>
-            <el-form-item label="Кнопка" class="mt-3">
-                <el-input v-model="form.button"/>
-            </el-form-item>
-            <el-form-item label="Ссылка" class="mt-3">
-                <el-input v-model="form.url"/>
-            </el-form-item>
+
+
+
             <el-form-item label="Заголовок" class="mt-3">
                 <el-input v-model="form.caption"/>
             </el-form-item>
             <el-form-item label="Описание" class="mt-3">
                 <el-input v-model="form.description" type="textarea" :rows="5"/>
-            </el-form-item>
-            <el-form-item label="Маркировка" class="mt-3">
-                <el-input v-model="form.marking"/>
             </el-form-item>
         </el-form>
 
@@ -87,12 +72,10 @@ const props = defineProps({
 })
 const form = reactive({
     id: null,
-    slug: null,
-    button: null,
-    url: null,
+    modelId: null,
+    modelType: null,
     caption: null,
     description: null,
-    marking: null,
 })
 const $delete_entity = inject("$delete_entity")
 const showDialog = ref(false)
@@ -119,9 +102,8 @@ function onDown(row) {
 
 function handleEdit(row) {
     form.id = row.id
-    form.slug = row.slug
-    form.button = row.button
-    form.url = row.url
+    form.modelId = row.model_id
+    form.modelType = row.model_type
     form.caption = row.caption
     form.description = row.description
     showDialog.value = true

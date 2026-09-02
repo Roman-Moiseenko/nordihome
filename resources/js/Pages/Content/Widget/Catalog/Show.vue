@@ -8,10 +8,7 @@
             <CatalogInfo :widget="widget" :templates="templates"/>
         </div>
 
-        <UploadImageFile
-            label="Новый элемент"
-            @selectImageFile="onAddItem"
-        />
+     <el-button>Добавить</el-button>
 
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <CatalogItems :items="widget.items" />
