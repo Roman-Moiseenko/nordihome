@@ -4,6 +4,7 @@ namespace App\Modules\Order\Application\Services\CreatingServices;
 
 use App\Modules\Order\Application\Actions\Order\CreateOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetStatusOrderUseCase;
+use App\Modules\Order\Application\DTOs\Order\StatusOrderAssignData;
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
@@ -32,7 +33,6 @@ readonly class CreateOrderByManagerService
         $orderEntity = $this->createOrderUseCase->execute($clientId, $staffId, $permission);
         //2. Записываем в лог
         $this->logger->log(orderId: $orderEntity->id, action: 'Заказ создан менеджером');
-
         //3. Создаем Лид (т.к. у заказа есть менеджер, лид присвоится ему)
         $leadData = new LeadSourceData(
             id: $orderEntity->id,
@@ -42,7 +42,8 @@ readonly class CreateOrderByManagerService
         );
         $this->dispatcher->dispatch(new LeadCollected($leadData));
         //4. Меняем статус на в работе
-        $this->setStatusOrderUseCase->execute($orderEntity->id, OrderStatus::draft());
+        $dto = new StatusOrderAssignData($orderEntity->id, OrderStatus::draft());
+        $this->setStatusOrderUseCase->execute($dto);
 
         return $orderEntity;
     }

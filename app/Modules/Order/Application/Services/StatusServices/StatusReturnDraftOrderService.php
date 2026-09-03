@@ -4,6 +4,7 @@ namespace App\Modules\Order\Application\Services\StatusServices;
 
 use App\Modules\Order\Application\Actions\Order\SendMailNewOrderClientUseCase;
 use App\Modules\Order\Application\Actions\Order\SetStatusOrderUseCase;
+use App\Modules\Order\Application\DTOs\Order\StatusOrderAssignData;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -20,9 +21,10 @@ readonly class StatusReturnDraftOrderService
     {
         if (!$permission->can('order.order.edit')) throw new AccessDeniedException();
 
-        $this->transactionManager->execute(function () use ($orderId, $permission) {
+        $this->transactionManager->execute(function () use ($orderId) {
             //1. Меняем статус
-            $this->statusOrderUseCase->execute($orderId, OrderStatus::draft());
+            $dto = new StatusOrderAssignData($orderId, OrderStatus::draft());
+            $this->statusOrderUseCase->execute($dto);
 
             //MAINDO 2. Отправка Письма клиенту, что заказ вернули в работу
             //$this->sendMailReturnOrderClientUseCase->execute($orderId, $emails);

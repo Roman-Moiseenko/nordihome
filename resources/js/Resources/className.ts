@@ -12,7 +12,11 @@ export const classes = {
         return ''
     },
     TableCompleted: ({row}: { row: IRowCompleted }) => {
-        if (row.completed === 0) return 'warning-row'
+        if (row.status === 'cancelled') return 'gray-row'
+        if (row.status === 'new') return 'danger-row'
+        if (row.status === 'draft') return 'warning-row'
+        if (row.status === 'awaiting') return 'primary-row'
+        if (row.status === 'completed') return 'success-row'
         return ''
     },
     TableCostCurrency: ({row}: { row: IRowCostCurrency }) => {

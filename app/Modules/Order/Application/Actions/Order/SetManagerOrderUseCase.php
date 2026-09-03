@@ -3,6 +3,7 @@
 namespace App\Modules\Order\Application\Actions\Order;
 
 use App\Modules\Auth\Application\Actions\Staff\ViewStaffUseCase;
+use App\Modules\Order\Application\DTOs\Order\StatusOrderAssignData;
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
@@ -32,7 +33,9 @@ readonly class SetManagerOrderUseCase
         $this->repository->save($orderEntity);
 
         if ($orderEntity->status->value === OrderStatus::new()) {
-            $this->setStatusOrderUseCase->execute($orderEntity->id, OrderStatus::draft());
+            $dto = new StatusOrderAssignData($orderId, OrderStatus::draft());
+
+            $this->setStatusOrderUseCase->execute($dto);
         }
 
         //Нужно ФИО менеджера для логирования

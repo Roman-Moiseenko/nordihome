@@ -74,6 +74,12 @@
 .gray-row {
     --el-table-tr-bg-color: var(--el-color-info-light-9);
 }
+.primary-row {
+    --el-table-tr-bg-color: var(--el-color-primary-light-9);
+}
+.success-row {
+    --el-table-tr-bg-color: var(--el-color-success-light-9);
+}
 
 a[type="primary"] {
     @apply text-sky-600;

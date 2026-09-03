@@ -73,7 +73,7 @@
                         </span>
                     </template>
                 </el-table-column>
-                <el-table-column prop="statusText" label="Статус" show-overflow-tooltip/>
+                <el-table-column prop="statusName" label="Статус" show-overflow-tooltip/>
                 <el-table-column prop="comment" label="Комментарий" show-overflow-tooltip/>
                 <el-table-column prop="staff" label="Ответственный" show-overflow-tooltip/>
                 <el-table-column label="Действия" align="right">

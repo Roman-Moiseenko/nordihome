@@ -44,7 +44,7 @@
 
                 <el-button type="warning" plain @click="toUserInfo(order.client.id)">Перейти в Карточку</el-button>
             </div>
-            <SearchUser v-else :route="route('admin.order.set-client', {id: order.id})"/>
+            <SearchUser v-else-if="is_new" :route="route('admin.order.set-client', {id: order.id})"/>
         </el-col>
         <!-- Суммы по заказу -->
         <el-col :span="8">

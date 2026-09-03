@@ -96,11 +96,11 @@ final class LeadEntity
         set => $this->status = $value;
     }
 
-    public DateTimeImmutable $createdAt {
+    public ?DateTimeImmutable $createdAt = null {
         get => $this->createdAt;
     }
 
-    public DateTimeImmutable $updatedAt {
+    public ?DateTimeImmutable $updatedAt = null {
         get => $this->updatedAt;
     }
 

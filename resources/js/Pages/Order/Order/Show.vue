@@ -126,7 +126,6 @@ if (props.order.staffId === null) {
 }
 
 provide('$order_related', props.order_related)
-console.log(props.order.status)
 const is_new = computed(() => {
     return props.order.status === "new" || props.order.status === "draft"
 })

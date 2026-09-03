@@ -2,23 +2,25 @@
 
 namespace App\Modules\Order\Application\Actions\Order;
 
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
-use App\Modules\Shared\Domain\Entities\UserPermission;
-use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
+use App\Modules\Order\Application\DTOs\Order\AssignClientToOrderData;
+use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+
+/**
+ * Не используется в одиночку, только через Сервис
+ */
 readonly class SetClientOrderUseCase
 {
     public function __construct(
-        private OrderRepositoryInterface $repository
+        private OrderRepositoryInterface $repository,
     )
     {
     }
 
-    public function execute(int $orderId, int $clientId, UserPermission $permission): void
+    public function execute(AssignClientToOrderData $dto): void
     {
-        if (!$permission->can('order.order.edit')) throw new AccessDeniedException();
-        $orderEntity = $this->repository->getById($orderId);
-        $orderEntity->clientId = $clientId;
+        $orderEntity = $this->repository->getById($dto->orderId);
+        $orderEntity->clientId = $dto->clientId;
         $this->repository->save($orderEntity);
     }
 }

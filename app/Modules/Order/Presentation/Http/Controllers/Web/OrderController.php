@@ -24,6 +24,7 @@ use App\Modules\Order\Application\Actions\OrderItem\AddProductOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\RemoveOrderItemUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\UpdateOrderItemUseCase;
 use App\Modules\Order\Application\Actions\ViewOrderUseCase;
+use App\Modules\Order\Application\DTOs\Order\AssignClientToOrderData;
 use App\Modules\Order\Application\DTOs\Order\DiscountOrderData;
 use App\Modules\Order\Application\DTOs\Order\FilterOrderIndexData;
 use App\Modules\Order\Application\DTOs\Order\OrderUpdateData;
@@ -31,6 +32,7 @@ use App\Modules\Order\Application\DTOs\OrderAddition\OrderAdditionUpdateData;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemPreData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
+use App\Modules\Order\Application\Services\AssignClientToOrderService;
 use App\Modules\Order\Application\Services\ChangePreOrderItemService;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderByManagerService;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderFromCopyService;
@@ -86,6 +88,7 @@ class OrderController extends Controller
         private readonly StatusReturnDraftOrderService $statusReturnDraftOrderService,
         private readonly StatusCompletedOrderService $statusCompletedOrderService,
         private readonly UpdateOrderUseCase $updateOrderUseCase,
+        private readonly AssignClientToOrderService $assignClientToOrderService,
     )
     {
     }
@@ -239,7 +242,11 @@ class OrderController extends Controller
 
     public function setClient(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->setClientOrderUseCase->execute($id, $request->integer('clientId'), $permission);
+        $dto = new AssignClientToOrderData(
+            orderId: $id,
+            clientId: $request->integer('clientId')
+        );
+        $this->assignClientToOrderService->execute($dto, $permission);
         return redirect()->back()->with('success', 'Клиент назначен');
     }
 

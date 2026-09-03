@@ -19,13 +19,9 @@ final readonly class UpdateContentBlockUseCase
     {
         $block = $this->contentBlockRepository->getById($id);
 
-        if ($dto->caption !== null) {
-            $block->caption = $dto->caption;
-        }
-
-        if ($dto->section !== null) {
+        $block->caption = $dto->caption;
+        if ($dto->section !== null)
             $block->section = new ContentSection($dto->section);
-        }
 
         return $this->contentBlockRepository->save($block);
     }

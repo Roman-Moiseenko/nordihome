@@ -16,9 +16,10 @@ readonly class SetStatusLeadFromOrderUseCase
     public function execute(int $orderId, string $status): void
     {
         $lead = $this->leadRepository->findByOrderId($orderId);
+
         $statusLead = new LeadStatusValue($status);
 
         $lead->addStatus($statusLead);
-
+        $this->leadRepository->save($lead);
     }
 }

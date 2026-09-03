@@ -3,10 +3,11 @@
 namespace App\Modules\Order\Application\Actions\Order;
 
 use App\Modules\Lead\Application\Actions\SetStatusLeadFromOrderUseCase;
-use App\Modules\Lead\Service\LeadService;
+use App\Modules\Order\Application\DTOs\Order\StatusOrderAssignData;
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
+use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
 
 readonly class SetStatusOrderUseCase
 {
@@ -14,33 +15,29 @@ readonly class SetStatusOrderUseCase
         private OrderLoggerServiceInterface   $logger,
         private OrderRepositoryInterface      $repository,
         private SetStatusLeadFromOrderUseCase $leadFromOrderUseCase,
+        private TransactionManagerInterface $transactionManager,
 
     )
     {
     }
 
-    //TODO Возможно через DTO
-    public function execute(
-        int         $orderId,
-        OrderStatus $status,
-        ?string     $comment = null,
-        ?string     $numberDocument = null,
-        ?string     $dateDocument = null,
-    ): void
+    public function execute(StatusOrderAssignData $dto): void
     {
-        $orderEntity = $this->repository->getById($orderId);
-        $orderEntity->addStatus($status, $comment, $numberDocument, $dateDocument);
-        $this->repository->save($orderEntity);
+        $this->transactionManager->execute(function () use ($dto) {
 
-        $comment = !is_null($comment) ? " ($comment)" : '';
-        $this->logger->log(
-            orderId: $orderEntity->id,
-            action: 'Смена статуса',
-            value: OrderStatus::STATUSES[$status->getValue()] . $comment
-        );
+            $orderEntity = $this->repository->getById($dto->orderId);
+            $orderEntity->addStatus($dto->status, $dto->comment, $dto->numberDocument, $dto->dateDocument);
+            $this->repository->save($orderEntity);
 
-        $this->leadFromOrderUseCase->execute($orderEntity->id, $status->getValue());
+            $comment = !is_null($dto->comment) ? " ($dto->comment)" : '';
+            $this->logger->log(
+                orderId: $orderEntity->id,
+                action: 'Смена статуса',
+                value: OrderStatus::STATUSES[$dto->status->getValue()] . $comment
+            );
 
-        //   $this->service->canceled($event->order->lead, Lead::CANCELED_ORDER_MANAGER);
+            $this->leadFromOrderUseCase->execute($orderEntity->id, $dto->status->getValue());
+        });
+
     }
 }

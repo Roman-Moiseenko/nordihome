@@ -3,6 +3,7 @@
 namespace App\Modules\Order\Application\Actions\Order;
 
 use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
+use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Mail\Entity\MailTemplateRegistry;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;
@@ -13,28 +14,26 @@ readonly class SendMailCancelOrderClientUseCase
 {
     public function __construct(
         private MailServiceInterface     $mailService,
-        private ViewClientUseCase        $clientUseCase,
         private OrderRepositoryInterface $repository,
+        private ClientRepositoryInterface $clientRepository,
     )
     {
     }
 
     public function execute(int $orderId): void
     {
-        $template = MailTemplateRegistry::get('order.cancelled');
         $orderEntity = $this->repository->getById($orderId);
+        if (is_null($orderEntity->clientId)) return; //
 
-        $client = $this->clientUseCase->execute(
-            $orderEntity->id,
-            new UserPermission(permissions: ['auth.buyer.view'])
-        );
+        $client = $this->clientRepository->findById($orderEntity->clientId);
 
+        $template = MailTemplateRegistry::get('order.cancelled');
         $this->mailService->send($template,
             [
                 'order' => $orderEntity,
                 'comment' => $orderEntity->status->comment
             ],
-            new Recipient(email: $client->email->value, clientId: $orderEntity->id)
+            new Recipient(email: $client->email->value, clientId: $orderEntity->clientId)
         );
 
     }

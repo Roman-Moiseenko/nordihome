@@ -7,7 +7,7 @@
             :preorder="true"
             :create="true"
         />
-        <SearchAddProducts :route="route('admin.order.add-products', {order: order.id})" class="ml-3"/>
+        <SearchAddProducts :route="route('admin.order.add-products', {id: order.id})" class="ml-3"/>
         <SelectAddition :additions="additions" :order="order"/>
         <div class="flex ml-1">
             <span class="ml-2 my-auto text-red-800">Скидка: </span>
