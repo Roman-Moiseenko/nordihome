@@ -14,8 +14,8 @@
                         :required="field.required"
                         :prop="field.name"
                     >
-                        <!-- html — редактор HTML-кода -->
-                        <HtmlEditor
+                        <!-- html — WYSIWYG-редактор (@erag/text-editor-vue) -->
+                        <RichTextEditor
                             v-if="field.format === 'html'"
                             :model-value="formModel[field.name] || ''"
                             @update:model-value="(val) => formModel[field.name] = val"
@@ -317,7 +317,7 @@ import type { WidgetFormFieldData } from '@Res/composables/useContentBlock'
 import ImagePicker from './ImagePicker.vue'
 import ProductPicker from './ProductPicker.vue'
 import ProductGroupPicker from './ProductGroupPicker.vue'
-import HtmlEditor from './HtmlEditor.vue'
+import RichTextEditor from './RichTextEditor.vue'
 
 const props = defineProps<{
     fields: WidgetFormFieldData[]

@@ -38,6 +38,7 @@
         "@codemirror/lang-php": "^6.0.2",
         "@codemirror/theme-one-dark": "^6.1.3",
         "@element-plus/icons-vue": "^2.3.1",
+        "@erag/text-editor-vue": "^1.2.0",
         "@fullcalendar/core": "^6.1.7",
         "@fullcalendar/daygrid": "^6.1.7",
         "@fullcalendar/interaction": "^6.1.7",
