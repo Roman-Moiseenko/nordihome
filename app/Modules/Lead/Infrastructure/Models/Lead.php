@@ -96,7 +96,7 @@ class Lead extends Model
         return $this->hasMany(LeadStatus::class, 'lead_id', 'id');
     }
 
-    public function user(): BelongsTo
+    public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class, 'client_id', 'id');
     }

@@ -4,6 +4,7 @@ namespace App\Modules\Lead\Providers;
 
 use App\Modules\Feedback\Database\Seeders\FeedbackRoleSeeder;
 use App\Modules\Lead\Application\Interfaces\LeadRepositoryInterface;
+use App\Modules\Lead\Database\Seeders\LeadRoleSeeder;
 use App\Modules\Lead\Infrastructure\Listeners\CreateLeadFromFormBack;
 use App\Modules\Lead\Infrastructure\Persistence\LeadRepository;
 use App\Modules\Shared\Infrastructure\Events\LeadCollected;
@@ -394,6 +395,7 @@ class LeadServiceProvider extends ServiceProvider
         $this->app->afterResolving('seed.handler', function ($handler) {
             $handler->register([
                 FeedbackRoleSeeder::class,
+                LeadRoleSeeder::class,
             ]);
         });
     }

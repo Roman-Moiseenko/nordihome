@@ -19,6 +19,12 @@ Route::group(
 
     Route::get('/', [LeadController::class, 'index'])->name('index');
     Route::post('/set-status/{lead}', [LeadController::class, 'set_status'])->name('set-status');
+
+    Route::post('/in-work/{id}', [LeadController::class, 'setInWork'])->name('in-work');
+    Route::post('/not-decided/{id}', [LeadController::class, 'setNotDecided'])->name('not-decided');
+    Route::post('/return-new/{id}', [LeadController::class, 'setReturnNew'])->name('return-new');
+
+
     Route::post('/add-item/{lead}', [LeadController::class, 'add_item'])->name('add-item');
     Route::post('/set-name/{lead}', [LeadController::class, 'set_name'])->name('set-name');
     Route::post('/set-comment/{lead}', [LeadController::class, 'set_comment'])->name('set-comment');

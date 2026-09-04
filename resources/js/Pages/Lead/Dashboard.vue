@@ -9,19 +9,19 @@
 
     <el-splitter>
         <template v-for="(key, index) in boards">
-        <el-splitter-panel v-if="index != 'completed'"
-                           @dragover.prevent="onDropOver(index)"
-                           @drop="onDropList(index)"
-                           :class="'shadow-sm ' + background[index]"
-        >
-            <el-tag effect="dark" :type="button_color[index]" size="large">{{ key }}</el-tag>
-            <template v-for="lead in leads[index]">
-                <LeadInfo :lead="lead"
-                          :draggable="true" @dragstart="onDragStart(lead, index)"
-                          @create:user="onDialogUser" @create:order="onDialogOrder" @add:item="onDialogItem"/>
-            </template>
-        </el-splitter-panel>
-</template>
+            <el-splitter-panel v-if="index != 'completed'"
+                               @dragover.prevent="onDropOver(index)"
+                               @drop="onDropList(index)"
+                               :class="'shadow-sm ' + background[index]"
+            >
+                <el-tag effect="dark" :type="button_color[index]" size="large">{{ key }}</el-tag>
+                <template v-for="lead in leads[index]">
+                    <LeadInfo :lead="lead"
+                              :draggable="true" @dragstart="onDragStart(lead, index)"
+                              @create:user="onDialogUser" @create:order="onDialogOrder" @add:item="onDialogItem"/>
+                </template>
+            </el-splitter-panel>
+        </template>
     </el-splitter>
     <el-dialog v-model="dialogUser" title="Добавить Клиента" width="400">
         <el-form label-width="auto">
@@ -56,7 +56,9 @@
 
     <el-dialog v-model="dialogOrder" title="Создать заказ" width="400">
         <div class="flex justify-center mb-4 mt-2">
-            Создать <el-tag type="danger" class="mx-2">Новый заказ</el-tag> ?
+            Создать
+            <el-tag type="danger" class="mx-2">Новый заказ</el-tag>
+            ?
         </div>
         <template #footer>
             <div class="dialog-footer">
@@ -76,7 +78,7 @@
                 <el-input v-model="formItem.comment" type="textarea" :rows="4"/>
             </el-form-item>
             <el-form-item label="Дата ограничения">
-                <el-date-picker v-model="formItem.finished_at" type="date" />
+                <el-date-picker v-model="formItem.finished_at" type="date"/>
             </el-form-item>
 
 
@@ -113,8 +115,8 @@ const props = defineProps({
 const background = {
     new_lead: 'bg-green-100',
     in_work: 'bg-red-100',
-    not_decide: 'bg-orange-100',
-    invoice: 'bg-cyan-100',
+    not_decided: 'bg-orange-100',
+    awaiting: 'bg-cyan-100',
     paid: 'bg-lime-100',
     assembly: 'bg-slate-100',
     delivery: 'bg-stone-100',
@@ -122,8 +124,8 @@ const background = {
 const button_color = {
     new_lead: 'success',
     in_work: 'danger',
-    not_decide: 'warning',
-    invoice: 'info',
+    not_decided: 'warning',
+    awaiting: 'info',
     paid: 'info',
     assembly: 'info',
     delivery: 'info',
@@ -159,6 +161,7 @@ function onDialogUser(val) {
     formUser.phone = val.phone
     dialogUser.value = true
 }
+
 function onCreateUser() {
     router.visit(route('admin.lead.create-user', {lead: formUser.lead}), {
         method: "post",
@@ -175,6 +178,7 @@ function onDialogOrder(val) {
     formOrder.lead = val
     dialogOrder.value = true
 }
+
 function onCreateOrder() {
     router.visit(route('admin.lead.create-order', {lead: formOrder.lead}), {
         method: "post",
@@ -185,6 +189,7 @@ function onCreateOrder() {
         }
     })
 }
+
 function onDialogItem(val) {
     formItem.lead = val
     formItem.comment = null
@@ -192,6 +197,7 @@ function onDialogItem(val) {
     formItem.type = null
     dialogItem.value = true
 }
+
 function onAddItem() {
     if (formItem.finished_at !== null) formItem.finished_at = func.date(formItem.finished_at)
     router.visit(route('admin.lead.add-item', {lead: formItem.lead}), {
@@ -207,7 +213,7 @@ function onAddItem() {
 
 //Drag & Drop
 function onDropOver(b) {
-    // console.log('onDropOver', b)
+     console.log('onDropOver', b)
 }
 
 function onDropList(key) {

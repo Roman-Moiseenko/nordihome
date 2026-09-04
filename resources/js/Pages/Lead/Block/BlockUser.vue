@@ -1,9 +1,9 @@
 <template>
-    <div v-if="lead.user" class="my-1">
-        <Link :href="route('admin.user.show', {user: lead.user.id})" class="flex items-center w-full text-sm"
-              type="primary"> {{ func.fullName(lead.user.fullname) }} </Link>
+    <div v-if="lead.client" class="my-1">
+        <Link :href="route('admin.client.show', {client: lead.client.id})" class="flex items-center w-full text-sm"
+              type="primary"> {{ lead.client.fullname }} </Link>
     </div>
-    <div v-if="!lead.user" class="flex my-1">
+    <div v-if="!lead.client_id" class="flex my-1">
         <EditField :field="lead.name" @update:field="onSetName" class="text-sm font-medium"/>
     </div>
 

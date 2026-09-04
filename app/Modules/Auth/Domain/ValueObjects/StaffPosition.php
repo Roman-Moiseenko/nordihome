@@ -65,6 +65,7 @@ final class StaffPosition
 
     // Удобные проверки
     public function isSupervisor(): bool { return $this->value === self::SUPERVISOR; }
+    public function isAdmin(): bool { return $this->value === self::ADMINISTRATOR; }
     public function isCustomerManager(): bool { return $this->value === self::CUSTOMER_MANAGER; }
     public function isPurchaseManager(): bool { return $this->value === self::PURCHASE_MANAGER; }
     public function isDriver(): bool { return $this->value === self::DRIVER; }

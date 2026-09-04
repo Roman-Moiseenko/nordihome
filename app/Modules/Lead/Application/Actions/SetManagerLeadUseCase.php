@@ -10,7 +10,7 @@ readonly class SetManagerLeadUseCase
         private LeadRepositoryInterface $leadRepository,
     ){}
 
-    public function execute(int $orderId, int $staffId): void
+    public function execute(int $orderId, ?int $staffId): void
     {
         $lead = $this->leadRepository->findByOrderId($orderId);
         $lead->staffId = $staffId;

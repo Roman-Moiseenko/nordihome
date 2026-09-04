@@ -20,16 +20,19 @@ readonly class SetManagerOrderUseCase
     {
     }
 
-    public function execute(int $orderId, $staffId,): void
+    public function execute(int $orderId, ?int $staffId): void
     {
         $orderEntity = $this->repository->getById($orderId);
         $orderEntity->staffId = $staffId;
         $this->repository->save($orderEntity);
 
-
         //Нужно ФИО менеджера для логирования
-        $staffEntity = $this->staffUseCase->execute($staffId, new UserPermission(permissions: ['auth.employee.view']));
-        $this->logger->log(orderId: $orderEntity->id, action: 'Назначен менеджер',
-            value: $staffEntity->fullName);
+        if (!is_null($staffId)) {
+            $staffEntity = $this->staffUseCase->execute($staffId, new UserPermission(permissions: ['auth.employee.view']));
+            $this->logger->log(orderId: $orderEntity->id, action: 'Назначен менеджер',
+                value: $staffEntity->fullName);
+        } else {
+            $this->logger->log(orderId: $orderEntity->id, action: 'Менеджер сброшен',);
+        }
     }
 }

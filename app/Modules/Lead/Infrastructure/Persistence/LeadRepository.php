@@ -70,6 +70,30 @@ class LeadRepository implements LeadRepositoryInterface
         if (is_null($model)) return null;
         return $this->hydrate($model->load(['items', 'statuses']));
     }
+
+    public function findById(int $id): ?LeadEntity
+    {
+        $model = Lead::where('id', $id)->first();
+        if (is_null($model)) return null;
+        return $this->hydrate($model->load(['items', 'statuses']));
+    }
+
+    public function findByStatus(string $status, ?int $staff_id = null): array
+    {
+        $query = Lead::query()->orderByDesc('created_at');
+
+        if (!is_null($staff_id)) {
+            $query->where('staff_id', $staff_id);
+        }
+
+        $query->whereHas('status', function ($query) use ($status) {
+            $query->where('value', $status);
+        });
+
+        return $query->get()
+            ->map(fn(Lead $lead) => $this->hydrate($lead->load(['items', 'statuses'])))
+            ->all();
+    }
     private function hydrate(Lead $model): LeadEntity
     {
         $data = array_map(function ($item) {

@@ -5,6 +5,11 @@ namespace App\Modules\Lead\Presentation\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Modules\Auth\Application\Actions\Client\CreateClientUseCase;
 use App\Modules\Auth\Application\DTOs\Client\ClientCreateData;
+use App\Modules\Lead\Application\Actions\IndexByStatusLeadUseCase;
+use App\Modules\Lead\Application\Services\StatusInWorkLeadService;
+use App\Modules\Lead\Application\Services\StatusNotDecidedLeadService;
+use App\Modules\Lead\Application\Services\StatusReturnNewLeadService;
+use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use App\Modules\Lead\Infrastructure\Models\Lead;
 use App\Modules\Lead\Infrastructure\Models\LeadStatus;
 use App\Modules\Lead\Repository\LeadRepository;
@@ -14,6 +19,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use JetBrains\PhpStorm\Deprecated;
 
 class LeadController extends Controller
 {
@@ -23,7 +29,11 @@ class LeadController extends Controller
     public function __construct(
         LeadService $service,
         LeadRepository $repository,
-        private CreateClientUseCase $createClientUseCase
+        private CreateClientUseCase $createClientUseCase,
+        private IndexByStatusLeadUseCase $indexByStatusLeadUseCase,
+        private StatusInWorkLeadService $statusInWorkLeadService,
+        private StatusNotDecidedLeadService $statusNotDecidedLeadService,
+        private StatusReturnNewLeadService $statusReturnNewLeadService,
     )
     {
         $this->service = $service;
@@ -36,12 +46,35 @@ class LeadController extends Controller
         $boards = $this->repository->getBoards();
         return Inertia::render('Lead/Dashboard', [
             'leads' => $leads,
-            'boards' => LeadStatus::STATUSES,
+            'boards' => LeadStatusValue::STATUSES,
 
             //TODO Справочники, состояния и др.
         ]);
     }
 
+    public function setInWork(int $id, UserPermission $permission)
+    {
+        $staffId = auth()->user()->profileable_id;
+        $this->statusInWorkLeadService->execute($id, $staffId, $permission);
+        return redirect()->back()->with( 'Обновлено!');
+    }
+
+    public function setNotDecided(int $id, UserPermission $permission)
+    {
+        $staffId = auth()->user()->profileable_id;
+        $this->statusNotDecidedLeadService->execute($id, $staffId, $permission);
+        return redirect()->back()->with( 'Обновлено!');
+    }
+
+    public function setReturnNew(int $id, UserPermission $permission)
+    {
+        $staffId = auth()->user()->profileable_id;
+        $this->statusReturnNewLeadService->execute($id, $staffId, $permission);
+        return redirect()->back()->with( 'Обновлено!');
+    }
+
+
+    #[Deprecated]
     public function set_status(Lead $lead, Request $request): RedirectResponse
     {
         $result = $this->service->setStatus($lead, $request);
@@ -105,6 +138,17 @@ class LeadController extends Controller
     {
         $order = $this->service->createOrder($lead, $request);
         return redirect()->route('admin.order.show', $order)->with('success', 'Обновлено!');
+    }
+
+    public function getLeads(Request $request): Response
+    {
+        $staffId = auth()->user()->profileable_id;
+
+        $leads = $this->indexByStatusLeadUseCase->execute($staffId, $request->input('status'));
+
+        return \request()->json($leads);
+
+
     }
 
 }

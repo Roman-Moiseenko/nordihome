@@ -71,9 +71,9 @@ class LeadRepository
         return array_merge($lead->toArray(), [
             'type' => $lead->getType(),
             'status' => $lead->status->value,
-            'user' => is_null($lead->client) ? null : [
+            'client' => is_null($lead->client) ? null : [
                 'id' => $lead->client->id,
-                'fullname' => $lead->client->fullname,
+                'fullname' => $lead->client->fullName,
                 'email' => $lead->client->email,
                 'phone' => $lead->client->phone,
             ],

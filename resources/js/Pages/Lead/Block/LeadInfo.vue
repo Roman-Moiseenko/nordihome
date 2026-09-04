@@ -9,7 +9,7 @@
 
         <!-- ACTION -->
         <div v-if="lead.status !== 1">
-            <el-button  v-if="!lead.user" type="primary" @click="onCreateUser"><i class="fa-light fa-user-plus"></i></el-button>
+            <el-button  v-if="!lead.client" type="primary" @click="onCreateUser"><i class="fa-light fa-user-plus"></i></el-button>
             <el-button  v-if="!lead.order" type="primary" @click="onCreateOrder"><i class="fa-light fa-cart-plus"></i></el-button>
             <el-button  type="info" @click="onCanceled"><i class="fa-light fa-trash"></i></el-button>
         </div>
@@ -29,6 +29,7 @@ import CollapseOrder from "./CollapseOrder.vue";
 const props = defineProps({
     lead: Object,
 })
+console.log(props.lead)
 //console.log(props.lead.id, props.lead.leads)
 const $emit = defineEmits(['create:user', 'create:order', 'add:item', 'lead:cancel'])
 
