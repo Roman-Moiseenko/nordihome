@@ -20,7 +20,6 @@ readonly class IndexByStatusLeadUseCase
         private LeadRepositoryInterface $repository,
         private StaffRepositoryInterface $staffRepository,
         private ClientRepositoryInterface $clientRepository,
-        private OrderRepositoryInterface $orderRepository,
         private ViewOrderUseCase $viewOrderUseCase,
     )
     {
@@ -34,9 +33,7 @@ readonly class IndexByStatusLeadUseCase
     public function execute(int $staffId, string $status): array
     {
         $staff = $this->staffRepository->findById($staffId);
-        \Log::info(json_encode($staff->positions->toArrayOfStrings()));
 
-        /** @var StaffPosition $position */
         foreach ($staff->positions->getPositions() as $position) {
 
             if ($position->isAdmin() || $position->isSupervisor() || $status == LeadStatusValue::NEW_LEAD) {
