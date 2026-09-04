@@ -18,13 +18,13 @@
                 <template v-for="lead in leads[index]">
                     <LeadInfo :lead="lead"
                               :draggable="true" @dragstart="onDragStart(lead, index)"
-                              @create:client="onDialogUser" @create:order="onDialogOrder" @add:item="onDialogItem"/>
+                              @create:client="onDialogClient" @create:order="onDialogOrder" @add:item="onDialogItem"/>
                 </template>
             </el-splitter-panel>
         </template>
     </el-splitter>
 
-    <CreateUser ref="dialogCreateUser"/>
+    <CreateClient ref="dialogCreateClient"/>
     <CreateOrder ref="dialogCreateOrder"/>
     <AddItem ref="dialogAddItem"/>
 </template>
@@ -33,7 +33,7 @@
 import {defineProps, ref} from "vue";
 import {Head, router} from "@inertiajs/vue3";
 import LeadInfo from "./Info/Lead.vue";
-import CreateUser from "./Dialogs/CreateUser.vue";
+import CreateClient from "./Dialogs/CreateClient.vue";
 import CreateOrder from "./Dialogs/CreateOrder.vue";
 import AddItem from "./Dialogs/AddItem.vue";
 
@@ -68,12 +68,12 @@ const button_color = {
 const dragItem = ref(null);
 const dragFrom = ref(null);
 
-const dialogCreateUser = ref(null)
+const dialogCreateClient = ref(null)
 const dialogCreateOrder = ref(null)
 const dialogAddItem = ref(null)
 
-function onDialogUser(val) {
-    dialogCreateUser.value.open(val)
+function onDialogClient(val) {
+    dialogCreateClient.value.open(val)
 }
 
 function onDialogOrder(val) {
