@@ -23,6 +23,7 @@ Route::group(
     Route::post('/in-work/{id}', [LeadController::class, 'setInWork'])->name('in-work');
     Route::post('/not-decided/{id}', [LeadController::class, 'setNotDecided'])->name('not-decided');
     Route::post('/return-new/{id}', [LeadController::class, 'setReturnNew'])->name('return-new');
+    Route::get('/leads', [LeadController::class, 'getLeads'])->name('leads');
 
 
     Route::post('/add-item/{lead}', [LeadController::class, 'add_item'])->name('add-item');
