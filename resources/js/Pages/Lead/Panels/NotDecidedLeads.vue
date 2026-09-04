@@ -2,9 +2,9 @@
     <el-splitter-panel
         @dragover.prevent="onDropOver"
         @drop="onDropList"
-        class="shadow-sm bg-green-100"
+        class="shadow-sm bg-orange-100"
     >
-        <el-tag effect="dark" type="success" size="large">Новый</el-tag>
+        <el-tag effect="dark" type="warning" size="large">Клиент думает</el-tag>
         <template v-for="lead in leads">
             <LeadInfo :lead="lead"
                       :draggable="canTransfer"
@@ -29,5 +29,5 @@ const {
     leads, dialogCreateClient, dialogCreateOrder, dialogAddItem,
     onDialogClient, onDialogOrder, onDialogItem,
     onDragStart, onDropOver, onDropList, canTransfer,
-} = useLeadPanel('new');
+} = useLeadPanel('not_decided');
 </script>

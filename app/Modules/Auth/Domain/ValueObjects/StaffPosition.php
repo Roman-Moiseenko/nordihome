@@ -52,10 +52,12 @@ final class StaffPosition
 
     public function __construct(string $value)
     {
+
         $normalized = strtolower(trim($value));
         if (!in_array($normalized, self::ALLOWED, true)) {
             throw new InvalidArgumentException("Недопустимая должность: {$value}");
         }
+
         $this->value = $normalized;
     }
 

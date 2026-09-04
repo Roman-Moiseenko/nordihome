@@ -89,12 +89,16 @@ class StaffRepository implements StaffRepositoryInterface
     {
 
         $fullName = new FullName($model->full_name); // предполагаем, что FullName умеет парсить строку
+
         $positions = new StaffPositions($model->positions ?? []);
+
         $staff = new StaffEntity(
             $fullName,
             $positions,
         );
         $staff->id = $model->id;
+        $staff->positions = $positions;
+
 
         if ($model->department) $staff->department = $model->department;
         if ($model->work_phone) $staff->workPhone = new PhoneNumber($model->work_phone);

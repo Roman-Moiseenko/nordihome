@@ -2,7 +2,7 @@
 
 namespace App\Modules\Order\Application\Services\CreatingServices;
 
-use App\Modules\Lead\Application\Actions\SetManagerLeadUseCase;
+use App\Modules\Lead\Application\Actions\SetManagerLeadFromOrderUseCase;
 use App\Modules\Lead\Application\Actions\SetStatusLeadFromOrderUseCase;
 use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use App\Modules\Order\Application\Actions\Order\CreateOrderUseCase;
@@ -21,12 +21,12 @@ readonly class CreateOrderByManagerService
 {
 
     public function __construct(
-        private OrderLoggerServiceInterface $logger,
-        private SetStatusOrderUseCase $setStatusOrderUseCase,
-        private Dispatcher                  $dispatcher,
-        private CreateOrderUseCase $createOrderUseCase,
-        private SetStatusLeadFromOrderUseCase $leadFromOrderUseCase,
-        private SetManagerLeadUseCase $setManagerLeadUseCase,
+        private OrderLoggerServiceInterface    $logger,
+        private SetStatusOrderUseCase          $setStatusOrderUseCase,
+        private Dispatcher                     $dispatcher,
+        private CreateOrderUseCase             $createOrderUseCase,
+        private SetStatusLeadFromOrderUseCase  $leadFromOrderUseCase,
+        private SetManagerLeadFromOrderUseCase $setManagerLeadUseCase,
     )
     {
     }

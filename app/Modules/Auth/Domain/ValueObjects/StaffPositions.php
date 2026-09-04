@@ -7,18 +7,28 @@ use InvalidArgumentException;
 final class StaffPositions
 {
     /** @var StaffPosition[] */
-    private array $positions;
+    public array $positions;
 
     public function __construct(array $positions)
     {
-        if (empty($positions)) {
+        $normalized = [];
+        foreach ($positions as $pos) {
+            $value = $pos instanceof StaffPosition ? $pos->getValue() : (string) $pos;
+            $value = strtolower(trim($value));
+
+            if ($value === '') {
+                continue;
+            }
+
+            $staffPosition = new StaffPosition($value);
+            $normalized[$staffPosition->getValue()] = $staffPosition;
+        }
+
+        if (empty($normalized)) {
             throw new InvalidArgumentException('Должна быть указана хотя бы одна должность');
         }
 
-        $this->positions = array_map(
-            fn(string $pos) => new StaffPosition($pos),
-            array_unique($positions) // исключаем дубликаты
-        );
+        $this->positions = array_values($normalized);
     }
 
     /** @return StaffPosition[] */

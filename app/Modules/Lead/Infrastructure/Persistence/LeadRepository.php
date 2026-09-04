@@ -30,6 +30,7 @@ class LeadRepository implements LeadRepositoryInterface
         $model->assembly = $lead->assembly;
         $model->delivery = $lead->delivery;
         $model->finished_at = $lead->finishedAt;
+        $model->created_at = $lead->createdAt;
 
         $model->data = array_map(
             fn(LeadDataField $field) => ['name' => $field->getName(), 'value' => $field->getValue()],

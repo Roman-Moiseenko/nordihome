@@ -2,6 +2,7 @@
 
 namespace App\Modules\Lead\Application\Services;
 
+use App\Modules\Lead\Application\Actions\SetManagerLeadFromOrderUseCase;
 use App\Modules\Lead\Application\Actions\SetManagerLeadUseCase;
 use App\Modules\Lead\Application\Actions\SetStatusLeadUseCase;
 use App\Modules\Lead\Application\Interfaces\LeadRepositoryInterface;
@@ -17,15 +18,15 @@ use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 readonly class StatusReturnNewLeadService
 {
     public function __construct(
-        private SetStatusLeadUseCase $statusLeadUseCase,
+        private SetStatusLeadUseCase           $statusLeadUseCase,
         private SetManagerLeadUseCase $setManagerLeadUseCase,
 
-        private SetStatusOrderUseCase $setStatusOrderUseCase,
-        private SetManagerOrderUseCase $setManagerOrderUseCase,
+        private SetStatusOrderUseCase          $setStatusOrderUseCase,
+        private SetManagerOrderUseCase         $setManagerOrderUseCase,
 
-        private LeadRepositoryInterface $leadRepository,
+        private LeadRepositoryInterface        $leadRepository,
 
-        private TransactionManagerInterface $transactionManager,
+        private TransactionManagerInterface    $transactionManager,
     )
     {
     }

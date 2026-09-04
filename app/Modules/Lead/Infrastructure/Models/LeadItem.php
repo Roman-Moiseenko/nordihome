@@ -23,6 +23,10 @@ class LeadItem extends Model
         'finished_at',
         'created_at',
     ];
+    protected $casts = [
+        'created_at' => 'datetime',
+        'finished_at' => 'datetime',
+    ];
 
     public static function new(string $comment, $finished_at): self
     {

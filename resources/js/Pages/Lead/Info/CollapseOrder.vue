@@ -14,12 +14,12 @@
                 <el-tag type="warning" effect="plain">{{ product.code }}</el-tag>
                 <span class="ml-auto">{{ product.quantity }} шт.</span>
             </div>
-            <el-tag type="info" class="mt-2">Отгрузки</el-tag>
-            <div v-for="expense in props.lead.order.expenses" class="flex">
+            <!--el-tag type="info" class="mt-2">Отгрузки</el-tag-->
+            <!--div v-for="expense in props.lead.order.expenses" class="flex">
                 <el-tag type="info" effect="plain">{{ func.date(expense.created_at) }} </el-tag>
                 <el-tag type="success" effect="plain" class="ml-auto">{{ expense.status }}</el-tag>
                 <el-button type="primary" size="small" @click="router.get(route('admin.order.expense.show', {expense: expense.id}))"><i class="fa-light fa-right"></i></el-button>
-            </div>
+            </div-->
         </el-collapse-item>
     </el-collapse>
 </template>

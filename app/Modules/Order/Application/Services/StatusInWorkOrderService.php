@@ -3,7 +3,7 @@
 namespace App\Modules\Order\Application\Services;
 
 
-use App\Modules\Lead\Application\Actions\SetManagerLeadUseCase;
+use App\Modules\Lead\Application\Actions\SetManagerLeadFromOrderUseCase;
 use App\Modules\Lead\Application\Actions\SetStatusLeadFromOrderUseCase;
 use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use App\Modules\Order\Application\Actions\Order\SetManagerOrderUseCase;
@@ -17,11 +17,11 @@ use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 readonly class StatusInWorkOrderService
 {
     public function __construct(
-        private TransactionManagerInterface $transactionManager,
-        private SetManagerOrderUseCase $setManagerOrderUseCase,
-        private SetStatusLeadFromOrderUseCase $leadFromOrderUseCase,
-        private SetStatusOrderUseCase $setStatusOrderUseCase,
-        private SetManagerLeadUseCase $setManagerLeadUseCase,
+        private TransactionManagerInterface    $transactionManager,
+        private SetManagerOrderUseCase         $setManagerOrderUseCase,
+        private SetStatusLeadFromOrderUseCase  $leadFromOrderUseCase,
+        private SetStatusOrderUseCase          $setStatusOrderUseCase,
+        private SetManagerLeadFromOrderUseCase $setManagerLeadUseCase,
     )
     {
     }

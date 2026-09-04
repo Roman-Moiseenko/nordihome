@@ -9,7 +9,6 @@ use App\Modules\Lead\Application\Actions\IndexByStatusLeadUseCase;
 use App\Modules\Lead\Application\Services\StatusInWorkLeadService;
 use App\Modules\Lead\Application\Services\StatusNotDecidedLeadService;
 use App\Modules\Lead\Application\Services\StatusReturnNewLeadService;
-use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use App\Modules\Lead\Infrastructure\Models\Lead;
 use App\Modules\Lead\Infrastructure\Models\LeadStatus;
 use App\Modules\Lead\Repository\LeadRepository;
@@ -42,14 +41,8 @@ class LeadController extends Controller
 
     public function index(Request $request): Response
     {
-        $leads = $this->repository->getIndex($request);
-        $boards = $this->repository->getBoards();
-        return Inertia::render('Lead/Dashboard', [
-            'leads' => $leads,
-            'boards' => LeadStatusValue::STATUSES,
-
-            //TODO Справочники, состояния и др.
-        ]);
+        // Каждая панель загружает свои данные отдельно через маршрут admin.lead.leads
+        return Inertia::render('Lead/Dashboard');
     }
 
     public function setInWork(int $id, UserPermission $permission)
@@ -140,13 +133,15 @@ class LeadController extends Controller
         return redirect()->route('admin.order.show', $order)->with('success', 'Обновлено!');
     }
 
-    public function getLeads(Request $request): Response
+    public function getLeads(Request $request)
     {
         $staffId = auth()->user()->profileable_id;
 
-        $leads = $this->indexByStatusLeadUseCase->execute($staffId, $request->input('status'));
+       // \Log::info($request->input('status'));
 
-        return \request()->json($leads);
+        $leads = $this->indexByStatusLeadUseCase->execute($staffId, $request->input('status'));
+       // \Log::warning(json_encode($leads));
+        return response()->json($leads);
 
 
     }

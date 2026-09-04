@@ -53,6 +53,7 @@ class Lead extends Model
     ];
     protected $casts = [
         'data' => 'array',
+        'finished_at' => 'datetime',
     ];
 
     const array TYPES = [
