@@ -229,7 +229,7 @@ class LeadService
     public function createOrder(Lead $lead, Request $request): Order
     {
         $order = $this->orderService->createOrder($lead->client_id);
-        $order->setStatus(OrderHistoryStatus::DRAFT);
+        $order->setStatus(OrderHistoryStatus::IN_WORK);
         $order->setManager($lead->staff_id);
         $lead->order_id = $order->id;
         $lead->save();

@@ -14,7 +14,6 @@ use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetClientOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetCouponOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
-use App\Modules\Order\Application\Actions\Order\SetManagerOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetPackingsOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\UpdateOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderAddition\AddAdditionOrderUseCase;
@@ -36,6 +35,7 @@ use App\Modules\Order\Application\Services\AssignClientToOrderService;
 use App\Modules\Order\Application\Services\ChangePreOrderItemService;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderByManagerService;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderFromCopyService;
+use App\Modules\Order\Application\Services\StatusInWorkOrderService;
 use App\Modules\Order\Application\Services\StatusServices\StatusAwaitingOrderService;
 use App\Modules\Order\Application\Services\StatusServices\StatusCancelOrderService;
 use App\Modules\Order\Application\Services\StatusServices\StatusCompletedOrderService;
@@ -80,7 +80,6 @@ class OrderController extends Controller
         private readonly SetAssemblagesOrderUseCase  $setAssemblagesOrderUseCase,
         private readonly SetPackingsOrderUseCase     $setPackingsOrderUseCase,
         private readonly CreateOrderFromCopyService  $createOrderFromCopyService,
-        private readonly SetManagerOrderUseCase      $setManagerOrderUseCase,
         private readonly StatusAwaitingOrderService  $statusAwaitingOrderService,
         private readonly StatusCancelOrderService    $statusCancelOrderService,
         private readonly IndexOrderUseCase $indexOrderUseCase,
@@ -89,6 +88,7 @@ class OrderController extends Controller
         private readonly StatusCompletedOrderService $statusCompletedOrderService,
         private readonly UpdateOrderUseCase $updateOrderUseCase,
         private readonly AssignClientToOrderService $assignClientToOrderService,
+        private readonly StatusInWorkOrderService $statusInWorkOrderService,
     )
     {
     }
@@ -184,13 +184,13 @@ class OrderController extends Controller
     public function take(int $id, UserPermission $permission): RedirectResponse
     {
         $staff = auth()->user()->profileable;
-        $this->setManagerOrderUseCase->execute($id, $staff->id, $permission);
+        $this->statusInWorkOrderService->execute($id, $staff->id, $permission);
         return redirect()->back()->with('success', 'Вы взяли заказ в работу');
     }
 
     public function setManager(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->setManagerOrderUseCase->execute($id, $request->integer('staff_id'), $permission);
+        $this->statusInWorkOrderService->execute($id, $request->integer('staff_id'), $permission);
         return redirect()->back()->with('success', 'Менеджер назначен');
     }
 

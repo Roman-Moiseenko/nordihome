@@ -7,7 +7,7 @@ use InvalidArgumentException;
 final class LeadStatusValue
 {
     const string NEW_LEAD = 'new';
-    const string IN_WORK = 'draft';
+    const string IN_WORK = 'in_work';
     const string NOT_DECIDED = 'not_decide';
     const string INVOICE = 'awaiting';
     const string PAID = 'paid';

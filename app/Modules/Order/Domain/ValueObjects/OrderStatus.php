@@ -6,12 +6,12 @@ use InvalidArgumentException;
 
 final class OrderStatus
 {
+
     public const string NEW = 'new'; //Новый заказ
-    public const string DRAFT = 'draft'; //В работе у менеджера
+    public const string IN_WORK = 'in_work'; //В работе у менеджера
     public const string AWAITING = 'awaiting'; //Ожидает оплаты - резерв 3 дня ??????
     public const string PREPAID = 'prepaid';  //Предоплата
     public const string PAID = 'paid';  //Оплачен
-
     public const string SHIPPED = 'partially_shipped'; //Частично выдан
     ///Отмененные статусы
     public const string CANCELLED = 'cancelled';//
@@ -24,7 +24,7 @@ final class OrderStatus
 
     public const array STATUSES = [
         self::NEW => 'Сформирован',
-        self::DRAFT => 'В работе у менеджера',
+        self::IN_WORK => 'В работе у менеджера',
         self::AWAITING => 'Ожидает оплаты',
         self::PREPAID => 'Внесена предоплата',
         self::PAID => 'Оплачен',
@@ -37,7 +37,7 @@ final class OrderStatus
     ];
     private const array ALLOWED = [
         self::NEW,
-        self::DRAFT,
+        self::IN_WORK,
         self::AWAITING,
         self::PREPAID,
         self::PAID,
@@ -98,8 +98,8 @@ final class OrderStatus
         return new self(OrderStatus::NEW);
     }
 
-    public static function draft(): self
+    public static function inWork(): self
     {
-        return new self(OrderStatus::DRAFT);
+        return new self(OrderStatus::IN_WORK);
     }
 }

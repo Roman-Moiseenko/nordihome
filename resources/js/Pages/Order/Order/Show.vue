@@ -127,7 +127,7 @@ if (props.order.staffId === null) {
 
 provide('$order_related', props.order_related)
 const is_new = computed(() => {
-    return props.order.status === "new" || props.order.status === "draft"
+    return props.order.status === "new" || props.order.status === "in_work"
 })
 const is_awaiting = computed(() => {
     return props.order.status === "awaiting"

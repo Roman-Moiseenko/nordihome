@@ -16,27 +16,16 @@ readonly class SetManagerOrderUseCase
         private OrderRepositoryInterface    $repository,
         private OrderLoggerServiceInterface $logger,
         private ViewStaffUseCase $staffUseCase,
-        private SetStatusOrderUseCase $setStatusOrderUseCase,
     )
     {
     }
 
-    public function execute(int $orderId, $staffId, UserPermission $permission): void
+    public function execute(int $orderId, $staffId,): void
     {
-        if (!$permission->can('order.order.edit')) throw new AccessDeniedException();
-
         $orderEntity = $this->repository->getById($orderId);
-
-
         $orderEntity->staffId = $staffId;
-
         $this->repository->save($orderEntity);
 
-        if ($orderEntity->status->value === OrderStatus::new()) {
-            $dto = new StatusOrderAssignData($orderId, OrderStatus::draft());
-
-            $this->setStatusOrderUseCase->execute($dto);
-        }
 
         //Нужно ФИО менеджера для логирования
         $staffEntity = $this->staffUseCase->execute($staffId, new UserPermission(permissions: ['auth.employee.view']));

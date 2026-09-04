@@ -117,7 +117,7 @@ class OrderService
 
         $staff = Staff::find($staff_id);
         if (empty($staff)) throw new \DomainException('Менеджер под ID ' . $staff_id . ' не существует!');
-        $order->setStatus(OrderHistoryStatus::DRAFT);
+        $order->setStatus(OrderHistoryStatus::IN_WORK);
         $order->setManager($staff->id);
         $this->logger->log(orderId: $order->id, action: 'Назначен менеджер',
             value: $staff->fullname->getFullName(), old: $old);
@@ -160,7 +160,7 @@ class OrderService
         DB::transaction(function () use ($order, $request) {
             $emails = $request->input('emails', []);
 
-            if ($order->status->value != OrderHistoryStatus::DRAFT) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
+            if ($order->status->value != OrderHistoryStatus::IN_WORK) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
             if ($order->getTotalAmount() == 0) throw new \DomainException('Сумма заказа не может быть равно нулю');
 
             $is_assemblage = false;
@@ -703,7 +703,7 @@ class OrderService
             $order = Order::find($event->id);
             try {
                 $order->setManager($event->staff->id);
-                $order->setStatus(OrderHistoryStatus::DRAFT);
+                $order->setStatus(OrderHistoryStatus::IN_WORK);
                 //FIXME Отправка сообщений
                 /*
                 $event->staff->notify(

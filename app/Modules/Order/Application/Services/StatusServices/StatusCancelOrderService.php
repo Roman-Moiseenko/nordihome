@@ -2,6 +2,8 @@
 
 namespace App\Modules\Order\Application\Services\StatusServices;
 
+use App\Modules\Lead\Application\Actions\SetStatusLeadFromOrderUseCase;
+use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use App\Modules\Order\Application\Actions\Order\SendMailCancelOrderClientUseCase;
 use App\Modules\Order\Application\Actions\Order\SetStatusOrderUseCase;
 use App\Modules\Order\Application\DTOs\Order\StatusOrderAssignData;
@@ -14,6 +16,7 @@ readonly class StatusCancelOrderService
     public function __construct(
         private SetStatusOrderUseCase            $statusOrderUseCase,
         private SendMailCancelOrderClientUseCase $mailCancelOrderClientUseCase,
+        private SetStatusLeadFromOrderUseCase $leadFromOrderUseCase,
     )
     {
     }
@@ -29,6 +32,8 @@ readonly class StatusCancelOrderService
         );
 
         $this->statusOrderUseCase->execute($dto);
+
+        $this->leadFromOrderUseCase->execute($dto->orderId, LeadStatusValue::CANCELLED);
 
         $this->mailCancelOrderClientUseCase->execute($orderId);
     }

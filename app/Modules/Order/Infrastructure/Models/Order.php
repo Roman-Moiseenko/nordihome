@@ -157,7 +157,7 @@ class Order extends Model
 
     public function isManager(): bool
     {
-        return $this->status->value == OrderHistoryStatus::DRAFT;
+        return $this->status->value == OrderHistoryStatus::IN_WORK;
     }
 
     public function isAwaiting(): bool

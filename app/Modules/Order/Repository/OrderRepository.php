@@ -296,7 +296,7 @@ class OrderRepository
     public function getInWorkWithPreorder()
     {
         $query = Order::whereHas('status', function ($query) {
-            $query->whereIn('value', [OrderHistoryStatus::NEW, OrderHistoryStatus::DRAFT]);
+            $query->whereIn('value', [OrderHistoryStatus::NEW, OrderHistoryStatus::IN_WORK]);
         })->whereHas('items', function ($query) {
             $query->where('preorder', true);
         });

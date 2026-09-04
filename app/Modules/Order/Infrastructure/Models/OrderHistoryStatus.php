@@ -24,7 +24,7 @@ class OrderHistoryStatus extends Model
     ///Стартовые статусы
 
     const string NEW = 'new'; //Новый заказ
-    const string DRAFT = 'draft'; //В работе у менеджера
+    const string IN_WORK = 'in_work'; //В работе у менеджера
     const string AWAITING = 'awaiting'; //Ожидает оплаты - резерв 3 дня ??????
     const string PREPAID = 'prepaid';  //Предоплата
     const string PAID = 'paid';  //Оплачен
@@ -43,7 +43,7 @@ class OrderHistoryStatus extends Model
 
     const array STATUSES = [
         self::NEW => 'Сформирован',
-        self::DRAFT => 'В работе у менеджера',
+        self::IN_WORK => 'В работе у менеджера',
         self::AWAITING => 'Ожидает оплаты',
         self::PREPAID => 'Внесена предоплата',
         self::PAID => 'Оплачен',

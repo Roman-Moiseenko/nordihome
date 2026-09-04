@@ -2,6 +2,9 @@
 
 namespace App\Modules\Order\Application\Services\CreatingServices;
 
+use App\Modules\Lead\Application\Actions\SetManagerLeadUseCase;
+use App\Modules\Lead\Application\Actions\SetStatusLeadFromOrderUseCase;
+use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use App\Modules\Order\Application\Actions\Order\CreateOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetStatusOrderUseCase;
 use App\Modules\Order\Application\DTOs\Order\StatusOrderAssignData;
@@ -22,6 +25,8 @@ readonly class CreateOrderByManagerService
         private SetStatusOrderUseCase $setStatusOrderUseCase,
         private Dispatcher                  $dispatcher,
         private CreateOrderUseCase $createOrderUseCase,
+        private SetStatusLeadFromOrderUseCase $leadFromOrderUseCase,
+        private SetManagerLeadUseCase $setManagerLeadUseCase,
     )
     {
     }
@@ -42,8 +47,11 @@ readonly class CreateOrderByManagerService
         );
         $this->dispatcher->dispatch(new LeadCollected($leadData));
         //4. Меняем статус на в работе
-        $dto = new StatusOrderAssignData($orderEntity->id, OrderStatus::draft());
+        $dto = new StatusOrderAssignData($orderEntity->id, OrderStatus::inWork());
         $this->setStatusOrderUseCase->execute($dto);
+
+        $this->leadFromOrderUseCase->execute($dto->orderId, LeadStatusValue::IN_WORK);
+        $this->setManagerLeadUseCase->execute($orderEntity->id, $staffId);
 
         return $orderEntity;
     }

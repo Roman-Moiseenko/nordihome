@@ -2,6 +2,8 @@
 
 namespace App\Modules\Order\Application\Services\StatusServices;
 
+use App\Modules\Lead\Application\Actions\SetStatusLeadFromOrderUseCase;
+use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use App\Modules\Order\Application\Actions\Order\SendMailNewOrderClientUseCase;
 use App\Modules\Order\Application\Actions\Order\SetStatusOrderUseCase;
 use App\Modules\Order\Application\DTOs\Order\StatusOrderAssignData;
@@ -16,6 +18,7 @@ readonly class StatusAwaitingOrderService
         private TransactionManagerInterface $transactionManager,
         private SendMailNewOrderClientUseCase $sendMailNewOrderClientUseCase,
         private SetStatusOrderUseCase $statusOrderUseCase,
+        private SetStatusLeadFromOrderUseCase $leadFromOrderUseCase,
     ){}
 
     public function execute(int $orderId, array|null $emails, UserPermission $permission): void
@@ -27,15 +30,18 @@ readonly class StatusAwaitingOrderService
             $dto = new StatusOrderAssignData($orderId, OrderStatus::awaiting());
 
             $this->statusOrderUseCase->execute($dto);
+            $this->leadFromOrderUseCase->execute($dto->orderId, LeadStatusValue::INVOICE);
 
-            //2. Отправка Счета клиенту
-            $this->sendMailNewOrderClientUseCase->execute($orderId, $emails);
 
             //TODO Отправка Заказа в 1С
 
             //TODO Уведомления ??
 
         });
+
+
+        //2. Отправка Счета клиенту
+        $this->sendMailNewOrderClientUseCase->execute($orderId, $emails);
     }
 
 
