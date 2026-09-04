@@ -23,83 +23,19 @@
             </el-splitter-panel>
         </template>
     </el-splitter>
-    <el-dialog v-model="dialogUser" title="Добавить Клиента" width="400">
-        <el-form label-width="auto">
-            <el-form-item label="Фамилия">
-                <el-input v-model="formUser.surname"/>
-            </el-form-item>
-            <el-form-item label="Имя">
-                <el-input v-model="formUser.firstname"/>
-            </el-form-item>
-            <el-form-item label="Отчество">
-                <el-input v-model="formUser.secondname"/>
-            </el-form-item>
-            <el-form-item label="Email">
-                <el-input v-model="formUser.email" :formatter="val => func.MaskEmail(val)"/>
-            </el-form-item>
-            <el-form-item label="Телефон">
-                <el-input v-model="formUser.phone" :formatter="val => func.MaskPhone(val)"/>
-            </el-form-item>
 
-        </el-form>
-        <template #footer>
-            <div class="dialog-footer">
-                <el-button type="info" class="" @click="dialogUser = false">
-                    Отмена
-                </el-button>
-                <el-button type="primary" class="" @click="onCreateUser">
-                    Создать
-                </el-button>
-            </div>
-        </template>
-    </el-dialog>
-
-    <el-dialog v-model="dialogOrder" title="Создать заказ" width="400">
-        <div class="flex justify-center mb-4 mt-2">
-            Создать
-            <el-tag type="danger" class="mx-2">Новый заказ</el-tag>
-            ?
-        </div>
-        <template #footer>
-            <div class="dialog-footer">
-                <el-button type="info" class="" @click="dialogOrder = false">
-                    Отмена
-                </el-button>
-                <el-button type="primary" class="" @click="onCreateOrder">
-                    Создать
-                </el-button>
-            </div>
-        </template>
-    </el-dialog>
-
-    <el-dialog v-model="dialogItem" title="Добавить Комментарий" width="400">
-        <el-form label-width="auto">
-            <el-form-item label="Комментарий">
-                <el-input v-model="formItem.comment" type="textarea" :rows="4"/>
-            </el-form-item>
-            <el-form-item label="Дата ограничения">
-                <el-date-picker v-model="formItem.finished_at" type="date"/>
-            </el-form-item>
-
-        </el-form>
-        <template #footer>
-            <div class="dialog-footer">
-                <el-button type="info" class="" @click="dialogItem = false">
-                    Отмена
-                </el-button>
-                <el-button type="primary" class="" @click="onAddItem">
-                    Создать
-                </el-button>
-            </div>
-        </template>
-    </el-dialog>
+    <CreateUser ref="dialogCreateUser"/>
+    <CreateOrder ref="dialogCreateOrder"/>
+    <AddItem ref="dialogAddItem"/>
 </template>
 
 <script setup lang="ts">
-import {defineProps, reactive, ref} from "vue";
+import {defineProps, ref} from "vue";
 import {Head, router} from "@inertiajs/vue3";
-import {func} from "@Res/func.js"
 import LeadInfo from "./Info/Lead.vue";
+import CreateUser from "./Dialogs/CreateUser.vue";
+import CreateOrder from "./Dialogs/CreateOrder.vue";
+import AddItem from "./Dialogs/AddItem.vue";
 
 const props = defineProps({
     leads: Array,
@@ -132,82 +68,20 @@ const button_color = {
 const dragItem = ref(null);
 const dragFrom = ref(null);
 
-const dialogUser = ref(false)
-const dialogOrder = ref(false)
-const dialogItem = ref(false)
-const formUser = reactive({
-    lead: null,
-    surname: null,
-    firstname: null,
-    secondname: null,
-    email: null,
-    phone: null,
-})
-const formOrder = reactive({
-    lead: null,
-})
-const formItem = reactive({
-    lead: null,
-    type: null,
-    finished_at: null,
-    comment: null,
-})
+const dialogCreateUser = ref(null)
+const dialogCreateOrder = ref(null)
+const dialogAddItem = ref(null)
 
 function onDialogUser(val) {
-    formUser.lead = val.id
-    formUser.firstname = val.name
-    formUser.email = val.email
-    formUser.phone = val.phone
-    dialogUser.value = true
-}
-
-function onCreateUser() {
-    router.visit(route('admin.lead.create-user', {lead: formUser.lead}), {
-        method: "post",
-        data: formUser,
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: page => {
-            dialogUser.value = false
-        }
-    })
+    dialogCreateUser.value.open(val)
 }
 
 function onDialogOrder(val) {
-    formOrder.lead = val
-    dialogOrder.value = true
-}
-
-function onCreateOrder() {
-    router.visit(route('admin.lead.create-order', {lead: formOrder.lead}), {
-        method: "post",
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: page => {
-            dialogUser.value = false
-        }
-    })
+    dialogCreateOrder.value.open(val)
 }
 
 function onDialogItem(val) {
-    formItem.lead = val
-    formItem.comment = null
-    formItem.finished_at = null
-    formItem.type = null
-    dialogItem.value = true
-}
-
-function onAddItem() {
-    if (formItem.finished_at !== null) formItem.finished_at = func.date(formItem.finished_at)
-    router.visit(route('admin.lead.add-item', {lead: formItem.lead}), {
-        method: "post",
-        data: formItem,
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: page => {
-            dialogItem.value = false
-        }
-    })
+    dialogAddItem.value.open(val)
 }
 
 //Drag & Drop
