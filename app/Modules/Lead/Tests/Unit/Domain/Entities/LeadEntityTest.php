@@ -46,7 +46,7 @@ class LeadEntityTest extends TestCase
         $lead->addStatusEntity(new LeadStatusEntity(new LeadStatusValue(LeadStatusValue::IN_WORK)));
 
         $this->assertCount(2, $lead->statuses);
-        $this->assertSame('draft', $lead->status->value->getValue());
+        $this->assertSame(LeadStatusValue::IN_WORK, $lead->status->value->getValue());
     }
 
     public function test_add_item(): void

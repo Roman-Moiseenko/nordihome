@@ -38,11 +38,15 @@ class SetStatusLeadFromOrderUseCaseTest extends TestCase
         $lead = $this->makeLead();
 
         $this->leadRepository->shouldReceive('findByOrderId')->with(10)->once()->andReturn($lead);
+        $this->leadRepository->shouldReceive('save')
+            ->with(Mockery::type(LeadEntity::class))
+            ->once()
+            ->andReturn($lead);
 
         $this->useCase->execute(10, LeadStatusValue::IN_WORK);
 
         $this->assertCount(1, $lead->statuses);
-        $this->assertSame('draft', $lead->status->value->getValue());
+        $this->assertSame(LeadStatusValue::IN_WORK, $lead->status->value->getValue());
     }
 
     public function test_throws_on_invalid_status(): void

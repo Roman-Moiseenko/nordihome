@@ -24,7 +24,6 @@ readonly class CreateOrderUseCase
     {
         if (!$permission->can('order.order.create')) throw new AccessDeniedException();
 
-        \Log::info($clientId);
         $orderEntity = new OrderEntity(
             traderId: $this->traderIdUseCase->execute(),
             type: new OrderSellType(OrderSellType::MANUAL),

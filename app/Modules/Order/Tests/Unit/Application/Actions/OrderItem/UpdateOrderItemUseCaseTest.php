@@ -4,6 +4,7 @@ namespace App\Modules\Order\Tests\Unit\Application\Actions\OrderItem;
 
 use App\Modules\Order\Application\Actions\AdditionGuide\GetAssemblageAdditionUseCase;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetPackingAdditionUseCase;
+use App\Modules\Order\Application\Actions\GetAdditionDataUseCase;
 use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetPackingsOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\UpdateOrderItemUseCase;
@@ -23,6 +24,7 @@ class UpdateOrderItemUseCaseTest extends TestCase
     use MockPermission;
 
     private OrderRepositoryInterface $repository;
+    private GetAdditionDataUseCase $getAdditionDataUseCase;
     private OrderCalculateService $orderCalculateService;
     private GetAssemblageAdditionUseCase $assemblageAdditionUseCase;
     private GetPackingAdditionUseCase $packingAdditionUseCase;
@@ -42,13 +44,17 @@ class UpdateOrderItemUseCaseTest extends TestCase
     {
         parent::setUp();
         $this->repository = Mockery::mock(OrderRepositoryInterface::class);
-        $this->orderCalculateService = Mockery::mock(OrderCalculateService::class);
+        $this->getAdditionDataUseCase = Mockery::mock(GetAdditionDataUseCase::class);
+        $this->orderCalculateService = new OrderCalculateService(
+            $this->repository,
+            $this->getAdditionDataUseCase,
+        );
         $this->assemblageAdditionUseCase = Mockery::mock(GetAssemblageAdditionUseCase::class);
         $this->packingAdditionUseCase = Mockery::mock(GetPackingAdditionUseCase::class);
 
-        // SetAssemblagesOrderUseCase и SetPackingsOrderUseCase — readonly-классы,
-        // Mockery их не умеет мокать, поэтому подставляем реальные экземпляры
-        // с замоканными зависимостями (как принято в CreateOrderUseCaseTest).
+        // SetAssemblagesOrderUseCase, SetPackingsOrderUseCase и OrderCalculateService —
+        // readonly-классы, Mockery их не умеет мокать, поэтому подставляем реальные
+        // экземпляры с замоканными зависимостями.
         $setAssemblagesOrderUseCase = new SetAssemblagesOrderUseCase(
             $this->repository,
             $this->orderCalculateService,
@@ -94,7 +100,6 @@ class UpdateOrderItemUseCaseTest extends TestCase
     {
         $this->repository->shouldNotReceive('getById');
         $this->repository->shouldNotReceive('save');
-        $this->orderCalculateService->shouldNotReceive('execute');
         $this->assemblageAdditionUseCase->shouldNotReceive('execute');
         $this->packingAdditionUseCase->shouldNotReceive('execute');
 
@@ -109,11 +114,11 @@ class UpdateOrderItemUseCaseTest extends TestCase
         $item = $this->makeItem(1);
         $order->items = [$item];
 
-        $this->repository->shouldReceive('getById')->with(10)->once()->andReturn($order);
+        $this->repository->shouldReceive('getById')->with(10)->twice()->andReturn($order);
+        $this->getAdditionDataUseCase->shouldNotReceive('execute');
         $this->assemblageAdditionUseCase->shouldNotReceive('execute');
         $this->packingAdditionUseCase->shouldNotReceive('execute');
-        $this->repository->shouldReceive('save')->with($order)->once()->andReturn($order);
-        $this->orderCalculateService->shouldReceive('execute')->with(10)->once();
+        $this->repository->shouldReceive('save')->with($order)->twice()->andReturn($order);
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, quantity: 5, comment: 'test'), $permission);
@@ -128,11 +133,11 @@ class UpdateOrderItemUseCaseTest extends TestCase
         $item = $this->makeItem(1);
         $order->items = [$item];
 
-        $this->repository->shouldReceive('getById')->with(10)->twice()->andReturn($order);
+        $this->repository->shouldReceive('getById')->with(10)->times(4)->andReturn($order);
+        $this->getAdditionDataUseCase->shouldNotReceive('execute');
         $this->assemblageAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
         $this->packingAdditionUseCase->shouldNotReceive('execute');
-        $this->repository->shouldReceive('save')->with($order)->twice()->andReturn($order);
-        $this->orderCalculateService->shouldReceive('execute')->with(10)->twice();
+        $this->repository->shouldReceive('save')->with($order)->times(4)->andReturn($order);
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, assemblage: true), $permission);
@@ -146,11 +151,11 @@ class UpdateOrderItemUseCaseTest extends TestCase
         $item = $this->makeItem(1);
         $order->items = [$item];
 
-        $this->repository->shouldReceive('getById')->with(10)->twice()->andReturn($order);
+        $this->repository->shouldReceive('getById')->with(10)->times(4)->andReturn($order);
+        $this->getAdditionDataUseCase->shouldNotReceive('execute');
         $this->assemblageAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
         $this->packingAdditionUseCase->shouldNotReceive('execute');
-        $this->repository->shouldReceive('save')->with($order)->twice()->andReturn($order);
-        $this->orderCalculateService->shouldReceive('execute')->with(10)->twice();
+        $this->repository->shouldReceive('save')->with($order)->times(4)->andReturn($order);
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, assemblage: false), $permission);
@@ -164,11 +169,11 @@ class UpdateOrderItemUseCaseTest extends TestCase
         $item = $this->makeItem(1);
         $order->items = [$item];
 
-        $this->repository->shouldReceive('getById')->with(10)->twice()->andReturn($order);
+        $this->repository->shouldReceive('getById')->with(10)->times(4)->andReturn($order);
+        $this->getAdditionDataUseCase->shouldNotReceive('execute');
         $this->assemblageAdditionUseCase->shouldNotReceive('execute');
         $this->packingAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
-        $this->repository->shouldReceive('save')->with($order)->twice()->andReturn($order);
-        $this->orderCalculateService->shouldReceive('execute')->with(10)->twice();
+        $this->repository->shouldReceive('save')->with($order)->times(4)->andReturn($order);
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, packing: true), $permission);
@@ -182,11 +187,11 @@ class UpdateOrderItemUseCaseTest extends TestCase
         $item = $this->makeItem(1);
         $order->items = [$item];
 
-        $this->repository->shouldReceive('getById')->with(10)->twice()->andReturn($order);
+        $this->repository->shouldReceive('getById')->with(10)->times(4)->andReturn($order);
+        $this->getAdditionDataUseCase->shouldNotReceive('execute');
         $this->assemblageAdditionUseCase->shouldNotReceive('execute');
         $this->packingAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
-        $this->repository->shouldReceive('save')->with($order)->twice()->andReturn($order);
-        $this->orderCalculateService->shouldReceive('execute')->with(10)->twice();
+        $this->repository->shouldReceive('save')->with($order)->times(4)->andReturn($order);
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, packing: false), $permission);
@@ -200,11 +205,11 @@ class UpdateOrderItemUseCaseTest extends TestCase
         $item = $this->makeItem(1);
         $order->items = [$item];
 
-        $this->repository->shouldReceive('getById')->with(10)->times(3)->andReturn($order);
+        $this->repository->shouldReceive('getById')->with(10)->times(6)->andReturn($order);
+        $this->getAdditionDataUseCase->shouldNotReceive('execute');
         $this->assemblageAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
         $this->packingAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
-        $this->repository->shouldReceive('save')->with($order)->times(3)->andReturn($order);
-        $this->orderCalculateService->shouldReceive('execute')->with(10)->times(3);
+        $this->repository->shouldReceive('save')->with($order)->times(6)->andReturn($order);
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, assemblage: true, packing: true), $permission);

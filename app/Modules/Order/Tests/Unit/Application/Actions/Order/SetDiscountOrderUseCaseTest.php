@@ -2,10 +2,12 @@
 
 namespace App\Modules\Order\Tests\Unit\Application\Actions\Order;
 
+use App\Modules\Order\Application\Actions\GetAdditionDataUseCase;
 use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
 use App\Modules\Order\Application\DTOs\Order\DiscountOrderData;
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
 use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Entities\OrderItemEntity;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
@@ -21,6 +23,8 @@ class SetDiscountOrderUseCaseTest extends TestCase
 
     private OrderRepositoryInterface $repository;
     private OrderLoggerServiceInterface $logger;
+    private GetAdditionDataUseCase $getAdditionDataUseCase;
+    private OrderCalculateService $calculateService;
     private SetDiscountOrderUseCase $useCase;
 
     public function getModuleName(): string
@@ -38,7 +42,16 @@ class SetDiscountOrderUseCaseTest extends TestCase
         parent::setUp();
         $this->repository = Mockery::mock(OrderRepositoryInterface::class);
         $this->logger = Mockery::mock(OrderLoggerServiceInterface::class);
-        $this->useCase = new SetDiscountOrderUseCase($this->repository, $this->logger);
+        $this->getAdditionDataUseCase = Mockery::mock(GetAdditionDataUseCase::class);
+        $this->calculateService = new OrderCalculateService(
+            $this->repository,
+            $this->getAdditionDataUseCase,
+        );
+        $this->useCase = new SetDiscountOrderUseCase(
+            $this->repository,
+            $this->logger,
+            $this->calculateService,
+        );
     }
 
     protected function tearDown(): void
@@ -75,8 +88,9 @@ class SetDiscountOrderUseCaseTest extends TestCase
         $discounted = $this->makeItem(productId: 2, quantity: 1, baseCost: 50.0, discountId: 5);
         $order->items = [$eligible, $discounted];
 
-        $this->repository->shouldReceive('getById')->with(10)->once()->andReturn($order);
-        $this->repository->shouldReceive('save')->with($order)->once()->andReturn($order);
+        $this->repository->shouldReceive('getById')->with(10)->twice()->andReturn($order);
+        $this->getAdditionDataUseCase->shouldNotReceive('execute');
+        $this->repository->shouldReceive('save')->with($order)->twice()->andReturn($order);
         $this->logger->shouldReceive('log')
             ->once()
             ->with(10, 'Установлена общая скидка', Mockery::any(), '10 %', '0 ₽');
@@ -95,8 +109,9 @@ class SetDiscountOrderUseCaseTest extends TestCase
         $item = $this->makeItem(productId: 1, quantity: 2, baseCost: 100.0);
         $order->items = [$item];
 
-        $this->repository->shouldReceive('getById')->with(10)->once()->andReturn($order);
-        $this->repository->shouldReceive('save')->with($order)->once()->andReturn($order);
+        $this->repository->shouldReceive('getById')->with(10)->twice()->andReturn($order);
+        $this->getAdditionDataUseCase->shouldNotReceive('execute');
+        $this->repository->shouldReceive('save')->with($order)->twice()->andReturn($order);
         $this->logger->shouldReceive('log')
             ->once()
             ->with(10, 'Установлена общая скидка', Mockery::any(), '100 ₽', '0 ₽');

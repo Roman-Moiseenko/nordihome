@@ -14,7 +14,7 @@ class LeadStatusEntityTest extends TestCase
         $status = new LeadStatusEntity(new LeadStatusValue(LeadStatusValue::IN_WORK));
 
         $this->assertNull($status->id);
-        $this->assertSame('draft', $status->value->getValue());
+        $this->assertSame(LeadStatusValue::IN_WORK, $status->value->getValue());
         $this->assertInstanceOf(DateTimeImmutable::class, $status->createdAt);
     }
 }

@@ -2,7 +2,6 @@
 
 namespace App\Modules\Order\Tests\Unit\Application\Actions\Order;
 
-use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
 use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
 use App\Modules\Auth\Domain\ValueObjects\Email;
@@ -33,14 +32,10 @@ class SendMailCancelOrderClientUseCaseTest extends TestCase
         $this->clientRepository = Mockery::mock(ClientRepositoryInterface::class);
         $this->repository = Mockery::mock(OrderRepositoryInterface::class);
 
-        // ViewClientUseCase — readonly-класс, Mockery его не умеет мокать,
-        // поэтому подставляем реальный экземпляр с моком репозитория.
-        $viewClientUseCase = new ViewClientUseCase($this->clientRepository);
-
         $this->useCase = new SendMailCancelOrderClientUseCase(
             $this->mailService,
-            $viewClientUseCase,
             $this->repository,
+            $this->clientRepository,
         );
     }
 
@@ -54,6 +49,7 @@ class SendMailCancelOrderClientUseCaseTest extends TestCase
     {
         $order = new OrderEntity(traderId: 1, type: new OrderSellType(OrderSellType::ONLINE));
         $order->id = 10;
+        $order->clientId = 10;
         $order->status = new OrderHistoryStatusEntity(OrderStatus::cancelled(), 'Причина отмены');
 
         return $order;
