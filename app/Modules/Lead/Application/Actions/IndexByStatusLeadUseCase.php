@@ -34,14 +34,23 @@ readonly class IndexByStatusLeadUseCase
     {
         $staff = $this->staffRepository->findById($staffId);
 
-        foreach ($staff->positions->getPositions() as $position) {
+        if ($staff->positions->contains(StaffPosition::administrator())
+            || $staff->positions->contains(StaffPosition::supervisor())
+            || $status == LeadStatusValue::NEW_LEAD) {
+
+            $leads = $this->repository->findByStatus($status);
+            return $this->hydrate($leads);
+        }
+
+
+      /*  foreach ($staff->positions->getPositions() as $position) {
 
             if ($position->isAdmin() || $position->isSupervisor() || $status == LeadStatusValue::NEW_LEAD) {
 
                 $leads = $this->repository->findByStatus($status);
                 return $this->hydrate($leads);
             }
-        }
+        }*/
 
         $leads = $this->repository->findByStatus($status, $staffId);
 
