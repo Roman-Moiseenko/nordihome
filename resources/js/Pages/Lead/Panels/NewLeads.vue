@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import LeadInfo from "@Page/Lead/Block/LeadInfo.vue";
+import LeadInfo from "@Page/Lead/Info/Lead.vue";
 
 const leads = [];
 

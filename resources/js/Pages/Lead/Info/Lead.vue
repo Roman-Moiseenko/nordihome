@@ -31,7 +31,7 @@ const props = defineProps({
 })
 console.log(props.lead)
 //console.log(props.lead.id, props.lead.leads)
-const $emit = defineEmits(['create:user', 'create:order', 'add:item', 'lead:cancel'])
+const $emit = defineEmits(['create:client', 'create:order', 'add:item', 'lead:cancel'])
 
 function onCreateUser() {
     const fields = {
@@ -49,7 +49,7 @@ function onCreateUser() {
             }
         })
     }
-    $emit('create:user', fields)
+    $emit('create:client', fields)
 }
 function onCreateOrder() {
     $emit('create:order', props.lead.id)

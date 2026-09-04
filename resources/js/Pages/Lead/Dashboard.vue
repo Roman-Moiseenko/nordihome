@@ -18,7 +18,7 @@
                 <template v-for="lead in leads[index]">
                     <LeadInfo :lead="lead"
                               :draggable="true" @dragstart="onDragStart(lead, index)"
-                              @create:user="onDialogUser" @create:order="onDialogOrder" @add:item="onDialogItem"/>
+                              @create:client="onDialogUser" @create:order="onDialogOrder" @add:item="onDialogItem"/>
                 </template>
             </el-splitter-panel>
         </template>
@@ -81,7 +81,6 @@
                 <el-date-picker v-model="formItem.finished_at" type="date"/>
             </el-form-item>
 
-
         </el-form>
         <template #footer>
             <div class="dialog-footer">
@@ -100,7 +99,7 @@
 import {defineProps, reactive, ref} from "vue";
 import {Head, router} from "@inertiajs/vue3";
 import {func} from "@Res/func.js"
-import LeadInfo from "@Page/Lead/Block/LeadInfo.vue";
+import LeadInfo from "./Info/Lead.vue";
 
 const props = defineProps({
     leads: Array,
