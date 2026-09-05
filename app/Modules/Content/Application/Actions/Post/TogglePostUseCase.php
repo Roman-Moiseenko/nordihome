@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Application\Actions\Post;
 
-use App\Modules\Content\Application\Interfaces\PostRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
 readonly class TogglePostUseCase

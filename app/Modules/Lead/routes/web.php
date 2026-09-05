@@ -18,7 +18,6 @@ Route::group(
     ], function () {
 
     Route::get('/', [LeadController::class, 'index'])->name('index');
-    Route::post('/set-status/{lead}', [LeadController::class, 'set_status'])->name('set-status');
 
     Route::post('/in-work/{id}', [LeadController::class, 'setInWork'])->name('in-work');
     Route::post('/not-decided/{id}', [LeadController::class, 'setNotDecided'])->name('not-decided');
@@ -26,9 +25,8 @@ Route::group(
     Route::get('/leads', [LeadController::class, 'getLeads'])->name('leads');
 
 
-    Route::post('/add-item/{lead}', [LeadController::class, 'add_item'])->name('add-item');
+    Route::post('/add-comment/{id}', [LeadController::class, 'addComment'])->name('add-comment');
     Route::post('/set-name/{lead}', [LeadController::class, 'set_name'])->name('set-name');
-    Route::post('/set-comment/{lead}', [LeadController::class, 'set_comment'])->name('set-comment');
     Route::post('/set-finished/{lead}', [LeadController::class, 'set_finished'])->name('set-finished');
     Route::post('/canceled/{lead}', [LeadController::class, 'canceled'])->name('canceled');
     //Route::post('/completed/{lead}', [LeadController::class, 'completed'])->name('completed');

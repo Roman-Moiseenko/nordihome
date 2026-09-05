@@ -6,8 +6,8 @@ use App\Modules\Catalog\Application\Actions\ProductPrice\GetProductSellPriceUseC
 use App\Modules\Order\Application\Actions\AdditionGuide\GetPolandAdditionUseCase;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Application\Services\OrderCalculateService;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Parser\Application\Actions\Product\GetParserPriceByProductUseCase;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;

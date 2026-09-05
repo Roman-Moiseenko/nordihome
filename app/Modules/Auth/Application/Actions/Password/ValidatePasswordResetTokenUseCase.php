@@ -2,7 +2,7 @@
 
 namespace App\Modules\Auth\Application\Actions\Password;
 
-use App\Modules\Auth\Application\Interfaces\PasswordResetTokenRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\PasswordResetTokenRepositoryInterface;
 
 readonly class ValidatePasswordResetTokenUseCase
 {

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Auth\Application\Actions\Staff;
 
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Auth\Domain\ValueObjects\StaffPositions;
 use App\Modules\Shared\Domain\Entities\UserPermission;

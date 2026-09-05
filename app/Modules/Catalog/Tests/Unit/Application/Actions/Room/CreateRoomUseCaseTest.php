@@ -6,8 +6,8 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Room;
 
 use App\Modules\Catalog\Application\Actions\Room\CreateRoomUseCase;
 use App\Modules\Catalog\Application\DTOs\Room\RoomCreateData;
-use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
+use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Parser\Infrastructure\Persistence;
 
 use App\Modules\Parser\Application\DTOs\Product\ParserProductFilterData;
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
-use App\Modules\Parser\Domain\ValueObjects\Composite;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\ValueObjects\Package;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Shared\Domain\ValueObjects\Slug;

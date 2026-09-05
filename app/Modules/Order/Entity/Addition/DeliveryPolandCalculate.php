@@ -6,7 +6,7 @@ namespace App\Modules\Order\Entity\Addition;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Infrastructure\Models\Order;
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Setting\Entity\Settings;
 use JetBrains\PhpStorm\Deprecated;
 

@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Modules\Content\Application\Actions\WidgetInstance;
 
 use App\Modules\Content\Application\DTOs\WidgetInstance\WidgetInstanceCreateData;
-use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Domain\Entities\WidgetInstanceEntity;
+use App\Modules\Content\Domain\Interfaces\ContentBlockRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 
 final readonly class CreateWidgetInstanceUseCase
 {

@@ -5,9 +5,8 @@ namespace App\Modules\Order\Entity\Addition;
 
 
 use App\Modules\Base\Entity\Packages;
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
-use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Parser\Domain\ValueObjects\Package;

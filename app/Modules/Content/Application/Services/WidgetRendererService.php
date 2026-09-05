@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Application\Services;
 
-use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use Illuminate\Support\Facades\View;
 
 class WidgetRendererService

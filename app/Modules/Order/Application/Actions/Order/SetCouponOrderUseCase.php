@@ -2,13 +2,10 @@
 
 namespace App\Modules\Order\Application\Actions\Order;
 
-use App\Modules\Discount\Entity\Coupon;
-use App\Modules\Order\Application\DTOs\Order\DiscountOrderData;
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
-use Carbon\Carbon;
 
 class SetCouponOrderUseCase
 {

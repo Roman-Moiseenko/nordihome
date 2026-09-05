@@ -2,9 +2,9 @@
 
 namespace App\Modules\Auth\Application\Actions\Staff;
 
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\StaffEntity;
 use App\Modules\Auth\Domain\Exceptions\StaffNotFoundException;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 

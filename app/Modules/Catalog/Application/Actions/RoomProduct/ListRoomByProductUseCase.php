@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Application\Actions\RoomProduct;
 
 use App\Modules\Catalog\Application\DTOs\Room\RoomProductData;
-use App\Modules\Catalog\Application\Interfaces\RoomProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\RoomProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 
 readonly class ListRoomByProductUseCase
 {

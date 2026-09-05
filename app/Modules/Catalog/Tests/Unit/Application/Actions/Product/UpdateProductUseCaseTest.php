@@ -6,8 +6,8 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Product;
 
 use App\Modules\Catalog\Application\Actions\Product\UpdateProductUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\ProductUpdateData;
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Mockery;

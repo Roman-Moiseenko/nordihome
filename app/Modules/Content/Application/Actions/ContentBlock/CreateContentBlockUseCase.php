@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Content\Application\Actions\ContentBlock;
 
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockCreateData;
-use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
 use App\Modules\Content\Domain\Entities\ContentBlockEntity;
+use App\Modules\Content\Domain\Interfaces\ContentBlockRepositoryInterface;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Content\Domain\ValueObjects\ContentSection;
 

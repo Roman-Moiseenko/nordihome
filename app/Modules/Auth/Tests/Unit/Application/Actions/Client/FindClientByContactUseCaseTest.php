@@ -4,8 +4,8 @@ namespace App\Modules\Auth\Tests\Unit\Application\Actions\Client;
 
 use App\Modules\Auth\Application\Actions\Client\FindClientByContactUseCase;
 use App\Modules\Auth\Application\DTOs\Client\FindClientByContactData;
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;

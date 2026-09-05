@@ -6,7 +6,7 @@ namespace App\Modules\Content\Application\Actions\Widget;
 
 use App\Modules\Content\Application\DTOs\Widget\WidgetIndexData;
 use App\Modules\Content\Application\DTOs\Widget\WidgetListByCategoryData;
-use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Domain\ValueObjects\WidgetCategory;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 

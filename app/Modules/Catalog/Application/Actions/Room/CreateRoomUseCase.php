@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Application\Actions\Room;
 
 use App\Modules\Catalog\Application\DTOs\Room\RoomCreateData;
-use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
+use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 

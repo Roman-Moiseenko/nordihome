@@ -2,29 +2,27 @@
 
 namespace App\Modules\Parser\Application\Services;
 
+use App\Modules\Base\Service\TranslateService;
 use App\Modules\Parser\Application\Actions\CategoryProduct\AttachCategoriesToProductUseCase;
+use App\Modules\Parser\Application\Actions\Product\CreateParserProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\FindAndAttachToProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\NewSellPriceParserProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\SetDimensionsProductFromParserUseCase;
 use App\Modules\Parser\Application\Actions\Product\ToggleProductAvailabilityUseCase;
-use App\Modules\Parser\Application\Interfaces\IkeaProductApiInterface;
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
-use App\Modules\Parser\Domain\Entities\ParserProductEntity;
-use App\Modules\Base\Service\TranslateService;
-use App\Modules\Parser\Application\Actions\Product\CreateParserProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\UpdateParserProductUseCase;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductCreateData;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductUpdateData;
-use App\Modules\Parser\Application\Interfaces\ParserCategoryRepositoryInterface;
+use App\Modules\Parser\Application\Interfaces\IkeaProductApiInterface;
+use App\Modules\Parser\Domain\Entities\ParserProductEntity;
+use App\Modules\Parser\Domain\Interfaces\ParserCategoryRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\ValueObjects\ParserStatus;
 use App\Modules\Parser\Infrastructure\Jobs\LoadProductIkeaJob;
 use App\Modules\Parser\Infrastructure\Jobs\LoadProductsIkeaJob;
-use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Parser\Infrastructure\Services\IkeaProductDataMapper;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
-use function Laravel\Prompts\warning;
 
 class LoadParserProductIkeaService
 {

@@ -6,8 +6,8 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Category;
 
 use App\Modules\Catalog\Application\Actions\Category\CreateCategoryUseCase;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryCreateData;
-use App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
+use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

@@ -3,9 +3,9 @@
 namespace App\Modules\Auth\Application\Actions\User;
 
 use App\Modules\Auth\Application\DTOs\User\ChangeUserCredentialsData;
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\Exceptions\InvalidCredentialsException;
 use App\Modules\Auth\Domain\Exceptions\UserAlreadyExistsException;
+use App\Modules\Auth\Domain\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\Services\PasswordHasherInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\HashedPassword;

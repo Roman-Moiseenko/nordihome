@@ -4,8 +4,8 @@ namespace App\Modules\Auth\Application\Actions\User;
 
 use App\Modules\Auth\Application\DTOs\User\UserProfileData;
 use App\Modules\Auth\Application\Interfaces\FreelanceRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\UserRepositoryInterface;
 
 final readonly class GetUserProfileUseCase
 {

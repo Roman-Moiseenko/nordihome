@@ -2,8 +2,8 @@
 
 namespace App\Modules\Auth\Infrastructure\Persistence;
 
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\UserEntity;
+use App\Modules\Auth\Domain\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\HashedPassword;
 use App\Modules\Auth\Domain\ValueObjects\ProfileType;
@@ -12,7 +12,6 @@ use App\Modules\Auth\Infrastructure\Models\EmailVerification;
 use App\Modules\Auth\Infrastructure\Models\Freelance;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Auth\Infrastructure\Models\User;
-
 use DateTimeImmutable;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;

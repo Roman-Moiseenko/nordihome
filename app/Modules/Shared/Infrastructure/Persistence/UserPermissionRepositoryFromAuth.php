@@ -2,10 +2,10 @@
 
 namespace App\Modules\Shared\Infrastructure\Persistence;
 
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
-use App\Modules\Shared\Application\Interfaces\UserPermissionRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\UserRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
+use App\Modules\Shared\Domain\Interfaces\UserPermissionRepositoryInterface;
 use Illuminate\Http\Request;
 
 readonly class UserPermissionRepositoryFromAuth implements UserPermissionRepositoryInterface

@@ -4,10 +4,10 @@ namespace App\Modules\Auth\Tests\Unit\Application\Actions\User;
 
 use App\Modules\Auth\Application\Actions\Client\ConsentClientUseCase;
 use App\Modules\Auth\Application\Actions\User\ConfirmEmailUseCase;
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
 use App\Modules\Auth\Domain\Entities\UserEntity;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\HashedPassword;

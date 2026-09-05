@@ -2,7 +2,7 @@
 
 namespace App\Modules\Discount\Application\Actions\Promotion;
 
-use App\Modules\Discount\Application\Interfaces\PromotionRepositoryInterface;
+use App\Modules\Discount\Domain\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Shared\Application\DTOs\ListEntityData;
 
 readonly class ListPromotionUseCase

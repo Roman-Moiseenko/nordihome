@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Shared\Application\Actions;
 
 use App\Modules\Shared\Application\DTOs\Photo\PhotoSortData;
-use App\Modules\Shared\Application\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Interfaces\PhotoRepositoryInterface;
 
 readonly class SortPhotoUseCase
 {

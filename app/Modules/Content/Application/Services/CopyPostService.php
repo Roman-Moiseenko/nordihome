@@ -4,13 +4,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Application\Services;
 
-use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\PostRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Domain\Entities\ContentBlockEntity;
 use App\Modules\Content\Domain\Entities\PostEntity;
 use App\Modules\Content\Domain\Entities\WidgetInstanceEntity;
+use App\Modules\Content\Domain\Interfaces\ContentBlockRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\Slug;

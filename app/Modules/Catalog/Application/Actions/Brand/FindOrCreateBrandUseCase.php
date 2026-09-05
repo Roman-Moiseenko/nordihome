@@ -2,8 +2,8 @@
 
 namespace App\Modules\Catalog\Application\Actions\Brand;
 
-use App\Modules\Catalog\Application\Interfaces\BrandRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\BrandEntity;
+use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
 
 
 readonly class FindOrCreateBrandUseCase

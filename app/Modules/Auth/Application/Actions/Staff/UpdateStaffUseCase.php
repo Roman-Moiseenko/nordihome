@@ -3,8 +3,8 @@
 namespace App\Modules\Auth\Application\Actions\Staff;
 
 use App\Modules\Auth\Application\DTOs\Staff\StaffUpdateData;
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\StaffEntity;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;

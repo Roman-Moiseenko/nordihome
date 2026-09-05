@@ -2,10 +2,10 @@
 
 namespace App\Modules\Lead\Infrastructure\Persistence;
 
-use App\Modules\Lead\Application\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Domain\Entities\LeadEntity;
 use App\Modules\Lead\Domain\Entities\LeadItemEntity;
 use App\Modules\Lead\Domain\Entities\LeadStatusEntity;
+use App\Modules\Lead\Domain\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Domain\ValueObjects\LeadDataField;
 use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use App\Modules\Lead\Infrastructure\Models\Lead;
@@ -30,7 +30,7 @@ class LeadRepository implements LeadRepositoryInterface
         $model->assembly = $lead->assembly;
         $model->delivery = $lead->delivery;
         $model->finished_at = $lead->finishedAt;
-        $model->created_at = $lead->createdAt;
+        $model->created_at = $lead->createdAt ?? now();
 
         $model->data = array_map(
             fn(LeadDataField $field) => ['name' => $field->getName(), 'value' => $field->getValue()],
@@ -55,8 +55,9 @@ class LeadRepository implements LeadRepositoryInterface
             if (!$itemEntity->id) {
                 $itemModel = $model->items()->create([
                     'comment' => $itemEntity->comment,
-                    'created_at' => $itemEntity->createdAt,
+                    'created_at' => $itemEntity->createdAt ?? now(),
                     'finished_at' => $itemEntity->finishedAt,
+                    'staff_id' => $itemEntity->staffId,
                 ]);
                 $itemEntity->id = $itemModel->id;
             }
@@ -118,6 +119,8 @@ class LeadRepository implements LeadRepositoryInterface
         $entity->assembly = $model->assembly;
         $entity->delivery = $model->delivery;
         $entity->finishedAt = $model->finished_at ? \DateTimeImmutable::createFromMutable($model->finished_at) : null;
+        $entity->createdAt = $model->created_at ? \DateTimeImmutable::createFromMutable($model->created_at) : null;
+        $entity->updatedAt = $model->updated_at ? \DateTimeImmutable::createFromMutable($model->updated_at) : null;
 
         // Гидрация items
         if ($model->relationLoaded('items')) {

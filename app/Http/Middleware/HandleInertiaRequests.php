@@ -2,7 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
 use App\Modules\Base\Helpers\AdminMenu;
 use Illuminate\Http\Request;
 use Inertia\Middleware;

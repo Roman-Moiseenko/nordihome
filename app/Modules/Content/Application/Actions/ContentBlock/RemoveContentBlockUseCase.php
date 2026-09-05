@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Application\Actions\ContentBlock;
 
-use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\ContentBlockRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
 
 final readonly class RemoveContentBlockUseCase
 {

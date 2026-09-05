@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Application\Actions\PromotionProduct;
 
-use App\Modules\Discount\Application\Interfaces\PromotionProductRepositoryInterface;
 use App\Modules\Discount\Application\Services\ResolvePriceProductsService;
+use App\Modules\Discount\Domain\Interfaces\PromotionProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 

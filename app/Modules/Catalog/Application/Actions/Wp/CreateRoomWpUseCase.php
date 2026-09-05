@@ -2,12 +2,9 @@
 
 namespace App\Modules\Catalog\Application\Actions\Wp;
 
-use App\Modules\Catalog\Application\DTOs\Category\CategoryCreateData;
 use App\Modules\Catalog\Application\DTOs\Wp\CategoryRoomWpData;
-use App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
-use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
+use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 

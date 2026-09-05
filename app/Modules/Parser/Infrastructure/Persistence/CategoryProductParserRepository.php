@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Parser\Infrastructure\Persistence;
 
-use App\Modules\Parser\Application\Interfaces\CategoryProductParserRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\CategoryProductParserRepositoryInterface;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use Illuminate\Pagination\LengthAwarePaginator;

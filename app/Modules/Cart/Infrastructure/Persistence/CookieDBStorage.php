@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Cart\Infrastructure\Persistence;
 
-use App\Modules\Cart\Application\Interfaces\StorageInterface;
 use App\Modules\Cart\Domain\Entities\CartItem;
+use App\Modules\Cart\Domain\Interfaces\StorageInterface;
 use App\Modules\Cart\Infrastructure\Models\CartCookie;
 use Illuminate\Support\Facades\Cookie;
 

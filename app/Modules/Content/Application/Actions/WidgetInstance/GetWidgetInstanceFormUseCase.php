@@ -4,9 +4,9 @@ namespace App\Modules\Content\Application\Actions\WidgetInstance;
 
 use App\Modules\Content\Application\DTOs\WidgetInstance\WidgetFormFieldData;
 use App\Modules\Content\Application\DTOs\WidgetInstance\WidgetInstanceFormData;
-use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Application\Services\ProductSearchService;
+use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 
 final readonly class GetWidgetInstanceFormUseCase
 {

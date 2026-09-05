@@ -4,7 +4,7 @@ namespace App\Modules\Order\Application\Actions\Order;
 
 use App\Modules\Order\Application\DTOs\Order\StatusOrderAssignData;
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
 

@@ -2,8 +2,8 @@
 
 namespace App\Modules\Shared\Presentation\Http\Middlewares;
 
-use App\Modules\Shared\Application\Interfaces\UserPermissionRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Interfaces\UserPermissionRepositoryInterface;
 use Closure;
 use Illuminate\Http\Request;
 

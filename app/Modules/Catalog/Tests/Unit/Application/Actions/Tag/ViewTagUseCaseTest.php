@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Tag;
 
 use App\Modules\Catalog\Application\Actions\Tag\ViewTagUseCase;
-use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\TagEntity;
+use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;

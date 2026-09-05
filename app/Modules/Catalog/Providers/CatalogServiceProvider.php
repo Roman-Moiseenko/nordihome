@@ -2,16 +2,16 @@
 
 namespace App\Modules\Catalog\Providers;
 
-use App\Modules\Catalog\Application\Interfaces\AttributeRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\BrandRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\CategoryProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\ProductPriceRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\RoomProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\TagProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\CategoryProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\RoomProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\BrandRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\CategoryProductRepository;
@@ -26,7 +26,6 @@ use App\Modules\Catalog\Presentation\Console\Commands\ClearCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\LoadCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\ResetPublishedCommand;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use RecursiveDirectoryIterator;

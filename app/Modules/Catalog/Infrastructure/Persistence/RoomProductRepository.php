@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\Modules\Catalog\Application\Interfaces\RoomProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\RoomProductRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Models\RoomProduct;
 use Illuminate\Pagination\LengthAwarePaginator;
 

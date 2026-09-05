@@ -3,12 +3,9 @@
 namespace App\Modules\Order\Application\Actions\Order;
 
 use App\Modules\Auth\Application\Actions\Staff\ViewStaffUseCase;
-use App\Modules\Order\Application\DTOs\Order\StatusOrderAssignData;
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
-use App\Modules\Order\Domain\ValueObjects\OrderStatus;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
-use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class SetManagerOrderUseCase
 {

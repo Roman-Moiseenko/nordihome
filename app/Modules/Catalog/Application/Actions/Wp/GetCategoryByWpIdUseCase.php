@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\Actions\Wp;
 
-use App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
+use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 
 readonly class GetCategoryByWpIdUseCase
 {

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Feedback\Infrastructure\Persistence;
 
-use App\Modules\Feedback\Application\Interfaces\FormBackRepositoryInterface;
 use App\Modules\Feedback\Domain\Entities\FormBackEntity;
+use App\Modules\Feedback\Domain\Interfaces\FormBackRepositoryInterface;
 use App\Modules\Feedback\Infrastructure\Models\FormBack;
 use Illuminate\Pagination\LengthAwarePaginator;
 

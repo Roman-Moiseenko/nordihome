@@ -3,9 +3,8 @@
 namespace App\Modules\Parser\Application\Actions\Product;
 
 use App\Modules\Parser\Application\DTOs\Product\ParserProductCreateData;
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
-use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 
 readonly class CreateParserProductUseCase
 {

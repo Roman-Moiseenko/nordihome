@@ -3,9 +3,9 @@
 namespace App\Modules\Auth\Tests\Unit\Application\Actions\Client;
 use App\Modules\Auth\Application\Actions\Client\CreateClientUseCase;
 use App\Modules\Auth\Application\DTOs\Client\ClientCreateData;
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
 use App\Modules\Auth\Domain\Exceptions\ClientAlreadyExistsException;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\TestCase;

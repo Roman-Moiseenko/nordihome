@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shared\Infrastructure\Persistence;
 
-use App\Modules\Shared\Application\Interfaces\SettingRepositoryInterface;
+use App\Modules\Shared\Domain\Interfaces\SettingRepositoryInterface;
 use App\Modules\Shared\Infrastructure\Models\Setting;
 
 class SettingRepository implements SettingRepositoryInterface

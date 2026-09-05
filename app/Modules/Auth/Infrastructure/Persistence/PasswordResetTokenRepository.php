@@ -3,10 +3,9 @@
 namespace App\Modules\Auth\Infrastructure\Persistence;
 
 use App\Modules\Auth\Application\DTOs\Password\PasswordResetData;
-use App\Modules\Auth\Application\Interfaces\PasswordResetTokenRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\PasswordResetTokenRepositoryInterface;
 use App\Modules\Auth\Infrastructure\Models\PasswordReset;
 use Carbon\Carbon;
-
 use Illuminate\Support\Str;
 
 class PasswordResetTokenRepository implements PasswordResetTokenRepositoryInterface

@@ -6,9 +6,9 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\CategoryProduct;
 
 use App\Modules\Catalog\Application\Actions\CategoryProduct\ListCategoryByProductUseCase;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryProductData;
-use App\Modules\Catalog\Application\Interfaces\CategoryProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
+use App\Modules\Catalog\Domain\Interfaces\CategoryProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
 use App\Modules\Catalog\Infrastructure\Models\CategoryProduct;
 use App\Modules\Catalog\Infrastructure\Models\Product;

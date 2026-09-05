@@ -2,8 +2,8 @@
 
 namespace App\Modules\Auth\Application\Actions\Password;
 
-use App\Modules\Auth\Application\Interfaces\PasswordResetTokenRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\PasswordResetTokenRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Mail\Entity\MailTemplateRegistry;
 use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;

@@ -61,28 +61,5 @@ function onCanceled() {
     $emit('lead:cancel', props.lead.id)
 }
 
-//Редактирование полей
-/*
-function onSetComment(value) {
-    router.visit(route('admin.lead.set-comment', {lead: props.lead.id}), {
-        method: "post",
-        data: {comment: value},
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: page => {
-        }
-    })
-}
-function onSetFinished(value) {
-    router.visit(route('admin.lead.set-finished', {lead: props.lead.id}), {
-        method: "post",
-        data: {finished_at: func.datetime(value)},
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: page => {
-        }
-    })
-}
-*/
 </script>
 

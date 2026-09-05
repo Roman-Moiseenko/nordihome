@@ -3,8 +3,7 @@
 namespace App\Modules\Auth\Application\Actions\Auth;
 
 use App\Modules\Auth\Application\DTOs\LoginData;
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
-use App\Modules\Auth\Domain\Exceptions\InvalidCredentialsException;
+use App\Modules\Auth\Domain\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\Services\PasswordHasherInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use Illuminate\Support\Facades\Auth;

@@ -2,11 +2,11 @@
 
 namespace App\Modules\Parser\Providers;
 
-use App\Modules\Parser\Application\Interfaces\CategoryProductParserRepositoryInterface;
 use App\Modules\Parser\Application\Interfaces\IkeaProductApiInterface;
-use App\Modules\Parser\Application\Interfaces\ParserCategoryRepositoryInterface;
-use App\Modules\Parser\Application\Interfaces\ParserLogRepositoryInterface;
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\CategoryProductParserRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\ParserCategoryRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\ParserLogRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Infrastructure\Persistence\CategoryProductParserRepository;
 use App\Modules\Parser\Infrastructure\Persistence\ParserCategoryRepository;
 use App\Modules\Parser\Infrastructure\Persistence\ParserLogRepository;
@@ -17,7 +17,6 @@ use App\Modules\Parser\Presentation\Console\Commands\IkeaCategoryCommand;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaClearData;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaProductCommand;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use RecursiveDirectoryIterator;

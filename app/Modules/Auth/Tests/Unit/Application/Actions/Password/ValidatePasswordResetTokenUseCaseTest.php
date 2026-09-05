@@ -4,7 +4,7 @@ namespace App\Modules\Auth\Tests\Unit\Application\Actions\Password;
 
 use App\Modules\Auth\Application\Actions\Password\ValidatePasswordResetTokenUseCase;
 use App\Modules\Auth\Application\DTOs\Password\PasswordResetData;
-use App\Modules\Auth\Application\Interfaces\PasswordResetTokenRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\PasswordResetTokenRepositoryInterface;
 use DateTimeImmutable;
 use Mockery;
 use PHPUnit\Framework\TestCase;

@@ -3,9 +3,9 @@
 namespace App\Modules\Auth\Application\Actions\User;
 
 use App\Modules\Auth\Application\Actions\Client\ConsentClientUseCase;
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
-use InvalidArgumentException;
+use App\Modules\Auth\Domain\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
+use InvalidArgumentException;
 
 /**
  * Подтверждение смены почты

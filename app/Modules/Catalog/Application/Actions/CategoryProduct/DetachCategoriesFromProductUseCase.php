@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\Actions\CategoryProduct;
 
-use App\Modules\Catalog\Application\Interfaces\CategoryProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\CategoryProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
 readonly class DetachCategoriesFromProductUseCase

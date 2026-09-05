@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Application\Actions\CategoryProduct;
 
 use App\Modules\Catalog\Application\DTOs\Product\ProductCategoryData;
-use App\Modules\Catalog\Application\Interfaces\CategoryProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\CategoryProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 readonly class ListProductByCategoryUseCase

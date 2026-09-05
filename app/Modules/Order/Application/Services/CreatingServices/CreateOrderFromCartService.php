@@ -13,9 +13,9 @@ use App\Modules\Order\Application\Actions\AdditionGuide\GetDeliveryAdditionUseCa
 use App\Modules\Order\Application\Actions\AdditionGuide\GetPolandAdditionUseCase;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Entities\OrderEntity;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use App\Modules\Order\Infrastructure\Events\OrderHasCreated;

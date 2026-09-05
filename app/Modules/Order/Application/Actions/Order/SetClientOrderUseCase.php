@@ -4,7 +4,7 @@ namespace App\Modules\Order\Application\Actions\Order;
 
 
 use App\Modules\Order\Application\DTOs\Order\AssignClientToOrderData;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 
 /**
  * Не используется в одиночку, только через Сервис

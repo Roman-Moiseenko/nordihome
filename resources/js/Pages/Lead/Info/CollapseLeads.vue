@@ -3,7 +3,7 @@
         <el-collapse-item title="Повторное обращение" name="1">
             <div v-for="_lead in lead.leads">
                 <template v-if="_lead.id !== lead.id">
-                    <el-tag type="info" effect="dark">{{ func.date(_lead.created_at) }}</el-tag>
+                    <el-tag type="info" effect="dark">{{ func.date(_lead.createdAt) }}</el-tag>
                     <el-tag type="success" effect="dark">{{ _lead.status }}</el-tag>
                 </template>
             </div>

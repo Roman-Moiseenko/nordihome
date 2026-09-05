@@ -2,8 +2,8 @@
 
 namespace App\Modules\Content\Infrastructure\Persistence;
 
-use App\Modules\Content\Application\Interfaces\MetaTemplateRepositoryInterface;
 use App\Modules\Content\Domain\Entities\MetaTemplateEntity;
+use App\Modules\Content\Domain\Interfaces\MetaTemplateRepositoryInterface;
 use App\Modules\Content\Infrastructure\Models\MetaTemplate;
 
 class MetaTemplateRepository implements MetaTemplateRepositoryInterface

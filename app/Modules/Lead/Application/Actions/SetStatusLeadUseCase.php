@@ -2,10 +2,8 @@
 
 namespace App\Modules\Lead\Application\Actions;
 
-use App\Modules\Auth\Application\Actions\Client\FindClientByContactUseCase;
-use App\Modules\Lead\Application\Interfaces\LeadRepositoryInterface;
+use App\Modules\Lead\Domain\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
-use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 
 readonly class SetStatusLeadUseCase
 {

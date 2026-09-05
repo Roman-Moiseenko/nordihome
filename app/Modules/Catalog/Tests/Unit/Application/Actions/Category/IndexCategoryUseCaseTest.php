@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Category;
 
 use App\Modules\Catalog\Application\Actions\Category\IndexCategoryUseCase;
-use App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
+use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;

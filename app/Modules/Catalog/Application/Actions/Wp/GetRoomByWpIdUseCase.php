@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\Actions\Wp;
 
-use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
+use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 
 readonly class GetRoomByWpIdUseCase
 {

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
 use App\Modules\Catalog\Application\DTOs\Attribute\AttributeCategoryData;
-use App\Modules\Catalog\Application\Interfaces\AttributeRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 

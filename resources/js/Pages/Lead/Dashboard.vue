@@ -11,20 +11,20 @@
                 <el-checkbox-button key="paid" value="paid" label="Оплачен" />
                 <el-checkbox-button key="assembly" value="assembly" label="На сборке" />
                 <el-checkbox-button key="delivery" value="delivery" label="На доставке" />
-                <el-checkbox-button key="cancelled" value="cancelled" label="Отменен" />
+                <el-checkbox-button key="cancelled" value="cancelled" label="Отменен" class="bg-red-100"/>
             </el-checkbox-group>
         </div>
     </el-row>
 
-    <el-splitter style="width: 2000px;">
-        <NewLeads/>
-        <InWorkLeads/>
-        <NotDecidedLeads/>
-        <AwaitingLeads/>
-        <PaidLeads/>
-        <AssemblyLeads/>
-        <DeliveryLeads/>
-        <CancelledLeads/>
+    <el-splitter :style="{ width: splitterWidth + 'px' }">
+        <NewLeads v-if="panelsView.includes('new')"/>
+        <InWorkLeads v-if="panelsView.includes('in_work')"/>
+        <NotDecidedLeads v-if="panelsView.includes('not_decided')"/>
+        <AwaitingLeads v-if="panelsView.includes('awaiting')"/>
+        <PaidLeads v-if="panelsView.includes('paid')"/>
+        <AssemblyLeads v-if="panelsView.includes('assembly')"/>
+        <DeliveryLeads v-if="panelsView.includes('delivery')"/>
+        <CancelledLeads v-if="panelsView.includes('cancelled')"/>
     </el-splitter>
 </template>
 
@@ -38,9 +38,13 @@ import PaidLeads from "./Panels/PaidLeads.vue";
 import AssemblyLeads from "./Panels/AssemblyLeads.vue";
 import DeliveryLeads from "./Panels/DeliveryLeads.vue";
 import CancelledLeads from "./Panels/CancelledLeads.vue";
-import {ref} from "vue";
+import {ref, computed} from "vue";
+import {PANEL_SIZE} from "./Panels/useLeadPanel";
 
-const panelsView = ref(['new','in_work','not_decided', 'awaiting','paid', 'assembly', 'cancelled', 'delivery']);
+const panelsView = ref(['new','in_work','not_decided', 'awaiting','paid', 'assembly', 'delivery']);
+
+const splitterWidth = computed(() => panelsView.value.length * PANEL_SIZE);
+
 defineProps({
     title: {
         type: String,

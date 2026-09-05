@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shared\Infrastructure\Persistence;
 
-use App\Modules\Shared\Application\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\PhotoEntity;
+use App\Modules\Shared\Domain\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\ValueObjects\PhotoType;
 use App\Modules\Shared\Infrastructure\Models\Photo;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;

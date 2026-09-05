@@ -4,15 +4,16 @@ namespace App\Modules\Auth\Providers;
 
 use App\Modules\Auth\Application\Actions\User\ChangeUserCredentialsUseCase;
 use App\Modules\Auth\Application\Actions\User\RegisterUserClientUseCase;
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Application\Interfaces\FreelanceRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\PasswordResetTokenRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Database\Seeders\AuthRoleSeeder;
 use App\Modules\Auth\Domain\Exceptions\ClientNotFoundException;
 use App\Modules\Auth\Domain\Exceptions\RoleInvalidArgumentException;
 use App\Modules\Auth\Domain\Exceptions\StaffNotFoundException;
+use App\Modules\Auth\Domain\Interfaces\ClientReadServiceInterface;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\PasswordResetTokenRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\Services\PasswordHasherInterface;
 use App\Modules\Auth\Domain\Services\PermissionProviderInterface;
 use App\Modules\Auth\Domain\Services\RoleRepositoryInterface;
@@ -22,12 +23,13 @@ use App\Modules\Auth\Infrastructure\Persistence\PasswordResetTokenRepository;
 use App\Modules\Auth\Infrastructure\Persistence\RoleRepository;
 use App\Modules\Auth\Infrastructure\Persistence\StaffRepository;
 use App\Modules\Auth\Infrastructure\Persistence\UserRepository;
+use App\Modules\Auth\Infrastructure\Services\ClientReadService;
 use App\Modules\Auth\Infrastructure\Services\LaravelPasswordHasher;
 use App\Modules\Auth\Infrastructure\Services\PermissionProvider;
+use App\Modules\Auth\Presentation\Console\Commands\AdminCreateCommand;
 use App\Modules\Mail\Service\FakeMailService;
 use App\Modules\Mail\Service\SystemMailService;
 use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;
-use App\Modules\Auth\Presentation\Console\Commands\AdminCreateCommand;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Facades\Blade;
@@ -142,10 +144,6 @@ class AuthServiceProvider extends ServiceProvider
             ClientRepository::class
         );
         $this->app->bind(
-            FreelanceRepositoryInterface::class,
-            FreelanceRepository::class
-        );
-        $this->app->bind(
             PasswordHasherInterface::class,
             LaravelPasswordHasher::class
         );
@@ -168,6 +166,7 @@ class AuthServiceProvider extends ServiceProvider
                 ? FakeMailService::class
                 : SystemMailService::class
         );
+
         $this->app->when(ChangeUserCredentialsUseCase::class)
             ->needs('$frontendUrl')
             ->give(config('app.frontend_url'));

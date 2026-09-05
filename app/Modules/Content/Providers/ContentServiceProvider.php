@@ -2,26 +2,25 @@
 
 namespace App\Modules\Content\Providers;
 
-use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\MetaTemplateRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
-use App\Modules\Content\Database\Seeders\MetaSeeder;
+use App\Modules\Content\Application\Services\WidgetRendererService;
 use App\Modules\Content\Database\Seeders\ContentRoleSeeder;
+use App\Modules\Content\Database\Seeders\MetaSeeder;
+use App\Modules\Content\Domain\Interfaces\ContentBlockRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\MetaTemplateRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Infrastructure\Persistence\ContentBlockRepository;
 use App\Modules\Content\Infrastructure\Persistence\MetaTemplateRepository;
+use App\Modules\Content\Infrastructure\Persistence\PostRepository;
 use App\Modules\Content\Infrastructure\Persistence\WidgetInstanceRepository;
 use App\Modules\Content\Infrastructure\Persistence\WidgetRepository;
-use App\Modules\Content\Application\Services\WidgetRendererService;
-use App\Modules\Content\Application\Interfaces\PostRepositoryInterface;
-use App\Modules\Content\Infrastructure\Persistence\PostRepository;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use Illuminate\Support\Facades\View;
 
 /**
  * Service Provider for Page module

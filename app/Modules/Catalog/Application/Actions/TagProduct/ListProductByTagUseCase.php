@@ -3,9 +3,8 @@
 namespace App\Modules\Catalog\Application\Actions\TagProduct;
 
 use App\Modules\Catalog\Application\DTOs\Product\ProductRoomData;
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\TagProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 readonly class ListProductByTagUseCase

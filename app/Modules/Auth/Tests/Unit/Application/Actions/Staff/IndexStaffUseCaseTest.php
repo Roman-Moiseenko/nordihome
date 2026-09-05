@@ -3,7 +3,7 @@
 namespace App\Modules\Auth\Tests\Unit\Application\Actions\Staff;
 
 use App\Modules\Auth\Application\Actions\Staff\IndexStaffUseCase;
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Mockery;

@@ -11,6 +11,5 @@ class LeadInfoData
         public string $status,
     )
     {
-
     }
 }

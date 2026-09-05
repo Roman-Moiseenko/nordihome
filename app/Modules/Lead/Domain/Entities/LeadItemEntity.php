@@ -26,7 +26,7 @@ final class LeadItemEntity
         set => $this->comment = $value;
     }
 
-    public DateTimeImmutable $createdAt {
+    public ?DateTimeImmutable $createdAt = null {
         get => $this->createdAt;
         set => $this->createdAt = $value;
     }

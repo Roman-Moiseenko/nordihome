@@ -4,8 +4,8 @@ namespace App\Modules\Order\Application\Actions\Order;
 
 use App\Modules\Accounting\Application\Actions\Trader\GetDefaultTraderIdUseCase;
 use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use App\Modules\Shared\Domain\Entities\UserPermission;

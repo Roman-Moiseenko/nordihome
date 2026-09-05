@@ -4,9 +4,9 @@ namespace App\Modules\Auth\Tests\Unit\Application\Actions\Password;
 
 use App\Modules\Auth\Application\Actions\Password\ResetPasswordUseCase;
 use App\Modules\Auth\Application\DTOs\Password\PasswordResetData;
-use App\Modules\Auth\Application\Interfaces\PasswordResetTokenRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\UserEntity;
+use App\Modules\Auth\Domain\Interfaces\PasswordResetTokenRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\Services\PasswordHasherInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\HashedPassword;

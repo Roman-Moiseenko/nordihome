@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Brand;
 
 use App\Modules\Catalog\Application\Actions\Brand\FindOrCreateBrandUseCase;
-use App\Modules\Catalog\Application\Interfaces\BrandRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\BrandEntity;
+use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

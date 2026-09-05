@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Application\Actions\Promotion;
 
 use App\Modules\Discount\Application\DTOs\Promotion\PromotionUpdateData;
-use App\Modules\Discount\Application\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Discount\Domain\Entities\PromotionEntity;
+use App\Modules\Discount\Domain\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Meta;

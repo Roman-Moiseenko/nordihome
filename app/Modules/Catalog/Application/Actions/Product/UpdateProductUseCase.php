@@ -6,8 +6,8 @@ namespace App\Modules\Catalog\Application\Actions\Product;
 
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Catalog\Application\DTOs\Product\ProductUpdateData;
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\Slug;

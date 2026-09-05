@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Infrastructure\Persistence;
 
-use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
 use App\Modules\Content\Domain\Entities\WidgetInstanceEntity;
+use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
 use App\Modules\Content\Infrastructure\Models\WidgetInstance;
 use DateTimeImmutable;
 

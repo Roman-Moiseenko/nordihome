@@ -6,7 +6,7 @@ namespace App\Modules\Order\Service;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\BatchSaleService;
 use App\Modules\Admin\Entity\Worker;
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Helpers\NotificationHelper;

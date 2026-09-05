@@ -6,9 +6,9 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\CategoryProduct;
 
 use App\Modules\Catalog\Application\Actions\CategoryProduct\ListProductByCategoryUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\ProductCategoryData;
-use App\Modules\Catalog\Application\Interfaces\CategoryProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
+use App\Modules\Catalog\Domain\Interfaces\CategoryProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Pagination\LengthAwarePaginator;

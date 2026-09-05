@@ -3,7 +3,7 @@
         @dragover.prevent="onDropOver"
         @drop="onDropList"
         class="shadow-sm bg-green-100"
-        :size="250"
+        :size="PANEL_SIZE"
         :resizable="false"
     >
         <el-tag effect="dark" type="success" size="large">Новый</el-tag>
@@ -25,7 +25,7 @@ import LeadInfo from "@Page/Lead/Info/Lead.vue";
 import CreateClient from "@Page/Lead/Dialogs/CreateClient.vue";
 import CreateOrder from "@Page/Lead/Dialogs/CreateOrder.vue";
 import AddItem from "@Page/Lead/Dialogs/AddItem.vue";
-import {useLeadPanel} from "./useLeadPanel";
+import {useLeadPanel, PANEL_SIZE} from "./useLeadPanel";
 
 const {
     leads, dialogCreateClient, dialogCreateOrder, dialogAddItem,

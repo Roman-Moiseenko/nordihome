@@ -22,6 +22,7 @@ class LeadItem extends Model
         'comment',
         'finished_at',
         'created_at',
+        'staff_id',
     ];
     protected $casts = [
         'created_at' => 'datetime',

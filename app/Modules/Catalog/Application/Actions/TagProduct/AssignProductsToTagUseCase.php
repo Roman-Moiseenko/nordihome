@@ -2,7 +2,7 @@
 
 namespace App\Modules\Catalog\Application\Actions\TagProduct;
 
-use App\Modules\Catalog\Application\Interfaces\TagProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
 class AssignProductsToTagUseCase

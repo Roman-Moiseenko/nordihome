@@ -6,8 +6,8 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\ProductPrice;
 
 use App\Modules\Catalog\Application\Actions\ProductPrice\SetProductPriceUseCase;
 use App\Modules\Catalog\Application\DTOs\ProductPrice\SetProductPriceData;
-use App\Modules\Catalog\Application\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductPriceEntity;
+use App\Modules\Catalog\Domain\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Mockery;

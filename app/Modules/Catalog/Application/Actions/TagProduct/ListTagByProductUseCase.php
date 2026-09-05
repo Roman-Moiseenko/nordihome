@@ -3,8 +3,8 @@
 namespace App\Modules\Catalog\Application\Actions\TagProduct;
 
 use App\Modules\Catalog\Application\DTOs\Tag\TagViewData;
-use App\Modules\Catalog\Application\Interfaces\TagProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 
 class ListTagByProductUseCase
 {

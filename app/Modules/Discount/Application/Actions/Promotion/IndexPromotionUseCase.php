@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Application\Actions\Promotion;
 
 use App\Modules\Discount\Application\DTOs\Promotion\PromotionIndexData;
-use App\Modules\Discount\Application\Interfaces\PromotionProductRepositoryInterface;
-use App\Modules\Discount\Application\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Discount\Domain\Entities\PromotionEntity;
+use App\Modules\Discount\Domain\Interfaces\PromotionProductRepositoryInterface;
+use App\Modules\Discount\Domain\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Shared\Application\Actions\GetImageThumbUseCase;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;

@@ -2,9 +2,8 @@
 
 namespace App\Modules\Discount\Application\Actions\Promotion;
 
-use App\Modules\Discount\Application\Interfaces\PromotionRepositoryInterface;
+use App\Modules\Discount\Domain\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
-use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 

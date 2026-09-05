@@ -2,13 +2,12 @@
 
 namespace App\Modules\Discount\Providers;
 
-use App\Modules\Discount\Application\Interfaces\PromotionProductRepositoryInterface;
-use App\Modules\Discount\Application\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Discount\Database\Seeders\DiscountRoleSeeder;
+use App\Modules\Discount\Domain\Interfaces\PromotionProductRepositoryInterface;
+use App\Modules\Discount\Domain\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Discount\Infrastructure\Persistence\PromotionProductRepository;
 use App\Modules\Discount\Infrastructure\Persistence\PromotionRepository;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use RecursiveDirectoryIterator;

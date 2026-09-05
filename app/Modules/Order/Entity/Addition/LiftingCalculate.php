@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Addition;
 
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Infrastructure\Models\Order;
 

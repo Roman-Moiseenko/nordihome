@@ -5,9 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Parser\Application\Actions\Product;
 
 use App\Modules\Parser\Application\DTOs\Product\ParserProductUpdateData;
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
-use App\Modules\Parser\Domain\ValueObjects\Composite;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\ValueObjects\Package;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 

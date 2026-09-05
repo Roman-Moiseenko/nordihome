@@ -3,7 +3,6 @@
 namespace App\Modules\Feedback\Providers;
 
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use RecursiveDirectoryIterator;
@@ -84,7 +83,7 @@ class FeedbackServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(
-            \App\Modules\Feedback\Application\Interfaces\FormBackRepositoryInterface::class,
+            \App\Modules\Feedback\Domain\Interfaces\FormBackRepositoryInterface::class,
             \App\Modules\Feedback\Infrastructure\Persistence\FormBackRepository::class
         );
     }

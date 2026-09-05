@@ -4,11 +4,11 @@ namespace App\Modules\Lead\Application\Actions;
 
 use App\Modules\Auth\Application\Actions\Client\FindClientByContactUseCase;
 use App\Modules\Auth\Application\DTOs\Client\FindClientByContactData;
-use App\Modules\Lead\Application\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Domain\Entities\LeadEntity;
+use App\Modules\Lead\Domain\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Domain\ValueObjects\LeadDataField;
 use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Application\DTOs\Lead\LeadSourceData;
 
 readonly class CreateLeadFromFormBackUseCase

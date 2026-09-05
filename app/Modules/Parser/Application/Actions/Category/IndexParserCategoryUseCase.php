@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Parser\Application\Actions\Category;
 
-use App\Modules\Parser\Application\Interfaces\ParserCategoryRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserCategoryEntity;
+use App\Modules\Parser\Domain\Interfaces\ParserCategoryRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
 readonly class IndexParserCategoryUseCase

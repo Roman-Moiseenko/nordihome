@@ -3,8 +3,8 @@
 namespace App\Modules\Lead\Tests\Unit\Application\Actions;
 
 use App\Modules\Lead\Application\Actions\SetStatusLeadFromOrderUseCase;
-use App\Modules\Lead\Application\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Domain\Entities\LeadEntity;
+use App\Modules\Lead\Domain\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use InvalidArgumentException;
 use Mockery;

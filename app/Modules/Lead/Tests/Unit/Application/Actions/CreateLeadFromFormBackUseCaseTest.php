@@ -3,17 +3,17 @@
 namespace App\Modules\Lead\Tests\Unit\Application\Actions;
 
 use App\Modules\Auth\Application\Actions\Client\FindClientByContactUseCase;
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
 use App\Modules\Lead\Application\Actions\CreateLeadFromFormBackUseCase;
-use App\Modules\Lead\Application\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Domain\Entities\LeadEntity;
+use App\Modules\Lead\Domain\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
 use App\Modules\Shared\Application\DTOs\Lead\LeadSourceData;
 use Mockery;

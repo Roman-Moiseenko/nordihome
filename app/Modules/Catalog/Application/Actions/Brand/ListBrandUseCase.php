@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\Actions\Brand;
 
-use App\Modules\Catalog\Application\Interfaces\BrandRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
 
 readonly class ListBrandUseCase
 {

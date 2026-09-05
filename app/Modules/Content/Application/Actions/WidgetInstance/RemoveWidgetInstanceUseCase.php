@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Application\Actions\WidgetInstance;
 
-use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
 
 final readonly class RemoveWidgetInstanceUseCase
 {

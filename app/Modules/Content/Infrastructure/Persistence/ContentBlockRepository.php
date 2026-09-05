@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Infrastructure\Persistence;
 
-use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
 use App\Modules\Content\Domain\Entities\ContentBlockEntity;
+use App\Modules\Content\Domain\Interfaces\ContentBlockRepositoryInterface;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Content\Domain\ValueObjects\ContentSection;
 use App\Modules\Content\Infrastructure\Models\ContentBlock;

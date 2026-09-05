@@ -3,10 +3,10 @@
 namespace App\Modules\Order\Providers;
 
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Database\Seeders\AdditionSeeder;
 use App\Modules\Order\Database\Seeders\OrderRoleSeeder;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Infrastructure\Events\OrderHasCreated;
 use App\Modules\Order\Infrastructure\Listeners\SendClientOrderNew;
 use App\Modules\Order\Infrastructure\Persistence\OrderRepository;

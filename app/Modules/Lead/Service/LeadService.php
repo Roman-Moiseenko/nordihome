@@ -195,19 +195,13 @@ class LeadService
     }
 
     #[Deprecated]
-    public function setComment(Lead $lead, Request $request): void
-    {
-        $lead->comment = $request->string('comment')->trim()->value();
-        $lead->save();
-    }
-
-    #[Deprecated]
     public function setFinished(Lead $lead, Request $request): void
     {
         $lead->finished_at = is_null($request->input('finished_at')) ? null : Carbon::parse($request->input('finished_at'));
         $lead->save();
     }
 
+    #[Deprecated]
     public function addItem(Lead $lead, Request $request): void
     {
         $finished = $request->input('finished_at');

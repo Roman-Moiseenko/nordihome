@@ -6,7 +6,7 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Tag;
 
 use App\Modules\Catalog\Application\Actions\Tag\CreateTagUseCase;
 use App\Modules\Catalog\Application\DTOs\Tag\TagCreateData;
-use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

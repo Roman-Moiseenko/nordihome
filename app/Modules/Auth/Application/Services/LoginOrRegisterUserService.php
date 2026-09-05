@@ -10,7 +10,7 @@ use App\Modules\Auth\Application\DTOs\Client\ClientCreateData;
 use App\Modules\Auth\Application\DTOs\Client\FindClientByContactData;
 use App\Modules\Auth\Application\DTOs\LoginData;
 use App\Modules\Auth\Application\DTOs\User\RegisterUserData;
-use App\Modules\Auth\Application\Interfaces\UserRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\UserRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 

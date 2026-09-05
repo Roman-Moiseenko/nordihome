@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Infrastructure\Persistence;
 
-use App\Modules\Discount\Application\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Discount\Domain\Entities\PromotionEntity;
+use App\Modules\Discount\Domain\Interfaces\PromotionRepositoryInterface;
 use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Shared\Domain\ValueObjects\Meta;

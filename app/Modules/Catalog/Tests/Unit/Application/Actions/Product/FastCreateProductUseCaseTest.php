@@ -6,8 +6,8 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Product;
 
 use App\Modules\Catalog\Application\Actions\Product\FastCreateProductUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\ProductFastCreateData;
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

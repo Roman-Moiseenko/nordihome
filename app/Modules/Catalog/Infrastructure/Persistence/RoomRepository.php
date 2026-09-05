@@ -4,13 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
+use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Models\Room;
-use App\Modules\Shared\Domain\ValueObjects\Image;
 use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RoomRepository implements RoomRepositoryInterface
 {

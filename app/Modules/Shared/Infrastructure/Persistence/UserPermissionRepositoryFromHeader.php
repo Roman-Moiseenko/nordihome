@@ -2,8 +2,8 @@
 
 namespace App\Modules\Shared\Infrastructure\Persistence;
 
-use App\Modules\Shared\Application\Interfaces\UserPermissionRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Interfaces\UserPermissionRepositoryInterface;
 use Illuminate\Http\Request;
 
 class UserPermissionRepositoryFromHeader implements UserPermissionRepositoryInterface

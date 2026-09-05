@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\Modules\Catalog\Application\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductPriceEntity;
+use App\Modules\Catalog\Domain\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Infrastructure\Models\ProductPrice;
 use DateTimeImmutable;

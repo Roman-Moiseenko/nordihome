@@ -2,17 +2,15 @@
 
 namespace App\Modules\Auth\Infrastructure\Persistence;
 
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
-use App\Modules\Auth\Domain\Entities\UserEntity;
-use App\Modules\Auth\Domain\ValueObjects\HashedPassword;
-use App\Modules\Auth\Domain\ValueObjects\PersonalDataConsent;
-use App\Modules\Auth\Infrastructure\Models\Client;
-use App\Modules\Auth\Domain\ValueObjects\FullName;
-use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
-use App\Modules\Auth\Domain\ValueObjects\Email;
-use App\Modules\Auth\Domain\ValueObjects\Gender;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Address;
+use App\Modules\Auth\Domain\ValueObjects\Email;
+use App\Modules\Auth\Domain\ValueObjects\FullName;
+use App\Modules\Auth\Domain\ValueObjects\Gender;
+use App\Modules\Auth\Domain\ValueObjects\PersonalDataConsent;
+use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Auth\Infrastructure\Models\User;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use DateTimeImmutable;

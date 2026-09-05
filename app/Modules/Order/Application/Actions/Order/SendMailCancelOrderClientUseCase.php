@@ -2,13 +2,11 @@
 
 namespace App\Modules\Order\Application\Actions\Order;
 
-use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Mail\Entity\MailTemplateRegistry;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;
 use App\Modules\Shared\Domain\Entities\Mail\Recipient;
-use App\Modules\Shared\Domain\Entities\UserPermission;
 
 readonly class SendMailCancelOrderClientUseCase
 {

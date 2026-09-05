@@ -2,10 +2,9 @@
 
 namespace App\Modules\Auth\Application\Actions\Staff;
 
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 readonly class RemoveStaffUseCase

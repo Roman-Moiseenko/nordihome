@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\Services;
 
-use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Domain\ValueObjects\ProductGroupType;
 use App\Modules\Shop\Application\DTOs\Elements\WidgetPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;

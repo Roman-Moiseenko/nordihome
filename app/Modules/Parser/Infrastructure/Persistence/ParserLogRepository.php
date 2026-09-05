@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Parser\Infrastructure\Persistence;
 
-use App\Modules\Parser\Application\Interfaces\ParserLogRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserLogEntity;
 use App\Modules\Parser\Domain\Entities\ParserLogItemEntity;
+use App\Modules\Parser\Domain\Interfaces\ParserLogRepositoryInterface;
 use App\Modules\Parser\Domain\ValueObjects\ParserStatus;
 use App\Modules\Parser\Domain\ValueObjects\PriceChangePayload;
 use App\Modules\Parser\Infrastructure\Models\ParserLog;

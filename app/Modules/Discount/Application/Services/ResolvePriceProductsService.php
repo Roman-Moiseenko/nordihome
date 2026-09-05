@@ -2,10 +2,9 @@
 
 namespace App\Modules\Discount\Application\Services;
 
-use App\Modules\Catalog\Application\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
-use App\Modules\Discount\Application\Interfaces\PromotionProductRepositoryInterface;
-use App\Modules\Discount\Application\Interfaces\PromotionRepositoryInterface;
+use App\Modules\Discount\Domain\Interfaces\PromotionRepositoryInterface;
 
 readonly class ResolvePriceProductsService
 {

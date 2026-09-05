@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Application\Actions\Product;
 
 use App\Modules\Catalog\Application\DTOs\Product\ProductFastCreateData;
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;

@@ -65,7 +65,7 @@ Breadcrumbs::for('admin.catalog.category.child', function (BreadcrumbTrail $trai
     $trail->push('Добавить подкатегорию', route('admin.catalog.category.create'));
 });
 Breadcrumbs::for('admin.catalog.category.show', function (BreadcrumbTrail $trail, int|string $id) {
-    $categoryRepository = app(App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface::class);
+    $categoryRepository = app(\App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface::class);
     $category = $categoryRepository->getById((int) $id);
     if ($category->parentId) {
         $parentCategory = $categoryRepository->getById($category->parentId);
@@ -81,7 +81,7 @@ Breadcrumbs::for('admin.catalog.category.edit', function (BreadcrumbTrail $trail
     $trail->push('Редактировать', route('admin.catalog.category.edit', $id));
 });
 Breadcrumbs::for('admin.catalog.category.update', function (BreadcrumbTrail $trail, int|string $id) {
-    $categoryRepository = app(App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface::class);
+    $categoryRepository = app(\App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface::class);
     $category = $categoryRepository->getById((int) $id);
     $trail->parent('admin.catalog.category.index');
     $trail->push($category->name, route('admin.catalog.category.show', $category->id));
@@ -120,7 +120,7 @@ Breadcrumbs::for('admin.catalog.tag.index', function (BreadcrumbTrail $trail) {
     $trail->push('Метки (Теги)', route('admin.catalog.tag.index'));
 });
 Breadcrumbs::for('admin.catalog.tag.show', function (BreadcrumbTrail $trail, int $id) {
-    $tagRepository = app(\App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface::class);
+    $tagRepository = app(\App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface::class);
     $tag = $tagRepository->getById((int) $id);
     $trail->parent('admin.catalog.tag.index');
     $trail->push($tag->name, route('admin.catalog.tag.show', $tag->id));
@@ -206,7 +206,7 @@ Breadcrumbs::for('admin.catalog.room.index', function (BreadcrumbTrail $trail) {
 });
 
 Breadcrumbs::for('admin.catalog.room.show', function (BreadcrumbTrail $trail, int|string $id) {
-    $roomRepository = app(App\Modules\Catalog\Application\Interfaces\RoomRepositoryInterface::class);
+    $roomRepository = app(\App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface::class);
     $room = $roomRepository->getById((int) $id);
     $trail->parent('admin.catalog.room.index');
     $trail->push($room->name, route('admin.catalog.room.show', $room->id));

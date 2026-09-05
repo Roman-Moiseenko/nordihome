@@ -4,8 +4,6 @@
             <template #title>
                 <el-tag effect="dark" size="large">Заказ #{{ lead.order.number }} на {{ func.price(lead.order.amount)}} </el-tag>
 
-                <el-tag v-if="lead.assembly" effect="plain" type="warning" size="large">Сборка</el-tag>
-                <el-tag v-if="lead.delivery" effect="plain" type="danger" size="large">Доставка</el-tag>
             </template>
             <Link :href="route('admin.order.show', {order: lead.order.id})" class="flex items-center w-full text-sm"
                   type="primary">Перейти к заказу <i class="fa-light fa-right ml-2"></i></Link>
@@ -32,7 +30,7 @@ import {Link, router} from "@inertiajs/vue3";
 const props = defineProps({
     lead: Object,
 })
-console.log(props.lead.order)
+
 </script>
 <style scoped>
 .el-collapse {

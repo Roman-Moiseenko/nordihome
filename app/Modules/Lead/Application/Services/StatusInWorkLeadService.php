@@ -2,10 +2,9 @@
 
 namespace App\Modules\Lead\Application\Services;
 
-use App\Modules\Lead\Application\Actions\SetManagerLeadFromOrderUseCase;
 use App\Modules\Lead\Application\Actions\SetManagerLeadUseCase;
 use App\Modules\Lead\Application\Actions\SetStatusLeadUseCase;
-use App\Modules\Lead\Application\Interfaces\LeadRepositoryInterface;
+use App\Modules\Lead\Domain\Interfaces\LeadRepositoryInterface;
 use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use App\Modules\Order\Application\Actions\Order\SetManagerOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetStatusOrderUseCase;

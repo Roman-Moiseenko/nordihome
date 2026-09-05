@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Infrastructure\Persistence;
 
-use App\Modules\Content\Application\Interfaces\PostRepositoryInterface;
 use App\Modules\Content\Domain\Entities\PostEntity;
+use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
 use App\Modules\Content\Infrastructure\Models\Post;
 use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;

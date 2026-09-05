@@ -456,8 +456,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Application\Actions\WidgetInstance;
 
-use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
-use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;use App\Modules\Shared\Domain\Entities\UserPermission;
 
 final readonly class RemoveWidgetInstanceUseCase
 {
@@ -519,9 +518,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Application\Services;
 
-use App\Modules\Content\Application\Interfaces\WidgetInstanceRepositoryInterface;
-use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
-use Illuminate\Support\Facades\View;
+use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;use Illuminate\Support\Facades\View;
 
 class WidgetRendererService
 {

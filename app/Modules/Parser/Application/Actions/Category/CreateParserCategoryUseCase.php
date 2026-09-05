@@ -2,12 +2,9 @@
 
 namespace App\Modules\Parser\Application\Actions\Category;
 
-use App\Modules\Catalog\Application\DTOs\Category\CategoryCreateData;
-use App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface;
-use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Parser\Application\DTOs\Category\ParserCategoryCreateData;
-use App\Modules\Parser\Application\Interfaces\ParserCategoryRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserCategoryEntity;
+use App\Modules\Parser\Domain\Interfaces\ParserCategoryRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 

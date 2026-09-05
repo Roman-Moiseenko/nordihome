@@ -3,8 +3,8 @@
 namespace App\Modules\Content\Application\Actions;
 
 use App\Modules\Content\Application\DTOs\MetaTemplateCreateData;
-use App\Modules\Content\Application\Interfaces\MetaTemplateRepositoryInterface;
 use App\Modules\Content\Domain\Entities\MetaTemplateEntity;
+use App\Modules\Content\Domain\Interfaces\MetaTemplateRepositoryInterface;
 
 readonly class CreateMetaTemplateUseCase
 {

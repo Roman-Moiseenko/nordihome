@@ -6,7 +6,7 @@ namespace App\Modules\Content\Application\Actions\ContentBlock;
 
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockViewData;
-use App\Modules\Content\Application\Interfaces\ContentBlockRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\ContentBlockRepositoryInterface;
 
 readonly class ListContentBlockByContainerUseCase
 {

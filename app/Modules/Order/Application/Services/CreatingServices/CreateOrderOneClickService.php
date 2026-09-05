@@ -9,8 +9,8 @@ use App\Modules\Catalog\Application\Actions\ProductPrice\GetProductSellPriceUseC
 use App\Modules\Order\Application\Actions\AdditionGuide\GetDeliveryAdditionUseCase;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use App\Modules\Order\Infrastructure\Events\OrderHasCreated;

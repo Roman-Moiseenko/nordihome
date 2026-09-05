@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Application\Actions;
 
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Order\Application\DTOs\ProductItemData;
 
 readonly class GetProductItemDataUseCase

@@ -3,7 +3,7 @@
 namespace App\Modules\Auth\Tests\Unit\Application\Actions\Client;
 
 use App\Modules\Auth\Application\Actions\Client\IndexClientUseCase;
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Mockery;

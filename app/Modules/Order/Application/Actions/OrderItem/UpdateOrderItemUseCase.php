@@ -5,8 +5,8 @@ namespace App\Modules\Order\Application\Actions\OrderItem;
 use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetPackingsOrderUseCase;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Application\Services\OrderCalculateService;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 

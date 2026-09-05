@@ -4,7 +4,7 @@ namespace App\Modules\Parser\Application\Actions\Product;
 
 use App\Modules\Parser\Application\DTOs\Product\ParserProductCategoryData;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductFilterData;
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Illuminate\Pagination\LengthAwarePaginator;

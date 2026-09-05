@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Parser\Application\Actions\Product;
 
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
 readonly class ToggleProductAvailabilityUseCase

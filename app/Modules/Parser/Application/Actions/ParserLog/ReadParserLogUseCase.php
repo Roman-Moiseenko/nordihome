@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Parser\Application\Actions\ParserLog;
 
-use App\Modules\Parser\Application\Interfaces\ParserLogRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\ParserLogRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
 readonly class ReadParserLogUseCase

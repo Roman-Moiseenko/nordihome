@@ -2,10 +2,8 @@
 
 namespace App\Modules\Order\Application\Actions;
 
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
-use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 
 readonly class GetOrderUseCase
 {

@@ -4,16 +4,16 @@ namespace App\Modules\Order\Tests\Unit\Application\Actions\Order;
 
 use App\Modules\Accounting\Application\Actions\Trader\GetDefaultTraderIdUseCase;
 use App\Modules\Auth\Application\Actions\Client\ViewClientUseCase;
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Order\Application\Actions\Order\CreateOrderUseCase;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Entities\OrderHistoryStatusEntity;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use App\Modules\Shared\Domain\Entities\UserPermission;

@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\CategoryProduct;
 
 use App\Modules\Catalog\Application\Actions\CategoryProduct\DetachCategoriesFromProductUseCase;
-use App\Modules\Catalog\Application\Interfaces\CategoryProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\CategoryProductRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

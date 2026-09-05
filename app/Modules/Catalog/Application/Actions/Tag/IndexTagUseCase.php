@@ -3,9 +3,9 @@
 namespace App\Modules\Catalog\Application\Actions\Tag;
 
 use App\Modules\Catalog\Application\DTOs\Tag\TagIndexData;
-use App\Modules\Catalog\Application\Interfaces\TagProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\TagEntity;
+use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Pagination\LengthAwarePaginator;
 

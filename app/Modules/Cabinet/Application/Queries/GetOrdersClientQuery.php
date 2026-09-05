@@ -4,7 +4,7 @@ namespace App\Modules\Cabinet\Application\Queries;
 
 use App\Modules\Cabinet\Application\Actions\GetOrderClientData;
 use App\Modules\Cabinet\Application\DTOs\OrdersClientPageData;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;

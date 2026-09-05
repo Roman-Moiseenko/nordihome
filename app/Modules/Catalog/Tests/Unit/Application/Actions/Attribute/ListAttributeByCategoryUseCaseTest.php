@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Attribute;
 
 use App\Modules\Catalog\Application\Actions\Attribute\ListAttributeByCategoryUseCase;
-use App\Modules\Catalog\Application\Interfaces\AttributeRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

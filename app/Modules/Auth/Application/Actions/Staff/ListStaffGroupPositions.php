@@ -3,7 +3,7 @@
 namespace App\Modules\Auth\Application\Actions\Staff;
 
 use App\Modules\Auth\Application\DTOs\Staff\StaffGroupData;
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 
 final readonly class ListStaffGroupPositions

@@ -16,13 +16,12 @@ use App\Modules\Auth\Application\DTOs\Staff\StaffIndexData;
 use App\Modules\Auth\Application\DTOs\Staff\StaffUpdateData;
 use App\Modules\Auth\Application\DTOs\Staff\StaffViewData;
 use App\Modules\Auth\Application\DTOs\User\UpdateUserData;
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
 use App\Modules\Auth\Application\Services\CreateAndAuthStaffUseCase;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response;
 

@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Auth\Application\Actions\Client;
 
 use App\Modules\Auth\Application\DTOs\Client\FindClientByContactData;
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
 

@@ -3,8 +3,8 @@
 namespace App\Modules\Order\Application\Actions\Order;
 
 use App\Modules\Order\Application\DTOs\Order\OrderUpdateData;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 

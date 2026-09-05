@@ -2,8 +2,7 @@
 
 namespace App\Modules\Parser\Application\Actions\Product;
 
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 
 readonly class AttachProductToParserUseCase
 {

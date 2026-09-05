@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Tag;
 
 use App\Modules\Catalog\Application\Actions\Tag\RemoveTagUseCase;
-use App\Modules\Catalog\Application\Interfaces\TagProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

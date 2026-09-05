@@ -2,10 +2,9 @@
 
 namespace App\Modules\Parser\Application\Actions\Product;
 
-use App\Modules\Catalog\Application\DTOs\ProductPrice\ProductSellPriceData;
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Parser\Application\Services\LoadParserProductIkeaService;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Setting\Entity\Settings;
 
 /**

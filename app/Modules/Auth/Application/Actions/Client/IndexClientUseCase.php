@@ -2,7 +2,7 @@
 
 namespace App\Modules\Auth\Application\Actions\Client;
 
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Illuminate\Pagination\LengthAwarePaginator;

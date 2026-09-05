@@ -3,7 +3,7 @@
 namespace App\Modules\Catalog\Application\Actions\Attribute;
 
 use App\Modules\Catalog\Application\DTOs\Attribute\AttributeCategoryData;
-use App\Modules\Catalog\Application\Interfaces\AttributeRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface;
 
 readonly class ListAttributeByCategoryUseCase
 {

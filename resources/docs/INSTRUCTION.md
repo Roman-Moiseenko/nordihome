@@ -6,9 +6,9 @@
 app/Modules/{ModuleName}/
 ├── Domain/
 │   ├── Entities/          # Domain Entity (бизнес-логика)
+│   ├── Interfaces/        # RepositoryInterface
 │   └── ValueObjects/      # Value Objects модуля (Slug, Image, Meta — в Shared)
 ├── Application/
-│   ├── Interfaces/        # RepositoryInterface
 │   ├── DTOs/              # Spatie Laravel Data
 │   └── Actions/           # UseCase
 ├── Infrastructure/
@@ -141,7 +141,7 @@ final class Slug
 
 **Назначение:** Контракт для работы с хранилищем.
 
-**Где лежит:** `app/Modules/{ModuleName}/Application/Interfaces/`
+**Где лежит:** `app/Modules/{ModuleName}/Domain/Interfaces/`
 
 **Правила:**
 - Методы возвращают Domain Entity или `void`
@@ -558,7 +558,7 @@ Route::group([
 **Структура (на примере CategoryProduct):**
 
 - **Pivot Model** — `Infrastructure/Models/{A}{B}.php` (например, `CategoryProduct`), `$timestamps = false`, `protected $table` — pivot-таблица
-- **RepositoryInterface** — `Application/Interfaces/{A}{B}RepositoryInterface.php`
+- **RepositoryInterface** — `Domain/Interfaces/{A}{B}RepositoryInterface.php`
 - **Repository** — `Infrastructure/Persistence/{A}{B}Repository.php`
 - **UseCase** — `Application/Actions/{A}{B}/` (Attach / Assign(sync) / Detach / List)
 - **DTO** для списка — `Application/DTOs/.../`

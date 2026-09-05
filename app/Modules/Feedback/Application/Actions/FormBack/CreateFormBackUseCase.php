@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Feedback\Application\Actions\FormBack;
 
 use App\Modules\Feedback\Application\DTOs\FormBack\FormBackCreateData;
-use App\Modules\Feedback\Application\Interfaces\FormBackRepositoryInterface;
 use App\Modules\Feedback\Domain\Entities\FormBackEntity;
+use App\Modules\Feedback\Domain\Interfaces\FormBackRepositoryInterface;
 use App\Modules\Shared\Application\DTOs\Lead\LeadSourceData;
 use App\Modules\Shared\Infrastructure\Events\LeadCollected;
 use Illuminate\Events\Dispatcher;

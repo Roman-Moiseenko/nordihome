@@ -2,6 +2,9 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { router } from '@inertiajs/vue3'
 
+// Ширина одной панели
+export const PANEL_SIZE = 250
+
 // Общее состояние перетаскивания между панелями
 const dragItem = ref(null)
 const dragFrom = ref(null)

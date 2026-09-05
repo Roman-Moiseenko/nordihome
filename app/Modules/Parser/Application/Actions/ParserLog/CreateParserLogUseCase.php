@@ -3,8 +3,8 @@
 namespace App\Modules\Parser\Application\Actions\ParserLog;
 
 use App\Modules\Parser\Application\DTOs\ParserLog\ParserLogCreateData;
-use App\Modules\Parser\Application\Interfaces\ParserLogRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserLogItemEntity;
+use App\Modules\Parser\Domain\Interfaces\ParserLogRepositoryInterface;
 
 class CreateParserLogUseCase
 {

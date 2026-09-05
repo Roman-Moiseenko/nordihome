@@ -5,12 +5,13 @@ namespace App\Modules\Lead\Presentation\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Modules\Auth\Application\Actions\Client\CreateClientUseCase;
 use App\Modules\Auth\Application\DTOs\Client\ClientCreateData;
+use App\Modules\Lead\Application\Actions\AddCommentLeadUseCase;
 use App\Modules\Lead\Application\Actions\IndexByStatusLeadUseCase;
+use App\Modules\Lead\Application\DTOs\Lead\LeadItemAddData;
 use App\Modules\Lead\Application\Services\StatusInWorkLeadService;
 use App\Modules\Lead\Application\Services\StatusNotDecidedLeadService;
 use App\Modules\Lead\Application\Services\StatusReturnNewLeadService;
 use App\Modules\Lead\Infrastructure\Models\Lead;
-use App\Modules\Lead\Infrastructure\Models\LeadStatus;
 use App\Modules\Lead\Repository\LeadRepository;
 use App\Modules\Lead\Service\LeadService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -33,6 +34,7 @@ class LeadController extends Controller
         private StatusInWorkLeadService $statusInWorkLeadService,
         private StatusNotDecidedLeadService $statusNotDecidedLeadService,
         private StatusReturnNewLeadService $statusReturnNewLeadService,
+        private AddCommentLeadUseCase $addCommentLeadUseCase,
     )
     {
         $this->service = $service;
@@ -67,29 +69,18 @@ class LeadController extends Controller
     }
 
 
-    #[Deprecated]
-    public function set_status(Lead $lead, Request $request): RedirectResponse
-    {
-        $result = $this->service->setStatus($lead, $request);
-
-        return redirect()->back()->with($result ? 'success' : 'error', $result ? 'Обновлено!' : 'Недопустимо!');
-    }
-
     public function set_name(Lead $lead, Request $request): RedirectResponse
     {
         $this->service->setName($lead, $request);
         return redirect()->back()->with('success', 'Обновлено!');
     }
 
-    public function add_item(Lead $lead, Request $request): RedirectResponse
+    public function addComment(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->service->addItem($lead, $request);
-        return redirect()->back()->with('success', 'Обновлено!');
-    }
+        $dto = LeadItemAddData::validateAndCreate($request->all());
+        $dto->staffId = auth()->user()->profileable_id;
+        $this->addCommentLeadUseCase->execute($id, $dto, $permission);
 
-    public function set_comment(Lead $lead, Request $request): RedirectResponse
-    {
-        $this->service->setComment($lead, $request);
         return redirect()->back()->with('success', 'Обновлено!');
     }
 
@@ -133,17 +124,15 @@ class LeadController extends Controller
         return redirect()->route('admin.order.show', $order)->with('success', 'Обновлено!');
     }
 
+    /**
+     * API запрос для каждой панели
+     */
     public function getLeads(Request $request)
     {
         $staffId = auth()->user()->profileable_id;
-
-       // \Log::info($request->input('status'));
-
         $leads = $this->indexByStatusLeadUseCase->execute($staffId, $request->input('status'));
-       // \Log::warning(json_encode($leads));
+
         return response()->json($leads);
-
-
     }
 
 }

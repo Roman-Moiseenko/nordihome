@@ -2,8 +2,8 @@
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\TagEntity;
+use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Models\Tag;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;

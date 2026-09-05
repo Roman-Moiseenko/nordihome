@@ -2,12 +2,12 @@
 
 namespace App\Modules\Order\Application\Actions\Order;
 
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
-use App\Modules\Auth\Application\Interfaces\StaffRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
+use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
 use App\Modules\Order\Application\DTOs\Order\FilterOrderIndexData;
 use App\Modules\Order\Application\DTOs\Order\OrderIndexData;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Illuminate\Pagination\LengthAwarePaginator;

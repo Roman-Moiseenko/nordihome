@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\TagProduct;
 
 use App\Modules\Catalog\Application\Actions\TagProduct\DetachTagsToProductUseCase;
-use App\Modules\Catalog\Application\Interfaces\TagProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

@@ -8,7 +8,7 @@ use App\Modules\Order\Application\Actions\OrderItem\UpdateOrderItemUseCase;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemPreData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;

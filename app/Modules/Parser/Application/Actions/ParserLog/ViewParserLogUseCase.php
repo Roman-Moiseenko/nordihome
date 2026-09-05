@@ -6,7 +6,7 @@ namespace App\Modules\Parser\Application\Actions\ParserLog;
 
 use App\Modules\Parser\Application\DTOs\ParserLog\ParserLogItemData;
 use App\Modules\Parser\Application\DTOs\ParserLog\ParserLogShowData;
-use App\Modules\Parser\Application\Interfaces\ParserLogRepositoryInterface;
+use App\Modules\Parser\Domain\Interfaces\ParserLogRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
 readonly class ViewParserLogUseCase

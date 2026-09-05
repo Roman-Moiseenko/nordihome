@@ -2,15 +2,15 @@
 
 namespace App\Modules\Order\Tests\Unit\Application\Actions\Order;
 
-use App\Modules\Auth\Application\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Mail\Entity\MailTemplate;
 use App\Modules\Order\Application\Actions\Order\SendMailCancelOrderClientUseCase;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Entities\OrderHistoryStatusEntity;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;

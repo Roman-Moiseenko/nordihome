@@ -31,21 +31,21 @@ const dialogItem = ref(false)
 const formItem = reactive({
     lead: null,
     type: null,
-    finished_at: null,
+    finishedAt: null,
     comment: null,
 })
 
 function open(val) {
     formItem.lead = val
     formItem.comment = null
-    formItem.finished_at = null
+    formItem.finishedAt = null
     formItem.type = null
     dialogItem.value = true
 }
 
 function onAddItem() {
-    if (formItem.finished_at !== null) formItem.finished_at = func.date(formItem.finished_at)
-    router.visit(route('admin.lead.add-item', {lead: formItem.lead}), {
+    if (formItem.finishedAt !== null) formItem.finishedAt = func.date(formItem.finishedAt)
+    router.visit(route('admin.lead.add-comment', {id: formItem.lead}), {
         method: "post",
         data: formItem,
         preserveScroll: true,

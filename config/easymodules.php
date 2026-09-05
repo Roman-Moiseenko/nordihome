@@ -65,6 +65,7 @@ return [
         'Domain/Entities',              // Domain entities (business models)
         'Domain/Services',              // Business services in the domain
         'Domain/ValueObjects',          // Value objects used in entities
+        'Domain/Interfaces',            // Interfaces for communication with external services
 
         // 🏛️ INFRASTRUCTURE LAYER
         'Infrastructure/Mappers',       // Mappers for transformation between entities and models

@@ -3,10 +3,10 @@
 namespace App\Modules\Parser\Application\Actions\Product;
 
 use App\Modules\Base\Entity\Dimensions;
-use App\Modules\Catalog\Application\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 
 readonly class SetDimensionsProductFromParserUseCase
 {

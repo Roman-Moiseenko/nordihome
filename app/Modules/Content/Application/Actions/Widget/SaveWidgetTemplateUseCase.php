@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Content\Application\Actions\Widget;
 
 use App\Modules\Content\Application\DTOs\Widget\WidgetContentUpdateData;
-use App\Modules\Content\Application\Interfaces\WidgetRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Infrastructure\Services\WidgetFileService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 

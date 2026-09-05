@@ -3,8 +3,8 @@
 namespace App\Modules\Parser\Application\Actions\Product;
 
 use App\Modules\Parser\Application\DTOs\Product\ParserProductCategoryData;
-use App\Modules\Parser\Application\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ListAllProductByCategoryUseCase

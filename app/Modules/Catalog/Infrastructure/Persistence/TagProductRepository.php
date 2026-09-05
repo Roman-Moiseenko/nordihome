@@ -2,7 +2,7 @@
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\Modules\Catalog\Application\Interfaces\TagProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Models\TagProduct;
 use Illuminate\Pagination\LengthAwarePaginator;
 

@@ -6,9 +6,9 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\TagProduct;
 
 use App\Modules\Catalog\Application\Actions\TagProduct\ListTagByProductUseCase;
 use App\Modules\Catalog\Application\DTOs\Tag\TagViewData;
-use App\Modules\Catalog\Application\Interfaces\TagProductRepositoryInterface;
-use App\Modules\Catalog\Application\Interfaces\TagRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\TagEntity;
+use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;

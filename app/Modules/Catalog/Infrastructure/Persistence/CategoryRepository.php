@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
-use App\Modules\Catalog\Application\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
+use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;

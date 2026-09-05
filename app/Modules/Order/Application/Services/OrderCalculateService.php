@@ -4,7 +4,7 @@ namespace App\Modules\Order\Application\Services;
 
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Order\Application\Actions\GetAdditionDataUseCase;
-use App\Modules\Order\Application\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 
 readonly class OrderCalculateService
 {
