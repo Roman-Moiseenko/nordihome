@@ -29,7 +29,7 @@ readonly class AssignClientToOrderService
 
         $this->transactionManager->execute(function () use ($dto) {
             //TODO Возможно проверка на наличие клиента
-            $this->setClientOrderUseCase->execute($dto);
+            $this->setClientOrderUseCase->execute($dto->orderId, $dto->clientId);
             $this->setClientLeadByOrderIdUseCase->execute($dto);
         });
 

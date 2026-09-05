@@ -11,7 +11,6 @@ use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
 use App\Modules\Guide\Entity\Addition;
 use App\Modules\Order\Application\Actions\Order\IndexOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
-use App\Modules\Order\Application\Actions\Order\SetClientOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetCouponOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetPackingsOrderUseCase;
@@ -83,7 +82,6 @@ class OrderController extends Controller
         private readonly StatusAwaitingOrderService  $statusAwaitingOrderService,
         private readonly StatusCancelOrderService    $statusCancelOrderService,
         private readonly IndexOrderUseCase $indexOrderUseCase,
-        private readonly SetClientOrderUseCase $setClientOrderUseCase,
         private readonly StatusReturnDraftOrderService $statusReturnDraftOrderService,
         private readonly StatusCompletedOrderService $statusCompletedOrderService,
         private readonly UpdateOrderUseCase $updateOrderUseCase,

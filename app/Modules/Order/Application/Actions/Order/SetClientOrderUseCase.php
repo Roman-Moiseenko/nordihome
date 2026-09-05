@@ -17,10 +17,10 @@ readonly class SetClientOrderUseCase
     {
     }
 
-    public function execute(AssignClientToOrderData $dto): void
+    public function execute(int $orderId, int $clientId): void
     {
-        $orderEntity = $this->repository->getById($dto->orderId);
-        $orderEntity->clientId = $dto->clientId;
+        $orderEntity = $this->repository->getById($orderId);
+        $orderEntity->clientId = $clientId;
         $this->repository->save($orderEntity);
     }
 }

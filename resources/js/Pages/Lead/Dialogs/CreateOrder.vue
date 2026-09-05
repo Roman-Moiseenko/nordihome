@@ -33,7 +33,7 @@ function open(val) {
 }
 
 function onCreateOrder() {
-    router.visit(route('admin.lead.create-order', {lead: formOrder.lead}), {
+    router.visit(route('admin.lead.create-order', {id: formOrder.lead}), {
         method: "post",
         preserveScroll: true,
         preserveState: true,

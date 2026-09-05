@@ -188,37 +188,7 @@ class LeadService
         $lead->save();
     }
 
-    public function setName(Lead $lead, Request $request): void
-    {
-        $lead->name = $request->string('name')->trim()->value();
-        $lead->save();
-    }
 
-    #[Deprecated]
-    public function setFinished(Lead $lead, Request $request): void
-    {
-        $lead->finished_at = is_null($request->input('finished_at')) ? null : Carbon::parse($request->input('finished_at'));
-        $lead->save();
-    }
-
-    #[Deprecated]
-    public function addItem(Lead $lead, Request $request): void
-    {
-        $finished = $request->input('finished_at');
-        $comment = $request->string('comment')->trim()->value();
-        $item = LeadItem::new($comment, $finished);
-        $item->staff_id = $lead->staff_id;
-        $lead->items()->save($item);
-        $lead->finished_at = $finished;
-        $lead->comment = $comment;
-        $lead->save();
-    }
-
-    public function createUser(Lead $lead, ClientEntity $client): void
-    {
-        $lead->client_id = $client->id;
-        $lead->save();
-    }
 
     public function createOrder(Lead $lead, Request $request): Order
     {

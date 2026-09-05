@@ -26,13 +26,12 @@ Route::group(
 
 
     Route::post('/add-comment/{id}', [LeadController::class, 'addComment'])->name('add-comment');
-    Route::post('/set-name/{lead}', [LeadController::class, 'set_name'])->name('set-name');
-    Route::post('/set-finished/{lead}', [LeadController::class, 'set_finished'])->name('set-finished');
+    Route::post('/set-name/{id}', [LeadController::class, 'setName'])->name('set-name');
     Route::post('/canceled/{lead}', [LeadController::class, 'canceled'])->name('canceled');
     //Route::post('/completed/{lead}', [LeadController::class, 'completed'])->name('completed');
 
-    Route::post('/create-user/{lead}', [LeadController::class, 'create_user'])->name('create-user');
-    Route::post('/create-order/{lead}', [LeadController::class, 'create_order'])->name('create-order');
+    Route::post('/create-client/{id}', [LeadController::class, 'createClient'])->name('create-client');
+    Route::post('/create-order/{id}', [LeadController::class, 'createOrder'])->name('create-order');
 
 
 });

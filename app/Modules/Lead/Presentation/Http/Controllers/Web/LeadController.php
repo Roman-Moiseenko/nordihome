@@ -3,42 +3,41 @@
 namespace App\Modules\Lead\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Auth\Application\Actions\Client\CreateClientUseCase;
 use App\Modules\Auth\Application\DTOs\Client\ClientCreateData;
 use App\Modules\Lead\Application\Actions\AddCommentLeadUseCase;
 use App\Modules\Lead\Application\Actions\IndexByStatusLeadUseCase;
+use App\Modules\Lead\Application\Actions\SetNameLeadUseCase;
 use App\Modules\Lead\Application\DTOs\Lead\LeadItemAddData;
+use App\Modules\Lead\Application\Services\CreatAndAssignClientLeadService;
+use App\Modules\Lead\Application\Services\CreateOrderFromLeadService;
 use App\Modules\Lead\Application\Services\StatusInWorkLeadService;
 use App\Modules\Lead\Application\Services\StatusNotDecidedLeadService;
 use App\Modules\Lead\Application\Services\StatusReturnNewLeadService;
 use App\Modules\Lead\Infrastructure\Models\Lead;
-use App\Modules\Lead\Repository\LeadRepository;
 use App\Modules\Lead\Service\LeadService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use JetBrains\PhpStorm\Deprecated;
 
 class LeadController extends Controller
 {
     private LeadService $service;
-    private LeadRepository $repository;
 
     public function __construct(
         LeadService $service,
-        LeadRepository $repository,
-        private CreateClientUseCase $createClientUseCase,
         private IndexByStatusLeadUseCase $indexByStatusLeadUseCase,
         private StatusInWorkLeadService $statusInWorkLeadService,
         private StatusNotDecidedLeadService $statusNotDecidedLeadService,
         private StatusReturnNewLeadService $statusReturnNewLeadService,
         private AddCommentLeadUseCase $addCommentLeadUseCase,
+        private CreatAndAssignClientLeadService $creatAndAssignClientLeadService,
+        private SetNameLeadUseCase $setNameLeadUseCase,
+        private CreateOrderFromLeadService $createOrderFromLeadService,
     )
     {
         $this->service = $service;
-        $this->repository = $repository;
     }
 
     public function index(Request $request): Response
@@ -68,11 +67,17 @@ class LeadController extends Controller
         return redirect()->back()->with( 'Обновлено!');
     }
 
-
-    public function set_name(Lead $lead, Request $request): RedirectResponse
+    public function setName(int $id, Request $request): RedirectResponse
     {
-        $this->service->setName($lead, $request);
+        $this->setNameLeadUseCase->execute($id, $request->input('name'));
+
         return redirect()->back()->with('success', 'Обновлено!');
+    }
+
+    public function createOrder(int $id, Request $request, UserPermission $permission): RedirectResponse
+    {
+        $order = $this->createOrderFromLeadService->execute($id, $permission);
+        return redirect()->route('admin.order.show', $order)->with('success', 'Обновлено!');
     }
 
     public function addComment(int $id, Request $request, UserPermission $permission): RedirectResponse
@@ -84,45 +89,20 @@ class LeadController extends Controller
         return redirect()->back()->with('success', 'Обновлено!');
     }
 
-    public function set_finished(Lead $lead, Request $request): RedirectResponse
-    {
-        $this->service->setFinished($lead, $request);
-        return redirect()->back()->with('success', 'Обновлено!');
-    }
-
     public function canceled(Lead $lead, Request $request): RedirectResponse
     {
         $this->service->canceled($lead, $request->integer('reason'));
         return redirect()->back()->with('success', 'Заявка отменена!');
     }
 
-   /* public function completed(Lead $lead, Request $request): RedirectResponse
+    public function createClient(int $id, Request $request, UserPermission $permissions): RedirectResponse
     {
-        $this->service->completed($lead, $request);
-        return redirect()->back()->with('success', 'Заявка завершена!');
-    }*/
+        $dto = ClientCreateData::validateAndCreate($request->all());
+        $this->creatAndAssignClientLeadService->execute($id, $dto, $permissions);
 
-    public function create_user(Lead $lead, Request $request, UserPermission $permissions): RedirectResponse
-    {
-        //TODO Переделать передачу полей под DTO
-        $dto = new ClientCreateData(
-            lastName: $request->string('surname')->trim()->value(),
-            firstName: $request->string('firstname')->trim()->value(),
-            email: $request->string('email')->trim()->value(),
-            middleName: $request->string('secondname')->trim()->value(),
-            phone: $request->string('phone')->trim()->value(),
-        );
-        $client = $this->createClientUseCase->execute($dto, $permissions);
-
-        $this->service->createUser($lead, $client);
         return redirect()->back()->with('success', 'Обновлено!');
     }
 
-    public function create_order(Lead $lead, Request $request): RedirectResponse
-    {
-        $order = $this->service->createOrder($lead, $request);
-        return redirect()->route('admin.order.show', $order)->with('success', 'Обновлено!');
-    }
 
     /**
      * API запрос для каждой панели
