@@ -71,6 +71,12 @@ export function useLeadPanel(status) {
             dragFrom.value = null
             return
         }
+        // Из панели new можно перетаскивать только в in_work
+        if (dragFrom.value === 'new' && status !== 'in_work') {
+            dragItem.value = null
+            dragFrom.value = null
+            return
+        }
         if (!dragItem.value) return
 
         router.visit(route(TRANSFER_ROUTES[status], { id: dragItem.value.id }), {

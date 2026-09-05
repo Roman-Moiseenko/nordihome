@@ -3,6 +3,8 @@
         @dragover.prevent="onDropOver"
         @drop="onDropList"
         class="shadow-sm bg-orange-100"
+        :size="250"
+        :resizable="false"
     >
         <el-tag effect="dark" type="warning" size="large">Клиент думает</el-tag>
         <template v-for="lead in leads">

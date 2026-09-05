@@ -3,6 +3,8 @@
         @dragover.prevent="onDropOver"
         @drop="onDropList"
         class="shadow-sm bg-cyan-100"
+        :size="250"
+        :resizable="false"
     >
         <el-tag effect="dark" type="info" size="large">Выставлен счет</el-tag>
         <template v-for="lead in leads">

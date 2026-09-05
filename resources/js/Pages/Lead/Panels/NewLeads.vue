@@ -3,6 +3,8 @@
         @dragover.prevent="onDropOver"
         @drop="onDropList"
         class="shadow-sm bg-green-100"
+        :size="250"
+        :resizable="false"
     >
         <el-tag effect="dark" type="success" size="large">Новый</el-tag>
         <template v-for="lead in leads">

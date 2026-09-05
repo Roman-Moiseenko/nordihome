@@ -3,11 +3,20 @@
 
     <el-row>
         <div class="mt-2 p-5 bg-white rounded-md">
-            Фильтры
+            <el-checkbox-group v-model="panelsView" size="large">
+                <el-checkbox-button key="new" value="new" label="Новые"  />
+                <el-checkbox-button key="in_work" value="in_work" label="В работе" />
+                <el-checkbox-button key="not_decided" value="not_decided" label="Клиент думает" />
+                <el-checkbox-button key="awaiting" value="awaiting" label="Выставлен счет" />
+                <el-checkbox-button key="paid" value="paid" label="Оплачен" />
+                <el-checkbox-button key="assembly" value="assembly" label="На сборке" />
+                <el-checkbox-button key="delivery" value="delivery" label="На доставке" />
+                <el-checkbox-button key="cancelled" value="cancelled" label="Отменен" />
+            </el-checkbox-group>
         </div>
     </el-row>
 
-    <el-splitter>
+    <el-splitter style="width: 2000px;">
         <NewLeads/>
         <InWorkLeads/>
         <NotDecidedLeads/>
@@ -29,7 +38,9 @@ import PaidLeads from "./Panels/PaidLeads.vue";
 import AssemblyLeads from "./Panels/AssemblyLeads.vue";
 import DeliveryLeads from "./Panels/DeliveryLeads.vue";
 import CancelledLeads from "./Panels/CancelledLeads.vue";
+import {ref} from "vue";
 
+const panelsView = ref(['new','in_work','not_decided', 'awaiting','paid', 'assembly', 'cancelled', 'delivery']);
 defineProps({
     title: {
         type: String,
