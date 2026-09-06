@@ -27,7 +27,7 @@
                 <el-input v-model="filter.client" placeholder="Клиент" class="mt-1"/>
                 <el-input v-model="filter.comment" placeholder="Комментарий" class="mt-1"/>
                 <el-select v-model="filter.staffId" placeholder="Ответственный" class="mt-1">
-                    <el-option v-for="item in staffs" :key="item.id" :label="func.fullName(item.fullname)"
+                    <el-option v-for="item in authStore.staffs.customer_manager" :key="item.id" :label="item.fullName"
                                :value="item.id"/>
 
                 </el-select>
@@ -109,6 +109,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import Active from '@Comp/Elements/Active.vue'
 import StatusGraph from "@Comp/Elements/StatusGraph.vue";
 import {classes} from "@Res/className"
+import {useAuthStore} from "@Res/authStore";
 
 const props = defineProps({
     orders: Object,
@@ -118,11 +119,12 @@ const props = defineProps({
     },
     filters: Array,
 
-    staffs: Array,
 })
 
-console.log(props.orders)
+//console.log(props.orders)
 const store = useStore();
+const authStore = useAuthStore()
+
 const tableData = ref([...props.orders.data])
 const filter = reactive({
     dateFrom: props.filters.dateFrom,

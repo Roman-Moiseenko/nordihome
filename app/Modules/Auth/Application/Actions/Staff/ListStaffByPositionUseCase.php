@@ -15,11 +15,8 @@ final readonly class ListStaffByPositionUseCase
     /**
      * @param StaffPosition|StaffPosition[] $position
      */
-    public function execute(StaffPosition|array $position, ?UserPermission $permissions = null): array
+    public function execute(StaffPosition|array $position): array
     {
-        if (!is_null($permissions) && !$permissions->can('auth.employee.view')) {
-            throw new AccessDeniedException();
-        }
 
         $positions = is_array($position)
             ? new StaffPositions(array_map(fn(StaffPosition $p) => $p->getValue(), $position))

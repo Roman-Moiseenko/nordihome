@@ -40,7 +40,6 @@ use App\Modules\Order\Application\Services\StatusServices\StatusCancelOrderServi
 use App\Modules\Order\Application\Services\StatusServices\StatusCompletedOrderService;
 use App\Modules\Order\Application\Services\StatusServices\StatusReturnDraftOrderService;
 use App\Modules\Order\Infrastructure\Models\Order;
-use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Order\Repository\OrderRepository;
 use App\Modules\Order\Service\OrderReserveService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -60,47 +59,43 @@ class OrderController extends Controller
 {
 
     public function __construct(
-        private readonly OrderRepository            $repository,
-       // private readonly InvoiceReport              $report,
-        private readonly OrganizationRepository     $organizations,
-        private readonly OrderReserveService        $reserveService,
-        private readonly ListStaffByPositionUseCase $positionUseCase,
-        private readonly ViewOrderUseCase            $viewOrderUseCase,
-        private readonly AddProductOrderUseCase      $addProductOrderUseCase,
-        private readonly UpdateOrderItemUseCase      $updateOrderItemUseCase,
-        private readonly RemoveOrderItemUseCase      $removeOrderItemUseCase,
-        private readonly AddAdditionOrderUseCase     $addAdditionOrderUseCase,
-        private readonly ChangePreOrderItemService   $changePreOrderItemService,
-        private readonly UpdateOrderAdditionUseCase  $updateOrderAdditionUseCase,
-        private readonly RemoveOrderAdditionUseCase  $removeOrderAdditionUseCase,
-        private readonly SetDiscountOrderUseCase     $setDiscountOrderUseCase,
-        private readonly SetCouponOrderUseCase       $setCouponOrderUseCase,
-        private readonly CreateOrderByManagerService $createOrderUseCase,
-        private readonly SetAssemblagesOrderUseCase  $setAssemblagesOrderUseCase,
-        private readonly SetPackingsOrderUseCase     $setPackingsOrderUseCase,
-        private readonly CreateOrderFromCopyService  $createOrderFromCopyService,
-        private readonly StatusAwaitingOrderService  $statusAwaitingOrderService,
-        private readonly StatusCancelOrderService    $statusCancelOrderService,
-        private readonly IndexOrderUseCase $indexOrderUseCase,
+        private readonly OrderRepository               $repository,
+        // private readonly InvoiceReport              $report,
+        private readonly OrganizationRepository        $organizations,
+
+        private readonly ViewOrderUseCase              $viewOrderUseCase,
+        private readonly AddProductOrderUseCase        $addProductOrderUseCase,
+        private readonly UpdateOrderItemUseCase        $updateOrderItemUseCase,
+        private readonly RemoveOrderItemUseCase        $removeOrderItemUseCase,
+        private readonly AddAdditionOrderUseCase       $addAdditionOrderUseCase,
+        private readonly ChangePreOrderItemService     $changePreOrderItemService,
+        private readonly UpdateOrderAdditionUseCase    $updateOrderAdditionUseCase,
+        private readonly RemoveOrderAdditionUseCase    $removeOrderAdditionUseCase,
+        private readonly SetDiscountOrderUseCase       $setDiscountOrderUseCase,
+        private readonly SetCouponOrderUseCase         $setCouponOrderUseCase,
+        private readonly CreateOrderByManagerService   $createOrderUseCase,
+        private readonly SetAssemblagesOrderUseCase    $setAssemblagesOrderUseCase,
+        private readonly SetPackingsOrderUseCase       $setPackingsOrderUseCase,
+        private readonly CreateOrderFromCopyService    $createOrderFromCopyService,
+        private readonly StatusAwaitingOrderService    $statusAwaitingOrderService,
+        private readonly StatusCancelOrderService      $statusCancelOrderService,
+        private readonly IndexOrderUseCase             $indexOrderUseCase,
         private readonly StatusReturnDraftOrderService $statusReturnDraftOrderService,
-        private readonly StatusCompletedOrderService $statusCompletedOrderService,
-        private readonly UpdateOrderUseCase $updateOrderUseCase,
-        private readonly AssignClientToOrderService $assignClientToOrderService,
-        private readonly StatusInWorkOrderService $statusInWorkOrderService,
+        private readonly StatusCompletedOrderService   $statusCompletedOrderService,
+        private readonly UpdateOrderUseCase            $updateOrderUseCase,
+        private readonly AssignClientToOrderService    $assignClientToOrderService,
+        private readonly StatusInWorkOrderService      $statusInWorkOrderService,
     )
     {
     }
 
-//MAINDO загрузка параметров через useStore
     public function index(Request $request, UserPermission $permissions): Response
     {
         $filterDto = FilterOrderIndexData::validateAndCreate($request->all());
-        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
         $orders = $this->indexOrderUseCase->execute($filterDto, $permissions);
         return Inertia::render('Order/Order/Index', [
             'orders' => $orders,
             'filters' => $filterDto,
-            'staffs' => $staffs,
         ]);
     }
 
@@ -116,19 +111,17 @@ class OrderController extends Controller
         //FIXME Через useStore
         $additions = array_map(
             fn($type) => [
-                'label'     => Addition::TYPES[$type],
+                'label' => Addition::TYPES[$type],
                 'additions' => Addition::orderBy('name')->where('type', $type)->getModels(),
             ],
             array_keys(Addition::TYPES)
         );
-        $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
         $traders = $this->organizations->getTraders();
 
         return Inertia::render('Order/Order/Show', [
             'order' => $order, //$this->repository->OrderWithToArray($order),
             //  'storages' => $storages,
             // 'mainStorage' => $mainStorage,
-            'staffs' => $staffs,
             'additions' => $additions,
             'traders' => $traders,
             // 'order_related' => $order->relatedDocuments(),
@@ -206,11 +199,13 @@ class OrderController extends Controller
         $this->statusAwaitingOrderService->execute($id, $request->input('emails'), $permission);
         return redirect()->back()->with('success', 'Заказ ожидает оплаты');
     }
+
     public function statusCompleted(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
         $this->statusCompletedOrderService->execute($id, $request->input('emails'), $permission);
         return redirect()->back()->with('success', 'Заказ ожидает оплаты');
     }
+
     /**
      * Вернуть в работу
      */
@@ -314,13 +309,6 @@ class OrderController extends Controller
             $this->addProductOrderUseCase->execute($id, $dto, $permission);
         }
         return redirect()->back()->with('success', 'Товары добавлены');
-    }
-
-    #[Deprecated]
-    public function reserve_collect(Request $request, OrderItem $item): RedirectResponse
-    {
-        $this->reserveService->CollectReserve($item, $request->integer('storage_id'), $request->float('quantity'));
-        return redirect()->back()->with('success', 'Сохранено');
     }
 
     /** РАБОТА С УСЛУГАМИ В ЗАКАЗЕ */

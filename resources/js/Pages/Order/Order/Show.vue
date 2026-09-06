@@ -78,6 +78,7 @@ import EditField from "@Comp/Elements/EditField.vue";
 import {func} from '@Res/func.js'
 import axios from "axios";
 import { ElMessage, ElMessageBox } from 'element-plus'
+import {useAuthStore} from "@Res/authStore";
 
 const props = defineProps({
     order: Object,
@@ -88,12 +89,11 @@ const props = defineProps({
 
     additions: Array,
     storages: Array,
-    staffs: Array,
     mainStorage: Object,
     traders: Array,
     order_related: Array,
 })
-
+const authStore = useAuthStore()
 const open = () => {
     ElMessageBox.confirm(
         'Взять заказ в работу?',

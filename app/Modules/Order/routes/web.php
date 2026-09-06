@@ -27,7 +27,7 @@ Route::group(
         Route::post('/set-info/{id}', [OrderController::class, 'setInfo'])->name('set-info');
         //Route::post('/resend-invoice/{order}', [OrderController::class, 'resend_invoice'])->name('resend-invoice');
 
-        Route::post('/reserve-collect/{item}', [OrderController::class, 'reserve_collect'])->name('reserve-collect');
+        //Route::post('/reserve-collect/{item}', [OrderController::class, 'reserve_collect'])->name('reserve-collect');
         //    Route::post('/set-info/{order}', 'OrderController@set_info')->name('set-info');
         Route::post('/add-products/{id}', [OrderController::class, 'addProducts'])->name('add-products');
         Route::post('/add-product/{id}', [OrderController::class, 'addProduct'])->name('add-product');
