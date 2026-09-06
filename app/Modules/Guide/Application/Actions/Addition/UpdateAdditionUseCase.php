@@ -6,6 +6,8 @@ use App\Modules\Guide\Application\DTOs\Addition\AdditionUpdateData;
 use App\Modules\Guide\Domain\Entities\AdditionEntity;
 use App\Modules\Guide\Domain\Interfaces\AdditionRepositoryInterface;
 use App\Modules\Guide\Domain\ValueObjects\AdditionType;
+use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 readonly class UpdateAdditionUseCase
@@ -16,8 +18,10 @@ readonly class UpdateAdditionUseCase
     {
 
     }
-    public function execute(int $additionId, AdditionUpdateData $dto): AdditionEntity
+    public function execute(int $additionId, AdditionUpdateData $dto, UserPermission $permission): AdditionEntity
     {
+        if (!$permission->can('guide.guide.edit')) throw new AccessDeniedException();
+
         $entity = $this->repository->getById($additionId);
 
         if (!is_null($dto->name)) $entity->name = $dto->name;

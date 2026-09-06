@@ -50,8 +50,7 @@ class ListStaffByPositionUseCaseTest extends TestCase
 
         $this->staffRepo->shouldReceive('findByPosition')->with($position)->once()->andReturn($staff);
 
-        $permission = $this->mockUserPermission(view: true);
-        $result = $this->useCase->execute($position, $permission);
+        $result = $this->useCase->execute($position);
 
         $this->assertSame($staff, $result);
     }
@@ -66,18 +65,9 @@ class ListStaffByPositionUseCaseTest extends TestCase
             ->once()
             ->andReturn($staff);
 
-        $permission = $this->mockUserPermission(view: true);
-        $result = $this->useCase->execute($positions, $permission);
+        $result = $this->useCase->execute($positions);
 
         $this->assertSame($staff, $result);
     }
 
-    public function test_throws_access_denied_when_missing_permission(): void
-    {
-        $permission = $this->mockUserPermission(view: false);
-        $this->staffRepo->shouldNotReceive('findByPosition');
-
-        $this->expectException(AccessDeniedException::class);
-        $this->useCase->execute(new StaffPosition(StaffPosition::DRIVER), $permission);
-    }
 }

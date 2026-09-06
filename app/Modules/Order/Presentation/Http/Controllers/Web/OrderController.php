@@ -99,11 +99,7 @@ class OrderController extends Controller
 //MAINDO загрузка параметров через useStore
     public function show(Request $request, Order $order, UserPermission $permissions): Response
     {
-
         $order = $this->viewOrderUseCase->execute($order->id, $permissions);
-
-        //$storages = Storage::orderBy('name')->getModels();
-        //$mainStorage = Storage::where('default', true)->first();
 
         //FIXME Через useStore
         $additions = array_map(
@@ -113,15 +109,13 @@ class OrderController extends Controller
             ],
             array_keys(AdditionType::TYPES)
         );
+       // dd($additions);
         $traders = $this->organizations->getTraders();
 
         return Inertia::render('Order/Order/Show', [
-            'order' => $order, //$this->repository->OrderWithToArray($order),
-            //  'storages' => $storages,
-            // 'mainStorage' => $mainStorage,
+            'order' => $order,
             'additions' => $additions,
             'traders' => $traders,
-            // 'order_related' => $order->relatedDocuments(),
         ]);
     }
 

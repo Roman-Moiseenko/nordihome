@@ -27,8 +27,8 @@ class AdditionRepository implements AdditionRepositoryInterface
 
     public function findBySlug(string $slug): ?AdditionEntity
     {
-        $model = Addition::where('slug')->first();
-        return is_null($model) ? null : $model->hydrate(new Addition());
+        $model = Addition::where('slug', $slug)->first();
+        return is_null($model) ? null : $this->hydrate($model);
     }
 
     public function remove(int $id): void

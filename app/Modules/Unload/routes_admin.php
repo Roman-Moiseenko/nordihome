@@ -1,12 +1,5 @@
 <?php
 
-use App\Modules\Guide\Controllers\AdditionController;
-use App\Modules\Guide\Controllers\CargoCompanyController;
-use App\Modules\Guide\Controllers\CountryController;
-use App\Modules\Guide\Controllers\GuideController;
-use App\Modules\Guide\Controllers\MarkingTypeController;
-use App\Modules\Guide\Controllers\MeasuringController;
-use App\Modules\Guide\Controllers\VATController;
 use App\Modules\Unload\Controllers\FeedController;
 use Illuminate\Support\Facades\Route;
 

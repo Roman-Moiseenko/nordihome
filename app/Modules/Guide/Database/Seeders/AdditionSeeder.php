@@ -26,7 +26,7 @@ class AdditionSeeder extends Seeder
                 base: 15,
                 type: AdditionType::ASSEMBLY,
                 class: AssemblyCalculate::class,
-                slug:'assembly_15',
+                slug:'assembly-15',
             ),
             new AdditionCreateData(
                 name: 'Упаковка товара',

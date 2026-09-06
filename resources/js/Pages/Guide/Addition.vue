@@ -19,18 +19,18 @@
             >
                 <el-table-column prop="name" label="Название" width="300"/>
                 <el-table-column prop="base" label="Базовое значение" width="160"/>
-                <el-table-column prop="type_name" label="Тип услуги" width="160"/>
+                <el-table-column prop="typeName" label="Тип услуги" width="160"/>
                 <el-table-column prop="manual" label="Ручной расчет" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.manual"/>
                     </template>
                 </el-table-column>
-                <el-table-column prop="manual" label="Количественная" align="center">
+                <el-table-column prop="isQuantity" label="Количественная" align="center">
                     <template #default="scope">
-                        <Active :active="scope.row.is_quantity"/>
+                        <Active :active="scope.row.isQuantity"/>
                     </template>
                 </el-table-column>
-                <el-table-column prop="class_name" label="Класс расчета" show-overflow-tooltip/>
+                <el-table-column prop="className" label="Класс расчета" show-overflow-tooltip/>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
                         <el-button v-if="!scope.row.completed"
@@ -98,6 +98,7 @@ const props = defineProps({
     types: Array,
     classes: Array,
 })
+
 const $delete_entity = inject("$delete_entity")
 const dialogCreate = ref(false)
 const tableData = [...props.additions]
@@ -126,9 +127,9 @@ function editDialog(row) {
     form.name = row.name
     form.base = row.base
     form.type = row.type
-    form.manual = row.manual === 1
+    form.manual = row.manual
     form.class = row.class
-    form.isQuantity = row.isQuantity === 1
+    form.isQuantity = row.isQuantity
     dialogCreate.value = true
 }
 

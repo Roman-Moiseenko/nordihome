@@ -7,6 +7,8 @@ use App\Modules\Guide\Domain\Entities\AdditionEntity;
 use App\Modules\Guide\Domain\Interfaces\AdditionRepositoryInterface;
 use App\Modules\Guide\Domain\ValueObjects\AdditionType;
 
+use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 readonly class CreateAdditionUseCase
@@ -18,8 +20,10 @@ readonly class CreateAdditionUseCase
 
     }
 
-    public function execute(AdditionCreateData $dto): AdditionEntity
+    public function execute(AdditionCreateData $dto, UserPermission $permission): AdditionEntity
     {
+        if (!$permission->can('guide.guide.create')) throw new AccessDeniedException();
+
         if (!is_null($dto->slug)) {
             $entity = $this->repository->findBySlug($dto->slug);
             if (!is_null($entity)) return $entity;

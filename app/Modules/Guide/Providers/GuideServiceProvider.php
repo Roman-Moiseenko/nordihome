@@ -3,6 +3,7 @@
 namespace App\Modules\Guide\Providers;
 
 use App\Modules\Guide\Database\Seeders\AdditionSeeder;
+use App\Modules\Guide\Database\Seeders\GuideRoleSeeder;
 use App\Modules\Guide\Domain\Interfaces\AdditionRepositoryInterface;
 use App\Modules\Guide\Infrastructure\Persistence\AdditionRepository;
 use Illuminate\Support\Facades\Blade;
@@ -389,6 +390,7 @@ class GuideServiceProvider extends ServiceProvider
         $this->app->afterResolving('seed.handler', function ($handler) {
             $handler->register([
                 AdditionSeeder::class,
+                GuideRoleSeeder::class,
             ]);
         });
     }
