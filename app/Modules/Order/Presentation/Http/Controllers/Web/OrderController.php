@@ -96,26 +96,16 @@ class OrderController extends Controller
         ]);
     }
 
-//MAINDO загрузка параметров через useStore
+
     public function show(Request $request, Order $order, UserPermission $permissions): Response
     {
         $order = $this->viewOrderUseCase->execute($order->id, $permissions);
 
-        //FIXME Через useStore
-        $additions = array_map(
-            fn($type) => [
-                'label' => AdditionType::TYPES[$type],
-                'additions' => Addition::orderBy('name')->where('type', $type)->getModels(),
-            ],
-            array_keys(AdditionType::TYPES)
-        );
-       // dd($additions);
         $traders = $this->organizations->getTraders();
 
         return Inertia::render('Order/Order/Show', [
             'order' => $order,
-            'additions' => $additions,
-            'traders' => $traders,
+            'traders' => $traders, //MAINDO загрузка параметров через useStore
         ]);
     }
 

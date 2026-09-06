@@ -30,7 +30,16 @@ class AdditionRepository implements AdditionRepositoryInterface
         $model = Addition::where('slug', $slug)->first();
         return is_null($model) ? null : $this->hydrate($model);
     }
-
+    /**
+     * @return AdditionEntity[]
+     */
+    public function getByType(int|string $type): array
+    {
+        $models = Addition::orderBy('name')->where('type', $type)->getModels();
+        return array_map(function (Addition $addition) {
+            return $this->hydrate($addition);
+        }, $models);
+    }
     public function remove(int $id): void
     {
         Addition::deleted($id);

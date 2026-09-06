@@ -30,9 +30,6 @@ export const useAuthStore = defineStore('auth', () => {
         permissions.value = permissionsRes.data
         roles.value = rolesRes.data
         staffs.value = staffsRes.data
-
-        console.log(1, staffsRes.data)
-
     }
 
     ;(async () => {

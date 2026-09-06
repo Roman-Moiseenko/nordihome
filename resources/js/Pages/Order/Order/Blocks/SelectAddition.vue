@@ -1,6 +1,6 @@
 <template>
     <el-select v-model="addition" filterable style="width: 200px;" class="ml-2" placeholder="Добавить услугу">
-        <el-option-group v-for="group in additions"
+        <el-option-group v-for="group in guideStore.groupAdditions"
                          :key="group.label"
                          :label="group.label">
             <el-option v-for="item in group.additions"
@@ -15,6 +15,7 @@
 <script setup lang="ts">
 import {defineProps, defineEmits, ref} from 'vue'
 import {router} from "@inertiajs/vue3";
+import {useGuideStore} from "@Res/guideStore";
 
 const props = defineProps({
     additions: Array,
@@ -22,6 +23,7 @@ const props = defineProps({
 })
 
 const addition = ref(null)
+const guideStore = useGuideStore()
 function handleSelect() {
     router.post(route('admin.order.add-addition', {id: props.order.id}), {additionId: addition.value})
     addition.value = null

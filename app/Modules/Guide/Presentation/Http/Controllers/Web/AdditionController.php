@@ -6,6 +6,7 @@ namespace App\Modules\Guide\Presentation\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Modules\Guide\Application\Actions\Addition\CreateAdditionUseCase;
 use App\Modules\Guide\Application\Actions\Addition\IndexAdditionUseCase;
+use App\Modules\Guide\Application\Actions\Addition\ListGroupAdditionUseCase;
 use App\Modules\Guide\Application\Actions\Addition\RemoveAdditionUseCase;
 use App\Modules\Guide\Application\Actions\Addition\UpdateAdditionUseCase;
 use App\Modules\Guide\Application\DTOs\Addition\AdditionCreateData;
@@ -18,6 +19,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class AdditionController extends Controller
 {
@@ -26,7 +28,8 @@ class AdditionController extends Controller
         private readonly IndexAdditionUseCase $indexAdditionUseCase,
         private readonly CreateAdditionUseCase $createAdditionUseCase,
         private readonly UpdateAdditionUseCase $updateAdditionUseCase,
-        private readonly RemoveAdditionUseCase $removeAdditionUseCase
+        private readonly RemoveAdditionUseCase $removeAdditionUseCase,
+        private readonly ListGroupAdditionUseCase $listGroupAdditionUseCase,
     )
     {
     }
@@ -63,6 +66,12 @@ class AdditionController extends Controller
     {
         $this->removeAdditionUseCase->execute($id, $permission);
         return redirect()->back()->with('success', 'Услуга удалена');
+    }
+
+    public function groupList()
+    {
+        $list = $this->listGroupAdditionUseCase->execute();
+        return response()->json($list, SymfonyResponse::HTTP_OK);
     }
 
 

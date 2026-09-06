@@ -16,4 +16,8 @@ interface AdditionRepositoryInterface
     public function save(AdditionEntity $addition): AdditionEntity;
 
     public function remove(int $id): void;
+    /**
+     * @return AdditionEntity[]
+     */
+    public function getByType(int|string $type): array;
 }

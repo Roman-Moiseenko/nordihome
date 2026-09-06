@@ -23,6 +23,7 @@ Route::group([
         'as' => 'addition.',
     ], function () {
         Route::get('/', [AdditionController::class, 'index'])->name('index');
+        Route::get('/group', [AdditionController::class, 'groupList'])->name('group');
         Route::post('/', [AdditionController::class, 'store'])->name('store');
         Route::put('/{id}', [AdditionController::class, 'update'])->name('update');
         Route::delete('/{id}', [AdditionController::class, 'destroy'])->name('destroy');

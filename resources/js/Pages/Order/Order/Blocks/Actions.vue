@@ -8,7 +8,7 @@
             :create="true"
         />
         <SearchAddProducts :route="route('admin.order.add-products', {id: order.id})" class="ml-3"/>
-        <SelectAddition :additions="additions" :order="order"/>
+        <SelectAddition :order="order"/>
         <div class="flex ml-1">
             <span class="ml-2 my-auto text-red-800">Скидка: </span>
 
@@ -169,10 +169,10 @@ import {ElLoading, ElMessage} from "element-plus";
 import SelectAddition from "@Page/Order/Order/Blocks/SelectAddition.vue";
 import axios from "axios";
 import OrderRelatedDocuments from "@Comp/Order/RelatedDocuments.vue";
+import {useGuideStore} from "@Res/guideStore.ts";
 
 const props = defineProps({
     order: Object,
-    additions: Array,
     storages: Array,
 })
 const iSaving = ref(false)

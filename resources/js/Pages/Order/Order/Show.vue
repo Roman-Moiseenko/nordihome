@@ -24,7 +24,7 @@
         </div>
         <el-affix target=".affix-container" :offset="64">
             <div class="bg-white rounded-lg my-2 p-1 shadow flex">
-                <OrderActions :order="order" :additions="additions" :storages="storages" />
+                <OrderActions :order="order" :storages="storages" />
             </div>
         </el-affix>
 
@@ -79,6 +79,7 @@ import {func} from '@Res/func.js'
 import axios from "axios";
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {useAuthStore} from "@Res/authStore";
+import {useGuideStore} from "@Res/guideStore";
 
 const props = defineProps({
     order: Object,
@@ -86,14 +87,13 @@ const props = defineProps({
         type: String,
         default: 'Заказ покупателя',
     },
-
-    additions: Array,
     storages: Array,
     mainStorage: Object,
     traders: Array,
     order_related: Array,
 })
 const authStore = useAuthStore()
+
 const open = () => {
     ElMessageBox.confirm(
         'Взять заказ в работу?',
