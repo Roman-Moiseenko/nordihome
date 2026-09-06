@@ -14,7 +14,8 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Service\CouponService;
-use App\Modules\Guide\Entity\Addition;
+use App\Modules\Guide\Domain\ValueObjects\AdditionType;
+use App\Modules\Guide\Infrastructure\Models\Addition;
 use App\Modules\Mail\Job\SendSystemMail;
 use App\Modules\Mail\Mailable\OrderAwaitingMail;
 use App\Modules\Notification\Events\TelegramHasReceived;
@@ -24,7 +25,6 @@ use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Events\OrderHasAwaiting;
 use App\Modules\Order\Events\OrderHasCanceled;
 use App\Modules\Order\Events\OrderHasSetManager;
-use App\Modules\Order\Infrastructure\Events\OrderHasCreated;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use App\Modules\Order\Infrastructure\Models\OrderHistoryStatus;
@@ -173,8 +173,8 @@ class OrderService
             }
             //Фиксируем цену за услугу
             foreach ($order->additions as $addition) {
-                if ($is_packing && $addition->addition->type == Addition::PACKING) $is_packing = false;
-                if ($is_assemblage && $addition->addition->type == Addition::ASSEMBLY) $is_assemblage = false;
+                if ($is_packing && $addition->addition->type == AdditionType::PACKING) $is_packing = false;
+                if ($is_assemblage && $addition->addition->type == AdditionType::ASSEMBLY) $is_assemblage = false;
                 $addition->amount = $addition->getAmount();
                 $addition->save();
             }

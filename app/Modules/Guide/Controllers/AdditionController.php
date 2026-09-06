@@ -4,7 +4,13 @@ declare(strict_types=1);
 namespace App\Modules\Guide\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Guide\Entity\Addition;
+use App\Modules\Guide\Application\Actions\Addition\CreateAdditionUseCase;
+use App\Modules\Guide\Application\Actions\Addition\RemoveAdditionUseCase;
+use App\Modules\Guide\Application\Actions\Addition\UpdateAdditionUseCase;
+use App\Modules\Guide\Application\DTOs\Addition\AdditionCreateData;
+use App\Modules\Guide\Application\DTOs\Addition\AdditionUpdateData;
+use App\Modules\Guide\Domain\ValueObjects\AdditionType;
+use App\Modules\Guide\Infrastructure\Models\Addition;
 use App\Modules\Guide\Service\AdditionService;
 use App\Modules\Order\Entity\Addition\CalculateAddition;
 use Illuminate\Http\RedirectResponse;
@@ -15,22 +21,23 @@ use Inertia\Response;
 class AdditionController extends Controller
 {
 
-    private AdditionService $service;
-
-    public function __construct(AdditionService $service)
+    public function __construct(
+        private readonly CreateAdditionUseCase $createAdditionUseCase,
+        private readonly UpdateAdditionUseCase $updateAdditionUseCase,
+        private readonly RemoveAdditionUseCase $removeAdditionUseCase
+    )
     {
-        $this->service = $service;
     }
 
     public function index(): Response
     {
         $additions = Addition::orderBy('type')->get()->map(function (Addition $addition) {
             return array_merge($addition->toArray(), [
-                'type_name' => $addition->typeName(),
-                'class_name' => $addition->className(),
+                'type_name' => AdditionType::TYPES[$addition->type],
+                'class_name' => is_null($addition->class) ? '' : $addition->class::getName()
             ]);
         });
-        $types = array_select(Addition::TYPES);
+        $types = array_select(AdditionType::TYPES);
         $classes = array_select(CalculateAddition::CLASSES);
 
         return Inertia::render('Guide/Addition', [
@@ -42,19 +49,21 @@ class AdditionController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $this->service->create($request);
+        $dto = AdditionCreateData::validateAndCreate($request->all());
+        $this->createAdditionUseCase->execute($dto);
         return redirect()->back()->with('success', 'Услуга добавлена');
     }
 
-    public function update(Request $request, Addition $addition): RedirectResponse
+    public function update(int $id, Request $request): RedirectResponse
     {
-        $this->service->update($addition, $request);
+        $dto = AdditionUpdateData::validateAndCreate($request->all());
+        $this->updateAdditionUseCase->execute($id, $dto);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function destroy(Addition $addition): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
-        $this->service->destroy($addition);
+        $this->removeAdditionUseCase->execute($id);
         return redirect()->back()->with('success', 'Услуга удалена');
     }
 

@@ -64,7 +64,7 @@
                         <el-checkbox v-model="form.manual" :checked="form.manual"/>
                     </el-form-item>
                     <el-form-item label="Количественная услуга">
-                        <el-checkbox v-model="form.is_quantity" :checked="form.is_quantity"/>
+                        <el-checkbox v-model="form.isQuantity" :checked="form.isQuantity"/>
                     </el-form-item>
                     <el-form-item label="Класс авто расчета">
                         <el-select v-model="form.class">
@@ -107,7 +107,7 @@ const form = reactive({
     base: null,
     manual: false,
     class: null,
-    is_quantity: false,
+    isQuantity: false,
 })
 
 function createDialog(row) {
@@ -117,7 +117,7 @@ function createDialog(row) {
     form.type = null
     form.manual = false
     form.class = null
-    form.is_quantity = false
+    form.isQuantity = false
     dialogCreate.value = true
 }
 
@@ -128,7 +128,7 @@ function editDialog(row) {
     form.type = row.type
     form.manual = row.manual === 1
     form.class = row.class
-    form.is_quantity = row.is_quantity === 1
+    form.isQuantity = row.isQuantity === 1
     dialogCreate.value = true
 }
 
@@ -138,7 +138,7 @@ function handleSave() {
         _route = route('admin.guide.addition.store')
         _method = "post"
     } else {
-        _route = route('admin.guide.addition.update', {addition: form.id})
+        _route = route('admin.guide.addition.update', {id: form.id})
         _method = "put"
     }
     router.visit(_route, {

@@ -32,4 +32,9 @@ class AssemblyCalculate extends CalculateAddition
         }
         return (int)ceil($result);
     }
+
+    public static function getName(): string
+    {
+        return 'Сборка (% от стоимости)';
+    }
 }

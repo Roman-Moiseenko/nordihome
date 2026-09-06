@@ -6,9 +6,8 @@ namespace App\Modules\Order\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Repository\OrganizationRepository;
-use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
-use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
-use App\Modules\Guide\Entity\Addition;
+use App\Modules\Guide\Domain\ValueObjects\AdditionType;
+use App\Modules\Guide\Infrastructure\Models\Addition;
 use App\Modules\Order\Application\Actions\Order\IndexOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetCouponOrderUseCase;
@@ -41,13 +40,11 @@ use App\Modules\Order\Application\Services\StatusServices\StatusCompletedOrderSe
 use App\Modules\Order\Application\Services\StatusServices\StatusReturnDraftOrderService;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Repository\OrderRepository;
-use App\Modules\Order\Service\OrderReserveService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use JetBrains\PhpStorm\Deprecated;
 
 /**
  * Общие операции с моделью Order. Все запросы POST или DELETE
@@ -111,10 +108,10 @@ class OrderController extends Controller
         //FIXME Через useStore
         $additions = array_map(
             fn($type) => [
-                'label' => Addition::TYPES[$type],
+                'label' => AdditionType::TYPES[$type],
                 'additions' => Addition::orderBy('name')->where('type', $type)->getModels(),
             ],
-            array_keys(Addition::TYPES)
+            array_keys(AdditionType::TYPES)
         );
         $traders = $this->organizations->getTraders();
 

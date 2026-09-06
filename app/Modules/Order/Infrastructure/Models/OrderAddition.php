@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Infrastructure\Models;
 
-use App\Modules\Guide\Entity\Addition;
+use App\Modules\Guide\Infrastructure\Models\Addition;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;

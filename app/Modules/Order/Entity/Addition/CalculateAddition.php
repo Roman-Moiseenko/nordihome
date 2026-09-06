@@ -15,7 +15,7 @@ abstract class CalculateAddition
         AssemblyCalculate::class => 'Сборка (% от стоимости)',
 
     ];
-
+    abstract public static function getName(): string;
     abstract public static function calculate(Order $order, int $base): int;
     abstract public static function calculateEntity(OrderEntity $order, int $base): int;
 

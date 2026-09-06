@@ -5,7 +5,8 @@ namespace App\Modules\Cabinet\Application\Actions;
 use App\Modules\Cabinet\Application\DTOs\OrderClientData;
 use App\Modules\Cabinet\Application\DTOs\OrderInfoData;
 use App\Modules\Cabinet\Application\DTOs\OrderInfoItemData;
-use App\Modules\Guide\Entity\Addition;
+use App\Modules\Guide\Domain\ValueObjects\AdditionType;
+use App\Modules\Guide\Infrastructure\Models\Addition;
 use App\Modules\Order\Application\Actions\GetAdditionDataUseCase;
 use App\Modules\Order\Application\Actions\GetProductItemDataUseCase;
 use App\Modules\Order\Domain\Entities\OrderItemEntity;
@@ -70,7 +71,7 @@ readonly class GetOrderClientData
         $additions = [];
         foreach ($orderEntity->additions as $addition) {
             $additionGuide = $this->getAdditionDataUseCase->execute($addition->additionId, $orderEntity);
-            if ($additionGuide->type == Addition::DELIVERY) {
+            if ($additionGuide->type == AdditionType::DELIVERY) {
                 $delivery += $addition->amount;
                 //if (!is_null($additionGuide->calculate)) $delivery += $additionGuide->calculate;
             }

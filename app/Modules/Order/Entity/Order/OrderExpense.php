@@ -14,7 +14,8 @@ use App\Modules\Delivery\Entity\Calendar;
 use App\Modules\Delivery\Entity\CalendarExpense;
 use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Modules\Delivery\Entity\DeliveryCargo;
-use App\Modules\Guide\Entity\Addition;
+use App\Modules\Guide\Domain\ValueObjects\AdditionType;
+use App\Modules\Guide\Infrastructure\Models\Addition;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
@@ -199,7 +200,7 @@ class OrderExpense extends Model
     public function isAssemble(): bool
     {
         foreach ($this->additions as $addition) {
-            if ($addition->orderAddition->addition->type == Addition::ASSEMBLY) return true;
+            if ($addition->orderAddition->addition->type == AdditionType::ASSEMBLY) return true;
         }
         return false;
     }

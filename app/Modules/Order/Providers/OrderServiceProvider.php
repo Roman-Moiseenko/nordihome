@@ -4,7 +4,6 @@ namespace App\Modules\Order\Providers;
 
 use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
 use App\Modules\Order\Application\Services\OrderLoggerService;
-use App\Modules\Order\Database\Seeders\AdditionSeeder;
 use App\Modules\Order\Database\Seeders\OrderRoleSeeder;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Infrastructure\Events\OrderHasCreated;
@@ -398,7 +397,6 @@ class OrderServiceProvider extends ServiceProvider
 
         $this->app->afterResolving('seed.handler', function ($handler) {
             $handler->register([
-                AdditionSeeder::class,
                 OrderRoleSeeder::class,
                 // Add seeder classes here
             ]);

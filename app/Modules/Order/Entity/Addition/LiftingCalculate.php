@@ -37,4 +37,9 @@ class LiftingCalculate extends CalculateAddition
         if ($result < 1) $result = 1;
         return (int)ceil($result * $base);
     }
+
+    public static function getName(): string
+    {
+        return 'Калькулятор подъема v1.0';
+    }
 }

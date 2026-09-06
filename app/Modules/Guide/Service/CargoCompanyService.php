@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Guide\Service;
 
-use App\Modules\Guide\Entity\Addition;
 use App\Modules\Guide\Entity\CargoCompany;
 use Illuminate\Http\Request;
 

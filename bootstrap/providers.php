@@ -8,6 +8,7 @@ return [
     App\Modules\Content\Providers\ContentServiceProvider::class,
     App\Modules\Discount\Providers\DiscountServiceProvider::class,
     App\Modules\Feedback\Providers\FeedbackServiceProvider::class,
+    App\Modules\Guide\Providers\GuideServiceProvider::class,
     App\Modules\Lead\Providers\LeadServiceProvider::class,
     App\Modules\Notification\Providers\NotificationServiceProvider::class,
     App\Modules\Order\Providers\OrderServiceProvider::class,

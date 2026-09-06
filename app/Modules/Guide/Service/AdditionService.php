@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Guide\Service;
 
-use App\Modules\Guide\Entity\Addition;
+use App\Modules\Guide\Infrastructure\Models\Addition;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -17,21 +17,6 @@ class AdditionService
         $addition->delete();
     }
 
-    public function create(Request $request): Addition
-    {
-        $name = $request->string('name')->trim()->value();
-        $addition = Addition::register(
-            $name,
-            Str::slug($name),
-            $request->integer('type'),
-            $request->boolean('manual'),
-            $request->integer('base')
-        );
-        $addition->class = $request->input('class');
-        $addition->is_quantity = $request->boolean('is_quantity');
-        $addition->save();
-        return $addition;
-    }
 
     public function update(Addition $addition, Request $request): void
     {

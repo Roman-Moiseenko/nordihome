@@ -2,7 +2,7 @@
 
 namespace App\Modules\Order\Application\Actions\AdditionGuide;
 
-use App\Modules\Guide\Entity\Addition;
+use App\Modules\Guide\Infrastructure\Models\Addition;
 
 class GetPolandAdditionUseCase
 {

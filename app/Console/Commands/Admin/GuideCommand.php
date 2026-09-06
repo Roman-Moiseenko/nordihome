@@ -3,17 +3,11 @@ declare(strict_types=1);
 
 namespace App\Console\Commands\Admin;
 
-use App\Modules\Guide\Entity\Addition;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;
 use App\Modules\Guide\Entity\Measuring;
 use App\Modules\Guide\Entity\VAT;
-use App\Modules\Order\Entity\Addition\AssemblyCalculate;
-use App\Modules\Order\Entity\Addition\DeliveryPolandCalculate;
-use App\Modules\Order\Entity\Addition\LiftingCalculate;
-use App\Modules\Order\Entity\Addition\PackingCalculate;
 use Illuminate\Console\Command;
-use NotificationChannels\Telegram\TelegramUpdates;
 
 //MAINDO Перенести в Seed
 class GuideCommand extends Command

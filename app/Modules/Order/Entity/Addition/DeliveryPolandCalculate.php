@@ -99,4 +99,8 @@ class DeliveryPolandCalculate extends CalculateAddition
         throw new \DomainException("Неверный вес - " . $weight);
     }
 
+    public static function getName(): string
+    {
+        return 'Доставка из польши v1.0';
+    }
 }

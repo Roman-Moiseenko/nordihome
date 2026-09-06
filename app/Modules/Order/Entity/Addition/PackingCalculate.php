@@ -115,4 +115,9 @@ class PackingCalculate extends CalculateAddition
       //  $order = Order::find($order->id);
         //return self::calculate($order, $base);
     }
+
+    public static function getName(): string
+    {
+        return 'Упаковка v1.0';
+    }
 }
