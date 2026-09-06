@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Cache;
 
 class GetCategoryTreeQuery
 {
-    private const string CACHE_KEY = CacheInvalidationRegistry::CATEGORY_INDEX_PAGE;
+    private const string CACHE_KEY = CacheInvalidationRegistry::CATEGORY_TREE;
 
     public function __construct(
         private CategoryTreeQueryRepository $repository
