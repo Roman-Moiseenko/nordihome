@@ -67,7 +67,21 @@
             }
         });
     </script>
-
+    <!-- Begin Talk-Me {literal} -->
+    <script>
+        (function(){(function c(d,w,m,i) {
+            window.supportAPIMethod = m;
+            var s = d.createElement('script');
+            s.id = 'supportScript';
+            s.async = true;
+            var id = '453ea4fa212864b24ff726d422d110c6';
+            s.src = (!i ? 'https://lcab.talk-me.ru/support/support.js' : 'https://static.site-chat.me/support/support.int.js') + '?h=' + id;
+            s.onerror = i ? undefined : function(){c(d,w,m,true)};
+            w[m] = w[m] ? w[m] : function(){(w[m].q = w[m].q ? w[m].q : []).push(arguments);};
+            (d.head ? d.head : d.body).appendChild(s);
+        })(document,window,'TalkMe')})();
+    </script>
+    <!-- {/literal} End Talk-Me -->
 </head>
 <body class="@yield('body')">
 @include('shop.header')
