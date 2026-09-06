@@ -11,6 +11,7 @@
 
 @section('content')
     {!! $page->text !!}
+    @include('shop.widgets.map-yandex')
 @endsection
 
 @pushonce('styles')

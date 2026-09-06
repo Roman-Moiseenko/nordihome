@@ -5,7 +5,7 @@ namespace App\Modules\Base\Helpers;
 
 class Version
 {
-    const VERSION = '0.9.0.0';
+    const string VERSION = '0.9.0.0';
 
     public static function updated(): array
     {

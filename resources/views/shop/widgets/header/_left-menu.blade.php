@@ -10,6 +10,6 @@
 @foreach($categories as $category)
     <a href="{{ route('shop.' . $entity . '.view', $category->slug) }}"
        class="nav-link" data-pane="{{ $category->slug }}" role="tab">
-        {{ $category->name }}
+        {!! $category->svg !!}        {{ $category->name }}
     </a>
 @endforeach
