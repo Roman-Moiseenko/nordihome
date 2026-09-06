@@ -49,7 +49,7 @@
                     <li class="one"></li>
                     <li class="one"></li>
                     <li class="one"></li>
-                    <li>1266 отзывов</li>
+                    <li>1366 отзывов</li>
                 </ul>
                 <img src="https://nordihome.ru/wp-content/themes/euroikea/images/avito_logo.svg"
                      alt="Лого Авито Nordihome">

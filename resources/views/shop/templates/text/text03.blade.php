@@ -16,7 +16,7 @@
     /** @var \App\Modules\Content\Entity\Widgets\TextWidget $widget */
 @endphp
 <div class="container">
-    <div class="main-advantages p-t_50 p-b_50">
+    <div class="main-advantages p-b_50">
         <h2 class="t-t_uppercase t-a_center">{{ $widget->caption }}</h2>
         <div class="row">
             @foreach($widget->items as $item)
