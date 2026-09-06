@@ -89,6 +89,14 @@ $total = $pageData->paginator->total;
                         @endforeach
                     </div>
                 @endif
+                <!-- Показать на мобиле -->
+                <div style="display: none">
+                    @foreach($mainInfo->children as $child)
+                        <div class="m-l_10 f-z_16">
+                            <a href="{{ route('shop.' . $mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
+                        </div>
+                    @endforeach
+                </div>
                 <div class="products">
                     <div class="row">
                         @foreach($pageData->products as $product)

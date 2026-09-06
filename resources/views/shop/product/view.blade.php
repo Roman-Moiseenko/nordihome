@@ -176,7 +176,9 @@
     </div>
 
     @include('shop.product._bonus', ['bonus' => $pageData->bonus])
+
     @include('shop.product._series', ['series' => $pageData->series])
+
     <div class="box-card">
         <div id="описание"></div>
         <h2 id="description">Описание</h2>
@@ -194,7 +196,9 @@
         'productAttributes' => $pageData->attributes,
         'dimensions' => $product->dimensions,
     ])
+
     @include('shop.product._equivalent', ['equivalents' => $pageData->equivalents])
+
     @include('shop.product._reviews', ['reviews' => $pageData->reviews])
 
     <section class="related-products">
@@ -224,7 +228,9 @@
 
         </div>
     </section>
+
     @include('shop.product._delivery')
+
     <script type="application/ld+json" class="schemantra.com">
         {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
     </script>
