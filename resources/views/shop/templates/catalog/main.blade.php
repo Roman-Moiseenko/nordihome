@@ -20,8 +20,8 @@
                     <a href="{{ $item->url() }}">
                         <div>
                             <img
-                                src="{{ $item->image() ?? '/images/no-image.jpg' }}"
-                                alt={{ $item->image() }}>
+                                src="{{ $item->image('catalog-free') ?? '/images/no-image.jpg' }}"
+                                alt={{ $item->name() }}>
                             <span>{{ $item->name() }}</span>
                         </div>
                     </a>

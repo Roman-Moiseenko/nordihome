@@ -49,10 +49,10 @@ class CatalogWidgetItem extends WidgetItem
         return route('shop.' . $this->model_type . '.view', $model->slug);
     }
 
-    public function image():? string
+    public function image(string $thumb = ''):? string
     {
         $model = $this->getModel();
-        return $model->getImage();
+        return $model->getImage($thumb);
     }
 
     public function name(): string
