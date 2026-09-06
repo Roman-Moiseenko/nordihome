@@ -104,7 +104,7 @@ class RoomTreeQueryRepository
             name: $row->name,
             slug: $row->slug,
             svg: $row->svg ?? '',
-            image: $this->imageThumbUseCase->execute($row, 'catalog'),
+            image: $this->imageThumbUseCase->execute($row, 'catalog-free'),
             children: [],
         ))->all();
     }
