@@ -101,7 +101,7 @@
  --->
 <div class="header-menu-buttons d-flex">
     <!-- Главные кнопки открываются по клику -->
-    <button class="nav-link header-menu-buttons-item m-r_5" type="button" data-target="catalogMenu">
+    <button class="header-menu-buttons-item m-r_5" type="button" data-target="catalogMenu">
         <div class="header-menu-buttons-item-burger">
             <span></span>
             <span></span>
@@ -109,7 +109,7 @@
         </div>
         <div>Каталог</div>
     </button>
-    <button class="nav-link header-menu-buttons-item" type="button" data-target="roomsMenu">
+    <button class="header-menu-buttons-item" type="button" data-target="roomsMenu">
         <div class="header-menu-buttons-item-burger">
             <span></span>
             <span></span>

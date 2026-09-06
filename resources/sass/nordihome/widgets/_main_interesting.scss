@@ -1,3 +1,4 @@
+#main-slider-interesting .main-slider .sl-text {min-height: 550px;}
 @media (max-width: 990px) {
     #main-slider-interesting .main-slider .sl-text {padding:40px 50px 40px 30px;}
     #main-slider-interesting .main-slider .owl-item:first-child .sl-text {background:$light-gray;}
@@ -7,6 +8,7 @@
     #main-slider-interesting .main-slider .owl-item:nth-child(5) .sl-text {background:$light-gray;}
 }
 @media (max-width: 768px) {
+    #main-slider-interesting .main-slider .sl-text {min-height: 330px;}
     #main-slider-interesting .main-slider .sl-text .heading-border {font-size: 20px;}
     #main-slider-interesting .main-slider .sl-text .text {line-height: 20px;font-size: 16px;}
     #main-slider-interesting .main-slider .sl-text .btn-big {padding: 10px 19px;font-size: 12px;}

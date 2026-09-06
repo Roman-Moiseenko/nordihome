@@ -21,13 +21,13 @@
             <div class="col-lg-6">
                 <a href="/catalog/" class="c-mini-item b-radius_12">
                     <img src="/images/pages/home/t-nalichie-min.jpg" alt="Товары Икеа в наличии">
-                    <div class="heading">Каталог товаров</div>
+                    <div class="heading">Каталог товаров в наличии</div>
                 </a>
             </div>
             <div class="col-lg-6">
                 <a href="/ikea/" class="c-mini-item b-radius_12">
                     <img src="/images/pages/home/t-zakaz-min.jpg" alt="Товары Икеа под заказ">
-                    <div class="heading">Весь ассортимент под заказ</div>
+                    <div class="heading">Каталог Икеа под заказ</div>
                 </a>
             </div>
         </div>
