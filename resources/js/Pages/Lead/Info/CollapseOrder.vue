@@ -5,7 +5,7 @@
                 <el-tag effect="dark" size="large">Заказ #{{ lead.order.number }} на {{ func.price(lead.order.amount)}} </el-tag>
 
             </template>
-            <Link :href="route('admin.order.show', {order: lead.order.id})" class="flex items-center w-full text-sm"
+            <Link :href="route('admin.order.show', {id: lead.order.id})" class="flex items-center w-full text-sm"
                   type="primary">Перейти к заказу <i class="fa-light fa-right ml-2"></i></Link>
             <el-tag type="warning" class="mt-2">Товары</el-tag>
             <div v-for="product in props.lead.order.products" class="flex">

@@ -20,4 +20,5 @@ interface AdditionRepositoryInterface
      * @return AdditionEntity[]
      */
     public function getByType(int|string $type): array;
+
 }

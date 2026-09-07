@@ -4,31 +4,30 @@ declare(strict_types=1);
 namespace App\Modules\Order\Service;
 
 use App\Modules\Accounting\Service\BatchSaleService;
-use App\Modules\Auth\Infrastructure\Models\Staff;
-use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderExpenseRefundAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseRefundItem;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use JetBrains\PhpStorm\Deprecated;
 
 class RefundService
 {
 
-    private OrderLoggerService $logger;
+  //  private OrderLoggerService $logger;
     private BatchSaleService $batchSaleService;
 
-    public function __construct(OrderLoggerService $logger, BatchSaleService $batchSaleService)
+    public function __construct( BatchSaleService $batchSaleService)
     {
-        $this->logger = $logger;
+        //$this->logger = $logger;
         $this->batchSaleService = $batchSaleService;
     }
 
+    #[Deprecated]
     public function create(OrderExpense $expense, $request): OrderExpenseRefund
     {
-        DB::transaction(function () use ($expense, $request, &$refund) {
-            /** @var Staff $staff */
+      /*  DB::transaction(function () use ($expense, $request, &$refund) {
+
             $staff = auth()->user()->profileable;
 
             $refund = OrderExpenseRefund::register($expense->id, $staff->id, $request->input('reason'));
@@ -47,7 +46,7 @@ class RefundService
             );
         });
 
-        return $refund;
+        return $refund;*/
     }
 
     public function completed(OrderExpenseRefund $refund)

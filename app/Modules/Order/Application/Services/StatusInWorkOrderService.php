@@ -8,7 +8,9 @@ use App\Modules\Lead\Application\Actions\SetStatusLeadFromOrderUseCase;
 use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use App\Modules\Order\Application\Actions\Order\SetManagerOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetStatusOrderUseCase;
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\Order\StatusOrderAssignData;
+use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -22,6 +24,7 @@ readonly class StatusInWorkOrderService
         private SetStatusLeadFromOrderUseCase  $leadFromOrderUseCase,
         private SetStatusOrderUseCase          $setStatusOrderUseCase,
         private SetManagerLeadFromOrderUseCase $setManagerLeadUseCase,
+        private CreateOrderLoggerUseCase $loggerUseCase,
     )
     {
     }
@@ -39,6 +42,9 @@ readonly class StatusInWorkOrderService
             $this->leadFromOrderUseCase->execute($orderId, LeadStatusValue::IN_WORK);
 
             $this->setManagerLeadUseCase->execute($orderId, $staffId);
+
+            $log = new OrderLoggerCreateData(action: 'Заказ взят в работу');
+            $this->loggerUseCase->execute($orderId, $log);
         });
 
     }

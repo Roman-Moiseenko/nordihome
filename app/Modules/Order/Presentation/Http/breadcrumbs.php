@@ -48,14 +48,16 @@ Breadcrumbs::for('admin.order.update', function (BreadcrumbTrail $trail, Order $
     $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.order.update', $order));
 });
 
-Breadcrumbs::for('admin.order.show', function (BreadcrumbTrail $trail, Order $order) {
+Breadcrumbs::for('admin.order.show', function (BreadcrumbTrail $trail, int $id) {
+    $order = Order::find($id);
     $trail->parent('admin.order.index');
-    $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.order.show', $order));
+    $trail->push($order->htmlDate() . ' ' . $order->htmlNum(), route('admin.order.show', $id));
 });
 
-Breadcrumbs::for('admin.order.log', function (BreadcrumbTrail $trail, Order $order) {
-    $trail->parent('admin.order.show', $order);
-    $trail->push('История заказа', route('admin.order.log', $order));
+Breadcrumbs::for('admin.order.log', function (BreadcrumbTrail $trail, int $id) {
+   // $order = Order::find($id);
+    $trail->parent('admin.order.show', $id);
+    $trail->push('История заказа', route('admin.order.log', $id));
 });
 
 //EXPENSE
@@ -65,7 +67,7 @@ Breadcrumbs::for('admin.order.expense.index', function (BreadcrumbTrail $trail) 
 });
 
 Breadcrumbs::for('admin.order.expense.show', function (BreadcrumbTrail $trail, OrderExpense $expense) {
-    $trail->parent('admin.order.show', $expense->order);
+    $trail->parent('admin.order.show', $expense->order_id);
     $trail->push('Расходный документ', route('admin.order.expense.show', $expense));
 });
 

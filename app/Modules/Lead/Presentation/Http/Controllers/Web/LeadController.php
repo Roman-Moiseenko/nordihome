@@ -77,7 +77,7 @@ class LeadController extends Controller
     public function createOrder(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
         $order = $this->createOrderFromLeadService->execute($id, $permission);
-        return redirect()->route('admin.order.show', $order)->with('success', 'Обновлено!');
+        return redirect()->route('admin.order.show', $order->id)->with('success', 'Обновлено!');
     }
 
     public function addComment(int $id, Request $request, UserPermission $permission): RedirectResponse

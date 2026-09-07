@@ -56,7 +56,7 @@ Route::group(
         Route::post('/completed/{id}', [OrderController::class, 'statusCompleted'])->name('completed');
         Route::post('/work/{id}', [OrderController::class, 'returnDraft'])->name('work');
 
-        Route::get('/log/{order}', [OrderController::class, 'log'])->name('log');
+        Route::get('/log/{id}', [OrderController::class, 'log'])->name('log');
         Route::post('/take/{id}', [OrderController::class, 'take'])->name('take');
 
         //Распоряжения

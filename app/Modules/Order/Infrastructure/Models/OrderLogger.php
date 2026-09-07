@@ -20,8 +20,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property Staff $staff
  * @property Order $order
  */
-class LoggerOrder extends Model
+class OrderLogger extends Model
 {
+
+    protected $table = 'order_logs';
+    protected $touches = ['order'];
     public $timestamps = false;
     public $attributes = [
         'value' => '',

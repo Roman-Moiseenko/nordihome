@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Order\Service;
 
 use App\Modules\Base\Entity\BankPayment;
-use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Events\OrderHasPaid;
@@ -16,15 +15,15 @@ use Illuminate\Support\Facades\DB;
 
 class OrderPaymentService
 {
-    private OrderLoggerService $logger;
+   // private OrderLoggerService $logger;
     private float $commission_card;
     private float $commission_yookassa;
 
     public function __construct(
-        OrderLoggerService $logger,
+      //  OrderLoggerService $logger,
     )
     {
-        $this->logger = $logger;
+     //   $this->logger = $logger;
         //TODO Из Настроек
         $this->commission_card = 2.0;
         $this->commission_yookassa = 2.7;
@@ -58,10 +57,10 @@ class OrderPaymentService
         $order->refresh();
         $this->checkPayment($order);
         $payment->completed();
-        $this->logger->log(orderId: $order->id, action: 'Внесена оплата',
+     /*   $this->logger->log(orderId: $order->id, action: 'Внесена оплата',
             object: $payment->methodText(), value: price($payment->amount),
             link: route('admin.order.payment.show', $payment));
-
+*/
         return $payment;
     }
 
@@ -86,9 +85,10 @@ class OrderPaymentService
             $payment->save();
             $order->refresh();
             $this->checkPayment($order);
-            $this->logger->log(orderId: $order->id, action: 'Разнесена оплата',
+          /*  $this->logger->log(orderId: $order->id, action: 'Разнесена оплата',
                 object: $payment->methodText(), value: price($payment->amount),
                 link: route('admin.order.payment.show', $payment));
+            */
         });
     }
 

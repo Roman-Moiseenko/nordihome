@@ -20,7 +20,7 @@
             </el-tooltip>
         </h1>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <OrderInfo :order="order" :storages="storages" :mainStorage="mainStorage" :traders="traders" />
+            <OrderInfo :order="order" :storages="storages" :mainStorage="mainStorage" />
         </div>
         <el-affix target=".affix-container" :offset="64">
             <div class="bg-white rounded-lg my-2 p-1 shadow flex">
@@ -89,7 +89,6 @@ const props = defineProps({
     },
     storages: Array,
     mainStorage: Object,
-    traders: Array,
     order_related: Array,
 })
 const authStore = useAuthStore()
@@ -146,7 +145,7 @@ provide("$status", {
 })
 
 function handleLogOrder() {
-    router.get(route('admin.order.log', {order: props.order.id}))
+    router.get(route('admin.order.log', {id: props.order.id}))
 }
 function setCreated(val) {
     axios.post(route('admin.order.set-info', {id: props.order.id}), {createdAt: func.datetime(val),}).then(result => {

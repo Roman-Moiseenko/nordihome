@@ -12,7 +12,6 @@ use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Helpers\NotificationHelper;
 use App\Modules\Notification\Helpers\TelegramParams;
 use App\Modules\Notification\Message\StaffMessage;
-use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
@@ -32,7 +31,7 @@ class ExpenseService
 {
     public function __construct(
         private readonly OrderReserveService      $reserveService,
-        private readonly OrderLoggerService       $logger,
+    //    private readonly OrderLoggerService       $logger,
         private readonly BatchSaleService         $batchSaleService,
         //private readonly StaffRepository     $staffs,
        // private readonly YookassaService     $yookassaService,
@@ -81,11 +80,12 @@ class ExpenseService
                     $expense->additions()->save(OrderExpenseAddition::new((int)$addition['id'], (float)$addition['value']));
             }
             $expense->refresh();
-
+/*
             $this->logger->log(orderId: $expense->order_id, action: 'Создано распоряжение на выдачу',
                 value: $expense->htmlNumDate(),
                 link: route('admin.order.expense.show', $expense)
             );
+            */
         });
 
         return $expense;
@@ -124,8 +124,9 @@ class ExpenseService
         if ($method == 'shop') {
             $this->completed($expense);
             $expense->refresh();
-            $this->logger->log(orderId: $expense->order_id, action: 'Выдать товар с магазина',
+        /*    $this->logger->log(orderId: $expense->order_id, action: 'Выдать товар с магазина',
                 value: $expense->htmlNumDate());
+            */
         }
         if ($method == 'warehouse') {
             //Нет отличных данных
@@ -165,9 +166,10 @@ class ExpenseService
             }
             //Удаляем назначенных рабочих
             $expense->workers()->detach();
-            $this->logger->log(orderId: $expense->order_id, action: 'Отмена распоряжения на выдачу',
+       /*     $this->logger->log(orderId: $expense->order_id, action: 'Отмена распоряжения на выдачу',
                 value: $expense->htmlNumDate(),
                 link: route('admin.order.expense.show', $expense));
+            */
             $expense->status = OrderExpense::STATUS_CANCELED;
             $expense->save();
             $order->refresh();
@@ -189,10 +191,11 @@ class ExpenseService
         $expense->assembly();
 
         event(new ExpenseHasAssembling($expense)); //Уведомление на склад на выдачу
-
+/*
         $this->logger->log(orderId: $expense->order_id, action: 'Распоряжение отправлено на сборку',
             value: $expense->htmlNumDate(),
             link: route('admin.order.expense.show', $expense));
+        */
     }
 
     public function setLoader(OrderExpense $expense, int $worker_id): void
@@ -203,10 +206,12 @@ class ExpenseService
 
         $message = 'Список товаров на сборку';
         $expense->status = OrderExpense::STATUS_ASSEMBLING;
+        /*
         $this->logger->log(orderId: $expense->order_id, action: 'Назначен грузчик распоряжению',
             object: $expense->htmlNumDate(),
             value: $expense->getWorker(Worker::WORK_LOADER)->fullname->getFullName(),
             link: route('admin.order.expense.show', $expense));
+        */
         $expense->save();
 
         /** @var Worker $worker */
@@ -263,10 +268,12 @@ class ExpenseService
         $expense->refresh();
 
         $expense->status = OrderExpense::STATUS_DELIVERY;
-        $this->logger->log(orderId:$expense->order_id, action:'Назначен доставщик распоряжению',
+      /*
+         $this->logger->log(orderId:$expense->order_id, action:'Назначен доставщик распоряжению',
             object: $expense->htmlNumDate(),
             value: $expense->getWorker(Worker::WORK_DRIVER)->fullname->getFullName(),
             link: route('admin.order.expense.show', $expense));
+        */
         $expense->save();
     }
 
@@ -279,11 +286,12 @@ class ExpenseService
         }
         $expense->push();
         $expense->refresh();
-
+/*
         $this->logger->log(orderId: $expense->order_id, action: 'Назначен сборщик(и) мебели',
             object: $expense->htmlNumDate(),
             value: implode(', ', $_workers),
             link: route('admin.order.expense.show', $expense));
+        */
     }
 
     /**
@@ -356,17 +364,18 @@ class ExpenseService
                 if ($check) {
                     $expense->order->setStatus(OrderHistoryStatus::COMPLETED);
                     event(new OrderHasCompleted($expense->order));
-                    $this->logger->log(orderId: $expense->order_id, action:  'Заказ завершен');
+                  //  $this->logger->log(orderId: $expense->order_id, action:  'Заказ завершен');
                 } else {
-                    $this->logger->log(orderId:$expense->order_id, action: 'Товар выдан по распоряжению',
+           /*         $this->logger->log(orderId:$expense->order_id, action: 'Товар выдан по распоряжению',
                         value:$expense->htmlNumDate(),
-                        link: route('admin.order.expense.show', $expense));
+                        link: route('admin.order.expense.show', $expense));*/
                 }
             } else {
-                $this->logger->log(orderId: $expense->order_id, action: 'Товар выдан по распоряжению',
+       /*         $this->logger->log(orderId: $expense->order_id, action: 'Товар выдан по распоряжению',
                     value: $expense->htmlNumDate(),
-                    link: route('admin.order.expense.show', $expense));
+                    link: route('admin.order.expense.show', $expense));*/
             }
+
             event(new ExpenseHasCompleted($expense));
         });
     }

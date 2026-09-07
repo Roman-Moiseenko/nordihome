@@ -8,23 +8,24 @@ use App\Modules\Delivery\Entity\Local\Tariff;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
 use App\Modules\Delivery\Helpers\DeliveryHelper;
 use App\Modules\Notification\Events\TelegramHasReceived;
-use App\Modules\Order\Application\Services\OrderLoggerService;
+
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Events\ExpenseHasDelivery;
 use App\Modules\Order\Service\ExpenseService;
 use App\Modules\Shop\CartItemInterface;
 use App\Modules\User\Entity\UserDelivery;
 use Illuminate\Http\Request;
+use JetBrains\PhpStorm\Deprecated;
 
 class DeliveryService
 {
 
-    private OrderLoggerService $logger;
+  // private OrderLoggerService $logger;
     private ExpenseService $expenseService;
 
-    public function __construct(OrderLoggerService $logger, ExpenseService $expenseService)
+    public function __construct(ExpenseService $expenseService)
     {
-        $this->logger = $logger;
+    //    $this->logger = $logger;
         $this->expenseService = $expenseService;
     }
 
@@ -66,6 +67,7 @@ class DeliveryService
     }
 
 
+    #[Deprecated]
     public function create(OrderExpense $expense, Request $request): void
     {
 
@@ -77,11 +79,11 @@ class DeliveryService
         $expense->save();
         $expense->refresh();
         event(new ExpenseHasDelivery($expense)); //Уведомляем клиента с трек-номером
-        $this->logger->log(orderId: $expense->order_id, action: 'Распоряжение в пути',
+      /*  $this->logger->log(orderId: $expense->order_id, action: 'Распоряжение в пути',
             value: !empty($track) ? ('Трек посылки ' . $track) : '',
             link: route('admin.order.expense.show', $expense)
         );
-
+*/
     }
 
     public function setStatus(OrderExpense $expense, int $status): void

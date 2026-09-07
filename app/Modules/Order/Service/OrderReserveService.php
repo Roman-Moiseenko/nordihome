@@ -5,7 +5,6 @@ namespace App\Modules\Order\Service;
 
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
-use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Setting\Entity\Settings;
@@ -15,13 +14,13 @@ class OrderReserveService
 {
     private Storage $storage;
     private int $minutes;
-    private OrderLoggerService $logger;
+   // private OrderLoggerService $logger;
 
-    public function __construct(OrderLoggerService $logger, Settings $settings)
+    public function __construct(Settings $settings)
     {
         $this->storage = Storage::where('default', true)->first();
         $this->minutes = $settings->common->reserve;
-        $this->logger = $logger;
+     //   $this->logger = $logger;
     }
 
     /**
@@ -185,9 +184,10 @@ class OrderReserveService
                 }
             }
         }
-        $this->logger->log(order: $orderItem->order, action: 'Перемещение резерва м/у складами',
+    /*    $this->logger->log(order: $orderItem->order, action: 'Перемещение резерва м/у складами',
             object: 'Склад назначения ' . $storageIn->name,
             value: $quantity . ' шт.');
+        */
     }
 
 

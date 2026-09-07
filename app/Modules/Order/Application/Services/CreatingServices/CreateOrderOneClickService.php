@@ -7,8 +7,9 @@ use App\Modules\Auth\Application\Services\FindOrCreateClientService;
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Catalog\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetDeliveryAdditionUseCase;
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
-use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
+use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
@@ -25,16 +26,13 @@ readonly class CreateOrderOneClickService
 {
     public function __construct(
         private TransactionManagerInterface $transactionManager,
-
-        //private OrderCalculateService       $orderCalculateService,
         private Dispatcher                  $dispatcher,
-
         private FindOrCreateClientService   $findOrCreateClientService,
         private GetProductSellPriceUseCase  $sellPriceUseCase,
         private OrderRepositoryInterface    $repository,
         private GetDeliveryAdditionUseCase $deliveryAdditionUseCase,
         private GetDefaultTraderIdUseCase $traderIdUseCase,
-        private OrderLoggerServiceInterface $logger,
+        private CreateOrderLoggerUseCase $loggerUseCase,
     )
     {
 
@@ -87,7 +85,9 @@ readonly class CreateOrderOneClickService
             );
             $this->dispatcher->dispatch(new LeadCollected($leadData));
             $this->dispatcher->dispatch(new OrderHasCreated($orderEntity->id));
-            $this->logger->log($orderEntity->id, 'Заказ создан в один клик');
+
+            $log = new OrderLoggerCreateData(action: 'Заказ создан в один клик',);
+            $this->loggerUseCase->execute($orderEntity->id, $log);
         });
         return $orderEntity;
     }

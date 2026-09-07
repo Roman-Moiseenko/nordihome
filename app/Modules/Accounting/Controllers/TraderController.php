@@ -5,6 +5,7 @@ namespace App\Modules\Accounting\Controllers;
 
 
 use App\Http\Controllers\Controller;
+use App\Modules\Accounting\Application\Actions\Trader\ListTradersUseCase;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Accounting\Repository\TraderRepository;
@@ -21,7 +22,11 @@ class TraderController extends Controller
     private TraderService $service;
     private TraderRepository $repository;
 
-    public function __construct(TraderService $service, TraderRepository $repository)
+    public function __construct(
+        TraderService                       $service,
+        TraderRepository                    $repository,
+        private readonly ListTradersUseCase $listTradersUseCase,
+    )
     {
         $this->service = $service;
         $this->repository = $repository;
@@ -51,10 +56,10 @@ class TraderController extends Controller
 
     public function show(Trader $trader, Request $request): Response
     {
-       // $organizations = Organization::orderBy('short_name')->active()->getModels();
+        // $organizations = Organization::orderBy('short_name')->active()->getModels();
         return Inertia::render('Accounting/Trader/Show', [
             'trader' => $this->repository->TraderWithToArray($trader),
-           // 'organizations' => $organizations,
+            // 'organizations' => $organizations,
         ]);
     }
 
@@ -102,5 +107,11 @@ class TraderController extends Controller
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
+    }
+
+    public function listTraders(): \Illuminate\Http\JsonResponse
+    {
+        $list = $this->listTradersUseCase->execute();
+        return \response()->json($list);
     }
 }

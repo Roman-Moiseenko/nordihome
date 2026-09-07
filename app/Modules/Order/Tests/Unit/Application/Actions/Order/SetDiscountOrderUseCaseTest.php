@@ -5,7 +5,6 @@ namespace App\Modules\Order\Tests\Unit\Application\Actions\Order;
 use App\Modules\Order\Application\Actions\GetAdditionDataUseCase;
 use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
 use App\Modules\Order\Application\DTOs\Order\DiscountOrderData;
-use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Entities\OrderItemEntity;
@@ -22,7 +21,6 @@ class SetDiscountOrderUseCaseTest extends TestCase
     use MockPermission;
 
     private OrderRepositoryInterface $repository;
-    private OrderLoggerServiceInterface $logger;
     private GetAdditionDataUseCase $getAdditionDataUseCase;
     private OrderCalculateService $calculateService;
     private SetDiscountOrderUseCase $useCase;
@@ -41,7 +39,7 @@ class SetDiscountOrderUseCaseTest extends TestCase
     {
         parent::setUp();
         $this->repository = Mockery::mock(OrderRepositoryInterface::class);
-        $this->logger = Mockery::mock(OrderLoggerServiceInterface::class);
+
         $this->getAdditionDataUseCase = Mockery::mock(GetAdditionDataUseCase::class);
         $this->calculateService = new OrderCalculateService(
             $this->repository,

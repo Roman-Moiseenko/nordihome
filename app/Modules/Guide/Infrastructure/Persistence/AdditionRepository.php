@@ -40,6 +40,7 @@ class AdditionRepository implements AdditionRepositoryInterface
             return $this->hydrate($addition);
         }, $models);
     }
+
     public function remove(int $id): void
     {
         Addition::deleted($id);

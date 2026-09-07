@@ -5,9 +5,11 @@ namespace App\Modules\Order\Application\Services;
 use App\Modules\Order\Application\Actions\OrderItem\AddProductOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\RemoveOrderItemUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\UpdateOrderItemUseCase;
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemPreData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
+use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -20,6 +22,7 @@ readonly class ChangePreOrderItemService
         private AddProductOrderUseCase      $addProductOrderUseCase,
         private UpdateOrderItemUseCase      $updateOrderItemUseCase,
         private RemoveOrderItemUseCase      $removeOrderItemUseCase,
+        private CreateOrderLoggerUseCase $loggerUseCase,
         private TransactionManagerInterface $transactionManager,
     )
     {
@@ -52,6 +55,13 @@ readonly class ChangePreOrderItemService
                 increase: true,
             );
             $this->addProductOrderUseCase->execute($orderId, $addProductDto, $permission); //Сохранит и пересчитает
+            $log = new OrderLoggerCreateData(
+                action: $dto->preorder ? 'Товар отправлен под Заказ' : 'Товар отправлен в наличие',
+                object: $baseItem->productId,
+                value: $quantity . ' шт.',
+                link: route('admin.catalog.product.edit', $baseItem->productId),
+            );
+            $this->loggerUseCase->execute($orderEntity->id, $log);
         });
     }
 }

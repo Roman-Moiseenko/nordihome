@@ -9,6 +9,7 @@ use App\Modules\Guide\Infrastructure\Models\Addition;
 use App\Modules\Order\Entity\Addition\AssemblyCalculate;
 use App\Modules\Order\Entity\Addition\DeliveryPolandCalculate;
 use App\Modules\Order\Entity\Addition\PackingCalculate;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Database\Seeder;
 
 class AdditionSeeder extends Seeder
@@ -63,22 +64,9 @@ class AdditionSeeder extends Seeder
             //['name' => 'Доставка в Россию', 'base' => 0, 'type' => AdditionType::DELIVERY, 'class' => null, 'slug' => 'russia', 'manual' => true],
             //['name' => 'Доставка по региону', 'base' => 0, 'type' => AdditionType::DELIVERY, 'class' => null, 'slug' => 'koenig', 'manual' => true],
         ];
+        $permission = new UserPermission(null, [], ['guide.guide.create']);
         foreach ($array as $item) {
-
-            $this->createAdditionUseCase->execute($item);
-/*
-            if(is_null(Addition::where('slug', $item['slug'])->first())) {
-                Addition::register(
-                    name: $item['name'],
-                    slug: $item['slug'],
-                    type: $item['type'],
-                    manual: $item['manual'] ?? false,
-                    base: $item['base'],
-                    class: $item['class'],
-                    is_quantity: false,
-                );
-            }
-            */
+            $this->createAdditionUseCase->execute($item, $permission);
         }
     }
 }

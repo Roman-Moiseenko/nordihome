@@ -2,16 +2,20 @@
 
 namespace App\Modules\Order\Application\Actions\AdditionGuide;
 
-use App\Modules\Guide\Infrastructure\Models\Addition;
+use App\Modules\Guide\Domain\Entities\AdditionEntity;
+use App\Modules\Guide\Domain\Interfaces\AdditionRepositoryInterface;
 
-class GetAssemblageAdditionUseCase
+readonly class GetAssemblageAdditionUseCase
 {
 
-    //FIXME Переделать на AdditionEntity
-    public function execute():? Addition
+    public function __construct(
+        private AdditionRepositoryInterface $repository
+    )
     {
-        $addition = Addition::where('slug', 'assembly_15')->first();
+    }
 
-        return $addition;
+    public function execute():? AdditionEntity
+    {
+        return $this->repository->findBySlug('assembly-15');
     }
 }

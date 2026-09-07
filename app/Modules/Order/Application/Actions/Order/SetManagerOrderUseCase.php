@@ -2,17 +2,16 @@
 
 namespace App\Modules\Order\Application\Actions\Order;
 
-use App\Modules\Auth\Application\Actions\Staff\ViewStaffUseCase;
-use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
-use App\Modules\Shared\Domain\Entities\UserPermission;
 
+
+/**
+ * атомарная операция, сама не используется, только через сервисы
+ */
 readonly class SetManagerOrderUseCase
 {
     public function __construct(
         private OrderRepositoryInterface    $repository,
-        private OrderLoggerServiceInterface $logger,
-        private ViewStaffUseCase $staffUseCase,
     )
     {
     }
@@ -23,13 +22,5 @@ readonly class SetManagerOrderUseCase
         $orderEntity->staffId = $staffId;
         $this->repository->save($orderEntity);
 
-        //Нужно ФИО менеджера для логирования
-        if (!is_null($staffId)) {
-            $staffEntity = $this->staffUseCase->execute($staffId, new UserPermission(permissions: ['auth.employee.view']));
-            $this->logger->log(orderId: $orderEntity->id, action: 'Назначен менеджер',
-                value: $staffEntity->fullName);
-        } else {
-            $this->logger->log(orderId: $orderEntity->id, action: 'Менеджер сброшен',);
-        }
     }
 }

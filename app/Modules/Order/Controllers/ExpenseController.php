@@ -53,7 +53,7 @@ class ExpenseController extends Controller
     public function canceled(OrderExpense $expense): RedirectResponse
     {
         $order = $this->service->cancel($expense);
-        return redirect()->route('admin.order.show', $order)->with('success', 'Распоряжение удалено. Товар возвращен в резерв и хранилище');
+        return redirect()->route('admin.order.show', $order->id)->with('success', 'Распоряжение удалено. Товар возвращен в резерв и хранилище');
     }
 
     public function set_delivery(OrderExpense $expense, Request $request): RedirectResponse

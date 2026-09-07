@@ -2,18 +2,19 @@
 
 namespace App\Modules\Order\Application\Actions\AdditionGuide;
 
-use App\Modules\Guide\Infrastructure\Models\Addition;
+use App\Modules\Guide\Domain\Entities\AdditionEntity;
+use App\Modules\Guide\Domain\Interfaces\AdditionRepositoryInterface;
 
-class GetDeliveryAdditionUseCase
+readonly class GetDeliveryAdditionUseCase
 {
+    public function __construct(
+        private AdditionRepositoryInterface $repository
+    ){}
 
-    public function execute(int $regionCode): Addition
+    public function execute(int $regionCode): AdditionEntity
     {
-        if ($regionCode == 39) {
-            $addition = Addition::where('slug', 'koenig')->first();
-        } else {
-            $addition = Addition::where('slug', 'russia')->first();
-        }
-        return $addition;
+        if ($regionCode == 39) return $this->repository->findBySlug('koenig');
+
+        return $this->repository->findBySlug('russia');
     }
 }

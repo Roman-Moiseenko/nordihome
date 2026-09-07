@@ -5,9 +5,6 @@ namespace App\Modules\Order\Presentation\Http\Controllers\Web;
 
 
 use App\Http\Controllers\Controller;
-use App\Modules\Accounting\Repository\OrganizationRepository;
-use App\Modules\Guide\Domain\ValueObjects\AdditionType;
-use App\Modules\Guide\Infrastructure\Models\Addition;
 use App\Modules\Order\Application\Actions\Order\IndexOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetCouponOrderUseCase;
@@ -20,6 +17,7 @@ use App\Modules\Order\Application\Actions\OrderAddition\UpdateOrderAdditionUseCa
 use App\Modules\Order\Application\Actions\OrderItem\AddProductOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\RemoveOrderItemUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\UpdateOrderItemUseCase;
+use App\Modules\Order\Application\Actions\OrderLogger\IndexOrderLoggerUseCase;
 use App\Modules\Order\Application\Actions\ViewOrderUseCase;
 use App\Modules\Order\Application\DTOs\Order\AssignClientToOrderData;
 use App\Modules\Order\Application\DTOs\Order\DiscountOrderData;
@@ -37,9 +35,7 @@ use App\Modules\Order\Application\Services\StatusInWorkOrderService;
 use App\Modules\Order\Application\Services\StatusServices\StatusAwaitingOrderService;
 use App\Modules\Order\Application\Services\StatusServices\StatusCancelOrderService;
 use App\Modules\Order\Application\Services\StatusServices\StatusCompletedOrderService;
-use App\Modules\Order\Application\Services\StatusServices\StatusReturnDraftOrderService;
-use App\Modules\Order\Infrastructure\Models\Order;
-use App\Modules\Order\Repository\OrderRepository;
+use App\Modules\Order\Application\Services\StatusServices\StatusReturnInWorkOrderService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -54,12 +50,7 @@ use Inertia\Response;
  */
 class OrderController extends Controller
 {
-
     public function __construct(
-        private readonly OrderRepository               $repository,
-        // private readonly InvoiceReport              $report,
-        private readonly OrganizationRepository        $organizations,
-
         private readonly ViewOrderUseCase              $viewOrderUseCase,
         private readonly AddProductOrderUseCase        $addProductOrderUseCase,
         private readonly UpdateOrderItemUseCase        $updateOrderItemUseCase,
@@ -67,21 +58,22 @@ class OrderController extends Controller
         private readonly AddAdditionOrderUseCase       $addAdditionOrderUseCase,
         private readonly ChangePreOrderItemService     $changePreOrderItemService,
         private readonly UpdateOrderAdditionUseCase    $updateOrderAdditionUseCase,
-        private readonly RemoveOrderAdditionUseCase    $removeOrderAdditionUseCase,
-        private readonly SetDiscountOrderUseCase       $setDiscountOrderUseCase,
-        private readonly SetCouponOrderUseCase         $setCouponOrderUseCase,
-        private readonly CreateOrderByManagerService   $createOrderUseCase,
-        private readonly SetAssemblagesOrderUseCase    $setAssemblagesOrderUseCase,
-        private readonly SetPackingsOrderUseCase       $setPackingsOrderUseCase,
-        private readonly CreateOrderFromCopyService    $createOrderFromCopyService,
-        private readonly StatusAwaitingOrderService    $statusAwaitingOrderService,
-        private readonly StatusCancelOrderService      $statusCancelOrderService,
-        private readonly IndexOrderUseCase             $indexOrderUseCase,
-        private readonly StatusReturnDraftOrderService $statusReturnDraftOrderService,
-        private readonly StatusCompletedOrderService   $statusCompletedOrderService,
-        private readonly UpdateOrderUseCase            $updateOrderUseCase,
-        private readonly AssignClientToOrderService    $assignClientToOrderService,
-        private readonly StatusInWorkOrderService      $statusInWorkOrderService,
+        private readonly RemoveOrderAdditionUseCase     $removeOrderAdditionUseCase,
+        private readonly SetDiscountOrderUseCase        $setDiscountOrderUseCase,
+        private readonly SetCouponOrderUseCase          $setCouponOrderUseCase,
+        private readonly CreateOrderByManagerService    $createOrderUseCase,
+        private readonly SetAssemblagesOrderUseCase     $setAssemblagesOrderUseCase,
+        private readonly SetPackingsOrderUseCase        $setPackingsOrderUseCase,
+        private readonly CreateOrderFromCopyService     $createOrderFromCopyService,
+        private readonly StatusAwaitingOrderService     $statusAwaitingOrderService,
+        private readonly StatusCancelOrderService       $statusCancelOrderService,
+        private readonly IndexOrderUseCase              $indexOrderUseCase,
+        private readonly StatusReturnInWorkOrderService $statusReturnDraftOrderService,
+        private readonly StatusCompletedOrderService    $statusCompletedOrderService,
+        private readonly UpdateOrderUseCase             $updateOrderUseCase,
+        private readonly AssignClientToOrderService     $assignClientToOrderService,
+        private readonly StatusInWorkOrderService       $statusInWorkOrderService,
+        private readonly IndexOrderLoggerUseCase        $loggerUseCase,
     )
     {
     }
@@ -97,15 +89,12 @@ class OrderController extends Controller
     }
 
 
-    public function show(Request $request, Order $order, UserPermission $permissions): Response
+    public function show(int $id, Request $request, UserPermission $permissions): Response
     {
-        $order = $this->viewOrderUseCase->execute($order->id, $permissions);
-
-        $traders = $this->organizations->getTraders();
+        $order = $this->viewOrderUseCase->execute($id, $permissions);
 
         return Inertia::render('Order/Order/Show', [
             'order' => $order,
-            'traders' => $traders, //MAINDO загрузка параметров через useStore
         ]);
     }
 
@@ -118,11 +107,10 @@ class OrderController extends Controller
         return redirect()->route('admin.order.show', $orderEntity->id)->with('success', 'Новый заказ');
     }
 
-    //MAINDO !
-    public function log(Order $order): Response
+    public function log(int $id): Response
     {
         return Inertia::render('Order/Order/Log', [
-            'order' => $this->repository->OrderLogToArray($order),
+            'logs' => $this->loggerUseCase->execute($id),
         ]);
     }
 

@@ -47,7 +47,7 @@ function onCancel() {
     router.post(route('admin.order.expense.canceled', {expense: props.expense.id}))
 }
 function onOrder() {
-    router.get(route('admin.order.show', {order: props.expense.order_id}))
+    router.get(route('admin.order.show', {id: props.expense.order_id}))
 }
 
 function onTrade12() {

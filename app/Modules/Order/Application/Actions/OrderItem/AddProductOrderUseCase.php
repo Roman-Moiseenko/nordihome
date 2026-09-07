@@ -4,10 +4,13 @@ namespace App\Modules\Order\Application\Actions\OrderItem;
 
 use App\Modules\Catalog\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetPolandAdditionUseCase;
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
+use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
+use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use App\Modules\Parser\Application\Actions\Product\GetParserPriceByProductUseCase;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
@@ -21,6 +24,7 @@ readonly class AddProductOrderUseCase
         private GetProductSellPriceUseCase     $getProductSellPriceUseCase,
         private GetParserPriceByProductUseCase $getParserProductPriceUseCase,
         private GetPolandAdditionUseCase       $polandAdditionUseCase,
+        private CreateOrderLoggerUseCase $loggerUseCase,
     )
     {
     }
@@ -51,5 +55,14 @@ readonly class AddProductOrderUseCase
 
         $orderEntity = $this->repository->save($orderEntity);
         $this->orderCalculateService->execute($orderEntity->id);
+
+        $log = new OrderLoggerCreateData(
+            action: 'Добавлен товар',
+            object: $dto->productId, //FixMe Артикул и название
+            value: $dto->quantity . ' шт.',
+            link: route('admin.catalog.product.edit', $dto->productId),
+        );
+        $this->loggerUseCase->execute($orderEntity->id, $log);
+
     }
 }

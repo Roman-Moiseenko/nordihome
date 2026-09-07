@@ -4,6 +4,7 @@ namespace App\Modules\Order\Application\Services;
 
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Order\Application\Actions\GetAdditionDataUseCase;
+use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 
 readonly class OrderCalculateService
@@ -15,7 +16,7 @@ readonly class OrderCalculateService
     {
     }
 
-    public function execute(int $orderId): void
+    public function execute(int $orderId): OrderEntity
     {
         $orderEntity = $this->orderRepository->getById($orderId);
 
@@ -54,7 +55,7 @@ readonly class OrderCalculateService
             $coupon = Coupon::find($orderEntity->couponId);
             $orderEntity->couponAmount = $coupon->bonus;
         }
-        $this->orderRepository->save($orderEntity);
+        return $this->orderRepository->save($orderEntity);
     }
 
 }

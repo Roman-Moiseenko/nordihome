@@ -168,6 +168,7 @@ Route::group(
                 Route::post('/detach/{trader}', [TraderController::class, 'detach'])->name('detach');
                 Route::post('/default/{trader}', [TraderController::class, 'default'])->name('default');
                 Route::post('/set-info/{trader}', [TraderController::class, 'set_info'])->name('set-info');
+                Route::get('/list/', [TraderController::class, 'listTraders'])->name('list');
             });
         //SUPPLY
         Route::group([

@@ -156,8 +156,8 @@
                 <el-form-item label="Продавец" size="small">
                     <el-select v-model="info.traderId" @change="setInfo" :disabled="iSavingInfo || !is_new" filterable
                                style="max-width: 280px;">
-                        <el-option v-for="item in traders" :key="item.id" :value="item.id"
-                                   :label="item.short_name + ' (' + item.inn +')'"/>
+                        <el-option v-for="item in accountingStore.traders" :key="item.id" :value="item.id"
+                                   :label="item.shortName + ' (' + item.INN +')'"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Комментарий" size="small">
@@ -222,12 +222,12 @@ import {ElLoading} from "element-plus";
 import axios from "axios";
 import EditUser from "@Comp/User/Edit.vue";
 import EditField from "@Comp/Elements/EditField.vue";
+import {useAccountingStore} from "@Res/accountingStore.ts";
 
 const props = defineProps({
     order: Object,
     storages: Array,
     mainStorage: Object,
-    traders: Array,
 })
 const iSavingInfo = ref(false)
 const info = reactive({
@@ -235,6 +235,7 @@ const info = reactive({
     shopperId: props.order.shopperId,
     comment: props.order.comment,
 })
+const accountingStore = useAccountingStore()
 const reserve = ref(props.order.reserve)
 
 const dialogCancel = ref(false)

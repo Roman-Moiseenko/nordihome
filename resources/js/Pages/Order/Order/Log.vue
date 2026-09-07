@@ -3,7 +3,7 @@
     <el-config-provider :locale="ru">
         <Head><title>{{ title }}</title></Head>
         <h1 class="font-medium text-xl">
-            История Заказа <span v-if="order.number">№ {{ order.number }}</span>
+            История Заказа
             <el-table
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
@@ -11,7 +11,7 @@
             >
                 <el-table-column prop="created_at" label="Дата" width="160">
                     <template #default="scope">
-                        {{ func.datetime(scope.row.created_at)}}
+                        {{ scope.row.createdAt}}
                     </template>
                 </el-table-column>
                 <el-table-column prop="action" label="Действие" width="260"/>
@@ -25,7 +25,7 @@
                 </el-table-column>
                 <el-table-column prop="staff" label="Ответственный" >
                     <template #default="scope">
-                        {{ func.fullName(scope.row.staff.fullname)}}
+                        {{ scope.row.staffName}}
                     </template>
                 </el-table-column>
 
@@ -41,12 +41,13 @@ import {Head, Link} from "@inertiajs/vue3";
 import {func} from "@Res/func.js";
 
 const props = defineProps({
-    order: Object,
+   // order: Object,
     title: {
         type: String,
         default: 'История заказа',
     },
+    logs: Array,
 })
-console.log(props.order.logs)
-const tableData = ref([...props.order.logs])
+
+const tableData = ref([...props.logs])
 </script>

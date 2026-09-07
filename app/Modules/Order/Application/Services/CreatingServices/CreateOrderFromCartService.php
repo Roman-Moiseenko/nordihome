@@ -11,8 +11,9 @@ use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetDeliveryAdditionUseCase;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetPolandAdditionUseCase;
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
-use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
+use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
@@ -40,7 +41,7 @@ readonly class CreateOrderFromCartService
         private GetPolandAdditionUseCase $polandAdditionUseCase,
         private GetDeliveryAdditionUseCase $deliveryAdditionUseCase,
         private GetDefaultTraderIdUseCase $traderIdUseCase,
-        private OrderLoggerServiceInterface $logger,
+        private CreateOrderLoggerUseCase $loggerUseCase,
     )
     {
 
@@ -48,7 +49,7 @@ readonly class CreateOrderFromCartService
 
     public function execute(ClientContext $clientContext, string|null $code, string|null $commentClient): OrderEntity
     {
-        //FIXME Каждую задачу из // вынести в UseCase
+
         $this->transactionManager->execute(function () use ($clientContext, $code, $commentClient, &$orderEntity) {
             //Создаем пустой заказ
             $orderEntity = new OrderEntity(
@@ -118,7 +119,9 @@ readonly class CreateOrderFromCartService
             );
             $this->dispatcher->dispatch(new LeadCollected($leadData));
             $this->dispatcher->dispatch(new OrderHasCreated($orderEntity->id));
-            $this->logger->log($orderEntity->id, 'Заказ создан из корзины');
+
+            $log = new OrderLoggerCreateData(action: 'Заказ создан из корзины',);
+            $this->loggerUseCase->execute($orderEntity->id, $log);
         });
         return $orderEntity;
     }

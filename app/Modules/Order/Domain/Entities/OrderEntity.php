@@ -290,7 +290,7 @@ class OrderEntity
 
     }
 
-    private function getAddition(int $id): OrderAdditionEntity
+    public function getAddition(int $id): OrderAdditionEntity
     {
         foreach ($this->additions as $addition) {
             if ($addition->id === $id) return $addition;

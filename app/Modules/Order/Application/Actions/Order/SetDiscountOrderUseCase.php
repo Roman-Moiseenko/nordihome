@@ -2,8 +2,9 @@
 
 namespace App\Modules\Order\Application\Actions\Order;
 
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\Order\DiscountOrderData;
-use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
+use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -14,8 +15,8 @@ readonly class SetDiscountOrderUseCase
 
     public function __construct(
         private OrderRepositoryInterface    $repository,
-        private OrderLoggerServiceInterface $logger,
         private OrderCalculateService $calculateService,
+        private CreateOrderLoggerUseCase $loggerUseCase,
     )
     {
     }
@@ -55,7 +56,10 @@ readonly class SetDiscountOrderUseCase
 
         $value = $dto->isPercent() ? "$dto->percent %" : price($dto->manual);
 
-        $this->logger->log(orderId: $orderEntity->id, action: 'Установлена общая скидка',
-            value: $value, old: price($old_manual));
+        $log = new OrderLoggerCreateData(action: 'Установлена общая скидка',
+            old: price($old_manual),
+            value: $value);
+        $this->loggerUseCase->execute($orderEntity->id, $log);
+
     }
 }

@@ -7,8 +7,6 @@ namespace App\Modules\Mail\Job;
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Mail\Mailable\AbstractMailable;
 use App\Modules\Mail\Service\SystemMailService;
-use App\Modules\Order\Application\Services\OrderLoggerService;
-use App\Modules\Order\Infrastructure\Models\Order;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -42,7 +40,7 @@ class SendSystemMail implements ShouldQueue
         $this->systemable_id = $systemable_id;
     }
 
-    public function handle(SystemMailService $service, OrderLoggerService $logger): void
+    public function handle(SystemMailService $service,): void
     {
         if (empty($this->emails)) $this->emails[] = $this->client->email;
         //Сохраняем данные об отправленном письме
@@ -50,13 +48,13 @@ class SendSystemMail implements ShouldQueue
         $system_mail->systemable_type = $this->systemable_type;
         $system_mail->systemable_id = $this->systemable_id;
         $system_mail->save();
-
+/*
         if ($this->systemable_type == Order::class) {
             $order = Order::find($this->systemable_id);
             $logger->log(orderId: $order->id, action: 'Письмо отправлено', value: $this->mail->getName(),
                 link: route('admin.mail.system.show', $system_mail));
         }
-
+*/
         try { //Отправляем письмо
             if (Mail::mailer('system')->to($this->client->email)->send($this->mail) == null) {
                 Log::error('Письмо не отправлено ' . $this->client->email);

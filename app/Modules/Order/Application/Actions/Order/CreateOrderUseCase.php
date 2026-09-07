@@ -11,6 +11,9 @@ use App\Modules\Order\Domain\ValueObjects\OrderStatus;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
+/**
+ * атомарная операция
+ */
 readonly class CreateOrderUseCase
 {
     public function __construct(

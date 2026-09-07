@@ -102,4 +102,12 @@ final class OrderStatus
     {
         return new self(OrderStatus::IN_WORK);
     }
+
+    public function isFinished(): bool
+    {
+        return $this->value === self::COMPLETED
+            || $this->value === self::COMPLETED_REFUND
+            || $this->value === self::CANCELLED
+            || $this->value === self::RETURNED;
+    }
 }

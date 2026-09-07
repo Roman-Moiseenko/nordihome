@@ -76,7 +76,7 @@ use JetBrains\PhpStorm\Pure;
  * @property Staff $staff
  * @property Coupon $coupon
  * @property OrderExpenseRefund $refund УДАЛИТЬ
- * @property LoggerOrder[] $logs
+ * @property OrderLogger[] $logs
  * @property Report $invoice
  * @property SystemMail[] $systemMails
  * @property Lead $lead
@@ -720,7 +720,7 @@ class Order extends Model
 
     public function logs(): HasMany
     {
-        return $this->hasMany(LoggerOrder::class, 'order_id', 'id')->orderByDesc('created_at');
+        return $this->hasMany(OrderLogger::class, 'order_id', 'id')->orderByDesc('created_at');
     }
 
     public function lead(): HasOne
@@ -802,7 +802,7 @@ class Order extends Model
 
         return [
             'name' => 'Заказ № ' . $this->number . ' от ' . $this->created_at->format('d-m-y'),
-            'link' => route('admin.order.show', $this, false),
+            'link' => route('admin.order.show', $this->id, false),
             'type' => 'info',
             'completed' => $this->isCompleted(),
             'children' => $documents,

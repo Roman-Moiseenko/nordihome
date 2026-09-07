@@ -65,7 +65,7 @@
             <Link v-if="payment.is_refund" type="danger" :href="route('admin.order.refund.show', {refund: payment.refund.id})">
                 Возврат № {{ payment.refund.number }} от {{ func.date(payment.refund.created_at) }}
             </Link>
-            <Link v-else type="primary" :href="route('admin.order.show', {order: payment.order_id})">
+            <Link v-else type="primary" :href="route('admin.order.show', {id: payment.order_id})">
                 Заказ № {{ payment.order.number }} от {{ func.date(payment.order.created_at) }}
             </Link>
         </el-col>

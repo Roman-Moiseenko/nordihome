@@ -83,7 +83,7 @@ const tableRowClassName = ({row}: { row: IRow }) => {
                 <el-table-column prop="status" label="Статус" width="260" align="center"/>
                 <el-table-column label="" width="160" align="right">
                     <template #default="scope">
-                        <Link type="primary" :href="route('admin.order.show', {order: scope.row.id})">К заказу</Link>
+                        <Link type="primary" :href="route('admin.order.show', {id: scope.row.id})">К заказу</Link>
                     </template>
                 </el-table-column>
             </el-table>

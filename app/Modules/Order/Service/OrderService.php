@@ -15,12 +15,10 @@ use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Service\CouponService;
 use App\Modules\Guide\Domain\ValueObjects\AdditionType;
-use App\Modules\Guide\Infrastructure\Models\Addition;
 use App\Modules\Mail\Job\SendSystemMail;
 use App\Modules\Mail\Mailable\OrderAwaitingMail;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Helpers\TelegramParams;
-use App\Modules\Order\Application\Services\OrderLoggerService;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Events\OrderHasAwaiting;
 use App\Modules\Order\Events\OrderHasCanceled;
@@ -49,7 +47,7 @@ class OrderService
     private ShopRepository $repository;
     private CouponService $coupons;
     private CalculatorOrder $calculator;
-    private OrderLoggerService $logger;
+  //  private OrderLoggerService $logger;
     private MovementService $movementService;
     private OrderReserveService $reserveService;
 
@@ -65,7 +63,7 @@ class OrderService
         ShopRepository      $repository,
         CouponService       $coupons,
         CalculatorOrder     $calculator,
-        OrderLoggerService  $logger,
+     //   OrderLoggerService  $logger,
         MovementService     $movementService,
         OrderReserveService $reserveService,
         Settings            $settings,
@@ -81,7 +79,7 @@ class OrderService
         $this->repository = $repository;
         $this->coupons = $coupons;
         $this->calculator = $calculator;
-        $this->logger = $logger;
+      //  $this->logger = $logger;
         $this->movementService = $movementService;
         $this->reserveService = $reserveService;
         $this->invoiceReport = $invoiceReport;
@@ -111,137 +109,10 @@ class OrderService
 
     //**** ФУНКЦИИ РАБОТЫ С ЗАКАЗОМ МЕНЕДЖЕРОМ
 
-    public function setManager(Order $order, int $staff_id): void
-    {
-        $old = $order->staff_id == null ? '' : $order->staff->fullname->getFullName();
-
-        $staff = Staff::find($staff_id);
-        if (empty($staff)) throw new \DomainException('Менеджер под ID ' . $staff_id . ' не существует!');
-        $order->setStatus(OrderHistoryStatus::IN_WORK);
-        $order->setManager($staff->id);
-        $this->logger->log(orderId: $order->id, action: 'Назначен менеджер',
-            value: $staff->fullname->getFullName(), old: $old);
-        //if (is_null($order->lead->staff_id)) {
-
-        event(new OrderHasSetManager($order));
-        //}
-
-    }
-
-    /**
-     * Отменить заказ
-     */
-    public function cancel(Order $order, string $comment): void
-    {
-        DB::transaction(function () use ($order, $comment) {
-            $order->clearReserve();
-            $order->setStatus(value: OrderHistoryStatus::CANCELLED, comment: $comment);
-
-            foreach ($order->payments as $payment) {
-                if ($payment->method != OrderPayment::METHOD_ACCOUNT)
-                    throw new \DomainException('Есть платежи не по счету. Отмена только через Возврат');
-                $payment->order_id = null;
-                $payment->shopper_id = $order->shopper_id;
-                $payment->trader_id = $order->trader_id;
-                $payment->save();
-            }
-            event(new OrderHasCanceled($order));
-            $this->logger->log(orderId: $order->id, action: 'Заказ отменен менеджером',
-                object: $comment);
-
-        });
-    }
-
-    /**
-     * Отправить заказ на оплату - резерв, присвоение номера заказу, счет, услуги по сборке
-     */
-    public function awaiting(Order $order, Request $request): void
-    {
-        DB::transaction(function () use ($order, $request) {
-            $emails = $request->input('emails', []);
-
-            if ($order->status->value != OrderHistoryStatus::IN_WORK) throw new \DomainException('Нельзя отправить заказ на оплату. Не верный статус');
-            if ($order->getTotalAmount() == 0) throw new \DomainException('Сумма заказа не может быть равно нулю');
-
-            $is_assemblage = false;
-            $is_packing = false;
-            foreach ($order->items as $item) {
-                //Проверка, если у товара есть сборка и/или упаковка, то должна быть 1 услуга с таким типом
-                if ($item->assemblage) $is_assemblage = true;
-                if ($item->packing) $is_packing = true;
-
-            }
-            //Фиксируем цену за услугу
-            foreach ($order->additions as $addition) {
-                if ($is_packing && $addition->addition->type == AdditionType::PACKING) $is_packing = false;
-                if ($is_assemblage && $addition->addition->type == AdditionType::ASSEMBLY) $is_assemblage = false;
-                $addition->amount = $addition->getAmount();
-                $addition->save();
-            }
-            if ($is_assemblage) throw new \DomainException('Не назначена услуга сборки');
-            if ($is_packing) throw new \DomainException('Не назначена услуга упаковки');
-
-            $order->setReserve(now()->addDays(3));
-            $order->setNumber();
-            $order->setStatus(OrderHistoryStatus::AWAITING);
-            $order->refresh();
-            $this->logger->log(orderId: $order->id, action: 'Заказ отправлен на оплату');
-
-            //Пересоздать отчет и отправить письмо клиенту.
-            //Создаем счет на оплату
-
-            //    dd($request->all());
-            if ($request->boolean('payment.account') || $request->boolean('payment.qr')) {
-                $invoice = $request->boolean('payment.account') ? $this->invoiceReport->pdf($order) : null;
-                //Создаем ссылку на оплату
-                $link_payment = $request->boolean('payment.qr') ? $this->bankService->createPaymentLink($order) : null;
-                SendSystemMail::dispatch(
-                    $order->client,
-                    new OrderAwaitingMail($order, $invoice, $link_payment),
-                    Order::class,
-                    $order->id,
-                    $emails
-                );
-            }
-            //TODO Или создаем событие //TODO event  Lead
-            event(new OrderHasAwaiting($order));
-
-        });
-    }
-
-    public function work(Order $order): void
-    {
-        DB::transaction(function () use ($order) {
-            if ($order->status->value != OrderHistoryStatus::AWAITING) throw new \DomainException('Заказ нельзя вернуть в работу');
-            $order->status->delete();
-
-            //Удаляем фиксацию цен на услугу
-            foreach ($order->additions as $addition) {
-                if (!$addition->addition->manual) {
-                    $addition->amount = 0;
-                    $addition->save();
-                }
-            }
-            event(new OrderHasWork($order));
-            $this->logger->log(orderId: $order->id, action: 'Заказ вернулся в работу');
-        });
-
-        //TODO event  Lead
-    }
-
     /**
      * Установить новое время резерва
      */
-    public function setReserveService(Order $order, Request $request): void
-    {
-        $old = $order->getReserveTo();
-        $new_reserve = Carbon::parse($request->date('reserve_at'));
-        $order->setReserve($new_reserve);
-        $this->logger->log(orderId: $order->id, action: 'Новое время резерва',
-            value: $request->string('reserve')->trim()->value(),
-            old: $old->toString()
-        );
-    }
+
 
     //** ФУНКЦИИ РАБОТЫ С ЭЛЕМЕНТАМИ ЗАКАЗА
 

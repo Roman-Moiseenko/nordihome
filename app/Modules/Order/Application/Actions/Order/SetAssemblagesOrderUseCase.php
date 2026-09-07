@@ -3,6 +3,8 @@
 namespace App\Modules\Order\Application\Actions\Order;
 
 use App\Modules\Order\Application\Actions\AdditionGuide\GetAssemblageAdditionUseCase;
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
+use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -15,6 +17,7 @@ readonly class SetAssemblagesOrderUseCase
         private OrderRepositoryInterface $repository,
         private OrderCalculateService    $orderCalculateService,
         private GetAssemblageAdditionUseCase $assemblageAdditionUseCase,
+        private CreateOrderLoggerUseCase $loggerUseCase,
     )
     {
 
@@ -43,6 +46,11 @@ readonly class SetAssemblagesOrderUseCase
         }
 
         $orderEntity = $this->repository->save($orderEntity);
+
+        if (count($ids) > 1) {
+            $log = new OrderLoggerCreateData(action: $assemblage ? 'Установлена сборка на все товары' : 'Сброшена сборка со всех товаров');
+            $this->loggerUseCase->execute($orderEntity->id, $log);
+        }
         $this->orderCalculateService->execute($orderEntity->id);
 
     }

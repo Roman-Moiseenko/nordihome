@@ -52,42 +52,8 @@ class LeadService
 
     }
 */
-    public function setStatus(Lead $lead, Request $request): bool
-    {
-        $newStatus = $request->input('status');
-        if (!isset(LeadStatus::STATUSES[$newStatus])) return false;
-        if (!in_array($newStatus, LeadStatus::MANUAL)) return false;
-        if ($lead->isNew()) {
-            $lead->staff_id = auth()->user()->profileable->id;
-            $lead->setStatus($newStatus);
-            $lead->save();
-            $lead->refresh();
-            //Если заявка уже является заказом
-            if (!is_null($lead->order)) { //Установить менеджера
-                $this->orderService->setManager($lead->order, $lead->staff_id);
-            }
-            return true;
 
-        } else {
-            if ($newStatus == LeadStatus::NEW_LEAD) {
-                $lead->staff_id = null;
-                foreach ($lead->statuses as $status) {
-                    $status->delete();
-                }
-            }
-            $lead->setStatus($newStatus);
-            $lead->save();
-            return true;
-        }
 
-    }
-
-    private function checkStatus(Lead $lead, string $status): bool
-    {
-       // if (is_null($lead->order_id) && $status > LeadStatus::NOT_DECIDED) return false;
-        //TODO Другие варианты
-        return true;
-    }
 
     //// Для событий по заказу ///
 

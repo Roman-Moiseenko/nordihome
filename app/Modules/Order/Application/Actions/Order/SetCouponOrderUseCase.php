@@ -2,17 +2,18 @@
 
 namespace App\Modules\Order\Application\Actions\Order;
 
-use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
+use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
-class SetCouponOrderUseCase
+readonly class SetCouponOrderUseCase
 {
 
     public function __construct(
         private OrderRepositoryInterface    $repository,
-        private OrderLoggerServiceInterface $logger,
+        private CreateOrderLoggerUseCase $loggerUseCase,
     )
     {
     }
@@ -63,8 +64,11 @@ class SetCouponOrderUseCase
         $orderEntity->recalculateTotals();
 
         $this->repository->save($orderEntity);
+        $log = new OrderLoggerCreateData(
+            action: empty($couponCode)  ? 'Купон сброшен' : 'Установлен купон',
+            value: $couponCode
+        );
+        $this->loggerUseCase->execute($orderEntity->id, $log);
 
-        $this->logger->log(orderId: $orderEntity->id, action: empty($couponCode)  ? 'Купон сброшен' : 'Установлен купон',
-            value: $couponCode);
     }
 }

@@ -2,6 +2,8 @@
 
 namespace App\Modules\Order\Application\Actions\OrderAddition;
 
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
+use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -12,6 +14,7 @@ readonly class AddAdditionOrderUseCase
     public function __construct(
         private OrderRepositoryInterface $repository,
         private OrderCalculateService    $orderCalculateService,
+        private CreateOrderLoggerUseCase $loggerUseCase,
     )
     {
     }
@@ -24,6 +27,12 @@ readonly class AddAdditionOrderUseCase
         $orderEntity->addAddition($additionId);
 
         $orderEntity = $this->repository->save($orderEntity);
-        $this->orderCalculateService->execute($orderEntity->id);
+        $orderEntity = $this->orderCalculateService->execute($orderEntity->id);
+
+        $log = new OrderLoggerCreateData(
+            action: 'Услуга добавлена в заказ',
+            object: $additionId, //FixMe Артикул и название
+        );
+        $this->loggerUseCase->execute($orderEntity->id, $log);
     }
 }

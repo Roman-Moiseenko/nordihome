@@ -6,8 +6,9 @@ use App\Modules\Lead\Application\Actions\SetManagerLeadFromOrderUseCase;
 use App\Modules\Lead\Application\Actions\SetStatusLeadFromOrderUseCase;
 use App\Modules\Lead\Domain\ValueObjects\LeadStatusValue;
 use App\Modules\Order\Application\Actions\Order\SetStatusOrderUseCase;
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\Order\StatusOrderAssignData;
-use App\Modules\Order\Application\Interfaces\OrderLoggerServiceInterface;
+use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderStatus;
@@ -23,12 +24,12 @@ readonly class CreateOrderFromCopyService
 
     public function __construct(
         private OrderRepositoryInterface       $repository,
-        private OrderLoggerServiceInterface    $logger,
         private SetStatusOrderUseCase          $setStatusOrderUseCase,
         private Dispatcher                     $dispatcher,
         private TransactionManagerInterface    $transactionManager,
         private SetStatusLeadFromOrderUseCase  $leadFromOrderUseCase,
         private SetManagerLeadFromOrderUseCase $setManagerLeadUseCase,
+        private CreateOrderLoggerUseCase $loggerUseCase,
 
     )
     {
@@ -40,6 +41,7 @@ readonly class CreateOrderFromCopyService
         $this->transactionManager->execute(function () use ($orderId, $staffId) {
 
             $orderEntity = $this->repository->getById($orderId);
+
             $orderEntity->id = null;
             $orderEntity->number = null;
             $orderEntity->statuses = [];
@@ -47,9 +49,7 @@ readonly class CreateOrderFromCopyService
             $orderEntity->staffId = $staffId; //Ставим себя менеджером
 
             $orderEntity = $this->repository->save($orderEntity);
-            $this->logger->log(orderId: $orderEntity->id, action: 'Создан заказ копированием');
 
-            //TODO Создать Lead через UseCase ????
             $leadData = new LeadSourceData(
                 id: $orderEntity->id,
                 able: 'order.order',
@@ -63,6 +63,9 @@ readonly class CreateOrderFromCopyService
 
             $this->leadFromOrderUseCase->execute($orderId, LeadStatusValue::IN_WORK);
             $this->setManagerLeadUseCase->execute($orderId, $staffId);
+
+            $log = new OrderLoggerCreateData(action: 'Заказ создан копированием', link: route('admin.order.show', $orderId));
+            $this->loggerUseCase->execute($orderEntity->id, $log);
 
             return $orderEntity;
         });

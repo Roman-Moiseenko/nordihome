@@ -15,7 +15,7 @@
             <el-table-column prop="quantity" label="Кол-во" width="100"/>
             <el-table-column prop="founded" label="Основание" width="260">
                 <template #default="scope">
-                    <el-link v-if="scope.row.order_id" :href="route('admin.order.show', {order: scope.row.order_id})">{{ scope.row.founded }}</el-link>
+                    <el-link v-if="scope.row.order_id" :href="route('admin.order.show', {id: scope.row.order_id})">{{ scope.row.founded }}</el-link>
                     <span v-else>{{ scope.row.founded }}</span>
                 </template>
             </el-table-column>

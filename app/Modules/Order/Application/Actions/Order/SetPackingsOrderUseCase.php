@@ -3,6 +3,8 @@
 namespace App\Modules\Order\Application\Actions\Order;
 
 use App\Modules\Order\Application\Actions\AdditionGuide\GetPackingAdditionUseCase;
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
+use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -15,6 +17,7 @@ readonly class SetPackingsOrderUseCase
         private OrderRepositoryInterface $repository,
         private OrderCalculateService    $orderCalculateService,
         private GetPackingAdditionUseCase $packingAdditionUseCase,
+        private CreateOrderLoggerUseCase $loggerUseCase,
     )
     {
     }
@@ -42,6 +45,10 @@ readonly class SetPackingsOrderUseCase
         }
 
         $orderEntity = $this->repository->save($orderEntity);
+        if (count($ids) > 1) {
+            $log = new OrderLoggerCreateData(action: $packing ? 'Установлена упаковка на все товары' : 'Сброшена упаковка со всех товаров');
+            $this->loggerUseCase->execute($orderEntity->id, $log);
+        }
         $this->orderCalculateService->execute($orderEntity->id);
 
     }
