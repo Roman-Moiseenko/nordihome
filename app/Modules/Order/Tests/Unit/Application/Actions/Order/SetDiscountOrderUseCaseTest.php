@@ -4,12 +4,16 @@ namespace App\Modules\Order\Tests\Unit\Application\Actions\Order;
 
 use App\Modules\Order\Application\Actions\GetAdditionDataUseCase;
 use App\Modules\Order\Application\Actions\Order\SetDiscountOrderUseCase;
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\Order\DiscountOrderData;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Entities\OrderItemEntity;
+use App\Modules\Order\Domain\Interfaces\OrderLoggerRepositoryInterface;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
+use App\Modules\Order\Domain\ValueObjects\OrderStatus;
+use App\Modules\Order\Tests\Support\SetsUpLaravelHelpers;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use DomainException;
 use Mockery;
@@ -19,8 +23,11 @@ use Tests\Trait\MockPermission;
 class SetDiscountOrderUseCaseTest extends TestCase
 {
     use MockPermission;
+    use SetsUpLaravelHelpers;
 
     private OrderRepositoryInterface $repository;
+    private OrderLoggerRepositoryInterface $loggerRepository;
+    private OrderRepositoryInterface $loggerOrderRepository;
     private GetAdditionDataUseCase $getAdditionDataUseCase;
     private OrderCalculateService $calculateService;
     private SetDiscountOrderUseCase $useCase;
@@ -38,22 +45,33 @@ class SetDiscountOrderUseCaseTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setUpLaravelHelpers();
+
         $this->repository = Mockery::mock(OrderRepositoryInterface::class);
+        $this->loggerRepository = Mockery::mock(OrderLoggerRepositoryInterface::class);
+        $this->loggerOrderRepository = Mockery::mock(OrderRepositoryInterface::class);
 
         $this->getAdditionDataUseCase = Mockery::mock(GetAdditionDataUseCase::class);
         $this->calculateService = new OrderCalculateService(
             $this->repository,
             $this->getAdditionDataUseCase,
         );
+
+        $loggerUseCase = new CreateOrderLoggerUseCase(
+            $this->loggerRepository,
+            $this->loggerOrderRepository,
+        );
+
         $this->useCase = new SetDiscountOrderUseCase(
             $this->repository,
-            $this->logger,
             $this->calculateService,
+            $loggerUseCase,
         );
     }
 
     protected function tearDown(): void
     {
+        $this->tearDownLaravelHelpers();
         Mockery::close();
         parent::tearDown();
     }
@@ -62,6 +80,7 @@ class SetDiscountOrderUseCaseTest extends TestCase
     {
         $order = new OrderEntity(traderId: 1, type: new OrderSellType(OrderSellType::ONLINE));
         $order->id = 10;
+        $order->addStatus(OrderStatus::new());
 
         return $order;
     }
@@ -79,6 +98,12 @@ class SetDiscountOrderUseCaseTest extends TestCase
         return $item;
     }
 
+    private function expectLoggerOrder(): void
+    {
+        $loggerOrder = $this->makeOrder();
+        $this->loggerOrderRepository->shouldReceive('getById')->with(10)->andReturn($loggerOrder);
+    }
+
     public function test_applies_percent_discount_to_eligible_items_and_logs(): void
     {
         $order = $this->makeOrder();
@@ -89,9 +114,17 @@ class SetDiscountOrderUseCaseTest extends TestCase
         $this->repository->shouldReceive('getById')->with(10)->twice()->andReturn($order);
         $this->getAdditionDataUseCase->shouldNotReceive('execute');
         $this->repository->shouldReceive('save')->with($order)->twice()->andReturn($order);
-        $this->logger->shouldReceive('log')
+
+        $this->expectLoggerOrder();
+        $this->loggerRepository->shouldReceive('save')
             ->once()
-            ->with(10, 'Установлена общая скидка', Mockery::any(), '10 %', '0 ₽');
+            ->andReturnUsing(function ($log) {
+                $this->assertSame('Установлена общая скидка', $log->action);
+                $this->assertSame('10 %', $log->value);
+                $this->assertSame('0 ₽', $log->old);
+
+                return $log;
+            });
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new DiscountOrderData(percent: 10.0), $permission);
@@ -110,9 +143,17 @@ class SetDiscountOrderUseCaseTest extends TestCase
         $this->repository->shouldReceive('getById')->with(10)->twice()->andReturn($order);
         $this->getAdditionDataUseCase->shouldNotReceive('execute');
         $this->repository->shouldReceive('save')->with($order)->twice()->andReturn($order);
-        $this->logger->shouldReceive('log')
+
+        $this->expectLoggerOrder();
+        $this->loggerRepository->shouldReceive('save')
             ->once()
-            ->with(10, 'Установлена общая скидка', Mockery::any(), '100 ₽', '0 ₽');
+            ->andReturnUsing(function ($log) {
+                $this->assertSame('Установлена общая скидка', $log->action);
+                $this->assertSame('100 ₽', $log->value);
+                $this->assertSame('0 ₽', $log->old);
+
+                return $log;
+            });
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new DiscountOrderData(manual: 100.0), $permission);
@@ -128,7 +169,7 @@ class SetDiscountOrderUseCaseTest extends TestCase
 
         $this->repository->shouldReceive('getById')->with(10)->once()->andReturn($order);
         $this->repository->shouldNotReceive('save');
-        $this->logger->shouldNotReceive('log');
+        $this->loggerRepository->shouldNotReceive('save');
 
         $permission = $this->mockUserPermission(edit: true);
         $this->expectException(DomainException::class);
@@ -139,7 +180,7 @@ class SetDiscountOrderUseCaseTest extends TestCase
     public function test_throws_access_denied_when_missing_permission(): void
     {
         $this->repository->shouldNotReceive('getById');
-        $this->logger->shouldNotReceive('log');
+        $this->loggerRepository->shouldNotReceive('save');
 
         $permission = $this->mockUserPermission(edit: false);
         $this->expectException(AccessDeniedException::class);

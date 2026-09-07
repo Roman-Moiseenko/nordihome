@@ -2,18 +2,23 @@
 
 namespace App\Modules\Order\Tests\Unit\Application\Actions\OrderItem;
 
+use App\Modules\Guide\Domain\Interfaces\AdditionRepositoryInterface;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetAssemblageAdditionUseCase;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetPackingAdditionUseCase;
 use App\Modules\Order\Application\Actions\GetAdditionDataUseCase;
 use App\Modules\Order\Application\Actions\Order\SetAssemblagesOrderUseCase;
 use App\Modules\Order\Application\Actions\Order\SetPackingsOrderUseCase;
 use App\Modules\Order\Application\Actions\OrderItem\UpdateOrderItemUseCase;
+use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Entities\OrderItemEntity;
+use App\Modules\Order\Domain\Interfaces\OrderLoggerRepositoryInterface;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
+use App\Modules\Order\Domain\ValueObjects\OrderStatus;
+use App\Modules\Order\Tests\Support\SetsUpLaravelHelpers;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\TestCase;
@@ -22,12 +27,13 @@ use Tests\Trait\MockPermission;
 class UpdateOrderItemUseCaseTest extends TestCase
 {
     use MockPermission;
+    use SetsUpLaravelHelpers;
 
     private OrderRepositoryInterface $repository;
+    private OrderLoggerRepositoryInterface $loggerRepository;
+    private OrderRepositoryInterface $loggerOrderRepository;
+    private AdditionRepositoryInterface $additionRepository;
     private GetAdditionDataUseCase $getAdditionDataUseCase;
-    private OrderCalculateService $orderCalculateService;
-    private GetAssemblageAdditionUseCase $assemblageAdditionUseCase;
-    private GetPackingAdditionUseCase $packingAdditionUseCase;
     private UpdateOrderItemUseCase $useCase;
 
     public function getModuleName(): string
@@ -43,39 +49,55 @@ class UpdateOrderItemUseCaseTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
+        $this->setUpLaravelHelpers();
+
         $this->repository = Mockery::mock(OrderRepositoryInterface::class);
+        $this->loggerRepository = Mockery::mock(OrderLoggerRepositoryInterface::class);
+        $this->loggerOrderRepository = Mockery::mock(OrderRepositoryInterface::class);
+        $this->additionRepository = Mockery::mock(AdditionRepositoryInterface::class);
         $this->getAdditionDataUseCase = Mockery::mock(GetAdditionDataUseCase::class);
-        $this->orderCalculateService = new OrderCalculateService(
+
+        $orderCalculateService = new OrderCalculateService(
             $this->repository,
             $this->getAdditionDataUseCase,
         );
-        $this->assemblageAdditionUseCase = Mockery::mock(GetAssemblageAdditionUseCase::class);
-        $this->packingAdditionUseCase = Mockery::mock(GetPackingAdditionUseCase::class);
 
-        // SetAssemblagesOrderUseCase, SetPackingsOrderUseCase и OrderCalculateService —
-        // readonly-классы, Mockery их не умеет мокать, поэтому подставляем реальные
+        $loggerUseCase = new CreateOrderLoggerUseCase(
+            $this->loggerRepository,
+            $this->loggerOrderRepository,
+        );
+
+        // readonly-классы: GetAssemblageAdditionUseCase, GetPackingAdditionUseCase,
+        // SetAssemblagesOrderUseCase, SetPackingsOrderUseCase — подставляем реальные
         // экземпляры с замоканными зависимостями.
+        $assemblageAdditionUseCase = new GetAssemblageAdditionUseCase($this->additionRepository);
+        $packingAdditionUseCase = new GetPackingAdditionUseCase($this->additionRepository);
+
         $setAssemblagesOrderUseCase = new SetAssemblagesOrderUseCase(
             $this->repository,
-            $this->orderCalculateService,
-            $this->assemblageAdditionUseCase,
+            $orderCalculateService,
+            $assemblageAdditionUseCase,
+            $loggerUseCase,
         );
         $setPackingsOrderUseCase = new SetPackingsOrderUseCase(
             $this->repository,
-            $this->orderCalculateService,
-            $this->packingAdditionUseCase,
+            $orderCalculateService,
+            $packingAdditionUseCase,
+            $loggerUseCase,
         );
 
         $this->useCase = new UpdateOrderItemUseCase(
             $this->repository,
-            $this->orderCalculateService,
+            $orderCalculateService,
             $setAssemblagesOrderUseCase,
             $setPackingsOrderUseCase,
+            $loggerUseCase,
         );
     }
 
     protected function tearDown(): void
     {
+        $this->tearDownLaravelHelpers();
         Mockery::close();
         parent::tearDown();
     }
@@ -84,6 +106,7 @@ class UpdateOrderItemUseCaseTest extends TestCase
     {
         $order = new OrderEntity(traderId: 1, type: new OrderSellType(OrderSellType::ONLINE));
         $order->id = 10;
+        $order->addStatus(OrderStatus::new());
 
         return $order;
     }
@@ -96,12 +119,17 @@ class UpdateOrderItemUseCaseTest extends TestCase
         return $item;
     }
 
+    private function expectLoggerOrder(): void
+    {
+        $loggerOrder = $this->makeOrder();
+        $this->loggerOrderRepository->shouldReceive('getById')->with(10)->andReturn($loggerOrder);
+    }
+
     public function test_throws_access_denied_when_missing_permission(): void
     {
         $this->repository->shouldNotReceive('getById');
         $this->repository->shouldNotReceive('save');
-        $this->assemblageAdditionUseCase->shouldNotReceive('execute');
-        $this->packingAdditionUseCase->shouldNotReceive('execute');
+        $this->loggerRepository->shouldNotReceive('save');
 
         $permission = $this->mockUserPermission(edit: false);
         $this->expectException(AccessDeniedException::class);
@@ -116,9 +144,18 @@ class UpdateOrderItemUseCaseTest extends TestCase
 
         $this->repository->shouldReceive('getById')->with(10)->twice()->andReturn($order);
         $this->getAdditionDataUseCase->shouldNotReceive('execute');
-        $this->assemblageAdditionUseCase->shouldNotReceive('execute');
-        $this->packingAdditionUseCase->shouldNotReceive('execute');
+        $this->additionRepository->shouldNotReceive('findBySlug');
         $this->repository->shouldReceive('save')->with($order)->twice()->andReturn($order);
+
+        $this->expectLoggerOrder();
+        $this->loggerRepository->shouldReceive('save')
+            ->once()
+            ->andReturnUsing(function ($log) {
+                $this->assertSame('Изменен комментарий позиции', $log->action);
+                $this->assertSame('test', $log->value);
+
+                return $log;
+            });
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, quantity: 5, comment: 'test'), $permission);
@@ -135,9 +172,11 @@ class UpdateOrderItemUseCaseTest extends TestCase
 
         $this->repository->shouldReceive('getById')->with(10)->times(4)->andReturn($order);
         $this->getAdditionDataUseCase->shouldNotReceive('execute');
-        $this->assemblageAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
-        $this->packingAdditionUseCase->shouldNotReceive('execute');
+        $this->additionRepository->shouldReceive('findBySlug')->with('assembly-15')->once()->andReturnNull();
         $this->repository->shouldReceive('save')->with($order)->times(4)->andReturn($order);
+
+        $this->expectLoggerOrder();
+        $this->loggerRepository->shouldReceive('save')->once()->andReturnUsing(fn ($log) => $log);
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, assemblage: true), $permission);
@@ -153,9 +192,11 @@ class UpdateOrderItemUseCaseTest extends TestCase
 
         $this->repository->shouldReceive('getById')->with(10)->times(4)->andReturn($order);
         $this->getAdditionDataUseCase->shouldNotReceive('execute');
-        $this->assemblageAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
-        $this->packingAdditionUseCase->shouldNotReceive('execute');
+        $this->additionRepository->shouldReceive('findBySlug')->with('assembly-15')->once()->andReturnNull();
         $this->repository->shouldReceive('save')->with($order)->times(4)->andReturn($order);
+
+        $this->expectLoggerOrder();
+        $this->loggerRepository->shouldReceive('save')->once()->andReturnUsing(fn ($log) => $log);
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, assemblage: false), $permission);
@@ -171,9 +212,11 @@ class UpdateOrderItemUseCaseTest extends TestCase
 
         $this->repository->shouldReceive('getById')->with(10)->times(4)->andReturn($order);
         $this->getAdditionDataUseCase->shouldNotReceive('execute');
-        $this->assemblageAdditionUseCase->shouldNotReceive('execute');
-        $this->packingAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
+        $this->additionRepository->shouldReceive('findBySlug')->with('packing')->once()->andReturnNull();
         $this->repository->shouldReceive('save')->with($order)->times(4)->andReturn($order);
+
+        $this->expectLoggerOrder();
+        $this->loggerRepository->shouldReceive('save')->once()->andReturnUsing(fn ($log) => $log);
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, packing: true), $permission);
@@ -189,9 +232,11 @@ class UpdateOrderItemUseCaseTest extends TestCase
 
         $this->repository->shouldReceive('getById')->with(10)->times(4)->andReturn($order);
         $this->getAdditionDataUseCase->shouldNotReceive('execute');
-        $this->assemblageAdditionUseCase->shouldNotReceive('execute');
-        $this->packingAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
+        $this->additionRepository->shouldReceive('findBySlug')->with('packing')->once()->andReturnNull();
         $this->repository->shouldReceive('save')->with($order)->times(4)->andReturn($order);
+
+        $this->expectLoggerOrder();
+        $this->loggerRepository->shouldReceive('save')->once()->andReturnUsing(fn ($log) => $log);
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, packing: false), $permission);
@@ -207,9 +252,12 @@ class UpdateOrderItemUseCaseTest extends TestCase
 
         $this->repository->shouldReceive('getById')->with(10)->times(6)->andReturn($order);
         $this->getAdditionDataUseCase->shouldNotReceive('execute');
-        $this->assemblageAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
-        $this->packingAdditionUseCase->shouldReceive('execute')->once()->andReturnNull();
+        $this->additionRepository->shouldReceive('findBySlug')->with('assembly-15')->once()->andReturnNull();
+        $this->additionRepository->shouldReceive('findBySlug')->with('packing')->once()->andReturnNull();
         $this->repository->shouldReceive('save')->with($order)->times(6)->andReturn($order);
+
+        $this->expectLoggerOrder();
+        $this->loggerRepository->shouldReceive('save')->once()->andReturnUsing(fn ($log) => $log);
 
         $permission = $this->mockUserPermission(edit: true);
         $this->useCase->execute(10, new OrderItemUpdateData(id: 1, assemblage: true, packing: true), $permission);
