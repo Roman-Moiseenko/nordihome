@@ -10,6 +10,7 @@ use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 readonly class UpdateProductUseCase
@@ -23,7 +24,7 @@ readonly class UpdateProductUseCase
     public function execute(ProductUpdateData $dto, UserPermission $userPermission): ProductEntity
     {
         if (!$userPermission->can('catalog.product.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $product = $this->productRepository->getById($dto->id);

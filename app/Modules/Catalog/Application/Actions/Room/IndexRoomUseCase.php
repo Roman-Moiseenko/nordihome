@@ -7,6 +7,7 @@ namespace App\Modules\Catalog\Application\Actions\Room;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class IndexRoomUseCase
 {
@@ -22,7 +23,7 @@ readonly class IndexRoomUseCase
     public function execute(UserPermission $userPermission): array
     {
         // Проверка прав доступа
-        if (!$userPermission->can('catalog.category.view')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.category.view')) throw new AccessDeniedException();
 
         return $this->roomRepository->getAll();
     }

@@ -8,6 +8,7 @@ use App\Modules\Content\Application\DTOs\Post\PostUpdateData;
 use App\Modules\Content\Domain\Entities\PostEntity;
 use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Support\Str;
@@ -21,7 +22,7 @@ readonly class UpdatePostUseCase
     public function execute(int $id, PostUpdateData $dto, UserPermission $userPermission): PostEntity
     {
         if (!$userPermission->can('content.post.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $post = $this->postRepository->getById($id);

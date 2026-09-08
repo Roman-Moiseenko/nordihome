@@ -7,6 +7,7 @@ namespace App\Modules\Parser\Application\Actions\Category;
 use App\Modules\Parser\Domain\Interfaces\ParserCategoryRepositoryInterface;
 use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class ToggleProductsAvailabilityUseCase
 {
@@ -22,7 +23,7 @@ readonly class ToggleProductsAvailabilityUseCase
     public function execute(int $categoryId, bool $active, UserPermission $userPermission): int
     {
         if (!$userPermission->can('parser.product.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         // 1. Получаем ID дочерних категорий (включая текущую)

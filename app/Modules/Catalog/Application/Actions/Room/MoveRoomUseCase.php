@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Application\Actions\Room;
 
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class MoveRoomUseCase
 {
@@ -19,7 +20,7 @@ readonly class MoveRoomUseCase
     {
         // Проверка прав доступа
         if (!$userPermission->can('catalog.category.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $this->roomRepository->move($id, $position);

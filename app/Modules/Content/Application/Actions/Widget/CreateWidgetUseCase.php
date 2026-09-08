@@ -11,6 +11,7 @@ use App\Modules\Content\Domain\ValueObjects\WidgetCategory;
 use App\Modules\Content\Domain\ValueObjects\WidgetSchema;
 use App\Modules\Content\Infrastructure\Services\WidgetFileService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class CreateWidgetUseCase
 {
@@ -24,7 +25,7 @@ readonly class CreateWidgetUseCase
     public function execute(WidgetCreateData $dto, UserPermission $userPermission): WidgetEntity
     {
         if (!$userPermission->can('content.widget.create')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         // Проверяем уникальность пары [category, slug]

@@ -6,6 +6,7 @@ namespace App\Modules\Parser\Application\Actions\Product;
 
 use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class ToggleProductFragileUseCase
 {
@@ -16,7 +17,7 @@ readonly class ToggleProductFragileUseCase
     public function execute(int $id, UserPermission $userPermission): string
     {
         if (!$userPermission->can('parser.product.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $product = $this->productRepository->getById($id);

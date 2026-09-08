@@ -5,6 +5,7 @@ namespace App\Modules\Catalog\Application\Actions\Tag;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class RemoveTagUseCase
 {
@@ -16,7 +17,7 @@ readonly class RemoveTagUseCase
 
     public function execute(int $tagId, UserPermission $userPermission): void
     {
-        if (!$userPermission->can('catalog.product.delete')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.product.delete')) throw new AccessDeniedException();
 
         // Проверка на наличие дочерних категорий
         if ($this->tagProductRepository->countProductsByTagId($tagId)> 0) {

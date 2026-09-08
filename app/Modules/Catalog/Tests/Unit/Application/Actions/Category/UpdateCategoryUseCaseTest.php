@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\Actions\Category\UpdateCategoryUseCase;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryUpdateData;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -115,7 +116,7 @@ class UpdateCategoryUseCaseTest extends TestCase
             metaDescription: null,
         );
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute(5, $dto, $this->mockUserPermission(edit: false));
     }
 }

@@ -7,6 +7,7 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Tag;
 use App\Modules\Catalog\Application\Actions\Tag\CreateTagUseCase;
 use App\Modules\Catalog\Application\DTOs\Tag\TagCreateData;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -54,7 +55,7 @@ class CreateTagUseCaseTest extends TestCase
 
         $dto = new TagCreateData(name: 'Скидка', slug: null, isMain: false);
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute($dto, $this->mockUserPermission(create: false));
     }
 }

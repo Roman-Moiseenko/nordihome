@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\Actions\Product\FastCreateProductUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\ProductFastCreateData;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -81,7 +82,7 @@ class FastCreateProductUseCaseTest extends TestCase
 
         $dto = new ProductFastCreateData(name: 'Стол', code: 'ART-001', brandId: 20, categoryId: 10, slug: null);
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute($dto, $this->mockUserPermission(create: false));
     }
 }

@@ -6,6 +6,7 @@ namespace App\Modules\Parser\Application\Actions\Category;
 
 use App\Modules\Parser\Domain\Interfaces\ParserCategoryRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class ToggleCategoryActiveUseCase
 {
@@ -20,7 +21,7 @@ readonly class ToggleCategoryActiveUseCase
     public function execute(int $categoryId, UserPermission $userPermission): bool
     {
         if (!$userPermission->can('parser.category.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $category = $this->categoryRepository->getById($categoryId);

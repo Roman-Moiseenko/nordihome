@@ -7,6 +7,7 @@ use App\Modules\Catalog\Domain\Entities\TagEntity;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 readonly class IndexTagUseCase
@@ -20,7 +21,7 @@ readonly class IndexTagUseCase
 
     public function execute(UserPermission $userPermission, int $perPage = 20): LengthAwarePaginator
     {
-        if (!$userPermission->can('catalog.product.view')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.product.view')) throw new AccessDeniedException();
 
         // 1. Получаем пагинированные сущности тегов
         $paginator = $this->tagRepository->paginate($perPage);

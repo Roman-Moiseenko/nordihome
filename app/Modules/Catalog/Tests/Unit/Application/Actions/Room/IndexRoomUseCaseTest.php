@@ -7,6 +7,7 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Room;
 use App\Modules\Catalog\Application\Actions\Room\IndexRoomUseCase;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -58,7 +59,7 @@ class IndexRoomUseCaseTest extends TestCase
     {
         $this->roomRepository->shouldNotReceive('getAll');
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute($this->mockUserPermission(view: false));
     }
 }

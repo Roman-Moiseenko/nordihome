@@ -7,6 +7,7 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Room;
 use App\Modules\Catalog\Application\Actions\Room\ViewRoomUseCase;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -59,7 +60,7 @@ class ViewRoomUseCaseTest extends TestCase
     {
         $this->roomRepository->shouldNotReceive('getById');
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute(5, $this->mockUserPermission(view: false));
     }
 }

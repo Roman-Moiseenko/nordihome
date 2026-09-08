@@ -8,6 +8,7 @@ use App\Modules\Content\Domain\Entities\WidgetEntity;
 use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Domain\ValueObjects\WidgetCategory;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class IndexWidgetUseCase
 {
@@ -23,7 +24,7 @@ readonly class IndexWidgetUseCase
     public function execute(UserPermission $userPermission): array
     {
         if (!$userPermission->can('content.widget.view')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         return $this->widgetRepository->getAll();

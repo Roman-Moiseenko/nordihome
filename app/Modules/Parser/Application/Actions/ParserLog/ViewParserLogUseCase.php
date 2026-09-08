@@ -8,6 +8,7 @@ use App\Modules\Parser\Application\DTOs\ParserLog\ParserLogItemData;
 use App\Modules\Parser\Application\DTOs\ParserLog\ParserLogShowData;
 use App\Modules\Parser\Domain\Interfaces\ParserLogRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class ViewParserLogUseCase
 {
@@ -18,7 +19,7 @@ readonly class ViewParserLogUseCase
     public function execute(int $id, UserPermission $userPermission): ParserLogShowData
     {
         if (!$userPermission->can('parser.product.view')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $log = $this->logRepository->getById($id);

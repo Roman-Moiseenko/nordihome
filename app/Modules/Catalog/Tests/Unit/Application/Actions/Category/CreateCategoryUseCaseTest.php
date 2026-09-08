@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\Actions\Category\CreateCategoryUseCase;
 use App\Modules\Catalog\Application\DTOs\Category\CategoryCreateData;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -81,8 +82,8 @@ class CreateCategoryUseCaseTest extends TestCase
 
         $dto = new CategoryCreateData(name: 'Мебель', slug: null, parentId: null);
 
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Доступ запрещён');
+        $this->expectException(AccessDeniedException::class);
+        $this->expectExceptionMessage('Access Denied');
 
         $this->useCase->execute($dto, $this->mockUserPermission(create: false));
     }

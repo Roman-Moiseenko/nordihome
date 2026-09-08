@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\DTOs\Room\RoomCreateData;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 readonly class CreateRoomUseCase
@@ -21,7 +22,7 @@ readonly class CreateRoomUseCase
     public function execute(RoomCreateData $dto, UserPermission $userPermission): RoomEntity
     {
         // Проверка прав доступа
-        if (!$userPermission->can('catalog.category.create')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.category.create')) throw new AccessDeniedException();
 
 
         $slug = new Slug($dto->slug ?: $dto->name);

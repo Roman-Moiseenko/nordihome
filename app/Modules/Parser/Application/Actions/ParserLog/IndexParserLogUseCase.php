@@ -7,7 +7,7 @@ namespace App\Modules\Parser\Application\Actions\ParserLog;
 use App\Modules\Parser\Application\DTOs\ParserLog\ParserLogIndexData;
 use App\Modules\Parser\Domain\Interfaces\ParserLogRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
-use DomainException;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 readonly class IndexParserLogUseCase
@@ -22,7 +22,7 @@ readonly class IndexParserLogUseCase
     public function execute(UserPermission $userPermission, int $perPage = 20): LengthAwarePaginator
     {
         if (!$userPermission->can('parser.product.view')) {
-            throw new DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $paginator = $this->logRepository->getLogsPaginated($perPage);

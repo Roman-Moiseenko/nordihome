@@ -8,6 +8,7 @@ use App\Modules\Content\Application\DTOs\Post\PostCreateData;
 use App\Modules\Content\Domain\Entities\PostEntity;
 use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 readonly class CreatePostUseCase
@@ -19,7 +20,7 @@ readonly class CreatePostUseCase
     public function execute(PostCreateData $dto, UserPermission $userPermission): PostEntity
     {
         if (!$userPermission->can('content.post.create')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $slug = new Slug($dto->slug ?: $dto->name);

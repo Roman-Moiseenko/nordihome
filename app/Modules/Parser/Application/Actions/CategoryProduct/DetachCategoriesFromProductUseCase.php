@@ -6,6 +6,7 @@ namespace App\Modules\Parser\Application\Actions\CategoryProduct;
 
 use App\Modules\Parser\Domain\Interfaces\CategoryProductParserRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class DetachCategoriesFromProductUseCase
 {
@@ -25,7 +26,7 @@ readonly class DetachCategoriesFromProductUseCase
     public function execute(int $productId, array $categoryIds, UserPermission $userPermission): void
     {
         if (!$userPermission->can('parser.product.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $this->categoryProductRepository->detachCategories($productId, $categoryIds);

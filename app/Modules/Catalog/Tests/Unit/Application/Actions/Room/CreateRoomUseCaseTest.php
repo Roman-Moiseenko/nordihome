@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\Actions\Room\CreateRoomUseCase;
 use App\Modules\Catalog\Application\DTOs\Room\RoomCreateData;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -67,7 +68,7 @@ class CreateRoomUseCaseTest extends TestCase
 
         $dto = new RoomCreateData(name: 'Спальня', slug: null, parentId: null);
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute($dto, $this->mockUserPermission(create: false));
     }
 }

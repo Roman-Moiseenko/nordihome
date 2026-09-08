@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Application\Actions\CategoryProduct;
 
 use App\Modules\Catalog\Domain\Interfaces\CategoryProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class AssignProductsToCategoryUseCase
 {
@@ -25,7 +26,7 @@ readonly class AssignProductsToCategoryUseCase
     public function execute(int $categoryId, array $productIds, UserPermission $userPermission): void
     {
         if (!$userPermission->can('catalog.category.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $this->categoryProductRepository->syncProducts($categoryId, $productIds);

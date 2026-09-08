@@ -7,6 +7,7 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\ProductPrice;
 use App\Modules\Catalog\Application\Actions\ProductPrice\GetLatestProductPricesUseCase;
 use App\Modules\Catalog\Domain\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -46,7 +47,7 @@ class GetLatestProductPricesUseCaseTest extends TestCase
     {
         $this->priceRepository->shouldNotReceive('findCurrentPrices');
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
 
         $this->useCase->execute(5, new UserPermission(null, [], []));
     }

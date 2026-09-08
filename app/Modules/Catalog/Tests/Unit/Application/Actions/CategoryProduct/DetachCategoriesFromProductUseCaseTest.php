@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\CategoryProduct;
 
 use App\Modules\Catalog\Application\Actions\CategoryProduct\DetachCategoriesFromProductUseCase;
 use App\Modules\Catalog\Domain\Interfaces\CategoryProductRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -55,7 +56,7 @@ class DetachCategoriesFromProductUseCaseTest extends TestCase
     {
         $this->repository->shouldNotReceive('detachCategories');
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute(5, [1, 2], $this->mockUserPermission(edit: false));
     }
 }

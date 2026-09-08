@@ -6,6 +6,7 @@ namespace App\Modules\Content\Application\Actions\Post;
 
 use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class RemovePostUseCase
 {
@@ -16,7 +17,7 @@ readonly class RemovePostUseCase
     public function execute(int $id, UserPermission $userPermission): void
     {
         if (!$userPermission->can('content.post.delete')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $this->postRepository->delete($id);

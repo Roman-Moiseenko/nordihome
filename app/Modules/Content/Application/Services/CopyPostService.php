@@ -13,6 +13,7 @@ use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 class CopyPostService
@@ -31,7 +32,7 @@ class CopyPostService
     public function execute(int $id, UserPermission $userPermission): PostEntity
     {
         if (!$userPermission->can('content.post.create')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $postEntity = $this->postRepository->getById($id);

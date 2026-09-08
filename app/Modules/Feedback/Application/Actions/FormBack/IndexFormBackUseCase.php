@@ -7,7 +7,7 @@ namespace App\Modules\Feedback\Application\Actions\FormBack;
 use App\Modules\Feedback\Application\DTOs\FormBack\FormBackIndexData;
 use App\Modules\Feedback\Domain\Interfaces\FormBackRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
-use DomainException;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 readonly class IndexFormBackUseCase
@@ -22,7 +22,7 @@ readonly class IndexFormBackUseCase
     public function execute(UserPermission $userPermission): LengthAwarePaginator
     {
         if (!$userPermission->can('feedback.form.view')) {
-            throw new DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $paginator = $this->formBackRepository->getAll();

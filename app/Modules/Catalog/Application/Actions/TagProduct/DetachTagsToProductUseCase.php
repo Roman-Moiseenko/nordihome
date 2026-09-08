@@ -4,6 +4,7 @@ namespace App\Modules\Catalog\Application\Actions\TagProduct;
 
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 class DetachTagsToProductUseCase
 {
@@ -15,7 +16,7 @@ class DetachTagsToProductUseCase
     public function execute(int $productId, array $tagIds, UserPermission $userPermission): void
     {
         if (!$userPermission->can('catalog.product.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $this->tagProductRepository->detachTags($productId, $tagIds);

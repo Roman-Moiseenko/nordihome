@@ -9,6 +9,7 @@ use App\Modules\Catalog\Application\DTOs\Product\ProductUpdateData;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -87,7 +88,7 @@ class UpdateProductUseCaseTest extends TestCase
 
         $dto = new ProductUpdateData(id: 5);
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute($dto, $this->mockUserPermission(edit: false));
     }
 }

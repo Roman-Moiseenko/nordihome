@@ -6,6 +6,7 @@ use App\Modules\Catalog\Application\DTOs\Tag\TagCreateData;
 use App\Modules\Catalog\Domain\Entities\TagEntity;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 readonly class CreateTagUseCase
@@ -17,7 +18,7 @@ readonly class CreateTagUseCase
     {}
     public function execute(TagCreateData $dto, UserPermission $userPermission): TagEntity
     {
-        if (!$userPermission->can('catalog.product.create')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.product.create')) throw new AccessDeniedException();
         $slug = new Slug($dto->slug ?: $dto->name);
         // Если slug занят, добавляем суффикс
         if ($this->repository->existsSlug((string)$slug)) $slug = new Slug((string)$slug . '-' . uniqid());

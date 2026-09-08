@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Category;
 
 use App\Modules\Catalog\Application\Actions\Category\UpCategoryUseCase;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -55,7 +56,7 @@ class UpCategoryUseCaseTest extends TestCase
     {
         $this->categoryRepository->shouldNotReceive('moveUp');
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute(5, $this->mockUserPermission(edit: false));
     }
 }

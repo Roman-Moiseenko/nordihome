@@ -6,6 +6,7 @@ namespace App\Modules\Content\Application\Actions\Post;
 
 use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class TogglePostUseCase
 {
@@ -20,7 +21,7 @@ readonly class TogglePostUseCase
     public function execute(int $postId, UserPermission $userPermission): string
     {
         if (!$userPermission->can('content.post.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $post = $this->postRepository->getById($postId);

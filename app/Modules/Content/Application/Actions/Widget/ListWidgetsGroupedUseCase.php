@@ -9,6 +9,7 @@ use App\Modules\Content\Application\DTOs\Widget\WidgetListByCategoryData;
 use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Domain\ValueObjects\WidgetCategory;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class ListWidgetsGroupedUseCase
 {
@@ -24,7 +25,7 @@ readonly class ListWidgetsGroupedUseCase
     public function execute(UserPermission $userPermission): array
     {
         if (!$userPermission->can('content.widget.view')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $widgets = $this->widgetRepository->getAll();

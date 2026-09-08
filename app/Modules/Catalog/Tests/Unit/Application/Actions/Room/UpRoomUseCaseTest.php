@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Room;
 
 use App\Modules\Catalog\Application\Actions\Room\UpRoomUseCase;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -55,7 +56,7 @@ class UpRoomUseCaseTest extends TestCase
     {
         $this->roomRepository->shouldNotReceive('moveUp');
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute(5, $this->mockUserPermission(edit: false));
     }
 }

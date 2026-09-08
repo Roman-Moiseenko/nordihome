@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Application\Actions\RoomProduct;
 
 use App\Modules\Catalog\Domain\Interfaces\RoomProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class AttachRoomsToProductUseCase
 {
@@ -25,7 +26,7 @@ readonly class AttachRoomsToProductUseCase
     public function execute(int $productId, array $roomIds, UserPermission $userPermission): void
     {
         if (!$userPermission->can('catalog.product.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $this->roomProductRepository->attachRooms($productId, $roomIds);

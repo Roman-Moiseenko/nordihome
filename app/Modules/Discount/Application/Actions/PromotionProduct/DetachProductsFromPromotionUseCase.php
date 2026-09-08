@@ -6,6 +6,7 @@ namespace App\Modules\Discount\Application\Actions\PromotionProduct;
 
 use App\Modules\Discount\Domain\Interfaces\PromotionProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class DetachProductsFromPromotionUseCase
 {
@@ -25,7 +26,7 @@ readonly class DetachProductsFromPromotionUseCase
     public function execute(int $promotionId, array $productIds, UserPermission $userPermission): void
     {
         if (!$userPermission->can('discount.promotion.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $this->promotionProductRepository->detachProducts($promotionId, $productIds);

@@ -6,6 +6,7 @@ use App\Modules\Parser\Application\DTOs\Category\ParserCategoryCreateData;
 use App\Modules\Parser\Domain\Entities\ParserCategoryEntity;
 use App\Modules\Parser\Domain\Interfaces\ParserCategoryRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 readonly class CreateParserCategoryUseCase
@@ -19,7 +20,7 @@ readonly class CreateParserCategoryUseCase
     public function execute(ParserCategoryCreateData $dto, UserPermission $userPermission): ParserCategoryEntity
     {
         // Проверка прав доступа
-        if (!$userPermission->can('parser.category.create')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('parser.category.create')) throw new AccessDeniedException();
 
 
         $slug = new Slug($dto->name);

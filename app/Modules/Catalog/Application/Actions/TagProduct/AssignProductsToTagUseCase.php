@@ -4,6 +4,7 @@ namespace App\Modules\Catalog\Application\Actions\TagProduct;
 
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 class AssignProductsToTagUseCase
 {
@@ -24,7 +25,7 @@ class AssignProductsToTagUseCase
     public function execute(int $roomId, array $productIds, UserPermission $userPermission): void
     {
         if (!$userPermission->can('catalog.product.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $this->tagProductRepository->syncProducts($roomId, $productIds);

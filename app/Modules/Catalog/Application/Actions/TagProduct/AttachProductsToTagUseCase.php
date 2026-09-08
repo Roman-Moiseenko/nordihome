@@ -4,6 +4,7 @@ namespace App\Modules\Catalog\Application\Actions\TagProduct;
 
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 class AttachProductsToTagUseCase
 {
@@ -16,7 +17,7 @@ class AttachProductsToTagUseCase
     public function execute(int $tagId, array $productIds, UserPermission $userPermission): void
     {
         if (!$userPermission->can('catalog.product.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $this->tagProductRepository->attachProducts($tagId, $productIds);

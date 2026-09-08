@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\Actions\Room\UpdateRoomUseCase;
 use App\Modules\Catalog\Application\DTOs\Room\RoomUpdateData;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -85,7 +86,7 @@ class UpdateRoomUseCaseTest extends TestCase
             metaDescription: null,
         );
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute(5, $dto, $this->mockUserPermission(edit: false));
     }
 }

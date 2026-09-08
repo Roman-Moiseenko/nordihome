@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\DTOs\Category\CategoryUpdateData;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Support\Str;
@@ -23,7 +24,7 @@ readonly class UpdateCategoryUseCase
     public function execute(int $id, CategoryUpdateData $dto, UserPermission $userPermission): CategoryEntity
     {
         // Проверка прав доступа
-        if (!$userPermission->can('catalog.category.edit')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.category.edit')) throw new AccessDeniedException();
 
         $category = $this->categoryRepository->getById($id);
 

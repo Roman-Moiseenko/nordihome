@@ -6,6 +6,7 @@ use App\Modules\Catalog\Application\DTOs\Category\CategoryCreateData;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 class CreateCategoryUseCase
@@ -19,7 +20,7 @@ class CreateCategoryUseCase
     public function execute(CategoryCreateData $dto, UserPermission $userPermission): CategoryEntity
     {
         // Проверка прав доступа
-        if (!$userPermission->can('catalog.category.create')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.category.create')) throw new AccessDeniedException();
 
 
         $slug = new Slug($dto->slug ?: $dto->name);

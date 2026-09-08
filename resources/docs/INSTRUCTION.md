@@ -282,6 +282,7 @@ class RoomViewData extends Data
   - Принимает DTO (если нужно) и `UserPermission`
   - Возвращает Entity или void
 - Проверка прав доступа — **первым делом** внутри `execute()`
+- При отсутствии прав — `throw new AccessDeniedException();` (без сообщения), пример ниже
 - Права доступа определяются так `{ModuleName}.{ModelName}.{Action}`, пример ниже
 - Никакой логики работы с БД — только вызов репозитория и бизнес-логика Entity
 
@@ -297,7 +298,7 @@ readonly class CreateRoomUseCase
     public function execute(RoomCreateData $dto, UserPermission $userPermission): RoomEntity
     {
         if (!$userPermission->can('catalog.room.create')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $slug = new Slug($dto->slug ?: $dto->name);
@@ -316,6 +317,8 @@ readonly class CreateRoomUseCase
     }
 }
 ```
+
+> **Импорт исключения:** `use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;`
 
 **Список стандартных UseCase:**
 

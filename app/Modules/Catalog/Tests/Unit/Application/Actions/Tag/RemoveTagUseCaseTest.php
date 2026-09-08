@@ -7,6 +7,7 @@ namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Tag;
 use App\Modules\Catalog\Application\Actions\Tag\RemoveTagUseCase;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -69,7 +70,7 @@ class RemoveTagUseCaseTest extends TestCase
     {
         $this->tagProductRepository->shouldNotReceive('countProductsByTagId');
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute(5, $this->mockUserPermission(delete: false));
     }
 }

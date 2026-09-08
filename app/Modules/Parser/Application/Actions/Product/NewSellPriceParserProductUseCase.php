@@ -5,6 +5,7 @@ namespace App\Modules\Parser\Application\Actions\Product;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
 use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class NewSellPriceParserProductUseCase
 {
@@ -15,7 +16,7 @@ readonly class NewSellPriceParserProductUseCase
     public function execute(int $id, float $priceSell, UserPermission $userPermission): ParserProductEntity
     {
         if (!$userPermission->can('parser.product.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $product = $this->productRepository->getById($id);

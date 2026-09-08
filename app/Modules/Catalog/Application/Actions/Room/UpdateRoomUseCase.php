@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\DTOs\Room\RoomUpdateData;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Support\Str;
@@ -23,7 +24,7 @@ readonly class UpdateRoomUseCase
     public function execute(int $id, RoomUpdateData $dto, UserPermission $userPermission): RoomEntity
     {
         // Проверка прав доступа
-        if (!$userPermission->can('catalog.category.edit')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.category.edit')) throw new AccessDeniedException();
 
         $room = $this->roomRepository->getById($id);
 

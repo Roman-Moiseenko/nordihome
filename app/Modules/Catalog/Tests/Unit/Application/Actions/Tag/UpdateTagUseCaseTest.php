@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\Actions\Tag\UpdateTagUseCase;
 use App\Modules\Catalog\Application\DTOs\Tag\TagUpdateData;
 use App\Modules\Catalog\Domain\Entities\TagEntity;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -70,7 +71,7 @@ class UpdateTagUseCaseTest extends TestCase
 
         $dto = new TagUpdateData(name: 'Акция', slug: null, isMain: false);
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute(5, $dto, $this->mockUserPermission(edit: false));
     }
 }

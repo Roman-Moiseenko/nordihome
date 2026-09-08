@@ -6,6 +6,7 @@ use App\Modules\Catalog\Application\DTOs\Wp\CategoryRoomWpData;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 class CreateCategoryWpUseCase
@@ -19,7 +20,7 @@ class CreateCategoryWpUseCase
     public function execute(CategoryRoomWpData $dto, UserPermission $userPermission):? CategoryEntity
     {
         // Проверка прав доступа
-        if (!$userPermission->can('catalog.category.create')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.category.create')) throw new AccessDeniedException();
 
         if ($this->categoryRepository->existsByWpId($dto->wpId)) return null;
 

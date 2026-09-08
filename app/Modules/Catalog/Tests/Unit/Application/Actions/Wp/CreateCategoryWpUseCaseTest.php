@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\Actions\Wp\CreateCategoryWpUseCase;
 use App\Modules\Catalog\Application\DTOs\Wp\CategoryRoomWpData;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -79,7 +80,7 @@ class CreateCategoryWpUseCaseTest extends TestCase
 
         $dto = new CategoryRoomWpData(wpId: 42, name: 'Мебель', parentId: null);
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute($dto, $this->mockUserPermission(create: false));
     }
 }

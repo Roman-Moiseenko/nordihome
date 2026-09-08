@@ -6,6 +6,7 @@ use App\Modules\Catalog\Application\DTOs\Wp\CategoryRoomWpData;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 class CreateRoomWpUseCase
@@ -19,7 +20,7 @@ class CreateRoomWpUseCase
     public function execute(CategoryRoomWpData $dto, UserPermission $userPermission):? RoomEntity
     {
         // Проверка прав доступа
-        if (!$userPermission->can('catalog.category.create')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.category.create')) throw new AccessDeniedException();
 
         if ($this->roomRepository->existsByWpId($dto->wpId)) return null;
 

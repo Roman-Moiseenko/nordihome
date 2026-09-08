@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Application\Actions\Category;
 
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class ToggleCategoryUseCase
 {
@@ -19,7 +20,7 @@ readonly class ToggleCategoryUseCase
     {
         // Проверка прав доступа
         if (!$userPermission->can('catalog.category.edit')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $category = $this->categoryRepository->getById($id);

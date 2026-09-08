@@ -9,6 +9,7 @@ use App\Modules\Catalog\Application\DTOs\Tag\TagIndexData;
 use App\Modules\Catalog\Domain\Entities\TagEntity;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -72,7 +73,7 @@ class IndexTagUseCaseTest extends TestCase
     {
         $this->tagRepository->shouldNotReceive('paginate');
 
-        $this->expectException(\DomainException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->useCase->execute($this->mockUserPermission(view: false), 20);
     }
 }

@@ -6,6 +6,7 @@ use App\Modules\Catalog\Application\DTOs\Tag\TagUpdateData;
 use App\Modules\Catalog\Domain\Entities\TagEntity;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Support\Str;
 
@@ -18,7 +19,7 @@ class UpdateTagUseCase
 
     public function execute(int $tagId, TagUpdateData $dto, UserPermission $userPermission): TagEntity
     {
-        if (!$userPermission->can('catalog.product.edit')) throw new \DomainException('Доступ запрещён');
+        if (!$userPermission->can('catalog.product.edit')) throw new AccessDeniedException();
 
         $tag = $this->repository->getById($tagId);
         // Обновляем поля, если переданы

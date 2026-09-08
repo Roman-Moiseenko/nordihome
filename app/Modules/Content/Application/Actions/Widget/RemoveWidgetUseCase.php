@@ -7,6 +7,7 @@ namespace App\Modules\Content\Application\Actions\Widget;
 use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Infrastructure\Services\WidgetFileService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
 readonly class RemoveWidgetUseCase
 {
@@ -20,7 +21,7 @@ readonly class RemoveWidgetUseCase
     public function execute(int $id, UserPermission $userPermission): void
     {
         if (!$userPermission->can('content.widget.delete')) {
-            throw new \DomainException('Доступ запрещён');
+            throw new AccessDeniedException();
         }
 
         $widget = $this->widgetRepository->getById($id);
