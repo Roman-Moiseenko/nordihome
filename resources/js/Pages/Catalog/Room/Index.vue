@@ -19,7 +19,7 @@
                 </div>
             </el-popover>
         </div>
-        <RoomChildren :categories="rooms" />
+        <CatalogChildren :items="rooms" resource="room" />
         <DeleteEntityModal name_entity="Комнату" name="room"/>
     </el-config-provider>
 </template>
@@ -29,7 +29,7 @@ import {Head, router} from "@inertiajs/vue3";
 import {inject, reactive, ref} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
 
-import RoomChildren from "@Comp/Room/Children.vue";
+import CatalogChildren from "@Comp/Catalog/Children.vue";
 import {useCatalogStore} from "@Res/catalogStore";
 
 const props = defineProps({

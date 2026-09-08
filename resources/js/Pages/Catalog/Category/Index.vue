@@ -20,7 +20,7 @@
             </el-popover>
         </div>
 
-        <CategoryChildren :categories="categories" />
+        <CatalogChildren :items="categories" resource="category" />
 
         <!--CategoryRow v-for="item in categories" :category="item" @delete:category="handleDeleteEntity" /-->
         <DeleteEntityModal name_entity="Категорию" name="category"/>
@@ -31,7 +31,7 @@
 import {Head, router} from "@inertiajs/vue3";
 import {inject, reactive, ref} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
-import CategoryChildren from "@Comp/Category/Children.vue";
+import CatalogChildren from "@Comp/Catalog/Children.vue";
 import {useCatalogStore} from "@Res/catalogStore";
 
 const props = defineProps({
