@@ -38,3 +38,12 @@
         min-width: 190px;
     }
 }
+@media (max-width: 576px) {
+    .c-mini-item {
+        .heading {
+            font-size: 14px;
+            min-width: 230px;
+            padding: 5px 15px;
+        }
+    }
+}

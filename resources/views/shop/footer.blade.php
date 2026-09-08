@@ -16,13 +16,13 @@
                     </div>
                     <div>
                         <div>
-                            <p>тел. @if(isset($contacts['phone']))
-                                    <a href="{{ $contacts['phone']->url }}">{{ phone($contacts['phone']->url) }}</a>
-                                @endif<br>
-                                тел. @if(isset($contacts['phone_1']))
+                            <p>тел. @if(isset($contacts['phone_1']))
                                     <a href="{{ $contacts['phone_1']->url }}">{{ phone($contacts['phone_1']->url) }}</a>
-                                @endif
-                                <br>@if(isset($contacts['phone_2']))
+                                @endif<br>
+                                тел. @if(isset($contacts['phone']))
+                                    <a href="{{ $contacts['phone']->url }}">{{ phone($contacts['phone']->url) }}</a> (бесплатно по России)
+                                @endif<br>
+                                @if(isset($contacts['phone_2']))
                                     <a href="{{ $contacts['phone_2']->url }}">{{ phone($contacts['phone_2']->url) }}</a>
                                 @endif - телефон для мессенджеров<br>
                                 @if(isset($contacts['mail_1']))
@@ -30,7 +30,7 @@
                                 @endif - по вопросам сотрудничества<br>
                                 @if(isset($contacts['mail_3']))
                                     <a href="{{ $contacts['mail_3']->url }}">{{ $contacts['mail_3']->name }}</a>
-                                @endif - написать директору</p>
+                                @endif -  отдел по работе с претензиями</p>
                             <p>ООО «Негоциант», ИНН 3906396090, КПП 390601001, ОГРН 1203900013602, 236023 Калининград, ул Советский проспект, 103А корпус 1</p>
                         </div>
                     </div>
