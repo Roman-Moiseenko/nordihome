@@ -61,6 +61,7 @@ Route::group([
     ], function () {
         Route::post('/up/{id}', [CategoryController::class, 'up'])->name('up');
         Route::post('/down/{id}', [CategoryController::class, 'down'])->name('down');
+        Route::post('/move/{id}', [CategoryController::class, 'move'])->name('move');
         Route::get('/tree', [CategoryController::class, 'tree'])->name('tree');
         Route::post('/toggle/{id}', [CategoryController::class, 'toggle'])->name('toggle');
         Route::get('/products/{id}', [CategoryController::class, 'products'])->name('products');
@@ -79,6 +80,7 @@ Route::group([
         Route::get('/tree', [RoomController::class, 'tree'])->name('tree');
         Route::post('/up/{id}', [RoomController::class, 'up'])->name('up');
         Route::post('/down/{id}', [RoomController::class, 'down'])->name('down');
+        Route::post('/move/{id}', [RoomController::class, 'move'])->name('move');
         Route::post('/toggle/{id}', [RoomController::class, 'toggle'])->name('toggle');
         // Связь Room → Products
         Route::get('/{id}/products', [RoomProductController::class, 'roomProducts'])->name('products');

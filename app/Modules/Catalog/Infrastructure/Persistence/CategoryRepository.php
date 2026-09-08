@@ -124,6 +124,34 @@ class CategoryRepository implements CategoryRepositoryInterface
         $model->down();
     }
 
+    public function move(int $id, int $position): void
+    {
+        /** @var Category $model */
+        $model = Category::findOrFail($id);
+
+        // Соседи (тот же родитель) без перемещаемого узла.
+        $others = $model->siblings()
+            ->defaultOrder()
+            ->get()
+            ->filter(fn(Category $node) => $node->getKey() !== $model->getKey())
+            ->values();
+
+        $position = max(0, min($position, $others->count()));
+
+        if ($position === 0) {
+            $target = $others->first();
+            if ($target !== null) {
+                $model->insertBeforeNode($target);
+            }
+            return;
+        }
+
+        $target = $others->get($position - 1);
+        if ($target !== null) {
+            $model->insertAfterNode($target);
+        }
+    }
+
     /**
      * @return int[]
      */

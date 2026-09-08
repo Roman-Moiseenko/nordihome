@@ -36,6 +36,8 @@ interface CategoryRepositoryInterface
 
     public function moveDown(int $id): void;
 
+    public function move(int $id, int $position): void;
+
     /** @return int[] */
     public function getDescendantIds(int $id): array;
 

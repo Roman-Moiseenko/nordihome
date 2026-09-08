@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Catalog\Application\Actions\Category;
+
+use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
+use App\Modules\Shared\Domain\Entities\UserPermission;
+
+readonly class MoveCategoryUseCase
+{
+    public function __construct(
+        private CategoryRepositoryInterface $categoryRepository,
+    )
+    {
+    }
+
+    public function execute(int $id, int $position, UserPermission $userPermission): void
+    {
+        // Проверка прав доступа
+        if (!$userPermission->can('catalog.category.edit')) {
+            throw new \DomainException('Доступ запрещён');
+        }
+
+        $this->categoryRepository->move($id, $position);
+    }
+}

@@ -5,6 +5,7 @@ namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 use App\Modules\Catalog\Application\Actions\Room\CreateRoomUseCase;
 use App\Modules\Catalog\Application\Actions\Room\DownRoomUseCase;
 use App\Modules\Catalog\Application\Actions\Room\IndexRoomUseCase;
+use App\Modules\Catalog\Application\Actions\Room\MoveRoomUseCase;
 use App\Modules\Catalog\Application\Actions\Room\RemoveRoomUseCase;
 use App\Modules\Catalog\Application\Actions\Room\ToggleRoomUseCase;
 use App\Modules\Catalog\Application\Actions\Room\TreeRoomUseCase;
@@ -36,6 +37,7 @@ readonly class RoomController
         private TreeRoomUseCase   $treeRoomUseCase,
         private UpRoomUseCase     $upRoomUseCase,
         private DownRoomUseCase   $downRoomUseCase,
+        private MoveRoomUseCase   $moveRoomUseCase,
         private ToggleRoomUseCase $toggleRoomUseCase,
         private ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
     )
@@ -93,6 +95,13 @@ readonly class RoomController
     public function down(int $id, UserPermission $userPermission)
     {
         $this->downRoomUseCase->execute($id, $userPermission);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function move(int $id, Request $request, UserPermission $userPermission)
+    {
+        $position = $request->integer('position', 0);
+        $this->moveRoomUseCase->execute($id, $position, $userPermission);
         return redirect()->back()->with('success', 'Сохранено');
     }
 

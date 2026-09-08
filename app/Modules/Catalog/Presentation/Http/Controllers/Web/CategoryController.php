@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\Actions\Attribute\ListAttributeByCategoryUse
 use App\Modules\Catalog\Application\Actions\Category\CreateCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\DownCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\IndexCategoryUseCase;
+use App\Modules\Catalog\Application\Actions\Category\MoveCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\RemoveCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\ToggleCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Category\TreeCategoryUseCase;
@@ -40,6 +41,7 @@ class CategoryController extends Controller
         private readonly ToggleCategoryUseCase $toggleCategoryUseCase,
         private readonly UpCategoryUseCase $upCategoryUseCase,
         private readonly DownCategoryUseCase $downCategoryUseCase,
+        private readonly MoveCategoryUseCase $moveCategoryUseCase,
         private readonly RemoveCategoryUseCase $removeCategoryUseCase,
         private readonly UpdateCategoryUseCase $updateCategoryUseCase,
         private readonly ViewCategoryUseCase $viewCategoryUseCase,
@@ -87,6 +89,13 @@ class CategoryController extends Controller
     public function down(int $id, UserPermission $userPermission): RedirectResponse
     {
         $this->downCategoryUseCase->execute($id, $userPermission);
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function move(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $position = $request->integer('position', 0);
+        $this->moveCategoryUseCase->execute($id, $position, $userPermission);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
