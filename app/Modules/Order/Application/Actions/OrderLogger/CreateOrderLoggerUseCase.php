@@ -24,7 +24,8 @@ readonly class CreateOrderLoggerUseCase
         //if (is_null($orderEntity)) throw new \DomainException("Заказ не существует");
         if ($orderEntity->status->value->isFinished()) throw new \DomainException("Заказ завершен. Доступ закрыт");
 
-        $staffId = auth()->check() ? auth()->user()->profileable_id : null;
+        $user = auth()->user();
+        $staffId = $user && $user->isStaff() ? $user->profileable_id : null;
         $logEntity = new OrderLoggerEntity(
             orderId: $orderId,
             staffId: $staffId,

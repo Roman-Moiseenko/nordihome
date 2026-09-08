@@ -37,7 +37,7 @@ readonly class IndexOrderUseCase
                 createdAt: $order->createdAt->format('Y-m-d H:i:s'),
                 number: $order->number,
                 clientName: is_null($clientEntity) ? '-' : $clientEntity->fullName->getValue(),
-                clientPhone: is_null($clientEntity) ? '' : $clientEntity->phone->getValue(),
+                clientPhone: is_null($clientEntity) ? '' : ($clientEntity->phone?->getValue() ?? ''),
                 amount: $order->getTotalAmount(),
                 status: $order->status->value->getValue(),
                 statusName: $order->status->value->getName(),

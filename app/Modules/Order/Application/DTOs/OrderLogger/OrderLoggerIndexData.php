@@ -15,14 +15,14 @@ class OrderLoggerIndexData extends Data
         public ?string $old,
         public ?string $value,
         public ?string $link,
-        public int $staffId,
-        public string $staffName,
+        public ?int $staffId,
+        public ?string $staffName,
     )
     {
 
     }
 
-    public static function fromEntity(OrderLoggerEntity $entity, string $staffName): self
+    public static function fromEntity(OrderLoggerEntity $entity, ?string $staffName): self
     {
         return new self(
             id: $entity->id,

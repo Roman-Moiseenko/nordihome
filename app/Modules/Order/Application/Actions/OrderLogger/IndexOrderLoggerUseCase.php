@@ -24,8 +24,8 @@ readonly class IndexOrderLoggerUseCase
         $logs = $this->loggerRepository->getByOrderId($orderId);
 
         return array_map(function (OrderLoggerEntity $log) {
-            $staff = $this->staffRepository->findById($log->staffId);
-            return OrderLoggerIndexData::fromEntity($log, $staff->fullName->getValue());
+            $staff = $log->staffId !== null ? $this->staffRepository->findById($log->staffId) : null;
+            return OrderLoggerIndexData::fromEntity($log, $staff?->fullName->getValue());
         }, $logs);
 
         //return OrderLoggerIndexData::collect($logs);

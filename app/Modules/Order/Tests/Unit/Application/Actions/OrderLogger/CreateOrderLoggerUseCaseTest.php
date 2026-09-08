@@ -14,7 +14,6 @@ use DomainException;
 use Illuminate\Contracts\Auth\Factory as AuthFactory;
 use Mockery;
 use PHPUnit\Framework\TestCase;
-use stdClass;
 
 class CreateOrderLoggerUseCaseTest extends TestCase
 {
@@ -76,8 +75,14 @@ class CreateOrderLoggerUseCaseTest extends TestCase
 
     public function test_sets_staff_id_when_authenticated(): void
     {
-        $user = new stdClass();
-        $user->profileable_id = 5;
+        $user = new class(5) {
+            public function __construct(public int $profileable_id) {}
+
+            public function isStaff(): bool
+            {
+                return true;
+            }
+        };
 
         $auth = Mockery::mock(AuthFactory::class);
         $auth->shouldReceive('check')->andReturn(true);

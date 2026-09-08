@@ -51,7 +51,7 @@ Breadcrumbs::for('cabinet.order.view', function (BreadcrumbTrail $trail, int $id
 });
 Breadcrumbs::for('cabinet.order.new_order', function (BreadcrumbTrail $trail, int $id) {
     $order = Order::find($id);
-    $trail->parent('cabinet.order.view', $order);
+    $trail->parent('cabinet.order.view', $id);
     $trail->push('Новый', route('cabinet.order.new_order', $order));
 });
 Breadcrumbs::for('cabinet.review.index', function (BreadcrumbTrail $trail) {
