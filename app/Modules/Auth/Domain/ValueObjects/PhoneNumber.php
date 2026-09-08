@@ -8,7 +8,7 @@ use libphonenumber\PhoneNumberFormat;
 use Illuminate\Http\Request;
 use libphonenumber\PhoneNumberUtil;
 
-final class PhoneNumber
+final class PhoneNumber implements \JsonSerializable
 {
     private string $rawInput;
     private string $e164;          // +79991234567
@@ -105,6 +105,11 @@ final class PhoneNumber
     }
 
     public function __toString(): string
+    {
+        return $this->e164;
+    }
+
+    public function jsonSerialize(): string
     {
         return $this->e164;
     }
