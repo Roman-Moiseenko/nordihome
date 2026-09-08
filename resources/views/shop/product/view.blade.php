@@ -133,7 +133,7 @@
                                     data-bs-target="#buy-click"
                                     onclick="document.getElementById('one-click-product-id').value={{$product->id}};
                                     document.getElementById('button-buy-click').setAttribute('data-product', {{$product->id}});"
-                            >В 1 Клик!
+                            >Купить в 1 клик
                             </button>
                         @else
                             <button type="button" class="btn btn-secondary" disabled>Снят с продажи</button>
