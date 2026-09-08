@@ -19,7 +19,9 @@
                 </div>
             </el-popover>
         </div>
+
         <CategoryChildren :categories="categories" />
+
         <!--CategoryRow v-for="item in categories" :category="item" @delete:category="handleDeleteEntity" /-->
         <DeleteEntityModal name_entity="Категорию" name="category"/>
     </el-config-provider>

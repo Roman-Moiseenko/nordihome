@@ -120,6 +120,7 @@ onMounted(() => {
 function initDragSort() {
     const el = document.querySelectorAll('.el-upload-list')[0];
     Sortable.create(el, {
+
         onEnd: ({ oldIndex, newIndex }) => {
             const page = fileList.value[oldIndex];
             fileList.value.splice(oldIndex, 1);

@@ -93,7 +93,7 @@ $total = $pageData->paginator->total;
                 <div style="display: none">
                     @foreach($pageData->mainInfo->children as $child)
                         <div class="m-l_10 f-z_16">
-                            <a href="{{ route('shop.' . $mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
+                            <a href="{{ route('shop.' . $pageData->mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
                         </div>
                     @endforeach
                 </div>
