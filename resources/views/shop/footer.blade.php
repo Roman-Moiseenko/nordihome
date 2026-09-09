@@ -68,7 +68,7 @@
         </div>
     </div>
     <div class="about pt-4 pb-3 text-center">
-        <p>2022 - {{date('Y')}} | Разработано <a href="https://website39.site" title="Разработка CRM и интернет-магазинов" target="_blank">Веб-студия Web39</a></p>
+        <p>2022 - {{date('Y')}} | Разработано <a href="https://koenigs.ru" title="Разработка CRM и интернет-магазинов" target="_blank">Веб-студия Web39</a></p>
     </div>
 
 </footer>

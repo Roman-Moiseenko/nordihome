@@ -29,6 +29,7 @@ trait SetsUpLaravelHelpers
 
         $auth = Mockery::mock(AuthFactory::class);
         $auth->shouldReceive('check')->andReturn(false);
+        $auth->shouldReceive('user')->andReturn(null);
         $this->container->instance(AuthFactory::class, $auth);
 
         Container::setInstance($this->container);

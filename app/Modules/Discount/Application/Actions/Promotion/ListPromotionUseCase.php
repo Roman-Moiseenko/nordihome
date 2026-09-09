@@ -3,7 +3,7 @@
 namespace App\Modules\Discount\Application\Actions\Promotion;
 
 use App\Modules\Discount\Domain\Interfaces\PromotionRepositoryInterface;
-use App\Modules\Shared\Application\DTOs\ListEntityData;
+use App\Modules\Shared\Application\DTOs\ListNamePublishedData;
 
 readonly class ListPromotionUseCase
 {
@@ -16,7 +16,7 @@ readonly class ListPromotionUseCase
     {
         $promotions = $this->promotionRepository->getAll();
 
-        return array_map(fn($promotion) => new ListEntityData(
+        return array_map(fn($promotion) => new ListNamePublishedData(
             id: $promotion->id,
             name: $promotion->name,
             published: $promotion->status->isStarted(),

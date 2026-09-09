@@ -4,7 +4,7 @@ namespace App\Modules\Shared\Application\DTOs;
 
 use Spatie\LaravelData\Data;
 
-class ListEntityData extends Data
+class ListNamePublishedData extends Data
 {
     public function __construct(
         public int $id,

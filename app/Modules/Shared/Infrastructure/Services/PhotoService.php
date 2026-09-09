@@ -111,7 +111,7 @@ class PhotoService
         $file = self::URL_THUMB . $path . $this->nameFileThumb($photoId, $fileName, $thumb);
 
         //if (!is_file($file)) { //$this->createThumbsOnRequest
-            $this->createThumbs($photoId, $modelType, $imageableId, $fileName);
+            $this->createThumbs($photoId, $modelType, $imageableId, $fileName, $thumb);
         //}
 
         return $file; //self::URL_THUMB . $path . $this->nameFileThumb($photoId, $fileName, $thumb);
@@ -120,7 +120,7 @@ class PhotoService
     /**
      * Создаёт все thumbs для файла (по настройкам из Settings)
      */
-    public function createThumbs(int $photoId, string $modelType, int $imageableId, string $fileName): void
+    public function createThumbs(int $photoId, string $modelType, int $imageableId, string $fileName, string $thumb): void
     {
         $uploadPath = $this->catalogUpload . $this->patternGeneratePath($modelType, $imageableId) . $fileName;
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
@@ -132,31 +132,66 @@ class PhotoService
         if (!in_array(mb_strtolower($ext), ['jpg', 'jpeg', 'png', 'webp'], true)) {
             return;
         }
+        foreach ($this->thumbs as $items) {
+            if ($items['name'] == $thumb) {
+                $params = $items;
+                break;
+            }
+        }
 
-        foreach ($this->thumbs as $params) {
+        if (!isset($params))  return;
+
+       // foreach ($this->thumbs as $params) {
             $thumbFile = $this->catalogThumb
                 . $this->patternGeneratePath($modelType, $imageableId)
                 . $this->nameFileThumb($photoId, $fileName, $params['name']);
             if (is_file($thumbFile)) {
-                continue; // уже есть
+                return; // уже есть
             }
 
             $manager = new ImageManager();
             try {
                 $img = $manager->make($uploadPath);
             } catch (\Throwable $e) {
-                continue;
+                return;
             }
-
+            /*
+        if (isset($params['width'], $params['height'])) {
+            if (!empty($params['fit'])) {
+                $img->fit($params['width'], $params['height']);
+            } else {
+                $scaleW = $img->width() / $params['width'];
+                $scaleH = $img->height() / $params['height'];
+                $scale = max($scaleW, $scaleH);
+                $img->fit((int)($img->width() / $scale), (int)($img->height() / $scale));
+                $img->resizeCanvas($params['width'], $params['height']);
+            }
+        }*/
+            // 1. ПРИВОДИМ К ПРОПОРЦИЯМ КОНЕЧНОГО ИЗОБРАЖЕНИЯ (БЕЗ РЕСАЙЗА)
             if (isset($params['width'], $params['height'])) {
+                $targetAspect = $params['width'] / $params['height'];
+
                 if (!empty($params['fit'])) {
-                    $img->fit($params['width'], $params['height']);
+                    // ОБРЕЗКА: Вырезаем по центру кусок в нужной пропорции.
+                    $currentAspect = $img->width() / $img->height();
+                    if ($currentAspect > $targetAspect) {
+                        $cropW = (int)($img->height() * $targetAspect);
+                        $cropH = $img->height();
+                    } else {
+                        $cropW = $img->width();
+                        $cropH = (int)($img->width() / $targetAspect);
+                    }
+                    $img->crop($cropW, $cropH);
                 } else {
-                    $scaleW = $img->width() / $params['width'];
-                    $scaleH = $img->height() / $params['height'];
-                    $scale = max($scaleW, $scaleH);
-                    $img->fit((int)($img->width() / $scale), (int)($img->height() / $scale));
-                    $img->resizeCanvas($params['width'], $params['height']);
+                    // БЕЗ ОБРЕЗКИ: Создаем БОЛЬШОЙ холст в нужной пропорции и добавляем белые поля
+                    $canvasH = $img->height();
+                    $canvasW = (int)($canvasH * $targetAspect);
+
+                    if ($canvasW < $img->width()) {
+                        $canvasW = $img->width();
+                        $canvasH = (int)($canvasW / $targetAspect);
+                    }
+                    $img->resizeCanvas($canvasW, $canvasH, 'center', false, '#ffffff');
                 }
             }
 
@@ -173,17 +208,19 @@ class PhotoService
                     $this->settings->image->watermark_offset
                 );
             }
-
+            if (isset($params['width'], $params['height'])) {
+                $img->resize($params['width'], $params['height']);
+            }
             $thumbDir = pathinfo($thumbFile, PATHINFO_DIRNAME);
             if (!is_dir($thumbDir)) {
                 mkdir($thumbDir, 0777, true);
             }
 
-            if (in_array(mb_strtolower($ext), ['jpg', 'webp'], true)) {
+            if (in_array(mb_strtolower($ext), ['jpg', 'jpeg', 'webp'], true)) {
                 $img->encode(null, 70);
             }
             $img->save($thumbFile);
-        }
+        //}
     }
 
     /**

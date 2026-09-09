@@ -11,23 +11,26 @@ export const useContentStore = defineStore('content', () => {
     const widgets = ref<any[]>([])
     const types = ref<any[]>([])
     const sections = ref<{ value: string; label: string }[]>([])
+    const labels = ref<any[]>([])
 
     async function fetchData() {
         const [
-            categoriesRes, widgetsRes, sectionsRes, typesRes,
+            categoriesRes, widgetsRes, sectionsRes, typesRes, labelsRes,
         ] = await Promise.all([
             axios.get(route('admin.content.widget.categories')),
             axios.get(route('admin.content.widget.widgets')),
             axios.get(route('admin.content.content-blocks.sections')),
             axios.get(route('admin.content.widget.product-group-types')),
+            axios.get(route('admin.content.label.list')),
         ])
 
         categories.value = categoriesRes.data
         widgets.value = widgetsRes.data
         sections.value = sectionsRes.data
         types.value = typesRes.data
+        labels.value = labelsRes.data
 
-        console.log(types.value)
+        console.log(labels.value)
     }
 
     ;(async () => {
@@ -54,5 +57,6 @@ export const useContentStore = defineStore('content', () => {
         types,
         categories,
         sections,
+        labels,
     }
 })

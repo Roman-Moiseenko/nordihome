@@ -15,6 +15,7 @@ use App\Modules\Content\Controllers\ProductWidgetController;
 use App\Modules\Content\Controllers\PromotionWidgetController;
 use App\Modules\Content\Controllers\TextWidgetController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\ContentBlockController;
+use App\Modules\Content\Presentation\Http\Controllers\Web\LabelController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\PostController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\WidgetController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\WidgetInstanceController;
@@ -256,12 +257,25 @@ Route::group(
             Route::post('/set-info/{id}', [PostController::class, 'post_set_info'])->name('set-info');
             Route::post('/toggle/{id}', [PostController::class, 'post_toggle'])->name('toggle');
             Route::post('/set-text/{post}', [PostController::class, 'post_set_text'])->name('set-text');
+            Route::post('/{id}/labels/sync', [PostController::class, 'post_labels_sync'])->name('labels.sync');
             Route::get('/{id}', [PostController::class, 'post'])->name('show');
             Route::post('/copy/{id}', [PostController::class, 'copy'])->name('copy');
             Route::delete('/{post}', [PostController::class, 'post_destroy'])->name('destroy');
             Route::post('/', [PostController::class, 'post_create'])->name('store');
 
             Route::get('/', [PostController::class, 'posts'])->name('index');
+        });
+
+        //Метки
+        Route::group([
+            'prefix' => 'label',
+            'as' => 'label.'
+        ], function () {
+            Route::get('/', [LabelController::class, 'index'])->name('index');
+            Route::get('/list', [LabelController::class, 'list'])->name('list');
+            Route::post('/', [LabelController::class, 'store'])->name('store');
+            Route::post('/{id}', [LabelController::class, 'update'])->name('update');
+            Route::delete('/{id}', [LabelController::class, 'destroy'])->name('destroy');
         });
 
         //Меню

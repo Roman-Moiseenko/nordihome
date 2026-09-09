@@ -4,6 +4,7 @@ namespace App\Modules\Content\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
+use App\Modules\Content\Application\Actions\LabelPost\AssignTagsToPostsUseCase;
 use App\Modules\Content\Application\Actions\Post\CreatePostUseCase;
 use App\Modules\Content\Application\Actions\Post\IndexPostUseCase;
 use App\Modules\Content\Application\Actions\Post\RemovePostUseCase;
@@ -49,6 +50,7 @@ class PostController extends Controller
         private readonly RemovePostUseCase $removePostUseCase,
         private readonly TogglePostUseCase $togglePostUseCase,
         private readonly CopyPostService $copyPostService,
+        private readonly AssignTagsToPostsUseCase $assignTagsToPostsUseCase,
     )
     {
         $this->service = $service;
@@ -160,6 +162,18 @@ class PostController extends Controller
     {
         $this->service->setTextPost($post, $request);
         return \response()->json(true);
+    }
+
+    public function post_labels_sync(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $labels = $request->input('labels', []);
+        if (!is_array($labels)) {
+            $labels = [];
+        }
+
+        $this->assignTagsToPostsUseCase->execute($id, $labels, $userPermission);
+
+        return redirect()->back()->with('success', 'Метки обновлены');
     }
 
 

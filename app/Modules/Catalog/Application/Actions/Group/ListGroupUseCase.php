@@ -3,7 +3,7 @@
 namespace App\Modules\Catalog\Application\Actions\Group;
 
 use App\Modules\Catalog\Entity\Group;
-use App\Modules\Shared\Application\DTOs\ListEntityData;
+use App\Modules\Shared\Application\DTOs\ListNamePublishedData;
 
 class ListGroupUseCase
 {
@@ -11,7 +11,7 @@ class ListGroupUseCase
     {
         $groups = Group::orderBy('name')->getModels();
 
-        return array_map(fn($group) => new ListEntityData(
+        return array_map(fn($group) => new ListNamePublishedData(
             id: $group->id,
             name: $group->name,
             published: $group->published,
