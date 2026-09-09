@@ -80,6 +80,12 @@ final class PostEntity
         set => $this->oldRender = $value;
     }
 
+    /** @var LabelEntity[] */
+    public array $labels = [] {
+        get => $this->labels;
+        set => $this->labels = $value;
+    }
+
     public function __construct(
         string $name,
         Slug $slug,

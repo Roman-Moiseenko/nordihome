@@ -20,7 +20,9 @@ readonly class ListLabelUseCase
     {
         $entities = $this->labelRepository->getAll();
 
-        return ListNameData::collect($entities);
+        return array_map(function (LabelEntity $labelEntity) {
+            return new ListNameData($labelEntity->id, $labelEntity->name);
+        }, $entities);
 
     }
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Application\DTOs\Post;
 
+use App\Modules\Content\Domain\Entities\LabelEntity;
 use App\Modules\Content\Domain\Entities\PostEntity;
+use App\Modules\Shared\Application\DTOs\ListNameData;
 use Spatie\LaravelData\Data;
 
 class PostViewData extends Data
@@ -22,6 +24,8 @@ class PostViewData extends Data
         public readonly ?array $meta,
         public readonly ?int $categoryId,
         public readonly ?string $text,
+        /** @var ListNameData[] */
+        public readonly array $labels = [],
         public readonly bool $oldRender = false,
     ) {}
 
@@ -43,6 +47,10 @@ class PostViewData extends Data
             ] : null,
             categoryId: $post->categoryId,
             text: $post->text,
+            labels: array_map(
+                static fn (LabelEntity $label) => new ListNameData((int) $label->id, $label->name),
+                $post->labels,
+            ),
             oldRender: $post->oldRender,
         );
     }

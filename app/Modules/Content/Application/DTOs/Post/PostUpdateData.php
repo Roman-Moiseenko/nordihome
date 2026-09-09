@@ -34,5 +34,7 @@ class PostUpdateData extends Data
         public readonly ?string $metaDescription,
         #[Nullable, BooleanType]
         public readonly ?bool $oldRender,
+        #[Nullable]
+        public readonly ?array $labels,
     ) {}
 }

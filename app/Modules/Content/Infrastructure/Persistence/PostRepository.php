@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Infrastructure\Persistence;
 
+use App\Modules\Content\Domain\Entities\LabelEntity;
 use App\Modules\Content\Domain\Entities\PostEntity;
 use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
+use App\Modules\Content\Infrastructure\Models\Label;
 use App\Modules\Content\Infrastructure\Models\Post;
 use App\Modules\Shared\Domain\ValueObjects\Meta;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
@@ -16,7 +18,7 @@ class PostRepository implements PostRepositoryInterface
     /** @return PostEntity[] */
     public function getAll(): array
     {
-        return Post::with(['image'])
+        return Post::with(['image', 'labels'])
             ->orderBy('created_at', 'desc')
             ->get()
             ->map(fn(Post $model) => $this->hydrate($model))
@@ -25,7 +27,7 @@ class PostRepository implements PostRepositoryInterface
 
     public function getById(int $id): PostEntity
     {
-        $model = Post::with(['image'])->findOrFail($id);
+        $model = Post::with(['image', 'labels'])->findOrFail($id);
         return $this->hydrate($model);
     }
 
@@ -54,7 +56,13 @@ class PostRepository implements PostRepositoryInterface
 
         $model->save();
 
-        return $this->hydrate($model->fresh()->load(['image']));
+        $labelIds = array_values(array_unique(array_map(
+            static fn (LabelEntity $label) => $label->id,
+            $post->labels,
+        )));
+        $model->labels()->sync($labelIds);
+
+        return $this->hydrate($model->fresh()->load(['image', 'labels']));
     }
 
     public function delete(int $id): void
@@ -86,6 +94,9 @@ class PostRepository implements PostRepositoryInterface
         $entity->published = $model->published;
         $entity->oldRender = $model->old_render;
         $entity->text = $model->text;
+        $entity->labels = $model->labels
+            ->map(fn (Label $label) => $this->hydrateLabel($label))
+            ->all();
 
         if ($model->published_at !== null) {
             $entity->publishedAt = new DateTimeImmutable($model->published_at->toDateTimeString());
@@ -105,5 +116,16 @@ class PostRepository implements PostRepositoryInterface
         );
 
         return $entity;
+    }
+
+    private function hydrateLabel(Label $model): LabelEntity
+    {
+        $label = new LabelEntity(
+            name: $model->name,
+            slug: new Slug($model->slug),
+        );
+        $label->id = $model->id;
+
+        return $label;
     }
 }

@@ -9,6 +9,7 @@ use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Entity\Renders\RenderPage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /**
  * @property int $id
  * @property int $category_id
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property PostCategory $category
  * @property bool $old_render
  * @property string $text
+ * @property Label[] $labels
  */
 class Post extends RenderPage
 {
@@ -58,5 +60,10 @@ class Post extends RenderPage
     public function category(): BelongsTo
     {
         return $this->belongsTo(PostCategory::class, 'category_id', 'id');
+    }
+
+    public function labels(): BelongsToMany
+    {
+        return $this->belongsToMany(Label::class, 'labels_posts', 'post_id', 'label_id');
     }
 }

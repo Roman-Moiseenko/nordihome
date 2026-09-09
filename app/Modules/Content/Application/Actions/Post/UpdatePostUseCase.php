@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Modules\Content\Application\Actions\Post;
 
 use App\Modules\Content\Application\DTOs\Post\PostUpdateData;
+use App\Modules\Content\Domain\Entities\LabelEntity;
 use App\Modules\Content\Domain\Entities\PostEntity;
+use App\Modules\Content\Domain\Interfaces\LabelRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
@@ -17,6 +19,7 @@ readonly class UpdatePostUseCase
 {
     public function __construct(
         private PostRepositoryInterface $postRepository,
+        private LabelRepositoryInterface $labelRepository,
     ) {}
 
     public function execute(int $id, PostUpdateData $dto, UserPermission $userPermission): PostEntity
@@ -54,6 +57,10 @@ readonly class UpdatePostUseCase
 
         if ($dto->oldRender !== null) $post->oldRender = $dto->oldRender;
 
+        if ($dto->labels !== null) {
+            $post->labels = $this->resolveLabels($dto->labels);
+        }
+
         // Meta
         if ($dto->metaTitle !== null || $dto->metaDescription !== null) {
             $currentMeta = $post->meta ?? Meta::default();
@@ -64,5 +71,50 @@ readonly class UpdatePostUseCase
         }
 
         return $this->postRepository->save($post);
+    }
+
+    /**
+     * @param array<int, int|string> $labels
+     * @return LabelEntity[]
+     */
+    private function resolveLabels(array $labels): array
+    {
+        $resolved = [];
+
+        foreach ($labels as $label) {
+            if (is_int($label)) {
+                $entity = $this->labelRepository->getById($label);
+                $resolved[$entity->id] = $entity;
+                continue;
+            }
+
+            if (!is_string($label)) {
+                continue;
+            }
+
+            $name = trim($label);
+            if ($name === '') {
+                continue;
+            }
+
+            $entity = $this->labelRepository->findByName($name);
+            if ($entity === null) {
+                $entity = $this->createLabel($name);
+            }
+
+            $resolved[$entity->id] = $entity;
+        }
+
+        return array_values($resolved);
+    }
+
+    private function createLabel(string $name): LabelEntity
+    {
+        $slug = new Slug($name);
+        if ($this->labelRepository->existsSlug((string) $slug)) {
+            $slug = new Slug((string) $slug . '-' . uniqid());
+        }
+
+        return $this->labelRepository->save(new LabelEntity(name: $name, slug: $slug));
     }
 }
