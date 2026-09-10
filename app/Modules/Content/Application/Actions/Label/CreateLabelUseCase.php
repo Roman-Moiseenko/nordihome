@@ -17,7 +17,7 @@ readonly class CreateLabelUseCase
 
     public function execute(LabelCreateData $dto, UserPermission $userPermission): LabelEntity
     {
-        if (!$userPermission->can('content.label.create')) {
+        if (!$userPermission->can('content.post.create')) {
             throw new AccessDeniedException();
         }
 

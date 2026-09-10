@@ -19,7 +19,7 @@ readonly class IndexLabelUseCase
 
     public function execute(UserPermission $userPermission, int $perPage = 20): LengthAwarePaginator
     {
-        if (!$userPermission->can('content.label.view')) {
+        if (!$userPermission->can('content.post.view')) {
             throw new AccessDeniedException();
         }
 

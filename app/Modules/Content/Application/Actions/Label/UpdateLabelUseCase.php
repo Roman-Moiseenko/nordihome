@@ -18,7 +18,7 @@ readonly class UpdateLabelUseCase
 
     public function execute(int $labelId, LabelUpdateData $dto, UserPermission $userPermission): LabelEntity
     {
-        if (!$userPermission->can('content.label.edit')) {
+        if (!$userPermission->can('content.post.edit')) {
             throw new AccessDeniedException();
         }
 

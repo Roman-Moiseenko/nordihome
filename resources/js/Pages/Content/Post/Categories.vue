@@ -6,6 +6,10 @@
             <el-button type="primary" class="p-4 my-3" @click="dialogCreate = true" ref="buttonRef">
                 Добавить рубрику
             </el-button>
+
+            <el-button type="success" class="p-4 my-3" @click="handleLabels" ref="buttonRef">
+                Метки
+            </el-button>
         </div>
         <div class="mt-2 p-5 bg-white rounded-md">
             <el-table
@@ -106,5 +110,8 @@ function routeClick(row) {
 
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.content.post-category.destroy', {category: row.id}));
+}
+function handleLabels() {
+    router.get(route('admin.content.label.index'));
 }
 </script>

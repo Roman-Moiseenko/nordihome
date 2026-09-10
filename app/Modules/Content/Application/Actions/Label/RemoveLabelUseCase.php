@@ -16,7 +16,7 @@ readonly class RemoveLabelUseCase
 
     public function execute(int $labelId, UserPermission $userPermission): void
     {
-        if (!$userPermission->can('content.label.delete')) {
+        if (!$userPermission->can('content.post.delete')) {
             throw new AccessDeniedException();
         }
 
