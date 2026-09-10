@@ -20,6 +20,20 @@
 @section('content')
     <h1 class="my-4">{{ $pageData->category->caption }}</h1>
 
+    @if(count($pageData->filters->labels) > 0)
+        <div class="box-card top-tags">
+            @foreach($pageData->filters->labels as $label)
+                @if($pageData->filters->labelId == $label->id)
+                    <a href="{{ route('shop.posts.view', [$pageData->category->slug]) }}"
+                       class="tag-filter active" data-tag-id="{{ $label->id }}">{{ $label->name }}</a>
+                @else
+                    <a href="{{ route('shop.posts.view', [$pageData->category->slug, 'label_id' => $label->id]) }}"
+                       class="tag-filter" data-tag-id="{{ $label->id }}">{{ $label->name }}</a>
+                @endif
+            @endforeach
+        </div>
+    @endif
+
     @foreach($pageData->posts as $post)
         <div class="item-news m-b_20">
             <div class="row">

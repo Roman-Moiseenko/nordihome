@@ -6,7 +6,7 @@ use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameImageData;
 use App\Modules\Shop\Application\DTOs\Entities\AttributeFilterData;
 
-readonly class FilterData
+readonly class FilterProductsData
 {
     /**
      * @param float $minPrice

@@ -1,6 +1,6 @@
 @php
-    use App\Modules\Shop\Application\DTOs\Elements\UrlData;use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
-    /** @var FilterData  $filters*/
+    use App\Modules\Shop\Application\DTOs\Elements\UrlData;use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
+    /** @var FilterProductsData  $filters*/
     /** @var CategoryRoomSecondData $secondInfo */
     /** @var CategoryRoomMainData $mainInfo */
     /** @var UrlData $back */
@@ -10,30 +10,30 @@
     <div class="mobile-close"><i class="fa-light fa-xmark"></i></div>
     <div class="base-filter">
         @if(!is_null($mainInfo))
-        <div class="children">
-            @if(!is_null($mainInfo->back))
-            <a href="{{ $mainInfo->back->url }}" class="heading">{{ $mainInfo->back->name }}</a>
-            @endif
-            <div>
-                <b>{{ $mainInfo->name }}</b>
-            </div>
-            @foreach($mainInfo->children as $child)
-                <div class="m-l_10 f-z_16">
-                    <a href="{{ route('shop.' . $mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
+            <div class="children">
+                @if(!is_null($mainInfo->back))
+                    <a href="{{ $mainInfo->back->url }}" class="heading">{{ $mainInfo->back->name }}</a>
+                @endif
+                <div>
+                    <b>{{ $mainInfo->name }}</b>
                 </div>
-            @endforeach
-        </div>
-        <br>
+                @foreach($mainInfo->children as $child)
+                    <div class="m-l_10 f-z_16">
+                        <a href="{{ route('shop.' . $mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
+                    </div>
+                @endforeach
+            </div>
+            <br>
         @endif
         @if(!is_null($secondInfo))
-        <div class="children">
-            <a href="{{ $secondInfo->back->url}}" class="heading">{{ $secondInfo->back->name }}</a>
-            @foreach($secondInfo->children as $child)
-                <div class="f-z_16 m-l_10">
-                    <a href="{{ route('shop.' . $secondInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
-                </div>
-            @endforeach
-        </div>
+            <div class="children">
+                <a href="{{ $secondInfo->back->url}}" class="heading">{{ $secondInfo->back->name }}</a>
+                @foreach($secondInfo->children as $child)
+                    <div class="f-z_16 m-l_10">
+                        <a href="{{ route('shop.' . $secondInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
+                    </div>
+                @endforeach
+            </div>
         @endif
         <x-widget.numeric name="price" min-value="{{ $filters->minPrice }}" max-value="{{ $filters->maxPrice }}"
                           current-min="{{ isset($request['price']) ? $request['price'][0] : '' }}"

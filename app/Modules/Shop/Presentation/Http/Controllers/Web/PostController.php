@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Content\Infrastructure\Models\Post;
 use App\Modules\Shop\Application\Queries\Post\PostIndexQuery;
 use App\Modules\Shop\Application\Queries\Post\PostPageQuery;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -17,12 +18,14 @@ class PostController extends Controller
     {
     }
 
-    public function posts($slug)
+    public function posts(string $slug, Request $request)
     {
-        $data = $this->postIndexQuery->execute($slug);
+        $filters = $request->all();
+        $data = $this->postIndexQuery->execute($slug, $filters);
 
         return view('shop.content.posts', [
             'pageData' => $data,
+            'filters' => $filters,
         ]);
     }
 

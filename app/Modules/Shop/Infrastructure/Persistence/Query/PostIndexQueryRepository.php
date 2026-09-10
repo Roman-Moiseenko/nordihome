@@ -4,6 +4,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
+use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Entities\PostCardData;
 use App\Modules\Shop\Application\DTOs\Entities\PostCategoryData;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -36,10 +37,20 @@ class PostIndexQueryRepository
         );
     }
 
-    public function getPosts(int $id, $page, $perPage): LengthAwarePaginator
+    public function getPosts(int $id, $page, $perPage, array $filters): LengthAwarePaginator
     {
-        $query = DB::table('posts')
-            ->where('posts.category_id', $id)
+        $query = DB::table('posts');
+
+        if (isset($filters['label_id'])) {
+            $query->whereExists(function ($sub) use ($filters) {
+                $sub->select(DB::raw(1))
+                    ->from('labels_posts')
+                    ->whereColumn('labels_posts.post_id', 'posts.id')
+                    ->where('labels_posts.label_id', (int)$filters['label_id']);
+            });
+        }
+
+        $query->where('posts.category_id', $id)
             ->where('posts.published', true)
             ->leftJoin('photos', function ($join) {
                 $join->on('posts.id', '=', 'photos.imageable_id')
@@ -81,6 +92,30 @@ class PostIndexQueryRepository
                 'query' => request()->query(),
             ],
         );
+    }
+
+    /**
+     * Получить метки, у которых есть посты в указанной категории.
+     *
+     * @param int $categoryId
+     * @return IdNameData[]
+     */
+    public function getLabels(int $categoryId): array
+    {
+        return DB::table('labels')
+            ->join('labels_posts', 'labels.id', '=', 'labels_posts.label_id')
+            ->join('posts', 'posts.id', '=', 'labels_posts.post_id')
+            ->where('posts.category_id', $categoryId)
+            ->where('posts.published', true)
+            ->select('labels.id', 'labels.name')
+            ->distinct()
+            ->orderBy('labels.name')
+            ->get()
+            ->map(fn($row) => new IdNameData(
+                id: (int)$row->id,
+                name: $row->name,
+            ))
+            ->all();
     }
 
 }

@@ -6,7 +6,7 @@ use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
-use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
+use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Search\ProductSearchPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
@@ -74,7 +74,7 @@ readonly class ProductSearchQuery
             array_map(fn(ChildrenData $cat) => $cat->id, $categories),
             $allProductIds,
         );
-        $filtersWithOrder = new FilterData(
+        $filtersWithOrder = new FilterProductsData(
             minPrice: $filters->minPrice,
             maxPrice: $filters->maxPrice,
             attributes: $filters->attributes,
@@ -92,7 +92,7 @@ readonly class ProductSearchQuery
         );
     }
 
-    private function getFilters(array $categoryIds, array $productIds): FilterData
+    private function getFilters(array $categoryIds, array $productIds): FilterProductsData
     {
 
 
@@ -103,7 +103,7 @@ readonly class ProductSearchQuery
             $aggr->tags ?? []
         );
 
-        return new FilterData(
+        return new FilterProductsData(
             minPrice: $aggr->min_price ?? 0,
             maxPrice: $aggr->max_price ?? 0,
             attributes: $aggr->attributes ?? [],

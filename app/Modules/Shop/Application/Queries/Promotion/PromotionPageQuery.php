@@ -8,7 +8,7 @@ use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Elements\UrlData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
-use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
+use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
@@ -90,7 +90,7 @@ readonly class PromotionPageQuery
             array_map(fn(ChildrenData $cat) => $cat->id, $categories),
             $allProductIds,
         );
-        $filtersWithOrder = new FilterData(
+        $filtersWithOrder = new FilterProductsData(
             minPrice: $filters->minPrice,
             maxPrice: $filters->maxPrice,
             attributes: $filters->attributes,
@@ -125,7 +125,7 @@ readonly class PromotionPageQuery
             schema: $schema,
         );
     }
-    private function getCachedFilters(int $promotionId, array $categoryIds, array $productIds): FilterData
+    private function getCachedFilters(int $promotionId, array $categoryIds, array $productIds): FilterProductsData
     {
         $key_cache = str_replace('{id}', (string)$promotionId, CacheInvalidationRegistry::PROMOTION_FILTERS_ID);
 
@@ -140,7 +140,7 @@ readonly class PromotionPageQuery
                     $aggr->tags ?? []
                 );
 
-                return new FilterData(
+                return new FilterProductsData(
                     minPrice: $aggr->min_price ?? 0,
                     maxPrice: $aggr->max_price ?? 0,
                     attributes: $aggr->attributes ?? [],

@@ -206,3 +206,24 @@
 button.to-wish, button.is-wish {
     background: var(--bs-white);
 }
+.top-tags { //Теги
+    .tag-filter {
+        cursor: pointer;
+        font-size: 13px;
+        text-decoration: none;
+        border: 1px solid black;
+        padding: 8px 15px;
+        margin-right: 8px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        display: inline-block;
+        &.active {
+            background: black;
+            color: white;
+        }
+        &:hover {
+            background: black;
+            color: white;
+        }
+    }
+}

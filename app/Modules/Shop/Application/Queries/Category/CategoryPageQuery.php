@@ -11,7 +11,7 @@ use App\Modules\Shop\Application\DTOs\Elements\UrlData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
-use App\Modules\Shop\Application\DTOs\PageElements\FilterData;
+use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
 use App\Modules\Shop\Application\Interfaces\BreadcrumbProviderInterface;
@@ -105,7 +105,7 @@ readonly class CategoryPageQuery
         );
 
         $filters = $this->getCachedFilters($mainInfo->id, $allProductIds);
-        $filtersWithOrder = new FilterData(
+        $filtersWithOrder = new FilterProductsData(
             minPrice: $filters->minPrice,
             maxPrice: $filters->maxPrice,
             attributes: $filters->attributes,
@@ -167,7 +167,7 @@ readonly class CategoryPageQuery
             ]
         );
 
-        $filtersWithOrder = new FilterData(
+        $filtersWithOrder = new FilterProductsData(
             minPrice: 0,
             maxPrice: 0,
             attributes: [],
@@ -222,7 +222,7 @@ readonly class CategoryPageQuery
         );
     }
 
-    private function getCachedFilters(int $categoryId, array $allProductIds): FilterData
+    private function getCachedFilters(int $categoryId, array $allProductIds): FilterProductsData
     {
         $key_cache = str_replace('{id}', (string)$categoryId, CacheInvalidationRegistry::CATEGORY_FILTERS_ID);
 
@@ -237,7 +237,7 @@ readonly class CategoryPageQuery
                     $aggr->tags ?? []
                 );
 
-                return new FilterData(
+                return new FilterProductsData(
                     minPrice: $aggr->min_price ?? 0,
                     maxPrice: $aggr->max_price ?? 0,
                     attributes: $aggr->attributes ?? [],

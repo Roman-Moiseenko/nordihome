@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Application\Queries\Post;
 
+use App\Modules\Shop\Application\DTOs\PageElements\FilterPostsData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\PostIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
@@ -22,7 +23,7 @@ readonly class PostIndexQuery
     {
     }
 
-    public function execute(string $slug): PostIndexPageData
+    public function execute(string $slug, array $params): PostIndexPageData
     {
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
@@ -32,10 +33,17 @@ readonly class PostIndexQuery
 
         //2. Загружаем с пагинацией записи постов
 
-        $postsPaginator = $this->repository->getPosts($category->id, $page, $perPage);
+        $postsPaginator = $this->repository->getPosts($category->id, $page, $perPage, $params);
 
         $schema = $this->schemaBuilder->buildForPosts(
             $category, $postsPaginator->items()
+        );
+
+        $labels = $this->repository->getLabels($category->id);
+
+        $filters = new FilterPostsData(
+            labels: $labels,
+            labelId: isset($params['label_id']) ? (int)$params['label_id'] : null,
         );
 
         $paginator = $this->paginatorBuilder->build(
@@ -56,6 +64,7 @@ readonly class PostIndexQuery
             paginator: $paginator,
             meta: $seo,
             schema: $schema,
+            filters: $filters,
         );
     }
 }
