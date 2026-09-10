@@ -6,7 +6,7 @@ namespace App\Console\Commands\Cron;
 
 use App\Events\ReserveHasTimeOut;
 use App\Events\ThrowableHasAppeared;
-use App\Modules\Analytics\Entity\LoggerCron;
+
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Order\Infrastructure\Models\Order;
 use Illuminate\Console\Command;
@@ -38,14 +38,10 @@ class ReserveBeforeCommand extends Command
                 }
             }
             if (!empty($orders)) {
-                $logger = LoggerCron::new($this->description);
+
                 foreach ($orders as $order) {
                     event(new ReserveHasTimeOut($order, false));
-                    $logger->items()->create([
-                        'object' => $order->htmlDate() . ' ' . $order->htmlNum(),
-                        'action' => 'Заканчивается срок резерва',
-                        'value' => 'Осталось ' . self::BEFORE_TIME_OUT . ' ч',
-                    ]);
+;
                 }
             }
         } catch (\Throwable $e) {

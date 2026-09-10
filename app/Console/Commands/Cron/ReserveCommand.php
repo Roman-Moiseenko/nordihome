@@ -5,7 +5,6 @@ namespace App\Console\Commands\Cron;
 
 use App\Events\ReserveHasTimeOut;
 use App\Events\ThrowableHasAppeared;
-use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Order\Events\OrderHasCanceled;
 use App\Modules\Order\Infrastructure\Models\Order;
@@ -31,24 +30,16 @@ class ReserveCommand extends Command
             $reserves = OrderReserve::where('reserve_at', '<', now())->where('reserve_at', '>', now()->subMinutes(9))->where('quantity', '>', 0)->get();
 
             if ($reserves->count() > 0) {
-                $logger = LoggerCron::new($this->description);
+
                 /** @var OrderReserve $reserve */
                 foreach ($reserves as $reserve) {
                     $order = $reserve->orderItem->order;
                     if ($order->status->value < OrderHistoryStatus::AWAITING) {
-                        $logger->items()->create([
-                            'object' => $reserve->orderItem->product->name,
-                            'action' => 'Снято с резерва - ',
-                            'value' => $reserve->quantity . ' шт.',
-                        ]);
+
                         $reserve->delete();
 
                         if ($order->checkOutReserve()) {
-                            $logger->items()->create([
-                                'object' => $order->htmlDate() . ' ' . $order->htmlNum(),
-                                'action' => 'Отменен на сумму',
-                                'value' => price($order->total),
-                            ]);
+
 
                             $order->setStatus(OrderHistoryStatus::CANCELLED, 'Закончилось время резерва');
                             event(new OrderHasCanceled($order));
@@ -60,14 +51,9 @@ class ReserveCommand extends Command
             }
 
             if (!empty($orders)) {
-                $logger = LoggerCron::new($this->description);
+
                 foreach ($orders as $order) {
                     event(new ReserveHasTimeOut($order));
-                    $logger->items()->create([
-                        'object' => $order->htmlDate() . ' ' . $order->htmlNum(),
-                        'action' => 'Закончился срок резерва',
-                        'value' => '',
-                    ]);
                 }
             }
         } catch (\Throwable $e) {

@@ -6,7 +6,6 @@ use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Service\OrganizationService;
 use App\Modules\Accounting\Service\PaymentDocumentService;
-use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Base\Entity\BankPayment;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Infrastructure\Models\Order;
@@ -195,12 +194,7 @@ class BankService
         foreach ($currencies as $currency) {
             $exchange = $this->getRate($currency->cbr_code);
             if ($currency->setExchange($exchange)) {
-                $logger = LoggerCron::new('Курс валют по ЦБ России');
-                $logger->items()->create([
-                    'object' => $currency->name,
-                    'action' => 'Новый курс',
-                    'value' => $exchange,
-                ]);
+
                 //Если злоты, меняем в Настройках Парсера
                 if ($currency->cbr_code == 'PLN') {
                     //TODO Test Удалить

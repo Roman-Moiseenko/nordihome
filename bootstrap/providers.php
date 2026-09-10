@@ -1,6 +1,7 @@
 <?php
 
 return [
+    App\Modules\Analytics\Providers\AnalyticsServiceProvider::class,
     App\Modules\Auth\Providers\AuthServiceProvider::class,
     App\Modules\Cabinet\Providers\CabinetServiceProvider::class,
     App\Modules\Cart\Providers\CartServiceProvider::class,

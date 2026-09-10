@@ -3,7 +3,6 @@
 namespace App\Console\Commands\Cron;
 
 use App\Modules\Accounting\Entity\Currency;
-use App\Modules\Analytics\Entity\LoggerCron;
 use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Setting;
 use Illuminate\Console\Command;
@@ -30,8 +29,6 @@ class CurrencyCommand extends Command
         $currencies = Currency::orderBy('name')->where('cbr_code', '<>', '')->get();
         $response = Http::get(self::CBR);
         if (!$response->ok()) {
-            //TODO Создать сообщение, что нет ответа от ЦБ
-            LoggerCron::new('Нет ответа ЦБ - ' . $this->description);
             return;
         }
         $xml = simplexml_load_string($response->body());
@@ -45,12 +42,8 @@ class CurrencyCommand extends Command
             if ($currency->setExchange($exchange)) {
                 //TODO Уведомление об изменении курса
                 $this->info($currency->name . ' - Установлен новый курс');
-                $logger = LoggerCron::new($this->description);
-                $logger->items()->create([
-                    'object' => $currency->name,
-                    'action' => 'Новый курс',
-                    'value' => $exchange,
-                ]);
+
+
                 //Если злоты, меняем в Настройках Парсера
                 if ($currency->cbr_code == 'PLN') {
                     $setting = Setting::where('slug', 'parser')->first();
