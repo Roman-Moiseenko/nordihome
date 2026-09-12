@@ -3,34 +3,34 @@
 namespace App\Modules\Cart\Application\Actions;
 
 use App\Modules\Cart\Application\DTOs\AddProductToCartData;
-use App\Modules\Cart\Domain\Entities\CartItem;
-use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
-use Illuminate\Contracts\Container\BindingResolutionException;
+use App\Modules\Cart\Domain\Entities\CartItemEntity;
+use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 
 readonly class AddToCartUseCase
 {
     public function __construct(
-        private HybridStorage $storage
+        private CartRepositoryInterface $cartRepository
     )
     {
     }
 
-    /**
-     * @throws BindingResolutionException
-     */
-    public function execute(AddProductToCartData $dto): void
+    public function execute(AddProductToCartData $dto, ClientContext $client): void
     {
 
-        $items = $this->storage->load();
+        $item = $this->cartRepository->getItemByProductId($dto->id, $client);
 
-        foreach ($items as $current) {
-            if ($current->isProduct($dto->id)) {
-                $this->storage->plus($current, $dto->quantity);
-                return;
-            }
+
+        if (!is_null($item)) {
+            $item->quantity += $dto->quantity;
+        } else {
+            $item = new CartItemEntity(
+                productId: $dto->id,
+                quantity: $dto->quantity,
+                isParser: $dto->isParser
+            );
         }
-
-        $this->storage->add(CartItem::create($dto->id, $dto->quantity, $dto->isParser));
+        $this->cartRepository->save($item, $client);
 
     }
 }

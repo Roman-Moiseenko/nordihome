@@ -236,13 +236,6 @@ class Order extends Model
         $this->save();
     }
 
-    public function setClient(int $client_id = null): void
-    {
-        if ($this->client_id != null) throw new \DomainException("Заказ уже привязан к клиенту");
-        $this->client_id = $client_id;
-        $this->save();
-    }
-
     public function setReserve(Carbon $addDays): void
     {
         foreach ($this->items as $item) {
@@ -281,16 +274,6 @@ class Order extends Model
             if ($item->product_id == $product_id) {
                 if (!$item->preorder || $withPreorder) $quantity += $item->quantity;
             }
-        }
-        return $quantity;
-    }
-
-    #[Pure]
-    public function getQuantityExpense(): float
-    {
-        $quantity = 0;
-        foreach ($this->items as $item) {
-            $quantity += $item->getExpenseAmount();
         }
         return $quantity;
     }

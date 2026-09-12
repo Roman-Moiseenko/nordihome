@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
+use App\Modules\Analytics\Application\Actions\Search\TrackSearchUseCase;
+use App\Modules\Analytics\Domain\Interfaces\VisitorContextInterface;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Shop\Application\DTOs\Search\ProductSearchPageData;
 use App\Modules\Shop\Application\Queries\Product\ProductViewQuery;
 use App\Modules\Shop\Application\Queries\Search\FullSearchQuery;
 use App\Modules\Shop\Application\Queries\Search\ProductSearchQuery;
@@ -22,6 +25,8 @@ class ProductController extends ShopController
         private ProductViewQuery $productViewQuery,
         private ProductSearchQuery $productSearchQuery,
         private FullSearchQuery $fullSearchQuery,
+        private TrackSearchUseCase $trackSearch,
+        private VisitorContextInterface $analyticsContext,
     )
     {
         $this->middleware(['role:admin'])->only(['view_draft']);
@@ -46,11 +51,34 @@ class ProductController extends ShopController
         $search = $request->string('search')->trim()->value();
         $client = $this->getClient($request);
         $data = $this->productSearchQuery->execute($search, $request->all(), $client);
+
+        $this->trackSearch($search, $data);
+
         return view('shop.product.search', [
             'pageData' => $data,
             'request' => $request->all(),
         ]);
 
+    }
+
+    /**
+     * Фиксирует строку поиска (переход на страницу результатов).
+     * Идентификаторы берём из VisitorContext, заполненного middleware.
+     */
+    private function trackSearch(string $query, ?ProductSearchPageData $data): void
+    {
+        $visitorId = $this->analyticsContext->getVisitorId();
+        if ($visitorId === null) {
+            return;
+        }
+
+        $this->trackSearch->execute(
+            $visitorId,
+            $this->analyticsContext->getSessionId(),
+            $this->analyticsContext->getPageViewId(),
+            $query,
+            $data?->paginator?->total ?? 0,
+        );
     }
     //Ajax
     public function search(Request $request)
@@ -59,9 +87,6 @@ class ProductController extends ShopController
         if (empty($search)) return \response()->json(false);
         $client = $this->getClient($request);
         $data = $this->fullSearchQuery->execute($search, $client);
-
-
-        $result = $this->repository->search($request['search']);
         return \response()->json($data);
     }
 

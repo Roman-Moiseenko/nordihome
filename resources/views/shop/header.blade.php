@@ -168,7 +168,7 @@
         </li>
 
         <li class="nav-item">
-            <livewire:header.cart/>
+            <livewire:header.cart :client-id="$client?->id ?? null"/>
         </li>
 </ul>
 </div>

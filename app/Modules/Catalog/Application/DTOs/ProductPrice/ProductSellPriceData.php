@@ -10,6 +10,7 @@ readonly class ProductSellPriceData
         public float $sellPrice,
         public ?int $discountId,
         public ?string $discountType,
+        public ?string $discountName,
     )
     {
 

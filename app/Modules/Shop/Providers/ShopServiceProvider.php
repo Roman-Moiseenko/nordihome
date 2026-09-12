@@ -2,6 +2,10 @@
 
 namespace App\Modules\Shop\Providers;
 
+use App\Modules\Analytics\Infrastructure\ViewComposers\AnalyticsComposer;
+use App\Modules\Analytics\Presentation\Http\Middlewares\IdentifyVisitorMiddleware;
+use App\Modules\Analytics\Presentation\Http\Middlewares\LinkVisitorToClientMiddleware;
+use App\Modules\Analytics\Presentation\Http\Middlewares\TrackPageViewMiddleware;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Contact;
@@ -73,6 +77,9 @@ class ShopServiceProvider extends ServiceProvider
     protected array $webMiddlewares = [
         'web',
         InjectClientContextMiddleware::class,
+        IdentifyVisitorMiddleware::class,
+        LinkVisitorToClientMiddleware::class,
+        TrackPageViewMiddleware::class,
     ];
 
     /**
@@ -109,6 +116,7 @@ class ShopServiceProvider extends ServiceProvider
         View::composer('*', WebComposer::class);
         View::composer('shop.ikea.*', IkeaComposer::class);
         View::composer('shop.*', MenuComposer::class);
+        View::composer(['shop.*', 'cart.*', 'cabinet.*'], AnalyticsComposer::class);
 
         Category::observe(CategoryCacheObserver::class);
         Room::observe(RoomCacheObserver::class);

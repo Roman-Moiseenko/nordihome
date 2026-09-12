@@ -2,24 +2,26 @@
 
 namespace App\Modules\Cart\Application\Actions;
 
-use App\Modules\Cart\Application\DTOs\UpdateProductCartData;
-use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
 
-class SubToCartUseCase
+use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
+use App\Modules\Shop\Application\DTOs\ClientContext;
+
+readonly class SubToCartUseCase
 {
     public function __construct(
-        private HybridStorage $storage
+        private CartRepositoryInterface $cartRepository
     )
     {
     }
-    public function execute(int $productId, int $quantity): void
+    public function execute(int $productId, int $quantity, ClientContext $client): void
     {
-        $items = $this->storage->load();
-        foreach ($items as $current) {
-            if ($current->isProduct($productId)) {
-                $this->storage->sub($current, $quantity);
-                return;
-            }
+        $item = $this->cartRepository->getItemByProductId($productId, $client);
+
+        if ($item->quantity <= $quantity) {
+            $this->cartRepository->removeByProductId($productId, $client);
+        } else {
+            $item->quantity -= $quantity;
+            $this->cartRepository->save($item, $client);
         }
     }
 }

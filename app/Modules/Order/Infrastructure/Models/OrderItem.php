@@ -8,7 +8,6 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\Discount;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Entity\OrderReserve;
-use App\Modules\Shop\CartItemInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -44,7 +43,7 @@ use JetBrains\PhpStorm\Pure;
  * @property SupplyStack $supplyStack
  * @property OrderReserve[] $reserves
  */
-class OrderItem extends Model implements CartItemInterface
+class OrderItem extends Model //implements CartItemInterface
 {
     protected $fillable = [
         'quantity',
@@ -151,17 +150,13 @@ class OrderItem extends Model implements CartItemInterface
     {
         return $this->hasMany(OrderReserve::class, 'order_item_id', 'id');
     }
-
+/*
     public function supplyStack(): BelongsTo
     {
         //if (!$this->preorder) throw new \DomainException('Данная функция должна вызываться для preorder == true');
         return $this->belongsTo(SupplyStack::class, 'supply_stack_id', 'id');
     }
-
-    public function expenseItems(): HasMany
-    {
-        return $this->hasMany(OrderExpenseItem::class, 'order_item_id', 'id');
-    }
+    */
 
     public function order(): BelongsTo
     {
@@ -197,14 +192,14 @@ class OrderItem extends Model implements CartItemInterface
             $reserve->update(['reserve_at' => $addDays]);
         }
     }
-
+/*
     public function discountName(): string
     {
         if (empty($this->discount_id)) return '';
         $discount = $this->discount_type::find($this->discount_id);
         return $this->discount_type::TYPE . ' ' . $discount->title;
     }
-
+*/
     /**
      * Функция для контроля кол-ва
      * @return bool

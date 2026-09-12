@@ -16,11 +16,13 @@ use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\HandleInertiaRequests;
 use App\Http\Middleware\PreventRequestsDuringMaintenance;
 use App\Http\Middleware\RedirectIfAuthenticated;
-use App\Http\Middleware\ShopCookieUserIdMiddleware;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\ValidateSignature;
 use App\Http\Middleware\VerifyCsrfToken;
+use App\Modules\Analytics\Presentation\Http\Middlewares\IdentifyVisitorMiddleware;
+use App\Modules\Analytics\Presentation\Http\Middlewares\LinkVisitorToClientMiddleware;
+use App\Modules\Analytics\Presentation\Http\Middlewares\TrackPageViewMiddleware;
 use App\Modules\Shared\Presentation\Http\Middlewares\LoadUserPermission;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -35,6 +37,7 @@ use Illuminate\Routing\Middleware\ThrottleRequests;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+
 /*
 |--------------------------------------------------------------------------
 | Bind Important Interfaces
@@ -95,7 +98,6 @@ return Application::configure(basePath: dirname(__DIR__))
             'throttle' => ThrottleRequests::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
             'logger' => AdminActivityLoggerMiddleware::class,
-            'user_cookie_id' => ShopCookieUserIdMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

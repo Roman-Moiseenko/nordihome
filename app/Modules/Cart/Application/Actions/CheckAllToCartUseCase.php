@@ -2,31 +2,27 @@
 
 namespace App\Modules\Cart\Application\Actions;
 
-use App\Modules\Cart\Application\DTOs\UpdateProductCartData;
-use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
-use Illuminate\Contracts\Container\BindingResolutionException;
+use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 
 /**
  * Отмечаем или снимаем отметку со всех товаров в корзине
  */
-class CheckAllToCartUseCase
+readonly class CheckAllToCartUseCase
 {
     public function __construct(
-        private HybridStorage $storage
+        private CartRepositoryInterface $cartRepository
     )
     {
     }
 
-    /**
-     * @throws BindingResolutionException
-     */
-    public function execute(bool $checked): void
+    public function execute(bool $checked, ClientContext $client): void
     {
-        $items = $this->storage->load();
-        foreach ($items as $current) {
-            $current->check = $checked;
-            $this->storage->check($current);
 
+        $items = $this->cartRepository->getAll($client);
+        foreach ($items as $item) {
+            $item->check = $checked;
+            $this->cartRepository->save($item, $client);
         }
     }
 }

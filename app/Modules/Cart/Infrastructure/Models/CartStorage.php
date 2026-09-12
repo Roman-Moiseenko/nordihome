@@ -41,6 +41,7 @@ class CartStorage extends Model
         'check' => 'boolean',
         'is_parser' => 'boolean',
         'options_json' => 'json',
+        'quantity' => 'float',
     ];
 
     public static function register(int $client_id, int $product_id, float $quantity, bool $is_parser): self

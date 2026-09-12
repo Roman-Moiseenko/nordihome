@@ -2,6 +2,14 @@
 
 namespace App\Modules\Cart\Providers;
 
+use App\Modules\Analytics\Presentation\Http\Middlewares\IdentifyVisitorMiddleware;
+use App\Modules\Analytics\Presentation\Http\Middlewares\LinkVisitorToClientMiddleware;
+use App\Modules\Analytics\Presentation\Http\Middlewares\TrackPageViewMiddleware;
+use App\Modules\Auth\Infrastructure\Events\UserIsLogin;
+use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
+use App\Modules\Cart\Infrastructure\Listeners\UnionCartAfterLoginListener;
+use App\Modules\Cart\Infrastructure\Persistence\CartRepository;
+use App\Modules\Shop\Presentation\Http\Middlewares\InjectClientContextMiddleware;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -45,7 +53,13 @@ class CartServiceProvider extends ServiceProvider
     /**
      * Default middlewares for web routes
      */
-    protected array $webMiddlewares = ['web'];
+    protected array $webMiddlewares = [
+        'web',
+        InjectClientContextMiddleware::class,
+        IdentifyVisitorMiddleware::class,
+        LinkVisitorToClientMiddleware::class,
+        TrackPageViewMiddleware::class,
+    ];
 
     /**
      * Default middlewares for API routes
@@ -83,7 +97,10 @@ class CartServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register module-specific services
+        $this->app->bind(
+            CartRepositoryInterface::class,
+            CartRepository::class
+        );
     }
 
     // =====================================================================
@@ -220,7 +237,10 @@ class CartServiceProvider extends ServiceProvider
      */
     public function registerEvents()
     {
-        // Event::listen(EventClass::class, ListenerClass::class);
+        Event::listen(
+            UserIsLogin::class,
+            UnionCartAfterLoginListener::class,
+        );
         // Event::subscribe(SubscriberClass::class);
     }
 

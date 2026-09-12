@@ -10,7 +10,9 @@ use App\Modules\Auth\Application\Actions\User\ConfirmEmailUseCase;
 use App\Modules\Auth\Application\Actions\User\VerifyUserUseCase;
 use App\Modules\Auth\Application\DTOs\LoginData;
 use App\Modules\Auth\Application\Services\LoginOrRegisterUserService;
+use App\Modules\Auth\Infrastructure\Events\UserIsLogin;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use Illuminate\Events\Dispatcher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,6 +25,7 @@ class AuthController extends Controller
         private readonly LogoutUserUseCase          $logoutUser,
         private readonly LoginOrRegisterUserService $loginOrRegisterUserService,
         private readonly ConfirmEmailUseCase        $confirmEmailUseCase,
+        private Dispatcher                  $dispatcher,
     )
     {
     }
@@ -48,12 +51,14 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         $this->logoutUser->execute($request);
+
         return redirect('/admin/login');
     }
 
     public function logoutClient(Request $request)
     {
         $this->logoutUser->execute($request);
+
         return redirect('/');
     }
 
@@ -69,12 +74,18 @@ class AuthController extends Controller
                 $this->confirmEmailUseCase->execute($dto->verify_token, $dto->agreement);
                 //Логинимся
                 $result = $this->loginClientUseCase->execute($dto);
+
+                if ($result) $this->dispatcher->dispatch(new UserIsLogin());
+
                 return \response()->json($result ? 'login' : 'password');
             } catch (\InvalidArgumentException $e) {
                 return \response()->json('token');
             }
         }
         $result = $this->loginOrRegisterUserService->execute($dto);
+
+        if ($result == 'login') $this->dispatcher->dispatch(new UserIsLogin());
+
         return \response()->json($result);
 
     }

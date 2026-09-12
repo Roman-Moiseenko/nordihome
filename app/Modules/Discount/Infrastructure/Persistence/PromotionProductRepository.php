@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Infrastructure\Persistence;
 
+use App\Modules\Discount\Domain\Entities\PromotionProductEntity;
 use App\Modules\Discount\Domain\Interfaces\PromotionProductRepositoryInterface;
 use App\Modules\Discount\Infrastructure\Models\PromotionProduct;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -85,5 +86,13 @@ class PromotionProductRepository implements PromotionProductRepositoryInterface
     public function countProductsByPromotionId(int $promotionId): int
     {
         return PromotionProduct::where('promotion_id', $promotionId)->count();
+    }
+
+    public function getPromotionId(int $productId): ?PromotionProductEntity
+    {
+        $model = PromotionProduct::where('product_id', $productId)->first();
+        if (is_null($model)) return null;
+
+        return new PromotionProductEntity($model->promotion_id, $model->product_id, $model->price);
     }
 }

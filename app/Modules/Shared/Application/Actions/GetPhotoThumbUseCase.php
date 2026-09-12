@@ -33,9 +33,9 @@ readonly class GetPhotoThumbUseCase
             new PhotoType($dto->type),
         );
 
-        if ($photo === null) {
-            throw new \DomainException('Изображение не найдено');
-        }
+        if ($photo === null) return '/images/no-image.jpg';
+
+
 
         // Если thumb не передан — возвращаем url оригинального файла
         if ($dto->thumb === null || $dto->thumb === '') {

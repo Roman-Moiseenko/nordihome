@@ -6,7 +6,6 @@ namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderFromCartService;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderOneClickService;
-use App\Modules\Order\Service\OrderService;
 use App\Modules\Shop\Application\DTOs\Checkout\OneClickOrderData;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
@@ -32,7 +31,7 @@ class CheckoutController extends ShopController
      //   OrderPaymentService    $payments,
     //    PaymentRepository $paymentRepository,
      //   DeliveryService   $deliveries,
-        OrderService                                         $service,
+        //private readonly OrderService                                         $service,
    //     StorageRepository $storages,
         private readonly GetCartUseCase                      $getCartUseCase,
         private readonly CreateOrderFromCartService $createOrderFromCartService,
@@ -57,7 +56,8 @@ class CheckoutController extends ShopController
      */
     public function create(Request $request): \Illuminate\View\View
     {
-        $cartInfo = $this->getCartUseCase->execute();
+        $client = $this->getClient($request);
+        $cartInfo = $this->getCartUseCase->execute($client);
 
         return view('shop.order.create', compact('cartInfo'));
     }

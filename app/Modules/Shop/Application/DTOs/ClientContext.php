@@ -11,4 +11,18 @@ final readonly class ClientContext
         public ?string $uuid = null,
         public string $priceType = PriceType::RETAIL,
     ) {}
+
+    public function toArray(): array
+    {
+        return (array)$this;
+    }
+
+    public static function fromArray(array $data): ClientContext
+    {
+        return new self(
+            $data['id'] ?? null,
+            $data['uuid'] ?? null,
+            $data['priceType'] ?? PriceType::RETAIL,
+        );
+    }
 }

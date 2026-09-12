@@ -23,9 +23,6 @@ readonly class FullSearchQuery
 
     public function execute(string $search, ClientContext $clientContext): FullSearchData
     {
-
-        //MAINDO Аналитика
-
         $allProductIds = $this->productSearchQueryRepository->getProductIdsBySearch($search);
 
         $productIds = array_slice($allProductIds, 0, FullSearchData::LIMIT_PRODUCTS);

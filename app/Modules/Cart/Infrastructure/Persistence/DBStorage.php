@@ -3,56 +3,57 @@ declare(strict_types=1);
 
 namespace App\Modules\Cart\Infrastructure\Persistence;
 
-use App\Modules\Cart\Domain\Entities\CartItem;
+use App\Modules\Cart\Domain\Entities\CartItemEntity;
 use App\Modules\Cart\Domain\Interfaces\StorageInterface;
 use App\Modules\Cart\Infrastructure\Models\CartStorage;
 
 class DBStorage implements StorageInterface
 {
-    private int|null $client_id;
+    private int|null $clientId;
 
     public function __construct()
     {
         if (!auth()->check())
             throw new \DomainException('Неправильный вызов DBStorage, user == null');
-        $this->client_id = auth()->user()->profileable_id;
+        $this->clientId = auth()->user()->profileable_id;
     }
 
-    /** @return CartItem[] */
+    /** @return CartItemEntity[] */
     public function load(): array
     {
-        $items = CartStorage::where('client_id', $this->client_id)->get();
+        $items = CartStorage::where('client_id', $this->clientId)->get();
         $result = [];
         /** @var CartStorage $item */
         foreach ($items as $item) {
-            $result[] = CartItem::load(
-                $item->id,
-                $item->product,
+            $cartItem = new CartItemEntity(
+                $item->product_id,
                 (float)$item->quantity,
-                $item->is_parser,
-                $item->check
-            );
+                $item->is_parser);
+            $cartItem->id = $item->id;
+            $cartItem->check = $item->check;
+
+            $result[] = $cartItem;
         }
         return $result;
     }
 
-    public function add(CartItem $item): void
+    public function add(CartItemEntity $item): void
     {
         CartStorage::register(
-            $this->client_id,
+            $this->clientId,
             $item->productId,
             $item->quantity,
-            $item->is_parser
+            $item->isParser
         );
     }
 
-    public function sub(CartItem $item, float $quantity): void
+    public function sub(CartItemEntity $item, float $quantity): void
     {
         $new_quantity = $item->quantity - $quantity;
         $this->updateQuantity($item->id, $new_quantity);
     }
 
-    public function plus(CartItem $item, float $quantity): void
+    public function plus(CartItemEntity $item, float $quantity): void
     {
         $new_quantity = $item->quantity + $quantity;
         $this->updateQuantity($item->id, $new_quantity);
@@ -65,10 +66,10 @@ class DBStorage implements StorageInterface
 
     public function clear(): void
     {
-        $this->clearByUser($this->client_id);
+        $this->clearByUser($this->clientId);
     }
 
-    public function check(CartItem $item): void
+    public function check(CartItemEntity $item): void
     {
         $this->updateCheck($item->id, $item->check);
     }

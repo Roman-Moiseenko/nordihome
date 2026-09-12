@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Entity;
 
-use App\Modules\Shop\CartItemInterface;
+use App\Modules\Cart\Domain\Entities\CartItemEntity;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -53,11 +53,8 @@ class Discount extends Model
         ]);
     }
 
-    /**
-     * @param CartItemInterface[] $items
-     * @param bool $written
-     * @return int
-     */
+
+    /*
     public function render(array &$items, bool $written = true): int
     {
         if (!$this->active) throw new \DomainException('Неверный алгоритм - текущий Discount (' . $this->id . ') не активен');
@@ -71,11 +68,11 @@ class Discount extends Model
 
         if ($this->isEnabled($amount)) {
             if ($written) {
-                array_walk($items, function (CartItemInterface &$item) {
+                array_walk($items, function (CartItem &$item) {
                     if ($item->getCheck()) {
                         $item->setDiscount($this->id);
                         $item->setDiscountType(Discount::class);
-                        $item->setSellCost(round((($item->getBaseCost()) * (100 - $this->discount)) / 100));
+                        $item->setSellCost(round((($item->base_cost) * (100 - $this->discount)) / 100));
                         $item->setDiscountName(empty($this->title) ? '' : $this->title . ' (' . $this->discount . '%)');
                     }
                 });
@@ -85,7 +82,7 @@ class Discount extends Model
         return 0;
         //if $written - то массив $items перезаписывается, в discount устанавливается посчитанная скидка
     }
-
+*/
     public function isEnabled(float $cost = null): bool
     {
         $class = __NAMESPACE__ . "\\" . $this->class;

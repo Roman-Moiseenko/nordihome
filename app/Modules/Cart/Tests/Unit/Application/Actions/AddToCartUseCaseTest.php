@@ -4,8 +4,8 @@ namespace App\Modules\Cart\Tests\Unit\Application\Actions;
 
 use App\Modules\Cart\Application\Actions\AddToCartUseCase;
 use App\Modules\Cart\Application\DTOs\AddProductToCartData;
-use App\Modules\Cart\Domain\Entities\CartItem;
-use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
+use App\Modules\Cart\Domain\Entities\CartItemEntity;
+use App\Modules\Cart\Infrastructure\Persistence\CartRepository;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -13,13 +13,13 @@ use PHPUnit\Framework\TestCase;
 
 class AddToCartUseCaseTest extends TestCase
 {
-    private HybridStorage $storage;
+    private CartRepository $storage;
     private AddToCartUseCase $useCase;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->storage = Mockery::mock(HybridStorage::class);
+        $this->storage = Mockery::mock(CartRepository::class);
         $this->useCase = new AddToCartUseCase($this->storage);
     }
 
@@ -29,12 +29,12 @@ class AddToCartUseCaseTest extends TestCase
         parent::tearDown();
     }
 
-    private function makeItem(int $id, int $productId, float $quantity = 1.0): CartItem
+    private function makeItem(int $id, int $productId, float $quantity = 1.0): CartItemEntity
     {
         $product = Mockery::mock(Product::class);
         $product->shouldReceive('getAttribute')->with('id')->andReturn($productId);
 
-        $item = CartItem::create($productId, $quantity, false);
+        $item = CartItemEntity::create($productId, $quantity, false);
         $item->id = $id;
         $item->product = $product;
 
@@ -47,9 +47,9 @@ class AddToCartUseCaseTest extends TestCase
         $this->storage->shouldReceive('load')->once()->andReturn([]);
         $this->storage->shouldReceive('add')
             ->once()
-            ->with(Mockery::on(fn(CartItem $item) => $item->productId === 10
+            ->with(Mockery::on(fn(CartItemEntity $item) => $item->productId === 10
                 && $item->quantity === 2.0
-                && $item->is_parser === false));
+                && $item->isParser === false));
 
         $dto = new AddProductToCartData(id: 10, quantity: 2, isParser: false);
 

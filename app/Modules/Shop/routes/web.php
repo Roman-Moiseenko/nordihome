@@ -14,9 +14,8 @@ use App\Modules\Shop\Presentation\Http\Controllers\Web\ProductController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\RoomController;
 use Illuminate\Support\Facades\Route;
 
-
+//MAINDO вынести в отдельный модуль
 Route::get('/sitemap.xml', [SitemapXmlController::class, 'index'])->name('sitemap');
-
 Route::get('/feed/{feed}/feed-google.xml', [FeedXMLController::class, 'google'])->name('google');
 Route::get('/feed/{feed}/feed-yandex.yml', [FeedXMLController::class, 'yandex'])->name('yandex');
 Route::post('/e-commerce/', [ECommerceController::class, 'e_commerce'])->name('e-commerce');
@@ -26,7 +25,6 @@ Route::post('/e-commerce/', [ECommerceController::class, 'e_commerce'])->name('e
 Route::group(
     [
         'as' => 'shop.',
-        'middleware' => ['user_cookie_id'],
     ],
     function () {
         Route::get('/test', function (){

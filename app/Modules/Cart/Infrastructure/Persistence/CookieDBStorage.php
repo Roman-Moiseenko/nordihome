@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Cart\Infrastructure\Persistence;
 
-use App\Modules\Cart\Domain\Entities\CartItem;
+use App\Modules\Cart\Domain\Entities\CartItemEntity;
 use App\Modules\Cart\Domain\Interfaces\StorageInterface;
 use App\Modules\Cart\Infrastructure\Models\CartCookie;
 use Illuminate\Support\Facades\Cookie;
@@ -11,48 +11,48 @@ use Illuminate\Support\Facades\Cookie;
 class CookieDBStorage implements StorageInterface
 {
 
-    private ?string $user_ui;
+    private ?string $uuid;
 
     public function __construct()
     {
-        $this->user_ui = Cookie::get('user_cookie_id');
-        //if (empty($this->user_ui)) throw new \DomainException('Что-то пошло не так, user_cookie_id пустой');
+        $this->uuid = Cookie::get('user_cookie_id');
     }
 
     public function load(): array
     {
-        $items = CartCookie::where('user_ui', $this->user_ui)->get();
+        $items = CartCookie::where('user_ui', $this->uuid)->get();
         $result = [];
         /** @var CartCookie $item */
         foreach ($items as $item) {
-            $result[] = CartItem::load(
-                $item->id,
-                $item->product,
+            $cartItem = new CartItemEntity(
+                $item->product_id,
                 (float)$item->quantity,
-                $item->is_parser,
-                $item->check
-            );
+                $item->is_parser);
+            $cartItem->id = $item->id;
+            $cartItem->check = $item->check;
+
+            $result[] = $cartItem;
         }
         return $result;
     }
 
-    public function add(CartItem $item): void
+    public function add(CartItemEntity $item): void
     {
         CartCookie::register(
-            $this->user_ui,
+            $this->uuid,
             $item->productId,
             $item->quantity,
-            $item->is_parser
+            $item->isParser
         );
     }
 
-    public function sub(CartItem $item, float $quantity): void
+    public function sub(CartItemEntity $item, float $quantity): void
     {
         $new_quantity = $item->quantity - $quantity;
         $this->updateQuantity($item->id, $new_quantity);
     }
 
-    public function plus(CartItem $item, float $quantity): void
+    public function plus(CartItemEntity $item, float $quantity): void
     {
         $new_quantity = $item->quantity + $quantity;
         $this->updateQuantity($item->id, $new_quantity);
@@ -65,10 +65,10 @@ class CookieDBStorage implements StorageInterface
 
     public function clear(): void
     {
-        $this->clearByUser($this->user_ui);
+        $this->clearByUser($this->uuid);
     }
 
-    public function check(CartItem $item): void
+    public function check(CartItemEntity $item): void
     {
         $this->updateCheck($item->id, $item->check);
     }
@@ -89,6 +89,7 @@ class CookieDBStorage implements StorageInterface
             ]);
         }
     }
+
     private function updateCheck(int $id, bool $check): void
     {
         $cookie = CartCookie::find($id);
@@ -96,6 +97,7 @@ class CookieDBStorage implements StorageInterface
             'check' => $check,
         ]);
     }
+
     private function fromStorage(int $id): void
     {
 

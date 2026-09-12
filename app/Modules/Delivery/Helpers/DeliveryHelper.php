@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Helpers;
 
+use App\Modules\Cart\Domain\Entities\CartItemEntity;
 use App\Modules\Delivery\Entity\Transport\Delivery;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
-use App\Modules\Shop\CartItemInterface;
 
 class DeliveryHelper
 {
@@ -37,7 +37,7 @@ class DeliveryHelper
     }
 
     /**
-     * @param CartItemInterface[] $items
+     * @param CartItemEntity[] $items
      */
     public static function calculate(string $class, array $items, array $params): DeliveryData
     {

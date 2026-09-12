@@ -24,7 +24,8 @@ class CartCookie extends Model
     protected $table = 'cart_cookie';
     protected $casts = [
         'check' => 'boolean',
-        'is_parser' => 'boolean'
+        'is_parser' => 'boolean',
+        'quantity' => 'float',
         ];
     protected $attributes = [
         'check' => true,

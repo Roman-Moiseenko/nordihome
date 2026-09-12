@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Service;
 
+use App\Modules\Cart\Domain\Entities\CartItemEntity;
 use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Delivery\Entity\Local\Tariff;
 use App\Modules\Delivery\Entity\Transport\DeliveryData;
@@ -12,7 +13,6 @@ use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Events\ExpenseHasDelivery;
 use App\Modules\Order\Service\ExpenseService;
-use App\Modules\Shop\CartItemInterface;
 use App\Modules\User\Entity\UserDelivery;
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\Deprecated;
@@ -36,7 +36,7 @@ class DeliveryService
     }
 
     /**
-     * @param CartItemInterface[] $items
+     * @param CartItemEntity[] $items
      */
     //TODO Пересчет от адреса
     public function calculate(int $user_id, array $items): DeliveryData

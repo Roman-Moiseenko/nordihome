@@ -173,7 +173,7 @@ class OrderRepository
             'logs' => $order->logs()->with('staff')->get(),
         ]);
     }
-
+/*
     private function OrderItemToArray(OrderItem $item): array
     {
         $quantity_sell = $item->product->getQuantitySell();
@@ -212,7 +212,7 @@ class OrderRepository
             'refund' => $refund == 0 ? null : $refund,
         ]);
     }
-
+*//*
     private function OrderAdditionToArray(OrderAddition $orderAddition): array
     {
         $refund = $orderAddition->getRefund();
@@ -226,12 +226,8 @@ class OrderRepository
             'refund' => $refund == 0 ? null : $refund,
         ]);
     }
+*//*
 
-    /**
-     * Возвращает список заказов, которые ждут оплаты, в том числе с внесенной предоплатой
-     * @param int|null $order_id - id текущего заказа, для случая, когда надо поменять назначения платежа, для уже оплаченного заказа
-     * @return mixed
-     */
     public function getNotPaidYet(int $order_id = null): mixed
     {
         $query = Order::whereHas('status', function ($query) {
@@ -240,7 +236,7 @@ class OrderRepository
         if (!is_null($order_id)) $query->orWhere('id', $order_id);
         return $query->orderBy('number')->get();
     }
-
+*/
 
     public function ExpenseWithToArray(OrderExpense $expense): array
     {

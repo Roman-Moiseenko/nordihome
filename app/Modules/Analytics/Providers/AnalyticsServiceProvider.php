@@ -83,7 +83,51 @@ class AnalyticsServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        // Register module-specific services
+        $this->app->bind(
+            \App\Modules\Analytics\Domain\Interfaces\VisitorRepositoryInterface::class,
+            \App\Modules\Analytics\Infrastructure\Persistence\VisitorRepository::class
+        );
+        $this->app->bind(
+            \App\Modules\Analytics\Domain\Interfaces\SessionRepositoryInterface::class,
+            \App\Modules\Analytics\Infrastructure\Persistence\SessionRepository::class
+        );
+        $this->app->bind(
+            \App\Modules\Analytics\Domain\Interfaces\PageViewRepositoryInterface::class,
+            \App\Modules\Analytics\Infrastructure\Persistence\PageViewRepository::class
+        );
+        $this->app->bind(
+            \App\Modules\Analytics\Domain\Interfaces\SearchRepositoryInterface::class,
+            \App\Modules\Analytics\Infrastructure\Persistence\SearchRepository::class
+        );
+        $this->app->bind(
+            \App\Modules\Analytics\Domain\Interfaces\ActionRepositoryInterface::class,
+            \App\Modules\Analytics\Infrastructure\Persistence\ActionRepository::class
+        );
+        $this->app->bind(
+            \App\Modules\Analytics\Domain\Interfaces\PopularSearchesRepositoryInterface::class,
+            \App\Modules\Analytics\Infrastructure\Persistence\PopularSearchesRepository::class
+        );
+        $this->app->bind(
+            \App\Modules\Analytics\Domain\Interfaces\PageDailyRepositoryInterface::class,
+            \App\Modules\Analytics\Infrastructure\Persistence\PageDailyRepository::class
+        );
+        $this->app->bind(
+            \App\Modules\Analytics\Domain\Interfaces\SourceDailyRepositoryInterface::class,
+            \App\Modules\Analytics\Infrastructure\Persistence\SourceDailyRepository::class
+        );
+        $this->app->bind(
+            \App\Modules\Analytics\Domain\Interfaces\PathRepositoryInterface::class,
+            \App\Modules\Analytics\Infrastructure\Persistence\PathRepository::class
+        );
+        $this->app->bind(
+            \App\Modules\Analytics\Domain\Interfaces\ExitRepositoryInterface::class,
+            \App\Modules\Analytics\Infrastructure\Persistence\ExitRepository::class
+        );
+
+        $this->app->scoped(
+            \App\Modules\Analytics\Domain\Interfaces\VisitorContextInterface::class,
+            \App\Modules\Analytics\Infrastructure\Services\VisitorContext::class
+        );
     }
 
     // =====================================================================

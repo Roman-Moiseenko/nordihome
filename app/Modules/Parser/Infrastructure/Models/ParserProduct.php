@@ -131,13 +131,4 @@ class ParserProduct extends Model
         return $category->brand->currency->first();
     }
 
-    public function getFullPackWeight(): float
-    {
-        $result = 0.0;
-        foreach ($this->packages as $package) {
-            $result += $package['weight'] * $package['quantity'];
-        }
-        return $result;
-    }
-
 }

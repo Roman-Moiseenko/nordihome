@@ -7,6 +7,7 @@ use App\Modules\Cart\Application\DTOs\AddProductToCartData;
 use App\Modules\Parser\Application\Actions\Product\ViewParserProductUseCase;
 use App\Modules\Parser\Application\Services\CreateProductFromParserService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 class AddProductToCartService
@@ -26,7 +27,7 @@ class AddProductToCartService
     /**
      * @throws BindingResolutionException
      */
-    public function execute(AddProductToCartData $dto): void
+    public function execute(AddProductToCartData $dto, ClientContext $client): void
     {
         $userPermission = new UserPermission(null, ['admin'], [
             'parser.product.view', 'catalog.product.create', 'catalog.product.edit',
@@ -62,7 +63,7 @@ class AddProductToCartService
 
         //TODO AddToCartUseCase
         //4. Товар в корзину
-        $this->addToCartUseCase->execute($dto);
+        $this->addToCartUseCase->execute($dto, $client);
         //$this->cart->add($product, $dto->quantity, $dto->isParser);
         //Возврат true / false
     }

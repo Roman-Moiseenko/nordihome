@@ -6,7 +6,6 @@ use App\Console\CreatesApplication;
 use App\Modules\Bank\Service\YookassaService;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Service\OrderPaymentService;
-use App\Modules\Order\Service\OrderService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 
@@ -20,7 +19,6 @@ class YookassaCommand extends Command
     public function handle(
         YookassaService $yookassa,
         OrderPaymentService $paymentService,
-        OrderService $orderService,
     ): void
     {
         $orderPayments = OrderPayment::where('method', OrderPayment::METHOD_YOOKASSA)->where('completed', false)->get();

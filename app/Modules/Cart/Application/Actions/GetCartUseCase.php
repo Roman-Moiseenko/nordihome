@@ -4,10 +4,16 @@ namespace App\Modules\Cart\Application\Actions;
 
 use App\Modules\Cart\Application\DTOs\CartInfoData;
 use App\Modules\Cart\Application\DTOs\CartItemData;
-use App\Modules\Cart\Domain\Entities\CartItem;
-use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
+use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
+use App\Modules\Catalog\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
+use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Parser\Application\Actions\Product\GetParserPriceByProductUseCase;
+use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Setting\Entity\Settings;
+use App\Modules\Shared\Application\Actions\GetPhotoThumbUseCase;
+use App\Modules\Shared\Application\DTOs\Photo\PhotoThumbData;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 readonly class GetCartUseCase
@@ -26,11 +32,15 @@ readonly class GetCartUseCase
         ['min' => 400, 'max' => 600, 'value' => 63, 'slug' => 'parser_delivery_9'],
         ['min' => 600, 'max' => 9999999, 'value' => 60, 'slug' => 'parser_delivery_10'],
     ];
-    public function __construct(
-        private HybridStorage $storage,
-                                private Settings $settings,
-    private GetParserPriceByProductUseCase $getParserPriceByProductUseCase,
 
+    public function __construct(
+        private CartRepositoryInterface          $cartRepository,
+        private Settings                         $settings,
+        private GetParserPriceByProductUseCase   $getParserPriceByProductUseCase,
+        private GetProductSellPriceUseCase       $productSellPriceUseCase,
+        private ProductRepositoryInterface       $productRepository,
+        private ParserProductRepositoryInterface $parserProductRepository,
+        private GetPhotoThumbUseCase             $getPhotoThumbUseCase,
     )
     {
 
@@ -39,14 +49,9 @@ readonly class GetCartUseCase
     /**
      * @throws BindingResolutionException
      */
-    public function execute(): CartInfoData
+    public function execute(ClientContext $clientContext): CartInfoData
     {
-       // $parser = $this->settings->getParser();
-
-
-        //$ratio = $parser->parser_coefficient;
-        //$sanctioned = $parser->cost_sanctioned;
-        $cartItems = $this->storage->load();
+        $cartItems = $this->cartRepository->getAll($clientContext);
         $items = [];
         $amount = 0;
         $discount = 0;
@@ -55,39 +60,39 @@ readonly class GetCartUseCase
         $amountCheck = 0;
         $discountCheck = 0;
         $quantityCheck = 0;
-        $weight = 0; $fragile = 0;
-        /** @var CartItem $item */
+        $weight = 0;
+        $fragile = 0;
 
+        $priceType = new PriceType($clientContext->priceType);
         foreach ($cartItems as $item) {
-
-            if ($item->is_parser) {
-                $url = route('shop.ikea.product', $item->getProduct()->parser->code);
+            $productEntity = $this->productRepository->getById($item->productId); //Получить Товар,
+            $productPrice = null; //
+            if ($item->isParser) {
+                $url = route('shop.ikea.product', $productEntity->code->getCodeSearch());
                 $price = $this->getParserPriceByProductUseCase->execute($item->productId); // $item->base_cost * (1 + (int)$item->product->parser->sanctioned * $sanctioned / 100) * $ratio;
             } else {
-                $url = route('shop.product.view', $item->getProduct()->slug);
-                if (!is_null($item->product->promotion())) {
-                    $item->discount_cost = $item->product->promotion()->pivot->price;
-                    $item->discount_name = $item->product->promotion()->name;
-                    $item->discount_id = $item->product->promotion()->id;
-                }
-
-                $price = $item->base_cost; // empty($item->discount_cost) ? $item->base_cost : $item->discount_cost;
+                $url = route('shop.product.view', $productEntity->slug);
+                $productPrice = $this->productSellPriceUseCase->execute($item->productId, $priceType);
+                //Получить текущую цену для текущего клиента
+                $price = $productPrice->basePrice;
             }
 
             $itemData = new CartItemData(
                 id: $item->id,
-                name: $item->product->name,
-                image: $item->product->getImage('mini'),
-                url: $url,
-                isParser: $item->is_parser,
-                productId: $item->product->id,
-                cost: $price * $item->getQuantity(),
+                cost: $price * $item->quantity,
                 price: $price,
-                quantity: $item->getQuantity(),
-                discountId: $item->discount_id ?? null,
-                discountPrice: empty($item->discount_cost) ? null : $item->discount_cost * $item->getQuantity(),
-                discountName: $item->discount_name,
+                quantity: $item->quantity,
                 check: $item->check,
+                isParser: $item->isParser,
+                //ProductInfo
+                productId: $item->productId,
+                name: $productEntity->name,
+                image: $this->getUrlImage($item->productId),
+                url: $url,
+                ///DiscountInfo
+                discountId: is_null($productPrice) ? null : $productPrice->discountId,
+                discountPrice: is_null($productPrice?->discountId) ? null : $productPrice->sellPrice * $item->quantity,
+                discountName: is_null($productPrice) ? null : $productPrice->discountName,
             );
             $amount += $itemData->cost;
             if ($itemData->discountPrice > 0) $discount += ($itemData->cost - $itemData->discountPrice);
@@ -97,11 +102,13 @@ readonly class GetCartUseCase
                 if ($itemData->discountPrice > 0) $discountCheck += ($itemData->cost - $itemData->discountPrice);
                 $quantityCheck += $itemData->quantity;
 
+                //Для парсера доп.расчет
                 if ($itemData->isParser) {
-                    $parser = $item->product->parser;
-                    $weightParser = $parser->getFullPackWeight();
+                    $parserEntity = $this->parserProductRepository->getByProductId($item->productId);
+
+                    $weightParser = $parserEntity->weight();
                     $weight += $weightParser * $itemData->quantity;
-                    if ($parser->fragile) $fragile += $weightParser * $itemData->quantity;
+                    if ($parserEntity->fragile) $fragile += $weightParser * $itemData->quantity;
                 }
             }
 
@@ -122,6 +129,16 @@ readonly class GetCartUseCase
         );
     }
 
+    private function getUrlImage(int $productId): string
+    {
+        $dto = new PhotoThumbData(
+            imageableId: $productId,
+            modelType: 'catalog.product',
+            type: 'gallery',
+            thumb: 'mini',
+        );
+        return $this->getPhotoThumbUseCase->execute($dto);
+    }
 
     private function getCostDelivery(float $weight, float $fragile): float
     {

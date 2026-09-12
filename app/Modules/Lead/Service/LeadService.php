@@ -1,24 +1,17 @@
 <?php
 
 namespace App\Modules\Lead\Service;
-use App\Modules\Auth\Domain\Entities\ClientEntity;
 use App\Modules\Feedback\Infrastructure\Models\FormBack;
 use App\Modules\Lead\Infrastructure\Models\Lead;
-use App\Modules\Lead\Infrastructure\Models\LeadItem;
 use App\Modules\Lead\Infrastructure\Models\LeadStatus;
 use App\Modules\Order\Entity\Order\OrderExpense;
-use App\Modules\Order\Infrastructure\Models\Order;
-use App\Modules\Order\Infrastructure\Models\OrderHistoryStatus;
-use App\Modules\Order\Service\OrderService;
-use Carbon\Carbon;
-use Illuminate\Http\Request;
-use JetBrains\PhpStorm\Deprecated;
+
 
 class LeadService
 {
 
     public function __construct(
-        private OrderService $orderService)
+        )
     {
 
     }
@@ -33,27 +26,6 @@ class LeadService
 
 
     }
-/*
-    public function createLeadFromOrder(Order $order): void
-    {
-        //TODO
-        $data = [];
-        $order->lead->create_lead($data);
-        $order->lead->order_id = $order->id;
-        $order->lead->client_id = $order->client_id;
-        $order->lead->save();
-
-        //Если есть менеджер ф-ция create_sales()
-        if (!is_null($order->staff_id)) {
-            $order->lead->staff_id = $order->staff_id;
-            $order->lead->setStatus(LeadStatus::IN_WORK);
-            $order->lead->save();
-        }
-
-    }
-*/
-
-
 
     //// Для событий по заказу ///
 
@@ -154,16 +126,5 @@ class LeadService
         $lead->save();
     }
 
-
-
-    public function createOrder(Lead $lead, Request $request): Order
-    {
-        $order = $this->orderService->createOrder($lead->client_id);
-        $order->setStatus(OrderHistoryStatus::IN_WORK);
-        $order->setManager($lead->staff_id);
-        $lead->order_id = $order->id;
-        $lead->save();
-        return $order;
-    }
 
 }

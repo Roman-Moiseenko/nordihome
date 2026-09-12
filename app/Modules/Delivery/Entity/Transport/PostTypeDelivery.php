@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Entity\Transport;
 
-use App\Modules\Shop\CartItemInterface;
+use App\Modules\Cart\Domain\Entities\CartItemEntity;
 use JetBrains\PhpStorm\Deprecated;
 
 #[Deprecated]
@@ -21,7 +21,7 @@ class PostTypeDelivery extends DeliveryAbstract
     }
 
     /**
-     * @param CartItemInterface[] $items
+     * @param CartItemEntity[] $items
      */
     public static function calculate(array $items, array $params): DeliveryData
     {

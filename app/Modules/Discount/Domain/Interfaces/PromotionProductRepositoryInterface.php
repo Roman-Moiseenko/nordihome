@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Domain\Interfaces;
 
+use App\Modules\Discount\Domain\Entities\PromotionProductEntity;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
@@ -62,4 +63,6 @@ interface PromotionProductRepositoryInterface
      * @return int
      */
     public function countProductsByPromotionId(int $promotionId): int;
+
+    public function getPromotionId(int $productId):? PromotionProductEntity;
 }

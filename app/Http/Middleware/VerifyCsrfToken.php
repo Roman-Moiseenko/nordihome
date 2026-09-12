@@ -21,6 +21,9 @@ class VerifyCsrfToken extends Middleware
         'csrf-token',
         'product/search',
         'login-client',
+        'analytics/track-action',
+        'analytics/record-exit',
+        'analytics/*',
     ];
 
     public function handle($request, \Closure $next)

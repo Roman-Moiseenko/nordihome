@@ -2,29 +2,24 @@
 
 namespace App\Modules\Cart\Application\Actions;
 
-use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
+use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 
 /**
  * Возвращает кол-во удаленных
  */
-class RemoveCartItemUseCase
+readonly class RemoveCartItemUseCase
 {
     public function __construct(
-        private HybridStorage $storage
+        private CartRepositoryInterface $cartRepository
     )
     {
 
     }
-    public function execute(int $productId): int
+    public function execute(int $productId, ClientContext $client): int
     {
-        $items = $this->storage->load();
-        foreach ($items as $current) {
-            if ($current->isProduct($productId)) {
-                $quantity = $current->getQuantity();
-                $this->storage->remove($current->id);
-                return $quantity;
-            }
-        }
+        $this->cartRepository->removeByProductId($productId, $client);
+
         return 0;
     }
 }

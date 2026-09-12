@@ -110,6 +110,10 @@
 @include('shop.pop-up.buy-click')
 @include('shop.pop-up.notification')
 <div id="cookie_notification"></div>
+
+@include('analytics::tracker')
+@vite('resources/js/nordihome/analytics-tracker.js')
+
 <!--FOOTER-->
 
 @include('shop.footer')

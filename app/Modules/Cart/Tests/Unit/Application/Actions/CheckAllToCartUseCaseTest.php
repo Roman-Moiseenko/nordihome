@@ -3,8 +3,8 @@
 namespace App\Modules\Cart\Tests\Unit\Application\Actions;
 
 use App\Modules\Cart\Application\Actions\CheckAllToCartUseCase;
-use App\Modules\Cart\Domain\Entities\CartItem;
-use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
+use App\Modules\Cart\Domain\Entities\CartItemEntity;
+use App\Modules\Cart\Infrastructure\Persistence\CartRepository;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -12,13 +12,13 @@ use PHPUnit\Framework\TestCase;
 
 class CheckAllToCartUseCaseTest extends TestCase
 {
-    private HybridStorage $storage;
+    private CartRepository $storage;
     private CheckAllToCartUseCase $useCase;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->storage = Mockery::mock(HybridStorage::class);
+        $this->storage = Mockery::mock(CartRepository::class);
         $this->useCase = new CheckAllToCartUseCase($this->storage);
     }
 
@@ -28,12 +28,12 @@ class CheckAllToCartUseCaseTest extends TestCase
         parent::tearDown();
     }
 
-    private function makeItem(int $id, int $productId, bool $check = true): CartItem
+    private function makeItem(int $id, int $productId, bool $check = true): CartItemEntity
     {
         $product = Mockery::mock(Product::class);
         $product->shouldReceive('getAttribute')->with('id')->andReturn($productId);
 
-        $item = CartItem::create($productId, 1, false);
+        $item = CartItemEntity::create($productId, 1, false);
         $item->id = $id;
         $item->product = $product;
         $item->check = $check;

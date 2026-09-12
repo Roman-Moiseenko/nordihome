@@ -3,8 +3,8 @@
 namespace App\Modules\Cart\Tests\Unit\Application\Actions;
 
 use App\Modules\Cart\Application\Actions\PlusToCartUseCase;
-use App\Modules\Cart\Domain\Entities\CartItem;
-use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
+use App\Modules\Cart\Domain\Entities\CartItemEntity;
+use App\Modules\Cart\Infrastructure\Persistence\CartRepository;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -12,13 +12,13 @@ use PHPUnit\Framework\TestCase;
 
 class PlusToCartUseCaseTest extends TestCase
 {
-    private HybridStorage $storage;
+    private CartRepository $storage;
     private PlusToCartUseCase $useCase;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->storage = Mockery::mock(HybridStorage::class);
+        $this->storage = Mockery::mock(CartRepository::class);
         $this->useCase = new PlusToCartUseCase($this->storage);
     }
 
@@ -28,12 +28,12 @@ class PlusToCartUseCaseTest extends TestCase
         parent::tearDown();
     }
 
-    private function makeItem(int $id, int $productId, float $quantity = 1.0): CartItem
+    private function makeItem(int $id, int $productId, float $quantity = 1.0): CartItemEntity
     {
         $product = Mockery::mock(Product::class);
         $product->shouldReceive('getAttribute')->with('id')->andReturn($productId);
 
-        $item = CartItem::create($productId, $quantity, false);
+        $item = CartItemEntity::create($productId, $quantity, false);
         $item->id = $id;
         $item->product = $product;
 

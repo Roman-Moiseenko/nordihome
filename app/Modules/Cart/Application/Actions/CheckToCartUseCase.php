@@ -2,30 +2,22 @@
 
 namespace App\Modules\Cart\Application\Actions;
 
-use App\Modules\Cart\Application\DTOs\UpdateProductCartData;
-use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
-use Illuminate\Contracts\Container\BindingResolutionException;
+use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 
-class CheckToCartUseCase
+readonly class CheckToCartUseCase
 {
     public function __construct(
-        private HybridStorage $storage
+        private CartRepositoryInterface $cartRepository
     )
     {
     }
 
-    /**
-     * @throws BindingResolutionException
-     */
-    public function execute(int $id): void
+    public function execute(int $id, ClientContext $client): void
     {
-        $items = $this->storage->load();
-        foreach ($items as $current) {
-            if ($current->isProduct($id)) {
-                $current->check();
-                $this->storage->check($current);
-                return;
-            }
-        }
+        $item = $this->cartRepository->getItemByProductId($id, $client);
+        $item->check = !$item->check;
+        $this->cartRepository->save($item, $client);
+
     }
 }

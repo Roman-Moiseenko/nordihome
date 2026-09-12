@@ -3,20 +3,20 @@
 namespace App\Modules\Cart\Tests\Unit\Application\Actions;
 
 use App\Modules\Cart\Application\Actions\ClearCartUseCase;
-use App\Modules\Cart\Infrastructure\Persistence\HybridStorage;
+use App\Modules\Cart\Infrastructure\Persistence\CartRepository;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class ClearCartUseCaseTest extends TestCase
 {
-    private HybridStorage $storage;
+    private CartRepository $storage;
     private ClearCartUseCase $useCase;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->storage = Mockery::mock(HybridStorage::class);
+        $this->storage = Mockery::mock(CartRepository::class);
         $this->useCase = new ClearCartUseCase($this->storage);
     }
 

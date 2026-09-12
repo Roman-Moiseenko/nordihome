@@ -5,10 +5,14 @@ namespace App\Livewire\Cabinet\Cart;
 use App\Modules\Cart\Application\Actions\CheckAllToCartUseCase;
 use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
-use App\Modules\Cart\Domain\Entities\Cart as CartEntity;
+use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\Services\ClientContextFactory;
+use App\Modules\Shop\Presentation\Http\Middlewares\InjectClientContextMiddleware;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Http\Request;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\Livewire;
 
 class CartPage extends Component
 {
@@ -31,13 +35,19 @@ class CartPage extends Component
     public bool $check_preorder;
 
     public int $renderKey = 0; // счётчик изменений
+
+    public ?int $clientId = null;
     public function boot()
     {
+
     }
 
-    public function mount(bool $preorder = false)
+    /**
+     * @throws BindingResolutionException
+     */
+    public function mount(?int $clientId, bool $preorder = false)
     {
-
+        $this->clientId = $clientId;
         $this->refresh_data();
         $this->check_preorder = $preorder;
     }
@@ -48,14 +58,12 @@ class CartPage extends Component
     #[On('update-header-cart')]
     public function refresh_data(): void
     {
+        $context = app(ClientContextFactory::class)->make();
         $this->renderKey++;
         $useCase = app()->make(GetCartUseCase::class);
-        $data = $useCase->execute();
-        $this->items = json_decode(json_encode($data->items), true);
+        $data = $useCase->execute($context);
 
-        //dd($this->items);
-        //$this->cart->loadItems();
-        //$this->items = $this->cart->ItemsData($this->cart->getItems());
+        $this->items = json_decode(json_encode($data->items), true);
 
         $this->amount = $data->amount;
         $this->discount = $data->discount;
@@ -66,8 +74,6 @@ class CartPage extends Component
         $this->quantityCheck = $data->quantityCheck;
         $this->delivery = $data->delivery;
         $this->deliveryParser = $data->deliveryParser;
-        //$this->preorder = $this->cart->info->preorder;
-        //$this->check_all = $this->cart->info->check_all;
 
         $this->check_all = true;
         $this->button_trash = false;
@@ -80,19 +86,20 @@ class CartPage extends Component
 
     public function check_items(CheckAllToCartUseCase $useCase)
     {
-        //$this->cart->check_all($this->check_all);
-        $useCase->execute($this->check_all);
+        $context = app(ClientContextFactory::class)->make();
+        $useCase->execute($this->check_all, $context);
         $this->dispatch('update-header-cart');
 
     }
 
     public function del_select(GetCartUseCase $cartUseCase, RemoveCartItemUseCase $useCase): void
     {
-        $items = $cartUseCase->execute()->items;
+        $context = app(ClientContextFactory::class)->make();
+        $items = $cartUseCase->execute($context)->items;
         foreach ($items as $item) {
             if ($item->check) {
                 $this->dispatch('e-cart', product_id: $item->productId, e_type: 'remove', quantity: $item->quantity);
-                $useCase->execute($item->productId);
+                $useCase->execute($item->productId, $context);
             }
         }
 

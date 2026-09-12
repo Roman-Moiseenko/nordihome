@@ -18,7 +18,7 @@ readonly class GetPhotoByEntityUseCase
     {
     }
 
-    public function execute(PhotoByEntityData $dto, UserPermission $userPermission): ?PhotoEntity
+    public function execute(PhotoByEntityData $dto): ?PhotoEntity
     {
         // Без проверки прав доступа
 

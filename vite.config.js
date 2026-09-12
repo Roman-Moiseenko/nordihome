@@ -53,6 +53,7 @@ export default defineConfig({
 
                // 'resources/sass/admin.scss',
                 'resources/js/admin.js',
+                'resources/js/nordihome/analytics-tracker.js',
                 'resources/css/admin.css',
                 'resources/images/logo.svg',
                 'resources/css/livewire/notification.css',

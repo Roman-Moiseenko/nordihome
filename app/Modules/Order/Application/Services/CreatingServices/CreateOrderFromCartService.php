@@ -59,7 +59,9 @@ readonly class CreateOrderFromCartService
                 priceType: new PriceType($clientContext->priceType));
 
             $isParser = false;
-            $cartData = $this->cartUseCase->execute();
+
+            $cartData = $this->cartUseCase->execute($clientContext);
+
             foreach ($cartData->items as $item) {
                 if ($item->check) {
 
@@ -76,7 +78,7 @@ readonly class CreateOrderFromCartService
                     );
                     $orderEntity->addItem($itemDto);
                     //Удаляем товары из корзины
-                    $this->removeCartItemUseCase->execute($item->id);
+                    $this->removeCartItemUseCase->execute($item->productId, $clientContext);
 
                 }
             }

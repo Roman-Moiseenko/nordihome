@@ -6,31 +6,31 @@ use App\Modules\Cart\Application\Actions\ClearCartUseCase;
 use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
 use App\Modules\Cart\Application\DTOs\CartItemData;
-use App\Modules\Cart\Domain\Entities\Cart as CartEntity;
+
+use App\Modules\Shop\Application\Services\ClientContextFactory;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class Cart extends Component
 {
-  //  private CartEntity $cart;
     public string $test = '';
     public int $count;
     public float $amount;
     public float $discount;
-    //private mixed $tz;
+    public ?int $clientId = null;
 
     /** @var CartItemData[] $items  */
     public array $items;
 
     public function boot(): void
     {
-    //    $this->cart = app()->make('\App\Modules\Cart\Domain\Entities\Cart');
     }
 
 
-    public function mount(): void
+    public function mount(?int $clientId): void
     {
-     //   $this->cart = app()->make('\App\Modules\Cart\Domain\Entities\Cart');
+        $this->clientId = $clientId;
         $this->refresh_fields();
     }
 
@@ -38,30 +38,38 @@ class Cart extends Component
     #[On('update-header-cart')]
     public function refresh_fields(): void
     {
+
         $useCase = app()->make(GetCartUseCase::class);
-        $data = $useCase->execute();
+        $context = app(ClientContextFactory::class)->make();
+        $data = $useCase->execute($context);
+
         $this->items = json_decode(json_encode($data->items), true);
-        $this->amount = $data->amount; // $this->cart->info->all->amount;
-        $this->discount = $data->discount; //$this->cart->info->all->discount;
-        $this->count = $data->quantity; //$this->cart->info->all->count;
+        $this->amount = $data->amount;
+        $this->discount = $data->discount;
+        $this->count = $data->quantity;
     }
 
     public function del_item($id, RemoveCartItemUseCase $useCase): void
     {
-        $quantity = $useCase->execute($id);
+        $context = app(ClientContextFactory::class)->make();
+        $quantity = $useCase->execute($id, $context);
 
         $this->dispatch('e-cart', product_id: $id, e_type: 'remove', quantity: $quantity);
         $this->dispatch('update-header-cart');
     }
 
+    /**
+     * @throws BindingResolutionException
+     */
     public function clear_cart(GetCartUseCase $cartUseCase, ClearCartUseCase $clearUseCase): void
     {
-        $items = $cartUseCase->execute()->items;
+        $context = app(ClientContextFactory::class)->make();
+        $items = $cartUseCase->execute($context)->items;
         foreach ($items as $item) {
             $this->dispatch('e-cart',
                 product_id: $item->productId, e_type: 'remove', quantity: $item->quantity);
         }
-        $clearUseCase->execute();
+        $clearUseCase->execute($context);
 
         $this->refresh_fields();
         $this->dispatch('update-header-cart');
