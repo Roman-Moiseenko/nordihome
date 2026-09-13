@@ -31,7 +31,6 @@ class CartController extends ShopController
 
     //AJAX
 
-
     /**
      * @throws BindingResolutionException
      */
@@ -52,39 +51,5 @@ class CartController extends ShopController
 
         return \response()->json('Товар добавлен в корзину');
     }
-    /*
-
-
-        public function remove(Request $request, Product $product) //sub, set_count, clear
-        {
-            $this->removeCartItemUseCase->execute($product->id);
-            //$this->cart->remove($product->id);
-          //  $cart = $this->cart->getCartToFront($request['tz']);
-            return \response()->json(null);
-        }
-
-        #[Deprecated]
-        public function clear(Request $request) //sub, set_count, clear
-        {
-            //TODO Сделать сервис
-            if ($request->has('product_ids')) {
-                foreach ($request->get('product_ids') as $productId) {
-                    $this->removeCartItemUseCase->execute($productId);
-                }
-            } else {
-                $this->clearCartUseCase->execute();
-                //$this->cart->clear();
-            }
-          //  $cart = $this->cart->getCartToFront($request['tz']);
-            return \response()->json(null);
-        }
-
-        #[Deprecated]
-        public function cart(Request $request)
-        {
-           // $cart = $this->cart->getCartToFront($request['tz']);
-            return \response()->json(null);
-        }
-    */
 
 }

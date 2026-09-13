@@ -23,7 +23,18 @@
                         <div class="sl-text">
                             <div class="heading-border">{{ $item->caption }}</div>
                             <div class="text">{!! $item->description !!}</div>
-                            <a href="{{ $item->url }}" class="btn btn-white btn-big t-t_uppercase f-z_14 m-t_20">{{ $item->button }}</a>
+                            <a href="{{ $item->url }}"
+                               data-analytics-action="banner_click"
+                               data-entity-type="banner"
+                               data-entity-id="{{ $item->id }}"
+                               data-analytics-payload='{
+                       "widget_id": {{ $widget->id }},
+                       "placement": "slider-payment",
+                       "slide_index": {{ $loop->index }},
+                       "title": @json($item->title ?? ''),
+                       "url": @json($item->url)
+                   }'
+                               class="btn btn-white btn-big t-t_uppercase f-z_14 m-t_20">{{ $item->button }}</a>
                         </div>
                     </div>
                     <div class="col-12 col-lg-6 padding_0 b-radius-right_12"

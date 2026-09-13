@@ -38,6 +38,15 @@ class PageViewRepository implements PageViewRepositoryInterface
         return $model ? $this->hydrate($model) : null;
     }
 
+    public function findLastByVisitor(int $visitorId): ?PageViewEntity
+    {
+        $model = PageView::where('visitor_id', $visitorId)
+            ->orderByDesc('viewed_at')
+            ->first();
+
+        return $model ? $this->hydrate($model) : null;
+    }
+
     public function finalizeView(int $pageViewId, int $duration, ?int $scrollDepth, bool $isExit): void
     {
         PageView::whereKey($pageViewId)->update([

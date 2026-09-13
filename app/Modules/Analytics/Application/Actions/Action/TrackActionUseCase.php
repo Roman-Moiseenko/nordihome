@@ -115,7 +115,8 @@ final readonly class TrackActionUseCase
 
     /**
      * page_view_id действия: если явно не передан — берём последний просмотр
-     * текущей сессии (действие происходит на открытой странице).
+     * текущей сессии, а при его отсутствии (например, сессия была закрыта
+     * exit-трекером) — последний просмотр посетителя в любых сессиях.
      */
     private function resolvePageViewId(?int $pageViewId, int $visitorId, int $sessionId): ?int
     {
@@ -123,7 +124,8 @@ final readonly class TrackActionUseCase
             return $pageViewId;
         }
 
-        return $this->pageViews->findLastByVisitorInSession($visitorId, $sessionId)?->id;
+        return $this->pageViews->findLastByVisitorInSession($visitorId, $sessionId)?->id
+            ?? $this->pageViews->findLastByVisitor($visitorId)?->id;
     }
 
     private function timeoutMinutes(): int

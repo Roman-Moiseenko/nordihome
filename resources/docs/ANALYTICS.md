@@ -316,7 +316,8 @@ Cookie устанавливается в `IdentifyVisitorMiddleware`, когда
   в VO `ActionType`/`EntityType`), инкрементит `actions_count` сессии.
   `page_view_id` берётся из DTO, а если не передан — автоматически подставляется
   последний просмотр текущей сессии (`resolvePageViewId()` →
-  `findLastByVisitorInSession`).
+  `findLastByVisitorInSession`), а при его отсутствии (сессия закрыта
+  exit-трекером) — последний просмотр посетителя (`findLastByVisitor`).
 
 ### Search
 - **`TrackSearchUseCase::execute(visitorId, sessionId, pageViewId, query, resultsCount)`**

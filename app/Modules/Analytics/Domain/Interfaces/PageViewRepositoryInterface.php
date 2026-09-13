@@ -17,6 +17,9 @@ interface PageViewRepositoryInterface
     /** Найти последний просмотр посетителя в сессии (для расчёта duration). */
     public function findLastByVisitorInSession(int $visitorId, int $sessionId): ?PageViewEntity;
 
+    /** Найти последний просмотр посетителя в любых сессиях (для привязки action). */
+    public function findLastByVisitor(int $visitorId): ?PageViewEntity;
+
     /** Проставить duration и scroll_depth для конкретного просмотра. */
     public function finalizeView(int $pageViewId, int $duration, ?int $scrollDepth, bool $isExit): void;
 
