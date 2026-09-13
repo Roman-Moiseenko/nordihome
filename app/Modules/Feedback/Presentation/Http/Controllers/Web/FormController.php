@@ -3,6 +3,9 @@
 namespace App\Modules\Feedback\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Analytics\Domain\ValueObjects\ActionType;
+use App\Modules\Analytics\Domain\ValueObjects\EntityType;
+use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Content\Entity\Widgets\FormWidget;
 use App\Modules\Feedback\Application\Actions\FormBack\CreateFormBackUseCase;
 use App\Modules\Feedback\Application\Actions\FormBack\IndexFormBackUseCase;
@@ -14,6 +17,8 @@ use Inertia\Inertia;
 
 class FormController extends Controller
 {
+    use RecordsAnalyticsAction;
+
     public function __construct(
         public IndexFormBackUseCase  $indexFormBackUseCase,
         public CreateFormBackUseCase $createFormBackUseCase,
@@ -42,6 +47,15 @@ class FormController extends Controller
         try {
             $dto = FormBackCreateData::validateAndCreate($request->all());
             $this->createFormBackUseCase->execute($dto);
+
+            $formName = $dto->data['form'] ?? $dto->data['form_name'] ?? null;
+            $this->recordAnalyticsAction(
+                ActionType::FORM_SUBMIT,
+                EntityType::FORM,
+                null,
+                ['form' => $formName, 'url' => $dto->url],
+            );
+
             return \response()->json(true);
         } catch (\Throwable $exception) {
             return \response()->json(false);

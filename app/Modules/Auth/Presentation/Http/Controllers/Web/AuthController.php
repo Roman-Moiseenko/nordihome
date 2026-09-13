@@ -3,6 +3,8 @@
 namespace App\Modules\Auth\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Analytics\Domain\ValueObjects\ActionType;
+use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Auth\Application\Actions\Auth\LoginStaffUseCase;
 use App\Modules\Auth\Application\Actions\Auth\LoginUserUseCase;
 use App\Modules\Auth\Application\Actions\Auth\LogoutUserUseCase;
@@ -19,6 +21,8 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 class AuthController extends Controller
 {
+    use RecordsAnalyticsAction;
+
     public function __construct(
         private readonly LoginStaffUseCase          $loginStaffUser,
         private readonly LoginUserUseCase           $loginClientUseCase,
@@ -72,10 +76,17 @@ class AuthController extends Controller
             try {
                 //Верифицируемся
                 $this->confirmEmailUseCase->execute($dto->verify_token, $dto->agreement);
+
+                //Регистрация завершена — клиент подтвердил почту
+                $this->recordAnalyticsAction(ActionType::REGISTER);
+
                 //Логинимся
                 $result = $this->loginClientUseCase->execute($dto);
 
-                if ($result) $this->dispatcher->dispatch(new UserIsLogin());
+                if ($result) {
+                    $this->dispatcher->dispatch(new UserIsLogin());
+                    $this->recordAnalyticsAction(ActionType::LOGIN);
+                }
 
                 return \response()->json($result ? 'login' : 'password');
             } catch (\InvalidArgumentException $e) {
@@ -84,7 +95,13 @@ class AuthController extends Controller
         }
         $result = $this->loginOrRegisterUserService->execute($dto);
 
-        if ($result == 'login') $this->dispatcher->dispatch(new UserIsLogin());
+        if ($result == 'login') {
+            $this->dispatcher->dispatch(new UserIsLogin());
+            $this->recordAnalyticsAction(ActionType::LOGIN);
+        } elseif ($result == 'verification') {
+            //Попытка регистрации — клиент получил код верификации
+            $this->recordAnalyticsAction(ActionType::REGISTER_ATTEMPT);
+        }
 
         return \response()->json($result);
 
@@ -93,6 +110,9 @@ class AuthController extends Controller
     public function verify(Request $request)
     {
         $this->confirmEmailUseCase->execute($request->input('token'), $request->boolean('agreement'));
+
+        //Регистрация завершена
+        $this->recordAnalyticsAction(ActionType::REGISTER);
 
         //TODO Возможно сделать страницу приветсвия
         return redirect('/')->with('success', 'Верификация прошла успешно');

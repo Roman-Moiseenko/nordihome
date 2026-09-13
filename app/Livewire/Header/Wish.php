@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Header;
 
+use App\Modules\Analytics\Domain\ValueObjects\ActionType;
+use App\Modules\Analytics\Domain\ValueObjects\EntityType;
+use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Cabinet\Application\Actions\Wish\RemoveWishUseCase;
 use App\Modules\Cabinet\Application\Queries\ListWishClientQuery;
@@ -11,6 +14,7 @@ use Illuminate\Support\Collection;
 
 class Wish extends Component
 {
+    use RecordsAnalyticsAction;
 
     public ?Client $client;
     public int $count = 0;
@@ -50,6 +54,12 @@ class Wish extends Component
     {
         $productId = $this->removeWishUseCase->execute($id);
 
+        $this->recordAnalyticsAction(
+            ActionType::WISHLIST_REMOVE,
+            EntityType::PRODUCT,
+            (int)$productId,
+        );
+
         $this->dispatch('update-wish', product_id: $productId);
         $this->refresh_fields();
 
@@ -61,6 +71,8 @@ class Wish extends Component
         foreach ($this->client->wishes as $wish) {
             $wish->delete();
         }
+        $this->recordAnalyticsAction(ActionType::WISHLIST_CLEAR);
+
         $this->items = [];
         $this->count = 0;
         $this->dispatch('update-wish');

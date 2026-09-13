@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Cabinet\Cart;
 
+use App\Modules\Analytics\Domain\ValueObjects\ActionType;
+use App\Modules\Analytics\Domain\ValueObjects\EntityType;
+use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Cart\Application\Actions\CheckAllToCartUseCase;
 use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
@@ -16,6 +19,7 @@ use Livewire\Livewire;
 
 class CartPage extends Component
 {
+    use RecordsAnalyticsAction;
 
    // public Product $product;
 
@@ -100,6 +104,13 @@ class CartPage extends Component
             if ($item->check) {
                 $this->dispatch('e-cart', product_id: $item->productId, e_type: 'remove', quantity: $item->quantity);
                 $useCase->execute($item->productId, $context);
+
+                $this->recordAnalyticsAction(
+                    ActionType::CART_REMOVE,
+                    EntityType::PRODUCT,
+                    (int)$item->productId,
+                    ['quantity' => $item->quantity],
+                );
             }
         }
 

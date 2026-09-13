@@ -6,6 +6,8 @@ namespace App\Modules\Analytics\Infrastructure\Persistence;
 
 use App\Modules\Analytics\Domain\Entities\ActionEntity;
 use App\Modules\Analytics\Domain\Interfaces\ActionRepositoryInterface;
+use App\Modules\Analytics\Domain\ValueObjects\ActionType;
+use App\Modules\Analytics\Domain\ValueObjects\EntityType;
 use App\Modules\Analytics\Infrastructure\Models\Action;
 use Carbon\CarbonInterface;
 use DateTimeImmutable;
@@ -48,9 +50,9 @@ class ActionRepository implements ActionRepositoryInterface
             ->all();
     }
 
-    public function findByTypeInPeriod(string $actionType, DateTimeImmutable $from, DateTimeImmutable $to, int $limit = 5000): array
+    public function findByTypeInPeriod(ActionType $actionType, DateTimeImmutable $from, DateTimeImmutable $to, int $limit = 5000): array
     {
-        return Action::where('action_type', $actionType)
+        return Action::where('action_type', $actionType->value)
             ->whereBetween('occurred_at', [$from, $to])
             ->orderBy('occurred_at')
             ->limit($limit)
@@ -59,10 +61,10 @@ class ActionRepository implements ActionRepositoryInterface
             ->all();
     }
 
-    public function countByEntity(string $actionType, string $entityType, int $entityId, DateTimeImmutable $from, DateTimeImmutable $to): int
+    public function countByEntity(ActionType $actionType, EntityType $entityType, int $entityId, DateTimeImmutable $from, DateTimeImmutable $to): int
     {
-        return Action::where('action_type', $actionType)
-            ->where('entity_type', $entityType)
+        return Action::where('action_type', $actionType->value)
+            ->where('entity_type', $entityType->value)
             ->where('entity_id', $entityId)
             ->whereBetween('occurred_at', [$from, $to])
             ->count();
@@ -78,8 +80,8 @@ class ActionRepository implements ActionRepositoryInterface
         $model->visitor_id = $action->visitorId;
         $model->session_id = $action->sessionId;
         $model->page_view_id = $action->pageViewId;
-        $model->action_type = $action->actionType;
-        $model->entity_type = $action->entityType;
+        $model->action_type = $action->actionType->value;
+        $model->entity_type = $action->entityType?->value;
         $model->entity_id = $action->entityId;
         $model->payload = $action->payload;
         $model->occurred_at = $action->occurredAt;
@@ -91,14 +93,14 @@ class ActionRepository implements ActionRepositoryInterface
         $action = new ActionEntity(
             visitorId: (int)$model->visitor_id,
             sessionId: (int)$model->session_id,
-            actionType: $model->action_type,
+            actionType: ActionType::from($model->action_type),
             occurredAt: DateTimeImmutable::createFromInterface($model->occurred_at),
             payload: $model->payload,
         );
 
         $action->id = $model->id;
         $action->pageViewId = $model->page_view_id;
-        $action->entityType = $model->entity_type;
+        $action->entityType = $model->entity_type !== null ? EntityType::from($model->entity_type) : null;
         $action->entityId = $model->entity_id;
         $action->isBot = (bool)$model->is_bot;
         $action->createdAt = $this->immutable($model->created_at);

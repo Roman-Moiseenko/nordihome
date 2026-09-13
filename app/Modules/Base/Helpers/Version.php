@@ -5,11 +5,15 @@ namespace App\Modules\Base\Helpers;
 
 class Version
 {
-    const string VERSION = '0.9.0.0';
+    const string VERSION = '0.9.0.1';
 
     public static function updated(): array
     {
         return [
+            '13.09.2026' => [
+                'Модуль Analytics - учет действий пользователя: точка входа, посещение страниц (скроллинг, длительность), действия с корзиной, избранным и заказом, форма, регистрация, поиск',
+                'Корзина переработана на Clean Architecture - теперь учитываются персональные цены клиента',
+            ],
             '05.06.2026' => [
                 'Переход архитектуры проекта на Clean Architecture',
                 'Добавлен новый вид категорий - По комнатам',

@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Cabinet\Cart;
 
+use App\Modules\Analytics\Domain\ValueObjects\ActionType;
+use App\Modules\Analytics\Domain\ValueObjects\EntityType;
+use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Cart\Application\Actions\CheckToCartUseCase;
 use App\Modules\Cart\Application\Actions\PlusToCartUseCase;
@@ -20,6 +23,7 @@ use Livewire\Livewire;
 
 class CartItem extends Component
 {
+    use RecordsAnalyticsAction;
 
  //   private mixed $cart;
     public array $item;
@@ -64,10 +68,18 @@ class CartItem extends Component
     public function toggle_wish(): void
     {
         if (!is_null($this->client)) {
+            $wasWish = $this->wish;
+
             $service = new WishService();
             $service->toggle($this->client->id, (int)$this->item['productId']);
             $this->update_wish();
             $this->dispatch('update-header-wish');
+
+            $this->recordAnalyticsAction(
+                $wasWish ? ActionType::WISHLIST_REMOVE : ActionType::WISHLIST_ADD,
+                EntityType::PRODUCT,
+                (int)$this->item['productId'],
+            );
         }
     }
 
@@ -75,6 +87,13 @@ class CartItem extends Component
     {
         $context = app(ClientContextFactory::class)->make();
         $useCase->execute($this->item['productId'], 1, $context);
+
+        $this->recordAnalyticsAction(
+            ActionType::CART_QUANTITY_CHANGE,
+            EntityType::PRODUCT,
+            (int)$this->item['productId'],
+            ['delta' => -1],
+        );
 
         $this->dispatch('update-header-cart');
         $this->dispatch('update-item-cart')->self();
@@ -86,6 +105,13 @@ class CartItem extends Component
     {
         $context = app(ClientContextFactory::class)->make();
         $useCase->execute($this->item['productId'], 1, $context);
+
+        $this->recordAnalyticsAction(
+            ActionType::CART_QUANTITY_CHANGE,
+            EntityType::PRODUCT,
+            (int)$this->item['productId'],
+            ['delta' => 1],
+        );
 
         $this->dispatch('update-header-cart');
         $this->dispatch('update-item-cart')->self();
@@ -99,6 +125,13 @@ class CartItem extends Component
     {
         $context = app(ClientContextFactory::class)->make();
         $result = $useCase->execute($this->item['productId'], $this->quantity, $context);
+
+        $this->recordAnalyticsAction(
+            ActionType::CART_QUANTITY_CHANGE,
+            EntityType::PRODUCT,
+            (int)$this->item['productId'],
+            ['quantity' => $this->quantity],
+        );
 
         if ($result > 0)
             $this->dispatch('e-cart', product_id: $this->item['productId'], e_type: 'add', quantity: $result);
@@ -129,6 +162,14 @@ class CartItem extends Component
         $context = app(ClientContextFactory::class)->make();
         $this->dispatch('e-cart', product_id: $this->item['productId'], e_type: 'remove', quantity: $this->quantity);
         $useCase->execute($this->item['productId'], $context);
+
+        $this->recordAnalyticsAction(
+            ActionType::CART_REMOVE,
+            EntityType::PRODUCT,
+            (int)$this->item['productId'],
+            ['quantity' => $this->quantity],
+        );
+
         $this->dispatch('update-header-cart');
     }
 

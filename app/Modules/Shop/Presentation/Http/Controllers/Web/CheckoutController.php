@@ -3,88 +3,53 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
+use App\Modules\Analytics\Domain\ValueObjects\ActionType;
+use App\Modules\Analytics\Domain\ValueObjects\EntityType;
+use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderFromCartService;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderOneClickService;
 use App\Modules\Shop\Application\DTOs\Checkout\OneClickOrderData;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
-
+use Illuminate\View\View;
 
 /**
  * Контроллер по созданию заказа из клиентской части, для просмотра используется контроллер из User
  */
 class CheckoutController extends ShopController
 {
-   // private Cart $cart;
-  //  private OrderPaymentService $payments;
-   // private DeliveryService $deliveries;
-  //  private OrderService $service;
-
-   // private ParserCart $parserCart;
- //   private StorageRepository $storages;
-  //  private PaymentRepository $paymentRepository;
+    use RecordsAnalyticsAction;
 
     public function __construct(
-     //   Cart              $cart,
-     //   ParserCart        $parserCart,
-     //   OrderPaymentService    $payments,
-    //    PaymentRepository $paymentRepository,
-     //   DeliveryService   $deliveries,
-        //private readonly OrderService                                         $service,
-   //     StorageRepository $storages,
         private readonly GetCartUseCase                      $getCartUseCase,
         private readonly CreateOrderFromCartService $createOrderFromCartService,
         private readonly CreateOrderOneClickService $createOrderOneClickService,
     )
     {
-       // parent::__construct();
-        //$this->middleware('auth:user')->except(['create_cart', 'create_click']);
-    //    $this->cart = $cart;
-     //   $this->payments = $payments;
-    //    $this->deliveries = $deliveries;
-     //   $this->service = $service;
-     //   $this->parserCart = $parserCart;
-
-    //    $this->storages = $storages;
-    //    $this->paymentRepository = $paymentRepository;
     }
 
 
     /**
      * @throws BindingResolutionException
      */
-    public function create(Request $request): \Illuminate\View\View
+    public function create(Request $request): View
     {
         $client = $this->getClient($request);
         $cartInfo = $this->getCartUseCase->execute($client);
 
+        $this->recordAnalyticsAction(ActionType::CHECKOUT_START, EntityType::ORDER);
+
         return view('shop.order.create', compact('cartInfo'));
     }
-
-/*
-    public function create_parser(Request $request)
-    {
-        if (Auth::guard('web')->check()) {
-            $user_id = Auth::guard('web')->user()->id;
-        } else {
-            throw new \DomainException('Доступ ограничен');
-        }
-        $payments = $this->paymentRepository->getPayments();
-        $storages = $this->storages->getPointDelivery();
-        $companies = DeliveryHelper::deliveries();
-        $delivery_cost = $this->deliveries->calculate($user_id, $this->parserCart->getItems());
-        $cart = $this->parserCart;
-        return view($this->route('order.create-parser'), compact('cart', 'payments',
-            'storages', 'companies', 'delivery_cost'));
-
-    }*/
 
     public function create_click(Request $request)
     {
         $dto = OneClickOrderData::validateAndCreate($request->all());
         $order = $this->createOrderOneClickService->execute($dto);
         if (!is_null($order)) {
+            $this->recordAnalyticsAction(ActionType::ONE_CLICK_BUY, EntityType::ORDER, $order->id);
+
             return redirect()->back()->with('success', "Ваш заказ успешно создан! № $order->number");
         } else {
             return redirect()->back()->with('error', "Ошибка создания заказа");
@@ -96,16 +61,17 @@ class CheckoutController extends ShopController
         //TODO получаем id заказа, и создаем дубль, (доставка, адрес, клиент - все есть в заказе)
     }
 
-
     public function store(Request $request)
     {
-
         //FIXME через DTO
         $client = $this->getClient($request);
         $order = $this->createOrderFromCartService->execute(
             $client,
             $request->input('coupon'),
             $request->input('commentClient'));
+
+        $this->recordAnalyticsAction(ActionType::ORDER_PLACED, EntityType::ORDER, $order->id);
+
         return redirect()->route('cabinet.order.new_order', ['id' => $order->id, 'from' => 'store'])->with('success', 'Ваш заказ успешно создан!');
     }
 

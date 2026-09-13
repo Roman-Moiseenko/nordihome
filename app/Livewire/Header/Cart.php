@@ -2,6 +2,9 @@
 
 namespace App\Livewire\Header;
 
+use App\Modules\Analytics\Domain\ValueObjects\ActionType;
+use App\Modules\Analytics\Domain\ValueObjects\EntityType;
+use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Cart\Application\Actions\ClearCartUseCase;
 use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
@@ -14,6 +17,7 @@ use Livewire\Component;
 
 class Cart extends Component
 {
+    use RecordsAnalyticsAction;
     public string $test = '';
     public int $count;
     public float $amount;
@@ -54,6 +58,13 @@ class Cart extends Component
         $context = app(ClientContextFactory::class)->make();
         $quantity = $useCase->execute($id, $context);
 
+        $this->recordAnalyticsAction(
+            ActionType::CART_REMOVE,
+            EntityType::PRODUCT,
+            (int)$id,
+            ['quantity' => $quantity],
+        );
+
         $this->dispatch('e-cart', product_id: $id, e_type: 'remove', quantity: $quantity);
         $this->dispatch('update-header-cart');
     }
@@ -70,6 +81,8 @@ class Cart extends Component
                 product_id: $item->productId, e_type: 'remove', quantity: $item->quantity);
         }
         $clearUseCase->execute($context);
+
+        $this->recordAnalyticsAction(ActionType::CART_CLEAR);
 
         $this->refresh_fields();
         $this->dispatch('update-header-cart');

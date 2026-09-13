@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Analytics\Domain\Interfaces;
 
 use App\Modules\Analytics\Domain\Entities\ActionEntity;
+use App\Modules\Analytics\Domain\ValueObjects\ActionType;
+use App\Modules\Analytics\Domain\ValueObjects\EntityType;
 use DateTimeImmutable;
 
 interface ActionRepositoryInterface
@@ -33,10 +35,10 @@ interface ActionRepositoryInterface
      *
      * @return ActionEntity[]
      */
-    public function findByTypeInPeriod(string $actionType, DateTimeImmutable $from, DateTimeImmutable $to, int $limit = 5000): array;
+    public function findByTypeInPeriod(ActionType $actionType, DateTimeImmutable $from, DateTimeImmutable $to, int $limit = 5000): array;
 
     /** Количество действий конкретного типа для сущности за период. */
-    public function countByEntity(string $actionType, string $entityType, int $entityId, DateTimeImmutable $from, DateTimeImmutable $to): int;
+    public function countByEntity(ActionType $actionType, EntityType $entityType, int $entityId, DateTimeImmutable $from, DateTimeImmutable $to): int;
 
     /** Удалить старые записи. */
     public function deleteOlderThan(DateTimeImmutable $before): int;

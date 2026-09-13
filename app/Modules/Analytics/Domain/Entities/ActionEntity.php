@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Analytics\Domain\Entities;
 
+use App\Modules\Analytics\Domain\ValueObjects\ActionType;
+use App\Modules\Analytics\Domain\ValueObjects\EntityType;
 use DateTimeImmutable;
 
 /**
@@ -34,12 +36,12 @@ final class ActionEntity
         set => $this->pageViewId = $value;
     }
 
-    public string $actionType {
+    public ActionType $actionType {
         get => $this->actionType;
         set => $this->actionType = $value;
     }
 
-    public ?string $entityType = null {
+    public ?EntityType $entityType = null {
         get => $this->entityType;
         set => $this->entityType = $value;
     }
@@ -76,7 +78,7 @@ final class ActionEntity
     public function __construct(
         int $visitorId,
         int $sessionId,
-        string $actionType,
+        ActionType $actionType,
         DateTimeImmutable $occurredAt,
         ?array $payload = null,
     ) {
