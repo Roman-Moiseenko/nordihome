@@ -3,10 +3,12 @@
 namespace App\Modules\Shop\Application\Queries\Ikea;
 
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
+use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Application\Actions\SetRatioPriceUseCase;
 use App\Modules\Shop\Application\DTOs\Entities\IkeaProductCardData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
+use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\IkeaIndexPageData;
 use App\Modules\Shop\Application\DTOs\Pages\IkeaViewPageData;
@@ -22,7 +24,7 @@ readonly class IkeaViewQuery
 {
     public function __construct(
         private IkeaTreeQueryRepository $treeRepo,
-        private Settings      $settings,
+        private GetWebSettingsUseCase $webSettingsUseCase,
         private SchemaBuilder $schemaBuilder,
         private PaginatorBuilder            $paginatorBuilder,
         private IkeaQueryRepository $repository,
@@ -33,7 +35,7 @@ readonly class IkeaViewQuery
 
     public function execute(string $slug, array $params): IkeaViewPageData
     {
-        $web = $this->settings->web;
+        $web = $this->webSettingsUseCase->execute();
 
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
@@ -79,16 +81,21 @@ readonly class IkeaViewQuery
         );
 
         $schema = $this->schemaBuilder->buildForProductIndex($productCards, $category->slug, 'ikea', []);
+        $meta = new SeoData(
+            title: $category->name,
+            description: $category->name . ' ' . $web->ikea_desc,
+            canonical: route('shop.ikea.view', $slug),
+            ogSiteName: $web->web_name,
+        );
+
+        if (!is_null($category->image)) $meta->addImage(OgImage::fromData($category->image));
 
         return new IkeaViewPageData(
             category: $category,
             categories: $categories,
             products: $productCards,
             paginator: $paginator,
-            meta: new SeoData(
-                title: $web->ikea_title,
-                description: $web->ikea_desc,
-            ),
+            meta: $meta,
             schema: $schema,
 
         );

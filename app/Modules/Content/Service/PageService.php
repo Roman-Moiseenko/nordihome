@@ -15,23 +15,9 @@ class PageService
         return Page::register(
             $request->string('name')->trim()->value(),
             $request->string('slug')->trim()->value(),
-            $request->string('title')->trim()->value(),
-            $request->string('description')->trim()->value(),
             $request->string('template')->trim()->value(),
             $request['parent_id'],
         );
-    }
-
-    public function update(Request $request, Page $page)
-    {
-        $page->update([
-            'name' => $request->string('name')->trim()->value(),
-            'slug' => $request->string('slug')->trim()->value(),
-            'title' => $request->string('title')->trim()->value(),
-            'description' => $request->string('description')->trim()->value(),
-            'template' => $request->string('template')->trim()->value(),
-            'parent_id' => $request['parent_id'],
-        ]);
     }
 
     public function destroy(Page $page): void
@@ -52,15 +38,13 @@ class PageService
         $slug = $request->string('slug')->trim()->value();
         $page->name = $name;
         $page->slug = empty($slug) ? Str::slug($name) : $slug;
-        $page->title = $request->string('title')->trim()->value();
-        $page->description = $request->string('description')->trim()->value();
+        $page->svg = $request->string('svg')->trim()->value();
         $page->parent_id = $request->input('parent_id');
         $page->template = $request->string('template')->value();
         $page->meta->fromRequest($request);
         $page->save();
 
         $page->saveImage($request->file('image'), $request->boolean('clear_image'));
-        $page->saveIcon($request->file('icon'), $request->boolean('clear_icon'));
     }
 
     public function up(Page $page): void

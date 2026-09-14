@@ -1,19 +1,17 @@
 <!--template:Страница Кухни Икеа под заказ-->
+@php
+    use App\Modules\Shop\Application\DTOs\Pages\PageViewPageData;
+    /** @var PageViewPageData $pageData */
+@endphp
 @extends('layouts.main')
-
-@section('main')
-    pages
-@endsection
-
-@section('title', $title)
-@section('description', $description)
+@section('main', 'pages')
 
 @section('content')
     <div class="container-xl">
-        <h1 class="my-4">{{ $page->name }}</h1>
+        <h1 class="my-4">{{ $pageData->name }}</h1>
     </div>
         <div class="mt-4">
-            {!! $page->text !!}
+            {!! $pageData->text !!}
         </div>
     <div class="parser-fos p-t_50 p-b_50">
         <div class="container">

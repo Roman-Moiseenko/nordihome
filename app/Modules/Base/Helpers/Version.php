@@ -5,11 +5,14 @@ namespace App\Modules\Base\Helpers;
 
 class Version
 {
-    const string VERSION = '0.9.0.1';
+    const string VERSION = '0.9.0.2';
 
     public static function updated(): array
     {
         return [
+            '15.09.2026' => [
+                'Добавлены мета-теги og для всех видов страниц - page, posts, post, category, room, products, product, novelty, ikea*, search',
+            ],
             '13.09.2026' => [
                 'Модуль Analytics - учет действий пользователя: точка входа, посещение страниц (скроллинг, длительность), действия с корзиной, избранным и заказом, форма, регистрация, поиск',
                 'Корзина переработана на Clean Architecture - теперь учитываются персональные цены клиента',

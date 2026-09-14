@@ -28,7 +28,7 @@ trait ImageField
 
     public function getImage(string $thumb = ''): ?string
     {
-        if (is_null($this->image) || is_null($this->image->file)) return null;
+        if (is_null($this->image) || is_null($this->image->file)) return 'images/no-image.jpg';
         if (empty($thumb)) return $this->image->getUploadUrl();
         return $this->image->getThumbUrl($thumb);
     }

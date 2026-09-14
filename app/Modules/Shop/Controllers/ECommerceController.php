@@ -5,14 +5,13 @@ namespace App\Modules\Shop\Controllers;
 use App\Modules\Shop\Repository\ECommerceRepository;
 use Illuminate\Http\Request;
 
-class ECommerceController extends ShopController
+class ECommerceController extends \App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController
 {
 
     private ECommerceRepository $repository;
 
     public function __construct(ECommerceRepository $repository)
     {
-        parent::__construct();
         $this->repository = $repository;
     }
 

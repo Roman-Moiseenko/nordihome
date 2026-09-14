@@ -2,8 +2,7 @@
 
 namespace App\Modules\Shop\Application\Queries\Ikea;
 
-use App\Modules\Setting\Entity\Settings;
-use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomData;
+use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\IkeaIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
@@ -15,7 +14,7 @@ readonly class IkeaIndexQuery
 {
     public function __construct(
         private IkeaTreeQueryRepository $treeRepo,
-        private Settings      $settings,
+        private GetWebSettingsUseCase $webSettingsUseCase,
         private SchemaBuilder $schemaBuilder,
     )
     {
@@ -23,7 +22,7 @@ readonly class IkeaIndexQuery
 
     public function execute(): IkeaIndexPageData
     {
-        $web = $this->settings->web;
+        $web = $this->webSettingsUseCase->execute();
 
         $categories = Cache::remember(
             CacheInvalidationRegistry::IKEA_CATEGORY_INDEX_PAGE,
@@ -33,11 +32,14 @@ readonly class IkeaIndexQuery
 
         $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'ikea');
 
+        $meta =new SeoData(
+            title: $web->ikea_title,
+            description: $web->ikea_desc,
+            canonical: route('shop.ikea.index'),
+            ogSiteName: $web->web_name,
+        );
         return new IkeaIndexPageData(
-            meta: new SeoData(
-                title: $web->ikea_title,
-                description: $web->ikea_desc,
-            ),
+            meta: $meta,
             schema: $schema,
             categories: $categories,
         );

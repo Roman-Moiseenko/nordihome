@@ -15,8 +15,6 @@
 @section('body', 'product')
 @section('main', 'container-xl product-page')
 @section('bottom-class', '')
-@section('title', $pageData->meta->title)
-@section('description', $pageData->meta->description)
 
 @section('content')
     <span class="e-detail" data-product="{{ $product->id }}"></span>

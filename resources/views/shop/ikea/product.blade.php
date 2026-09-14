@@ -10,15 +10,10 @@
             'caption' => $img->alt ?? '',
         ];
     }
-
 @endphp
 @extends('layouts.main')
-
 @section('body', 'ikea')
 @section('main', 'container-xl ikea-product')
-@section('title', $pageData->meta->title)
-@section('description', $pageData->meta->description)
-
 
 @section('content')
     <h1>{{ $pageData->product->name }}</h1>

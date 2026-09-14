@@ -24,9 +24,12 @@ use function public_path;
  * @property string $file
  * @property string $alt
  * @property string $slug
+ * @property string $format
  * @property string $title
  * @property string $description
  * @property int $sort
+ * @property int $width
+ * @property int $height
  * @property string $type
  */
 class Photo extends Model
@@ -50,6 +53,9 @@ class Photo extends Model
         'title',
         'description',
         'model_type',
+        'format',
+        'width',
+        'height',
     ];
 
     public UploadedFile $fileForUpload;

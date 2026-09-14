@@ -2,6 +2,8 @@
 
 namespace App\Modules\Shop\Application\DTOs\Entities;
 
+use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
+
 class PostCardData
 {
 
@@ -10,7 +12,7 @@ class PostCardData
         public string $slug,
         public string $caption,
         public string $fragment,
-        public string $image,
+        public ImageInfoData $image,
     )
     {
     }

@@ -95,7 +95,7 @@ class AdminComposer
                 $categories = Cache::rememberForever(CacheHelper::MENU_CATEGORIES, function () {
                     return $this->shopRepository->getChildren();
                 });
-                $view->with('url_page', request()->url());
+                //$view->with('url_page', request()->url());
                 $trees = Cache::rememberForever(CacheHelper::MENU_TREES, function () {
                     return $this->shopRepository->getTree();
                 });

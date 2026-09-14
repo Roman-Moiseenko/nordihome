@@ -37,6 +37,7 @@ readonly class UploadPhotoUseCase
             $file,
         ) : '';
 
+
         $photo = new PhotoEntity(
             imageableId: $dto->imageableId,
             imageableType: $fqcn,
@@ -45,19 +46,16 @@ readonly class UploadPhotoUseCase
             type: new PhotoType($dto->type),
         );
 
-
-        $photo = $this->photoRepository->save($photo);
-
-        //Для не одиночных (gallery) делаем нарезку
-  /*     if (!$photo->type->isSingle()) {
-            $this->photoService->createThumbs(
-                $photo->id,
-                $photo->modelType,
-                $photo->imageableId,
-                $photo->file,
-            );
+        // Извлекаем метаданные изображения из файла
+        if ($file) {
+            $photo->format = $file->getMimeType();
+            $size = @getimagesize($file->getPathname());
+            if (is_array($size)) {
+                $photo->width = (int)$size[0];
+                $photo->height = (int)$size[1];
+            }
         }
-*/
-        return $photo;
+
+        return $this->photoRepository->save($photo);
     }
 }

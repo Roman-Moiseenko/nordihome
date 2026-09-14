@@ -16,9 +16,10 @@ class AdminActivityLoggerMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
+        /*
         $user_id = $request->user()->id;
         $action = $request->route()->getName();
-        if (!empty($request->all())) {
+       if (!empty($request->all())) {
             LoggerActivity::register(
                 $user_id,
                 $action,
@@ -26,7 +27,7 @@ class AdminActivityLoggerMiddleware
                 $request->all()
             );
         }
-        //dd($request);
+        */
         return $next($request);
     }
 }

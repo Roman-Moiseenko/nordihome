@@ -78,6 +78,9 @@ class PhotoRepository implements PhotoRepositoryInterface
         $model->slug = $photo->slug;
         $model->title = $photo->title;
         $model->description = $photo->description;
+        $model->format = $photo->format;
+        $model->width = $photo->width;
+        $model->height = $photo->height;
         // $model->sort = $photo->sort;
         $model->type = (string)$photo->type;
         $model->save();
@@ -258,6 +261,9 @@ class PhotoRepository implements PhotoRepositoryInterface
         $entity->slug = $model->slug ?? '';
         $entity->title = $model->title ?? '';
         $entity->description = $model->description ?? '';
+        $entity->format = $model->format ?? null;
+        $entity->width = $model->width !== null ? (int)$model->width : null;
+        $entity->height = $model->height !== null ? (int)$model->height : null;
         $entity->sort = $model->sort ?? 0;
 
         // Генерируем uploadUrl

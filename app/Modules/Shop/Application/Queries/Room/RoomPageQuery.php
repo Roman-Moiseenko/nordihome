@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Application\Queries\Room;
 
+use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
@@ -9,6 +10,7 @@ use App\Modules\Shop\Application\DTOs\Elements\UrlData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
+use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
@@ -30,12 +32,14 @@ readonly class RoomPageQuery
         private AttributeQueryRepository    $attributeQueryRepository,
         private SchemaBuilder               $schemaBuilder,
         private ContentBlockQueryRepository   $blockRepository,
+        private GetWebSettingsUseCase $webSettingsUseCase,
     )
     {
     }
 
     public function execute(string $slug, array $params, ClientContext $clientContext): ?ProductIndexPageData
     {
+        $web = $this->webSettingsUseCase->execute();
         $mainInfo = $this->repository->getRoom($slug);
 
         $key_cache = str_replace('{id}', (string)$mainInfo->id, CacheInvalidationRegistry::ROOM_PRODUCTS_ID);
@@ -124,6 +128,9 @@ readonly class RoomPageQuery
             }
         }
         $meta = $this->seoAdapter->getSeo('catalog.room', $mainInfo, $page);
+        $meta->ogSiteName = $web->web_name;
+        $meta->canonical = route('shop.room.view', $slug);
+        $meta->addImage(OgImage::fromData($mainInfo->image));
 
         $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'room', $faq);
         return new ProductIndexPageData(

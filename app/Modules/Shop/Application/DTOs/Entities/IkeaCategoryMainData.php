@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Application\DTOs\Entities;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
+use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
 use App\Modules\Shop\Application\DTOs\Elements\UrlData;
 
 class IkeaCategoryMainData
@@ -11,6 +12,7 @@ class IkeaCategoryMainData
         public readonly string        $name,
         public readonly string        $slug,
         public int                    $totalProducts = 0,
+        public ?ImageInfoData         $image = null,
     )
     {
     }

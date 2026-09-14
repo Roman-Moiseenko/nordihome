@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Controllers;
+namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
 use App\Modules\Content\Entity\Widgets\ProductWidget;
 

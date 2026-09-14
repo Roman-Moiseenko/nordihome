@@ -1,17 +1,15 @@
 <!--template:Страница Тарифы и условия доставки-->
+@php
+    use App\Modules\Shop\Application\DTOs\Pages\PageViewPageData;
+    /** @var PageViewPageData $pageData */
+@endphp
 @extends('layouts.main')
-
-@section('main')
-    pages
-@endsection
-
-@section('title', $title)
-@section('description', $description)
+@section('main', 'pages')
 
 @section('content')
 
     <div class="container-xl my-3">
-        <h1>{{ $page->name }}</h1>
+        <h1>{{ $pageData->name }}</h1>
     </div>
     <div class="block-delivery-terms p-t_50 p-b_50 bg-black">
         <div class="container-xl">
@@ -523,7 +521,7 @@
         </div>
     </div>
     <div>
-            {!! $page->text !!}
+            {!! $pageData->text !!}
     </div>
 @endsection
 

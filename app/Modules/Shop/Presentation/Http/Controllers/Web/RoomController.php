@@ -18,7 +18,6 @@ class RoomController extends ShopController
 
     public function index()
     {
-
         $data = $this->roomIndexQuery->execute();
 
         return view('shop.catalog.room', [

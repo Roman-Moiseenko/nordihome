@@ -601,36 +601,6 @@ class ShopRepository
     }
 
 
-    public function getMapData(): array
-    {
-        $trader = Trader::where('default', true)->first();
-
-        return array_map(function (Storage $storage) use ($trader) {
-            return [
-                'latitude' => $storage->latitude,
-                'longitude' => $storage->longitude,
-                'iconCaption' => $trader->name, //$trader->organization->short_name,
-                'balloonContent' => $storage->address,
-            ];
-        }, Storage::getModels());
-
-        /*
-         [
-         [
-             'latitude' => 54.737798,
-             'longitude' => 20.477079,
-             'iconCaption' => 'NORDI HOME',
-             'balloonContent' => 'Советский проспект 103А корпус 1'
-         ],
-         [
-             'latitude' => 54.678130,
-             'longitude' => 20.495324,
-             'iconCaption' => 'NORDI HOME',
-             'balloonContent' => 'ул. Батальная 18, 2 этаж'
-         ],
-     ];*/
-    }
-
     public function getProdAttributes(Product $product): array
     {
         try {

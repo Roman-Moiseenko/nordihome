@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use Illuminate\Http\Request;
 
-class ShopController extends Controller
+abstract class ShopController extends Controller
 {
 
     public function getClient(Request $request): ClientContext

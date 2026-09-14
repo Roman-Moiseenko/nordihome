@@ -2,14 +2,9 @@
     use App\Modules\Shop\Application\DTOs\Pages\CatalogIndexPageData;
     /** @var CatalogIndexPageData $pageData */
 @endphp
-
 @extends('layouts.main')
-
 @section('body', 'room')
 @section('main', 'container-xl rooms-page')
-@section('title', $pageData->meta->title)
-@section('description', $pageData->meta->description)
-
 
 @section('content')
     <div class="title-page">

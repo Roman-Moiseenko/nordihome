@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Application\Queries\Room;
 
+use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
@@ -15,7 +16,8 @@ readonly class RoomIndexQuery
 {
     public function __construct(
         private RoomTreeQueryRepository $treeRepo,
-        private Settings                $settings,
+        private GetWebSettingsUseCase   $webSettingsUseCase,
+
         private SchemaBuilder           $schemaBuilder,
     )
     {
@@ -23,7 +25,7 @@ readonly class RoomIndexQuery
 
     public function execute(): CatalogIndexPageData
     {
-        $web = $this->settings->web;
+        $web = $this->webSettingsUseCase->execute();
 
         $categories = Cache::remember(
             CacheInvalidationRegistry::ROOM_INDEX_PAGE,
@@ -38,13 +40,15 @@ readonly class RoomIndexQuery
                 $this->treeRepo->getChildren(),
             ),
         );
-
+        $meta = new SeoData(
+            title: $web->rooms_title,
+            description: $web->rooms_desc,
+            canonical: route('shop.room.index'),
+            ogSiteName: $web->web_name,
+        );
         $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'room');
         return new CatalogIndexPageData(
-            meta: new SeoData(
-                title: $web->rooms_title,
-                description: $web->rooms_desc,
-            ),
+            meta: $meta,
             categories: $categories,
             schema: $schema,
         );

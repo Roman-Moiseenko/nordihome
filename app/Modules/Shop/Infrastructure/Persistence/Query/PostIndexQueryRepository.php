@@ -2,11 +2,10 @@
 
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
-use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
-use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Entities\PostCardData;
 use App\Modules\Shop\Application\DTOs\Entities\PostCategoryData;
+use App\Modules\Shop\Application\Helpers\ImageInfoDataHelper;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -15,7 +14,7 @@ class PostIndexQueryRepository
 
     private const string MODEL_TYPE = 'content.post';
     public function __construct(
-        private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
+        private readonly ImageInfoDataHelper $imageInfoHelper,
     )
     {
     }
@@ -65,6 +64,12 @@ class PostIndexQueryRepository
                 'posts.fragment',
                 'photos.id as photo_id',
                 'photos.file as photo_file',
+                'photos.alt as photo_alt',
+                'photos.title as photo_title',
+                'photos.description as photo_description',
+                'photos.format as photo_format',
+                'photos.width as photo_width',
+                'photos.height as photo_height',
                 'photos.model_type as model_type',
             );
 
@@ -78,7 +83,7 @@ class PostIndexQueryRepository
                 slug: $item->slug,
                 caption: $item->caption ?? '',
                 fragment: $item->fragment ?? '',
-                image: $this->imageThumbUseCase->execute($item),
+                image: $this->imageInfoHelper->build($item),
             );
         });
 

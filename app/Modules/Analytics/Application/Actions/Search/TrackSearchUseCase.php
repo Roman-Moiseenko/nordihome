@@ -15,11 +15,11 @@ use DateTimeImmutable;
  * Нормализует строку запроса (нижний регистр + trim) и пишет append-only
  * запись. Обновляет счётчик searches_count сессии.
  */
-final class TrackSearchUseCase
+final readonly class TrackSearchUseCase
 {
     public function __construct(
-        private readonly SearchRepositoryInterface $searches,
-        private readonly SessionRepositoryInterface $sessions,
+        private SearchRepositoryInterface  $searches,
+        private SessionRepositoryInterface $sessions,
     ) {}
 
     public function execute(

@@ -9,13 +9,7 @@
     /** @var PostIndexPageData $pageData */
 @endphp
 @extends('layouts.main')
-
-@section('main')
-    posts container-xl
-@endsection
-
-@section('title', $pageData->meta->title)
-@section('description', $pageData->meta->description)
+@section('main', 'posts container-xl')
 
 @section('content')
     <h1 class="my-4">{{ $pageData->category->caption }}</h1>
@@ -38,7 +32,7 @@
         <div class="item-news m-b_20">
             <div class="row">
                 <div class="col-md-5 col-lg-4 img">
-                    <img src="{{ $post->image }}" alt="{{ $post->caption }}" class="width_100">
+                    <img src="{{ $post->image->src }}" alt="{{ $post->caption }}" class="width_100">
                 </div>
                 <div class="col-md-7 col-lg-8">
                     <h3 class="news-head"><a href="{{ route('shop.post.view', $post->slug) }}">{{ $post->caption }}</a>

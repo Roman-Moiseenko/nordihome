@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\Queries\Post;
 
+use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\Elements\TableContent;
+use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\PostViewPageData;
 use App\Modules\Shop\Application\Services\WidgetDataEnricherService;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
@@ -21,12 +23,14 @@ readonly class PostPageQuery
         private SeoAdapter                    $seoAdapter,
         private SchemaBuilder                 $schemaBuilder,
         private WidgetDataEnricherService     $widgetEnricher,
+        private GetWebSettingsUseCase $webSettingsUseCase,
     )
     {
     }
 
     public function execute(string $slug): PostViewPageData
     {
+        $web = $this->webSettingsUseCase->execute();
         // 1. Получить PostData (один SQL-запрос с фото)
         $post = $this->postRepository->getPostBySlug($slug);
 
@@ -39,6 +43,11 @@ readonly class PostPageQuery
         }
         // 4. SEO
         $meta = $this->seoAdapter->getSeo('content.post', $post);
+        $meta->canonical = route('shop.post.view', $post->slug);
+        $meta->ogSiteName = $web->web_name;
+        $meta->addImage(OgImage::fromData($post->image));
+        $meta->articleModifiedTime = $post->updatedAt;
+        $meta->articlePublishedTime = $post->publishedAt;
 
         // вытаскиваем FAQ из блоков, если есть
         $faq = [];
@@ -68,7 +77,7 @@ readonly class PostPageQuery
         return new PostViewPageData(
             post: $post,
             blocks: $blocks,
-            meta: $meta,
+            meta: $meta->asArticle(),
             schema: $schema,
             tableContents: $tableContents,
         );

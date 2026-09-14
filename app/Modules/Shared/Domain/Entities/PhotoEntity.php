@@ -54,6 +54,21 @@ final class PhotoEntity
         set => $this->description = $value;
     }
 
+    public ?string $format = null {
+        get => $this->format;
+        set => $this->format = $value;
+    }
+
+    public ?int $width = null {
+        get => $this->width;
+        set => $this->width = $value;
+    }
+
+    public ?int $height = null {
+        get => $this->height;
+        set => $this->height = $value;
+    }
+
     public int $sort = 0 {
         get => $this->sort;
         set => $this->sort = $value;

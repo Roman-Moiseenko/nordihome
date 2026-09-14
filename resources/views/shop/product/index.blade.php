@@ -9,11 +9,8 @@ $total = $pageData->paginator->total;
 @extends('layouts.main')
 @section('body', 'products')
 @section('main', 'container-xl products-page')
-@section('title', $pageData->meta->title)
-@section('description', $pageData->meta->description)
 
 @section('content')
-
     <div class="title-page">
         <div class="products-page-title">
             <div class="title h1">

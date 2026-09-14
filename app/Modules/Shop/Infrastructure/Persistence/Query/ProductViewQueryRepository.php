@@ -157,7 +157,7 @@ class ProductViewQueryRepository
             ->where('model_type', self::PHOTO_MODEL_TYPE)
             ->where('type', 'gallery')
             ->orderBy('sort')
-            ->get(['id', 'file', 'alt', 'title', 'description', 'model_type']);
+            ->get(['id', 'file', 'alt', 'title', 'description', 'model_type', 'format', 'width', 'height']);
 
         // Build ImageInfoData array
         $images = [];
@@ -183,6 +183,9 @@ class ProductViewQueryRepository
                 'title' => $photo->title ?? '',
                 'description' => $photo->description ?? '',
                 'mini' => $mini,
+                'format' => $photo->format ?? null,
+                'width' => $photo->width !== null ? (int)$photo->width : null,
+                'height' => $photo->height !== null ? (int)$photo->height : null,
             ]);
         }
 

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Application\Queries\Search;
 
+use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
@@ -25,6 +26,7 @@ readonly class ProductSearchQuery
         private ProductIndexQueryRepository  $productIndexQueryRepository,
         private AttributeQueryRepository     $attributeQueryRepository,
         private PaginatorBuilder             $paginatorBuilder,
+        private GetWebSettingsUseCase $webSettingsUseCase,
     )
     {
     }
@@ -32,7 +34,7 @@ readonly class ProductSearchQuery
 
     public function execute(string $search, array $params, ClientContext $clientContext): ?ProductSearchPageData
     {
-        //MAINDO Аналитика
+        $web = $this->webSettingsUseCase->execute();
 
         $allProductIds = $this->productSearchQueryRepository->getProductIdsBySearch($search);
         $perPage = 20;
@@ -83,11 +85,14 @@ readonly class ProductSearchQuery
             sortOrder: $params['order'] ?? '',
             tagId: isset($params['tag_id']) ? (int)$params['tag_id'] : null,
         );
+        $meta = new SeoData($search . ' Интернет Магазин', '');
+        $meta->ogSiteName = $web->web_name;
+
         return new ProductSearchPageData(
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
-            meta: new SeoData($search . ' Интернет Магазин', ''),
+            meta: $meta,
             search: $search,
         );
     }

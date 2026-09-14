@@ -3,11 +3,8 @@
     /** @var ProductIndexPageData $pageData */
 @endphp
 @extends('layouts.main')
-
 @section('body', 'products novelty')
 @section('main', 'container-xl products-page')
-@section('title', $pageData->meta->title)
-@section('description', $pageData->meta->description)
 
 @section('content')
     <div class="title-page">

@@ -25,5 +25,6 @@ class Web extends AbstractSetting
     public string $rooms_desc = '';
     public string $title_contact = '';
     public string $title_city = '';
+    public string $web_name = '';
 
 }

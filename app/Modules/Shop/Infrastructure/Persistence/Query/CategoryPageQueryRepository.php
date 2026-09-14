@@ -8,15 +8,18 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
+use App\Modules\Shop\Application\Helpers\ImageInfoDataHelper;
 use Illuminate\Support\Facades\DB;
 
 class CategoryPageQueryRepository
 {
     private const string PHOTO_MODEL_TYPE = 'catalog.product';
+    private const string CATEGORY_MODEL_TYPE = 'catalog.category';
 
     public function __construct(
         private readonly PhotoService $photoService,
         private readonly AttributeQueryRepository $attributeQueryRepository,
+        private readonly ImageInfoDataHelper $imageInfoHelper,
     )
     {
     }
@@ -25,6 +28,11 @@ class CategoryPageQueryRepository
     {
         $row = DB::table('categories')
             ->leftJoin('categories as parent', 'parent.id', '=', 'categories.parent_id')
+            ->leftJoin('photos', function ($join) {
+                $join->on('categories.id', '=', 'photos.imageable_id')
+                    ->where('photos.model_type', '=', self::CATEGORY_MODEL_TYPE)
+                    ->where('photos.type', '=', 'image');
+            })
             ->where('categories.slug', $slug)
             ->select(
                 'categories.id',
@@ -32,7 +40,16 @@ class CategoryPageQueryRepository
                 'categories.meta',
                 'categories.parent_id',
                 'parent.name as parent_name',
-                'parent.slug as parent_slug')
+                'parent.slug as parent_slug',
+                'photos.id as photo_id',
+                'photos.file as photo_file',
+                'photos.alt as photo_alt',
+                'photos.title as photo_title',
+                'photos.description as photo_description',
+                'photos.format as photo_format',
+                'photos.width as photo_width',
+                'photos.height as photo_height',
+                'photos.model_type as model_type')
             ->first();
         if (!$row) return null;
 
@@ -52,6 +69,7 @@ class CategoryPageQueryRepository
             totalProducts: 0,
             title: $meta['title'] ?? '',
             description: $meta['description'] ?? '',
+            image: !empty($row->photo_id) ? $this->imageInfoHelper->build($row) : null,
         );
     }
 

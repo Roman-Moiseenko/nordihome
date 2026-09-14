@@ -6,20 +6,20 @@
             <el-row :gutter="10">
                 <el-col :span="8">
                     <el-form-item label="Количество товаров на странице" label-position="top">
-                        <el-input v-model="form.paginate" :formatter="val => func.MaskInteger(val)"  style="width: 150px;"/>
+                        <el-input v-model="form.paginate" :formatter="val => func.MaskInteger(val)"/>
                     </el-form-item>
                     <el-form-item label="Логотип для сайта, с прозрачным фоном (svg, png)" label-position="top">
-                        <el-input v-model="form.logo_img"   style="width: 300px;"/>
+                        <el-input v-model="form.logo_img"/>
                     </el-form-item>
                     <el-form-item label="Подпись (alt) под логотипом" label-position="top">
-                        <el-input v-model="form.logo_alt"   style="width: 300px;"/>
+                        <el-input v-model="form.logo_alt" />
                     </el-form-item>
 
                     <el-form-item label="Яндекс Метрика" label-position="top">
-                        <el-input v-model="form.metrika"   style="width: 300px;"/>
+                        <el-input v-model="form.metrika"/>
                     </el-form-item>
                     <el-form-item label="Гугл Аналитика" label-position="top">
-                        <el-input v-model="form.google"   style="width: 300px;"/>
+                        <el-input v-model="form.google"/>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -27,42 +27,47 @@
                         <el-checkbox v-model="form.is_cache" :checked="form.is_cache"/>
                     </el-form-item>
 
-                    <el-form-item label="Home - хлебные крошки" label-position="left">
+                    <el-form-item label="Home - хлебные крошки" label-position="top">
                         <el-input v-model="form.breadcrumbs_home" />
                     </el-form-item>
 
                     <el-form-item label="Показывать категории товаров" label-position="left">
                         <el-checkbox v-model="form.is_category" :checked="form.is_category"/>
                     </el-form-item>
+                    <el-form-item label="Название сайта" label-position="top">
+                        <el-input v-model="form.web_name" />
+                    </el-form-item>
+
+
                 </el-col>
                 <el-col :span="8">
                     <h2 class="font-medium">SEO-настройки (Заголовки)</h2>
                     <el-form-item label="meta-Title для списка категорий" label-position="top">
-                        <el-input v-model="form.categories_title"   style="width: 300px;"/>
+                        <el-input v-model="form.categories_title"/>
                     </el-form-item>
                     <el-form-item label="meta-Description для списка категорий" label-position="top">
-                        <el-input v-model="form.categories_desc"   style="width: 300px;" type="textarea" :rows="3"/>
+                        <el-input v-model="form.categories_desc" type="textarea" :rows="3"/>
                     </el-form-item>
 
                     <el-form-item label="meta-Title для списка комнат" label-position="top">
-                        <el-input v-model="form.rooms_title"   style="width: 300px;"/>
+                        <el-input v-model="form.rooms_title"/>
                     </el-form-item>
                     <el-form-item label="meta-Description для списка комнат" label-position="top">
-                        <el-input v-model="form.rooms_desc"   style="width: 300px;" type="textarea" :rows="3"/>
+                        <el-input v-model="form.rooms_desc" type="textarea" :rows="3"/>
                     </el-form-item>
 
                     <el-form-item label="meta-Title для Икеа" label-position="top">
-                        <el-input v-model="form.ikea_title"   style="width: 300px;"/>
+                        <el-input v-model="form.ikea_title"  />
                     </el-form-item>
                     <el-form-item label="meta-Description для Икеа" label-position="top">
-                        <el-input v-model="form.ikea_desc"   style="width: 300px;" type="textarea" :rows="3"/>
+                        <el-input v-model="form.ikea_desc" type="textarea" :rows="3"/>
                     </el-form-item>
 
                     <el-form-item label="meta-Title Контактные данные" label-position="top">
-                        <el-input v-model="form.title_contact"   style="width: 300px;"/>
+                        <el-input v-model="form.title_contact"/>
                     </el-form-item>
                     <el-form-item label="meta-Title Бренд и Город" label-position="top">
-                        <el-input v-model="form.title_city"   style="width: 300px;"/>
+                        <el-input v-model="form.title_city"/>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -92,6 +97,7 @@ const form = reactive({
     logo_alt: props.web.logo_alt,
     metrika: props.web.metrika,
     google: props.web.google,
+    web_name: props.web.web_name,
 
     categories_title: props.web.categories_title,
     categories_desc: props.web.categories_desc,

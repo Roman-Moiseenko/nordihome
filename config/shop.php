@@ -63,5 +63,8 @@ return [
     ],
     'tinymce' => env('TINYMCE', ''),
 
+    'analytics' => [
+        'session_timeout_minutes' => 30,
+    ],
 
 ];

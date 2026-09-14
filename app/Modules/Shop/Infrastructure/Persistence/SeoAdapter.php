@@ -6,6 +6,7 @@ use App\Modules\Base\Entity\Meta;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Content\Repository\MetaTemplateRepository;
+use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
@@ -13,7 +14,7 @@ use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 readonly class SeoAdapter
 {
     public function __construct(
-        private MetaTemplateRepository $seoService
+        private MetaTemplateRepository $seoService,
     ) {}
 
 
@@ -22,6 +23,7 @@ readonly class SeoAdapter
         $seo = $this->seoService->generateSeo($entityKey, $dto);
         //Добавляем номер страницы к title чтоб избежать дублей
         if ($page > 1) $seo->title .= ' - Страница ' . $page;
+
         return $seo;
     }
 

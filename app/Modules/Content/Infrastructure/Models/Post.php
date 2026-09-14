@@ -28,8 +28,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Post extends RenderPage
 {
-    use ImageField;
-
     protected $attributes = [
         'template' => '',
         'text' => '',

@@ -58,15 +58,13 @@ class PostCategory extends Model
      */
     public function view(callable $fn): string
     {
-        //$this->text = Template::renderClasses($this->text);
-        $url_page = route('shop.posts.view', $this->slug);
         if ($fn != null) $this->meta = $fn($this, $this->meta);
         $posts = $this->posts()->paginate($this->paginate ?? 20);
 
         return view(
             Template::blade('posts') . $this->template,
             ['category' => $this, 'posts' => $posts,
-                'title' => $this->meta->title, 'description' => $this->meta->description, 'url_page' => $url_page])
+                'title' => $this->meta->title, 'description' => $this->meta->description,])
             ->render();
     }
 

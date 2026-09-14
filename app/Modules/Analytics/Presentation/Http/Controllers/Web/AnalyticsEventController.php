@@ -7,10 +7,10 @@ namespace App\Modules\Analytics\Presentation\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Modules\Analytics\Application\Actions\Action\TrackActionUseCase;
 use App\Modules\Analytics\Application\Actions\Exit\RecordExitUseCase;
-use App\Modules\Analytics\Application\Actions\Search\TrackSearchClickUseCase;
 use App\Modules\Analytics\Application\DTOs\Action\TrackActionData;
 use App\Modules\Analytics\Application\DTOs\Exit\RecordExitData;
 use App\Modules\Analytics\Application\DTOs\Search\TrackSearchClickData;
+use App\Modules\Analytics\Application\Services\TrackSearchClickService;
 use App\Modules\Analytics\Infrastructure\Services\VisitorUuidGenerator;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,16 +24,16 @@ use Illuminate\Http\Request;
 class AnalyticsEventController extends Controller
 {
     public function __construct(
-        private readonly TrackActionUseCase $trackAction,
-        private readonly RecordExitUseCase $recordExit,
-        private readonly TrackSearchClickUseCase $trackSearchClick,
+        private readonly TrackActionUseCase      $trackAction,
+        private readonly RecordExitUseCase       $recordExit,
+        private readonly TrackSearchClickService $trackSearchClick,
     ) {}
 
     public function trackAction(Request $request): JsonResponse
     {
-        \Log::info(json_encode($request->all()));
+    //    \Log::info(json_encode($request->all()));
         $dto = TrackActionData::validateAndCreate($request->all());
-        \Log::info('!');
+     //   \Log::info('!');
         $ok = $this->trackAction->execute(
             $dto,
             $request->cookie(VisitorUuidGenerator::COOKIE_NAME),

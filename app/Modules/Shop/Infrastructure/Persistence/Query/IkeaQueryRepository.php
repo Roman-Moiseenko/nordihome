@@ -7,6 +7,7 @@ use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shop\Application\DTOs\Elements\IkeaVariantData;
 use App\Modules\Shop\Application\DTOs\Entities\IkeaCategoryMainData;
+use App\Modules\Shop\Application\Helpers\ImageInfoDataHelper;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
@@ -14,23 +15,45 @@ use Illuminate\Support\Facades\DB;
 class IkeaQueryRepository
 {
     private const string PHOTO_MODEL_TYPE = 'parser.product';
+    private const string CATEGORY_MODEL_TYPE = 'parser.category';
 
     public function __construct(
         private readonly GetImageThumbByRowUseCase $imageThumbUseCase,
+        private readonly ImageInfoDataHelper $imageInfoHelper,
     )
     {
     }
 
     public function getCategoryBySlug(string $slug): IkeaCategoryMainData
     {
-        $row = ParserCategory::where('slug', $slug)
-            ->select('id', 'name', 'slug')
+        $row = DB::table('parser_categories')
+            ->leftJoin('photos', function ($join) {
+                $join->on('parser_categories.id', '=', 'photos.imageable_id')
+                    ->where('photos.model_type', '=', self::CATEGORY_MODEL_TYPE)
+                    ->where('photos.type', '=', 'image');
+            })
+            ->where('parser_categories.slug', $slug)
+            ->select(
+                'parser_categories.id',
+                'parser_categories.name',
+                'parser_categories.slug',
+                'photos.id as photo_id',
+                'photos.file as photo_file',
+                'photos.alt as photo_alt',
+                'photos.title as photo_title',
+                'photos.description as photo_description',
+                'photos.format as photo_format',
+                'photos.width as photo_width',
+                'photos.height as photo_height',
+                'photos.model_type as model_type',
+            )
             ->firstOrFail();
 
         return new IkeaCategoryMainData(
             id: $row->id,
             name: $row->name,
             slug: $row->slug,
+            image: !empty($row->photo_id) ? $this->imageInfoHelper->build($row) : null,
         );
     }
 

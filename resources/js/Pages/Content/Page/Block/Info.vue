@@ -13,19 +13,6 @@
                     fit="cover"
                 />
             </el-tooltip>
-            <el-tooltip content="Иконка для меню" placement="top-start" effect="dark">
-                <el-image
-                    style="width: 100px; height: 100px"
-                    :src="page.icon"
-                    :zoom-rate="1.2"
-                    :max-scale="7"
-                    :min-scale="0.2"
-                    :initial-index="4"
-                    :preview-src-list="[page.icon]"
-                    fit="cover"
-                    class="ml-3"
-                />
-            </el-tooltip>
         </el-col>
         <el-col :span="18">
             <el-descriptions v-if="!editPage" :column="3" border class="mb-5">
@@ -41,11 +28,8 @@
                 <el-descriptions-item label="Шаблон">
                     {{ page.template }}
                 </el-descriptions-item>
-                <el-descriptions-item label="Заголовок">
-                    {{ page.title }}
-                </el-descriptions-item>
-                <el-descriptions-item label="Описание">
-                    {{ page.description }}
+                <el-descriptions-item label="svg">
+                    <span v-html="page.svg"/>
                 </el-descriptions-item>
                 <el-descriptions-item label="Мета Заголовок">
                     {{ page.meta.title }}
@@ -65,7 +49,7 @@
     </el-link>
 
     <el-row v-if="editPage" :gutter="10">
-        <el-col :span="8">
+        <el-col :span="10">
             <el-form v-if="editPage" label-width="auto">
                 <el-form-item label="Страница">
                     <el-input v-model="form.name"/>
@@ -83,11 +67,8 @@
                         <el-option v-for="item in templates" :key="item.value" :value="item.value" :label="item.label"/>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="Заголовок">
-                    <el-input v-model="form.title"/>
-                </el-form-item>
-                <el-form-item label="Описание">
-                    <el-input v-model="form.description" type="textarea" rows="3"/>
+                <el-form-item label="svg иконка">
+                    <el-input v-model="form.svg" type="textarea" rows="3"/>
                 </el-form-item>
                 <el-form-item label="Мета Заголовок">
                     <el-input v-model="form.meta_title"/>
@@ -100,16 +81,11 @@
                 <el-button type="success" @click="setPage">Сохранить</el-button>
             </el-form>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="6">
             <UploadImageFile
                 label="Изображение для каталога"
                 v-model:image="page.image"
                 @selectImageFile="onSelectImage"
-            />
-            <UploadImageFile
-                label="Иконка для меню"
-                v-model:image="page.icon"
-                @selectImageFile="onSelectIcon"
             />
         </el-col>
         <el-col :span="8">
@@ -154,14 +130,10 @@ const form = reactive({
     slug: props.page.slug,
     parent_id: props.page.parent_id,
     template: props.page.template,
-    title: props.page.title,
-    description: props.page.description,
+    svg: props.page.svg,
 
     image: null,
     clear_image: false,
-    icon: null,
-    clear_icon: false,
-
     meta_title: props.page.meta.title,
     meta_description: props.page.meta.description,
 })
@@ -184,12 +156,4 @@ function onSelectImage(val: any) {
     form.image = val.file
 }
 
-function onSelectIcon(val: any) {
-    form.clear_icon = val.clear_file
-    form.icon = val.file
-}
-
-function onShow() {
-
-}
 </script>

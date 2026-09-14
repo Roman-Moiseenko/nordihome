@@ -3,12 +3,8 @@
     /** @var IkeaIndexPageData $pageData */
 @endphp
 @extends('layouts.main')
-
 @section('body', 'ikea')
 @section('main', 'container-xl ikea-index')
-@section('title', $pageData->meta->title)
-@section('description', $pageData->meta->description)
-
 
 @section('content')
     <div class="title-page">

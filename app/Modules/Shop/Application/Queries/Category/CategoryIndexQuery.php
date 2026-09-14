@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\Queries\Category;
 
-use App\Modules\Setting\Entity\Settings;
+use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\CatalogIndexPageData;
@@ -17,7 +17,7 @@ readonly class CategoryIndexQuery
 {
     public function __construct(
         private CategoryTreeQueryRepository $treeRepo,
-        private Settings                    $settings,
+        private GetWebSettingsUseCase $webSettingsUseCase,
         private SchemaBuilder               $schemaBuilder,
     )
     {
@@ -25,7 +25,7 @@ readonly class CategoryIndexQuery
 
     public function execute(): CatalogIndexPageData
     {
-        $web = $this->settings->web;
+        $web = $this->webSettingsUseCase->execute();
 
         $categories = Cache::remember(
             CacheInvalidationRegistry::CATEGORY_INDEX_PAGE,
@@ -41,12 +41,16 @@ readonly class CategoryIndexQuery
             ),
         );
 
+        $meta = new SeoData(
+            title: $web->categories_title,
+            description: $web->categories_desc,
+            canonical: route('shop.category.index'),
+            ogSiteName: $web->web_name,
+        );
+
         $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'category');
         return new CatalogIndexPageData(
-            meta: new SeoData(
-                title: $web->categories_title,
-                description: $web->categories_desc,
-            ),
+            meta: $meta,
             categories: $categories,
             schema: $schema,
         );

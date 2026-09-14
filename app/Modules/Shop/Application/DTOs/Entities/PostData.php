@@ -2,9 +2,10 @@
 
 namespace App\Modules\Shop\Application\DTOs\Entities;
 
+use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
+
 class PostData
 {
-
     public function __construct(
         public int $id,
         public string $slug,
@@ -12,7 +13,9 @@ class PostData
         public string $description,
         public string $caption,
         public string $fragment,
-        public string $image,
+        public ImageInfoData $image,
+        public string $publishedAt,
+        public string $updatedAt,
     )
     {
     }

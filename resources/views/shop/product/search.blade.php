@@ -5,8 +5,6 @@
 @extends('layouts.main')
 @section('body', 'products search')
 @section('main', 'container-xl products-page')
-@section('title', $pageData->meta->title)
-@section('description', $pageData->meta->description)
 
 @section('content')
 

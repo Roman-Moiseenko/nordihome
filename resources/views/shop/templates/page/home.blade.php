@@ -1,16 +1,15 @@
 <!--template:Пустая Главная-->
+@php
+    use App\Modules\Shop\Application\DTOs\Pages\PageViewPageData;
+    /** @var PageViewPageData $pageData */
+@endphp
 @extends('layouts.main')
-
 @section('breadcrumbs')
 @endsection
-
 @section('main', 'home')
 
-@section('title', $title)
-@section('description', $description)
-
 @section('content')
-    {!! $page->text !!}
+    {!! $pageData->text !!}
     @include('shop.widgets.map-yandex')
 @endsection
 

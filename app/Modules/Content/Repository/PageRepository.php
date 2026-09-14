@@ -26,7 +26,6 @@ class PageRepository
     {
         return array_merge($this->PageToArray($page), [
             'image' => $page->getImage(),
-            'icon' => $page->getIcon(),
         ]);
     }
 }

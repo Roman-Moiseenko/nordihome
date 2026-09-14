@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Application\Queries\Promotion;
 
+use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
@@ -9,6 +10,7 @@ use App\Modules\Shop\Application\DTOs\Elements\UrlData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
+use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
@@ -32,11 +34,13 @@ readonly class PromotionPageQuery
         private SchemaBuilder               $schemaBuilder,
         private ContentBlockQueryRepository   $blockRepository,
         private RoomPageQueryRepository     $roomRepository,
+        private GetWebSettingsUseCase $webSettingsUseCase,
     )
     {
     }
     public function execute(string $slug, array $params, ClientContext $clientContext): ?ProductIndexPageData
     {
+        $web = $this->webSettingsUseCase->execute();
         $mainInfo = $this->repository->getPromotion($slug);
         $key_cache = str_replace('{id}', (string)$mainInfo->id, CacheInvalidationRegistry::PROMOTION_PRODUCTS_ID);
 
@@ -112,6 +116,10 @@ readonly class PromotionPageQuery
         }
 
         $meta = $this->seoAdapter->getSeo('discount.promotion', $mainInfo, $page);
+        $meta->ogSiteName = $web->web_name;
+        $meta->canonical = route('shop.promotion.view', $slug);
+        $meta->addImage(OgImage::fromData($mainInfo->image));
+
 
         $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'promotion', $faq);
         return new ProductIndexPageData(

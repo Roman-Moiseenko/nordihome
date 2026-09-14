@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\Queries\Category;
 
+use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
@@ -12,6 +13,7 @@ use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
+use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
 use App\Modules\Shop\Application\Interfaces\BreadcrumbProviderInterface;
@@ -35,12 +37,15 @@ readonly class CategoryPageQuery
         private AttributeQueryRepository    $attributeQueryRepository,
         private SchemaBuilder               $schemaBuilder,
         private ContentBlockQueryRepository   $blockRepository,
+        private GetWebSettingsUseCase $webSettingsUseCase,
     )
     {
     }
 
     public function execute(string $slug, array $params, ClientContext $clientContext): ?ProductIndexPageData
     {
+        $web = $this->webSettingsUseCase->execute();
+
         $mainInfo = $this->repository->getCategory($slug);
         if (is_null($mainInfo)) throw new \DomainException("Не найдена категория $slug");
 
@@ -49,10 +54,7 @@ readonly class CategoryPageQuery
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
 
-        /**
-         * $allProductIds - Список всех ID товаров без фильтрации
-         */
-
+        //Список всех ID товаров без фильтрации
         $allProductIds = Cache::remember(
             $key_cache,
             now()->addDay(),
@@ -82,13 +84,10 @@ readonly class CategoryPageQuery
             )
             : new UrlData(url: route('shop.category.index'), name: 'Каталог');
         $mainInfo->totalProducts = $idPaginator->total();
-        /**
-         * $productIds - Список всех ID товаров уже с фильтрацией
-         */
+
+        //Список всех ID товаров уже с фильтрацией
         $productIds = $idPaginator->items();
-
         $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds, $clientContext);
-
         $productCards = array_map(
             fn(array $item) => ProductCardData::fromArray($item),
             $productCardsRaw
@@ -125,8 +124,14 @@ readonly class CategoryPageQuery
                 break;
             }
         }
-
+        //Мета-теги
         $meta = $this->seoAdapter->getSeo('catalog.category', $mainInfo, $page);
+        $meta->ogSiteName = $web->web_name;
+        $meta->canonical = route('shop.category.view', $slug);
+        $meta->addImage(OgImage::fromData($mainInfo->image));
+
+
+        //$meta->articleModifiedTime = $mainInfo->
 
         $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'category', $faq);
         return new ProductIndexPageData(
@@ -143,6 +148,8 @@ readonly class CategoryPageQuery
 
     public function executeNew(array $params, ClientContext $clientContext): ProductIndexPageData
     {
+        $web = $this->webSettingsUseCase->execute();
+
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
         $allProductIds = $this->repository->getNewProductIds();
@@ -205,8 +212,9 @@ readonly class CategoryPageQuery
             entity: 'room',
         );
 
-
-
+        $meta = new SeoData('Новинки', 'Новинки Икеа оригинал из Европы с доставкой по всей России. IKEA доступные цены! В наличии в интернет магазине NORDI HOME');
+        $meta->ogSiteName = $web->web_name;
+        $meta->canonical = route('shop.novelty');
 
         //FIXME
         $schema = $this->schemaBuilder->createSchema();
@@ -217,7 +225,7 @@ readonly class CategoryPageQuery
             products: $productCards,
             paginator: $paginator,
             filters: $filtersWithOrder,
-            meta: new SeoData('Новинки', 'Новинки Икеа оригинал из Европы с доставкой по всей России. IKEA доступные цены! В наличии в интернет магазине NORDI HOME'),
+            meta: $meta,
             schema: $schema,
         );
     }

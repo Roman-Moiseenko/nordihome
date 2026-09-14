@@ -28,6 +28,7 @@ return [
         'title' => 'Логгеры',
         'can' => 'admin-panel',
         'font_awesome' => 'fa-light fa-scroll',
+        'route_name' => 'admin.home'
         /*    'sub_menu' => [
                 'shop' => [
                     'icon' => 'users',

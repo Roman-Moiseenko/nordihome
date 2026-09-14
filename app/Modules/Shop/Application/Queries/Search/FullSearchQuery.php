@@ -10,6 +10,9 @@ use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepositor
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductSearchQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomSearchQueryRepository;
 
+/**
+ * Для ajax поиск
+ */
 readonly class FullSearchQuery
 {
     public function __construct(

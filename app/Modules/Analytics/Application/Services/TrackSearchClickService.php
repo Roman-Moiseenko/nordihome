@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Analytics\Application\Actions\Search;
+namespace App\Modules\Analytics\Application\Services;
 
+use App\Modules\Analytics\Application\Actions\Search\RegisterSearchClickUseCase;
+use App\Modules\Analytics\Application\Actions\Search\TrackSearchUseCase;
 use App\Modules\Analytics\Application\DTOs\Search\TrackSearchClickData;
 use App\Modules\Analytics\Domain\Entities\SessionEntity;
 use App\Modules\Analytics\Domain\Entities\VisitorEntity;
@@ -19,7 +21,7 @@ use DateTimeImmutable;
  * созданную запись информацией о выбранном результате через
  * RegisterSearchClickUseCase. Идентификация — по uuid из cookie.
  */
-final readonly class TrackSearchClickUseCase
+final readonly class TrackSearchClickService
 {
     public function __construct(
         private VisitorRepositoryInterface $visitors,

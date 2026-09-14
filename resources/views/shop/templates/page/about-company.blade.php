@@ -1,16 +1,14 @@
 <!--template:Страница О компании-->
+@php
+    use App\Modules\Shop\Application\DTOs\Pages\PageViewPageData;
+    /** @var PageViewPageData $pageData */
+@endphp
 @extends('layouts.main')
-
-@section('main')
-    pages
-@endsection
-
-@section('title', $title)
-@section('description', $description)
+@section('main', 'pages')
 
 @section('content')
     <div class="container-xl">
-        <h1 class="my-4">{{ $page->name }}</h1>
+        <h1 class="my-4">{{ $pageData->name }}</h1>
         <div class="row">
             <div class="col-lg-6 bg-black b-radius_12 m-b_10">
                 <div class="about-block-text"><p>НОРДИ ХОУМ — магазин мебели и товаров для дома из Европы с доставкой по всей России.</p>
@@ -26,7 +24,7 @@
     </div>
     <div class="container-xl">
         <div class="mt-4">
-            {!! $page->text !!}
+            {!! $pageData->text !!}
         </div>
     </div>
     @include('shop.widgets.contact')

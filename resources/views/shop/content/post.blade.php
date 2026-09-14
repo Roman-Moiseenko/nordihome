@@ -3,11 +3,9 @@
     /** @var PostViewPageData  $pageData */
 @endphp
 @extends('layouts.main')
-@section('title', $pageData->meta->title)
-@section('description', $pageData->meta->description)
 @section('body', 'post')
-
 @section('main', 'container-xl')
+
 @section('content')
     <h1>{{ $pageData->post->caption }}</h1>
     <!-- Виджет содержания -->

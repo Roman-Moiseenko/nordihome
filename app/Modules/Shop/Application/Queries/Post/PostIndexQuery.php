@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shop\Application\Queries\Post;
 
+use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterPostsData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\PostIndexPageData;
@@ -19,12 +20,14 @@ readonly class PostIndexQuery
         private PaginatorBuilder         $paginatorBuilder,
         //private SeoAdapter                    $seoAdapter,
         private SchemaBuilder            $schemaBuilder,
+        private GetWebSettingsUseCase $webSettingsUseCase,
     )
     {
     }
 
     public function execute(string $slug, array $params): PostIndexPageData
     {
+        $web = $this->webSettingsUseCase->execute();
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
 
@@ -55,14 +58,16 @@ readonly class PostIndexQuery
                 'query' => array_diff_key(request()->query(), ['page' => null]),
             ]
         );
-        $seo = new SeoData($category->title, $category->description);
-        if ($page > 1) $seo->title .= ' - Страница ' . $page;
-        //$category->
+        $meta = new SeoData($category->title, $category->description);
+        if ($page > 1) $meta->title .= ' - Страница ' . $page;
+        $meta->canonical = route('shop.posts.view', $slug);
+        $meta->ogSiteName = $web->web_name;
+
         return new PostIndexPageData(
             category: $category,
             posts: $postsPaginator->items(),
             paginator: $paginator,
-            meta: $seo,
+            meta: $meta->asArticle(),
             schema: $schema,
             filters: $filters,
         );

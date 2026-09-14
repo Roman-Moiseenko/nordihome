@@ -4,10 +4,14 @@ namespace App\Modules\Content\Entity\Renders;
 
 use App\Modules\Base\Casts\MetaCast;
 use App\Modules\Base\Entity\Meta;
+use App\Modules\Base\Traits\IconField;
+use App\Modules\Base\Traits\ImageField;
 use App\Modules\Content\Entity\Widgets\Template;
+use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
+use App\Modules\Shop\Application\DTOs\Pages\PageViewPageData;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-
+//MAINDO Переделать в Query
 /**
  * @property string $text
  * @property bool $published
@@ -18,6 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 abstract class RenderPage extends Model
 {
+    use ImageField;
     protected string $field = '';
 
     protected $attributes = [
@@ -60,22 +65,32 @@ abstract class RenderPage extends Model
         $this->field = empty($this->field) ? $this->getField() : $this->field;
         $this->text = $this->renderTags($this->text);
         $this->text  = $this->renderRoots($this->text);
-
         $this->text = Template::renderClasses($this->text);
 
-        $url_page = route('shop.' . $this->field . '.view', $this->slug);
         if ($fn != null) $this->meta = $fn($this, $this->meta);
+
 
         $title = is_array($this->meta) ? $this->meta['title'] : $this->meta->title;
         $description = is_array($this->meta) ? $this->meta['description'] : $this->meta->description;
+        $meta = new SeoData($title, $description);
+
+        //MAINDO ИЗ web настроек
+        $meta->ogSiteName = 'НОРДИ ХОУМ - Мебель и товары для дома из Европы и России | Калининград';
+
+
+        //MAINDO Остальные данные для страницы
+        $pageData = new PageViewPageData(
+            meta: $meta,
+        );
 
 
         return view(
             Template::blade($this->field) . $this->template,
             [$this->field => $this,
+                'pageData' => $pageData,
                 'title' => $title,
                 'description' => $description,
-                'url_page' => $url_page])
+                ])
             ->render();
     }
 

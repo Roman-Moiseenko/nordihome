@@ -5,14 +5,17 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
+use App\Modules\Shop\Application\Helpers\ImageInfoDataHelper;
 use Illuminate\Support\Facades\DB;
 
 class RoomPageQueryRepository
 {
     private const string PHOTO_MODEL_TYPE = 'catalog.product';
+    private const string ROOM_MODEL_TYPE = 'catalog.room';
 
     public function __construct(
         private readonly PhotoService $photoService,
+        private readonly ImageInfoDataHelper $imageInfoHelper,
     )
     {
     }
@@ -21,16 +24,32 @@ class RoomPageQueryRepository
     {
         $row = DB::table('rooms')
             ->leftJoin('rooms as parent', 'parent.id', '=', 'rooms.parent_id')
+            ->leftJoin('photos', function ($join) {
+                $join->on('rooms.id', '=', 'photos.imageable_id')
+                    ->where('photos.model_type', '=', self::ROOM_MODEL_TYPE)
+                    ->where('photos.type', '=', 'image');
+            })
             ->where('rooms.slug', $slug)
             ->select('rooms.id',
                 'rooms.name', 'rooms.slug',
                 'rooms.meta', 'rooms.parent_id',
-                'parent.name as parent_name', 'parent.slug as parent_slug')
+                'parent.name as parent_name', 'parent.slug as parent_slug',
+                'photos.id as photo_id',
+                'photos.file as photo_file',
+                'photos.alt as photo_alt',
+                'photos.title as photo_title',
+                'photos.description as photo_description',
+                'photos.format as photo_format',
+                'photos.width as photo_width',
+                'photos.height as photo_height',
+                'photos.model_type as model_type')
             ->first();
         if (!$row) return null;
 
         $childrenRows = DB::table('rooms')->where('parent_id', $row->id)->get(['id', 'name', 'slug']);
         $children = $childrenRows->map(fn($c) => new ChildrenData($c->id, $c->name, $c->slug))->all();
+
+        $meta = json_decode($row->meta ?? '{}', true);
 
         return new CategoryRoomMainData(
             id: $row->id,
@@ -42,6 +61,7 @@ class RoomPageQueryRepository
             totalProducts: 0,
             title: $meta['title'] ?? $row->name,
             description: $meta['description'] ?? '',
+            image: !empty($row->photo_id) ? $this->imageInfoHelper->build($row) : null,
         );
 
     }
