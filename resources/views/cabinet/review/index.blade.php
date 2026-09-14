@@ -1,7 +1,6 @@
 @php
-    use App\Modules\Cabinet\Application\DTOs\ReviewClientData;
-
-    /** @var ReviewClientData[] $reviews */
+    use App\Modules\Cabinet\Application\DTOs\Pages\ReviewViewData;
+        /** @var ReviewViewData  $pageData*/
 @endphp
 @extends('cabinet.layout')
 @section('body')
@@ -9,12 +8,10 @@
     review
 @endsection
 
-@section('title', 'Мои отзывы')
-
 @section('h1', 'Отзывы')
 
 @section('subcontent')
-    @foreach($reviews as $review)
+    @foreach($pageData->reviews as $review)
         <div class="box-card d-flex review-item">
             <div class="product-img">
                 <a href="{{ route('shop.product.view', $review->product->slug) }}" target="_blank"><img
@@ -42,7 +39,7 @@
             </div>
         </div>
     @endforeach
-    @if(count($reviews) == 0)
+    @if(count($pageData->reviews) == 0)
         <div class="fs-5 m-3 mb-5">
             У вас еще нет отзывов на товары.
         </div>

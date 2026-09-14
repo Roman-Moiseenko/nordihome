@@ -5,6 +5,7 @@ namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
 
 use App\Modules\Auth\Infrastructure\Models\Client;
+use App\Modules\Cabinet\Application\Queries\PageCabinetQuery;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use App\Modules\User\Service\UserService;
 use Illuminate\Http\Request;
@@ -16,7 +17,10 @@ class CabinetController extends ShopController
 
     private UserService $service;
 
-    public function __construct(UserService $service)
+    public function __construct(
+        UserService                       $service,
+        private readonly PageCabinetQuery $pageCabinetQuery,
+    )
     {
         //parent::__construct();
         $this->service = $service;
@@ -24,7 +28,8 @@ class CabinetController extends ShopController
 
     public function view(Request $request)
     {
-        return view('cabinet.view');
+        $data = $this->pageCabinetQuery->execute($this->getClient($request));
+        return view('cabinet.view', ['pageData' => $data]);
     }
 
     public function profile(Client $client)

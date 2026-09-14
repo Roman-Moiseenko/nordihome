@@ -37,7 +37,7 @@ class OrderController extends ShopController
     {
         $client = $this->getClient($request);
 
-        $pageData = $this->getOrdersClientQuery->execute($client->id, $request->query());
+        $pageData = $this->getOrdersClientQuery->execute($client, $request->query());
 
         return view('cabinet.order.index', [
             'pageData' => $pageData,

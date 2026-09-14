@@ -2,10 +2,7 @@
     use App\Modules\Auth\Application\DTOs\Client\ClientInfoWebData;use App\Modules\Catalog\Domain\ValueObjects\PriceType;
     /** @var ClientInfoWebData $client */
 @endphp
-
 @extends('cabinet.layout')
-
-@section('title', 'Мой кабинет - NORDI HOME')
 
 @section('h1', 'Мой кабинет')
 

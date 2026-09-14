@@ -4,6 +4,7 @@
 namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
 
+use App\Modules\Cabinet\Application\Queries\PageOptionsQuery;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use App\Modules\User\Entity\Subscription;
 use App\Modules\User\Entity\User;
@@ -18,23 +19,27 @@ class OptionsController extends ShopController
 
     private SubscriptionService $service;
 
-    public function __construct(SubscriptionService $service)
+    public function __construct(
+        SubscriptionService $service,
+        private readonly PageOptionsQuery $pageOptionsQuery,
+    )
     {
         $this->service = $service;
     }
 
     public function index(Request $request)
     {
-        $subscriptions = Subscription::orderBy('name')->active()->get();
-        return view('cabinet.options', compact('subscriptions'));
+        $data = $this->pageOptionsQuery->execute($this->getClient($request));
+
+
+        return view('cabinet.options', ['pageData' => $data]);
     }
 
     //AJAX
     public function subscription(Subscription $subscription): \Illuminate\Http\JsonResponse
     {
-        /** @var User $user */
-        $user = Auth::guard('web')->user();
-        $this->service->toggle($user, $subscription);
-        return response()->json(true);
+        abort(404);
+      // $this->service->toggle($user, $subscription);
+       // return response()->json(true);
     }
 }

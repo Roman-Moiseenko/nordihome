@@ -7,6 +7,7 @@ use App\Modules\Analytics\Domain\ValueObjects\ActionType;
 use App\Modules\Analytics\Domain\ValueObjects\EntityType;
 use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Cart\Application\DTOs\AddProductToCartData;
+use App\Modules\Cart\Application\Queries\PageCartQuery;
 use App\Modules\Cart\Application\Services\AddProductToCartService;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -19,14 +20,17 @@ class CartController extends ShopController
     use RecordsAnalyticsAction;
 
     public function __construct(
-        private readonly AddProductToCartService $addProductToCartService)
+        private readonly AddProductToCartService $addProductToCartService,
+        private readonly PageCartQuery           $pageCartQuery,
+    )
     {
 
     }
 
     public function view(Request $request)
     {
-        return view('cart.index');
+        $data = $this->pageCartQuery->execute($this->getClient($request));
+        return view('cart.index', ['pageData' => $data]);
     }
 
     //AJAX

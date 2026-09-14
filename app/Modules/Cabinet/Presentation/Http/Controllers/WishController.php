@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
+use App\Modules\Cabinet\Application\Queries\PageWishQuery;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use App\Modules\User\Entity\User;
@@ -17,7 +18,9 @@ class WishController extends ShopController
     private WishService $service;
     private UserRepository $repository;
 
-    public function __construct(WishService $service, UserRepository $repository)
+    public function __construct(WishService $service, UserRepository $repository,
+    private readonly PageWishQuery $pageWishQuery,
+    )
     {
         $this->service = $service;
         $this->repository = $repository;
@@ -25,7 +28,9 @@ class WishController extends ShopController
 
     public function index(Request $request)
     {
-        return view('cabinet.wish');
+        $data = $this->pageWishQuery->execute($this->getClient($request));
+
+        return view('cabinet.wish', ['pageData' => $data]);
     }
 
     //Ajax

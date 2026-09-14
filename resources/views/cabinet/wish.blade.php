@@ -3,8 +3,6 @@
     @parent
     wish
 @endsection
-
-@section('title', 'Мои избранные товары - NORDI HOME')
 @section('h1', 'Избранное')
 
 @section('subcontent')

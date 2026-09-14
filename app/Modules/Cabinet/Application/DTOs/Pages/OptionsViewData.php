@@ -1,0 +1,14 @@
+<?php
+
+namespace App\Modules\Cabinet\Application\DTOs\Pages;
+
+use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
+use Spatie\LaravelData\Data;
+
+class OptionsViewData extends Data
+{
+    public function __construct(
+        public readonly SeoData $meta,
+        public readonly array $subscriptions = [],
+    ){}
+}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
 use App\Modules\Cabinet\Application\Queries\GetReviewsClientQuery;
+use App\Modules\Cabinet\Application\Queries\PageReviewQuery;
 use App\Modules\Catalog\Entity\Review;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use Illuminate\Http\Request;
@@ -11,17 +12,16 @@ use Illuminate\Http\Request;
 class ReviewController extends ShopController
 {
     public function __construct(
-        public GetReviewsClientQuery $getReviewsClientQuery,
+        public PageReviewQuery $pageReviewQuery
     )
     {
     }
     public function index(Request $request)
     {
-        //FIXME - Отзывы сделать useCase для получения всех отзывово, через пагинацию
-        // Либо отдельный CabinetReviewPageData
         $client = $this->getClient($request);
-        $reviews = $this->getReviewsClientQuery->execute($client->id);
-        return view('cabinet.review.index', ['reviews' => $reviews]);
+
+        $data = $this->pageReviewQuery->execute($client);
+        return view('cabinet.review.index', ['pageData' => $data]);
     }
 
     public function show(int $id, Request $request)

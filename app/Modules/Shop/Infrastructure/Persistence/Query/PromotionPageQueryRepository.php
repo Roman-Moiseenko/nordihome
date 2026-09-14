@@ -9,12 +9,9 @@ use Illuminate\Support\Facades\DB;
 
 class PromotionPageQueryRepository
 {
-    private const string PHOTO_MODEL_TYPE = 'catalog.product';
     private const string PROMOTION_MODEL_TYPE = 'discount.promotion';
 
     public function __construct(
-        private readonly PhotoService $photoService,
-        private readonly AttributeQueryRepository $attributeQueryRepository,
         private readonly ImageInfoDataHelper $imageInfoHelper,
     )
     {

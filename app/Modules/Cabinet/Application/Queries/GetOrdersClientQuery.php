@@ -2,9 +2,11 @@
 
 namespace App\Modules\Cabinet\Application\Queries;
 
+use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Cabinet\Application\Actions\GetOrderClientData;
 use App\Modules\Cabinet\Application\DTOs\OrdersClientPageData;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -15,18 +17,19 @@ readonly class GetOrdersClientQuery
         private OrderRepositoryInterface $repository,
         private PaginatorBuilder            $paginatorBuilder,
         private GetOrderClientData $getOrderClientData,
+        private ClientRepositoryInterface $clientRepository,
     )
     {
     }
 
-    public function execute(int $clientId, array $params): OrdersClientPageData
+    public function execute(ClientContext $context, array $params): OrdersClientPageData
     {
         $perPage = 10;
         $page = (int)($params['page'] ?? 1);
 
         /** @var LengthAwarePaginator<int> $idsPaginator */
-        $idsPaginator = $this->repository->getIdsByClientId($clientId, $perPage, $page);
-
+        $idsPaginator = $this->repository->getIdsByClientId($context->id, $perPage, $page);
+        $client = $this->clientRepository->findById($context->id);
         $orders = array_map(
             fn(int $id) => $this->getOrderClientData->execute($id),
             $idsPaginator->items(),
@@ -45,7 +48,7 @@ readonly class GetOrdersClientQuery
         return new OrdersClientPageData(
             orders: $orders,
             paginator: $paginator,
-            meta: new SeoData('Мои Заказы', ''),
+            meta: new SeoData('Мои Заказы | ' . $client->fullName->getValue(), ''),
         );
     }
 }
