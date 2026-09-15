@@ -128,7 +128,7 @@ readonly class CategoryPageQuery
         $meta = $this->seoAdapter->getSeo('catalog.category', $mainInfo, $page);
         $meta->ogSiteName = $web->web_name;
         $meta->canonical = route('shop.category.view', $slug);
-        $meta->addImage(OgImage::fromData($mainInfo->image));
+        if (!is_null($mainInfo->image)) $meta->addImage(OgImage::fromData($mainInfo->image));
 
 
         //$meta->articleModifiedTime = $mainInfo->

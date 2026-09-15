@@ -10,7 +10,7 @@
 
 @section('content')
     {!! $pageData->text !!}
-    @include('shop.widgets.map-yandex')
+    @include('shop.widgets.map')
 @endsection
 
 @pushonce('styles')

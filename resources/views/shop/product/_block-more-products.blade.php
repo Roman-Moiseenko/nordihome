@@ -5,14 +5,23 @@
             <ol>
                 <li class="m-b_10">Наши менеджеры помогут Вам с подбором. Для этого Вам просто надо связаться с нами по телефону:
                     @if(isset($contacts['phone_1']))
-                    <a href="{{ $contacts['phone_1']->url }}" class="t-color_orange">{{ phone( $contacts['phone_1']->url ) }}</a>
+                    <a href="{{ $contacts['phone_1']->url }}" class="t-color_orange"
+                       data-analytics-action="contact_click"
+                       data-analytics-payload='{"channel":"{{ $contacts['phone_1']->channel }}","placement":"page_product"}'
+                    >{{ phone( $contacts['phone_1']->url ) }}</a>
                     @endif
                     <br>либо в мессенджерах
                     @if(isset($contacts['max_bot']))
-                        <a href="{{ $contacts['max_bot']->url }}" target="_blank">{!! $contacts['max_bot']->svg !!}</a>
+                        <a href="{{ $contacts['max_bot']->url }}" target="_blank"
+                           data-analytics-action="contact_click"
+                           data-analytics-payload='{"channel":"{{ $contacts['max_bot']->channel }}","placement":"page_product"}'
+                        >{!! $contacts['max_bot']->svg !!}</a>
                     @endif
                     @if(isset($contacts['telegram_bot']))
-                    <a href="{{ $contacts['telegram_bot']->url }}" target="_blank">{!! $contacts['telegram_bot']->svg !!}</a></li>
+                    <a href="{{ $contacts['telegram_bot']->url }}" target="_blank"
+                       data-analytics-action="contact_click"
+                       data-analytics-payload='{"channel":"{{ $contacts['telegram_bot']->channel }}","placement":"page_product"}'
+                    >{!! $contacts['telegram_bot']->svg !!}</a></li>
                 @endif
                 <li>Вы можете сделать заказ из полного ассортимента IKEA.pl, а мы доставим выбранные позиции в кратчайшие сроки, не зависимо от веса и объёма.</li>
             </ol>

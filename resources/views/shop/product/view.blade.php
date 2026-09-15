@@ -245,29 +245,6 @@
 
 @section('bottom-content')
     @include ('shop.product._block-more-products')
-    <div class="block-map">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12 padding_0">
-                    <div class="map-yandex" id="map-yandex"></div>
-                    <script>
-                        let ok = false;
-                        window.addEventListener('scroll', function () {
-                            if (ok === false) {
-                                ok = true;
-                                setTimeout(() => {
-                                    let script = document.createElement('script');
-                                    script.src = 'https://api-maps.yandex.ru/services/constructor/1.0/js/?um=constructor%3Ade8d267d33a8a3658335441ae0726a71a93f99369797fd0a57314bfd35fa76a9&amp;width=100%&amp;height=400&amp;lang=ru_RU&amp;scroll=false';
-                                    document.getElementById('map-yandex').replaceWith(script);
-                                }, 2000)
-                            }
-                        });
-                    </script>
-                </div>
-            </div>
-        </div>
-
-
-    </div>
+    @include('shop.widgets.map')
 @endsection
 

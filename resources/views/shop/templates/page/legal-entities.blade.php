@@ -234,7 +234,12 @@
                 <div class="row">
                     <div class="col-md-12 col-lg-6">
                         <h3 class="t-color_orange">Приглашаем Вас к сотрудничеству и предлагаем гибкие начальные условия</h3>
-                        <div class="m-b_20">Оставьте заявку, чтобы обсудить или свяжитесь с нами по телефону: <a href="{!! $contacts['phone']->url !!}" class="t-color_white">{{ phone( $contacts['phone']->url ) }}</a></div>
+                        <div class="m-b_20">Оставьте заявку, чтобы обсудить или свяжитесь с нами по телефону:
+                            <a href="{!! $contacts['phone']->url !!}" class="t-color_white"
+                               data-analytics-action="contact_click"
+                               data-analytics-payload='{"channel":"{{ $contacts['phone']->channel }}","placement":"page_legal"}'
+                            >{{ phone( $contacts['phone']->url ) }}</a>
+                        </div>
                         <div class="m-b_20">Мы открыты к сотрудничеству и рады обсудить это на личной встрече по адресу: г. Калининград, ул. Советский проспект 103А, корпус 1</div>
                     </div>
                     <div class="col-md-12 col-lg-6">
