@@ -28,7 +28,7 @@ class CreateLabelUseCaseTest extends TestCase
 
     public function getEntityName(): string
     {
-        return 'label';
+        return 'post';
     }
 
     protected function setUp(): void
