@@ -8,6 +8,7 @@ use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\Gender;
+use App\Modules\Auth\Domain\ValueObjects\NewsletterConsent;
 use App\Modules\Auth\Domain\ValueObjects\PersonalDataConsent;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
 use App\Modules\Auth\Infrastructure\Models\Client;
@@ -64,6 +65,23 @@ class ClientRepository implements ClientRepositoryInterface
             $model->policy_version = null;
             $model->action_identifier = null;
             $model->consent_active = false;
+        }
+
+        $newsletterConsent = $client->newsletterConsent;
+        if ($newsletterConsent !== null) {
+            $model->newsletter_consented = true;
+            $model->newsletter_consented_at = $newsletterConsent->consentedAt;
+            $model->newsletter_consent_text_version = $newsletterConsent->consentTextVersion;
+            $model->newsletter_action_identifier = $newsletterConsent->actionIdentifier;
+            $model->newsletter_source = $newsletterConsent->source;
+            $model->newsletter_active = $newsletterConsent->active;
+        } else {
+            $model->newsletter_consented = false;
+            $model->newsletter_consented_at = null;
+            $model->newsletter_consent_text_version = null;
+            $model->newsletter_action_identifier = null;
+            $model->newsletter_source = null;
+            $model->newsletter_active = false;
         }
         $model->price_type = $client->priceType->value;
         $model->discount = $client->discount;
@@ -200,6 +218,22 @@ class ClientRepository implements ClientRepositoryInterface
 
         } else {
             $client->dataConsent = null;
+        }
+
+        // Восстановление согласия на рассылку
+        if ($model->newsletter_consented && $model->newsletter_consent_text_version) {
+            $client->newsletterConsent = new NewsletterConsent(
+                consentTextVersion: $model->newsletter_consent_text_version,
+                source: $model->newsletter_source ?? NewsletterConsent::SOURCE_POPUP,
+                actionIdentifier: $model->newsletter_action_identifier,
+                active: $model->newsletter_active
+            );
+
+            if ($model->newsletter_consented_at) {
+                $client->newsletterConsent->consentedAt = DateTimeImmutable::createFromMutable($model->newsletter_consented_at);
+            }
+        } else {
+            $client->newsletterConsent = null;
         }
         $client->priceType = is_null($model->price_type) ? PriceType::retail() : new PriceType($model->price_type);
         $client->discount = $model->discount;

@@ -35,9 +35,13 @@
                                     Необходимо согласие на обработку персональных данных
                                 </div>
                             </div>
+                            <div class="form-check mt-2 p-0">
+                                <input class="form-check-input" type="checkbox" name="newsletter" id="newsletter" value="1" checked>
+                                <label class="form-check-label f-z_14" for="newsletter">Согласен получать новости, акции и специальные предложения по электронной почте</label>
+                            </div>
                             <span id="token-error" class="fs-7 text-danger" style="display: none">Неверный код подтверждения</span>
                         </div>
-                        <div class="fs-7 mt-3">
+                        <div class="fs-7 mt-3" id="forgot-password">
                             <a href="{{ route('password.request') }}">Забыли пароль?</a>
                         </div>
                         <div class="d-flex justify-content-center my-5">

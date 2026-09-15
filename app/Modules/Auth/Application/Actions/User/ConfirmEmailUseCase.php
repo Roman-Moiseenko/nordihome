@@ -18,7 +18,7 @@ readonly class ConfirmEmailUseCase
         private ConsentClientUseCase $consentClientUseCase,
     ) {}
 
-    public function execute(string $token, bool $agreement): void
+    public function execute(string $token, bool $agreement, ?string $actionIdentifier = null): int
     {
         $verification = $this->userRepository->findEmailVerificationByToken($token);
         if (!$verification || now()->gt($verification->expires_at)) {
@@ -41,9 +41,11 @@ readonly class ConfirmEmailUseCase
             $user->verifyEmail();
         }
 
-        $this->consentClientUseCase->execute($user->profileableId); //Согласие
+        $this->consentClientUseCase->execute($user->profileableId, $actionIdentifier); //Согласие
 
         $this->userRepository->save($user);
         $this->userRepository->deleteEmailVerification($token);
+
+        return (int)$user->profileableId;
     }
 }

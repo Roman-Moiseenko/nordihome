@@ -23,5 +23,7 @@ class LoginData extends Data
         public readonly ?string $verify_token = null,
         #[Nullable, BooleanType]
         public readonly bool $agreement = false,
+        #[Nullable, BooleanType]
+        public readonly bool $newsletter = false,
     ) {}
 }

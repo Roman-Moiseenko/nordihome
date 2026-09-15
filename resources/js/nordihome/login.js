@@ -16,8 +16,10 @@ window.$ = jQuery;
         const inputPassword = loginPopup.find('input[name="password"]');
         const inputVerify = loginPopup.find('input[name="verify_token"]');
         const checkAgreement = loginPopup.find('input[name="agreement"]');
+        const checkNewsletter = loginPopup.find('input[name="newsletter"]');
         const tokenError = $('#token-error');
         const passwordError =$('#password-error')
+        const forgotPassword = $('#forgot-password');
 
         inputVerify.parent().hide();
         buttonLogin.on('click', function () {
@@ -39,7 +41,8 @@ window.$ = jQuery;
                     email: inputEmail.val(),
                     password: inputPassword.val(),
                     verify_token: inputVerify.val(),
-                    agreement: checkAgreement.prop('checked') ? 1 : 0
+                    agreement: checkAgreement.prop('checked') ? 1 : 0,
+                    newsletter: checkNewsletter.prop('checked') ? 1 : 0
                 }, function (data) {
                     console.log(data)
 
@@ -52,6 +55,7 @@ window.$ = jQuery;
                         inputVerify.prop('required', true);
                         checkAgreement.prop('required', true);
                         inputVerify.parent().show();
+                        forgotPassword.hide();
                     }
                     if (data === "password") passwordError.show(); //Неверный пароль
                     if (data === "login") location.reload(); //Аутентификация прошла

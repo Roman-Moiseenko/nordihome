@@ -16,6 +16,10 @@
 Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a>
 на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности
 
+@component('mail::button', ['url' => route('register.verify', ['token' => $token, 'agreement' => true, 'newsletter' => true])])
+Подтвердить почту и подписаться на рассылку
+@endcomponent
+
 С уважением команда <br>
 {{ config('app.name') }}
 </x-mail::message>

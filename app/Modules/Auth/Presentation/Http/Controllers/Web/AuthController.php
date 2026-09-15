@@ -8,10 +8,12 @@ use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Auth\Application\Actions\Auth\LoginStaffUseCase;
 use App\Modules\Auth\Application\Actions\Auth\LoginUserUseCase;
 use App\Modules\Auth\Application\Actions\Auth\LogoutUserUseCase;
+use App\Modules\Auth\Application\Actions\Client\NewsletterConsentClientUseCase;
 use App\Modules\Auth\Application\Actions\User\ConfirmEmailUseCase;
 use App\Modules\Auth\Application\Actions\User\VerifyUserUseCase;
 use App\Modules\Auth\Application\DTOs\LoginData;
 use App\Modules\Auth\Application\Services\LoginOrRegisterUserService;
+use App\Modules\Auth\Domain\ValueObjects\NewsletterConsent;
 use App\Modules\Auth\Infrastructure\Events\UserIsLogin;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Events\Dispatcher;
@@ -29,6 +31,7 @@ class AuthController extends Controller
         private readonly LogoutUserUseCase          $logoutUser,
         private readonly LoginOrRegisterUserService $loginOrRegisterUserService,
         private readonly ConfirmEmailUseCase        $confirmEmailUseCase,
+        private readonly NewsletterConsentClientUseCase $newsletterConsentClientUseCase,
         private Dispatcher                  $dispatcher,
     )
     {
@@ -75,7 +78,12 @@ class AuthController extends Controller
         if (!is_null($dto->verify_token)) {
             try {
                 //Верифицируемся
-                $this->confirmEmailUseCase->execute($dto->verify_token, $dto->agreement);
+                $clientId = $this->confirmEmailUseCase->execute($dto->verify_token, $dto->agreement, $request->ip());
+
+                //Согласие на рассылку
+                if ($dto->newsletter) {
+                    $this->newsletterConsentClientUseCase->execute($clientId, NewsletterConsent::SOURCE_POPUP, $request->ip());
+                }
 
                 //Регистрация завершена — клиент подтвердил почту
                 $this->recordAnalyticsAction(ActionType::REGISTER);
@@ -109,7 +117,12 @@ class AuthController extends Controller
 
     public function verify(Request $request)
     {
-        $this->confirmEmailUseCase->execute($request->input('token'), $request->boolean('agreement'));
+        $clientId = $this->confirmEmailUseCase->execute($request->input('token'), $request->boolean('agreement'), $request->ip());
+
+        //Подписка на рассылку
+        if ($request->boolean('newsletter')) {
+            $this->newsletterConsentClientUseCase->execute($clientId, NewsletterConsent::SOURCE_REGISTRATION, $request->ip());
+        }
 
         //Регистрация завершена
         $this->recordAnalyticsAction(ActionType::REGISTER);

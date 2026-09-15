@@ -8,6 +8,7 @@ use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\Gender;
+use App\Modules\Auth\Domain\ValueObjects\NewsletterConsent;
 use App\Modules\Auth\Domain\ValueObjects\PersonalDataConsent;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
 use App\Modules\Auth\Domain\ValueObjects\StaffPositions;
@@ -69,6 +70,22 @@ trait HydratesProfileableEntities
             }
         } else {
             $client->dataConsent = null;
+        }
+
+        // Восстановление согласия на рассылку
+        if ($model->newsletter_consented && $model->newsletter_consent_text_version) {
+            $client->newsletterConsent = new NewsletterConsent(
+                consentTextVersion: $model->newsletter_consent_text_version,
+                source: $model->newsletter_source ?? NewsletterConsent::SOURCE_POPUP,
+                actionIdentifier: $model->newsletter_action_identifier,
+                active: $model->newsletter_active
+            );
+
+            if ($model->newsletter_consented_at) {
+                $client->newsletterConsent->consentedAt = DateTimeImmutable::createFromMutable($model->newsletter_consented_at);
+            }
+        } else {
+            $client->newsletterConsent = null;
         }
 
         $client->user = $this->hydrateUser($model->user);

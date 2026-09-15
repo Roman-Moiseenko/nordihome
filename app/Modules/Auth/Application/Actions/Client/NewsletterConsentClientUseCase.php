@@ -3,26 +3,30 @@
 namespace App\Modules\Auth\Application\Actions\Client;
 
 use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
-use App\Modules\Auth\Domain\ValueObjects\PersonalDataConsent;
+use App\Modules\Auth\Domain\ValueObjects\NewsletterConsent;
 use InvalidArgumentException;
 
-readonly class ConsentClientUseCase
+readonly class NewsletterConsentClientUseCase
 {
-
     public function __construct(private ClientRepositoryInterface $clientRepository)
     {
     }
 
-    public function execute(?int $clientId, ?string $actionIdentifier = null): void
+    public function execute(
+        ?int $clientId,
+        string $source = NewsletterConsent::SOURCE_POPUP,
+        ?string $actionIdentifier = null,
+    ): void
     {
         if (is_null($clientId)) throw new InvalidArgumentException('Нет id Client');
         $client = $this->clientRepository->findById($clientId);
 
-        $consent = new PersonalDataConsent(
-            policyVersion: '№1 от 01.01.2026',
+        $consent = new NewsletterConsent(
+            consentTextVersion: '№2 от 01.01.2026',
+            source: $source,
             actionIdentifier: $actionIdentifier,
         );
-        $client->dataConsent = $consent;
+        $client->newsletterConsent = $consent;
         $this->clientRepository->save($client);
     }
 }

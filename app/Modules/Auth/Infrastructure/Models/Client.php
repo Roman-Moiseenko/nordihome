@@ -35,6 +35,12 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property string $policy_version
  * @property string $action_identifier
  * @property bool $consent_active
+ * @property bool $newsletter_consented
+ * @property Carbon $newsletter_consented_at
+ * @property string $newsletter_consent_text_version
+ * @property string $newsletter_action_identifier
+ * @property string $newsletter_source
+ * @property bool $newsletter_active
  * @property User $user
  * @property string $price_type
  * @property float $discount
@@ -67,6 +73,12 @@ class Client extends Model
         'policy_version',
         'action_identifier',
         'consent_active',
+        'newsletter_consented',
+        'newsletter_consented_at',
+        'newsletter_consent_text_version',
+        'newsletter_action_identifier',
+        'newsletter_source',
+        'newsletter_active',
         'price_type',
         'discount',
         'is_pickup',
@@ -78,6 +90,9 @@ class Client extends Model
         'consented' => 'boolean',
         'consented_at' => 'datetime',
         'consent_active' => 'boolean',
+        'newsletter_consented' => 'boolean',
+        'newsletter_consented_at' => 'datetime',
+        'newsletter_active' => 'boolean',
     ];
 
     public function user(): MorphOne
