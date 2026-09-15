@@ -3,23 +3,24 @@
 namespace App\Modules\Cart\Tests\Unit\Application\Actions;
 
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
-use App\Modules\Cart\Domain\Entities\CartItemEntity;
-use App\Modules\Cart\Infrastructure\Persistence\CartRepository;
-use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class RemoveCartItemUseCaseTest extends TestCase
 {
-    private CartRepository $storage;
+    private CartRepositoryInterface $cartRepository;
     private RemoveCartItemUseCase $useCase;
+    private ClientContext $client;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->storage = Mockery::mock(CartRepository::class);
-        $this->useCase = new RemoveCartItemUseCase($this->storage);
+        $this->cartRepository = Mockery::mock(CartRepositoryInterface::class);
+        $this->useCase = new RemoveCartItemUseCase($this->cartRepository);
+        $this->client = new ClientContext(uuid: 'test-uuid');
     }
 
     protected function tearDown(): void
@@ -28,37 +29,14 @@ class RemoveCartItemUseCaseTest extends TestCase
         parent::tearDown();
     }
 
-    private function makeItem(int $id, int $productId, float $quantity = 1.0): CartItemEntity
-    {
-        $product = Mockery::mock(Product::class);
-        $product->shouldReceive('getAttribute')->with('id')->andReturn($productId);
-
-        $item = CartItemEntity::create($productId, $quantity, false);
-        $item->id = $id;
-        $item->product = $product;
-
-        return $item;
-    }
-
     #[Test]
-    public function it_removes_item_and_returns_its_quantity(): void
+    public function it_removes_item(): void
     {
-        $item = $this->makeItem(7, 10, 4.0);
+        $this->cartRepository
+            ->shouldReceive('removeByProductId')
+            ->with(10, $this->client)
+            ->once();
 
-        $this->storage->shouldReceive('load')->once()->andReturn([$item]);
-        $this->storage->shouldReceive('remove')->once()->with(7);
-
-        $this->assertSame(4, $this->useCase->execute(10));
-    }
-
-    #[Test]
-    public function it_returns_zero_when_item_not_found(): void
-    {
-        $item = $this->makeItem(7, 10, 4.0);
-
-        $this->storage->shouldReceive('load')->once()->andReturn([$item]);
-        $this->storage->shouldNotReceive('remove');
-
-        $this->assertSame(0, $this->useCase->execute(99));
+        $this->assertSame(0, $this->useCase->execute(10, $this->client));
     }
 }

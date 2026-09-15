@@ -4,22 +4,24 @@ namespace App\Modules\Cart\Tests\Unit\Application\Actions;
 
 use App\Modules\Cart\Application\Actions\CheckToCartUseCase;
 use App\Modules\Cart\Domain\Entities\CartItemEntity;
-use App\Modules\Cart\Infrastructure\Persistence\CartRepository;
-use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class CheckToCartUseCaseTest extends TestCase
 {
-    private CartRepository $storage;
+    private CartRepositoryInterface $cartRepository;
     private CheckToCartUseCase $useCase;
+    private ClientContext $client;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->storage = Mockery::mock(CartRepository::class);
-        $this->useCase = new CheckToCartUseCase($this->storage);
+        $this->cartRepository = Mockery::mock(CartRepositoryInterface::class);
+        $this->useCase = new CheckToCartUseCase($this->cartRepository);
+        $this->client = new ClientContext(uuid: 'test-uuid');
     }
 
     protected function tearDown(): void
@@ -28,52 +30,47 @@ class CheckToCartUseCaseTest extends TestCase
         parent::tearDown();
     }
 
-    private function makeItem(int $id, int $productId, bool $check = true): CartItemEntity
-    {
-        $product = Mockery::mock(Product::class);
-        $product->shouldReceive('getAttribute')->with('id')->andReturn($productId);
-
-        $item = CartItemEntity::create($productId, 1, false);
-        $item->id = $id;
-        $item->product = $product;
-        $item->check = $check;
-
-        return $item;
-    }
-
     #[Test]
-    public function it_toggles_check_of_matching_item(): void
+    public function it_unchecks_item(): void
     {
-        $item = $this->makeItem(1, 10, true);
+        $item = new CartItemEntity(productId: 10, quantity: 1.0, isParser: false);
+        $item->check = true;
 
-        $this->storage->shouldReceive('load')->once()->andReturn([$item]);
-        $this->storage->shouldReceive('check')->once()->with($item);
+        $this->cartRepository
+            ->shouldReceive('getItemByProductId')
+            ->with(10, $this->client)
+            ->once()
+            ->andReturn($item);
+        $this->cartRepository
+            ->shouldReceive('save')
+            ->once()
+            ->with($item, $this->client)
+            ->andReturnUsing(fn(CartItemEntity $item) => $item);
 
-        $this->useCase->execute(10);
+        $this->useCase->execute(10, $this->client);
 
         $this->assertFalse($item->check);
     }
 
     #[Test]
-    public function it_does_not_touch_non_matching_items(): void
+    public function it_checks_item(): void
     {
-        $item = $this->makeItem(1, 10, true);
+        $item = new CartItemEntity(productId: 10, quantity: 1.0, isParser: false);
+        $item->check = false;
 
-        $this->storage->shouldReceive('load')->once()->andReturn([$item]);
-        $this->storage->shouldNotReceive('check');
+        $this->cartRepository
+            ->shouldReceive('getItemByProductId')
+            ->with(10, $this->client)
+            ->once()
+            ->andReturn($item);
+        $this->cartRepository
+            ->shouldReceive('save')
+            ->once()
+            ->with($item, $this->client)
+            ->andReturnUsing(fn(CartItemEntity $item) => $item);
 
-        $this->useCase->execute(99);
+        $this->useCase->execute(10, $this->client);
 
         $this->assertTrue($item->check);
-    }
-
-    #[Test]
-    public function it_does_nothing_when_cart_is_empty(): void
-    {
-        $this->storage->shouldReceive('load')->once()->andReturn([]);
-        $this->storage->shouldNotReceive('check');
-
-        $this->useCase->execute(10);
-        $this->addToAssertionCount(1);
     }
 }

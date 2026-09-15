@@ -4,22 +4,24 @@ namespace App\Modules\Cart\Tests\Unit\Application\Actions;
 
 use App\Modules\Cart\Application\Actions\SubToCartUseCase;
 use App\Modules\Cart\Domain\Entities\CartItemEntity;
-use App\Modules\Cart\Infrastructure\Persistence\CartRepository;
-use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
 class SubToCartUseCaseTest extends TestCase
 {
-    private CartRepository $storage;
+    private CartRepositoryInterface $cartRepository;
     private SubToCartUseCase $useCase;
+    private ClientContext $client;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->storage = Mockery::mock(CartRepository::class);
-        $this->useCase = new SubToCartUseCase($this->storage);
+        $this->cartRepository = Mockery::mock(CartRepositoryInterface::class);
+        $this->useCase = new SubToCartUseCase($this->cartRepository);
+        $this->client = new ClientContext(uuid: 'test-uuid');
     }
 
     protected function tearDown(): void
@@ -28,39 +30,45 @@ class SubToCartUseCaseTest extends TestCase
         parent::tearDown();
     }
 
-    private function makeItem(int $id, int $productId, float $quantity = 1.0): CartItemEntity
-    {
-        $product = Mockery::mock(Product::class);
-        $product->shouldReceive('getAttribute')->with('id')->andReturn($productId);
-
-        $item = CartItemEntity::create($productId, $quantity, false);
-        $item->id = $id;
-        $item->product = $product;
-
-        return $item;
-    }
-
     #[Test]
     public function it_decrements_matching_item_quantity(): void
     {
-        $item = $this->makeItem(1, 10, 5.0);
+        $item = new CartItemEntity(productId: 10, quantity: 5.0, isParser: false);
 
-        $this->storage->shouldReceive('load')->once()->andReturn([$item]);
-        $this->storage->shouldReceive('sub')->once()->with($item, 2);
+        $this->cartRepository
+            ->shouldReceive('getItemByProductId')
+            ->with(10, $this->client)
+            ->once()
+            ->andReturn($item);
+        $this->cartRepository
+            ->shouldReceive('save')
+            ->once()
+            ->with($item, $this->client)
+            ->andReturnUsing(fn(CartItemEntity $item) => $item);
+        $this->cartRepository->shouldNotReceive('removeByProductId');
 
-        $this->useCase->execute(10, 2);
-        $this->addToAssertionCount(1);
+        $this->useCase->execute(10, 2, $this->client);
+
+        $this->assertSame(3.0, $item->quantity);
     }
 
     #[Test]
-    public function it_does_nothing_when_item_not_found(): void
+    public function it_removes_item_when_quantity_is_less_or_equal(): void
     {
-        $item = $this->makeItem(1, 10, 5.0);
+        $item = new CartItemEntity(productId: 10, quantity: 2.0, isParser: false);
 
-        $this->storage->shouldReceive('load')->once()->andReturn([$item]);
-        $this->storage->shouldNotReceive('sub');
+        $this->cartRepository
+            ->shouldReceive('getItemByProductId')
+            ->with(10, $this->client)
+            ->once()
+            ->andReturn($item);
+        $this->cartRepository
+            ->shouldReceive('removeByProductId')
+            ->with(10, $this->client)
+            ->once();
+        $this->cartRepository->shouldNotReceive('save');
 
-        $this->useCase->execute(99, 2);
+        $this->useCase->execute(10, 3, $this->client);
         $this->addToAssertionCount(1);
     }
 }
