@@ -1,6 +1,7 @@
 @php
     /** @var App\Modules\Shop\Application\DTOs\Menu\MenuData[] $menus */
 /** @var  App\Modules\Shop\Application\DTOs\Menu\ContactData[] $contacts*/
+
 @endphp
 
 <header>
@@ -20,18 +21,7 @@
                         @endif
                     </div>
                     <div class="d-flex ms-2">
-
-                        @foreach($contacts as $item)
-                            <div class="ms-2">
-                                <a href="{{ $item->url }}" target="_blank" title="{{ $item->name }}">
-                                    @if(is_null($item->svg))
-                                        <i class="{{ $item->icon }} fs-3" style="color: {{ $item->color }}"></i>
-                                    @else
-                                        {!! $item->svg !!}
-                                    @endif
-                                </a>
-                            </div>
-                        @endforeach
+                        @include('shop.widgets.header.contacts')
                     </div>
                 </div>
             </div>
@@ -58,31 +48,7 @@
                     <br><span class="f-z_13">по России бесплатно</span>
                 </div>
                 <div class="d-flex ms-2 h-social">
-
-                    {{-- @foreach($contacts as $item)
-                         <div class="ms-2">
-                             <a href="{{ $item->url }}" target="_blank" title="{{ $item->name }}">
-                                 @if(is_null($item->svg))
-                                     <i class="{{ $item->icon }} fs-3" style="color: {{ $item->color }}"></i>
-                                 @else
-                                     {!! $item->svg !!}
-                                 @endif
-                             </a>
-                         </div>
-                     @endforeach --}}
-                    @if(isset($contacts['phone']))
-                        <a href="{{ $contacts['phone']->url }}" target="_blank" class="m-r_5">{!! $contacts['phone']->svg !!}</a>
-                    @endif
-                    @if(isset($contacts['telegram']))
-                        <a href="{{ $contacts['telegram']->url }}" target="_blank" class="m-r_5">{!! $contacts['telegram']->svg !!}</a>
-                    @endif
-                    @if(isset($contacts['max_bot_1']))
-                        <a href="{{ $contacts['max_bot_1']->url }}" target="_blank" class="m-r_5">{!! $contacts['max_bot_1']->svg !!}</a>
-                    @endif
-                    @if(isset($contacts['vk']))
-                        <a href="{{ $contacts['vk']->url }}" target="_blank">{!! $contacts['vk']->svg !!}</a>
-                    @endif
-
+                    @include('shop.widgets.header.contacts')
                 </div>
             </div>
         </div>

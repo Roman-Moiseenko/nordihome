@@ -23,7 +23,10 @@ use App\Modules\Content\Entity\Widgets\FormWidget;
 <div class="heading f-w_600 f-z_23 m-b_20">ФОРМА ОБРАТНОЙ СВЯЗИ</div>
 <div>По вопросам сотрудничества:
     @if(isset($contacts['mail_1']))
-        <a href="{{ $contacts['mail_1']->url }}">{{ $contacts['mail_1']->name }}</a>
+        <a href="{{ $contacts['mail_1']->url }}" target="_blank"
+           data-analytics-action="contact_click"
+           data-analytics-payload='{"channel":"{{ $contacts['mail_1']->channel }}","placement":"form-contacts"}'
+        >{{ $contacts['mail_1']->name }}</a>
     @endif
 </div>
 <div>

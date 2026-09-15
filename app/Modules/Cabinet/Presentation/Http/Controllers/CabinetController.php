@@ -61,14 +61,14 @@ class CabinetController extends ShopController
     public function email(Client $client, Request $request)
     {
         $result = $this->service->setEmail($client, $request);
-        $user->refresh();
+        $client->refresh();
         return response()->json($result);
     }
 
-    public function password(Client $user, Request $request)
+    public function password(Client $client, Request $request)
     {
         $result = $this->service->setPassword($client, $request);
-        $user->refresh();
+        $client->refresh();
         return response()->json($result);
     }
 }

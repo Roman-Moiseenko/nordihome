@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Content\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Content\Domain\ValueObjects\ContactChannel;
 use App\Modules\Content\Entity\Contact;
 use App\Modules\Content\Service\ContactService;
 use Illuminate\Http\RedirectResponse;
@@ -78,5 +79,10 @@ class ContactController extends Controller
     {
         $this->service->destroy($contact);
         return redirect()->back()->with('success', 'Контакт удален');
+    }
+
+    public function listContacts(): \Illuminate\Http\JsonResponse
+    {
+        return response()->json(ContactChannel::CONTACTS);
     }
 }

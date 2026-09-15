@@ -84,8 +84,11 @@
                 <el-form-item label="Ссылка на контакт" label-position="top" class="mt-3">
                     <el-input v-model="form.url" placeholder="https://"/>
                 </el-form-item>
-                <el-form-item label="Тип для аналитики" label-position="top" class="mt-3">
-                    <el-input-number v-model="form.type" min="0"/>
+                <el-form-item label="Канал для аналитики" label-position="top" class="mt-3">
+                    <el-select v-model="form.channel">
+                        <el-option v-for="(item, index) in contentStore.channels" :label="item" :key="index" :value="index"/>
+                    </el-select>
+
                 </el-form-item>
 
             </el-form>
@@ -111,6 +114,7 @@ import {defineProps, inject, reactive, ref} from "vue";
 
 import {route} from "ziggy-js";
 import axios from "axios";
+import {useContentStore} from "@Res/contentStore";
 
 
 const props = defineProps({
@@ -122,6 +126,7 @@ const props = defineProps({
 })
 console.log(props.contacts)
 const store = useStore();
+const contentStore = useContentStore()
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.contacts])
@@ -136,6 +141,7 @@ const form = reactive({
     color: null,
     slug: null,
     svg: null,
+    channel: null,
 })
 
 function onOpenDialog() {
@@ -147,6 +153,7 @@ function onOpenDialog() {
     form.color = null
     form.slug = null
     form.svg = null
+    form.channel = null,
     dialogCreate.value = true
 }
 
@@ -192,6 +199,7 @@ function routeClick(row) {
     form.color = row.color
     form.slug = row.slug
     form.svg = row.svg
+    form.channel = row.channel
     dialogCreate.value = true
 }
 

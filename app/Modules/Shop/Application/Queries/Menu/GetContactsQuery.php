@@ -30,7 +30,6 @@ readonly class GetContactsQuery
             $index = empty($contact->slug) ? $i : $contact->slug;
             $indexed[$index] = $contact;
         }
-
         return $indexed;
         /*
         return Cache::remember(

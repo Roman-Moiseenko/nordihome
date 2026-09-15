@@ -12,16 +12,18 @@ export const useContentStore = defineStore('content', () => {
     const types = ref<any[]>([])
     const sections = ref<{ value: string; label: string }[]>([])
     const labels = ref<any[]>([])
+    const channels = ref<any[]>([])
 
     async function fetchData() {
         const [
-            categoriesRes, widgetsRes, sectionsRes, typesRes, labelsRes,
+            categoriesRes, widgetsRes, sectionsRes, typesRes, labelsRes, channelsRes,
         ] = await Promise.all([
             axios.get(route('admin.content.widget.categories')),
             axios.get(route('admin.content.widget.widgets')),
             axios.get(route('admin.content.content-blocks.sections')),
             axios.get(route('admin.content.widget.product-group-types')),
             axios.get(route('admin.content.label.list')),
+            axios.get(route('admin.content.contact.list')),
         ])
 
         categories.value = categoriesRes.data
@@ -29,8 +31,9 @@ export const useContentStore = defineStore('content', () => {
         sections.value = sectionsRes.data
         types.value = typesRes.data
         labels.value = labelsRes.data
+        channels.value = channelsRes.data
 
-        console.log(labels.value)
+        console.log(channels.value)
     }
 
     ;(async () => {
@@ -58,5 +61,6 @@ export const useContentStore = defineStore('content', () => {
         categories,
         sections,
         labels,
+        channels,
     }
 })

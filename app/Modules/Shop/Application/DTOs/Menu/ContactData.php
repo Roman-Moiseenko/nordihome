@@ -16,6 +16,7 @@ class ContactData extends Data
         public readonly int $type,
         public readonly string $slug,
         public readonly ?string $svg,
+        public readonly ?string $channel,
     )
     {
     }

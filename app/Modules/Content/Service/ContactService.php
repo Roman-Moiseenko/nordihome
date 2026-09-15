@@ -19,6 +19,7 @@ class ContactService
             type: $request->integer('type'),
             slug:  $request->string('slug')->trim()->value(),
             svg:  $request->input('svg'),
+            channel: $request->input('channel'),
         );
     }
 
@@ -32,6 +33,7 @@ class ContactService
             'type' => $request->integer('type'),
             'slug' => $request->string('slug')->trim()->value(),
             'svg' => $request->input('svg'),
+            'channel' => $request->input('channel'),
         ]);
     }
 

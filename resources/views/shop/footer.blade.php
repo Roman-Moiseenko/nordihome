@@ -17,19 +17,34 @@
                     <div>
                         <div>
                             <p>тел. @if(isset($contacts['phone_1']))
-                                    <a href="{{ $contacts['phone_1']->url }}">{{ phone($contacts['phone_1']->url) }}</a>
+                                    <a href="{{ $contacts['phone_1']->url }}"
+                                       data-analytics-action="contact_click"
+                                       data-analytics-payload='{"channel":"{{ $contacts['phone_1']->channel }}","placement":"header"}'
+                                    >{{ phone($contacts['phone_1']->url) }}</a>
                                 @endif<br>
                                 тел. @if(isset($contacts['phone']))
-                                    <a href="{{ $contacts['phone']->url }}">{{ phone($contacts['phone']->url) }}</a> (бесплатно по России)
+                                    <a href="{{ $contacts['phone']->url }}"
+                                       data-analytics-action="contact_click"
+                                       data-analytics-payload='{"channel":"{{ $contacts['phone']->channel }}","placement":"header"}'
+                                    >{{ phone($contacts['phone']->url) }}</a> (бесплатно по России)
                                 @endif<br>
                                 @if(isset($contacts['phone_2']))
-                                    <a href="{{ $contacts['phone_2']->url }}">{{ phone($contacts['phone_2']->url) }}</a>
+                                    <a href="{{ $contacts['phone_2']->url }}"
+                                       data-analytics-action="contact_click"
+                                       data-analytics-payload='{"channel":"{{ $contacts['phone_2']->channel }}","placement":"header"}'
+                                    >{{ phone($contacts['phone_2']->url) }}</a>
                                 @endif - телефон для мессенджеров<br>
                                 @if(isset($contacts['mail_1']))
-                                    <a href="{{ $contacts['mail_1']->url }}">{{ $contacts['mail_1']->name }}</a>
+                                    <a href="{{ $contacts['mail_1']->url }}"
+                                       data-analytics-action="contact_click"
+                                       data-analytics-payload='{"channel":"{{ $contacts['mail_1']->channel }}","placement":"header"}'
+                                    >{{ $contacts['mail_1']->name }}</a>
                                 @endif - по вопросам сотрудничества<br>
                                 @if(isset($contacts['mail_3']))
-                                    <a href="{{ $contacts['mail_3']->url }}">{{ $contacts['mail_3']->name }}</a>
+                                    <a href="{{ $contacts['mail_3']->url }}"
+                                       data-analytics-action="contact_click"
+                                       data-analytics-payload='{"channel":"{{ $contacts['mail_3']->channel }}","placement":"header"}'
+                                    >{{ $contacts['mail_3']->name }}</a>
                                 @endif -  отдел по работе с претензиями</p>
                             <p>ООО «Негоциант», ИНН 3906396090, КПП 390601001, ОГРН 1203900013602, 236023 Калининград, ул Советский проспект, 103А корпус 1</p>
                         </div>

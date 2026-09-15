@@ -78,7 +78,10 @@
                 var entityType = $el.data('entity-type') || null;
                 var entityId = $el.data('entity-id') || null;
                 var payload = $el.data('analytics-payload') || null;
-
+                // Для контактов — обогащаем payload значением из href
+                if (actionType === 'contact_click') {
+                    payload = self.normalizeContactPayload($el, payload);
+                }
                 self.trackAction(actionType, entityType, entityId, payload);
             });
         },
@@ -178,6 +181,85 @@
                 }
             });
         },
+
+        normalizeContactPayload: function ($el, payload) {
+            // Если value уже задан — не трогаем
+            if (payload.value) {
+                return payload;
+            }
+
+            var href = $el.attr('href');
+            if (!href) {
+                return payload;
+            }
+
+            payload.value = this.extractContactValue(href);
+            return payload;
+        },
+        /**
+         * Извлекает чистое значение из URL/href контакта.
+         *
+         * Примеры:
+         *   tel:88007008179                → 88007008179
+         *   mailto:info@site.ru            → info@site.ru
+         *   sms:+79001234567               → +79001234567
+         *   https://t.me/nordihome         → nordihome
+         *   https://vk.com/nordihome       → nordihome
+         *   https://max.ru/id390639_bot    → id390639_bot
+         *   https://wa.me/79001234567      → 79001234567
+         *   https://ok.ru/group/12345      → 12345
+         *   https://youtube.com/@channel   → @channel
+         */
+        extractContactValue: function (href) {
+            if (!href) return '';
+
+            href = String(href).trim();
+
+            // Убираем схемы tel:, mailto:, sms:
+            let schemeMatch = href.match(/^(tel|mailto|sms):/i);
+            if (schemeMatch) {
+                return href.substring(schemeMatch[0].length).trim();
+            }
+
+            // Убираем протокол и //
+            href = href.replace(/^(https?:)?\/\//i, '');
+
+            // Убираем query и fragment
+            href = href.replace(/[?#].*$/, '');
+
+            // Убираем trailing slash
+            href = href.replace(/\/+$/, '');
+
+            // Разбираем на host и path
+            let parts = href.split('/');
+            let host = parts.shift() || '';
+            let path = parts.join('/');
+
+            // Список соцсетей и мессенджеров — берём последний сегмент пути
+            let socialHosts = [
+                'vk.com', 't.me', 'max.ru', 'instagram.com',
+                'youtube.com', 'youtu.be', 'ok.ru', 'wa.me'
+            ];
+
+            let isSocial = socialHosts.some(function (h) {
+                return host === h || host.slice(-h.length - 1) === '.' + h;
+            });
+
+            if (isSocial) {
+                if (path === '') return host;
+
+                // Для wa.me — путь это номер телефона
+                if (host === 'wa.me') return path;
+
+                // Для ok.ru/group/12345 — берём последний сегмент
+                var segments = path.split('/');
+                return segments[segments.length - 1];
+            }
+
+            // Для обычных ссылок — host + path
+            return path !== '' ? host + '/' + path : host;
+        },
+
     };
 
     // Экспорт в глобальную область

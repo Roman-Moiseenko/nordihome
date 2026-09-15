@@ -220,6 +220,7 @@ Route::group(
             Route::post('/up/{contact}', [ContactController::class, 'up'])->name('up');
             Route::post('/down/{contact}', [ContactController::class, 'down'])->name('down');
             Route::post('/set-info/{contact}', [ContactController::class, 'set_info'])->name('set-info');
+            Route::get('/list', [ContactController::class, 'listContacts'])->name('list');
         });
         Route::resource('contact', ContactController::class)->except(['show', 'create', 'edit', 'update']); //CRUD
 

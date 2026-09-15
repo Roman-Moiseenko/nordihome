@@ -23,6 +23,7 @@ class ContactQueryRepository
             type: (int)$row->type,
             slug: $row->slug ?? '',
             svg: $row->svg,
+            channel: $row->channel,
         ))->all();
     }
 }
