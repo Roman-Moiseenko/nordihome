@@ -2,6 +2,7 @@
 
 namespace App\Modules\Auth\Application\Actions\Client;
 
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Auth\Application\DTOs\Client\ClientCreateData;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
 use App\Modules\Auth\Domain\Exceptions\ClientAlreadyExistsException;
@@ -9,7 +10,6 @@ use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Application\DTOs\ProductPrice;
+namespace App\Modules\Accounting\Application\DTOs\ProductPrice;
 
 use Spatie\LaravelData\Attributes\Validation\Numeric;
 use Spatie\LaravelData\Attributes\Validation\Required;

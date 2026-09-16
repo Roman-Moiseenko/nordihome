@@ -2,12 +2,12 @@
 
 namespace App\Modules\Cart\Application\Actions;
 
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Cart\Application\DTOs\CartInfoData;
 use App\Modules\Cart\Application\DTOs\CartItemData;
 use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
-use App\Modules\Catalog\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Parser\Application\Actions\Product\GetParserPriceByProductUseCase;
 use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Setting\Entity\Settings;

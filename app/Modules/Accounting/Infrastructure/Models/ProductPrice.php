@@ -2,8 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Infrastructure\Models;
+namespace App\Modules\Accounting\Infrastructure\Models;
 
+use App\Modules\Catalog\Infrastructure\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -13,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string $type
  * @property float $amount
  * @property string $currency
- * @property string $set_at
+ * @property Carbon $set_at
  * @property string|null $founded
  * @property string|null $comment
  *
@@ -38,6 +40,7 @@ class ProductPrice extends Model
     protected $casts = [
         'product_id' => 'integer',
         'amount'     => 'float',
+        'set_at' => 'datetime',
     ];
 
     public function product(): BelongsTo

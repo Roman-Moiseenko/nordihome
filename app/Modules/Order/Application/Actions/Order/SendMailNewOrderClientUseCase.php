@@ -27,7 +27,7 @@ readonly class SendMailNewOrderClientUseCase
         //Из фронта нет данных о других email, берем от клиента
         if (empty($emails)) {
             $client = $this->clientUseCase->execute(
-                $orderEntity->id,
+                $orderEntity->clientId,
                 new UserPermission(permissions: ['auth.buyer.view'])
             );
             $emails[] = $client->email->value;

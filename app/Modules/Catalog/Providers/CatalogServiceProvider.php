@@ -6,7 +6,6 @@ use App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\CategoryProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
-use App\Modules\Catalog\Domain\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\RoomProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
@@ -16,7 +15,6 @@ use App\Modules\Catalog\Infrastructure\Persistence\AttributeRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\BrandRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\CategoryProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\CategoryRepository;
-use App\Modules\Catalog\Infrastructure\Persistence\ProductPriceRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\ProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomRepository;
@@ -140,10 +138,6 @@ class CatalogServiceProvider extends ServiceProvider
             BrandRepository::class
         );
 
-        $this->app->bind(
-            ProductPriceRepositoryInterface::class,
-            ProductPriceRepository::class
-        );
         $this->app->bind(
             TagRepositoryInterface::class,
             TagRepository::class

@@ -3,10 +3,10 @@
 namespace App\Modules\Order\Application\Services\CreatingServices;
 
 use App\Modules\Accounting\Application\Actions\Trader\GetDefaultTraderIdUseCase;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Auth\Application\Queries\GetInfoWebClientQuery;
 use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetDeliveryAdditionUseCase;

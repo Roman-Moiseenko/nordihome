@@ -15,6 +15,7 @@ final readonly class ContactChannel implements \Stringable
     public const string OK = 'ok';
     public const string AVITO = 'avito';
     public const string OZON = 'ozon';
+    //public const string INSTAGRAM = 'instagram';
 
     private const array ALLOWED = [
         self::PHONE, self::EMAIL, self::TELEGRAM,

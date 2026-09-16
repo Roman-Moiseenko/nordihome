@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Domain\Interfaces;
+namespace App\Modules\Accounting\Infrastructure\Interfaces;
 
-use App\Modules\Catalog\Domain\Entities\ProductPriceEntity;
+use App\Modules\Accounting\Domain\Entities\ProductPriceEntity;
 
 interface ProductPriceRepositoryInterface
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Catalog\Domain\Entities;
+namespace App\Modules\Accounting\Domain\Entities;
 
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 
 final class ProductPriceEntity
 {

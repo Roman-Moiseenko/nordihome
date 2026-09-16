@@ -1,8 +1,6 @@
 <?php
 
-namespace App\Modules\Catalog\Domain\ValueObjects;
-
-use InvalidArgumentException;
+namespace App\Modules\Accounting\Domain\ValueObjects;
 
 final class PriceType
 {

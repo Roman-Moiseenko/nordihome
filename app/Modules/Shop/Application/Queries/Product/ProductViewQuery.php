@@ -2,13 +2,9 @@
 
 namespace App\Modules\Shop\Application\Queries\Product;
 
-use App\Modules\Auth\Infrastructure\Models\Client;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\ClientContext;
-use App\Modules\Shop\Application\DTOs\Entities\ProductData;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
-use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductViewPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Query\EquivalentViewQueryRepository;

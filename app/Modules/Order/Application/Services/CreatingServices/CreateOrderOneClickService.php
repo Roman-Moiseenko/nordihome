@@ -2,10 +2,10 @@
 
 namespace App\Modules\Order\Application\Services\CreatingServices;
 
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
 use App\Modules\Accounting\Application\Actions\Trader\GetDefaultTraderIdUseCase;
 use App\Modules\Auth\Application\Services\FindOrCreateClientService;
 use App\Modules\Auth\Domain\ValueObjects\Address;
-use App\Modules\Catalog\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetDeliveryAdditionUseCase;
 use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;

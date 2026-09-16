@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Catalog\Application\Actions\ProductPrice;
+namespace App\Modules\Accounting\Application\Actions\ProductPrice;
 
-use App\Modules\Catalog\Application\DTOs\ProductPrice\ProductSellPriceData;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Accounting\Application\DTOs\ProductPrice\ProductSellPriceData;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Discount\Application\Actions\PromotionProduct\GetPromotionDataByProductUseCase;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Shared\Domain\Entities\UserPermission;

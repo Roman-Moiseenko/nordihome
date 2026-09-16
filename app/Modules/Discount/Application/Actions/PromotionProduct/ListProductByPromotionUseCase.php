@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Application\Actions\PromotionProduct;
 
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
+use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
-use App\Modules\Catalog\Domain\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Discount\Application\DTOs\Promotion\PromotionProductViewData;
 use App\Modules\Discount\Domain\Interfaces\PromotionProductRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;

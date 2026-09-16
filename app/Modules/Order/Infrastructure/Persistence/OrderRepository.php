@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Infrastructure\Persistence;
 
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Auth\Domain\ValueObjects\Address;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Order\Application\DTOs\Order\FilterOrderIndexData;
 use App\Modules\Order\Domain\Entities\OrderAdditionEntity;
 use App\Modules\Order\Domain\Entities\OrderEntity;

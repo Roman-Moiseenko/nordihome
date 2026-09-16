@@ -2,11 +2,11 @@
 
 namespace App\Modules\Shop\Presentation\Http\Middlewares;
 use App\Modules\Auth\Infrastructure\Models\Client;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\Services\ClientContextFactory;
 use Closure;
 use Illuminate\Http\Request;
+
 class InjectClientContextMiddleware
 {
     public function handle(Request $request, Closure $next)

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Tests\Unit\Domain\ValueObjects;
 
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 

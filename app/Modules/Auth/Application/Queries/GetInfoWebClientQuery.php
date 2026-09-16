@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Auth\Application\Queries;
 
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Auth\Application\DTOs\Client\ClientInfoWebData;
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Auth\Domain\ValueObjects\Email;
@@ -12,7 +13,6 @@ use App\Modules\Auth\Domain\ValueObjects\Gender;
 use App\Modules\Auth\Domain\ValueObjects\PersonalDataConsent;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
 use App\Modules\Auth\Infrastructure\Persistence\Query\ClientQueryRepository;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use DateTimeImmutable;
 use DomainException;
 

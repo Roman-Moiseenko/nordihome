@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Application\Services;
 
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 
 class ClientContextFactory

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Domain\Entities;
 
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Auth\Domain\ValueObjects\Address;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Order\Application\DTOs\OrderAddition\OrderAdditionUpdateData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemUpdateData;

@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Entity;
 
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Catalog\IWidgetHome;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -12,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
  *@property string $name
  *@property Product[] $products
  */
-class Series extends Model implements IWidgetHome
+class Series extends Model
 {
 
     public $timestamps = false;

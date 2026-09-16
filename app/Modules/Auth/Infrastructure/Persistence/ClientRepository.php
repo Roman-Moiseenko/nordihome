@@ -2,6 +2,7 @@
 
 namespace App\Modules\Auth\Infrastructure\Persistence;
 
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Auth\Domain\Entities\ClientEntity;
 use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Auth\Domain\ValueObjects\Address;
@@ -13,7 +14,6 @@ use App\Modules\Auth\Domain\ValueObjects\PersonalDataConsent;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Auth\Infrastructure\Models\User;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use DateTimeImmutable;
 use Illuminate\Pagination\LengthAwarePaginator;
 

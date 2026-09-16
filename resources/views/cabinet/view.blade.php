@@ -1,5 +1,5 @@
 @php
-    use App\Modules\Auth\Application\DTOs\Client\ClientInfoWebData;use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+    use App\Modules\Accounting\Domain\ValueObjects\PriceType;use App\Modules\Auth\Application\DTOs\Client\ClientInfoWebData;
     /** @var ClientInfoWebData $client */
 @endphp
 @extends('cabinet.layout')

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\ProductPrice;
 
-use App\Modules\Catalog\Application\Actions\ProductPrice\GetLatestProductPricesUseCase;
-use App\Modules\Catalog\Domain\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetLatestProductPricesUseCase;
+use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;

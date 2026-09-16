@@ -2,18 +2,18 @@
 
 namespace App\Modules\Parser\Application\Services;
 
+use App\Modules\Accounting\Application\Actions\ProductPrice\SetProductPriceUseCase;
+use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Catalog\Application\Actions\Category\FindOrCreateTempCategory;
 use App\Modules\Catalog\Application\Actions\Product\FastCreateProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\UpdateProductUseCase;
-use App\Modules\Catalog\Application\Actions\ProductPrice\SetProductPriceUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\ProductFastCreateData;
 use App\Modules\Catalog\Application\DTOs\Product\ProductUpdateData;
-use App\Modules\Catalog\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Catalog\Application\Services\AttachAttributeProductService;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Parser\Application\Actions\Product\AttachProductToParserUseCase;
 use App\Modules\Parser\Application\Actions\Product\SetDimensionsProductFromParserUseCase;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;

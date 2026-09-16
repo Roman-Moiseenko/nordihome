@@ -2,11 +2,13 @@
 
 namespace App\Modules\Catalog\Application\Services;
 
+use App\Modules\Accounting\Application\Actions\ProductPrice\SetProductPriceUseCase;
+use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Application\Actions\Brand\FindOrCreateBrandUseCase;
 use App\Modules\Catalog\Application\Actions\CategoryProduct\AttachCategoriesToProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\FastCreateProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\UpdateProductUseCase;
-use App\Modules\Catalog\Application\Actions\ProductPrice\SetProductPriceUseCase;
 use App\Modules\Catalog\Application\Actions\RoomProduct\AttachRoomsToProductUseCase;
 use App\Modules\Catalog\Application\Actions\Tag\FindOrCreateTagUseCase;
 use App\Modules\Catalog\Application\Actions\TagProduct\AttachTagsToProductUseCase;
@@ -14,10 +16,8 @@ use App\Modules\Catalog\Application\Actions\Wp\GetCategoryByWpIdUseCase;
 use App\Modules\Catalog\Application\Actions\Wp\GetRoomByWpIdUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\ProductFastCreateData;
 use App\Modules\Catalog\Application\DTOs\Product\ProductUpdateData;
-use App\Modules\Catalog\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Catalog\Domain\Entities\BrandEntity;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;

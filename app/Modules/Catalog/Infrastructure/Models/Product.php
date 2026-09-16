@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Models;
 
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Accounting\Entity\BalanceProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
+use App\Modules\Accounting\Infrastructure\Models\ProductPrice;
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Casts\DimensionsCast;
 use App\Modules\Base\Entity\Dimensions;
@@ -14,7 +16,6 @@ use App\Modules\Base\Traits\GalleryField;
 use App\Modules\Cabinet\Infrastructure\Models\Wish;
 use App\Modules\Cart\Infrastructure\Models\CartCookie;
 use App\Modules\Cart\Infrastructure\Models\CartStorage;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Entity\Equivalent;
 use App\Modules\Catalog\Entity\EquivalentProduct;
 use App\Modules\Catalog\Entity\Group;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Catalog\Application\DTOs\ProductPrice;
+namespace App\Modules\Accounting\Application\DTOs\ProductPrice;
 
 readonly class ProductSellPriceData
 {

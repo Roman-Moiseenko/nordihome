@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameImageData;

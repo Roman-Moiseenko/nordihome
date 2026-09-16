@@ -2,6 +2,7 @@
 
 namespace App\Modules\Auth\Domain\Entities;
 
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Auth\Domain\ValueObjects\Address;
 use App\Modules\Auth\Domain\ValueObjects\Email;
 use App\Modules\Auth\Domain\ValueObjects\FullName;
@@ -9,7 +10,6 @@ use App\Modules\Auth\Domain\ValueObjects\Gender;
 use App\Modules\Auth\Domain\ValueObjects\NewsletterConsent;
 use App\Modules\Auth\Domain\ValueObjects\PersonalDataConsent;
 use App\Modules\Auth\Domain\ValueObjects\PhoneNumber;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
 use DateTimeImmutable;
 
 class ClientEntity

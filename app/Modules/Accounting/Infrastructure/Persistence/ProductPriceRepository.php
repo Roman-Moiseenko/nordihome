@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Infrastructure\Persistence;
+namespace App\Modules\Accounting\Infrastructure\Persistence;
 
-use App\Modules\Catalog\Domain\Entities\ProductPriceEntity;
-use App\Modules\Catalog\Domain\Interfaces\ProductPriceRepositoryInterface;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
-use App\Modules\Catalog\Infrastructure\Models\ProductPrice;
+use App\Modules\Accounting\Domain\Entities\ProductPriceEntity;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
+use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Accounting\Infrastructure\Models\ProductPrice;
 use DateTimeImmutable;
 use Illuminate\Support\Facades\DB;
 

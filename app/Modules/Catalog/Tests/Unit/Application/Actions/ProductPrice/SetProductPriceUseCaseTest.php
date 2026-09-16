@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\ProductPrice;
 
-use App\Modules\Catalog\Application\Actions\ProductPrice\SetProductPriceUseCase;
-use App\Modules\Catalog\Application\DTOs\ProductPrice\SetProductPriceData;
-use App\Modules\Catalog\Domain\Entities\ProductPriceEntity;
-use App\Modules\Catalog\Domain\Interfaces\ProductPriceRepositoryInterface;
-use App\Modules\Catalog\Domain\ValueObjects\PriceType;
+use App\Modules\Accounting\Application\Actions\ProductPrice\SetProductPriceUseCase;
+use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
+use App\Modules\Accounting\Domain\Entities\ProductPriceEntity;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
+use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
