@@ -228,7 +228,7 @@ class LoadParserProductIkeaService
                 url: $imageItem['url'],
                 alt: $altImage,
             );
-            LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission);
+            LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission)->onQueue('photo');
         }
 
         return $productEntity;

@@ -151,7 +151,7 @@ readonly class LoadProductWpService
                 url: $imageData['url'],
                 alt: $imageData['alt'],
             );
-            LoadPhotoByUrlJob::dispatch($dtoImage, $userPermission);
+            LoadPhotoByUrlJob::dispatch($dtoImage, $userPermission)->onQueue('photo');
         }
 
         //Установить цену из $product["price"], только розницу и минимальную (половина)

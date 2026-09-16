@@ -108,7 +108,7 @@ readonly class CreateProductFromParserService
                 copyId: $image->id,
                 alt: $image->alt,
             );
-            CopyPhotoByIdJob::dispatch($dtoImage, $userPermission);
+            CopyPhotoByIdJob::dispatch($dtoImage, $userPermission)->onQueue('photo');
         }
         // DTO ProductCreate
 
