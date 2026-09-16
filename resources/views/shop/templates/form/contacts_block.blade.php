@@ -32,24 +32,24 @@ use App\Modules\Content\Entity\Widgets\FormWidget;
 <div>
     <div id="{{ $widget->id }}" class="feedback" not-hide>
         <div class="m-b_10 m-t_10">
-            <label> {{ $widget->fields["name"] }} <input name="name" class="width_100" required placeholder="Елена"/></label>
+            <label> {{ $widget->fields["name"] }} <input name="name" class="width_100" required placeholder="Елена*"/></label>
         </div>
         <div class="m-b_10">
-            <label> {{ $widget->fields["phone"] }} <input name="phone" class="width_100" required placeholder="+79097589135"/></label>
+            <label> {{ $widget->fields["phone"] }} <input name="phone" class="width_100" required placeholder="+79097589135*"/></label>
         </div>
         <div class="m-b_10">
-            <label>{{ $widget->fields["question"] }} <textarea class="width_100" placeholder="Мой вопрос"></textarea>
+            <label>{{ $widget->fields["question"] }} <textarea class="width_100" required placeholder="Мой вопрос*"></textarea>
             </label>
         </div>
         <div class="m-b_10">
-            <label>Ваш ник в Telegram <input name="telegram" class="width_100" required placeholder="Пример: @username"/></label>
+            <label>Ваш ник в Telegram <input name="telegram" class="width_100" placeholder="Пример: @username"/></label>
         </div>
         <div class="m-b_10">
             <label>Выберите удобный способ для связи с Вами <select class="width_100"><option value="">—Выберите вариант—</option><option value="Позвонить по телефону">Позвонить по телефону</option><option value="Написать на почту">Написать на почту</option><option value="Написать в Телеграм">Написать в Телеграм</option><option value="Написать в Макс">Написать в Макс</option></select></label>
         </div>
         <div>
             <label class="f-z_14">
-                <input type="checkbox" name="agreement" value="{{ $widget->fields["agreement"] }}"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
+                <input type="checkbox" name="agreement" required value="{{ $widget->fields["agreement"] }}"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
             </label>
         </div>
         <div>

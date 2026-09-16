@@ -5,14 +5,13 @@
 @endphp
 
 <header>
-    <div class="header-mobile">
-        <div class="menu-top container-xl mt-2">
-            <div class="d-flex justify-content-between">
-                <div class="d-flex">
-                    <div>
-                        @if(isset($menus['menu-header01']))
-                            <ul id="menu-menyu-v-shapke" class="h-menu">
-                                @foreach($menus['menu-header01']->items as $item)
+    <div class="header-mobile bg-f2f2f2">
+        <div class="container-xl">
+            <div class="d-flex justify-content-between align-items-center mob-gray-line">
+                    <div class="wrap-mob-menu-top">
+                        @if(isset($menus['menu-header02']))
+                            <ul id="menu-menyu-v-shapke02" class="h-menu">
+                                @foreach($menus['menu-header02']->items as $item)
                                     <li><a href="{{ $item->url }}">{{ $item->name }}</a></li>
                                 @endforeach
                             </ul>
@@ -29,7 +28,7 @@
     </div>
     <div class="menu-top hide-mobile">
         <div class="container-xl">
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end align-items-center">
                 <div>
                     @if(isset($menus['menu-header02']))
                         <ul id="menu-menyu-v-shapke02" class="h-menu">
@@ -122,7 +121,7 @@
             <livewire:header.wish/>
         </li>
 
-        <li class="nav-item">
+       <!-- <li class="nav-item">
             <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.order.index') }}"
                @notclient
                data-bs-toggle="modal" data-bs-target="#login-popup"
@@ -131,7 +130,7 @@
                 <i class="fa-sharp fa-light fa-box-open fs-4"></i>
                 <span class="fs-7">Заказы</span>
             </a>
-        </li>
+        </li> -->
 
         <li class="nav-item">
             <livewire:header.cart :client-id="$client?->id ?? null"/>
@@ -139,7 +138,8 @@
 </ul>
 </div>
 </div>
-    <div class="top-menu m-t_10 m-b_10">
+</nav>
+    <div class="top-menu">
         @if(isset($menus['menu-header01']))
             <ul id="menu-menyu-v-shapke" class="h-menu">
                 @foreach($menus['menu-header01']->items as $item)
@@ -150,7 +150,6 @@
             Меню не найдено
         @endif
     </div>
-</nav>
 
 
 <nav class="menu-mobile">
