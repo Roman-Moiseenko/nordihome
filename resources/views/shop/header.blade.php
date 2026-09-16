@@ -19,9 +19,9 @@
                             Меню не найдено
                         @endif
                     </div>
-                    <div class="d-flex ms-2">
-                        @include('shop.widgets.header.contacts')
-                    </div>
+
+                @include('shop.widgets.header.contacts')
+
                 </div>
             </div>
         </div>

@@ -1,3 +1,13 @@
+<div class="col-auto mob-h-phone m-l_10">
+    @if(isset($contacts['phone']))
+        <a href="{{ $contacts['phone']->url }}" class="f-z_16"
+           data-analytics-action="contact_click"
+           data-analytics-payload='{"channel":"{{ $contacts['phone']->channel }}","placement":"header"}'
+        ><b>{{ phone($contacts['phone']->url) }}</b></a>
+    @endif
+    <br><span class="f-z_13">по России бесплатно</span>
+</div>
+<div class="d-flex ms-2 mob-h-social">
 @if(isset($contacts['phone']))
     <a href="{{ $contacts['phone']->url }}" target="_blank" class="m-r_5"
        data-analytics-action="contact_click"
@@ -22,3 +32,5 @@
        data-analytics-payload='{"channel":"{{ $contacts['vk']->channel }}","placement":"header"}'
     >{!! $contacts['vk']->svg !!}</a>
 @endif
+</div>
+
