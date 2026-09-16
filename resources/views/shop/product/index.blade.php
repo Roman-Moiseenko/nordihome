@@ -43,6 +43,16 @@ $total = $pageData->paginator->total;
             </div>
         </div>
     </div>
+    <!-- Показать на мобиле -->
+    <div Class="catalog-subcategories-mob">
+        <div class="row">
+        @foreach($pageData->mainInfo->children as $child)
+            <div class="col-6 col-sm-4 col-md-3">
+                <a href="{{ route('shop.' . $pageData->mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
+            </div>
+        @endforeach
+        </div>
+    </div>
     <form action="" method="GET">
         <div class="mobile-manager">
             <div class="order btn-group">
@@ -89,14 +99,7 @@ $total = $pageData->paginator->total;
                         @endforeach
                     </div>
                 @endif
-                <!-- Показать на мобиле -->
-                <div style="display: none">
-                    @foreach($pageData->mainInfo->children as $child)
-                        <div class="m-l_10 f-z_16">
-                            <a href="{{ route('shop.' . $pageData->mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
-                        </div>
-                    @endforeach
-                </div>
+
                 <div class="products">
                     <div class="row">
                         @foreach($pageData->products as $product)

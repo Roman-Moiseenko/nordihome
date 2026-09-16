@@ -33,7 +33,7 @@
 }
 .header-menu-buttons-item.active .header-menu-buttons-item-burger span:first-child {
     transform: rotate(45deg);
-    margin-bottom: -1px;
+    margin-bottom: -2px;
 }
 .header-menu-buttons-item.active .header-menu-buttons-item-burger span:nth-child(2n) {
     display: none;
@@ -146,11 +146,14 @@ body.no-scroll {
     background: $f2f2f2;
     padding: 7px 0;
 }
+header {
+    box-shadow: var(--bs-box-shadow-sm);
+    padding-bottom: 15px;
+}
 .menu-bottom {
     height: auto;
     box-sizing: content-box;
     transition: $transition;
-    box-shadow: var(--bs-box-shadow-sm);
     display: block;
     >.menu-container {
         //height: 59px;
@@ -201,7 +204,7 @@ body.no-scroll {
 }
 
 .menu-bottom-profile {
-    min-width: 300px;
+    min-width: 230px;
 }
 
 .menu-bottom.sticky-menu {
@@ -578,10 +581,10 @@ body.no-scroll {
         display: none !important;
     }
 }
+.top-menu {margin-top:2px;}
 //Мобильное меню
 .header-mobile {
-    display: flex;
-    justify-content: space-between;
+    padding:7px 0;
     margin-bottom: 0;
     #menu-menyu-v-shapke li {
         font-size: 11px;
@@ -590,7 +593,38 @@ body.no-scroll {
             padding: 1px 9px 2px 9px;
         }
     }
+    .wrap-mob-menu-top {
+        flex-grow: 1;
+        min-width: 0;
+        mask-image: linear-gradient(
+                90deg,
+                transparent 0, rgba(0, 0, 0, .25) 9px,
+                #000 18px,
+                #000 calc(100% - 18px),
+                rgba(0, 0, 0, .25) calc(100% - 9px),
+                transparent
+        );
+        .h-menu {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-right: 5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            justify-content: start;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
+    .mob-h-phone {
+        line-height:16px;
+    }
 }
+
 .header-menu-mobile-btn {
     border: none;
     transition: all 0.15s ease;
@@ -650,6 +684,12 @@ body.no-scroll {
     }
 }
 @media screen and (max-width: 992px) {
+    #menu-menyu-v-shapke {
+        li {
+            padding-top:2px;
+            padding-bottom:4px;
+        }
+    }
     .mega-menu-panel.show, .header-menu-buttons {display: none!important;}
     .menu-mobile {display:block;}
     .navbar-brand {
@@ -667,6 +707,27 @@ body.no-scroll {
             min-width: unset;
         }
     }
+    .top-menu {
+        flex-grow: 1;
+        min-width: 0;
+        -webkit-mask-image: linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.25) 9px, #000 18px, #000 calc(100% - 18px), rgba(0, 0, 0, 0.25) calc(100% - 9px), transparent);
+        mask-image: linear-gradient(90deg, transparent 0, rgba(0, 0, 0, 0.25) 9px, #000 18px, #000 calc(100% - 18px), rgba(0, 0, 0, 0.25) calc(100% - 9px), transparent);
+        .h-menu {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            overflow-y: hidden;
+            -webkit-overflow-scrolling: touch;
+            padding-right: 5px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            justify-content: start;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            &::-webkit-scrollbar {
+                display: none;
+            }
+        }
+    }
 }
 @media screen and (max-width: 768px) {
     .header-menu-mobile ul {
@@ -679,6 +740,13 @@ body.no-scroll {
     .h-city-text {
         font-size: 10px;
     }
+    .wrap-mob-menu-top {
+        .h-menu {
+            li {
+                font-size: 14px;
+            }
+        }
+    }
 }
 @media screen and (max-width: 670px) {
     .menu-bottom > .menu-container .menu-bottom-search {
@@ -688,7 +756,20 @@ body.no-scroll {
     .menu-bottom-catalog {width:100%;}
 }
 @media screen and (max-width: 576px) {
+    #menu-menyu-v-shapke {
+        li {
+            font-size: 11px;
+        }
+    }
     .header-menu-mobile ul {
         grid-template-columns: repeat(3, 1fr);
+    }
+    .header-mobile {
+        .mob-gray-line {
+            flex-wrap:wrap;
+        }
+        .wrap-mob-menu-top {
+            margin-bottom: 6px;
+        }
     }
 }

@@ -4,14 +4,13 @@
 @endphp
 
 <header>
-    <div class="header-mobile">
-        <div class="menu-top container-xl mt-2">
-            <div class="d-flex justify-content-between">
-                <div class="d-flex">
-                    <div>
-                        @if(isset($menus['menu-header01']))
-                            <ul id="menu-menyu-v-shapke" class="h-menu">
-                                @foreach($menus['menu-header01']->items as $item)
+    <div class="header-mobile bg-f2f2f2">
+        <div class="container-xl">
+            <div class="d-flex justify-content-between align-items-center mob-gray-line">
+                    <div class="wrap-mob-menu-top">
+                        @if(isset($menus['menu-header02']))
+                            <ul id="menu-menyu-v-shapke02" class="h-menu">
+                                @foreach($menus['menu-header02']->items as $item)
                                     <li><a href="{{ $item->url }}">{{ $item->name }}</a></li>
                                 @endforeach
                             </ul>
@@ -19,27 +18,33 @@
                             Меню не найдено
                         @endif
                     </div>
-                    <div class="d-flex ms-2">
-
-                        @foreach($contacts as $item)
-                            <div class="ms-2">
-                                <a href="{{ $item->url }}" target="_blank" title="{{ $item->name }}">
-                                    @if(is_null($item->svg))
-                                        <i class="{{ $item->icon }} fs-3" style="color: {{ $item->color }}"></i>
-                                    @else
-                                        {!! $item->svg !!}
-                                    @endif
-                                </a>
-                            </div>
-                        @endforeach
+                    <div class="col-auto mob-h-phone m-l_10">
+                        @if(isset($contacts['phone']))
+                            <a href="{{ $contacts['phone']->url }}" class="f-z_16"><b>{{ phone($contacts['phone']->url) }}</b></a>
+                        @endif
+                        <br><span class="f-z_13">по России бесплатно</span>
                     </div>
-                </div>
+                    <div class="d-flex ms-2 mob-h-social">
+                        @if(isset($contacts['phone']))
+                            <a href="{{ $contacts['phone']->url }}" target="_blank" class="m-r_5">{!! $contacts['phone']->svg !!}</a>
+                        @endif
+                        @if(isset($contacts['telegram']))
+                            <a href="{{ $contacts['telegram']->url }}" target="_blank" class="m-r_5">{!! $contacts['telegram']->svg !!}</a>
+                        @endif
+                        @if(isset($contacts['max_bot_1']))
+                            <a href="{{ $contacts['max_bot_1']->url }}" target="_blank" class="m-r_5">{!! $contacts['max_bot_1']->svg !!}</a>
+                        @endif
+                        @if(isset($contacts['vk']))
+                            <a href="{{ $contacts['vk']->url }}" target="_blank">{!! $contacts['vk']->svg !!}</a>
+                        @endif
+
+                    </div>
             </div>
         </div>
     </div>
     <div class="menu-top hide-mobile">
         <div class="container-xl">
-            <div class="d-flex justify-content-end">
+            <div class="d-flex justify-content-end align-items-center">
                 <div>
                     @if(isset($menus['menu-header02']))
                         <ul id="menu-menyu-v-shapke02" class="h-menu">
@@ -156,7 +161,7 @@
             <livewire:header.wish/>
         </li>
 
-        <li class="nav-item">
+       <!-- <li class="nav-item">
             <a class="nav-link d-flex flex-column text-center" href="{{ route('cabinet.order.index') }}"
                @notclient
                data-bs-toggle="modal" data-bs-target="#login-popup"
@@ -165,7 +170,7 @@
                 <i class="fa-sharp fa-light fa-box-open fs-4"></i>
                 <span class="fs-7">Заказы</span>
             </a>
-        </li>
+        </li> -->
 
         <li class="nav-item">
             <livewire:header.cart/>
@@ -173,7 +178,8 @@
 </ul>
 </div>
 </div>
-    <div class="top-menu m-t_10 m-b_10">
+</nav>
+    <div class="top-menu">
         @if(isset($menus['menu-header01']))
             <ul id="menu-menyu-v-shapke" class="h-menu">
                 @foreach($menus['menu-header01']->items as $item)
@@ -184,7 +190,6 @@
             Меню не найдено
         @endif
     </div>
-</nav>
 
 
 <nav class="menu-mobile">

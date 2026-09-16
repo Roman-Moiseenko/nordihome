@@ -53,6 +53,20 @@
         }
     }
 }
+.catalog-subcategories-mob {
+    display:none;
+    a {
+        text-decoration: none;
+        background: #e8e8e8;
+        display: block;
+        border-radius: 12px;
+        text-align: center;
+        padding: 15px 10px;
+        font-size: 14px;
+        margin: 0 0 10px 0;
+        min-height: 68px;
+    }
+}
 @media screen and (max-width: 991px){
     .catalog-card {
         margin: 10px 0;
@@ -60,5 +74,18 @@
             font-size: 16px;
         }
     }
-
+    .catalog-subcategories-mob {display:block;}
+}
+@media (max-width: 576px) {
+    .catalog-subcategories-mob a {
+        text-decoration: none;
+        background: #e8e8e8;
+        display: block;
+        border-radius: 12px;
+        text-align: center;
+        padding: 15px 5px;
+        font-size: 13px;
+        margin: 0 0 10px 0;
+        min-height: 68px;
+    }
 }

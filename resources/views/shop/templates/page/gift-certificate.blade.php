@@ -32,7 +32,7 @@
                       </div>
                   </div>
                   <div class="col-md-12 col-lg-6">
-                      <img src="/images/pages/gift-certificate/sert01-2.png" alt="Подарочный сертификат в Норди хоум (Nordi home)">
+                      <img src="/images/pages/gift-certificate/sert01-2.png" alt="Подарочный сертификат в Норди хоум">
                   </div>
               </div>
           </div>
@@ -62,10 +62,10 @@
                                         <div class="row">
                                             <div class="col-12 col-md-6 col-lg-3 m-b_10">Укажите Ваши контакты</div>
                                             <div class="col-sm-6 col-md-6 col-lg-3 sert-m-b m-b_10">
-                                                <label><input name="name" type="text" required placeholder="Ваше имя"/></label>
+                                                <label><input name="name" type="text" required placeholder="Ваше имя*"/></label>
                                             </div>
                                             <div class="col-sm-6 col-md-6 col-lg-3 m-b_10">
-                                                <label><input name="phone" type="tel" required placeholder="Ваш телефон: +79097589135"/></label>
+                                                <label><input name="phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/></label>
                                             </div>
                                             <div class="col-sm-6 col-md-6 col-lg-3 m-b_10">
                                                 <label><input name="telegram" placeholder="Ник в Телеграм: @username"/></label>
@@ -74,7 +74,7 @@
                                         <div class="row m-b_10">
                                             <div class="col-12 col-md-4 col-lg-3">Эл. адрес для отправки сертификата</div>
                                             <div class="col-sm-6 col-md-3 col-lg-3 sert-m-b">
-                                                <label><input placeholder="mail@yandex.ru" type="email" name="email"></label>
+                                                <label><input placeholder="mail@yandex.ru" required type="email" name="email*"></label>
                                             </div>
                                             <div class="col-sm-6 col-md-3 col-lg-3">
                                                 <label>
@@ -83,7 +83,7 @@
                                             </div>
                                             <div class="col-sm-6 col-md-3 col-lg-3 f-z_13">
                                                 <label class="f-z_14">
-                                                    <input type="checkbox" name="agreement" value="Принимаю согласие"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a> И я согласен с <a href="/page/podarocnyi-sertifikat-v-nordi-xoum-nordi-home" target="_blank">условиями приобретения</a> подарочного сертификата
+                                                    <input type="checkbox" required name="agreement" value="Принимаю согласие"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a> И я согласен с <a href="/page/podarocnyi-sertifikat-v-nordi-xoum-nordi-home" target="_blank">условиями приобретения</a> подарочного сертификата
                                                 </label>
                                             </div>
                                             <div class="col-sm-6 col-md-3 col-lg-3 m-t_10"><label><button class="btn-form btn btn-red" type="button">Оформить заказ</button></label></div>
@@ -97,12 +97,12 @@
                         </div>
                         <div class="bg-sert-gray sert-gift">
                             <div class="container-xl">
-                                <img src="/images/pages/gift-certificate/sert02-2.png" alt="Сертификат на покупки Nordi home">
+                                <img src="/images/pages/gift-certificate/sert02-2.png" alt="Сертификат на покупки Норди хоум">
                             </div>
                         </div>
                         <div class="sert-rules p-t_50 p-b_50">
                             <div class="container-xl">
-                                <div class="t-a_center m-b_30 f-z_23">Основные правила использования подарочного сертификата НОРДИ ХОУМ (NORDI HOME)</div>
+                                <div class="t-a_center m-b_30 f-z_23">Основные правила использования подарочного сертификата НОРДИ ХОУМ</div>
                                 <div class="row">
                                     <div class="col-sm-6 col-md-4 col-lg-3">
                                         <div class="sert-rules-item t-a_center">
@@ -239,17 +239,17 @@
                                             <form>
                                                 <div class="row m-b_10">
                                                     <div class="col-5 col-sm-4 col-md-3 col-lg-4 col-xl-3"><label class="fos-sert-lable-gray">Номинал<br> <select name="select-cert"><option value="1 500 Р">1 500 Р</option><option value="3 000 Р">3 000 Р</option><option value="5 000 Р">5 000 Р</option><option value="15 000 Р">15 000 Р</option><option value="30 000 Р">30 000 Р</option><option value="50 000 Р">50 000 Р</option></select></label></div>
-                                                    <div class="col-7 col-sm-4 col-md-3"><label class="fos-sert-lable-gray">Количество<br><input  placeholder="1" value="" type="text" name="quantity-cert"></label></div>
+                                                    <div class="col-7 col-sm-4 col-md-3"><label class="fos-sert-lable-gray">Количество<br><input  placeholder="1*" value="" required type="text" name="quantity-cert"></label></div>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-sm-6 col-md-6 col-lg-6 col-xl-5 sert-m-b m-b_10">
-                                                        <label><input name="name" type="text" required placeholder="Ваше имя"/></label>
+                                                        <label><input name="name" type="text" required placeholder="Ваше имя*"/></label>
                                                     </div>
                                                     <div class="col-sm-6 col-md-6 col-lg-6 col-xl-5 sert-m-b m-b_10">
-                                                        <label><input name="phone" class="mask-phone" type="tel" required placeholder="Ваш телефон: +79097589135"/></label>
+                                                        <label><input name="phone" class="mask-phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/></label>
                                                     </div>
                                                     <div class="col-sm-6 col-md-6 col-lg-6 col-xl-5 m-b_10">
-                                                        <label><input placeholder="mail@yandex.ru" type="email" name="email"></label>
+                                                        <label><input placeholder="mail@yandex.ru" type="email" required name="email*"></label>
                                                     </div>
                                                     <div class="col-sm-6 col-md-6 col-lg-6 col-xl-5 m-b_10">
                                                         <label><input name="telegram" placeholder="Ник в Телеграм: @username"/></label>
@@ -271,7 +271,7 @@
                                                 <div class="row m-b_10">
                                                     <div class="col-12 m-b_10">
                                                         <label class="f-z_14">
-                                                            <input type="checkbox" name="agreement" value="Принимаю согласие"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a> И я согласен с <a href="/page/podarocnyi-sertifikat-v-nordi-xoum-nordi-home" target="_blank">условиями приобретения</a> подарочного сертификата
+                                                            <input type="checkbox" name="agreement" required value="Принимаю согласие"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a> И я согласен с <a href="/page/podarocnyi-sertifikat-v-nordi-xoum-nordi-home" target="_blank">условиями приобретения</a> подарочного сертификата
                                                         </label>
                                                     </div>
                                                     <div class="col-md-6 col-lg-5"><label><button class="btn-form btn btn-red" type="button">Оформить заказ</button></label></div>
@@ -356,20 +356,20 @@
                             <div>
                                 <h3 class="t-t_uppercase t-a_center">условия сертификата</h3>
                                 <div class="contant-page">
-                                    <p>Подарочные сертификаты НОРДИ ХОУМ (NORDI HOME) — это возможность поделиться уютом и&nbsp;теплом с&nbsp;друзьями, близкими или коллегами. Универсальный вариант подарка, чтобы самостоятельно выбрать именно&nbsp;то, что действительно хочется! В наличии имеются подарочные сертификаты номиналом: 1 500, 3 000, 5 000, 15&nbsp;000, 30&nbsp;000 и 50&nbsp;000 рублей. Оформление сертификата возможно как в бумажном, так и в электронном варианте.</p>
+                                    <p>Подарочные сертификаты НОРДИ ХОУМ — это возможность поделиться уютом и&nbsp;теплом с&nbsp;друзьями, близкими или коллегами. Универсальный вариант подарка, чтобы самостоятельно выбрать именно&nbsp;то, что действительно хочется! В наличии имеются подарочные сертификаты номиналом: 1 500, 3 000, 5 000, 15&nbsp;000, 30&nbsp;000 и 50&nbsp;000 рублей. Оформление сертификата возможно как в бумажном, так и в электронном варианте.</p>
                                     <ul>
-                                        <li>Подарочный сертификат НОРДИ ХОУМ (NORDI HOME) (далее – ПС) является собственностью ООО «НОРДИ ХОУМ»</li>
-                                        <li>Подарочные сертификаты доступны к использованию в любом действующем розничном магазине НОРДИ ХОУМ (NORDI HOME) и в интернет-магазине www.nordihome.ru.</li>
-                                        <li>Подарочные сертификаты являются картами на предъявителя (не являются именными). Любое физическое лицо, предъявившее ПС, может оплатить с его помощью любые товары и услуги в НОРДИ ХОУМ (NORDI HOME).</li>
+                                        <li>Подарочный сертификат НОРДИ ХОУМ (далее – ПС) является собственностью ООО «НОРДИ ХОУМ»</li>
+                                        <li>Подарочные сертификаты доступны к использованию в любом действующем розничном магазине НОРДИ ХОУМ и в интернет-магазине www.nordihome.ru.</li>
+                                        <li>Подарочные сертификаты являются картами на предъявителя (не являются именными). Любое физическое лицо, предъявившее ПС, может оплатить с его помощью любые товары и услуги в НОРДИ ХОУМ.</li>
                                         <li>Номинальная стоимость сертификата — сумма в российских рублях.</li>
                                         <li>В случае утраты подарочного сертификата, в том числе хищения (компрометации), сертификат не может быть восстановлен, денежные средства не могут быть возвращены в связи с отсутствием персонификации лица, владевшего ПС до утраты (компрометации).</li>
                                         <li>Срок действия ПС ограничен. Действителен 1 (один) год с момента продажи сертификата.</li>
                                         <li>Обмен ПС на другие сертификаты с целью изменения номинала не производится.</li>
                                         <li>Активация ПС производится кассиром магазина в момент продажи.</li>
-                                        <li>ПС принимается к оплате любых товаров, представленных в магазинах НОРДИ ХОУМ (NORDI HOME), включая товары со скидкой.</li>
+                                        <li>ПС принимается к оплате любых товаров, представленных в магазинах НОРДИ ХОУМ, включая товары со скидкой.</li>
                                         <li>Если сумма покупки (итоговая сумма чека) превышает номинал ПС, то разница между суммой покупки и номиналом ПС оплачивается наличными денежными средствами и/или с использованием банковских карт.</li>
                                     </ul>
-                                    <p>Компания оставляет за собой право вносить любые изменения в настоящие правила в любое время без предварительного уведомления владельцев сертификатов. Условия использования сертификата доводятся до сведения Покупателей посредством размещения новой информации на официальном сайте www.nordihome.ru. Информацию также можно уточнить у продавцов-консультантов в магазине НОРДИ ХОУМ (NORDI HOME) или по телефону&nbsp; <a href="{!! $contacts['phone']->url !!}">{{ phone( $contacts['phone']->url ) }}</a>.</p>
+                                    <p>Компания оставляет за собой право вносить любые изменения в настоящие правила в любое время без предварительного уведомления владельцев сертификатов. Условия использования сертификата доводятся до сведения Покупателей посредством размещения новой информации на официальном сайте www.nordihome.ru. Информацию также можно уточнить у продавцов-консультантов в магазине НОРДИ ХОУМ или по телефону&nbsp; <a href="{!! $contacts['phone']->url !!}">{{ phone( $contacts['phone']->url ) }}</a>.</p>
                                 </div>
                             </div>
                         </div>
@@ -392,12 +392,12 @@
                             <div class="row">
                                 <div class="col-md-6 col-lg-4">
                                     <label>
-                                        <input name="name" type="text" required placeholder="Имя и Фамилия"/>
+                                        <input name="name" type="text" required placeholder="Имя и Фамилия*"/>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-lg-4">
                                     <label>
-                                        <input name="phone" type="tel" required placeholder="Ваш телефон: +79097589135"/>
+                                        <input name="phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-lg-4">
@@ -418,7 +418,7 @@
                                 </div>
                                 <div class="col-12">
                                     <label class="f-z_14">
-                                        <input type="checkbox" name="agreement" value="Принимаю согласие"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
+                                        <input type="checkbox" required name="agreement" value="Принимаю согласие"> Я <a href="/page/soglasie-na-obrabotku-personalnyx-dannyx" target="_blank">согласен</a> на обработку персональных данных. Подробнее об этом в <a href="/page/politika-obrabotki-personalnyx-dannyx" target="_blank">политике конфиденциальности</a>
                                     </label>
                                 </div>
                             </div>
