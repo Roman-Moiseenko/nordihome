@@ -25,6 +25,10 @@ readonly class AddProductToStockUseCase
                 reserve: $dto->reserve,
             );
         } else {
+            //Если кол-во не изменилось, запись не делаем
+            if ($entity->quantity == $dto->quantity && $entity->reserve == $dto->reserve)
+                return $entity;
+
             $entity->quantity = $dto->quantity;
             $entity->reserve = $dto->reserve;
         }

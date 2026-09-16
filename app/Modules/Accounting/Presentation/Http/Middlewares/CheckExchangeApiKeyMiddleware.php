@@ -23,7 +23,7 @@ final class CheckExchangeApiKeyMiddleware
         $expectedApiKey = (string) env('1С_API_KEY');
         $providedApiKey = (string) $request->header(self::HEADER_NAME);
 
-        if ($expectedApiKey === '' || $providedApiKey !== $expectedApiKey) {
+        if ($expectedApiKey === '' || !hash_equals($expectedApiKey, $providedApiKey)) {
             return response()->json(['error' => 'Unauthorized'], 401);
         }
 
