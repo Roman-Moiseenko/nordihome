@@ -20,6 +20,7 @@ use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
 use App\Http\Middleware\ValidateSignature;
 use App\Http\Middleware\VerifyCsrfToken;
+use App\Modules\Accounting\Presentation\Http\Middlewares\CheckExchangeApiKeyMiddleware;
 use App\Modules\Analytics\Presentation\Http\Middlewares\IdentifyVisitorMiddleware;
 use App\Modules\Analytics\Presentation\Http\Middlewares\LinkVisitorToClientMiddleware;
 use App\Modules\Analytics\Presentation\Http\Middlewares\TrackPageViewMiddleware;
@@ -97,6 +98,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'throttle' => ThrottleRequests::class,
             'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
             'logger' => AdminActivityLoggerMiddleware::class,
+            'exchange.api.key' => CheckExchangeApiKeyMiddleware::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

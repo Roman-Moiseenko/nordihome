@@ -35,6 +35,7 @@ class ExchangeController extends Controller
 
     public function price(Request $request)
     {
+        return response()->json(['check']);
         try {
             $dto = PricePayloadData::validateAndCreate($request->all());
         } catch (ValidationException $e) {
