@@ -35,10 +35,10 @@ use App\Modules\Content\Entity\Widgets\FormWidget;
             <label> {{ $widget->fields["name"] }} <input name="name" class="width_100" required placeholder="Елена*"/></label>
         </div>
         <div class="m-b_10">
-            <label> {{ $widget->fields["phone"] }} <input name="phone" class="width_100" required placeholder="+79097589135*"/></label>
+            <label> {{ $widget->fields["phone"] }} <input name="phone" class="width_100" data-check="email" required placeholder="+79097589135*"/></label>
         </div>
         <div class="m-b_10">
-            <label>{{ $widget->fields["question"] }} <textarea class="width_100" required placeholder="Мой вопрос*"></textarea>
+            <label>{{ $widget->fields["question"] }} <textarea name="question" class="width_100" required placeholder="Мой вопрос*"></textarea>
             </label>
         </div>
         <div class="m-b_10">

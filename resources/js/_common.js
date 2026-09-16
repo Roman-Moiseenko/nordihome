@@ -106,6 +106,12 @@ const common = {
         let regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
         return regex.test(email);
     },
+    //Валидация телефона: 8XXXXXXXXXX или +7XXXXXXXXXX (пробелы, скобки и дефисы игнорируются)
+    isPhone(phone) {
+        if (phone === null || phone === undefined) return false;
+        let cleaned = String(phone).replace(/[\s\-()]/g, '');
+        return /^(8\d{10}|\+7\d{10})$/.test(cleaned);
+    },
     //Валидация input/number
     inn_format(_num) {
         let regex = /^([0-9]{10,12})+$/;
