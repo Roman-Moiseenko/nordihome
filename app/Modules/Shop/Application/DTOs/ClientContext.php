@@ -10,6 +10,7 @@ final readonly class ClientContext
         public ?int $id = null,
         public ?string $uuid = null,
         public string $priceType = PriceType::RETAIL,
+        public ?string $ip = null,
     ) {}
 
     public function toArray(): array
@@ -23,6 +24,7 @@ final readonly class ClientContext
             $data['id'] ?? null,
             $data['uuid'] ?? null,
             $data['priceType'] ?? PriceType::RETAIL,
+            $data['ip'] ?? null,
         );
     }
 }

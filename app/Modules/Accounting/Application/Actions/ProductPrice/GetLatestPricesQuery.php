@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Application\Actions\ProductPrice;
 
-use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
-readonly class GetLatestProductPricesUseCase
+readonly class GetLatestPricesQuery
 {
     public function __construct(
-        private ProductPriceRepositoryInterface $priceRepository,
+        private PriceRepositoryInterface $priceRepository,
     )
     {
     }
@@ -21,7 +21,7 @@ readonly class GetLatestProductPricesUseCase
      */
     public function execute(int $productId, UserPermission $userPermission): array
     {
-        if (!$userPermission->can('catalog.product.price.view')) {
+        if (!$userPermission->can('accounting.price.view')) {
             throw new AccessDeniedException();
         }
 

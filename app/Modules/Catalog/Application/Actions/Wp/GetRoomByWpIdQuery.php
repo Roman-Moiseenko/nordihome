@@ -7,7 +7,7 @@ namespace App\Modules\Catalog\Application\Actions\Wp;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 
-readonly class GetRoomByWpIdUseCase
+readonly class GetRoomByWpIdQuery
 {
     public function __construct(
         private RoomRepositoryInterface $roomRepository,

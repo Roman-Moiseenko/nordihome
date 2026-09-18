@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Tag;
 
-use App\Modules\Catalog\Application\Actions\Tag\IndexTagUseCase;
+use App\Modules\Catalog\Application\Actions\Tag\IndexTagQuery;
 use App\Modules\Catalog\Application\DTOs\Tag\TagIndexData;
 use App\Modules\Catalog\Domain\Entities\TagEntity;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
@@ -24,7 +24,7 @@ class IndexTagUseCaseTest extends TestCase
 
     private TagRepositoryInterface $tagRepository;
     private TagProductRepositoryInterface $tagProductRepository;
-    private IndexTagUseCase $useCase;
+    private IndexTagQuery $useCase;
 
     public function getModuleName(): string
     {
@@ -41,7 +41,7 @@ class IndexTagUseCaseTest extends TestCase
         parent::setUp();
         $this->tagRepository = Mockery::mock(TagRepositoryInterface::class);
         $this->tagProductRepository = Mockery::mock(TagProductRepositoryInterface::class);
-        $this->useCase = new IndexTagUseCase($this->tagRepository, $this->tagProductRepository);
+        $this->useCase = new IndexTagQuery($this->tagRepository, $this->tagProductRepository);
     }
 
     protected function tearDown(): void

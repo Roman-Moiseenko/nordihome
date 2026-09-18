@@ -5,7 +5,7 @@ namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Application\Actions\Tag\CreateTagUseCase;
-use App\Modules\Catalog\Application\Actions\Tag\IndexTagUseCase;
+use App\Modules\Catalog\Application\Actions\Tag\IndexTagQuery;
 use App\Modules\Catalog\Application\Actions\Tag\RemoveTagUseCase;
 use App\Modules\Catalog\Application\Actions\Tag\UpdateTagUseCase;
 use App\Modules\Catalog\Application\Actions\Tag\ViewTagUseCase;
@@ -29,7 +29,7 @@ class TagController extends Controller
     public function __construct(
         TagService                        $service,
         TagRepository                     $repository,
-        private readonly IndexTagUseCase  $indexTagUseCase,
+        private readonly IndexTagQuery    $indexTagUseCase,
         private readonly CreateTagUseCase $createTagUseCase,
         private readonly UpdateTagUseCase $updateTagUseCase,
         private readonly RemoveTagUseCase $removeTagUseCase,

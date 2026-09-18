@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Discount\Application\Actions\PromotionProduct;
 
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
-use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Discount\Application\DTOs\Promotion\PromotionProductViewData;
@@ -16,8 +16,8 @@ readonly class ListProductByPromotionUseCase
 {
     public function __construct(
         private PromotionProductRepositoryInterface $promotionProductRepository,
-        private ProductRepositoryInterface $productRepository,
-        private ProductPriceRepositoryInterface $priceRepository,
+        private ProductRepositoryInterface          $productRepository,
+        private PriceRepositoryInterface            $priceRepository,
     )
     {
     }

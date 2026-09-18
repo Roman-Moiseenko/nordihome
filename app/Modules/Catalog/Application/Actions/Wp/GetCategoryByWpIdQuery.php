@@ -7,7 +7,7 @@ namespace App\Modules\Catalog\Application\Actions\Wp;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 
-readonly class GetCategoryByWpIdUseCase
+readonly class GetCategoryByWpIdQuery
 {
     public function __construct(
         private CategoryRepositoryInterface $categoryRepository,

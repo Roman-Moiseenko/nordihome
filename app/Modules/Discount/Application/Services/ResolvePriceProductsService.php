@@ -3,14 +3,14 @@
 namespace App\Modules\Discount\Application\Services;
 
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
-use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
 use App\Modules\Discount\Domain\Interfaces\PromotionRepositoryInterface;
 
 readonly class ResolvePriceProductsService
 {
     public function __construct(
         private PromotionRepositoryInterface $promotionRepository,
-        private ProductPriceRepositoryInterface $priceRepository,
+        private PriceRepositoryInterface     $priceRepository,
     )
     {
     }

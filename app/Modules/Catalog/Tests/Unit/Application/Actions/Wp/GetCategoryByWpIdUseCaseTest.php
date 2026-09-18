@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Wp;
 
-use App\Modules\Catalog\Application\Actions\Wp\GetCategoryByWpIdUseCase;
+use App\Modules\Catalog\Application\Actions\Wp\GetCategoryByWpIdQuery;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
@@ -15,13 +15,13 @@ use PHPUnit\Framework\TestCase;
 class GetCategoryByWpIdUseCaseTest extends TestCase
 {
     private CategoryRepositoryInterface $categoryRepository;
-    private GetCategoryByWpIdUseCase $useCase;
+    private GetCategoryByWpIdQuery $useCase;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->categoryRepository = Mockery::mock(CategoryRepositoryInterface::class);
-        $this->useCase = new GetCategoryByWpIdUseCase($this->categoryRepository);
+        $this->useCase = new GetCategoryByWpIdQuery($this->categoryRepository);
     }
 
     protected function tearDown(): void

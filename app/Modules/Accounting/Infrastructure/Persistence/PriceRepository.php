@@ -6,12 +6,12 @@ namespace App\Modules\Accounting\Infrastructure\Persistence;
 
 use App\Modules\Accounting\Domain\Entities\ProductPriceEntity;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
-use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
 use App\Modules\Accounting\Infrastructure\Models\ProductPrice;
 use DateTimeImmutable;
 use Illuminate\Support\Facades\DB;
 
-class ProductPriceRepository implements ProductPriceRepositoryInterface
+class PriceRepository implements PriceRepositoryInterface
 {
     public function getById(int $id): ProductPriceEntity
     {

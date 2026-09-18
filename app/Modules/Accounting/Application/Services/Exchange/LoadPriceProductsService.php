@@ -2,11 +2,11 @@
 
 namespace App\Modules\Accounting\Application\Services\Exchange;
 
-use App\Modules\Accounting\Application\Actions\ProductPrice\SetProductPriceUseCase;
+use App\Modules\Accounting\Application\Actions\ProductPrice\SetPriceUseCase;
 use App\Modules\Accounting\Application\DTOs\Exchange\PricePayloadData;
 use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
-use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 
 readonly class LoadPriceProductsService
@@ -14,7 +14,7 @@ readonly class LoadPriceProductsService
 
     public function __construct(
         private ProductRepositoryInterface $productRepository,
-        private SetProductPriceUseCase $priceUseCase,
+        private SetPriceUseCase            $priceUseCase,
 
     )
     {

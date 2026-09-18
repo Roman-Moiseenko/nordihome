@@ -2,7 +2,6 @@
 
 namespace App\Modules\Order\Application\Services\CreatingServices;
 
-use App\Modules\Accounting\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
 use App\Modules\Accounting\Application\Actions\Trader\GetDefaultTraderIdUseCase;
 use App\Modules\Auth\Application\Services\FindOrCreateClientService;
 use App\Modules\Auth\Domain\ValueObjects\Address;
@@ -10,6 +9,7 @@ use App\Modules\Order\Application\Actions\AdditionGuide\GetDeliveryAdditionUseCa
 use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
 use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
+use App\Modules\Order\Application\Queries\GetSellPriceQuery;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Order\Domain\ValueObjects\OrderSellType;
@@ -28,11 +28,11 @@ readonly class CreateOrderOneClickService
         private TransactionManagerInterface $transactionManager,
         private Dispatcher                  $dispatcher,
         private FindOrCreateClientService   $findOrCreateClientService,
-        private GetProductSellPriceUseCase  $sellPriceUseCase,
+        private GetSellPriceQuery           $sellPriceUseCase,
         private OrderRepositoryInterface    $repository,
-        private GetDeliveryAdditionUseCase $deliveryAdditionUseCase,
-        private GetDefaultTraderIdUseCase $traderIdUseCase,
-        private CreateOrderLoggerUseCase $loggerUseCase,
+        private GetDeliveryAdditionUseCase  $deliveryAdditionUseCase,
+        private GetDefaultTraderIdUseCase   $traderIdUseCase,
+        private CreateOrderLoggerUseCase    $loggerUseCase,
     )
     {
 

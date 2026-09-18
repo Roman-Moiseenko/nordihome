@@ -3,9 +3,10 @@
 namespace App\Modules\Accounting\Providers;
 
 use App\Modules\Accounting\Domain\Interfaces\StockRepositoryInterface;
-use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
-use App\Modules\Accounting\Infrastructure\Persistence\ProductPriceRepository;
+use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
+use App\Modules\Accounting\Infrastructure\Persistence\PriceRepository;
 use App\Modules\Accounting\Infrastructure\Persistence\StockRepository;
+use App\Modules\Accounting\Database\Seeders\AccountingRoleSeeder;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Persistence\ProductRepository;
 use Illuminate\Support\Facades\Blade;
@@ -97,8 +98,8 @@ class AccountingServiceProvider extends ServiceProvider
 
 
         $this->app->bind(
-            ProductPriceRepositoryInterface::class,
-            ProductPriceRepository::class
+            PriceRepositoryInterface::class,
+            PriceRepository::class
         );
     }
 
@@ -397,7 +398,7 @@ class AccountingServiceProvider extends ServiceProvider
 
         $this->app->afterResolving('seed.handler', function ($handler) {
             $handler->register([
-                // Add seeder classes here
+                AccountingRoleSeeder::class,
             ]);
         });
     }

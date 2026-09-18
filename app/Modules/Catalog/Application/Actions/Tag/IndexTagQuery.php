@@ -10,7 +10,7 @@ use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-readonly class IndexTagUseCase
+readonly class IndexTagQuery
 {
     public function __construct(
         private TagRepositoryInterface        $tagRepository,

@@ -40,6 +40,10 @@ Breadcrumbs::for('admin.accounting.storage.index', function (BreadcrumbTrail $tr
     $trail->parent('admin.home');
     $trail->push('Хранилища', route('admin.accounting.storage.index'));
 });
+Breadcrumbs::for('admin.accounting.stock.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Остатки товаров', route('admin.accounting.stock.index'));
+});
 Breadcrumbs::for('admin.accounting.storage.create', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.accounting.storage.index');
     $trail->push('Добавить', route('admin.accounting.storage.create'));

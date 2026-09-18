@@ -2,7 +2,7 @@
 
 namespace App\Modules\Catalog\Application\Services;
 
-use App\Modules\Accounting\Application\Actions\ProductPrice\SetProductPriceUseCase;
+use App\Modules\Accounting\Application\Actions\ProductPrice\SetPriceUseCase;
 use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Application\Actions\Brand\FindOrCreateBrandUseCase;
@@ -12,8 +12,8 @@ use App\Modules\Catalog\Application\Actions\Product\UpdateProductUseCase;
 use App\Modules\Catalog\Application\Actions\RoomProduct\AttachRoomsToProductUseCase;
 use App\Modules\Catalog\Application\Actions\Tag\FindOrCreateTagUseCase;
 use App\Modules\Catalog\Application\Actions\TagProduct\AttachTagsToProductUseCase;
-use App\Modules\Catalog\Application\Actions\Wp\GetCategoryByWpIdUseCase;
-use App\Modules\Catalog\Application\Actions\Wp\GetRoomByWpIdUseCase;
+use App\Modules\Catalog\Application\Actions\Wp\GetCategoryByWpIdQuery;
+use App\Modules\Catalog\Application\Actions\Wp\GetRoomByWpIdQuery;
 use App\Modules\Catalog\Application\DTOs\Product\ProductFastCreateData;
 use App\Modules\Catalog\Application\DTOs\Product\ProductUpdateData;
 use App\Modules\Catalog\Domain\Entities\BrandEntity;
@@ -29,14 +29,14 @@ readonly class LoadProductWpService
 {
     public function __construct(
         private ProductRepositoryInterface       $productRepository,
-        private GetCategoryByWpIdUseCase         $categoryByWpIdUseCase,
-        private GetRoomByWpIdUseCase             $roomByWpIdUseCase,
+        private GetCategoryByWpIdQuery           $categoryByWpIdUseCase,
+        private GetRoomByWpIdQuery               $roomByWpIdUseCase,
         private FindOrCreateBrandUseCase         $findOrCreateBrandUseCase,
         private FastCreateProductUseCase         $fastCreateProductUseCase,
         private AttachCategoriesToProductUseCase $attachCategoriesToProductUseCase,
         private AttachRoomsToProductUseCase      $attachRoomsToProductUseCase,
         private UpdateProductUseCase             $updateProductUseCase,
-        private SetProductPriceUseCase           $setProductPriceUseCase,
+        private SetPriceUseCase                  $setProductPriceUseCase,
         private FindOrCreateTagUseCase           $findOrCreateTagUseCase,
         private AttachTagsToProductUseCase       $attachTagsToProductUseCase,
         private AttachAttributeProductService    $attachAttributeProductService,

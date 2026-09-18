@@ -2,7 +2,7 @@
 
 namespace App\Modules\Parser\Application\Services;
 
-use App\Modules\Accounting\Application\Actions\ProductPrice\SetProductPriceUseCase;
+use App\Modules\Accounting\Application\Actions\ProductPrice\SetPriceUseCase;
 use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Base\Entity\Dimensions;
@@ -30,17 +30,17 @@ readonly class CreateProductFromParserService
 {
 
     public function __construct(
-        private ParserProductRepositoryInterface $parserProductRepository,
-        private BrandRepositoryInterface $brandRepository,
-        private FastCreateProductUseCase         $fastCreateProductUseCase,
-        private FindOrCreateTempCategory $findOrCreateTempCategory,
-        private UpdateProductUseCase             $updateProductUseCase,
-        private AttachAttributeProductService    $attachAttributeProductService,
-        private SetProductPriceUseCase           $setProductPriceUseCase,
-        private AttachProductToParserUseCase $attachProductToParserUseCase,
+        private ParserProductRepositoryInterface      $parserProductRepository,
+        private BrandRepositoryInterface              $brandRepository,
+        private FastCreateProductUseCase              $fastCreateProductUseCase,
+        private FindOrCreateTempCategory              $findOrCreateTempCategory,
+        private UpdateProductUseCase                  $updateProductUseCase,
+        private AttachAttributeProductService         $attachAttributeProductService,
+        private SetPriceUseCase                       $setProductPriceUseCase,
+        private AttachProductToParserUseCase          $attachProductToParserUseCase,
         private SetDimensionsProductFromParserUseCase $dimensionsProductFromParserUseCase,
-        private PhotoRepositoryInterface $photoRepository,
-        private SettingRepository $settingRepository,
+        private PhotoRepositoryInterface              $photoRepository,
+        private SettingRepository                     $settingRepository,
     )
     {
 

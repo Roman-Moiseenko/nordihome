@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\ProductPrice;
 
-use App\Modules\Accounting\Application\Actions\ProductPrice\SetProductPriceUseCase;
+use App\Modules\Accounting\Application\Actions\ProductPrice\SetPriceUseCase;
 use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Accounting\Domain\Entities\ProductPriceEntity;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
-use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
@@ -16,14 +16,14 @@ use PHPUnit\Framework\TestCase;
 
 class SetProductPriceUseCaseTest extends TestCase
 {
-    private ProductPriceRepositoryInterface $priceRepository;
-    private SetProductPriceUseCase $useCase;
+    private PriceRepositoryInterface $priceRepository;
+    private SetPriceUseCase $useCase;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->priceRepository = Mockery::mock(ProductPriceRepositoryInterface::class);
-        $this->useCase = new SetProductPriceUseCase($this->priceRepository);
+        $this->priceRepository = Mockery::mock(PriceRepositoryInterface::class);
+        $this->useCase = new SetPriceUseCase($this->priceRepository);
     }
 
     protected function tearDown(): void

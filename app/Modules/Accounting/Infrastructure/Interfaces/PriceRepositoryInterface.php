@@ -6,7 +6,7 @@ namespace App\Modules\Accounting\Infrastructure\Interfaces;
 
 use App\Modules\Accounting\Domain\Entities\ProductPriceEntity;
 
-interface ProductPriceRepositoryInterface
+interface PriceRepositoryInterface
 {
     /**
      * Найти цену по ID

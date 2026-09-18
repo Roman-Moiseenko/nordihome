@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\TagProduct;
 
-use App\Modules\Catalog\Application\Actions\TagProduct\ListTagByProductUseCase;
+use App\Modules\Catalog\Application\Actions\TagProduct\ListTagByProductQuery;
 use App\Modules\Catalog\Application\DTOs\Tag\TagViewData;
 use App\Modules\Catalog\Domain\Entities\TagEntity;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
@@ -18,14 +18,14 @@ class ListTagByProductUseCaseTest extends TestCase
 {
     private TagProductRepositoryInterface $tagProductRepository;
     private TagRepositoryInterface $tagRepository;
-    private ListTagByProductUseCase $useCase;
+    private ListTagByProductQuery $useCase;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->tagProductRepository = Mockery::mock(TagProductRepositoryInterface::class);
         $this->tagRepository = Mockery::mock(TagRepositoryInterface::class);
-        $this->useCase = new ListTagByProductUseCase($this->tagProductRepository, $this->tagRepository);
+        $this->useCase = new ListTagByProductQuery($this->tagProductRepository, $this->tagRepository);
     }
 
     protected function tearDown(): void

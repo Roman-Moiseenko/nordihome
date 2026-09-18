@@ -7,7 +7,7 @@ use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-readonly class ListProductByTagUseCase
+readonly class ListProductByTagQuery
 {
     public function __construct(
         private TagProductRepositoryInterface $tagProductRepository,

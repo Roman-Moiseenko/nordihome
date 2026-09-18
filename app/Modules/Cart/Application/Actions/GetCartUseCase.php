@@ -2,12 +2,12 @@
 
 namespace App\Modules\Cart\Application\Actions;
 
-use App\Modules\Accounting\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Cart\Application\DTOs\CartInfoData;
 use App\Modules\Cart\Application\DTOs\CartItemData;
 use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
+use App\Modules\Order\Application\Queries\GetSellPriceQuery;
 use App\Modules\Parser\Application\Actions\Product\GetParserPriceByProductUseCase;
 use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Setting\Entity\Settings;
@@ -37,7 +37,7 @@ readonly class GetCartUseCase
         private CartRepositoryInterface          $cartRepository,
         private Settings                         $settings,
         private GetParserPriceByProductUseCase   $getParserPriceByProductUseCase,
-        private GetProductSellPriceUseCase       $productSellPriceUseCase,
+        private GetSellPriceQuery                $productSellPriceUseCase,
         private ProductRepositoryInterface       $productRepository,
         private ParserProductRepositoryInterface $parserProductRepository,
         private GetPhotoThumbUseCase             $getPhotoThumbUseCase,

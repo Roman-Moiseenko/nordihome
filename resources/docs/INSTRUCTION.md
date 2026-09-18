@@ -10,7 +10,7 @@ app/Modules/{ModuleName}/
 │   └── ValueObjects/      # Value Objects модуля (Slug, Image, Meta — в Shared)
 ├── Application/
 │   ├── DTOs/              # Spatie Laravel Data
-│   └── Actions/           # UseCase
+│   └── Actions/           # Query (данные) / UseCase (действия)
 ├── Infrastructure/
 │   ├── Models/            # Eloquent Model (именование: {Entity}Model)
 │   ├── Persistence/       # Реализация RepositoryInterface
@@ -34,7 +34,7 @@ app/Modules/{ModuleName}/
 
 **Правила:**
 - Используем PHP 8.4 property hooks (`get`/`set`)
-- Все поля с модификатором `public` (для доступа из UseCase/репозитория)
+- Все поля с модификатором `public` (для доступа из Query/UseCase/репозитория)
 - **Общие ValueObjects** (Slug, Email, Meta, Image) — в `app/Modules/Shared/Domain/ValueObjects/`
 - **VO, специфичные для модуля** — в `Domain/ValueObjects/` самого модуля
 - Конструктор принимает ТОЛЬКО обязательные для создания поля
@@ -269,11 +269,15 @@ class RoomViewData extends Data
 
 ---
 
-## 5. UseCase
+## 5. Actions (Query / UseCase)
 
 **Назначение:** Один сценарий использования (один публичный метод `execute()`).
 
 **Где лежит:** `app/Modules/{ModuleName}/Application/Actions/{ModelName}/`
+
+**Именование:**
+- Action, который **только возвращает данные** (список, просмотр, поиск) — суффикс `Query`, например `IndexRoomQuery`, `ViewRoomQuery`
+- Action, который **выполняет действие** (создание, обновление, удаление) — суффикс `UseCase`, например `CreateRoomUseCase`, `RemoveRoomUseCase`
 
 **Правила:**
 - Класс `readonly`
@@ -320,13 +324,33 @@ readonly class CreateRoomUseCase
 
 > **Импорт исключения:** `use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;`
 
-**Список стандартных UseCase:**
+**Пример Query (только возвращает данные):**
 
-| UseCase | Принимает | DTO | Описание |
-|---------|-----------|-----|----------|
-| `Index{Entity}UseCase` | `UserPermission` | — | Список всех сущностей |
+```php
+readonly class ViewRoomQuery
+{
+    public function __construct(
+        private RoomRepositoryInterface $roomRepository,
+    ) {}
+
+    public function execute(int $id, UserPermission $userPermission): RoomEntity
+    {
+        if (!$userPermission->can('catalog.room.view')) {
+            throw new AccessDeniedException();
+        }
+
+        return $this->roomRepository->getById($id);
+    }
+}
+```
+
+**Список стандартных Action:**
+
+| Action | Принимает | DTO | Описание |
+|--------|-----------|-----|----------|
+| `Index{Entity}Query` | `UserPermission` | — | Список всех сущностей |
+| `View{Entity}Query` | `int $id` + `UserPermission` | — | Просмотр одной |
 | `Create{Entity}UseCase` | DTO + `UserPermission` | `{Entity}CreateData` | Создание |
-| `View{Entity}UseCase` | `int $id` + `UserPermission` | — | Просмотр одной |
 | `Update{Entity}UseCase` | `int $id` + DTO + `UserPermission` | `{Entity}UpdateData` | Обновление |
 | `Remove{Entity}UseCase` | `int $id` + `UserPermission` | — | Удаление |
 
@@ -495,12 +519,12 @@ public function register()
 
 ## 9. Controller
 
-**Назначение:** Тонкий контроллер. Только принимает запрос, вызывает UseCase, возвращает ответ.
+**Назначение:** Тонкий контроллер. Только принимает запрос, вызывает Query/UseCase, возвращает ответ.
 
 **Где лежит:** `app/Modules/{ModuleName}/Presentation/Http/Controllers/Web/`
 
 **Правила:**
-- В конструкторе — DI UseCase (автоматически через Laravel DI)
+- В конструкторе — DI Query/UseCase (автоматически через Laravel DI)
 - Методы:
   - `index()` — список
   - `store(Request)` — создание (получает DTO через `validateAndCreate`)
@@ -515,9 +539,9 @@ public function register()
 class RoomController
 {
     public function __construct(
-        public readonly IndexRoomUseCase $indexRoomUseCase,
+        public readonly IndexRoomQuery $indexRoomQuery,
         public readonly CreateRoomUseCase $createRoomUseCase,
-        public readonly ViewRoomUseCase $viewRoomUseCase,
+        public readonly ViewRoomQuery $viewRoomQuery,
         public readonly UpdateRoomUseCase $updateRoomUseCase,
         public readonly RemoveRoomUseCase $removeRoomUseCase,
     ) {}
@@ -556,14 +580,14 @@ Route::group([
 
 ## 11. Связи многие-ко-многим (pivot)
 
-**Назначение:** Отношение «многие-ко-многим» (например, `Category` ↔ `Product`, `Promotion` ↔ `Product`) оформляется как отдельный под-модуль внутри модуля. В Domain Entity родительская сущность НЕ хранит коллекцию связанных сущностей — связи получаются через отдельные UseCase.
+**Назначение:** Отношение «многие-ко-многим» (например, `Category` ↔ `Product`, `Promotion` ↔ `Product`) оформляется как отдельный под-модуль внутри модуля. В Domain Entity родительская сущность НЕ хранит коллекцию связанных сущностей — связи получаются через отдельные Query/UseCase.
 
 **Структура (на примере CategoryProduct):**
 
 - **Pivot Model** — `Infrastructure/Models/{A}{B}.php` (например, `CategoryProduct`), `$timestamps = false`, `protected $table` — pivot-таблица
 - **RepositoryInterface** — `Domain/Interfaces/{A}{B}RepositoryInterface.php`
 - **Repository** — `Infrastructure/Persistence/{A}{B}Repository.php`
-- **UseCase** — `Application/Actions/{A}{B}/` (Attach / Assign(sync) / Detach / List)
+- **Actions** — `Application/Actions/{A}{B}/` (Attach / Assign(sync) / Detach — UseCase; List — Query)
 - **DTO** для списка — `Application/DTOs/.../`
 
 **Пример RepositoryInterface:**
@@ -588,20 +612,20 @@ interface CategoryProductRepositoryInterface
 - `attach` — дополняет существующие связи (с проверкой на дубли)
 - `sync` — заменяет весь набор связей
 - `detach` — удаляет указанные связи
-- `List...UseCase` — сначала получает ID связанных сущностей через pivot-репозиторий (с пагинацией), затем сущности через основной репозиторий (`findByIds`), затем маппит в DTO
+- `List...Query` — сначала получает ID связанных сущностей через pivot-репозиторий (с пагинацией), затем сущности через основной репозиторий (`findByIds`), затем маппит в DTO
 - Дополнительные колонки pivot (например, `price` в `promotions_products`) пробрасываются в сигнатурах методов: `attachProducts(int $promotionId, array $products)`, где `$products = [product_id => price]`
 
 ---
 
 ## 12. Фильтрация и передача данных на фронтенд
 
-**Назначение:** Единый подход к фильтрации списков (`index()`) и передаче данных на фронтенд через Inertia. Пример — [`IndexOrderUseCase`](app/Modules/Order/Application/Actions/Order/IndexOrderUseCase.php:15).
+**Назначение:** Единый подход к фильтрации списков (`index()`) и передаче данных на фронтенд через Inertia. Пример — [`IndexOrderQuery`](app/Modules/Order/Application/Actions/Order/IndexOrderUseCase.php:15).
 
 **Поток данных:**
 
 1. **Controller** создаёт Filter DTO из запроса через `validateAndCreate()`
-2. **Controller** передаёт Filter DTO в UseCase **по ссылке** (`&$filter`) и одновременно кладёт его в Inertia-ответ как `filters`
-3. **UseCase** проверяет права, вызывает `getFilteredPaginated($filter)` и маппит сущности в Index DTO через `->through()`
+2. **Controller** передаёт Filter DTO в Query **по ссылке** (`&$filter`) и одновременно кладёт его в Inertia-ответ как `filters`
+3. **Query** проверяет права, вызывает `getFilteredPaginated($filter)` и маппит сущности в Index DTO через `->through()`
 4. **Repository** применяет к запросу только непустые поля фильтра, **пишет обратно** в DTO счётчик применённых фильтров (`$filter->count`) и возвращает `LengthAwarePaginator`
 5. **Фронтенд** получает `orders` (пагинатор с DTO) и `filters` (исходный Filter DTO с обновлённым `count`)
 
@@ -636,8 +660,8 @@ class FilterOrderIndexData extends Data
 public function index(Request $request, UserPermission $permissions): Response
 {
     $filterDto = FilterOrderIndexData::validateAndCreate($request->all());
-    $staffs = $this->positionUseCase->execute(StaffPosition::customerManager(), $permissions);
-    $orders = $this->indexOrderUseCase->execute($filterDto, $permissions);
+    $staffs = $this->positionQuery->execute(StaffPosition::customerManager(), $permissions);
+    $orders = $this->indexOrderQuery->execute($filterDto, $permissions);
 
     return Inertia::render('Order/Order/Index', [
         'orders' => $orders,      // LengthAwarePaginator с OrderIndexData
@@ -647,12 +671,12 @@ public function index(Request $request, UserPermission $permissions): Response
 }
 ```
 
-### 12.3 UseCase
+### 12.3 Action (Query)
 
-UseCase принимает Filter DTO **по ссылке** (`&$filter`), чтобы Repository мог писать в него `count`:
+Action (Query) принимает Filter DTO **по ссылке** (`&$filter`), чтобы Repository мог писать в него `count`:
 
 ```php
-readonly class IndexOrderUseCase
+readonly class IndexOrderQuery
 {
     public function execute(FilterOrderIndexData &$filter, UserPermission $permission): LengthAwarePaginator
     {
@@ -741,7 +765,7 @@ public function getFilteredPaginated(FilterOrderIndexData &$filter): LengthAware
 
 ### 12.6 Index DTO (вывода)
 
-Index DTO — это **обычный `readonly` класс** (не `Spatie\LaravelData\Data`), т.к. валидация для вывода не нужна. Создаётся напрямую в UseCase внутри `through()`:
+Index DTO — это **обычный `readonly` класс** (не `Spatie\LaravelData\Data`), т.к. валидация для вывода не нужна. Создаётся напрямую в Query внутри `through()`:
 
 ```php
 readonly class OrderIndexData
@@ -772,10 +796,10 @@ readonly class OrderIndexData
 2. **ValueObjects** (если нужны новые, специфичные для модуля) — в `Domain/ValueObjects/` модуля
 3. **RepositoryInterface** — контракт на работу с БД
 4. **DTO** — Spatie Data с валидацией + `fromEntity()`
-5. **UseCase** — сценарии (проверка прав + бизнес-логика)
+5. **Actions (Query / UseCase)** — сценарии (проверка прав + бизнес-логика)
 6. **Eloquent Model** — в `Infrastructure/Models`
 7. **Repository** — реализация с `hydrate()`
 8. **ServiceProvider** — биндинг
-9. **Controller** — тонкий, вызывает UseCase
+9. **Controller** — тонкий, вызывает Query/UseCase
 10. **Routes** — resource + дополнительные маршруты
 11. **Breadcrumbs** + **Menu**

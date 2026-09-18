@@ -14,6 +14,7 @@ use App\Modules\Accounting\Controllers\StorageController;
 use App\Modules\Accounting\Controllers\SupplyController;
 use App\Modules\Accounting\Controllers\SurplusController;
 use App\Modules\Accounting\Controllers\TraderController;
+use App\Modules\Accounting\Presentation\Http\Controllers\Web\StockController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -302,4 +303,12 @@ Route::group([
     Route::resource('organization', OrganizationController::class)->except(['create', 'edit', 'update']); //CRUD
     Route::resource('trader', TraderController::class)->except(['create', 'edit', 'update']); //CRUD
     Route::resource('payment', PaymentController::class)->except(['create', 'store']); //CRUD
+
+    //STOCK (остатки товаров)
+
+    Route::get('/stock', [StockController::class, 'index'])->name('stock.index');
+    Route::post('/stock/add-product', [StockController::class, 'addProduct'])->name('stock.add-product');
+    Route::post('/stock/add-products', [StockController::class, 'addProducts'])->name('stock.add-products');
+
+
 });

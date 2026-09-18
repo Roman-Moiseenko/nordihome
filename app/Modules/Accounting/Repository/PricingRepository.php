@@ -36,7 +36,7 @@ class PricingRepository extends AccountingRepository
     {
         return array_merge($document->toArray(), [
             'trashed' => $document->trashed(),
-            'staff' => !is_null($document->staff) ? $document->staff->fullname->getFullName() : '-',
+            'staff' => !is_null($document->staff) ? $document->staff->fullName : '-',
             'arrival' => is_null($document->arrival_id) ? null : $document->arrival()->first()->toArray(),
         ]);
     }

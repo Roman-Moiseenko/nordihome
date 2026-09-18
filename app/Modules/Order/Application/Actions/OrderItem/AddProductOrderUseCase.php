@@ -2,12 +2,12 @@
 
 namespace App\Modules\Order\Application\Actions\OrderItem;
 
-use App\Modules\Accounting\Application\Actions\ProductPrice\GetProductSellPriceUseCase;
 use App\Modules\Order\Application\Actions\AdditionGuide\GetPolandAdditionUseCase;
 use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\OrderAddProductData;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
 use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
+use App\Modules\Order\Application\Queries\GetSellPriceQuery;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Parser\Application\Actions\Product\GetParserPriceByProductUseCase;
@@ -20,10 +20,10 @@ readonly class AddProductOrderUseCase
     public function __construct(
         private OrderRepositoryInterface       $repository,
         private OrderCalculateService          $orderCalculateService,
-        private GetProductSellPriceUseCase     $getProductSellPriceUseCase,
+        private GetSellPriceQuery              $getProductSellPriceUseCase,
         private GetParserPriceByProductUseCase $getParserProductPriceUseCase,
         private GetPolandAdditionUseCase       $polandAdditionUseCase,
-        private CreateOrderLoggerUseCase $loggerUseCase,
+        private CreateOrderLoggerUseCase       $loggerUseCase,
     )
     {
     }

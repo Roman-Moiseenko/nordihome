@@ -30,7 +30,7 @@ return [
         'vue' => true,
         'font_awesome' => 'fa-light fa-abacus',
         'sub_menu' => [
-            'supply' => [
+/*            'supply' => [
                 'icon' => 'folder-pen',
                 'title' => 'Заказы поставщикам',
                 'route_name' => 'admin.accounting.supply.index',
@@ -65,7 +65,7 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-sharp fa-light fa-arrows-rotate',
             ],
-
+*/
             'pricing' => [
                 'icon' => 'badge-russian-ruble',
                 'title' => 'Ценообразование',
@@ -73,6 +73,7 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-circle-dollar',
             ],
+/*
             'inventory' => [
                 'icon' => 'badge-russian-ruble',
                 'title' => 'Инвентаризация',
@@ -94,6 +95,7 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-folder-plus',
             ],
+            */
             'distributors' => [
                 'icon' => 'factory',
                 'title' => 'Поставщики',
@@ -101,12 +103,20 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-industry-windows',
             ],
-            'storages' => [
+     /*       'storages' => [
                 'icon' => 'warehouse',
                 'title' => 'Хранилища',
                 'route_name' => 'admin.accounting.storage.index',
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-warehouse',
+            ],
+            */
+            'stock' => [
+                'icon' => 'boxes',
+                'title' => 'Остатки товаров',
+                'route_name' => 'admin.accounting.stock.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-boxes-stacked',
             ],
             'currency' => [
                 'icon' => 'candlestick-chart',

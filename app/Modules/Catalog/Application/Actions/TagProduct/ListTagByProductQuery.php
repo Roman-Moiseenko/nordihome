@@ -6,7 +6,7 @@ use App\Modules\Catalog\Application\DTOs\Tag\TagViewData;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 
-class ListTagByProductUseCase
+readonly class ListTagByProductQuery
 {
     public function __construct(
         private TagProductRepositoryInterface $tagProductRepository,

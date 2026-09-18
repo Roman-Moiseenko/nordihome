@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Modules\Accounting\Application\Actions\ProductPrice;
+namespace App\Modules\Order\Application\Queries;
 
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetLatestPricesQuery;
 use App\Modules\Accounting\Application\DTOs\ProductPrice\ProductSellPriceData;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Discount\Application\Actions\PromotionProduct\GetPromotionDataByProductUseCase;
@@ -12,18 +13,19 @@ use App\Modules\Shared\Domain\Entities\UserPermission;
  * Возвращает цену на товар
  * Базовая,
  * Продажная - либо по акции, либо от цены клиента
+ * Использует запросы с двух модулей - Accounting и Discount
  */
-readonly class GetProductSellPriceUseCase
+readonly class GetSellPriceQuery
 {
 
     public function __construct(
-        private GetLatestProductPricesUseCase $pricesUseCase,
+        private GetLatestPricesQuery             $pricesUseCase,
         private GetPromotionDataByProductUseCase $promotionDataByProductUseCase,
     ) {
     }
     public function execute(int $id, PriceType $priceType): ProductSellPriceData
     {
-        $prices = $this->pricesUseCase->execute($id, new UserPermission(null, [] , ['catalog.product.price.view']));
+        $prices = $this->pricesUseCase->execute($id, new UserPermission(null, [] , ['accounting.price.view']));
 
         $discountId = null;
         $discountType = null;

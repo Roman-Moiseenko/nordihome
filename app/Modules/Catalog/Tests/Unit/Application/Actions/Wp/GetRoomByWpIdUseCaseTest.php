@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Wp;
 
-use App\Modules\Catalog\Application\Actions\Wp\GetRoomByWpIdUseCase;
+use App\Modules\Catalog\Application\Actions\Wp\GetRoomByWpIdQuery;
 use App\Modules\Catalog\Domain\Entities\RoomEntity;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
@@ -15,13 +15,13 @@ use PHPUnit\Framework\TestCase;
 class GetRoomByWpIdUseCaseTest extends TestCase
 {
     private RoomRepositoryInterface $roomRepository;
-    private GetRoomByWpIdUseCase $useCase;
+    private GetRoomByWpIdQuery $useCase;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->roomRepository = Mockery::mock(RoomRepositoryInterface::class);
-        $this->useCase = new GetRoomByWpIdUseCase($this->roomRepository);
+        $this->useCase = new GetRoomByWpIdQuery($this->roomRepository);
     }
 
     protected function tearDown(): void

@@ -7,13 +7,13 @@ namespace App\Modules\Accounting\Application\Actions\ProductPrice;
 use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Accounting\Domain\Entities\ProductPriceEntity;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
-use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
-readonly class SetProductPriceUseCase
+readonly class SetPriceUseCase
 {
     public function __construct(
-        private ProductPriceRepositoryInterface $priceRepository,
+        private PriceRepositoryInterface $priceRepository,
     )
     {
     }

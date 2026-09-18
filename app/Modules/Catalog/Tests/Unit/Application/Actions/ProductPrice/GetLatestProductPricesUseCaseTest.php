@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\ProductPrice;
 
-use App\Modules\Accounting\Application\Actions\ProductPrice\GetLatestProductPricesUseCase;
-use App\Modules\Accounting\Infrastructure\Interfaces\ProductPriceRepositoryInterface;
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetLatestPricesQuery;
+use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use Mockery;
@@ -14,14 +14,14 @@ use PHPUnit\Framework\TestCase;
 
 class GetLatestProductPricesUseCaseTest extends TestCase
 {
-    private ProductPriceRepositoryInterface $priceRepository;
-    private GetLatestProductPricesUseCase $useCase;
+    private PriceRepositoryInterface $priceRepository;
+    private GetLatestPricesQuery $useCase;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->priceRepository = Mockery::mock(ProductPriceRepositoryInterface::class);
-        $this->useCase = new GetLatestProductPricesUseCase($this->priceRepository);
+        $this->priceRepository = Mockery::mock(PriceRepositoryInterface::class);
+        $this->useCase = new GetLatestPricesQuery($this->priceRepository);
     }
 
     protected function tearDown(): void
