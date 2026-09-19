@@ -7,7 +7,7 @@ namespace App\Modules\Shop\Application\DTOs\Entities;
 use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
 use App\Modules\Shop\Application\DTOs\Elements\PromotionProductData;
 
-readonly class ProductCardData
+class ProductCardData
 {
     public function __construct(
         public int                  $id,

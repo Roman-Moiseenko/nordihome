@@ -12,6 +12,7 @@ use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
+use App\Modules\Shop\Application\Services\RegionalPriceCalculator;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
@@ -33,6 +34,7 @@ readonly class RoomPageQuery
         private SchemaBuilder               $schemaBuilder,
         private ContentBlockQueryRepository   $blockRepository,
         private GetWebSettingsUseCase $webSettingsUseCase,
+        private RegionalPriceCalculator $regionalPriceCalculator,
     )
     {
     }
@@ -86,10 +88,13 @@ readonly class RoomPageQuery
         $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds, $clientContext);
 
         $productCards = array_map(
-            fn(array $item) => ProductCardData::fromArray($item),
+            fn(array $item) => $this->regionalPriceCalculator->productCardData(
+                ProductCardData::fromArray($item),
+                $clientContext->region
+            ),
             $productCardsRaw
         );
-        //MAINDO Цена для других регионов Сервис!!!
+
 
         $secondInfo = new CategoryRoomSecondData(
             children: $categories,

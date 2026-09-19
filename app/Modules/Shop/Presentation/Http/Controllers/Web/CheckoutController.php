@@ -6,7 +6,7 @@ namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 use App\Modules\Analytics\Domain\ValueObjects\ActionType;
 use App\Modules\Analytics\Domain\ValueObjects\EntityType;
 use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
-use App\Modules\Cart\Application\Actions\GetCartUseCase;
+use App\Modules\Cart\Application\Actions\GetCartQuery;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderFromCartService;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderOneClickService;
 use App\Modules\Shop\Application\DTOs\Checkout\OneClickOrderData;
@@ -22,7 +22,7 @@ class CheckoutController extends ShopController
     use RecordsAnalyticsAction;
 
     public function __construct(
-        private readonly GetCartUseCase                      $getCartUseCase,
+        private readonly GetCartQuery               $getCartUseCase,
         private readonly CreateOrderFromCartService $createOrderFromCartService,
         private readonly CreateOrderOneClickService $createOrderOneClickService,
     )

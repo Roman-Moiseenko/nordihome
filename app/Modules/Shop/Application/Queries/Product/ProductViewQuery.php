@@ -4,8 +4,10 @@ namespace App\Modules\Shop\Application\Queries\Product;
 
 use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\ProductViewPageData;
+use App\Modules\Shop\Application\Services\RegionalPriceCalculator;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Query\EquivalentViewQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
@@ -20,8 +22,9 @@ readonly class ProductViewQuery
         private SchemaBuilder                 $schemaBuilder,
         private SeoAdapter                    $seoAdapter,
         private EquivalentViewQueryRepository $equivalentRepository,
-        private ProductIndexQueryRepository $indexQueryRepository,
-        private GetWebSettingsUseCase $webSettingsUseCase,
+        private ProductIndexQueryRepository   $indexQueryRepository,
+        private GetWebSettingsUseCase         $webSettingsUseCase,
+        private RegionalPriceCalculator       $regionalPriceCalculator,
     )
     {
     }
@@ -31,7 +34,10 @@ readonly class ProductViewQuery
         $web = $this->webSettingsUseCase->execute();
 
         $product = $this->repository->getProductBySlug($slug, $clientContext);
-        //MAINDO Цена для других регионов Сервис!!!
+        $product = $this->regionalPriceCalculator->productData(
+            $product, $clientContext->region
+        );
+        
         $attributes = $this->repository->getAttributes($product);
 
         $meta = $this->seoAdapter->getSeo('catalog.product', $product);
@@ -48,14 +54,20 @@ readonly class ProductViewQuery
         $equivalentIds = $this->equivalentRepository->getProductIds($product->id);
 
         $equivalents = $this->indexQueryRepository->loadProductCards($equivalentIds, $clientContext);
-        //MAINDO Цена для других регионов Сервис!!!
 
+        $equivalentCards = array_map(
+            fn(array $item) => $this->regionalPriceCalculator->productCardData(
+                ProductCardData::fromArray($item),
+                $clientContext->region
+            ),
+            $equivalents
+        );
         return new ProductViewPageData(
             product: $product,
             meta: $meta->asProduct(),
             schema: $schema,
             attributes: $attributes,
-            equivalents: $equivalents,
+            equivalents: $equivalentCards,
         );
     }
 }

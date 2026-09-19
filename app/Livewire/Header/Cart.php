@@ -6,7 +6,7 @@ use App\Modules\Analytics\Domain\ValueObjects\ActionType;
 use App\Modules\Analytics\Domain\ValueObjects\EntityType;
 use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Cart\Application\Actions\ClearCartUseCase;
-use App\Modules\Cart\Application\Actions\GetCartUseCase;
+use App\Modules\Cart\Application\Actions\GetCartQuery;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
 use App\Modules\Cart\Application\DTOs\CartItemData;
 use App\Modules\Shop\Application\Services\ClientContextFactory;
@@ -42,7 +42,7 @@ class Cart extends Component
     public function refresh_fields(): void
     {
 
-        $useCase = app()->make(GetCartUseCase::class);
+        $useCase = app()->make(GetCartQuery::class);
         $context = app(ClientContextFactory::class)->make();
         $data = $useCase->execute($context);
 
@@ -71,7 +71,7 @@ class Cart extends Component
     /**
      * @throws BindingResolutionException
      */
-    public function clear_cart(GetCartUseCase $cartUseCase, ClearCartUseCase $clearUseCase): void
+    public function clear_cart(GetCartQuery $cartUseCase, ClearCartUseCase $clearUseCase): void
     {
         $context = app(ClientContextFactory::class)->make();
         $items = $cartUseCase->execute($context)->items;

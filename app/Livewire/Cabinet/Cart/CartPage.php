@@ -6,7 +6,7 @@ use App\Modules\Analytics\Domain\ValueObjects\ActionType;
 use App\Modules\Analytics\Domain\ValueObjects\EntityType;
 use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Cart\Application\Actions\CheckAllToCartUseCase;
-use App\Modules\Cart\Application\Actions\GetCartUseCase;
+use App\Modules\Cart\Application\Actions\GetCartQuery;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
 use App\Modules\Shop\Application\Services\ClientContextFactory;
 use Illuminate\Contracts\Container\BindingResolutionException;
@@ -60,7 +60,7 @@ class CartPage extends Component
     {
         $context = app(ClientContextFactory::class)->make();
         $this->renderKey++;
-        $useCase = app()->make(GetCartUseCase::class);
+        $useCase = app()->make(GetCartQuery::class);
         $data = $useCase->execute($context);
 
         $this->items = json_decode(json_encode($data->items), true);
@@ -92,7 +92,7 @@ class CartPage extends Component
 
     }
 
-    public function del_select(GetCartUseCase $cartUseCase, RemoveCartItemUseCase $useCase): void
+    public function del_select(GetCartQuery $cartUseCase, RemoveCartItemUseCase $useCase): void
     {
         $context = app(ClientContextFactory::class)->make();
         $items = $cartUseCase->execute($context)->items;

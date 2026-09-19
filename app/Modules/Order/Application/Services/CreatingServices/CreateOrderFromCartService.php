@@ -5,7 +5,7 @@ namespace App\Modules\Order\Application\Services\CreatingServices;
 use App\Modules\Accounting\Application\Actions\Trader\GetDefaultTraderIdUseCase;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Auth\Application\Queries\GetInfoWebClientQuery;
-use App\Modules\Cart\Application\Actions\GetCartUseCase;
+use App\Modules\Cart\Application\Actions\GetCartQuery;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
@@ -32,16 +32,16 @@ readonly class CreateOrderFromCartService
 {
     public function __construct(
         private TransactionManagerInterface $transactionManager,
-        private GetCartUseCase              $cartUseCase,
+        private GetCartQuery                $cartUseCase,
         private RemoveCartItemUseCase       $removeCartItemUseCase,
         private GetInfoWebClientQuery       $getInfoClientQuery,
         private OrderCalculateService       $orderCalculateService,
         private Dispatcher                  $dispatcher,
         private OrderRepositoryInterface    $repository,
-        private GetPolandAdditionUseCase $polandAdditionUseCase,
-        private GetDeliveryAdditionUseCase $deliveryAdditionUseCase,
-        private GetDefaultTraderIdUseCase $traderIdUseCase,
-        private CreateOrderLoggerUseCase $loggerUseCase,
+        private GetPolandAdditionUseCase    $polandAdditionUseCase,
+        private GetDeliveryAdditionUseCase  $deliveryAdditionUseCase,
+        private GetDefaultTraderIdUseCase   $traderIdUseCase,
+        private CreateOrderLoggerUseCase    $loggerUseCase,
     )
     {
 

@@ -14,9 +14,10 @@ use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shared\Application\Actions\GetPhotoThumbUseCase;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoThumbData;
 use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\Services\RegionalPriceCalculator;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
-readonly class GetCartUseCase
+readonly class GetCartQuery
 {
 
     const DELIVERY_PERIOD = [
@@ -41,6 +42,7 @@ readonly class GetCartUseCase
         private ProductRepositoryInterface       $productRepository,
         private ParserProductRepositoryInterface $parserProductRepository,
         private GetPhotoThumbUseCase             $getPhotoThumbUseCase,
+        private RegionalPriceCalculator $regionalPriceCalculator,
     )
     {
 
@@ -77,6 +79,9 @@ readonly class GetCartUseCase
                 $price = $productPrice->basePrice;
             }
 
+            //Расчитываем коэф. на базовую цену
+            $price = $this->regionalPriceCalculator->apply($price, $clientContext->region);
+
             $itemData = new CartItemData(
                 id: $item->id,
                 cost: $price * $item->quantity,
@@ -91,7 +96,9 @@ readonly class GetCartUseCase
                 url: $url,
                 ///DiscountInfo
                 discountId: is_null($productPrice) ? null : $productPrice->discountId,
-                discountPrice: is_null($productPrice?->discountId) ? null : $productPrice->sellPrice * $item->quantity,
+                discountPrice: is_null($productPrice?->discountId)
+                    ? null
+                    : $this->regionalPriceCalculator->apply($productPrice->sellPrice, $clientContext->region) * $item->quantity, //с коэфициентом
                 discountName: is_null($productPrice) ? null : $productPrice->discountName,
             );
             $amount += $itemData->cost;

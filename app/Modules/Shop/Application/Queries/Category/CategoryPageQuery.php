@@ -16,6 +16,7 @@ use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
+use App\Modules\Shop\Application\Services\RegionalPriceCalculator;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
@@ -35,8 +36,9 @@ readonly class CategoryPageQuery
         private ProductIndexQueryRepository $productIndexQueryRepository,
         private AttributeQueryRepository    $attributeQueryRepository,
         private SchemaBuilder               $schemaBuilder,
-        private ContentBlockQueryRepository   $blockRepository,
-        private GetWebSettingsUseCase $webSettingsUseCase,
+        private ContentBlockQueryRepository $blockRepository,
+        private GetWebSettingsUseCase       $webSettingsUseCase,
+        private RegionalPriceCalculator     $regionalPriceCalculator,
     )
     {
     }
@@ -88,10 +90,13 @@ readonly class CategoryPageQuery
         $productIds = $idPaginator->items();
         $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds, $clientContext);
         $productCards = array_map(
-            fn(array $item) => ProductCardData::fromArray($item),
+            fn(array $item) => $this->regionalPriceCalculator->productCardData(
+                ProductCardData::fromArray($item),
+                $clientContext->region
+            ),
             $productCardsRaw
         );
-        //MAINDO Цена для других регионов Сервис!!!
+
         $paginator = $this->paginatorBuilder->build(
             total: $idPaginator->total(),
             perPage: $perPage,
@@ -159,10 +164,12 @@ readonly class CategoryPageQuery
         $productCardsRaw = $this->productIndexQueryRepository->loadProductCards($productIds, $clientContext);
 
         $productCards = array_map(
-            fn(array $item) => ProductCardData::fromArray($item),
+            fn(array $item) => $this->regionalPriceCalculator->productCardData(
+                ProductCardData::fromArray($item),
+                $clientContext->region
+            ),
             $productCardsRaw
         );
-        //MAINDO Цена для других регионов Сервис!!!
 
         $paginator = $this->paginatorBuilder->build(
             total: $idPaginator->total(),
