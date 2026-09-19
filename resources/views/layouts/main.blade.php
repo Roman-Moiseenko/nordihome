@@ -107,6 +107,7 @@
 <!--livewire:shop.popup.buy-click :user="$user" /-->
 @include('shop.pop-up.buy-click')
 @include('shop.pop-up.notification')
+@include('shop.pop-up.region')
 <div id="cookie_notification"></div>
 
 @include('analytics::tracker')

@@ -13,6 +13,7 @@ class ClientContextFactory
             ? auth()->user()->profileable
             : null;
 
+
         return new ClientContext(
             id: $client->id ?? null,
             uuid: request()->cookie('user_cookie_id'),

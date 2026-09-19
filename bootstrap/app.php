@@ -87,6 +87,13 @@ return Application::configure(basePath: dirname(__DIR__))
             SubstituteBindings::class,
         ]);
 
+        // Куки, которые JS ставит на клиенте, не шифруем,
+        // иначе Laravel не сможет их прочитать ($request->cookie() вернёт null)
+        $middleware->encryptCookies([
+            'user_cookie_region',
+            'user_cookie_town',
+        ]);
+
         //Группа middleware для клиентских модулей shop, cart, cabinet
         $middleware->group('storefront', [
             'web',

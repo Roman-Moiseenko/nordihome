@@ -10,6 +10,7 @@ class InjectClientContextMiddleware
 {
     public function handle(Request $request, Closure $next)
     {
+        //dd($request->cookie('user_cookie_region'));
         $context = app(ClientContextFactory::class)->make();
         app()->instance(ClientContext::class, $context);
         $request->attributes->set('client_context', $context);
