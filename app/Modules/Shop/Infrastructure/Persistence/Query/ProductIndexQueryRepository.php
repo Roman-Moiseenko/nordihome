@@ -6,7 +6,7 @@ use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 

@@ -204,7 +204,6 @@ Route::group([
         Route::post('/sale/{product}', [ProductController::class, 'sale'])->name('sale');
         Route::post('/restore/{id}', [ProductController::class, 'restore'])->name('restore');
         Route::delete('/full-delete/{id}', [ProductController::class, 'full_delete'])->name('full-delete');
-        Route::post('/fast-create', [ProductController::class, 'fast_create'])->name('fast-create');
 
         Route::group([
             'prefix' => 'image',
@@ -212,9 +211,7 @@ Route::group([
         ], function () {
             Route::post('/add/{product}', [ProductController::class, 'add_image'])->name('add');
             Route::post('/get/{product}', [ProductController::class, 'get_images'])->name('get');
-            Route::delete('/del/{product}', [ProductController::class, 'del_image'])->name('del');
-            //Route::post('/up/{product}', [ProductController::class, 'up_image'])->name('up');
-            //Route::post('/down/{product}', [ProductController::class, 'down_image'])->name('down');
+            Route::delete('/del/{product}', [ProductController::class, 'del_image'])->name('del');;
             Route::post('/set/{product}', [ProductController::class, 'set_image'])->name('set');
             Route::post('/move/{product}', [ProductController::class, 'move_image'])->name('move');
         });

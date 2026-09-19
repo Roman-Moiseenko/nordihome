@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Application\Queries\Room;
 
 use App\Modules\Shop\Application\DTOs\RoomTreeClientData;
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomTreeQueryRepository;
-use App\Modules\Storefront\Infrastructure\Persistence\CacheInvalidationRegistry;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
 

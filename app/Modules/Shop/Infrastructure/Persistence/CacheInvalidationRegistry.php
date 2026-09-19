@@ -1,5 +1,5 @@
 <?php
-namespace App\Modules\Storefront\Infrastructure\Persistence;
+namespace App\Modules\Shop\Infrastructure\Persistence;
 use Illuminate\Support\Facades\Cache;
 
 class CacheInvalidationRegistry

@@ -5,7 +5,7 @@ namespace App\Modules\Cart\Application\Services;
 use App\Modules\Cart\Application\Actions\AddToCartUseCase;
 use App\Modules\Cart\Application\DTOs\AddProductToCartData;
 use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 
 readonly class UnionStoragesService
 {

@@ -17,7 +17,6 @@ return [
     App\Modules\Parser\Providers\ParserServiceProvider::class,
     App\Modules\Shared\Providers\SharedServiceProvider::class,
     App\Modules\Shop\Providers\ShopServiceProvider::class,
-    App\Modules\Storefront\Providers\StorefrontServiceProvider::class,
     App\Providers\AppServiceProvider::class,
     App\Providers\EventServiceProvider::class,
     App\Providers\RouteServiceProvider::class,

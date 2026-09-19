@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Storefront\Application\Services;
+namespace App\Modules\Shop\Application\Services;
 
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 
 class ClientContextFactory
 {

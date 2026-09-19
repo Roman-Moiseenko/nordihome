@@ -19,12 +19,12 @@ use App\Modules\Shop\Infrastructure\Observers\MenuItemCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\PromotionProductCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\RoomCacheObserver;
 use App\Modules\Shop\Infrastructure\Services\BreadcrumbService;
-use App\Modules\Storefront\Presentation\Http\ViewComposers\CategoryComposer;
-use App\Modules\Storefront\Presentation\Http\ViewComposers\ClientComposer;
-use App\Modules\Storefront\Presentation\Http\ViewComposers\IkeaComposer;
-use App\Modules\Storefront\Presentation\Http\ViewComposers\MenuComposer;
-use App\Modules\Storefront\Presentation\Http\ViewComposers\RoomComposer;
-use App\Modules\Storefront\Presentation\Http\ViewComposers\WebComposer;
+use App\Modules\Shop\Presentation\Http\ViewComposers\CategoryComposer;
+use App\Modules\Shop\Presentation\Http\ViewComposers\ClientComposer;
+use App\Modules\Shop\Presentation\Http\ViewComposers\IkeaComposer;
+use App\Modules\Shop\Presentation\Http\ViewComposers\MenuComposer;
+use App\Modules\Shop\Presentation\Http\ViewComposers\RoomComposer;
+use App\Modules\Shop\Presentation\Http\ViewComposers\WebComposer;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -101,6 +101,15 @@ class ShopServiceProvider extends ServiceProvider
         $this->registerSeeders();
 
 
+        $storefront = ['shop.*', 'cart.*', 'cabinet.*'];
+
+        View::composer($storefront, CategoryComposer::class);
+        View::composer($storefront, ClientComposer::class); //shop.*
+        View::composer($storefront, RoomComposer::class);
+        View::composer($storefront, WebComposer::class);
+        View::composer('shop.ikea.*', IkeaComposer::class);
+        View::composer($storefront, MenuComposer::class);
+        View::composer($storefront, AnalyticsComposer::class);
 
         Category::observe(CategoryCacheObserver::class);
         Room::observe(RoomCacheObserver::class);

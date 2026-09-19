@@ -4,7 +4,7 @@ namespace App\Modules\Cart\Tests\Unit\Application\Actions;
 
 use App\Modules\Cart\Application\Actions\ClearCartUseCase;
 use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;

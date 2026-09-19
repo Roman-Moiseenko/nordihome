@@ -2,10 +2,6 @@
 
 namespace App\Modules\Cabinet\Providers;
 
-use App\Modules\Analytics\Presentation\Http\Middlewares\IdentifyVisitorMiddleware;
-use App\Modules\Analytics\Presentation\Http\Middlewares\LinkVisitorToClientMiddleware;
-use App\Modules\Analytics\Presentation\Http\Middlewares\TrackPageViewMiddleware;
-use App\Modules\Storefront\Presentation\Http\Middlewares\InjectClientContextMiddleware;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;

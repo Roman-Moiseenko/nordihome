@@ -64,75 +64,6 @@ class ProductService
         $this->groupService = $groupService;
     }
 
-    public function createByParser(int $brand_id, string $code, int $category_id = null): ?Product
-    {
-        dd("Неверный запуск");
-
-        //FIXME Исправить или удалить
-
-        /*
-
-        $brand = Brand::find($brand_id);
-        $parser_class = $brand->parser_class;
-
-        Log::info("Parser Class " . $parser_class);
-        try {
-            $parser = app()->make($parser_class);
-
-            $product = $parser->findProduct($code);
-        } catch (\Throwable $e) {
-            Log::info("ERROR " . $e->getMessage() . " / " . $e->getFile() . " / " . $e->getLine());
-            return null;
-        }
-
-
-
-        if (!is_null($category_id)) {
-            $product->main_category_id = $category_id;
-            $product->save();
-        }
-        return $product;
-*/
-    }
-
-    /**
-     * @throws \Throwable
-     */
-    public function create(Request $request): Product
-    {
-        if ($request->boolean('parser')) {
-            return $this->createByParser(
-                $request->integer('brand_id'),
-                $request->string('code')->trim()->value(),
-                $request->input('category_id')
-            );
-        }
-
-        DB::transaction(function () use ($request, &$product) {
-            $arguments = [
-                'pre_order' => $this->common_set->pre_order,
-                'local' => $this->common_set->delivery_local,
-                'delivery' => $this->common_set->delivery_all,
-            ];
-            $product = Product::register(
-                $request->string('name')->trim()->value(),
-                $request->string('code')->trim()->value(),
-                $request->integer('category_id'),
-                $request->string('slug')->trim()->value(),
-                $arguments);
-            $product->brand_id = $request->integer('brand_id');
-            if (!empty($request['categories'])) {
-                foreach ($request['categories'] as $category_id) {
-                    $product->categories()->attach((int)$category_id);
-                }
-            }
-            $this->series($request, $product);
-            $product->push();
-            $this->storageService->add_product($product);
-        });
-
-        return $product;
-    }
 
     public function createFull(Request $request): Product
     {
@@ -181,22 +112,6 @@ class ProductService
         return $product;
     }
 
-    public function create_fast(Request $request): Product
-    {
-        $product = $this->create($request);
-
-        $product->pricesRetail()->create([
-            'value' => $request->integer('price'),
-            'founded' => 'Создано из заказа',
-        ]);
-        $product->pricesPre()->create([
-            'value' => $request->integer('price'),
-            'founded' => 'Создано из заказа',
-        ]);
-
-        event(new ProductHasFastCreate($product));
-        return $product;
-    }
 
 
     public function moderation(Product $product): void

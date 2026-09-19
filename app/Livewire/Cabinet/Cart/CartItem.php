@@ -11,7 +11,7 @@ use App\Modules\Cart\Application\Actions\PlusToCartUseCase;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
 use App\Modules\Cart\Application\Actions\SetToCartUseCase;
 use App\Modules\Cart\Application\Actions\SubToCartUseCase;
-use App\Modules\Storefront\Application\Services\ClientContextFactory;
+use App\Modules\Shop\Application\Services\ClientContextFactory;
 use App\Modules\User\Service\WishService;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Livewire\Attributes\On;

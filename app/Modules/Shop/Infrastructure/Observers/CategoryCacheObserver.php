@@ -3,7 +3,7 @@
 namespace App\Modules\Shop\Infrastructure\Observers;
 
 use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Storefront\Infrastructure\Persistence\CacheInvalidationRegistry;
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 
 class CategoryCacheObserver
 {

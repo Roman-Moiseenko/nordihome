@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Application\Queries\Group;
 
-use App\Modules\Storefront\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 
 class GroupPageQuery
 {

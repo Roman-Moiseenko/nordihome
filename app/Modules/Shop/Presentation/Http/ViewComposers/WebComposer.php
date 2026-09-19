@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Storefront\Presentation\Http\ViewComposers;
+namespace App\Modules\Shop\Presentation\Http\ViewComposers;
 
 use Illuminate\View\View;
 

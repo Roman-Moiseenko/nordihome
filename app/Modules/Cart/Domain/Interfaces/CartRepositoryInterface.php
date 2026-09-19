@@ -3,7 +3,7 @@
 namespace App\Modules\Cart\Domain\Interfaces;
 
 use App\Modules\Cart\Domain\Entities\CartItemEntity;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 
 interface CartRepositoryInterface
 {

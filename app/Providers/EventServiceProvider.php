@@ -7,7 +7,6 @@ use App\Events\CouponHasCreated;
 use App\Events\DepartureHasCompleted;
 use App\Events\MovementHasCompleted;
 use App\Events\MovementHasCreated;
-use App\Events\ParserPriceHasChange;
 use App\Events\PaymentHasPaid;
 use App\Events\PriceHasMinimum;
 use App\Events\PricingHasCompleted;
@@ -36,7 +35,6 @@ use App\Listeners\NotificationOrderCanceled;
 use App\Listeners\NotificationOrderCompleted;
 use App\Listeners\NotificationOrderPaid;
 use App\Listeners\NotificationOrderPrepaid;
-use App\Listeners\NotificationParserPriceChange;
 use App\Listeners\NotificationPaymentNew;
 use App\Listeners\NotificationPriceMinimum;
 use App\Listeners\NotificationPricingCompleted;
@@ -66,7 +64,6 @@ use App\Modules\Lead\Listeners\LeadSetDelivery;
 use App\Modules\Lead\Listeners\LeadSetInWork;
 use App\Modules\Lead\Listeners\LeadSetManager;
 use App\Modules\Lead\Listeners\LeadSetPaid;
-use App\Modules\Lead\Listeners\LeadSetStatus;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Service\NotificationService;
 use App\Modules\Order\Events\ExpenseHasAssembling;
@@ -248,9 +245,7 @@ class EventServiceProvider extends ServiceProvider
         ProductHasBlocked::class => [
             NotificationProductBlocked::class,
         ],
-        ParserPriceHasChange::class => [
-            NotificationParserPriceChange::class,
-        ],
+
         ProductHasFastCreate::class => [
             NotificationProductFastCreat::class,
         ],

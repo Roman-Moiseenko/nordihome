@@ -7,7 +7,7 @@ use App\Modules\Cart\Domain\Entities\CartItemEntity;
 use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
 use App\Modules\Cart\Infrastructure\Models\CartCookie;
 use App\Modules\Cart\Infrastructure\Models\CartStorage;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 
 
 class CartRepository implements CartRepositoryInterface

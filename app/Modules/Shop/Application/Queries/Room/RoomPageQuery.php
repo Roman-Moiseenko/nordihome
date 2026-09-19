@@ -3,6 +3,7 @@
 namespace App\Modules\Shop\Application\Queries\Room;
 
 use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Elements\UrlData;
@@ -13,13 +14,12 @@ use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\AttributeQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ContentBlockQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
-use App\Modules\Storefront\Infrastructure\Persistence\CacheInvalidationRegistry;
 use Illuminate\Support\Facades\Cache;
 
 readonly class RoomPageQuery

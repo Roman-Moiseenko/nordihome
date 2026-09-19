@@ -13,7 +13,7 @@ use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shared\Application\Actions\GetPhotoThumbUseCase;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoThumbData;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 readonly class GetCartUseCase

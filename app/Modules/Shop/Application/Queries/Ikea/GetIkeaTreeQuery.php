@@ -2,8 +2,8 @@
 
 namespace App\Modules\Shop\Application\Queries\Ikea;
 
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaTreeQueryRepository;
-use App\Modules\Storefront\Infrastructure\Persistence\CacheInvalidationRegistry;
 use Illuminate\Support\Facades\Cache;
 
 class GetIkeaTreeQuery

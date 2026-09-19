@@ -10,9 +10,9 @@ use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\IkeaViewPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaTreeQueryRepository;
-use App\Modules\Storefront\Infrastructure\Persistence\CacheInvalidationRegistry;
 use Illuminate\Support\Facades\Cache;
 
 readonly class IkeaViewQuery

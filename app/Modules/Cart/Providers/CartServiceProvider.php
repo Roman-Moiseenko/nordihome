@@ -2,14 +2,10 @@
 
 namespace App\Modules\Cart\Providers;
 
-use App\Modules\Analytics\Presentation\Http\Middlewares\IdentifyVisitorMiddleware;
-use App\Modules\Analytics\Presentation\Http\Middlewares\LinkVisitorToClientMiddleware;
-use App\Modules\Analytics\Presentation\Http\Middlewares\TrackPageViewMiddleware;
 use App\Modules\Auth\Infrastructure\Events\UserIsLogin;
 use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
 use App\Modules\Cart\Infrastructure\Listeners\UnionCartAfterLoginListener;
 use App\Modules\Cart\Infrastructure\Persistence\CartRepository;
-use App\Modules\Storefront\Presentation\Http\Middlewares\InjectClientContextMiddleware;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;

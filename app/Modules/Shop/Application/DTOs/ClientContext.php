@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Storefront\Application\DTOs;
+namespace App\Modules\Shop\Application\DTOs;
 
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 

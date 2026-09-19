@@ -9,7 +9,7 @@ use App\Modules\Cart\Application\Actions\ClearCartUseCase;
 use App\Modules\Cart\Application\Actions\GetCartUseCase;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
 use App\Modules\Cart\Application\DTOs\CartItemData;
-use App\Modules\Storefront\Application\Services\ClientContextFactory;
+use App\Modules\Shop\Application\Services\ClientContextFactory;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Livewire\Attributes\On;
 use Livewire\Component;

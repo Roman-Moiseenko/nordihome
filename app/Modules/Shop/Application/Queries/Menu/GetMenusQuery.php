@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Application\Queries\Menu;
 
 use App\Modules\Shop\Application\DTOs\Menu\MenuData;
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\MenuQueryRepository;
-use App\Modules\Storefront\Infrastructure\Persistence\CacheInvalidationRegistry;
 use Illuminate\Support\Facades\Cache;
 
 readonly class GetMenusQuery

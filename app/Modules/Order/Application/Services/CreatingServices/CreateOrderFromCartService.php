@@ -24,7 +24,7 @@ use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Shared\Application\DTOs\Lead\LeadSourceData;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
 use App\Modules\Shared\Infrastructure\Events\LeadCollected;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use Carbon\Carbon;
 use Illuminate\Events\Dispatcher;
 

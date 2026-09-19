@@ -8,11 +8,11 @@ use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\DimensionsData;
 use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
 use App\Modules\Shop\Application\DTOs\Elements\PromotionProductData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
 use Illuminate\Support\Facades\DB;
 
 class ProductViewQueryRepository

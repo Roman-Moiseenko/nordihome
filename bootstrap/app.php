@@ -25,7 +25,7 @@ use App\Modules\Analytics\Presentation\Http\Middlewares\IdentifyVisitorMiddlewar
 use App\Modules\Analytics\Presentation\Http\Middlewares\LinkVisitorToClientMiddleware;
 use App\Modules\Analytics\Presentation\Http\Middlewares\TrackPageViewMiddleware;
 use App\Modules\Shared\Presentation\Http\Middlewares\LoadUserPermission;
-use App\Modules\Storefront\Presentation\Http\Middlewares\InjectClientContextMiddleware;
+use App\Modules\Shop\Presentation\Http\Middlewares\InjectClientContextMiddleware;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Application;

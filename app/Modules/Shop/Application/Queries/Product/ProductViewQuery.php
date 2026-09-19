@@ -3,6 +3,7 @@
 namespace App\Modules\Shop\Application\Queries\Product;
 
 use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\ProductViewPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
@@ -10,7 +11,6 @@ use App\Modules\Shop\Infrastructure\Persistence\Query\EquivalentViewQueryReposit
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductViewQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
 
 readonly class ProductViewQuery
 {

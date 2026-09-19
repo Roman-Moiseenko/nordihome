@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Storefront\Presentation\Http\Middlewares;
-use App\Modules\Storefront\Application\DTOs\ClientContext;
-use App\Modules\Storefront\Application\Services\ClientContextFactory;
+namespace App\Modules\Shop\Presentation\Http\Middlewares;
+use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\Services\ClientContextFactory;
 use Closure;
 use Illuminate\Http\Request;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Storefront\Presentation\Http\ViewComposers;
+namespace App\Modules\Shop\Presentation\Http\ViewComposers;
 
 use App\Modules\Shop\Application\Queries\Menu\GetContactsQuery;
 use App\Modules\Shop\Application\Queries\Menu\GetMenusQuery;
