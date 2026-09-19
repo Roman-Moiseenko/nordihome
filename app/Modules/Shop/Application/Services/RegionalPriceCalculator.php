@@ -12,14 +12,12 @@ class RegionalPriceCalculator
     public function apply(int $price, ?int $region): int
     {
         if (is_null($region) || $region == 39) return $price;
-        //TODO возможно сделать таблицу с коэфициентами по регионам и закешировать при загрузку
+        //TODO возможно сделать таблицу с коэфициентами по регионам и закешировать при загрузке
         return (int)(ceil($price * 1.4));
     }
 
     public function productCardData(ProductCardData $data, ?int $region): ProductCardData
     {
-
-
         $data->price = $this->apply($data->price, $region);
         $data->price_previous = $this->apply($data->price_previous, $region);
         if ($data->promotion?->price > 0) $data->promotion->price = $this->apply($data->promotion->price, $region);

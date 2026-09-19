@@ -2,6 +2,7 @@
 
 namespace App\Modules\Unload\Repository;
 
+use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Tag;
