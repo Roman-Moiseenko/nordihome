@@ -7,7 +7,7 @@ use App\Modules\Cart\Application\DTOs\AddProductToCartData;
 use App\Modules\Parser\Application\Actions\Product\ViewParserProductUseCase;
 use App\Modules\Parser\Application\Services\CreateProductFromParserService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
-use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Storefront\Application\DTOs\ClientContext;
 use Illuminate\Contracts\Container\BindingResolutionException;
 
 class AddProductToCartService

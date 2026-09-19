@@ -22,11 +22,11 @@ use Symfony\Component\HttpFoundation\Response;
  * генерирует новый и помечает ответ для установки cookie. Пропускает /admin/*,
  * /api/analytics/* и служебные маршруты.
  */
-final class IdentifyVisitorMiddleware
+final readonly class IdentifyVisitorMiddleware
 {
     public function __construct(
-        private readonly VisitorUuidGenerator $uuidGenerator,
-        private readonly UserAgentParser $userAgentParser,
+        private VisitorUuidGenerator $uuidGenerator,
+        private UserAgentParser      $userAgentParser,
     ) {}
 
     public function handle(Request $request, Closure $next): Response

@@ -5,9 +5,8 @@ namespace App\Modules\Cabinet\Providers;
 use App\Modules\Analytics\Presentation\Http\Middlewares\IdentifyVisitorMiddleware;
 use App\Modules\Analytics\Presentation\Http\Middlewares\LinkVisitorToClientMiddleware;
 use App\Modules\Analytics\Presentation\Http\Middlewares\TrackPageViewMiddleware;
-use App\Modules\Shop\Presentation\Http\Middlewares\InjectClientContextMiddleware;
+use App\Modules\Storefront\Presentation\Http\Middlewares\InjectClientContextMiddleware;
 use Illuminate\Support\Facades\Blade;
-use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use RecursiveDirectoryIterator;
@@ -50,11 +49,7 @@ class CabinetServiceProvider extends ServiceProvider
      * Default middlewares for web routes
      */
     protected array $webMiddlewares = [
-        'web',
-        InjectClientContextMiddleware::class,
-        IdentifyVisitorMiddleware::class,
-        LinkVisitorToClientMiddleware::class,
-        TrackPageViewMiddleware::class,
+        'storefront',
     ];
 
     /**

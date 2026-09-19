@@ -4,7 +4,7 @@ namespace App\Modules\Cart\Infrastructure\Listeners;
 
 use App\Modules\Auth\Infrastructure\Events\UserIsLogin;
 use App\Modules\Cart\Application\Services\UnionStoragesService;
-use App\Modules\Shop\Application\Services\ClientContextFactory;
+use App\Modules\Storefront\Application\Services\ClientContextFactory;
 
 readonly class UnionCartAfterLoginListener
 {

@@ -11,15 +11,11 @@ use App\Modules\Cart\Application\Actions\PlusToCartUseCase;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
 use App\Modules\Cart\Application\Actions\SetToCartUseCase;
 use App\Modules\Cart\Application\Actions\SubToCartUseCase;
-use App\Modules\Shop\Application\DTOs\ClientContext;
-use App\Modules\Shop\Application\Services\ClientContextFactory;
-use App\Modules\Shop\Presentation\Http\Middlewares\InjectClientContextMiddleware;
+use App\Modules\Storefront\Application\Services\ClientContextFactory;
 use App\Modules\User\Service\WishService;
 use Illuminate\Contracts\Container\BindingResolutionException;
-use Illuminate\Http\Request;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\Livewire;
 
 class CartItem extends Component
 {

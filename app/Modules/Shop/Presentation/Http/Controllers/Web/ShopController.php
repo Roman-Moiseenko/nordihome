@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
-use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Storefront\Application\DTOs\ClientContext;
 use Illuminate\Http\Request;
 
 abstract class ShopController extends Controller

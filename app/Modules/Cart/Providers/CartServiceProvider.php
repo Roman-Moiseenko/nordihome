@@ -9,7 +9,7 @@ use App\Modules\Auth\Infrastructure\Events\UserIsLogin;
 use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
 use App\Modules\Cart\Infrastructure\Listeners\UnionCartAfterLoginListener;
 use App\Modules\Cart\Infrastructure\Persistence\CartRepository;
-use App\Modules\Shop\Presentation\Http\Middlewares\InjectClientContextMiddleware;
+use App\Modules\Storefront\Presentation\Http\Middlewares\InjectClientContextMiddleware;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -54,11 +54,7 @@ class CartServiceProvider extends ServiceProvider
      * Default middlewares for web routes
      */
     protected array $webMiddlewares = [
-        'web',
-        InjectClientContextMiddleware::class,
-        IdentifyVisitorMiddleware::class,
-        LinkVisitorToClientMiddleware::class,
-        TrackPageViewMiddleware::class,
+        'storefront',
     ];
 
     /**

@@ -2,10 +2,8 @@
 
 namespace App\Modules\Shop\Infrastructure\Observers;
 
-use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
-use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
-use Illuminate\Support\Facades\Cache;
+use App\Modules\Storefront\Infrastructure\Persistence\CacheInvalidationRegistry;
 
 class IkeaCategoryCacheObserver
 {

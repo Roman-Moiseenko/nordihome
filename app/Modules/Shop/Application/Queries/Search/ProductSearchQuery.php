@@ -3,7 +3,6 @@
 namespace App\Modules\Shop\Application\Queries\Search;
 
 use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
-use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
@@ -16,6 +15,7 @@ use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepositor
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductSearchQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomPageQueryRepository;
+use App\Modules\Storefront\Application\DTOs\ClientContext;
 
 readonly class ProductSearchQuery
 {
@@ -63,6 +63,8 @@ readonly class ProductSearchQuery
             fn(array $item) => ProductCardData::fromArray($item),
             $productCardsRaw
         );
+        //MAINDO Цена для других регионов Сервис!!!
+
         $paginator = $this->paginatorBuilder->build(
             total: $idPaginator->total(),
             perPage: $perPage,

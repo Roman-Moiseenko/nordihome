@@ -2,13 +2,13 @@
 
 namespace App\Modules\Shop\Application\Queries\Search;
 
-use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Search\FullSearchData;
 use App\Modules\Shop\Application\DTOs\Search\ItemSearchData;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategorySearchQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductSearchQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomSearchQueryRepository;
+use App\Modules\Storefront\Application\DTOs\ClientContext;
 
 /**
  * Для ajax поиск

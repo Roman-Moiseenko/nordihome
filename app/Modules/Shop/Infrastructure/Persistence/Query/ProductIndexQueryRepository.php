@@ -6,7 +6,7 @@ use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
-use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Storefront\Application\DTOs\ClientContext;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\DB;
 
@@ -57,6 +57,12 @@ class ProductIndexQueryRepository
     }
 
 
+    /**
+     * Основной метод загрузки товаров по id списком
+     * @param array $ids
+     * @param ClientContext $client
+     * @return array
+     */
     public function loadProductCards(array $ids, ClientContext $client): array
     {
         if (empty($ids)) {

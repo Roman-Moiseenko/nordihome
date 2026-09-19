@@ -5,8 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
-use App\Modules\Shared\Infrastructure\Services\PhotoService;
-use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Storefront\Application\DTOs\ClientContext;
 use Illuminate\Support\Facades\DB;
 
 class RoomSearchQueryRepository

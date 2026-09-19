@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Application\DTOs;
+namespace App\Modules\Storefront\Application\DTOs;
 
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 
@@ -11,6 +11,7 @@ final readonly class ClientContext
         public ?string $uuid = null,
         public string $priceType = PriceType::RETAIL,
         public ?string $ip = null,
+        public ?int $region = null,
     ) {}
 
     public function toArray(): array

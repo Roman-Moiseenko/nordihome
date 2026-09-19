@@ -36,11 +36,9 @@ Route::group(
             return csrf_token();
         });
         // Route::get('/shop/{old_slug}', [ProductController::class, 'old_slug']);
-        //Route::get('/page/news', [PageController::class, 'news'])->name('page.news');
         Route::get('/page/{slug}', [PageController::class, 'view'])->name('page.view');
         Route::get('/posts/{slug}', [PostController::class, 'posts'])->name('posts.view');
         Route::get('/post/{slug}', [PostController::class, 'post'])->name('post.view');
-        //Route::get('/news', [\App\Modules\Page\Controllers\NewsController::class, ''])
 
         Route::group([
             'as' => 'product.',

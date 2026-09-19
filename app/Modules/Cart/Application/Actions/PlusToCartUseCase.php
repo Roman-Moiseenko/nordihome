@@ -3,7 +3,7 @@
 namespace App\Modules\Cart\Application\Actions;
 
 use App\Modules\Cart\Domain\Interfaces\CartRepositoryInterface;
-use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Storefront\Application\DTOs\ClientContext;
 
 class PlusToCartUseCase
 {

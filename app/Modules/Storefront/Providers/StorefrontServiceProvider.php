@@ -1,24 +1,8 @@
 <?php
 
-namespace App\Modules\Shop\Providers;
+namespace App\Modules\Storefront\Providers;
 
 use App\Modules\Analytics\Infrastructure\ViewComposers\AnalyticsComposer;
-use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Catalog\Infrastructure\Models\Room;
-use App\Modules\Content\Entity\Contact;
-use App\Modules\Content\Entity\Menu;
-use App\Modules\Content\Entity\MenuItem;
-use App\Modules\Discount\Infrastructure\Models\Promotion;
-use App\Modules\Parser\Infrastructure\Models\ParserCategory;
-use App\Modules\Shop\Application\Interfaces\BreadcrumbProviderInterface;
-use App\Modules\Shop\Infrastructure\Observers\CategoryCacheObserver;
-use App\Modules\Shop\Infrastructure\Observers\ContactCacheObserver;
-use App\Modules\Shop\Infrastructure\Observers\IkeaCategoryCacheObserver;
-use App\Modules\Shop\Infrastructure\Observers\MenuCacheObserver;
-use App\Modules\Shop\Infrastructure\Observers\MenuItemCacheObserver;
-use App\Modules\Shop\Infrastructure\Observers\PromotionProductCacheObserver;
-use App\Modules\Shop\Infrastructure\Observers\RoomCacheObserver;
-use App\Modules\Shop\Infrastructure\Services\BreadcrumbService;
 use App\Modules\Storefront\Presentation\Http\ViewComposers\CategoryComposer;
 use App\Modules\Storefront\Presentation\Http\ViewComposers\ClientComposer;
 use App\Modules\Storefront\Presentation\Http\ViewComposers\IkeaComposer;
@@ -26,6 +10,7 @@ use App\Modules\Storefront\Presentation\Http\ViewComposers\MenuComposer;
 use App\Modules\Storefront\Presentation\Http\ViewComposers\RoomComposer;
 use App\Modules\Storefront\Presentation\Http\ViewComposers\WebComposer;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -33,44 +18,42 @@ use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
 /**
- * Service Provider for Shop module
+ * Service Provider for Storefront module
  *
  * This provider handles automatic registration of all module components:
  * commands, translations, configuration, events, routes, views, migrations,
  * factories and seeders.
  *
- * @package App\Modules\Shop\Providers
+ * @package App\Modules\Storefront\Providers
  * @author Easy Module Generator
  * @version 1.0.0
  */
-class ShopServiceProvider extends ServiceProvider
+class StorefrontServiceProvider extends ServiceProvider
 {
     /**
      * Module name
      */
-    protected string $name = 'Shop';
+    protected string $name = 'Storefront';
 
     /**
      * Module base path within app/
      */
-    protected string $basePath = 'Modules/Shop';
+    protected string $basePath = 'Modules/Storefront';
 
     /**
      * Module base namespace
      */
-    protected string $baseNamespace = 'App\Modules\Shop';
+    protected string $baseNamespace = 'App\Modules\Storefront';
 
     /**
      * Namespace used for views and translations
      */
-    protected string $scopeNamespace = 'shop';
+    protected string $scopeNamespace = 'storefront';
 
     /**
      * Default middlewares for web routes
      */
-    protected array $webMiddlewares = [
-        'storefront',
-    ];
+    protected array $webMiddlewares = ['web'];
 
     /**
      * Default middlewares for API routes
@@ -100,15 +83,17 @@ class ShopServiceProvider extends ServiceProvider
         $this->registerFactories();
         $this->registerSeeders();
 
+        $commonModules = ['shop.*', 'cart.*', 'cabinet.*'];
+
+        View::composer($commonModules, CategoryComposer::class);
+        View::composer($commonModules, ClientComposer::class); //shop.*
+        View::composer($commonModules, RoomComposer::class);
+        View::composer($commonModules, WebComposer::class);
+        View::composer('shop.ikea.*', IkeaComposer::class);
+        View::composer($commonModules, MenuComposer::class);
+        View::composer($commonModules, AnalyticsComposer::class);
 
 
-        Category::observe(CategoryCacheObserver::class);
-        Room::observe(RoomCacheObserver::class);
-        ParserCategory::observe(IkeaCategoryCacheObserver::class);
-        Menu::observe(MenuCacheObserver::class);
-        MenuItem::observe(MenuItemCacheObserver::class);
-        Contact::observe(ContactCacheObserver::class);
-        Promotion::observe(PromotionProductCacheObserver::class);
     }
 
     /**
@@ -119,10 +104,6 @@ class ShopServiceProvider extends ServiceProvider
     public function register()
     {
         // Register module-specific services
-        $this->app->bind(
-            BreadcrumbProviderInterface::class,
-            BreadcrumbService::class
-        );
     }
 
     // =====================================================================

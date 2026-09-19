@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Shop\Application\Services;
+namespace App\Modules\Storefront\Application\Services;
 
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
-use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Storefront\Application\DTOs\ClientContext;
 
 class ClientContextFactory
 {
@@ -18,6 +18,7 @@ class ClientContextFactory
             uuid: request()->cookie('user_cookie_id'),
             priceType: $client?->getPriceType() ?? PriceType::retail(),
             ip: request()->ip(),
+            region: request()->cookie('user_cookie_region')
         );
     }
 }

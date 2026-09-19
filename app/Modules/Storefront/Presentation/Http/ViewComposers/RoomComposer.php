@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Presentation\Http\ViewComposers;
+namespace App\Modules\Storefront\Presentation\Http\ViewComposers;
 
 use App\Modules\Shop\Application\Queries\Room\GetRoomTreeQuery;
 use Illuminate\Contracts\Cache\LockTimeoutException;

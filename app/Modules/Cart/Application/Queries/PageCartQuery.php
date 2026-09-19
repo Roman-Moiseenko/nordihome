@@ -4,8 +4,8 @@ namespace App\Modules\Cart\Application\Queries;
 
 use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Cart\Application\DTOs\CartViewData;
-use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
+use App\Modules\Storefront\Application\DTOs\ClientContext;
 
 readonly class PageCartQuery
 {

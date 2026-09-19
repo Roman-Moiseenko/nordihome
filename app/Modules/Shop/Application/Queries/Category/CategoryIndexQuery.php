@@ -9,8 +9,8 @@ use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\CatalogIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
-use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
+use App\Modules\Storefront\Infrastructure\Persistence\CacheInvalidationRegistry;
 use Illuminate\Support\Facades\Cache;
 
 readonly class CategoryIndexQuery

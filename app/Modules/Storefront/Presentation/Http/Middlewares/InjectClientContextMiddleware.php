@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Modules\Shop\Presentation\Http\Middlewares;
-use App\Modules\Auth\Infrastructure\Models\Client;
-use App\Modules\Shop\Application\DTOs\ClientContext;
-use App\Modules\Shop\Application\Services\ClientContextFactory;
+namespace App\Modules\Storefront\Presentation\Http\Middlewares;
+use App\Modules\Storefront\Application\DTOs\ClientContext;
+use App\Modules\Storefront\Application\Services\ClientContextFactory;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -12,9 +11,6 @@ class InjectClientContextMiddleware
     public function handle(Request $request, Closure $next)
     {
 
-
-
-        /** @var Client $client */
     /*    $client = (auth()->check() && auth()->user()->isClient()) ? auth()->user()->profileable : null;
         $user_ui = $request->cookie('user_cookie_id');
         $context = new ClientContext(
@@ -30,6 +26,7 @@ class InjectClientContextMiddleware
         app()->instance(ClientContext::class, $context);
         $request->attributes->set('client_context', $context);
 
+        //\Log::info('InjectClientContextMiddleware');
         return $next($request);
     }
 }

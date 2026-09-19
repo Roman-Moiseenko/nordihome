@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Modules\Shop\Presentation\Http\ViewComposers;
+namespace App\Modules\Storefront\Presentation\Http\ViewComposers;
 
 use App\Modules\Shop\Application\Queries\Menu\GetContactsQuery;
 use App\Modules\Shop\Application\Queries\Menu\GetMenusQuery;
-use App\Modules\Shop\Repository\MenuRepository;
 use Illuminate\View\View;
 
 readonly class MenuComposer

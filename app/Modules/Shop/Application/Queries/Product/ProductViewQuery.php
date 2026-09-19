@@ -3,7 +3,6 @@
 namespace App\Modules\Shop\Application\Queries\Product;
 
 use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
-use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\ProductViewPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
@@ -11,6 +10,7 @@ use App\Modules\Shop\Infrastructure\Persistence\Query\EquivalentViewQueryReposit
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductViewQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
+use App\Modules\Storefront\Application\DTOs\ClientContext;
 
 readonly class ProductViewQuery
 {
@@ -31,7 +31,7 @@ readonly class ProductViewQuery
         $web = $this->webSettingsUseCase->execute();
 
         $product = $this->repository->getProductBySlug($slug, $clientContext);
-
+        //MAINDO Цена для других регионов Сервис!!!
         $attributes = $this->repository->getAttributes($product);
 
         $meta = $this->seoAdapter->getSeo('catalog.product', $product);
@@ -48,6 +48,7 @@ readonly class ProductViewQuery
         $equivalentIds = $this->equivalentRepository->getProductIds($product->id);
 
         $equivalents = $this->indexQueryRepository->loadProductCards($equivalentIds, $clientContext);
+        //MAINDO Цена для других регионов Сервис!!!
 
         return new ProductViewPageData(
             product: $product,

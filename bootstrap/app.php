@@ -25,6 +25,7 @@ use App\Modules\Analytics\Presentation\Http\Middlewares\IdentifyVisitorMiddlewar
 use App\Modules\Analytics\Presentation\Http\Middlewares\LinkVisitorToClientMiddleware;
 use App\Modules\Analytics\Presentation\Http\Middlewares\TrackPageViewMiddleware;
 use App\Modules\Shared\Presentation\Http\Middlewares\LoadUserPermission;
+use App\Modules\Storefront\Presentation\Http\Middlewares\InjectClientContextMiddleware;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Foundation\Application;
@@ -58,6 +59,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+
+
+
         $middleware->append([
             TrustProxies::class,
             HandleCors::class,
@@ -81,6 +85,16 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api([
             ThrottleRequests::class.':api',
             SubstituteBindings::class,
+        ]);
+
+        //Группа middleware для клиентских модулей shop, cart, cabinet
+        $middleware->group('storefront', [
+            'web',
+            InjectClientContextMiddleware::class,
+            IdentifyVisitorMiddleware::class,
+            LinkVisitorToClientMiddleware::class,
+            TrackPageViewMiddleware::class,
+
         ]);
 
         $middleware->alias([

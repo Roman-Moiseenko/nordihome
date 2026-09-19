@@ -2,22 +2,17 @@
 
 namespace App\Modules\Shop\Application\Queries\Ikea;
 
-use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
-use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shop\Application\Actions\SetRatioPriceUseCase;
 use App\Modules\Shop\Application\DTOs\Entities\IkeaProductCardData;
-use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
-use App\Modules\Shop\Application\DTOs\Pages\IkeaIndexPageData;
 use App\Modules\Shop\Application\DTOs\Pages\IkeaViewPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
-use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaTreeQueryRepository;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Modules\Storefront\Infrastructure\Persistence\CacheInvalidationRegistry;
 use Illuminate\Support\Facades\Cache;
 
 readonly class IkeaViewQuery

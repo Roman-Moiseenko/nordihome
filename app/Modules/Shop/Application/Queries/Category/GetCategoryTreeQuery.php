@@ -3,8 +3,8 @@
 namespace App\Modules\Shop\Application\Queries\Category;
 
 use App\Modules\Shop\Application\DTOs\CategoryTreeClientData;
-use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
+use App\Modules\Storefront\Infrastructure\Persistence\CacheInvalidationRegistry;
 use Illuminate\Contracts\Cache\LockTimeoutException;
 use Illuminate\Support\Facades\Cache;
 

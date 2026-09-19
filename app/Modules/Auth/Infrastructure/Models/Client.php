@@ -121,7 +121,7 @@ class Client extends Model
     //FixMe Сделать поле и изменение цены клиентам, плюс может быть индивидальную скидку
     public function getPriceType(): PriceType
     {
-        return PriceType::retail();
+        return !is_null($this->price_type) ? new PriceType($this->price_type) : PriceType::default();
     }
 
     public function reviews(): HasMany

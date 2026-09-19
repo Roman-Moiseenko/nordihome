@@ -5,9 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Application\Queries\Menu;
 
 use App\Modules\Shop\Application\DTOs\Menu\ContactData;
-use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ContactQueryRepository;
-use Illuminate\Support\Facades\Cache;
 
 readonly class GetContactsQuery
 {
