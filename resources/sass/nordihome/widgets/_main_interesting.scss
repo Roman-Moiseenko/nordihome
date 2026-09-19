@@ -6,6 +6,7 @@
     #main-slider-interesting .main-slider .owl-item:nth-child(3) .heading-border {color:white;}
     #main-slider-interesting .main-slider .owl-item:nth-child(4) .sl-text {background:$blue;}
     #main-slider-interesting .main-slider .owl-item:nth-child(5) .sl-text {background:$light-gray;}
+    #main-slider-interesting .main-slider .sl-text {min-height: 380px;}
 }
 @media (max-width: 768px) {
     #main-slider-interesting .main-slider .sl-text {min-height: 330px;}

@@ -63,7 +63,7 @@
                                                 <label><input name="name" type="text" required placeholder="Ваше имя*"/></label>
                                             </div>
                                             <div class="col-sm-6 col-md-6 col-lg-3 m-b_10">
-                                                <label><input name="phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/></label>
+                                                <label><input name="phone" class="mask-phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/></label>
                                             </div>
                                             <div class="col-sm-6 col-md-6 col-lg-3 m-b_10">
                                                 <label><input name="telegram" placeholder="Ник в Телеграм: @username"/></label>
@@ -395,7 +395,7 @@
                                 </div>
                                 <div class="col-md-6 col-lg-4">
                                     <label>
-                                        <input name="phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/>
+                                        <input name="phone" class="mask-phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-lg-4">
@@ -408,7 +408,7 @@
                                     </label></div>
                                 <div class="col-md-9 col-lg-8">
                                     <label>
-                                        <textarea placeholder="Опишите ваш вопрос или оставьте это поле пустым"></textarea>
+                                        <textarea name="question" placeholder="Опишите ваш вопрос или оставьте это поле пустым"></textarea>
                                     </label>
                                 </div>
                                 <div class="col-md-3 col-lg-4">

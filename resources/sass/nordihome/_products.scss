@@ -88,6 +88,7 @@
 
         background: var(--bs-white);
         transition: $transition-slow;
+        padding-top: 45px;
         .borders {
             border: 1px solid var(--bs-gray-400);
             border-radius: $radius-card;
@@ -245,6 +246,7 @@
             background: $yellow;
             font-weight: 700;
             color:$black;
+            text-align: center;
         }
         .black {
 

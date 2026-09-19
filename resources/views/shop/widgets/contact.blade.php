@@ -122,10 +122,10 @@
                             <label>Ваше имя <input name="name" class="width_100" required placeholder="Елена*"/></label>
                         </div>
                         <div class="m-b_10">
-                            <label>Ваш телефон <input name="phone" class="width_100" required placeholder="+79097589135*"/></label>
+                            <label>Ваш телефон <input type="tel" name="phone" class="mask-phone width_100" required placeholder="+79097589135*"/></label>
                         </div>
                         <div class="m-b_10">
-                            <label>Ваш вопрос <textarea class="width_100" required placeholder="Мой вопрос"></textarea>
+                            <label>Ваш вопрос <textarea class="width_100" name="question" required placeholder="Мой вопрос"></textarea>
                             </label>
                         </div>
                         <div class="m-b_10">

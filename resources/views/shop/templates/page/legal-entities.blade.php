@@ -86,7 +86,7 @@
                                 </div>
                                 <div>
                                     <label>
-                                        <input name="phone" type="tel" class="width_100" required placeholder="Телефон*"/>
+                                        <input name="phone" type="tel"  class="width_100 mask-phone" required placeholder="Телефон*"/>
                                     </label>
                                 </div>
                                 <div>
@@ -104,7 +104,7 @@
                                 </div>
                                 <div>
                                     <label>
-                                        <textarea placeholder="Комментарий"></textarea>
+                                        <textarea name="question" placeholder="Комментарий"></textarea>
                                     </label>
                                 </div>
                                 <div>
@@ -255,7 +255,7 @@
                                     </div>
                                     <div>
                                         <label>
-                                            <input name="phone" type="tel" required placeholder="Телефон*"/>
+                                            <input name="phone" type="tel" class="mask-phone" required placeholder="Телефон*"/>
                                         </label>
                                     </div>
                                     <div>
@@ -273,7 +273,7 @@
                                     </div>
                                     <div>
                                         <label>
-                                            <textarea placeholder="Комментарий"></textarea>
+                                            <textarea name="question" placeholder="Комментарий"></textarea>
                                         </label>
                                     </div>
                                     <div>
