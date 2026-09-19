@@ -18,7 +18,7 @@ class ClientContextFactory
             uuid: request()->cookie('user_cookie_id'),
             priceType: $client?->getPriceType() ?? PriceType::retail(),
             ip: request()->ip(),
-            region: request()->cookie('user_cookie_region')
+            region: request()->cookie('user_cookie_region') ?? null,
         );
     }
 }

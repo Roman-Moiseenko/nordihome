@@ -27,4 +27,5 @@ import  './nordihome/login.js'
 import  './nordihome/search.js'
 import './nordihome/cookie.js'
 import './nordihome/fancybox.js'
+import './nordihome/region.js'
 

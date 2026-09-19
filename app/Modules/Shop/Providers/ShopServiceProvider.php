@@ -23,6 +23,7 @@ use App\Modules\Shop\Presentation\Http\ViewComposers\CategoryComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\ClientComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\IkeaComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\MenuComposer;
+use App\Modules\Shop\Presentation\Http\ViewComposers\RegionModalComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\RoomComposer;
 use App\Modules\Shop\Presentation\Http\ViewComposers\WebComposer;
 use Illuminate\Support\Facades\Blade;
