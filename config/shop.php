@@ -60,6 +60,7 @@ return [
     'frontend' => [
         'logo-nav' => '/images/logo-nordi-home-2.svg',
         'brand-alt' => 'NORDI Home',
+        'token_dadata' => env('DADATA_TOKEN')
     ],
     'tinymce' => env('TINYMCE', ''),
 

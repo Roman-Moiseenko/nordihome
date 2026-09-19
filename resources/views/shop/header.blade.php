@@ -8,6 +8,7 @@
     <div class="header-mobile bg-f2f2f2">
         <div class="container-xl">
             <div class="d-flex justify-content-between align-items-center mob-gray-line">
+                <div id="code-region" style="margin-right: auto">Калининградская область</div>
                 <div class="wrap-mob-menu-top">
                     @if(isset($menus['menu-header02']))
                         <ul id="menu-menyu-v-shapke02" class="h-menu">
@@ -29,6 +30,7 @@
     <div class="menu-top hide-mobile">
         <div class="container-xl">
             <div class="d-flex justify-content-end align-items-center">
+                <div id="code-region" style="margin-right: auto">Калининградская область</div>
                 <div>
                     @if(isset($menus['menu-header02']))
                         <ul id="menu-menyu-v-shapke02" class="h-menu">
@@ -52,10 +54,7 @@
                     <img src="/uploads/gallery/7/nordi-home-rus.svg" alt="Nordi Home" class="img-fluid img-logo">
                     <div class="h-city-text">склады находятся в г.Калининград</div>
                 </a>
-                <!--- <a href="{{ route('shop.category.index') }}">Категории</a>
 
-<a href="{{ route('shop.room.index') }}">Комнаты</a>
- --->
                 <div class="header-menu-buttons d-flex">
                     <!-- Главные кнопки открываются по клику -->
                     <button class="header-menu-buttons-item m-r_5" type="button" data-target="catalogMenu">

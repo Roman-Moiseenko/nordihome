@@ -19,5 +19,7 @@ readonly class ClientComposer
             : null;
 
         $view->with('client', $client);
+        $view->with('ip', request()->ip());
+
     }
 }
