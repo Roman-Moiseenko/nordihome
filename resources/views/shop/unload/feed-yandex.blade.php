@@ -32,9 +32,10 @@
                     <price>{{ $product['price'] }}</price>
                     @if($info['preprice']) <oldprice>{{ $product['preprice'] }}</oldprice> @endif
                     <currencyId>RUR</currencyId>
-                    <store>{{ $product['store'] }}</store>
-                    <pickup>{{ $product['pickup'] }}</pickup>
-                    <delivery>{{ $product['delivery'] }}</delivery>
+                    <vendorCode>{{ $product['code'] }}</vendorCode>
+                    <store>{{ $product['store'] ? 'true' : 'false' }}</store>
+                    <pickup>{{ $product['pickup'] ? 'true' : 'false' }}</pickup>
+                    <delivery>{{ $product['delivery'] ? 'true' : 'false' }}</delivery>
                     <categoryId>{{ $product['category'] }}</categoryId>
                 </offer>
             @endforeach

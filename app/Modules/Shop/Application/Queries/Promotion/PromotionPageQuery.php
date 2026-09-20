@@ -123,7 +123,7 @@ readonly class PromotionPageQuery
         $meta = $this->seoAdapter->getSeo('discount.promotion', $mainInfo, $page);
         $meta->ogSiteName = $web->web_name;
         $meta->canonical = route('shop.promotion.view', $slug);
-        $meta->addImage(OgImage::fromData($mainInfo->image));
+        if (!is_null($mainInfo->image)) $meta->addImage(OgImage::fromData($mainInfo->image));
 
 
         $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'promotion', $faq);

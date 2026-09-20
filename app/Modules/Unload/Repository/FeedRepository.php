@@ -113,6 +113,7 @@ class FeedRepository
             'store' => true,
             'pickup' => true,
             'delivery' => true,
+            'code' => $product->code,
         ];
     }
 
