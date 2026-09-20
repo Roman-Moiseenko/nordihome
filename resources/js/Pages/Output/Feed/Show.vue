@@ -3,194 +3,173 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Фид {{ feed.name }}</h1>
         <div class="p-5 bg-white rounded-md">
-            <FeedInfo :feed="feed" />
+            <FeedInfo :feed="feed"/>
         </div>
 
-        <el-splitter layout="vertical">
-            <el-splitter-panel v-model:size="size" :min="50">
-                <el-row>
-                        <el-col :span="12" class="bg-green-50">
-                            <div class="flex bg-white rounded-lg p-2">
-                            <SearchAddProduct
-                                :route="route('admin.output.feed.add-product', {feed: feed.id, in: true})"
-                                caption="Включить"
-                                button="success"
-                            />
-                            <SearchAddProducts :route="route('admin.output.feed.add-products', {feed: feed.id, in: true})" class="ml-3"/>
 
-                            <el-tooltip content="Очистить все товары" effect="dark" placement="top-start">
-                                <el-button type="danger" plain @click="clearProducts" class="ml-1"><i
-                                    class="fa-light fa-trash"></i></el-button>
-                            </el-tooltip>
-                            </div>
-                            <el-tag
-                                v-for="product in Feed.productsIn"
-                                type="success"
-                                effect="plain"
-                                closable
-                                @close="delProduct(product.id, true)"
-                            >{{ product.code }}
-                            </el-tag>
-                        </el-col>
-                        <el-col :span="12" class="bg-red-50">
-                            <div class="flex bg-white rounded-lg p-2">
-                                <SearchAddProduct
-                                    :route="route('admin.output.feed.add-product', {feed: feed.id, in: false})"
-                                    caption="Исключить"
-                                    button="danger"
-                                />
-                                <SearchAddProducts :route="route('admin.output.feed.add-products', {feed: feed.id, in: false})" class="ml-3"/>
+        <el-card header="Товары" class="mb-1">
+            <el-row>
+                <el-col :span="12" class="bg-green-50">
+                    <div class="flex bg-white rounded-lg p-2">
+                        <SearchAddProduct
+                            :route="route('admin.output.feed.add-product', {feed: feed.id, in: true})"
+                            caption="Включить"
+                            button="success"
+                        />
+                        <SearchAddProducts :route="route('admin.output.feed.add-products', {feed: feed.id, in: true})"
+                                           class="ml-3"/>
 
-                                <el-tooltip content="Очистить все товары" effect="dark" placement="top-start">
-                                    <el-button type="danger" plain @click="clearProducts" class="ml-1"><i
-                                        class="fa-light fa-trash"></i></el-button>
-                                </el-tooltip>
-                            </div>
-                            <el-tag
-                                v-for="product in Feed.productsOut"
-                                type="danger"
-                                effect="plain"
-                                closable
-                                @close="delProduct(product.id, false)"
-                            >{{ product.code }}
-                            </el-tag>
-                        </el-col>
-                    </el-row>
-            </el-splitter-panel>
-            <el-splitter-panel v-model:size="size2" :min="50">
-                <el-row class="bg-white rounded-lg p-2 w-[100%]">
-                    <div class="flex">
+                        <el-tooltip content="Очистить все товары" effect="dark" placement="top-start">
+                            <el-button type="danger" plain @click="clearProducts" class="ml-1"><i
+                                class="fa-light fa-trash"></i></el-button>
+                        </el-tooltip>
+                    </div>
+                    <el-tag
+                        v-for="product in Feed.productsIn"
+                        type="success"
+                        effect="plain"
+                        closable
+                        @close="delProduct(product.id, true)"
+                    >{{ product.code }}
+                    </el-tag>
+                </el-col>
+                <el-col :span="12" class="bg-red-50">
+                    <div class="flex bg-white rounded-lg p-2">
+                        <SearchAddProduct
+                            :route="route('admin.output.feed.add-product', {feed: feed.id, in: false})"
+                            caption="Исключить"
+                            button="danger"
+                        />
+                        <SearchAddProducts :route="route('admin.output.feed.add-products', {feed: feed.id, in: false})"
+                                           class="ml-3"/>
 
-                        <el-select v-model="tag_id" clearable filterable>
-                            <el-option v-for="tag in useCatalog.tags" :label="tag.name" :value="tag.id"/>
-                        </el-select>
-                        <el-checkbox v-model="tag_in" :checked="true" class="ml-2">Включать</el-checkbox>
-                        <el-button type="primary" class="ml-3" @click="addTag">
-                            <i class="fa-light fa-tags mr-2"></i>
-                            Добавить
-                        </el-button>
+                        <el-tooltip content="Очистить все товары" effect="dark" placement="top-start">
+                            <el-button type="danger" plain @click="clearProducts" class="ml-1"><i
+                                class="fa-light fa-trash"></i></el-button>
+                        </el-tooltip>
                     </div>
-                </el-row>
-                <el-row>
-                    <el-col :span="12" class="bg-green-50">
-                        <el-tag
-                            v-for="tag in Feed.tagsIn"
-                            type="success"
-                            effect="plain"
-                            closable
-                            @close="delTag(tag.id)"
-                        >{{ tag.name }}
-                        </el-tag>
-                    </el-col>
-                    <el-col :span="12" class="bg-red-50">
-                        <el-tag
-                            v-for="tag in Feed.tagsOut"
-                            type="danger"
-                            effect="plain"
-                            closable
-                            @close="delTag(tag.id)"
-                        >{{ tag.name }}
-                        </el-tag>
-                    </el-col>
-                </el-row>
-            </el-splitter-panel>
-            <el-splitter-panel>
-                <el-row>
-                    <div class="flex bg-white rounded-lg p-2 w-[100%] font-bold">
-                        Категории
-                    </div>
-                </el-row>
-                свернуть
-                <el-row>
-                    <el-col :span="12">
-                        <el-tree
-                            class="!bg-green-50"
-                            style="max-width: 600px"
-                            :data="useCatalog.categoriesTree"
-                            show-checkbox
-                            node-key="id"
-                            :props="defaultProps"
-                            :default-checked-keys="[...Feed.categoriesIn]"
-                            @check="onCheckIn"
-                        />
-                    </el-col>
-                    <el-col :span="12">
-                        <el-tree
-                            class="!bg-red-50"
-                            style="max-width: 600px"
-                            :data="useCatalog.categoriesTree"
-                            show-checkbox
-                            node-key="id"
-                            :props="defaultProps"
-                            :default-checked-keys="[...Feed.categoriesOut]"
-                            @check="onCheckOut"
-                        />
-                    </el-col>
-                </el-row>
-            </el-splitter-panel>
-            <el-splitter-panel>
-                <el-row>
-                    <div class="flex bg-white rounded-lg p-2 w-[100%] font-bold">
-                        Комнаты
-                    </div>
-                </el-row>
-                свернуть
-                <el-row>
-                    <el-col :span="12">
-                        <el-tree
-                            class="!bg-green-50"
-                            style="max-width: 600px"
-                            :data="useCatalog.roomsTree"
-                            show-checkbox
-                            node-key="id"
-                            :props="defaultProps"
-                            :default-checked-keys="[...Feed.roomsIn]"
-                            @check="onCheckIn"
-                        />
-                    </el-col>
-                    <el-col :span="12">
-                        <el-tree
-                            class="!bg-red-50"
-                            style="max-width: 600px"
-                            :data="useCatalog.roomsTree"
-                            show-checkbox
-                            node-key="id"
-                            :props="defaultProps"
-                            :default-checked-keys="[...Feed.roomsOut]"
-                            @check="onCheckOut"
-                        />
-                    </el-col>
-                </el-row>
-            </el-splitter-panel>
-            <el-splitter-panel>
-                <el-row>
-                    <div class="flex bg-white rounded-lg p-2 w-[100%] font-bold">
-                        Акции
-                    </div>
-                </el-row>
-                свернуть
-                <el-row>
-                    <el-col :span="12">
-                    </el-col>
-                    <el-col :span="12">
-                    </el-col>
-                </el-row>
-            </el-splitter-panel>
-            <el-splitter-panel>
-                <el-row>
-                    <div class="flex bg-white rounded-lg p-2 w-[100%] font-bold">
-                        Группы
-                    </div>
-                </el-row>
-                свернуть
-                <el-row>
-                    <el-col :span="12">
-                    </el-col>
-                    <el-col :span="12">
-                    </el-col>
-                </el-row>
-            </el-splitter-panel>
-        </el-splitter>
+                    <el-tag
+                        v-for="product in Feed.productsOut"
+                        type="danger"
+                        effect="plain"
+                        closable
+                        @close="delProduct(product.id, false)"
+                    >{{ product.code }}
+                    </el-tag>
+                </el-col>
+            </el-row>
+        </el-card>
+        <el-card header="Теги" class="mb-1">
+            <el-row class="bg-white rounded-lg p-2 w-[100%]">
+                <div class="flex">
+
+                    <el-select v-model="tag_id" clearable filterable>
+                        <el-option v-for="tag in useCatalog.tags" :label="tag.name" :value="tag.id"/>
+                    </el-select>
+                    <el-checkbox v-model="tag_in" :checked="true" class="ml-2">Включать</el-checkbox>
+                    <el-button type="primary" class="ml-3" @click="addTag">
+                        <i class="fa-light fa-tags mr-2"></i>
+                        Добавить
+                    </el-button>
+                </div>
+            </el-row>
+            <el-row>
+                <el-col :span="12" class="bg-green-50">
+
+                    <el-tag
+                        v-for="tag in Feed.tagsIn"
+                        type="success"
+                        effect="plain"
+                        closable
+                        @close="delTag(tag.id)"
+                    >{{ tag.name }}
+                    </el-tag>
+                </el-col>
+                <el-col :span="12" class="bg-red-50">
+                    <el-tag
+                        v-for="tag in Feed.tagsOut"
+                        type="danger"
+                        effect="plain"
+                        closable
+                        @close="delTag(tag.id)"
+                    >{{ tag.name }}
+                    </el-tag>
+                </el-col>
+            </el-row>
+        </el-card>
+        <el-card header="Категории" class="mb-1">
+            <el-row>
+                <el-col :span="12">
+                    <el-tree
+                        class="!bg-green-50"
+                        style="max-width: 600px"
+                        :data="useCatalog.categoriesTree"
+                        show-checkbox
+                        node-key="id"
+                        :props="defaultProps"
+                        :default-checked-keys="[...Feed.categoriesIn]"
+                        @check="onCheckIn"
+                    />
+                </el-col>
+                <el-col :span="12">
+                    <el-tree
+                        class="!bg-red-50"
+                        style="max-width: 600px"
+                        :data="useCatalog.categoriesTree"
+                        show-checkbox
+                        node-key="id"
+                        :props="defaultProps"
+                        :default-checked-keys="[...Feed.categoriesOut]"
+                        @check="onCheckOut"
+                    />
+                </el-col>
+            </el-row>
+        </el-card>
+        <el-card header="Комнаты" class="mb-1">
+            <el-row>
+                <el-col :span="12">
+                    <el-tree
+                        class="!bg-green-50"
+                        style="max-width: 600px"
+                        :data="useCatalog.roomsTree"
+                        show-checkbox
+                        node-key="id"
+                        :props="defaultProps"
+                        :default-checked-keys="[...Feed.roomsIn]"
+                        @check="onCheckIn"
+                    />
+                </el-col>
+                <el-col :span="12">
+                    <el-tree
+                        class="!bg-red-50"
+                        style="max-width: 600px"
+                        :data="useCatalog.roomsTree"
+                        show-checkbox
+                        node-key="id"
+                        :props="defaultProps"
+                        :default-checked-keys="[...Feed.roomsOut]"
+                        @check="onCheckOut"
+                    />
+                </el-col>
+            </el-row>
+        </el-card>
+        <el-card header="Акции" class="mb-1">
+            <el-row>
+                <el-col :span="12">
+                </el-col>
+                <el-col :span="12">
+                </el-col>
+            </el-row>
+        </el-card>
+        <el-card header="Группы" class="mb-1">
+            <el-row>
+                <el-col :span="12">
+                </el-col>
+                <el-col :span="12">
+                </el-col>
+            </el-row>
+        </el-card>
+
     </el-config-provider>
 </template>
 
