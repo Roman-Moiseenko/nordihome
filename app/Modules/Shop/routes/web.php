@@ -1,7 +1,7 @@
 <?php
 
+use App\Modules\Output\Presentation\Http\Controllers\Web\FeedXMLController;
 use App\Modules\Shop\Controllers\ECommerceController;
-use App\Modules\Shop\Controllers\FeedXMLController;
 use App\Modules\Shop\Controllers\SitemapXmlController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\CatalogController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\CheckoutController;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Shop\Controllers;
+namespace App\Modules\Output\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Output\Infrastructure\Models\Feed;

@@ -13,37 +13,6 @@ use Illuminate\Http\Request;
 class FeedRepository
 {
 
-    public function getIndex(Request $request, &$filters): array
-    {
-        $query = Feed::orderBy('id');
-        $filters = [];
-
-        return $query->get()
-            ->map(fn(Feed $order) => $this->FeedToArray($order))->toArray();
-    }
-
-    public function FeedToArray(Feed $feed): array
-    {
-        return array_merge($feed->toArray(), [
-            'products_in' => Product::whereIn('id', $feed->products_in)
-                ->get()
-                ->map(fn(Product $product) => ['id' => $product->id, 'code' => $product->code])
-                ->toArray(),
-            'products_out' => Product::whereIn('id', $feed->products_out)
-                ->get()
-                ->map(fn(Product $product) => ['id' => $product->id, 'code' => $product->code])
-                ->toArray(),
-            'tags_in' => Tag::whereIn('id', $feed->tags_in)
-                ->get()
-                ->map(fn(Tag $tag) => ['id' => $tag->id, 'name' => $tag->name])
-                ->toArray(),
-            'tags_out' => Tag::whereIn('id', $feed->tags_out)
-                ->get()
-                ->map(fn(Tag $tag) => ['id' => $tag->id, 'name' => $tag->name])
-                ->toArray(),
-        ]);
-    }
-
     public function GetProducts(Feed $feed): array
     {
         $tag_In_product_ids = Product::whereHas('tags', function ($query) use ($feed) {
