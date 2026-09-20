@@ -48,6 +48,14 @@ const props = defineProps({
     caption: {
         default: 'Добавить товары',
         type: String
+    },
+    params: { //Доп.параметры для post-запроса
+        default: {},
+        type: Object,
+    },
+    preserveState: {
+        default: false,
+        type: Boolean
     }
 })
 const uploadDialog = ref(false);
@@ -152,9 +160,9 @@ function onUpload() {
     })
     router.visit(props.route, {
         method: "post",
-        data: {products: products.value,},
+        data: {products: products.value, ...props.params},
         preserveScroll: true,
-        preserveState: false,
+        preserveState: props.preserveState,
         onSuccess: page => {
             disabledUnload.value = false
             uploadDialog.value = false

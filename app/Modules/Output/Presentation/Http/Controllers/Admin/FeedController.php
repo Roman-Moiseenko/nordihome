@@ -3,12 +3,14 @@
 namespace App\Modules\Output\Presentation\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Infrastructure\Models\Tag;
+use App\Modules\Output\Application\Actions\Feed\CreateFeedUseCase;
 use App\Modules\Output\Application\Actions\Feed\IndexFeedQuery;
+use App\Modules\Output\Application\Actions\Feed\RemoveFeedUseCase;
+use App\Modules\Output\Application\Actions\Feed\UpdateFeedUseCase;
 use App\Modules\Output\Application\Actions\Feed\ViewFeedQuery;
+use App\Modules\Output\Application\DTOs\Feed\FeedCreateData;
+use App\Modules\Output\Application\DTOs\Feed\FeedUpdateData;
 use App\Modules\Output\Infrastructure\Models\Feed;
-use App\Modules\Output\Infrastructure\Services\FeedRepository;
-use App\Modules\Output\Infrastructure\Services\FeedService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,21 +19,13 @@ use Inertia\Response;
 
 class FeedController extends Controller
 {
-    private FeedService $service;
-    private FeedRepository $repository;
-
-
     public function __construct(
-        FeedService $service,
-                                FeedRepository $repository,
-                                private readonly IndexFeedQuery $indexFeedQuery,
+        private readonly IndexFeedQuery $indexFeedQuery,
         private readonly ViewFeedQuery $viewFeedQuery,
-
-    )
-    {
-        $this->service = $service;
-        $this->repository = $repository;
-    }
+        private readonly CreateFeedUseCase $createFeedUseCase,
+        private readonly UpdateFeedUseCase $updateFeedUseCase,
+        private readonly RemoveFeedUseCase $removeFeedUseCase,
+    ) {}
 
     public function index(Request $request, UserPermission $userPermission): Response
     {
@@ -47,74 +41,71 @@ class FeedController extends Controller
         $feed = $this->viewFeedQuery->execute($id, $userPermission);
 
         return Inertia::render('Output/Feed/Show', [
-            'feed' => $feed, //fn() => $this->repository->FeedToArray($feed),
+            'feed' => $feed,
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $feed = $this->service->create($request);
-        return redirect()->route('admin.output.feed.show', $feed)->with('success', 'Фид создан');
+        $feed = $this->createFeedUseCase->execute(
+            FeedCreateData::from($request->all()),
+            $userPermission,
+        );
+
+        return redirect()->route('admin.output.feed.show', $feed->id)->with('success', 'Фид создан');
     }
 
-    public function set_info(Feed $feed, Request $request): RedirectResponse
+    /**
+     * Единственная точка входа обновления фида.
+     *
+     * Принимает только изменяемый параметр:
+     *  - скалярные поля (name, setPreprice, setTitle, setDescription);
+     *  - мутация списка (field + action add|remove|clear + in + ids).
+     */
+    public function update(Feed $feed, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->setInfo($feed, $request);
+        $payload = $request->only(['name', 'setPreprice', 'active', 'setTitle', 'setDescription', 'field', 'action', 'in']);
+        $payload['ids'] = $this->resolveIds($request);
+
+        $this->updateFeedUseCase->execute(
+            $feed->id,
+            FeedUpdateData::from($payload),
+            $userPermission,
+        );
+
         return redirect()->back()->with('success', 'Сохранено');
     }
-    public function toggle(Feed $feed): RedirectResponse
-    {
-        $message = $this->service->toggle($feed);
-        return redirect()->back()->with('success', $message);
-    }
 
-    public function destroy(Feed $feed): RedirectResponse
+    public function destroy(Feed $feed, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->delete($feed);
+        $this->removeFeedUseCase->execute($feed->id, $userPermission);
+
         return redirect()->back()->with('success', 'Фид удален');
     }
 
-    public function add_product(Feed $feed, Request $request): RedirectResponse
+    /**
+     * Идентификаторы могут приходить как ids (массив), product_id (один товар)
+     * или products (массив товаров из пакетной загрузки).
+     *
+     * @return int[]
+     */
+    private function resolveIds(Request $request): array
     {
-        $this->service->addProduct($feed, $request);
-        return redirect()->back()->with('success', 'Добавлено');
+        if ($request->has('ids')) {
+            return array_map('intval', (array) $request->input('ids'));
+        }
+
+        if ($request->filled('product_id')) {
+            return [$request->integer('product_id')];
+        }
+
+        if ($request->has('products')) {
+            return collect($request->input('products'))
+                ->pluck('product_id')
+                ->map(fn ($id) => (int) $id)
+                ->all();
+        }
+
+        return [];
     }
-
-    public function add_products(Feed $feed, Request $request): RedirectResponse
-    {
-        $this->service->addProducts($feed, $request);
-        return redirect()->back()->with('success', 'Добавлено');
-    }
-
-    public function del_product(Feed $feed, Request $request): RedirectResponse
-    {
-        $this->service->delProduct($feed, $request);
-        return redirect()->back()->with('success', 'Удалено');
-    }
-
-    public function del_products(Feed $feed, Request $request): RedirectResponse
-    {
-        $this->service->delProducts($feed, $request);
-        return redirect()->back()->with('success', 'Удалено');
-    }
-
-    public function add_tag(Feed $feed, Request $request): RedirectResponse
-    {
-        $this->service->addTag($feed, $request);
-        return redirect()->back()->with('success', 'Добавлено');
-    }
-
-    public function del_tag(Feed $feed, Request $request): RedirectResponse
-    {
-        $this->service->delTag($feed, $request);
-        return redirect()->back()->with('success', 'Удалено');
-    }
-
-    public function categories(Feed $feed, Request $request)
-    {
-        $this->service->setCategories($feed, $request);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
-
-
 }

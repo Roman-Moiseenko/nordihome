@@ -126,8 +126,9 @@ function savePage() {
     })
 }
 function onToggle(row) {
-    router.visit(route('admin.output.feed.toggle', {feed: row.id}), {
+    router.visit(route('admin.output.feed.update', {feed: row.id}), {
         method: "post",
+        data: {active: !row.active},
         preserveScroll: true,
         preserveState: false,
     })

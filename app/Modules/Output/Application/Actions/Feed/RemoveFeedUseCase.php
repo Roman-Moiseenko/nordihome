@@ -20,6 +20,12 @@ readonly class RemoveFeedUseCase
             throw new AccessDeniedException();
         }
 
+        $feed = $this->feedRepository->getById($id);
+
+        if ($feed->active) {
+            throw new \DomainException('Нельзя удалить активный фид');
+        }
+
         $this->feedRepository->delete($id);
     }
 }
