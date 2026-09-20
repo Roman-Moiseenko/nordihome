@@ -1,4 +1,4 @@
-<div class="col-auto mob-h-phone m-l_10">
+<div class="col-auto mob-phone-8800 m-l_10">
     @if(isset($contacts['phone']))
         <a href="{{ $contacts['phone']->url }}" class="f-z_16"
            data-analytics-action="contact_click"
@@ -7,7 +7,7 @@
     @endif
     <br><span class="f-z_13">по России бесплатно</span>
 </div>
-<div class="d-flex ms-2 mob-h-social">
+<div class="d-flex ms-2 h-social">
 @if(isset($contacts['phone']))
     <a href="{{ $contacts['phone']->url }}" target="_blank" class="m-r_5"
        data-analytics-action="contact_click"

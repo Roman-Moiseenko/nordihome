@@ -26,7 +26,7 @@
                     </div>
                     <div class="col-md-6 col-lg-4">
                         <label>
-                            <input name="phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/>
+                            <input name="phone" class="mask-phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/>
                         </label>
                     </div>
                     <div class="col-md-6 col-lg-4">
@@ -39,7 +39,7 @@
                         </label></div>
                     <div class="col-md-9 col-lg-8">
                         <label>
-                            <textarea placeholder="Опишите Ваш вопрос или оставьте это поле пустым"></textarea>
+                            <textarea name="question" placeholder="Опишите Ваш вопрос или оставьте это поле пустым"></textarea>
                         </label>
                     </div>
                     <div class="col-md-3 col-lg-4">

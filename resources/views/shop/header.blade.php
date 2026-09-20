@@ -26,7 +26,7 @@
             </div>
         </div>
     </div>
-    </div>
+
     <div class="menu-top hide-mobile">
         <div class="container-xl">
             <div class="d-flex justify-content-end align-items-center">

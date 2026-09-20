@@ -33,12 +33,12 @@
                 </div>
                 <div class="col-md-6 col-lg-3">
                     <label>
-                        <input name="phone" type="tel" required placeholder="{{ $widget->fields["phone"] }}"/>
+                        <input name="phone" type="tel" class="mask-phone" required placeholder="{{ $widget->fields["phone"] }}"/>
                     </label>
                 </div>
                 <div class="col-md-9 col-lg-5">
                     <label>
-                        <textarea placeholder="{{ $widget->fields["question"] }}"></textarea>
+                        <textarea name="question" placeholder="{{ $widget->fields["question"] }}"></textarea>
                     </label>
                 </div>
                 <div class="col-md-3 col-lg-2">

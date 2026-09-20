@@ -479,11 +479,14 @@ select {
         float: none;
         margin-left: 0;
     }
-    .main-catalog-mini .c-mini-item {margin-bottom:20px;}
+    .main-catalog-mini .c-mini-item {}
+
 }
 @media (max-width: 768px) {
     .main-slider-sale .main-slider .sl-text .text, .main-slider-sale .main-slider .sl-text .heading-border:after {display:none;}
     .main-slider-sale .main-slider .sl-text .heading-border {margin-bottom:0px;}
+    .p-b_50 {padding-bottom: 30px;}
+    .p-t_50 {padding-top: 30px;}
 }
 @media (max-width: 576px) {
     .main-slider-sale .main-slider .sl-text .heading-border {font-size: 24px;}

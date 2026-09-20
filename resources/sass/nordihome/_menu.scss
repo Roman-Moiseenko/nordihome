@@ -754,8 +754,12 @@ header {
         margin-top:10px;
     }
     .menu-bottom-catalog {width:100%;}
+    .header-menu-mobile {top: 195px;}
 }
 @media screen and (max-width: 576px) {
+    .header-menu-mobile {
+        top: 225px;
+    }
     #menu-menyu-v-shapke {
         li {
             font-size: 11px;
@@ -765,11 +769,12 @@ header {
         grid-template-columns: repeat(3, 1fr);
     }
     .header-mobile {
+        padding: 7px 0 11px 0;
         .mob-gray-line {
             flex-wrap:wrap;
         }
         .wrap-mob-menu-top {
-            margin-bottom: 6px;
+            margin-bottom: 10px;
         }
     }
 }
