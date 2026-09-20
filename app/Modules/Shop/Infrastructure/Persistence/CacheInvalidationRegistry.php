@@ -46,6 +46,13 @@ class CacheInvalidationRegistry
     ];
 
 
+    //Фиды (выгрузки Google/Yandex) — зависят от товаров, категорий, комнат, групп и акций.
+    //Теги не используем (не все драйверы кеша их поддерживают), поэтому инвалидация
+    //делается через инкремент версии, которая входит в ключ выгрузки.
+    public const string FEED_VERSION = 'feed_version';
+    public const string FEED_EXPORT = 'feed_export_{id}_v{version}';
+
+
     public const string MENUS = 'menus';
     public const string CONTACTS = 'contacts';
 
@@ -59,6 +66,7 @@ class CacheInvalidationRegistry
             $resolvedKey = str_replace('{id}', $categoryId, $key);
             Cache::forget($resolvedKey);
         }
+        $this->forgetFeeds();
     }
 
     public function forgetRoom(int $categoryId): void
@@ -67,6 +75,7 @@ class CacheInvalidationRegistry
             $resolvedKey = str_replace('{id}', $categoryId, $key);
             Cache::forget($resolvedKey);
         }
+        $this->forgetFeeds();
     }
 
     public function forgetIkeaCategory(int $categoryId): void
@@ -75,6 +84,7 @@ class CacheInvalidationRegistry
             $resolvedKey = str_replace('{id}', $categoryId, $key);
             Cache::forget($resolvedKey);
         }
+        $this->forgetFeeds();
     }
     public function forgetMenus(): void
     {
@@ -92,5 +102,17 @@ class CacheInvalidationRegistry
             $resolvedKey = str_replace('{id}', $promotionId, $key);
             Cache::forget($resolvedKey);
         }
+        $this->forgetFeeds();
+    }
+
+    /**
+     * Сброс всех кешей выгрузок фидов (товары, категории, комнаты, группы, акции).
+     * Инкрементируем версию — старые ключи выгрузок перестают использоваться,
+     * а с истечением TTL удаляются автоматически.
+     */
+    public function forgetFeeds(): void
+    {
+        $version = (int) Cache::get(self::FEED_VERSION, 0);
+        Cache::put(self::FEED_VERSION, $version + 1, now()->addYear());
     }
 }

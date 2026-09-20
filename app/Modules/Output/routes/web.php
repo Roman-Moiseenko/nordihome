@@ -1,7 +1,11 @@
 <?php
 
+use App\Modules\Output\Presentation\Http\Controllers\Web\FeedXMLController;
 use App\Modules\Output\Presentation\Http\Controllers\Admin\FeedController;
 use Illuminate\Support\Facades\Route;
+
+Route::get('/feed/{feed}/feed-google.xml', [FeedXMLController::class, 'google'])->name('google');
+Route::get('/feed/{feed}/feed-yandex.yml', [FeedXMLController::class, 'yandex'])->name('yandex');
 
 
 Route::group([

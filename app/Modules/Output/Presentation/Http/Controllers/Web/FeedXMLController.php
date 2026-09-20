@@ -3,38 +3,47 @@
 namespace App\Modules\Output\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Output\Application\Queries\Feed\GetFeedForGoogleQuery;
+use App\Modules\Output\Application\Queries\Feed\GetFeedForYandexQuery;
+use App\Modules\Output\Domain\Interfaces\FeedRepositoryInterface;
 use App\Modules\Output\Infrastructure\Models\Feed;
-use App\Modules\Output\Infrastructure\Services\FeedRepository;
+use Illuminate\Http\Response;
 
 class FeedXMLController extends Controller
 {
-    private FeedRepository $repository;
+    public function __construct(
+        private readonly FeedRepositoryInterface $feedRepository,
+        private readonly GetFeedForGoogleQuery $googleQuery,
+        private readonly GetFeedForYandexQuery $yandexQuery,
+    ) {}
 
-    public function __construct(FeedRepository $repository)
+    public function google(Feed $feed): Response
     {
-        $this->repository = $repository;
-    }
+        if (!$feed->active) {
+            abort(404);
+        }
 
-    public function google(Feed $feed)
-    {
-        if (!$feed->active) abort(404);
-        $date = now()->addDays(14)->format('Y-m-d\TH:i+0200'); //2016-12-25T13:00-0800
-        $products = $this->repository->GetProducts($feed);
-        $info = $this->repository->getInfo($feed);
-        $content = view('shop.unload.feed-google', compact('products', 'info', 'date'))->render();
+        $data = $this->googleQuery->execute($this->feedRepository->getById($feed->id));
+        $date = now()->addDays(14)->format('Y-m-d\TH:i+0200');
+
+        $content = view('shop.unload.feed-google', compact('data', 'date'))->render();
         ob_end_clean();
-        return response($content)->header('Content-Type','text/xml');
+
+        return response($content)->header('Content-Type', 'text/xml');
     }
 
-    public function yandex(Feed $feed)
+    public function yandex(Feed $feed): Response
     {
-        if (!$feed->active) abort(404);
+        if (!$feed->active) {
+            abort(404);
+        }
+
+        $data = $this->yandexQuery->execute($this->feedRepository->getById($feed->id));
         $date = now()->format('Y-m-d\TH:i');
-        $products = $this->repository->GetProducts($feed);
-        $yml_categories = $this->repository->GetCategories($products);
-        $info = $this->repository->getInfo($feed);
-        $content = view('shop.unload.feed-yandex', compact('products', 'info', 'yml_categories', 'date'))->render();
+
+        $content = view('shop.unload.feed-yandex', compact('data', 'date'))->render();
         ob_end_clean();
-        return response($content)->header('Content-Type','text/xml');
+
+        return response($content)->header('Content-Type', 'text/xml');
     }
 }
