@@ -3,8 +3,8 @@
 namespace App\Modules\Shop\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Unload\Entity\Feed;
-use App\Modules\Unload\Repository\FeedRepository;
+use App\Modules\Output\Infrastructure\Models\Feed;
+use App\Modules\Output\Infrastructure\Services\FeedRepository;
 
 class FeedXMLController extends Controller
 {

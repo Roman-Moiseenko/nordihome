@@ -6,6 +6,7 @@ use App\Modules\Base\Entity\Meta;
 use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Page;
 use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Infrastructure\Models\MetaTemplate;
@@ -102,6 +103,13 @@ class MetaTemplateRepository
             ];
         }
         if ($class == Promotion::class) {
+            return [
+                '{name}',
+                '{title}',
+                '{description}',
+            ];
+        }
+        if ($class == Room::class) {
             return [
                 '{name}',
                 '{title}',

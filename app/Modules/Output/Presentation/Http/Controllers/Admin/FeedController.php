@@ -1,12 +1,15 @@
 <?php
 
-namespace App\Modules\Unload\Controllers;
+namespace App\Modules\Output\Presentation\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Infrastructure\Models\Tag;
-use App\Modules\Unload\Entity\Feed;
-use App\Modules\Unload\Repository\FeedRepository;
-use App\Modules\Unload\Service\FeedService;
+use App\Modules\Output\Application\Actions\Feed\IndexFeedQuery;
+use App\Modules\Output\Application\Actions\Feed\ViewFeedQuery;
+use App\Modules\Output\Infrastructure\Models\Feed;
+use App\Modules\Output\Infrastructure\Services\FeedRepository;
+use App\Modules\Output\Infrastructure\Services\FeedService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -18,36 +21,40 @@ class FeedController extends Controller
     private FeedRepository $repository;
 
 
-    public function __construct(FeedService $service,
-                                FeedRepository $repository)
+    public function __construct(
+        FeedService $service,
+                                FeedRepository $repository,
+                                private readonly IndexFeedQuery $indexFeedQuery,
+        private readonly ViewFeedQuery $viewFeedQuery,
+
+    )
     {
         $this->service = $service;
         $this->repository = $repository;
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request, UserPermission $userPermission): Response
     {
-        $feeds = $this->repository->getIndex($request, $filters);
+        $feeds = $this->indexFeedQuery->execute($userPermission, $request->integer('size', 15));
 
-        return Inertia::render('Unload/Feed/Index', [
+        return Inertia::render('Output/Feed/Index', [
             'feeds' => $feeds,
-            'filters' => $filters,
         ]);
     }
 
-    public function show(Feed $feed): Response
+    public function show(int $id, UserPermission $userPermission): Response
     {
-        $tags = Tag::orderBy('name')->get()->toArray();
-        return Inertia::render('Unload/Feed/Show', [
-            'feed' => fn() => $this->repository->FeedToArray($feed),
-            'tags' => $tags,
+        $feed = $this->viewFeedQuery->execute($id, $userPermission);
+
+        return Inertia::render('Output/Feed/Show', [
+            'feed' => $feed, //fn() => $this->repository->FeedToArray($feed),
         ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
         $feed = $this->service->create($request);
-        return redirect()->route('admin.unload.feed.show', $feed)->with('success', 'Фид создан');
+        return redirect()->route('admin.output.feed.show', $feed)->with('success', 'Фид создан');
     }
 
     public function set_info(Feed $feed, Request $request): RedirectResponse

@@ -1,7 +1,7 @@
 <div class="checkbox-group">
-    <input class="variant-input" type="checkbox" id="{{ $name . '-' . $id }}" name="{{ $name }}"
+    <input class="variant-input" type="checkbox" id="{{ $code . '-' . $id }}" name="{{ $code }}"
            value="{{ $id }}" {{ $checked ? 'checked' : '' }}/>
-    <label for="{{ $name . '-' . $id }}">{{ $caption }}</label>
+    <label for="{{ $code . '-' . $id }}">{{ $caption }}</label>
 </div>
 
 @once

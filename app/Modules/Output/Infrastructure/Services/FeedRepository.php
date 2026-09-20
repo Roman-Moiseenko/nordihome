@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Modules\Unload\Repository;
+namespace App\Modules\Output\Infrastructure\Services;
 
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Tag;
+use App\Modules\Output\Infrastructure\Models\Feed;
 use App\Modules\Shared\Infrastructure\Models\Photo;
-use App\Modules\Unload\Entity\Feed;
 use Illuminate\Http\Request;
 
 class FeedRepository

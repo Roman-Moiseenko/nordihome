@@ -70,7 +70,7 @@ const info = reactive({
 
 function onSetInfo() {
     router.visit(
-        route('admin.unload.feed.set-info', {feed: props.feed.id}), {
+        route('admin.output.feed.set-info', {feed: props.feed.id}), {
             method: "post",
             data: info,
             onSuccess: page => {

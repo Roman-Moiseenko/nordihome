@@ -12,11 +12,11 @@
                         <el-col :span="12" class="bg-green-50">
                             <div class="flex bg-white rounded-lg p-2">
                             <SearchAddProduct
-                                :route="route('admin.unload.feed.add-product', {feed: feed.id, in: true})"
+                                :route="route('admin.output.feed.add-product', {feed: feed.id, in: true})"
                                 caption="Включить"
                                 button="success"
                             />
-                            <SearchAddProducts :route="route('admin.unload.feed.add-products', {feed: feed.id, in: true})" class="ml-3"/>
+                            <SearchAddProducts :route="route('admin.output.feed.add-products', {feed: feed.id, in: true})" class="ml-3"/>
 
                             <el-tooltip content="Очистить все товары" effect="dark" placement="top-start">
                                 <el-button type="danger" plain @click="clearProducts" class="ml-1"><i
@@ -24,7 +24,7 @@
                             </el-tooltip>
                             </div>
                             <el-tag
-                                v-for="product in Feed.products_in"
+                                v-for="product in Feed.productsIn"
                                 type="success"
                                 effect="plain"
                                 closable
@@ -35,11 +35,11 @@
                         <el-col :span="12" class="bg-red-50">
                             <div class="flex bg-white rounded-lg p-2">
                                 <SearchAddProduct
-                                    :route="route('admin.unload.feed.add-product', {feed: feed.id, in: false})"
+                                    :route="route('admin.output.feed.add-product', {feed: feed.id, in: false})"
                                     caption="Исключить"
                                     button="danger"
                                 />
-                                <SearchAddProducts :route="route('admin.unload.feed.add-products', {feed: feed.id, in: false})" class="ml-3"/>
+                                <SearchAddProducts :route="route('admin.output.feed.add-products', {feed: feed.id, in: false})" class="ml-3"/>
 
                                 <el-tooltip content="Очистить все товары" effect="dark" placement="top-start">
                                     <el-button type="danger" plain @click="clearProducts" class="ml-1"><i
@@ -47,7 +47,7 @@
                                 </el-tooltip>
                             </div>
                             <el-tag
-                                v-for="product in Feed.products_out"
+                                v-for="product in Feed.productsOut"
                                 type="danger"
                                 effect="plain"
                                 closable
@@ -62,7 +62,7 @@
                     <div class="flex">
 
                         <el-select v-model="tag_id" clearable filterable>
-                            <el-option v-for="tag in tags" :label="tag.name" :value="tag.id"/>
+                            <el-option v-for="tag in useCatalog.tags" :label="tag.name" :value="tag.id"/>
                         </el-select>
                         <el-checkbox v-model="tag_in" :checked="true" class="ml-2">Включать</el-checkbox>
                         <el-button type="primary" class="ml-3" @click="addTag">
@@ -74,7 +74,7 @@
                 <el-row>
                     <el-col :span="12" class="bg-green-50">
                         <el-tag
-                            v-for="tag in Feed.tags_in"
+                            v-for="tag in Feed.tagsIn"
                             type="success"
                             effect="plain"
                             closable
@@ -84,7 +84,7 @@
                     </el-col>
                     <el-col :span="12" class="bg-red-50">
                         <el-tag
-                            v-for="tag in Feed.tags_out"
+                            v-for="tag in Feed.tagsOut"
                             type="danger"
                             effect="plain"
                             closable
@@ -100,6 +100,7 @@
                         Категории
                     </div>
                 </el-row>
+                свернуть
                 <el-row>
                     <el-col :span="12">
                         <el-tree
@@ -109,7 +110,7 @@
                             show-checkbox
                             node-key="id"
                             :props="defaultProps"
-                            :default-checked-keys="[...Feed.categories_in]"
+                            :default-checked-keys="[...Feed.categoriesIn]"
                             @check="onCheckIn"
                         />
                     </el-col>
@@ -121,9 +122,71 @@
                             show-checkbox
                             node-key="id"
                             :props="defaultProps"
-                            :default-checked-keys="[...Feed.categories_out]"
+                            :default-checked-keys="[...Feed.categoriesOut]"
                             @check="onCheckOut"
                         />
+                    </el-col>
+                </el-row>
+            </el-splitter-panel>
+            <el-splitter-panel>
+                <el-row>
+                    <div class="flex bg-white rounded-lg p-2 w-[100%] font-bold">
+                        Комнаты
+                    </div>
+                </el-row>
+                свернуть
+                <el-row>
+                    <el-col :span="12">
+                        <el-tree
+                            class="!bg-green-50"
+                            style="max-width: 600px"
+                            :data="useCatalog.roomsTree"
+                            show-checkbox
+                            node-key="id"
+                            :props="defaultProps"
+                            :default-checked-keys="[...Feed.roomsIn]"
+                            @check="onCheckIn"
+                        />
+                    </el-col>
+                    <el-col :span="12">
+                        <el-tree
+                            class="!bg-red-50"
+                            style="max-width: 600px"
+                            :data="useCatalog.roomsTree"
+                            show-checkbox
+                            node-key="id"
+                            :props="defaultProps"
+                            :default-checked-keys="[...Feed.roomsOut]"
+                            @check="onCheckOut"
+                        />
+                    </el-col>
+                </el-row>
+            </el-splitter-panel>
+            <el-splitter-panel>
+                <el-row>
+                    <div class="flex bg-white rounded-lg p-2 w-[100%] font-bold">
+                        Акции
+                    </div>
+                </el-row>
+                свернуть
+                <el-row>
+                    <el-col :span="12">
+                    </el-col>
+                    <el-col :span="12">
+                    </el-col>
+                </el-row>
+            </el-splitter-panel>
+            <el-splitter-panel>
+                <el-row>
+                    <div class="flex bg-white rounded-lg p-2 w-[100%] font-bold">
+                        Группы
+                    </div>
+                </el-row>
+                свернуть
+                <el-row>
+                    <el-col :span="12">
+                    </el-col>
+                    <el-col :span="12">
                     </el-col>
                 </el-row>
             </el-splitter-panel>
@@ -143,13 +206,13 @@ import {useCatalogStore} from "@Res/catalogStore";
 const useCatalog = useCatalogStore()
 const props = defineProps({
     feed: Object,
-    tags: Array,
+    //tags: Array,
     title: {
         type: String,
         default: 'Карточка фида',
     },
 })
-console.log(props.categories)
+console.log(props.feed)
 const defaultProps = {
     children: 'children',
     label: 'name',
@@ -187,7 +250,7 @@ function clearProducts() {
 }
 
 function saveData(_action, _data) {
-    router.visit(route('admin.unload.feed.' + _action, {feed: props.feed.id}), {
+    router.visit(route('admin.output.feed.' + _action, {feed: props.feed.id}), {
         only: ['feed', 'flash'],
         method: "post",
         data: _data,

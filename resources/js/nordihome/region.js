@@ -42,6 +42,47 @@ window.$ = jQuery;
         return str.slice(0, -2);
     }
 
+    // Отсекаем ботов/краулеров, чтобы не тратить запросы к Dadata
+    function isBot() {
+        // Автоматизация и headless-браузеры (Selenium, Puppeteer, Playwright и т.п.)
+        if (navigator.webdriver) return true;
+
+        const ua = String(navigator.userAgent || "").toLowerCase();
+        if (!ua) return false;
+
+        const botPatterns = [
+            "bot",
+            "crawler",
+            "spider",
+            "slurp",
+            "bingpreview",
+            "facebookexternalhit",
+            "facebot",
+            "whatsapp",
+            "telegrambot",
+            "linkedinbot",
+            "pinterestbot",
+            "headlesschrome",
+            "phantomjs",
+            "puppeteer",
+            "playwright",
+            "selenium",
+            "yandexbot",
+            "googlebot",
+            "bingbot",
+            "baiduspider",
+            "duckduckbot",
+            "ahrefsbot",
+            "semrushbot",
+            "mj12bot",
+            "dotbot",
+            "uptimerobot",
+            "pingdom",
+        ];
+
+        return botPatterns.some((pattern) => ua.includes(pattern));
+    }
+
     // Подпись региона в шапке: приоритет у user_cookie_town, затем название региона
     function updateHeader(region) {
         const town = getCookie(COOKIE_TOWN);
@@ -152,6 +193,11 @@ window.$ = jQuery;
         if (existingRegion !== undefined || existingTown !== undefined) {
             // Регион уже выбран — показываем его в шапке и не открываем модалку
             updateHeader(findRegion(existingRegion));
+            return;
+        }
+
+        // Боты/краулеры: не определяем регион и не показываем окно выбора
+        if (isBot()) {
             return;
         }
 

@@ -45,6 +45,11 @@ class TagRepository implements TagRepositoryInterface
             ->exists();
     }
 
+    public function getAll()
+    {
+        return Tag::orderBy('name')->get()
+            ->map(fn(Tag $model) => $this->hydrate($model))->toArray();
+    }
     public function paginate(int $perPage = 15): LengthAwarePaginator
     {
         return Tag::orderBy('name')

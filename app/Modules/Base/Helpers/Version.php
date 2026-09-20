@@ -10,6 +10,10 @@ class Version
     public static function updated(): array
     {
         return [
+            '21.09.2026' => [
+                'Выбор региона, авто выбор по ip, наценка на +40% на другие регионы',
+                'Фиды - добавлена фильтрация по комнатам, акциям и группам',
+            ],
             '15.09.2026' => [
                 'Добавлены мета-теги og для всех видов страниц - page, posts, post, category, room, products, product, novelty, ikea*, search',
             ],

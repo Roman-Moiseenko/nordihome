@@ -94,11 +94,13 @@ Route::group([
         'prefix' => 'tag',
         'as' => 'tag.',
     ], function () {
+        Route::get('/list', [TagController::class, 'list'])->name('list');
         Route::get('/', [TagController::class, 'index'])->name('index');
         Route::get('/{id}', [TagController::class, 'show'])->name('show');
         Route::post('/store', [TagController::class, 'store'])->name('store');
         Route::post('/update/{id}', [TagController::class, 'update'])->name('update');
         Route::delete('/destroy/{id}', [TagController::class, 'destroy'])->name('destroy');
+
     });
     //EQUIVALENT
     Route::group([

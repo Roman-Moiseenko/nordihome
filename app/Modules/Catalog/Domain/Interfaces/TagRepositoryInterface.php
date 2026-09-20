@@ -20,4 +20,6 @@ interface TagRepositoryInterface
     public function getById(int $tagId): TagEntity;
 
     public function findByIds(array $tagIds): array;
+
+    public function getAll();
 }

@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Application\Actions\Tag\CreateTagUseCase;
 use App\Modules\Catalog\Application\Actions\Tag\IndexTagQuery;
+use App\Modules\Catalog\Application\Actions\Tag\ListTagsQuery;
 use App\Modules\Catalog\Application\Actions\Tag\RemoveTagUseCase;
 use App\Modules\Catalog\Application\Actions\Tag\UpdateTagUseCase;
 use App\Modules\Catalog\Application\Actions\Tag\ViewTagUseCase;
@@ -16,6 +17,7 @@ use App\Modules\Catalog\Infrastructure\Models\Tag;
 use App\Modules\Catalog\Repository\TagRepository;
 use App\Modules\Catalog\Service\TagService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -34,6 +36,7 @@ class TagController extends Controller
         private readonly UpdateTagUseCase $updateTagUseCase,
         private readonly RemoveTagUseCase $removeTagUseCase,
         private readonly ViewTagUseCase   $viewTagUseCase,
+        private readonly ListTagsQuery $listTagsQuery,
     )
     {
         $this->service = $service;
@@ -42,7 +45,7 @@ class TagController extends Controller
 
     public function index(Request $request, UserPermission $userPermission): Response
     {
-        $data = $this->indexTagUseCase->execute($userPermission);
+        $data = $this->indexTagUseCase->execute($userPermission, $request->integer('size', 20));
         return Inertia::render('Catalog/Tag/Index', [
             'tags' => $data,
         ]);
@@ -76,5 +79,11 @@ class TagController extends Controller
         $this->removeTagUseCase->execute($id, $userPermission);
 
         return redirect()->back()->with('success', 'Метка удалена');
+    }
+
+    public function list(): JsonResponse
+    {
+        $tags = $this->listTagsQuery->execute();
+        return response()->json($tags);
     }
 }

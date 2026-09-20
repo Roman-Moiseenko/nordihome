@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Modules\Unload\Service;
+namespace App\Modules\Output\Infrastructure\Services;
 
-use App\Modules\Unload\Entity\Feed;
+use App\Modules\Output\Infrastructure\Models\Feed;
 use Illuminate\Http\Request;
 
 class FeedService

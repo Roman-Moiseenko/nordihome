@@ -14,6 +14,7 @@ return [
     App\Modules\Lead\Providers\LeadServiceProvider::class,
     App\Modules\Notification\Providers\NotificationServiceProvider::class,
     App\Modules\Order\Providers\OrderServiceProvider::class,
+    App\Modules\Output\Providers\OutputServiceProvider::class,
     App\Modules\Parser\Providers\ParserServiceProvider::class,
     App\Modules\Shared\Providers\SharedServiceProvider::class,
     App\Modules\Shop\Providers\ShopServiceProvider::class,

@@ -5,6 +5,7 @@ namespace App\Modules\Content\Infrastructure\Models;
 use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Page;
 use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
@@ -31,6 +32,7 @@ class MetaTemplate extends Model
         PostCategory::class => 'Рубрика',
         Group::class => 'Группа товаров',
         Promotion::class => 'Акция',
+        Room::class => 'Комнаты',
     ];
 
     protected $fillable = [

@@ -74,6 +74,12 @@
                 </div>
             </template>
         </el-dialog>
+
+        <pagination
+            :current_page="feeds.current_page"
+            :per_page="feeds.per_page"
+            :total="feeds.total"
+        />
     </el-config-provider>
 
 </template>
@@ -89,9 +95,10 @@ import {defineProps, inject, reactive, ref} from "vue";
 
 import {route} from "ziggy-js";
 import axios from "axios";
+import Pagination from "@Comp/Pagination.vue";
 
 const props = defineProps({
-    feeds: Array,
+    feeds: Object,
     errors: Object,
     title: {
         type: String,
@@ -101,14 +108,14 @@ const props = defineProps({
 
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.feeds])
+const tableData = ref([...props.feeds.data])
 const form = reactive({
     name: null,
 })
 
 function savePage() {
     dialogCreate.value = false;
-    router.visit(route('admin.unload.feed.store'), {
+    router.visit(route('admin.output.feed.store'), {
         method: "post",
         data: form,
         preserveScroll: true,
@@ -119,18 +126,18 @@ function savePage() {
     })
 }
 function onToggle(row) {
-    router.visit(route('admin.unload.feed.toggle', {feed: row.id}), {
+    router.visit(route('admin.output.feed.toggle', {feed: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function routeClick(row) {
-    router.get(route('admin.unload.feed.show', {feed: row.id}))
+    router.get(route('admin.output.feed.show', {id: row.id}))
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.unload.feed.destroy', {feed: row.id}));
+    $delete_entity.show(route('admin.output.feed.destroy', {feed: row.id}));
 }
 
 function copyBufferGoogle(row) {
