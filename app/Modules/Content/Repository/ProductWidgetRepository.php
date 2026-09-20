@@ -38,6 +38,7 @@ class ProductWidgetRepository
             'modelable_key' => $modelableKey !== false ? $modelableKey : null,
             //'modelable' => ProductGroupType::modelKey($widget->modelable_type),
             'model_type' => $widget->model_type,
+            'modelable_id' => $widget->modelable_id,
         ]);
     }
 
