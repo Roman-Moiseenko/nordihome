@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Modules\Shop\Controllers;
+namespace App\Modules\Output\Presentation\Http\Controllers\Web;
 
+use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use App\Modules\Shop\Repository\ECommerceRepository;
 use Illuminate\Http\Request;
 
-class ECommerceController extends \App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController
+class ECommerceController extends ShopController
 {
 
     private ECommerceRepository $repository;
