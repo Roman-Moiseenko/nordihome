@@ -1,12 +1,14 @@
+@php
+    use App\Modules\Cabinet\Application\DTOs\Pages\NewOrderData;
+    /** @var NewOrderData $pageData */
+@endphp
 @extends('layouts.main')
-
 @section('body', 'order')
 @section('main', 'container-xl order-page-create')
-@section('title', 'Заказ сформирован')
 
 @section('content')
     <div class="title-page">
-        <h1>Заказ сформирован</h1>
+        <h1>Заказ сформирован # {{ $pageData->numberOrder }} от {{ $pageData->dateOrder }}</h1>
     </div>
     <div class="screen-action">
         <div class="left-list-block">
@@ -28,7 +30,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             // Передаем список товаров из заказа в событие e-commerce
             window.dispatchEvent(new CustomEvent('e-order', {
-                detail: {!! json_encode($e_array) !!}
+                detail: {!! json_encode($pageData->eArray) !!}
             }));
         });
 

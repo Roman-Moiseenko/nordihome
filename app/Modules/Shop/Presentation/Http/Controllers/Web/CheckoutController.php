@@ -6,6 +6,7 @@ namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 use App\Modules\Analytics\Domain\ValueObjects\ActionType;
 use App\Modules\Analytics\Domain\ValueObjects\EntityType;
 use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
+use App\Modules\Cabinet\Application\Queries\PageCreateQuery;
 use App\Modules\Cart\Application\Actions\GetCartQuery;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderFromCartService;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderOneClickService;
@@ -22,9 +23,10 @@ class CheckoutController extends ShopController
     use RecordsAnalyticsAction;
 
     public function __construct(
-        private readonly GetCartQuery               $getCartUseCase,
+        //private readonly GetCartQuery               $getCartUseCase,
         private readonly CreateOrderFromCartService $createOrderFromCartService,
         private readonly CreateOrderOneClickService $createOrderOneClickService,
+        private readonly PageCreateQuery $pageCreateQuery,
     )
     {
     }
@@ -33,11 +35,13 @@ class CheckoutController extends ShopController
     public function create(Request $request): View
     {
         $client = $this->getClient($request);
-        $cartInfo = $this->getCartUseCase->execute($client);
+        //$cartInfo = $this->getCartUseCase->execute($client);
 
         $this->recordAnalyticsAction(ActionType::CHECKOUT_START, EntityType::ORDER);
 
-        return view('shop.order.create', compact('cartInfo'));
+        $data = $this->pageCreateQuery->execute($client);
+
+        return view('shop.order.create', ['pageData' => $data]);
     }
 
     public function create_click(Request $request)

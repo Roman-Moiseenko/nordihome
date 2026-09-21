@@ -6,6 +6,7 @@ namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
 use App\Modules\Cabinet\Application\Queries\GetOrderClientQuery;
 use App\Modules\Cabinet\Application\Queries\GetOrdersClientQuery;
+use App\Modules\Cabinet\Application\Queries\PageNewOrderQuery;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
 use Illuminate\Http\Request;
@@ -18,8 +19,9 @@ use function view;
 class OrderController extends ShopController
 {
     public function __construct(
-        public GetOrdersClientQuery $getOrdersClientQuery,
-        public GetOrderClientQuery $getOrderClientQuery,
+        private readonly GetOrdersClientQuery $getOrdersClientQuery,
+        private readonly GetOrderClientQuery $getOrderClientQuery,
+        private readonly PageNewOrderQuery $pageNewOrderQuery,
     )
     {
     }
@@ -47,10 +49,13 @@ class OrderController extends ShopController
 
     public function new_order(int $id, Request $request)
     {
-        //TODO заменить на DTO
-        $order = Order::find($id);
         if ($request->string('from')->value() != 'store') abort(404);
-        $e_array = [];
+        $client = $this->getClient($request);
+        $data = $this->pageNewOrderQuery->execute($id, $client);
+
+        //$order = Order::find($id);
+
+        /*$e_array = [];
 
         foreach ($order->items as $item) {
             $e_array[] = [
@@ -58,7 +63,8 @@ class OrderController extends ShopController
                 'quantity' => $item->quantity,
             ];
         }
-        return view('cabinet.order.new', compact('order', 'e_array'));
+        */
+        return view('cabinet.order.new', ['pageData' => $data]); //compact('order', 'e_array')
     }
 
     public function copy(Order $order)

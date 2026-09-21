@@ -3,15 +3,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
-use App\Modules\Analytics\Application\Actions\Search\TrackSearchUseCase;
 use App\Modules\Analytics\Application\Services\TrackSearchService;
-use App\Modules\Analytics\Domain\Interfaces\VisitorContextInterface;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Shop\Application\DTOs\Search\ProductSearchPageData;
 use App\Modules\Shop\Application\Queries\Product\ProductViewQuery;
 use App\Modules\Shop\Application\Queries\Search\FullSearchQuery;
 use App\Modules\Shop\Application\Queries\Search\ProductSearchQuery;
-use App\Modules\Shop\Repository\ShopRepository;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
 

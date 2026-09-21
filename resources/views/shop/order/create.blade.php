@@ -1,5 +1,7 @@
 @php
-    /** @var \App\Modules\Cart\Application\DTOs\CartInfoData $cartInfo */
+    use App\Modules\Cabinet\Application\DTOs\Pages\CreateOrderData;
+    /** @var CreateOrderData $pageData */
+    $cartInfo = $pageData->cartInfo;
     $amountCommon = $cartInfo->amountCheck + $cartInfo->delivery + $cartInfo->deliveryParser - $cartInfo->discountCheck;
 @endphp
 @extends('layouts.main')
