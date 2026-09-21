@@ -8,7 +8,7 @@
     <div class="header-mobile bg-f2f2f2">
         <div class="container-xl">
             <div class="d-flex justify-content-between align-items-center mob-gray-line">
-                <div id="code-region" style="margin-right: auto; cursor: pointer">Калининград</div>
+                <div id="code-region" style="margin-right: auto; cursor: pointer" class="f-z_12">Калининград</div>
                 <div class="wrap-mob-menu-top">
                     @if(isset($menus['menu-header02']))
                         <ul id="menu-menyu-v-shapke02" class="h-menu">
@@ -30,7 +30,7 @@
     <div class="menu-top hide-mobile">
         <div class="container-xl">
             <div class="d-flex justify-content-end align-items-center">
-                <div id="code-region" style="margin-right: auto; cursor: pointer">Калининград</div>
+                <div id="code-region" style="margin-right: auto; cursor: pointer" class="f-z_14">Калининград</div>
                 <div>
                     @if(isset($menus['menu-header02']))
                         <ul id="menu-menyu-v-shapke02" class="h-menu">
