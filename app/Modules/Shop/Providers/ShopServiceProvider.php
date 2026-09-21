@@ -4,10 +4,13 @@ namespace App\Modules\Shop\Providers;
 
 use App\Modules\Analytics\Infrastructure\ViewComposers\AnalyticsComposer;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Contact;
 use App\Modules\Content\Entity\Menu;
 use App\Modules\Content\Entity\MenuItem;
+use App\Modules\Content\Entity\Page;
+use App\Modules\Content\Infrastructure\Models\Post;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Output\Infrastructure\Models\Feed;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
@@ -18,6 +21,9 @@ use App\Modules\Shop\Infrastructure\Observers\FeedCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\IkeaCategoryCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\MenuCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\MenuItemCacheObserver;
+use App\Modules\Shop\Infrastructure\Observers\PageCacheObserver;
+use App\Modules\Shop\Infrastructure\Observers\PostCacheObserver;
+use App\Modules\Shop\Infrastructure\Observers\ProductCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\PromotionProductCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\RoomCacheObserver;
 use App\Modules\Shop\Infrastructure\Services\BreadcrumbService;
@@ -121,6 +127,9 @@ class ShopServiceProvider extends ServiceProvider
         Contact::observe(ContactCacheObserver::class);
         Promotion::observe(PromotionProductCacheObserver::class);
         Feed::observe(FeedCacheObserver::class);
+        Product::observe(ProductCacheObserver::class);
+        Page::observe(PageCacheObserver::class);
+        Post::observe(PostCacheObserver::class);
     }
 
     /**

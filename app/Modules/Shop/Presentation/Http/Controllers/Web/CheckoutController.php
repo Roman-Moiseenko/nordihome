@@ -30,9 +30,6 @@ class CheckoutController extends ShopController
     }
 
 
-    /**
-     * @throws BindingResolutionException
-     */
     public function create(Request $request): View
     {
         $client = $this->getClient($request);

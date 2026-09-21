@@ -53,6 +53,10 @@ class CacheInvalidationRegistry
     public const string FEED_EXPORT = 'feed_export_{id}_v{version}';
 
 
+    //Карта сайта (sitemap.xml) — зависит от товаров, категорий, комнат,
+    //страниц, новостей и акций.
+    public const string SITEMAP = 'sitemap';
+
     public const string MENUS = 'menus';
     public const string CONTACTS = 'contacts';
 
@@ -67,6 +71,7 @@ class CacheInvalidationRegistry
             Cache::forget($resolvedKey);
         }
         $this->forgetFeeds();
+        $this->forgetSitemap();
     }
 
     public function forgetRoom(int $categoryId): void
@@ -76,6 +81,7 @@ class CacheInvalidationRegistry
             Cache::forget($resolvedKey);
         }
         $this->forgetFeeds();
+        $this->forgetSitemap();
     }
 
     public function forgetIkeaCategory(int $categoryId): void
@@ -103,6 +109,7 @@ class CacheInvalidationRegistry
             Cache::forget($resolvedKey);
         }
         $this->forgetFeeds();
+        $this->forgetSitemap();
     }
 
     /**
@@ -114,5 +121,13 @@ class CacheInvalidationRegistry
     {
         $version = (int) Cache::get(self::FEED_VERSION, 0);
         Cache::put(self::FEED_VERSION, $version + 1, now()->addYear());
+    }
+
+    /**
+     * Сброс кеша карты сайта.
+     */
+    public function forgetSitemap(): void
+    {
+        Cache::forget(self::SITEMAP);
     }
 }
