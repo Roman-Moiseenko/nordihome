@@ -37,7 +37,7 @@ class GetLatestProductPricesUseCaseTest extends TestCase
 
         $this->priceRepository->shouldReceive('findCurrentPrices')->with(5)->once()->andReturn($prices);
 
-        $permission = new UserPermission(null, [], ['catalog.product.price.view']);
+        $permission = new UserPermission(null, [], ['accounting.price.view']);
 
         $this->assertSame($prices, $this->useCase->execute(5, $permission));
     }

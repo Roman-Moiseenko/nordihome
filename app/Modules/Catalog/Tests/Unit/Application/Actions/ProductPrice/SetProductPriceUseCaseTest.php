@@ -9,7 +9,6 @@ use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Accounting\Domain\Entities\ProductPriceEntity;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
-use App\Modules\Shared\Domain\Entities\UserPermission;
 use Mockery;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
@@ -35,6 +34,11 @@ class SetProductPriceUseCaseTest extends TestCase
     #[Test]
     public function it_creates_and_saves_price(): void
     {
+        $this->priceRepository->shouldReceive('getLastByProductAndType')
+            ->with(5, 'retail')
+            ->once()
+            ->andReturn(null);
+
         $this->priceRepository->shouldReceive('save')
             ->once()
             ->with(Mockery::on(fn(ProductPriceEntity $price) => $price->productId === 5
@@ -44,7 +48,7 @@ class SetProductPriceUseCaseTest extends TestCase
 
         $dto = new SetProductPriceData(productId: 5, price: 1999.90, priceType: 'retail', founded: 'src', comment: 'note');
 
-        $result = $this->useCase->execute($dto, new UserPermission(null, [], []));
+        $result = $this->useCase->execute($dto);
 
         $this->assertInstanceOf(ProductPriceEntity::class, $result);
         $this->assertSame('src', $result->founded);

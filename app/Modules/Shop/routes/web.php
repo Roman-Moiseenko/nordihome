@@ -1,8 +1,8 @@
 <?php
 
 
+use App\Modules\Output\Presentation\Http\Controllers\Web\SitemapXmlController;
 use App\Modules\Shop\Controllers\ECommerceController;
-use App\Modules\Shop\Controllers\SitemapXmlController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\CatalogController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\CheckoutController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\GroupController;
@@ -15,7 +15,6 @@ use App\Modules\Shop\Presentation\Http\Controllers\Web\RoomController;
 use Illuminate\Support\Facades\Route;
 
 //MAINDO вынести в отдельный модуль
-Route::get('/sitemap.xml', [SitemapXmlController::class, 'index'])->name('sitemap');
 Route::post('/e-commerce/', [ECommerceController::class, 'e_commerce'])->name('e-commerce');
 
 

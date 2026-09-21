@@ -26,7 +26,7 @@ class FeedXMLController extends Controller
         $data = $this->googleQuery->execute($this->feedRepository->getById($feed->id));
         $date = now()->addDays(14)->format('Y-m-d\TH:i+0200');
 
-        $content = view('shop.unload.feed-google', compact('data', 'date'))->render();
+        $content = view('output.feed-google', compact('data', 'date'))->render();
         ob_end_clean();
 
         return response($content)->header('Content-Type', 'text/xml');
@@ -41,7 +41,7 @@ class FeedXMLController extends Controller
         $data = $this->yandexQuery->execute($this->feedRepository->getById($feed->id));
         $date = now()->format('Y-m-d\TH:i');
 
-        $content = view('shop.unload.feed-yandex', compact('data', 'date'))->render();
+        $content = view('output.feed-yandex', compact('data', 'date'))->render();
         ob_end_clean();
 
         return response($content)->header('Content-Type', 'text/xml');

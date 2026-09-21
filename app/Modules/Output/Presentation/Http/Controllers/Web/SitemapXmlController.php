@@ -1,12 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Shop\Controllers;
+namespace App\Modules\Output\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Page;
+use App\Modules\Content\Infrastructure\Models\Post;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 
 class SitemapXmlController extends Controller
@@ -14,17 +16,17 @@ class SitemapXmlController extends Controller
 
     public function index()
     {
-        //TODO Формируем массив данных формата
-        // Сделать по индексным файлам
-
         $pages = array_merge(
             $this->products(),
             $this->categories(),
+            $this->rooms(),
             $this->pages(),
+            $this->posts(),
             $this->static(),
             $this->promotions(),
+        //TODO Метки и другие умные фильтры
         );
-        $content = view('shop.unload.sitemap', compact('pages'))->render();
+        $content = view('output.sitemap', compact('pages'))->render();
         ob_end_clean();
         return response($content)->header('Content-Type','text/xml');
     }
@@ -51,7 +53,19 @@ class SitemapXmlController extends Controller
                 'date' => now()->format('c'),
                 'changefreq' => 'weekly'
             ];
-        }, Category::has('products')->getModels());
+        }, Category::has('products')->where('published', true)->getModels());
+    }
+
+    private function rooms(): array
+    {
+        //Исключить пустые категории
+        return array_map(function (Room $room) {
+            return [
+                'url' => route('shop.room.view', $room->slug),
+                'date' => now()->format('c'),
+                'changefreq' => 'weekly'
+            ];
+        }, Room::has('products')->where('published', true)->getModels());
     }
 
 
@@ -65,6 +79,18 @@ class SitemapXmlController extends Controller
             ];
         }, Page::where('published', true)->getModels());
     }
+
+    private function posts(): array
+    {
+        return array_map(function (Post $post) {
+            return [
+                'url' => route('shop.post.view', $post->slug),
+                'date' => $post->updated_at->format('c'),
+                'changefreq' => 'weekly'
+            ];
+        }, Post::where('published', true)->getModels());
+    }
+
 
     private function static(): array
     {
@@ -85,6 +111,6 @@ class SitemapXmlController extends Controller
                 'date' => $promotion->start_at->format('c'),
                 'changefreq' => 'weekly'
             ];
-        }, Promotion::where('published', true)->where('active', true)->getModels());
+        }, Promotion::where('status', 'started')->getModels());
     }
 }

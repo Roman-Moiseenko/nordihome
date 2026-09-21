@@ -44,7 +44,7 @@ class ConsentClientUseCaseTest extends TestCase
 
         $this->assertNotNull($client->dataConsent);
         $this->assertTrue($client->dataConsent->active);
-        $this->assertSame('v1 от 01.01.2026', $client->dataConsent->policyVersion);
+        $this->assertSame('№1 от 01.01.2026', $client->dataConsent->policyVersion);
     }
 
     public function test_throws_when_client_id_is_null(): void

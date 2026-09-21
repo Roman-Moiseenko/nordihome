@@ -52,6 +52,7 @@ class SendMailNewOrderClientUseCaseTest extends TestCase
     {
         $order = new OrderEntity(traderId: 1, type: new OrderSellType(OrderSellType::ONLINE));
         $order->id = 10;
+        $order->clientId = 10;
 
         return $order;
     }
