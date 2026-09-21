@@ -9,7 +9,11 @@
                     placeholder="Не ограничено"
                     style="width: 160px"
                     @change="onSave"
-                />
+                >
+                    <template #suffix>
+                        <span>₽</span>
+                    </template>
+                </el-input-number>
             </el-form-item>
             <el-form-item label="Максимальная цена">
                 <el-input-number
@@ -19,7 +23,11 @@
                     placeholder="Не ограничено"
                     style="width: 160px"
                     @change="onSave"
-                />
+                >
+                    <template #suffix>
+                        <span>₽</span>
+                    </template>
+                </el-input-number>
             </el-form-item>
         </div>
     </Card>
