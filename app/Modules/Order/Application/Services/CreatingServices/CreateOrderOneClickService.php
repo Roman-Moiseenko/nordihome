@@ -20,8 +20,13 @@ use App\Modules\Shared\Application\DTOs\Lead\LeadSourceData;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
 use App\Modules\Shared\Infrastructure\Events\LeadCollected;
 use App\Modules\Shop\Application\DTOs\Checkout\OneClickOrderData;
+use App\Modules\Shop\Application\DTOs\ClientContext;
+use App\Modules\Shop\Application\Services\RegionalPriceCalculator;
 use Illuminate\Events\Dispatcher;
 
+/**
+ * Создание заказа в 1 клик, для цены нужна наценка
+ */
 readonly class CreateOrderOneClickService
 {
     public function __construct(
@@ -33,14 +38,15 @@ readonly class CreateOrderOneClickService
         private GetDeliveryAdditionUseCase  $deliveryAdditionUseCase,
         private GetDefaultTraderIdUseCase   $traderIdUseCase,
         private CreateOrderLoggerUseCase    $loggerUseCase,
+        private RegionalPriceCalculator $regionalPriceCalculator,
     )
     {
 
     }
 
-    public function execute(OneClickOrderData $dto): ?OrderEntity
+    public function execute(OneClickOrderData $dto, ClientContext $context): ?OrderEntity
     {
-        $this->transactionManager->execute(function () use ($dto, &$orderEntity) {
+        $this->transactionManager->execute(function () use ($dto, &$orderEntity, $context) {
             $client = $this->findOrCreateClientService->execute($dto); //Ищем или создаем клиента
             //Получаем данные о товаре
             $product = $this->sellPriceUseCase->execute($dto->productId, $client->priceType);
@@ -63,12 +69,12 @@ readonly class CreateOrderOneClickService
                 $orderEntity->addAddition($addition->id);
             }
 
-            //Добавляем продукт
+            //Добавляем продукт, и применяем региональный коэффициент
             $orderEntity->addItem(new OrderItemData(
                 productId: $dto->productId,
                 quantity: 1.0,
-                basePrice: $product->basePrice,
-                sellPrice: $product->sellPrice,
+                basePrice: $this->regionalPriceCalculator->apply($product->basePrice, $context->region),
+                sellPrice: $this->regionalPriceCalculator->apply($product->sellPrice, $context->region),
                 discountId: $product->discountId,
                 discountType: $product->discountType,
             ));

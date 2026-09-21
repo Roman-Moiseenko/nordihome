@@ -48,9 +48,6 @@ readonly class GetCartQuery
 
     }
 
-    /**
-     * @throws BindingResolutionException
-     */
     public function execute(ClientContext $clientContext): CartInfoData
     {
         $cartItems = $this->cartRepository->getAll($clientContext);

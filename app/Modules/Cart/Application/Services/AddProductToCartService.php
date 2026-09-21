@@ -24,9 +24,6 @@ class AddProductToCartService
 
     }
 
-    /**
-     * @throws BindingResolutionException
-     */
     public function execute(AddProductToCartData $dto, ClientContext $client): void
     {
         $userPermission = new UserPermission(null, ['admin'], [

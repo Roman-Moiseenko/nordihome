@@ -46,7 +46,8 @@ class CheckoutController extends ShopController
     public function create_click(Request $request)
     {
         $dto = OneClickOrderData::validateAndCreate($request->all());
-        $order = $this->createOrderOneClickService->execute($dto);
+        $client = $this->getClient($request);
+        $order = $this->createOrderOneClickService->execute($dto, $client);
         if (!is_null($order)) {
             $this->recordAnalyticsAction(ActionType::ONE_CLICK_BUY, EntityType::ORDER, $order->id);
 

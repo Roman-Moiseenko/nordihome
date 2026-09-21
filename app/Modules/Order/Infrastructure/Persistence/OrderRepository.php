@@ -351,7 +351,7 @@ class OrderRepository implements OrderRepositoryInterface
         $entity->isPickup = (bool) $model->is_pickup;
         $entity->priceType = new PriceType($model->price_type);
 
-        if (!empty($model->city) || !empty($model->street)) {
+        if (!empty($model->city) || !empty($model->region_code)) {
             $entity->address = new Address(
                 country: $model->country ?? '',
                 city: $model->city ?? '',

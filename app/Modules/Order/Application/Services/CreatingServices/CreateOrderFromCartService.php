@@ -28,6 +28,9 @@ use App\Modules\Shop\Application\DTOs\ClientContext;
 use Carbon\Carbon;
 use Illuminate\Events\Dispatcher;
 
+/**
+ * Создание заказа из корзины, цену берем из корзины (пересчет в моемент получения данных)
+ */
 readonly class CreateOrderFromCartService
 {
     public function __construct(

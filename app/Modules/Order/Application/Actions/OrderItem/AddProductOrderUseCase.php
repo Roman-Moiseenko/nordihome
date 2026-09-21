@@ -13,6 +13,7 @@ use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Parser\Application\Actions\Product\GetParserPriceByProductUseCase;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
+use App\Modules\Shop\Application\Services\RegionalPriceCalculator;
 
 readonly class AddProductOrderUseCase
 {
@@ -24,6 +25,8 @@ readonly class AddProductOrderUseCase
         private GetParserPriceByProductUseCase $getParserProductPriceUseCase,
         private GetPolandAdditionUseCase       $polandAdditionUseCase,
         private CreateOrderLoggerUseCase       $loggerUseCase,
+        private RegionalPriceCalculator $regionalPriceCalculator,
+
     )
     {
     }
@@ -34,12 +37,17 @@ readonly class AddProductOrderUseCase
         $orderEntity = $this->repository->getById($orderId);
         $productPrice = $this->getProductSellPriceUseCase->execute($dto->productId, $orderEntity->priceType);
 
+        //По региону доставки вычисляем коэффициент наценки
+        $region = $orderEntity->address?->regionCode ?? null;
+        $basePrice = $this->regionalPriceCalculator->apply($productPrice->basePrice, $region);
+        $sellPrice = !($dto->preorder) ? $productPrice->sellPrice : $this->getParserProductPriceUseCase->execute($dto->productId);
+        $sellPrice = $this->regionalPriceCalculator->apply($sellPrice, $region);
 
         $itemDto = new OrderItemData(
             productId: $dto->productId,
             quantity: $dto->quantity,
-            basePrice: $productPrice->basePrice,
-            sellPrice: !($dto->preorder) ? $productPrice->sellPrice : $this->getParserProductPriceUseCase->execute($dto->productId),
+            basePrice: $basePrice,
+            sellPrice: $sellPrice,
             discountId: !($dto->preorder) ? $productPrice->discountId : null,
             discountType: !($dto->preorder) ? $productPrice->discountType : null,
             preorder: $dto->preorder,
