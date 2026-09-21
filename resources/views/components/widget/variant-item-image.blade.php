@@ -1,7 +1,7 @@
 <div class="variant-image-container {{ $checked ? 'active' : '' }}">
-    <input class="variant-image-input" type="checkbox" id="{{ $code . '-' . $id }}" name="{{ $code }}"
+    <input class="variant-image-input" type="checkbox" id="{{ $name . '-' . $id }}" name="{{ $name }}"
            value="{{ $id }}" {{ $checked ? 'checked' : '' }}/>
-    <label for="{{ $code . '-' . $id }}">
+    <label for="{{ $name . '-' . $id }}">
         <img src="{{ $image }}" alt="{{ $alt }}"/> <span>{{ $caption }}</span>
     </label>
 </div>
