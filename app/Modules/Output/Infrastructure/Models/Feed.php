@@ -31,6 +31,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $set_title
  * @property string $set_description
  *
+ * @property int|null $price_min
+ * @property int|null $price_max
+ *
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  *
@@ -68,6 +71,8 @@ class Feed extends Model
         'groups_out' => 'array',
         'tags_in' => 'array',
         'tags_out' => 'array',
+        'price_min' => 'integer',
+        'price_max' => 'integer',
     ];
 
     public static function register(string $name): self

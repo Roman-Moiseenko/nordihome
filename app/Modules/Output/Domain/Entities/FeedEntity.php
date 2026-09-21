@@ -108,6 +108,16 @@ final class FeedEntity
         set => $this->setDescription = $value;
     }
 
+    public ?int $priceMin = null {
+        get => $this->priceMin;
+        set => $this->priceMin = $value;
+    }
+
+    public ?int $priceMax = null {
+        get => $this->priceMax;
+        set => $this->priceMax = $value;
+    }
+
     public ?\DateTimeImmutable $createdAt = null {
         get => $this->createdAt;
         set => $this->createdAt = $value;

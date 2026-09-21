@@ -15,6 +15,8 @@ class FeedViewData extends Data
         public readonly bool $setPreprice,
         public readonly string $setTitle,
         public readonly string $setDescription,
+        public readonly ?int $priceMin,
+        public readonly ?int $priceMax,
 
         /** @var ListCodeData[] $productsIn */
         public readonly array $productsIn,

@@ -31,6 +31,12 @@ class FeedUpdateData extends Data
         public readonly ?string $setTitle = null,
         #[Nullable, StringType]
         public readonly ?string $setDescription = null,
+        #[Nullable]
+        public readonly ?int $priceMin = null,
+        #[Nullable]
+        public readonly ?int $priceMax = null,
+        #[Nullable, BooleanType]
+        public readonly ?bool $priceChanged = null,
         #[Nullable, StringType]
         public readonly ?string $field = null,
         #[Nullable, StringType]

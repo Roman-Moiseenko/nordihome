@@ -37,6 +37,9 @@ class FeedRepository implements FeedRepositoryInterface
         $model->set_title = $feed->setTitle ?? '';
         $model->set_description = $feed->setDescription ?? '';
 
+        $model->price_min = $feed->priceMin;
+        $model->price_max = $feed->priceMax;
+
         $model->save();
 
         return $this->hydrate($model->fresh());
@@ -85,6 +88,9 @@ class FeedRepository implements FeedRepositoryInterface
         $entity->setPreprice = (bool) $model->set_preprice;
         $entity->setTitle = $model->set_title ?: null;
         $entity->setDescription = $model->set_description ?: null;
+
+        $entity->priceMin = $model->price_min !== null ? (int) $model->price_min : null;
+        $entity->priceMax = $model->price_max !== null ? (int) $model->price_max : null;
 
         $entity->createdAt = $model->created_at instanceof \DateTimeInterface
             ? \DateTimeImmutable::createFromInterface($model->created_at)

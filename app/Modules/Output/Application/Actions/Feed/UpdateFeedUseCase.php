@@ -63,6 +63,11 @@ readonly class UpdateFeedUseCase
         if ($dto->setDescription !== null) {
             $feed->setDescription = $dto->setDescription === '' ? null : $dto->setDescription;
         }
+
+        if ($dto->priceChanged === true) {
+            $feed->priceMin = $dto->priceMin;
+            $feed->priceMax = $dto->priceMax;
+        }
     }
 
     private function applyList(FeedEntity $feed, FeedUpdateData $dto): void

@@ -35,6 +35,8 @@ readonly class ViewFeedQuery
             setPreprice: $feedEntity->setPreprice,
             setTitle: $feedEntity->setTitle ?? '',
             setDescription: $feedEntity->setDescription ?? '',
+            priceMin: $feedEntity->priceMin,
+            priceMax: $feedEntity->priceMax,
             productsIn: $this->productsToCode($feedEntity->productsIn),
             productsOut: $this->productsToCode($feedEntity->productsOut),
             tagsIn: $this->tagsToName($feedEntity->tagsIn),

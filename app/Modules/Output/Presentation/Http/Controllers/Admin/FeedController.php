@@ -64,8 +64,18 @@ class FeedController extends Controller
      */
     public function update(Feed $feed, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $payload = $request->only(['name', 'setPreprice', 'active', 'setTitle', 'setDescription', 'field', 'action', 'in']);
+        $payload = $request->only([
+            'name', 'setPreprice', 'active', 'setTitle', 'setDescription',
+            'priceMin', 'priceMax', 'priceChanged',
+            'field', 'action', 'in',
+        ]);
         $payload['ids'] = $this->resolveIds($request);
+
+        foreach (['priceMin', 'priceMax'] as $priceField) {
+            if (array_key_exists($priceField, $payload)) {
+                $payload[$priceField] = $this->nullableInt($payload[$priceField]);
+            }
+        }
 
         $this->updateFeedUseCase->execute(
             $feed->id,
@@ -107,5 +117,14 @@ class FeedController extends Controller
         }
 
         return [];
+    }
+
+    private function nullableInt(mixed $value): ?int
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return (int) $value;
     }
 }

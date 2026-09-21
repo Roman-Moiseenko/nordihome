@@ -50,7 +50,7 @@ class FeedExportQueryRepository
         $outs = $this->getProductIds($feed, false);
         $ids = array_values(array_diff($ins, $outs));
 
-        $products = $this->productsToArray($ids);
+        $products = $this->productsToArray($ids, $feed->priceMin, $feed->priceMax);
 
         $categoryIds = array_values(array_unique(array_filter(array_map(
             static fn (array $product) => $product['category'],
@@ -105,7 +105,7 @@ class FeedExportQueryRepository
      * @param int[] $ids
      * @return array<int, array<string, mixed>>
      */
-    private function productsToArray(array $ids): array
+    private function productsToArray(array $ids, ?int $priceMin = null, ?int $priceMax = null): array
     {
         if (empty($ids)) {
             return [];
@@ -115,10 +115,22 @@ class FeedExportQueryRepository
             ->with(['gallery', 'promotions'])
             ->whereIn('id', $ids)
             ->get()
-            ->map(function (Product $product) {
+            ->map(function (Product $product) use ($priceMin, $priceMax) {
                 $regular = (float) $product->getPrice();
                 $previous = (float) $product->getPrice(true);
                 $promoPrice = $this->promotionPrice($product);
+
+                // При действующей акции цена по акции выводится как основная,
+                // базовая цена уходит в oldprice.
+                $price = $promoPrice > 0 ? $promoPrice : $regular;
+
+                // Фильтр по цене, если задан.
+                if ($priceMin !== null && $price < $priceMin) {
+                    return null;
+                }
+                if ($priceMax !== null && $price > $priceMax) {
+                    return null;
+                }
 
                 return [
                     'id' => $product->id,
@@ -129,9 +141,7 @@ class FeedExportQueryRepository
                         ->values()
                         ->all(),
                     'url' => route('shop.product.view', $product->slug),
-                    // При действующей акции цена по акции выводится как основная,
-                    // базовая цена уходит в oldprice.
-                    'price' => $promoPrice > 0 ? $promoPrice : $regular,
+                    'price' => $price,
                     'preprice' => $promoPrice > 0 ? $regular : $previous,
                     'category' => $product->main_category_id,
                     'store' => true,
@@ -140,6 +150,8 @@ class FeedExportQueryRepository
                     'code' => $product->code,
                 ];
             })
+            ->filter()
+            ->values()
             ->all();
     }
 

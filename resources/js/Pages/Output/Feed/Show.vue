@@ -19,6 +19,7 @@
             </HelpBlock>
         </div>
 
+        <Price :feed="feed"/>
         <Products :feed="feed" :save="save"/>
         <Tags :feed="feed" :save="save"/>
         <Categories :feed="feed" :save="save"/>
@@ -34,6 +35,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import {Head, router, usePage} from "@inertiajs/vue3";
 import HelpBlock from "@Comp/HelpBlock.vue";
 import FeedInfo from "./Block/Info.vue"
+import Price from "./Block/Price.vue"
 import Products from "./Block/Products.vue"
 import Tags from "./Block/Tags.vue"
 import Categories from "./Block/Categories.vue"
