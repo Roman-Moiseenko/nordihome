@@ -15,6 +15,8 @@ use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Output\Infrastructure\Models\Feed;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Shop\Application\Interfaces\BreadcrumbProviderInterface;
+use App\Modules\Shop\Console\Commands\ForgetShopCacheCommand;
+use App\Modules\Shop\Console\Commands\WarmShopCacheCommand;
 use App\Modules\Shop\Infrastructure\Observers\CategoryCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\ContactCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\FeedCacheObserver;
@@ -158,7 +160,8 @@ class ShopServiceProvider extends ServiceProvider
     protected function registerCommands()
     {
         $this->commands([
-            // Add command classes here
+            ForgetShopCacheCommand::class,
+            WarmShopCacheCommand::class,
         ]);
     }
 

@@ -22,6 +22,7 @@ use App\Modules\Parser\Infrastructure\Jobs\LoadProductsIkeaJob;
 use App\Modules\Parser\Infrastructure\Services\IkeaProductDataMapper;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\ValueObjects\QueueName;
 use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
 
 class LoadParserProductIkeaService
@@ -228,7 +229,7 @@ class LoadParserProductIkeaService
                 url: $imageItem['url'],
                 alt: $altImage,
             );
-            LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission)->onQueue('photo');
+            LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission)->onQueue(QueueName::PHOTO);
         }
 
         return $productEntity;

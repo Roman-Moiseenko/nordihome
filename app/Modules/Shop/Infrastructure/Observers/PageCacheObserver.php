@@ -13,11 +13,11 @@ class PageCacheObserver
 
     public function saved(Page $page): void
     {
-        $this->registry->forgetSitemap();
+        $this->registry->forgetPage($page->slug);
     }
 
     public function deleted(Page $page): void
     {
-        $this->registry->forgetSitemap();
+        $this->registry->forgetPage($page->slug);
     }
 }

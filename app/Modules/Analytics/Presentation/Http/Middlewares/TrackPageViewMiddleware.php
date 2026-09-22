@@ -10,6 +10,7 @@ use App\Modules\Analytics\Application\Actions\Session\StartSessionUseCase;
 use App\Modules\Analytics\Application\Actions\Visitor\IdentifyVisitorUseCase;
 use App\Modules\Analytics\Infrastructure\Jobs\TrackPageViewJob;
 use App\Modules\Analytics\Infrastructure\Services\PageTypeResolver;
+use App\Modules\Shared\Domain\ValueObjects\QueueName;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -118,7 +119,7 @@ final class TrackPageViewMiddleware
                 visitorId: $visitor->id,
                 sessionId: $session->id,
                 needGeo: $needGeo,
-            ))->onQueue('analytics');
+            ))->onQueue(QueueName::ANALYTICS);
         }
 
         return $response;

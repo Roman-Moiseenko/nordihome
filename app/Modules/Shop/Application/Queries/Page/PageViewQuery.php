@@ -8,7 +8,9 @@ use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\PageViewPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
+use Illuminate\Support\Facades\Cache;
 use JetBrains\PhpStorm\Deprecated;
 
 readonly class PageViewQuery
@@ -22,8 +24,27 @@ readonly class PageViewQuery
     }
     public function execute(string $slug):? PageViewPageData
     {
+        $key = str_replace('{slug}', $slug, CacheInvalidationRegistry::PAGE_BY_SLUG);
+
+        $cached = Cache::get($key);
+        if ($cached instanceof PageViewPageData) {
+            return $cached;
+        }
+
+        $pageData = $this->build($slug);
+
+        // Не кешируем отсутствующую страницу (null), чтобы после её создания
+        // данные не отдавались из кеша до срабатывания обсервера.
+        if ($pageData instanceof PageViewPageData) {
+            Cache::put($key, $pageData, now()->addDay());
+        }
+
+        return $pageData;
+    }
+
+    private function build(string $slug): ?PageViewPageData
+    {
         $web = $this->webSettingsUseCase->execute();
-        //MAINDO Сделать кеширование данных
         $page = Page::query()->where('slug', $slug)->where('published', true)->first();
         if (is_null($page)) return null;
 

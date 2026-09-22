@@ -24,6 +24,7 @@ use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\ValueObjects\PhotoType;
+use App\Modules\Shared\Domain\ValueObjects\QueueName;
 use App\Modules\Shared\Infrastructure\Job\CopyPhotoByIdJob;
 
 readonly class CreateProductFromParserService
@@ -108,7 +109,7 @@ readonly class CreateProductFromParserService
                 copyId: $image->id,
                 alt: $image->alt,
             );
-            CopyPhotoByIdJob::dispatch($dtoImage, $userPermission)->onQueue('photo');
+            CopyPhotoByIdJob::dispatch($dtoImage, $userPermission)->onQueue(QueueName::PHOTO);
         }
         // DTO ProductCreate
 

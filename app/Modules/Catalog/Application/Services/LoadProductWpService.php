@@ -20,6 +20,7 @@ use App\Modules\Catalog\Domain\Entities\BrandEntity;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\ValueObjects\QueueName;
 use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
 
 /**
@@ -151,7 +152,7 @@ readonly class LoadProductWpService
                 url: $imageData['url'],
                 alt: $imageData['alt'],
             );
-            LoadPhotoByUrlJob::dispatch($dtoImage, $userPermission)->onQueue('photo');
+            LoadPhotoByUrlJob::dispatch($dtoImage, $userPermission)->onQueue(QueueName::PHOTO);
         }
 
         //Установить цену из $product["price"], только розницу и минимальную (половина)

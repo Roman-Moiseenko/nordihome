@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Analytics\Presentation\Http\Middlewares;
 
 use App\Modules\Analytics\Infrastructure\Jobs\LinkVisitorToClientJob;
+use App\Modules\Shared\Domain\ValueObjects\QueueName;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +29,7 @@ final class LinkVisitorToClientMiddleware
         dispatch(new LinkVisitorToClientJob(
             uuid: (string) $snapshot->uuid,
             clientId: $snapshot->clientId,
-        ))->onQueue('analytics');
+        ))->onQueue(QueueName::ANALYTICS);
 
         return $next($request);
     }

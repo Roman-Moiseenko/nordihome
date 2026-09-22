@@ -60,6 +60,9 @@ class CacheInvalidationRegistry
     public const string MENUS = 'menus';
     public const string CONTACTS = 'contacts';
 
+    //Страницы (контентные страницы) — кешируются по slug.
+    public const string PAGE_BY_SLUG = 'page_{slug}';
+
 
     /**
      * Сбросить все ключи, связанные с категорией (включая глобальные).
@@ -129,5 +132,41 @@ class CacheInvalidationRegistry
     public function forgetSitemap(): void
     {
         Cache::forget(self::SITEMAP);
+    }
+
+    /**
+     * Сброс кеша контентной страницы по её slug.
+     * Страница также участвует в карте сайта, поэтому сбрасываем и её.
+     */
+    public function forgetPage(string $slug): void
+    {
+        Cache::forget(str_replace('{slug}', $slug, self::PAGE_BY_SLUG));
+        $this->forgetSitemap();
+    }
+
+    /**
+     * Полный сброс глобальных кешей модуля (деревья, индексные страницы,
+     * меню, контакты, карта сайта и версия фидов).
+     *
+     * Ключи с параметром {id} сбрасываются отдельными методами
+     * (forgetCategory/forgetRoom/forgetIkeaCategory/forgetPromotion/forgetPage),
+     * поскольку здесь нет перечня идентификаторов.
+     */
+    public function forgetAll(): void
+    {
+        foreach ([
+            self::CATEGORY_TREE,
+            self::CATEGORY_INDEX_PAGE,
+            self::ROOM_TREE,
+            self::ROOM_INDEX_PAGE,
+            self::IKEA_CATEGORY_INDEX_PAGE,
+        ] as $key) {
+            Cache::forget($key);
+        }
+
+        $this->forgetMenus();
+        $this->forgetContacts();
+        $this->forgetFeeds();
+        $this->forgetSitemap();
     }
 }

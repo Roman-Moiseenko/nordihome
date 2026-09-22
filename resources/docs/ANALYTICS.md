@@ -390,7 +390,7 @@ Cookie устанавливается в `IdentifyVisitorMiddleware`, когда
 - **`LinkVisitorToClientJob`** — асинхронная привязка visitor к client_id после
   логина.
 
-Оба уходят в очередь `analytics` (`->onQueue('analytics')`).
+Оба уходят в очередь `analytics` (`->onQueue(QueueName::ANALYTICS)`).
 
 ---
 
