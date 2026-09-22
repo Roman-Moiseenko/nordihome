@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Setting\Entity;
 
-use App\Modules\Catalog\Entity\Group;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 
 class Common extends AbstractSetting
 {

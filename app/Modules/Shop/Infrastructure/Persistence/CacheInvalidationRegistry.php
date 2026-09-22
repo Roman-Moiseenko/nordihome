@@ -46,6 +46,14 @@ class CacheInvalidationRegistry
     ];
 
 
+    //Группы
+    public const string GROUP_PRODUCTS_ID = 'group_products_{id}';
+    public const string GROUP_FILTERS_ID = 'group_filters_{id}';
+    private const array GROUP_PRODUCTS_KEYS = [
+        self::GROUP_PRODUCTS_ID,
+        self::GROUP_FILTERS_ID,
+    ];
+
     //Фиды (выгрузки Google/Yandex) — зависят от товаров, категорий, комнат, групп и акций.
     //Теги не используем (не все драйверы кеша их поддерживают), поэтому инвалидация
     //делается через инкремент версии, которая входит в ключ выгрузки.
@@ -114,7 +122,15 @@ class CacheInvalidationRegistry
         $this->forgetFeeds();
         $this->forgetSitemap();
     }
-
+    public function forgetGroup(int $groupId): void
+    {
+        foreach (self::GROUP_PRODUCTS_KEYS as $key) {
+            $resolvedKey = str_replace('{id}', $groupId, $key);
+            Cache::forget($resolvedKey);
+        }
+        $this->forgetFeeds();
+        $this->forgetSitemap();
+    }
     /**
      * Сброс всех кешей выгрузок фидов (товары, категории, комнаты, группы, акции).
      * Инкрементируем версию — старые ключи выгрузок перестают использоваться,

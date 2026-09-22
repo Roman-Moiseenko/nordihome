@@ -3,9 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Entity\Widgets;
 
-use App\Modules\Base\Traits\ImageField;
-use App\Modules\Catalog\Entity\Group;
-use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Content\Domain\ValueObjects\ProductGroupType;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

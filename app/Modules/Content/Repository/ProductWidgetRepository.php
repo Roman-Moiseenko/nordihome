@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Repository;
 
-use App\Modules\Content\Domain\ValueObjects\ProductGroupType;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Content\Entity\Widgets\ProductWidget;
 use App\Modules\Content\Entity\Widgets\ProductWidgetItem;
-use App\Modules\Catalog\Entity\Group;
 use Illuminate\Contracts\Support\Arrayable;
 
 class ProductWidgetRepository

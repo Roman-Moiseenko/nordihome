@@ -2,15 +2,13 @@
 
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
-use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
-use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
 use App\Modules\Shop\Application\Helpers\ImageInfoDataHelper;
 use Illuminate\Support\Facades\DB;
 
-class PromotionPageQueryRepository
+class GroupPageQueryRepository
 {
-    private const string PROMOTION_MODEL_TYPE = 'discount.promotion';
+    private const string GROUP_MODEL_TYPE = 'catalog.group';
 
     public function __construct(
         private readonly ImageInfoDataHelper $imageInfoHelper,
@@ -18,18 +16,19 @@ class PromotionPageQueryRepository
     {
     }
 
-    public function getPromotion(string $slug): ?CategoryRoomMainData
+
+    public function getGroup(string $slug): ?CategoryRoomMainData
     {
-        $row = DB::table('promotions')
+        $row = DB::table('groups')
             ->leftJoin('photos', function ($join) {
-                $join->on('promotions.id', '=', 'photos.imageable_id')
-                    ->where('photos.model_type', '=', self::PROMOTION_MODEL_TYPE)
+                $join->on('groups.id', '=', 'photos.imageable_id')
+                    ->where('photos.model_type', '=', self::GROUP_MODEL_TYPE)
                     ->where('photos.type', '=', 'image');
             })
-            ->where('promotions.slug', $slug)
-            ->where('status', PromotionStatus::STARTED)
+            ->where('groups.slug', $slug)
+            ->where('published', true)
             ->select(
-                'promotions.*',
+                'groups.*',
                 'photos.id as photo_id',
                 'photos.file as photo_file',
                 'photos.alt as photo_alt',
@@ -58,14 +57,14 @@ class PromotionPageQueryRepository
         );
     }
 
-    public function getProductIdsInPromotion(int $id): array
+    public function getProductIdsInGroup(int $id): array
     {
-        return DB::table('promotions_products')
-            ->join('products', 'products.id', '=', 'promotions_products.product_id')
-            ->where('promotions_products.promotion_id', $id)
+        return DB::table('groups_products')
+            ->join('products', 'products.id', '=', 'groups_products.product_id')
+            ->where('groups_products.group_id', $id)
             ->where('products.published', true)
             ->where('products.not_sale', false)
-            ->pluck('promotions_products.product_id')
+            ->pluck('groups_products.product_id')
             ->toArray();
     }
 }

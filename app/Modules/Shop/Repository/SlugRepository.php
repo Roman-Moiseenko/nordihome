@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Repository;
 
-use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Page;
@@ -56,7 +56,7 @@ class SlugRepository
         return $room;
     }
 
-    public function PageBySlug(string $slug): Page
+    public function PageBySlug($slug): Page
     {
         return Page::where('slug', $slug)->where('published', true)->first();
     }
@@ -66,7 +66,7 @@ class SlugRepository
         return Promotion::where('slug', $slug)->where('status', PromotionStatus::STARTED)->firstOrFail();
     }
 
-    public function getGroupBySlug(string $slug): Group
+    public function getGroupBySlug($slug): Group
     {
         return Group::where('slug', $slug)->firstOrFail();
     }

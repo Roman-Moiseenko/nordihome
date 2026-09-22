@@ -17,6 +17,7 @@ class ModelTypeMapper
         'catalog.category' => \App\Modules\Catalog\Infrastructure\Models\Category::class,
         'catalog.product' => \App\Modules\Catalog\Infrastructure\Models\Product::class,
         'catalog.brand' => \App\Modules\Catalog\Infrastructure\Models\Brand::class,
+        'catalog.group' => \App\Modules\Catalog\Infrastructure\Models\Group::class,
         'catalog.tag' => \App\Modules\Catalog\Infrastructure\Models\Tag::class,
         'catalog.attribute-variant' => \App\Modules\Catalog\Infrastructure\Models\AttributeVariant::class,
 

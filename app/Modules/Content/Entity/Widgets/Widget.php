@@ -5,9 +5,6 @@ namespace App\Modules\Content\Entity\Widgets;
 
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
-use App\Modules\Catalog\Entity\Group;
-use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Catalog\Infrastructure\Models\Room;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Schema\Blueprint;
 

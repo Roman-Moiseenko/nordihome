@@ -59,10 +59,6 @@ class AdditionSeeder extends Seeder
                 slug: 'koenig',
                 manual: true,
             ),
-           // ['name' => 'Упаковка товара', 'base' => 1, 'type' => AdditionType::PACKING, 'class' => PackingCalculate::class, 'slug' => 'packing'],
-            //['name' => 'Доставка из Польши', 'base' => 0, 'type' => AdditionType::DELIVERY, 'class' => DeliveryPolandCalculate::class, 'slug' => 'poland'],
-            //['name' => 'Доставка в Россию', 'base' => 0, 'type' => AdditionType::DELIVERY, 'class' => null, 'slug' => 'russia', 'manual' => true],
-            //['name' => 'Доставка по региону', 'base' => 0, 'type' => AdditionType::DELIVERY, 'class' => null, 'slug' => 'koenig', 'manual' => true],
         ];
         $permission = new UserPermission(null, [], ['guide.guide.create']);
         foreach ($array as $item) {

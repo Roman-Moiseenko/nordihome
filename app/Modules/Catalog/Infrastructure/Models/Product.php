@@ -18,7 +18,6 @@ use App\Modules\Cart\Infrastructure\Models\CartCookie;
 use App\Modules\Cart\Infrastructure\Models\CartStorage;
 use App\Modules\Catalog\Entity\Equivalent;
 use App\Modules\Catalog\Entity\EquivalentProduct;
-use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Entity\Modification;
 use App\Modules\Catalog\Entity\ModificationProduct;
 use App\Modules\Catalog\Entity\ProductPriceBulk;

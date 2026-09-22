@@ -2,7 +2,7 @@
 
 namespace App\Modules\Catalog\Application\Actions\Group;
 
-use App\Modules\Catalog\Entity\Group;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Shared\Application\DTOs\ListNamePublishedData;
 
 class ListGroupUseCase

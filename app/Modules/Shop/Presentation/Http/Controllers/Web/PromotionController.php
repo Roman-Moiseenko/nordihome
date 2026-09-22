@@ -8,7 +8,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
 
-class PromotionAbstractController extends ShopAbstractController
+class PromotionController extends ShopAbstractController
 {
 
 
@@ -22,7 +22,7 @@ class PromotionAbstractController extends ShopAbstractController
     {
         $data = $this->promotionPageQuery->execute($slug, $request->all(),
             $this->getClient($request));
-
+        if (is_null($data)) abort(404, 'Акция не найдена');
         return view('shop.product.index', [
             'pageData' => $data,
             'request' => $request->all(),

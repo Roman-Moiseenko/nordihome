@@ -2,8 +2,8 @@
 
 namespace App\Modules\Content\Repository;
 
-use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Content\Entity\Menu;
 use App\Modules\Content\Entity\MenuItem;
 use App\Modules\Content\Entity\Page;

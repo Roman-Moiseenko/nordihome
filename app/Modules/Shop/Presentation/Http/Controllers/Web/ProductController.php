@@ -11,7 +11,7 @@ use App\Modules\Shop\Application\Queries\Search\ProductSearchQuery;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
 
-class ProductAbstractController extends ShopAbstractController
+class ProductController extends ShopAbstractController
 {
     //  private ShopRepository $repository;
     private ViewRepository $views;

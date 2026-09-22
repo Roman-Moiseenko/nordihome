@@ -2,7 +2,6 @@
 
 namespace App\Modules\Catalog\Application\Actions\Series;
 
-use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Entity\Series;
 use App\Modules\Shared\Application\DTOs\ListNamePublishedData;
 

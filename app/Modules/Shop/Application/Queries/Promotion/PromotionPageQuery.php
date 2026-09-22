@@ -44,6 +44,7 @@ readonly class PromotionPageQuery
     {
         $web = $this->webSettingsUseCase->execute();
         $mainInfo = $this->repository->getPromotion($slug);
+        if (is_null($mainInfo)) return null;
         $key_cache = str_replace('{id}', (string)$mainInfo->id, CacheInvalidationRegistry::PROMOTION_PRODUCTS_ID);
 
         $perPage = 20;

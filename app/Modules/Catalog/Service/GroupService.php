@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Service;
 
-use App\Modules\Catalog\Entity\Group;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

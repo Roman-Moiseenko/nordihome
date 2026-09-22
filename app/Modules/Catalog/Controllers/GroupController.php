@@ -4,7 +4,7 @@ namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Application\Actions\Group\ListGroupUseCase;
-use App\Modules\Catalog\Entity\Group;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Repository\GroupRepository;
 use App\Modules\Catalog\Repository\ProductRepository;
 use App\Modules\Catalog\Service\GroupService;

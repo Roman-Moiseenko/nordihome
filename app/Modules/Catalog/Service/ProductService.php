@@ -5,7 +5,6 @@ namespace App\Modules\Catalog\Service;
 
 use App\Events\ParserPriceHasChange;
 use App\Events\ProductHasBlocked;
-use App\Events\ProductHasFastCreate;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Accounting\Service\StorageService;
@@ -13,9 +12,9 @@ use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Catalog\Entity\Bonus;
 use App\Modules\Catalog\Entity\Composite;
-use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Repository\TagRepository;
 use App\Modules\Parser\Domain\ValueObjects\Package;

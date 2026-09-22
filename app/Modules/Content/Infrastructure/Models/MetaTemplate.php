@@ -2,8 +2,8 @@
 
 namespace App\Modules\Content\Infrastructure\Models;
 
-use App\Modules\Catalog\Entity\Group;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Page;

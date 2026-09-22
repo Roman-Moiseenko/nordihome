@@ -4,6 +4,7 @@ namespace App\Modules\Shop\Providers;
 
 use App\Modules\Analytics\Infrastructure\ViewComposers\AnalyticsComposer;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Contact;
@@ -20,6 +21,7 @@ use App\Modules\Shop\Console\Commands\WarmShopCacheCommand;
 use App\Modules\Shop\Infrastructure\Observers\CategoryCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\ContactCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\FeedCacheObserver;
+use App\Modules\Shop\Infrastructure\Observers\GroupProductCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\IkeaCategoryCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\MenuCacheObserver;
 use App\Modules\Shop\Infrastructure\Observers\MenuItemCacheObserver;
@@ -128,6 +130,7 @@ class ShopServiceProvider extends ServiceProvider
         MenuItem::observe(MenuItemCacheObserver::class);
         Contact::observe(ContactCacheObserver::class);
         Promotion::observe(PromotionProductCacheObserver::class);
+        Group::observe(GroupProductCacheObserver::class);
         Feed::observe(FeedCacheObserver::class);
         Product::observe(ProductCacheObserver::class);
         Page::observe(PageCacheObserver::class);

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Repository;
 
-use App\Modules\Catalog\Entity\Group;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\PromotionGroup;
 use App\Modules\Discount\Infrastructure\Models\Promotion;

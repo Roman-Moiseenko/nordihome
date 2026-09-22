@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Console\Commands;
 
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Page;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
@@ -50,6 +51,12 @@ class ForgetShopCacheCommand extends Command
             $this->registry->forgetPromotion((int) $id);
         }
         $this->info('Кеши акций сброшены');
+
+        // 4. Группы  (товары, фильтры + фиды + sitemap)
+        foreach (Group::query()->pluck('id') as $id) {
+            $this->registry->forgetGroup((int) $id);
+        }
+        $this->info('Кеши групп сброшены');
 
         // 5. Контентные страницы (по slug + sitemap)
         foreach (Page::query()->pluck('slug') as $slug) {

@@ -12,7 +12,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller as BaseController;
 
-class CatalogAbstractController extends ShopAbstractController
+class CatalogController extends ShopAbstractController
 {
     public function __construct(
         private readonly CategoryPageQuery $categoryPageQuery,

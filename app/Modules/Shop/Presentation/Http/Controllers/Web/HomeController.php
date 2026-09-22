@@ -4,7 +4,7 @@ namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 
 use App\Modules\Content\Entity\Widgets\ProductWidget;
 
-class HomeAbstractController extends ShopAbstractController
+class HomeController extends ShopAbstractController
 {
 
     public function index()

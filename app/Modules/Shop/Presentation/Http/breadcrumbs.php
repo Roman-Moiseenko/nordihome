@@ -173,12 +173,14 @@ Breadcrumbs::for('shop.parser.product', function (BreadcrumbTrail $trail, $slug)
 });
 
 Breadcrumbs::for('shop.promotion.view', function (BreadcrumbTrail $trail, $slug) {
+
     $promotion = (new SlugRepository())->getPromotionBySlug($slug);
     $trail->parent('shop.home');
     $trail->push('Акция ' . $promotion->name, route('shop.promotion.view', $slug));
 });
 
 Breadcrumbs::for('shop.group.view', function (BreadcrumbTrail $trail, $slug) {
+
     $group = (new SlugRepository())->getGroupBySlug($slug);
     $trail->parent('shop.home');
     $trail->push('Группа товаров ' . $group->name, route('shop.group.view', $slug));

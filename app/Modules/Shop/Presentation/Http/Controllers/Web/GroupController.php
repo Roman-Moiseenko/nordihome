@@ -7,7 +7,7 @@ namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 use App\Modules\Shop\Application\Queries\Group\GroupPageQuery;
 use Illuminate\Http\Request;
 
-class GroupAbstractController extends ShopAbstractController
+class GroupController extends ShopAbstractController
 {
 
 
@@ -24,7 +24,7 @@ class GroupAbstractController extends ShopAbstractController
             $request->all(),
             $this->getClient($request)
         );
-
+        if (is_null($data)) abort(404, 'Группа товаров не найдена');
         return view('shop.product.index', [
             'pageData' => $data,
             'request' => $request->all(),

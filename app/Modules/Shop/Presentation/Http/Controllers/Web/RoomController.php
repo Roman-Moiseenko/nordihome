@@ -7,7 +7,7 @@ use App\Modules\Shop\Application\Queries\Room\RoomIndexQuery;
 use App\Modules\Shop\Application\Queries\Room\RoomPageQuery;
 use Illuminate\Http\Request;
 
-class RoomAbstractController extends ShopAbstractController
+class RoomController extends ShopAbstractController
 {
     public function __construct(
         private readonly RoomPageQuery $roomPageQuery,

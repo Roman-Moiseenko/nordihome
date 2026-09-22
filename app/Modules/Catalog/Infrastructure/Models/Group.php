@@ -1,10 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Entity;
+namespace App\Modules\Catalog\Infrastructure\Models;
 
 use App\Modules\Base\Traits\ImageField;
-use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Str;
@@ -15,6 +14,7 @@ use Illuminate\Support\Str;
  * @property string $slug
  * @property bool $published
  * @property string $description
+ * @property array $meta
  * @property Product[] $products
  */
 class Group extends Model
@@ -25,10 +25,15 @@ class Group extends Model
 
     protected $attributes = [
         'published' => false,
+        'meta' => '[]',
     ];
 
     protected $fillable = [
         'name', 'description', 'slug', 'published'
+    ];
+
+    protected $casts = [
+        'meta' => 'array',
     ];
 
     public static function register(string $name, string $description = '', string $slug = '', bool $published = false): static
