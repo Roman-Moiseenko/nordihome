@@ -30,7 +30,7 @@
                     @endforeach
                     <url>{{ $product->url }}</url>
                     <price>{{ $product->price }}</price>
-                    @if($data->info->preprice && $product->preprice != 0) <oldprice>{{ $product->preprice }}</oldprice> @endif
+                    @if($product->preprice > 0) <oldprice>{{ $product->preprice }}</oldprice> @endif
                     <currencyId>RUR</currencyId>
                     <vendorCode>{{ $product->code }}</vendorCode>
                     <store>{{ $product->store ? 'true' : 'false' }}</store>
