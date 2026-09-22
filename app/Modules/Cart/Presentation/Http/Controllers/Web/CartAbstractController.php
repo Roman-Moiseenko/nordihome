@@ -9,13 +9,13 @@ use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
 use App\Modules\Cart\Application\DTOs\AddProductToCartData;
 use App\Modules\Cart\Application\Queries\PageCartQuery;
 use App\Modules\Cart\Application\Services\AddProductToCartService;
-use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 
-class CartController extends ShopController
+class CartAbstractController extends ShopAbstractController
 {
     use RecordsAnalyticsAction;
 

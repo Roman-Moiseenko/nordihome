@@ -4,10 +4,10 @@ namespace App\Modules\Output\Presentation\Http\Controllers\Web;
 
 use App\Modules\Output\Application\DTOs\ECommerce\ECommerceEventData;
 use App\Modules\Output\Application\Queries\ECommerce\GetECommerceQuery;
-use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
 use Illuminate\Http\Request;
 
-class ECommerceController extends ShopController
+class ECommerceAbstractController extends ShopAbstractController
 {
     public function __construct(
         private readonly GetECommerceQuery $eCommerceQuery,

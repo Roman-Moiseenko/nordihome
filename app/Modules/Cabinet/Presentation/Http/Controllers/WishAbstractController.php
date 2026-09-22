@@ -5,7 +5,7 @@ namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
 use App\Modules\Cabinet\Application\Queries\PageWishQuery;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Repository\UserRepository;
 use App\Modules\User\Service\WishService;
@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use function response;
 use function view;
 
-class WishController extends ShopController
+class WishAbstractController extends ShopAbstractController
 {
     private WishService $service;
     private UserRepository $repository;

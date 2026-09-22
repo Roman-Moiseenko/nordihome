@@ -8,7 +8,7 @@ use App\Modules\Shop\Application\Queries\Post\PostIndexQuery;
 use App\Modules\Shop\Application\Queries\Post\PostPageQuery;
 use Illuminate\Http\Request;
 
-class PostController extends Controller
+class PostController extends ShopAbstractController
 {
 
     public function __construct(
@@ -31,10 +31,6 @@ class PostController extends Controller
 
     public function post($slug)
     {
-        //FIXME после переноса на виджеты удалить
-        $post = Post::where('slug', $slug)->firstOrFail();
-        if ($post->old_render) return $post->view(null);
-
         $data = $this->postPageQuery->execute($slug);
 
         return view('shop.content.post', [

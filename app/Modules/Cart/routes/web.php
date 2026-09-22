@@ -1,6 +1,6 @@
 <?php
 
-use App\Modules\Cart\Presentation\Http\Controllers\Web\CartController;
+use App\Modules\Cart\Presentation\Http\Controllers\Web\CartAbstractController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -19,13 +19,13 @@ Route::group(
         'as' => 'shop.',
     ],
     function () {
-        Route::get('/cart', [CartController::class, 'view'])->name('cart.view');
+        Route::get('/cart', [CartAbstractController::class, 'view'])->name('cart.view');
         Route::group([
             'prefix' => 'cart_post',
             'as' => 'cart.',
         ], function () {
             //Route::post('/cart', [CartController::class, 'cart'])->name('all');
-            Route::post('/add', [CartController::class, 'add'])->name('add');
+            Route::post('/add', [CartAbstractController::class, 'add'])->name('add');
             //     Route::post('/sub/{product}', [CartController::class, 'sub'])->name('sub');
             //     Route::post('/set/{product}', [CartController::class, 'set'])->name('set');
             //      Route::post('/check/{product}', [CartController::class, 'check'])->name('check');

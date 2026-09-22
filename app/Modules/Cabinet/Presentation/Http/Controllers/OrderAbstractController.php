@@ -8,7 +8,7 @@ use App\Modules\Cabinet\Application\Queries\GetOrderClientQuery;
 use App\Modules\Cabinet\Application\Queries\GetOrdersClientQuery;
 use App\Modules\Cabinet\Application\Queries\PageNewOrderQuery;
 use App\Modules\Order\Infrastructure\Models\Order;
-use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use function view;
@@ -16,7 +16,7 @@ use function view;
 /**
  * Контроллер для просмотра заказов клиента
  */
-class OrderController extends ShopController
+class OrderAbstractController extends ShopAbstractController
 {
     public function __construct(
         private readonly GetOrdersClientQuery $getOrdersClientQuery,

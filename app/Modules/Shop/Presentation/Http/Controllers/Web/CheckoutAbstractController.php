@@ -18,7 +18,7 @@ use Illuminate\View\View;
 /**
  * Контроллер по созданию заказа из клиентской части, для просмотра используется контроллер из User
  */
-class CheckoutController extends ShopController
+class CheckoutAbstractController extends ShopAbstractController
 {
     use RecordsAnalyticsAction;
 

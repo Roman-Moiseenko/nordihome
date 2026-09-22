@@ -6,13 +6,13 @@ namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Cabinet\Application\Queries\PageCabinetQuery;
-use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
 use App\Modules\User\Service\UserService;
 use Illuminate\Http\Request;
 use function response;
 use function view;
 
-class CabinetController extends ShopController
+class CabinetAbstractController extends ShopAbstractController
 {
 
     private UserService $service;

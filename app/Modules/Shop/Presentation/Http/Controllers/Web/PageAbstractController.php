@@ -6,7 +6,7 @@ namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 use App\Modules\Shop\Application\Queries\Page\PageViewQuery;
 use Illuminate\Contracts\View\View;
 
-class PageController extends \App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController
+class PageAbstractController extends \App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController
 {
 
     public function __construct(

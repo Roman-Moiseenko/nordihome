@@ -7,7 +7,7 @@ namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 use App\Modules\Shop\Application\Queries\Group\GroupPageQuery;
 use Illuminate\Http\Request;
 
-class GroupController extends ShopController
+class GroupAbstractController extends ShopAbstractController
 {
 
 

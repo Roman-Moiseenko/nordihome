@@ -5,7 +5,7 @@ namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
 
 use App\Modules\Cabinet\Application\Queries\PageOptionsQuery;
-use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopController;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
 use App\Modules\User\Entity\Subscription;
 use App\Modules\User\Entity\User;
 use App\Modules\User\Service\SubscriptionService;
@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use function response;
 use function view;
 
-class OptionsController extends ShopController
+class OptionsAbstractController extends ShopAbstractController
 {
 
     private SubscriptionService $service;

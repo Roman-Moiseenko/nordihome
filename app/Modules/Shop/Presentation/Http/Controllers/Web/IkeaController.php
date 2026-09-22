@@ -8,7 +8,7 @@ use App\Modules\Shop\Application\Queries\Ikea\IkeaProductQuery;
 use App\Modules\Shop\Application\Queries\Ikea\IkeaViewQuery;
 use Illuminate\Http\Request;
 
-class IkeaController extends Controller
+class IkeaController extends ShopAbstractController
 {
 
     public function __construct(
