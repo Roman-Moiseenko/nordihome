@@ -19,13 +19,13 @@
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <a href="/catalog/" class="c-mini-item b-radius_12">
+                <a href="/catalog/" class="c-mini-item m-b_10 b-radius_12">
                     <img src="/images/pages/home/t-nalichie-min.jpg" alt="Товары Икеа в наличии">
                     <div class="heading">Каталог товаров в наличии</div>
                 </a>
             </div>
             <div class="col-md-6">
-                <a href="/ikea/" class="c-mini-item b-radius_12">
+                <a href="/ikea/" class="c-mini-item m-b_10 b-radius_12">
                     <img src="/images/pages/home/t-zakaz-min.jpg" alt="Товары Икеа под заказ">
                     <div class="heading">Каталог Икеа под заказ</div>
                 </a>

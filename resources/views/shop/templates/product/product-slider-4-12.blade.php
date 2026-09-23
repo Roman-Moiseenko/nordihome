@@ -22,10 +22,8 @@
                    style="max-width: 100%; overflow: hidden;">
                     <img loading="lazy" src="{{ $_product->getImage('catalog') }}"
                          alt="{{ $_product->getName() }}" style="width: 100%;"/>
-                </a>
-                <a href="{{ route('shop.product.view', $_product->slug) }}">
-                    <div class="name">{{ $_product->getName() }}</div>
-                    <div class="price">{{ price($_product->getPrice()) }}</div>
+                    <div class="name f-w_600 m-b_10">{{ $_product->getName() }}</div>
+                    <div class="price m-b_10">{{ price($_product->getPrice()) }}</div>
                 </a>
                 <div>
                     <button class="to-cart btn btn-black e-add" data-product="{{$_product->id}}">

@@ -199,7 +199,7 @@
 
     @include('shop.product._reviews', ['reviews' => $pageData->reviews])
 
-    <section class="related-products">
+    <!-- <section class="related-products">
         <h2 id="с-этим-товаром-часто-покупают">С этим товаром часто покупают</h2>
         <div id="" class="owl-carousel owl-theme slider-images-product">
             <div>
@@ -225,7 +225,7 @@
             </div>
 
         </div>
-    </section>
+    </section> -->
 
     @include('shop.product._delivery')
 
