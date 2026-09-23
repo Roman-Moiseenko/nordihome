@@ -13,7 +13,9 @@ class ProductWidgetRepository
 
     public function getIndex(\Illuminate\Http\Request $request): Arrayable
     {
-        return ProductWidget::with('modelable')->get()->map(fn(ProductWidget $widget) => $this->WidgetToArray($widget));
+        return ProductWidget::with('modelable')
+            ->get()
+            ->map(fn(ProductWidget $widget) => $this->WidgetToArray($widget));
     }
 
     private function WidgetToArray(ProductWidget $widget): array

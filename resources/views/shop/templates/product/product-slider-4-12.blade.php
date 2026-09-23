@@ -1,4 +1,4 @@
-<!--template:Слайдер товаров старый шаблон -->
+<!--template:Слайдер товаров -->
 @php
     /**
     * $widget->name
@@ -16,7 +16,7 @@
     <h3>{{ $widget->description }}</h3>
 
     <div id="" class="owl-carousel owl-theme slider-images-product">
-        @foreach($widget->products(8) as $_product)
+        @foreach($widget->products(12) as $_product)
             <div style="">
                 <a href="{{ route('shop.product.view', $_product->slug) }}"
                    style="max-width: 100%; overflow: hidden;">
@@ -24,10 +24,8 @@
                          alt="{{ $_product->getName() }}" style="width: 100%;"/>
                 </a>
                 <a href="{{ route('shop.product.view', $_product->slug) }}">
-                    <div class="d-flex justify-content-between">
-                        <div class="name">{{ $_product->getName() }}</div>
-                        <div class="price">{{ price($_product->getPrice()) }}</div>
-                    </div>
+                    <div class="name">{{ $_product->getName() }}</div>
+                    <div class="price">{{ price($_product->getPrice()) }}</div>
                 </a>
                 <div>
                     <button class="to-cart btn btn-black e-add" data-product="{{$_product->id}}">
@@ -38,7 +36,7 @@
         @endforeach
     </div>
     @if(!empty($widget->getUrl()))
-        <div>
+        <div class="t-a_center m-t_10">
             <a href="{{ $widget->getUrl() }}">{{ $widget->button_name }}</a>
         </div>
     @endif

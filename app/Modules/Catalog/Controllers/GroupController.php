@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Application\Actions\Group\ListGroupUseCase;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Repository\GroupRepository;
-use App\Modules\Catalog\Repository\ProductRepository;
 use App\Modules\Catalog\Service\GroupService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -17,18 +16,15 @@ use Inertia\Response;
 class GroupController extends Controller
 {
     private GroupService $service;
-    private ProductRepository $products;
     private GroupRepository $repository;
 
     public function __construct(
         GroupService $service,
-        ProductRepository $products,
         GroupRepository $repository,
         private readonly ListGroupUseCase $listGroupUseCase,
     )
     {
         $this->service = $service;
-        $this->products = $products;
         $this->repository = $repository;
     }
 
