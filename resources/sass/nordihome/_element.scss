@@ -121,10 +121,25 @@
     bottom: 75px;
 }
 @media screen and (max-width: 991px) {
+    .mob-bottom-open {
+        bottom: 127px;
+        &.show {
+            bottom: 127px;
+        }
+    }
     .scrollup {
         &.is-active {
-
+            bottom: 195px;
         }
+    }
+    .online-chat-root-TalkMe {
+        #supportTrigger {
+            bottom: 65px !important;
+            right: 15px !important;
+        }
+    }
+    .mob-bottom {
+        bottom: 125px;
     }
 }
 

@@ -4,7 +4,7 @@
 
 @endphp
 @if(!empty($items))
-    <div class="article-chapter">
+    <div class="article-chapter link-blue">
         <p><b>В этой статье:</b></p>
         <ul>
             @foreach($items as $item)
