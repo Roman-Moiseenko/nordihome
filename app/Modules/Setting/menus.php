@@ -62,6 +62,14 @@ return [
                 'route_name' => 'admin.setting.image',
                 'font_awesome' => 'fa-light fa-image',
             ],
+            'cache' => [
+                'title' => 'Кеширование',
+                'action' => true,
+                'vue' => true,
+                'route_name' => 'admin.setting.cache',
+                'font_awesome' => 'fa-light fa-database',
+            ],
+
         ],
     ],
 ];

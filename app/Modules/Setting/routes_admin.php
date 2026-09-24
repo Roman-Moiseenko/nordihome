@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Setting\Controllers\SettingCacheController;
 use App\Modules\Setting\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,19 @@ Route::get('/setting/notification', [SettingController::class, 'notification'])-
 Route::get('/setting/image', [SettingController::class, 'image'])->name('setting.image');
 
 Route::put('/setting', [SettingController::class, 'update'])->name('setting.update');
+
+
+Route::group([
+    'prefix' => 'setting/cache',
+    'as' => 'setting.cache.'
+], function () {
+    Route::get('/', [SettingCacheController::class, 'index'])->name('index');
+
+    Route::post('/clear-all', [SettingCacheController::class, 'clearAll'])->name('clear-all');
+    Route::post('/clearImage', [SettingCacheController::class, 'clearImage'])->name('clear-image');
+
+    Route::post('/recache', [SettingCacheController::class, 'recache'])->name('recache');
+});
 
 
 

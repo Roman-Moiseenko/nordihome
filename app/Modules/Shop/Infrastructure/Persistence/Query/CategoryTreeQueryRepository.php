@@ -55,7 +55,7 @@ class CategoryTreeQueryRepository
                     name: $item->name,
                     slug: $item->slug,
                     svg: $item->svg ?? '',
-                    image: $this->imageThumbUseCase->execute($item),
+                    image: $this->imageThumbUseCase->execute($item, 'catalog-free'),
                     children: $children
                 );
             }
