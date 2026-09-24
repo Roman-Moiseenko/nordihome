@@ -41,3 +41,7 @@ Breadcrumbs::for('admin.setting.image', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.setting.index');
     $trail->push('Изображения', route('admin.setting.image'));
 });
+Breadcrumbs::for('admin.setting.cache.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.setting.index');
+    $trail->push('Кеширование', route('admin.setting.cache.index'));
+});

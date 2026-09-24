@@ -66,7 +66,7 @@ return [
                 'title' => 'Кеширование',
                 'action' => true,
                 'vue' => true,
-                'route_name' => 'admin.setting.cache',
+                'route_name' => 'admin.setting.cache.index',
                 'font_awesome' => 'fa-light fa-database',
             ],
 
