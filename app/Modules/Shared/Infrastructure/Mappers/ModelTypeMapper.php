@@ -22,7 +22,7 @@ class ModelTypeMapper
         'parser.product' => \App\Modules\Parser\Infrastructure\Models\ParserProduct::class,
 
         'content.post' => \App\Modules\Content\Infrastructure\Models\Post::class,
-       // 'content.page' => \App\Modules\Content\Infrastructure\Models\Page::class,
+        'content.page' => \App\Modules\Content\Infrastructure\Models\Page::class,
         'content.banner-widget-item' => \App\Modules\Content\Entity\Widgets\BannerWidgetItem::class,
 
         'discount.promotion' => \App\Modules\Discount\Infrastructure\Models\Promotion::class,

@@ -1,159 +1,102 @@
 <template>
-    <el-row :gutter="10" v-if="!editPage">
-        <el-col :span="6">
-            <el-tooltip content="Изображение для каталога" placement="top-start" effect="dark">
-                <el-image
-                    style="width: 200px; height: 200px"
-                    :src="page.image"
-                    :zoom-rate="1.2"
-                    :max-scale="7"
-                    :min-scale="0.2"
-                    :initial-index="4"
-                    :preview-src-list="[page.image]"
-                    fit="cover"
-                />
-            </el-tooltip>
-        </el-col>
-        <el-col :span="18">
-            <el-descriptions v-if="!editPage" :column="3" border class="mb-5">
-                <el-descriptions-item label="Страница">
-                    {{ page.name }}
-                </el-descriptions-item>
-                <el-descriptions-item label="Ссылка">
-                    {{ page.slug }}
-                </el-descriptions-item>
-                <el-descriptions-item label="Родительская">
-                    {{ page.parent_name }}
-                </el-descriptions-item>
-                <el-descriptions-item label="Шаблон">
-                    {{ page.template }}
-                </el-descriptions-item>
-                <el-descriptions-item label="svg">
-                    <span v-html="page.svg"/>
-                </el-descriptions-item>
-                <el-descriptions-item label="Мета Заголовок">
-                    {{ page.meta.title }}
-                </el-descriptions-item>
-                <el-descriptions-item label="Мета Описание">
-                    {{ page.meta.description }}
-                </el-descriptions-item>
-            </el-descriptions>
-        </el-col>
-    </el-row>
-    <el-button v-if="!editPage" type="warning" @click="editPage = true">Изменить</el-button>
-
-    <el-link v-if="!editPage" type="info" :underline="false" class="ml-2"
-             :href="route('shop.page.view', {slug: page.slug})"
-             target="_blank">
-        Просмотр
-    </el-link>
-
-    <el-row v-if="editPage" :gutter="10">
-        <el-col :span="10">
-            <el-form v-if="editPage" label-width="auto">
+    <el-form label-width="auto">
+        <el-row :gutter="10">
+            <el-col :span="4">
+                <el-tooltip content="Изображение для каталога" placement="top-start" effect="dark">
+                    <PhotoDTO model-type="content.page" :entity-id="page.id" type="image"/>
+                </el-tooltip>
+            </el-col>
+            <el-col :span="10">
                 <el-form-item label="Страница">
-                    <el-input v-model="form.name"/>
+                    <el-input v-model="info.name"/>
                 </el-form-item>
                 <el-form-item label="Ссылка">
-                    <el-input v-model="form.slug" clearable/>
+                    <el-input v-model="info.slug" clearable/>
                 </el-form-item>
                 <el-form-item label="Родительская">
-                    <el-select v-model="form.parent_id" clearable filterable>
+                    <el-select v-model="info.parent_id" clearable filterable>
                         <el-option v-for="item in pages" :key="item.id" :value="item.id" :label="item.name"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Шаблон">
-                    <el-select v-model="form.template">
+                    <el-select v-model="info.template">
                         <el-option v-for="item in templates" :key="item.value" :value="item.value" :label="item.label"/>
                     </el-select>
                 </el-form-item>
+            </el-col>
+            <el-col :span="10">
                 <el-form-item label="svg иконка">
-                    <el-input v-model="form.svg" type="textarea" rows="3"/>
+                    <el-input v-model="info.svg" type="textarea" :rows="3"/>
                 </el-form-item>
                 <el-form-item label="Мета Заголовок">
-                    <el-input v-model="form.meta_title"/>
+                    <el-input v-model="info.meta_title"/>
                 </el-form-item>
                 <el-form-item label="Мета Описание">
-                    <el-input v-model="form.meta_description" type="textarea" rows="3"/>
+                    <el-input v-model="info.meta_description" type="textarea" :rows="3"/>
                 </el-form-item>
-
-                <el-button type="info" @click="editPage = false">Отмена</el-button>
-                <el-button type="success" @click="setPage">Сохранить</el-button>
-            </el-form>
-        </el-col>
-        <el-col :span="6">
-            <UploadImageFile
-                label="Изображение для каталога"
-                v-model:image="page.image"
-                @selectImageFile="onSelectImage"
-            />
-        </el-col>
-        <el-col :span="8">
-            <HelpBlock>
-                <p><b>Название страницы</b> является обязательным полем.</p>
-                <p>Поле <b>Slug</b> (ссылка на страницу) можно не заполнять, тогда оно заполнится автоматически. При
-                    заполнении использовать латинский алфавит.</p>
-                <p>Рекомендуемое разрешение для <b>картинок</b> в карточку категории 700х700.</p>
-                <p><b>Иконки</b> для меню рекомендуется сохранять в форматах разрешающие прозрачный цвет - png, svg.
-                    Разрешение не более 200х200.</p>
-                <p>Поля <b>Meta</b> используются в SEO. Для заполнения обязательны.</p>
-            </HelpBlock>
-        </el-col>
-    </el-row>
+            </el-col>
+        </el-row>
+        <el-button v-if="hasChanges" type="info" @click="onCancel" style="margin-left: 4px">
+            Отмена
+        </el-button>
+        <el-button v-if="hasChanges" type="success" @click="onSetInfo">
+            Сохранить
+        </el-button>
+    </el-form>
 </template>
 
-<script setup lang="ts">
-/*
-scope.row.published
-             ? route('shop.product.view', {slug: scope.row.slug})
-             : route('shop.product.view-draft', {product: scope.row.id})
- */
-
-import {defineProps, reactive, ref} from "vue";
+<script setup>
+import {reactive, computed} from "vue";
 import {router} from "@inertiajs/vue3";
-import Active from "@Comp/Elements/Active.vue";
-
-import {ISelectItem} from '@Res/interface.d.ts'
-import UploadImageFile from "@Comp/UploadImageFile.vue";
-import HelpBlock from "@Comp/HelpBlock.vue";
-import {route} from "ziggy-js";
+import PhotoDTO from "@Comp/PhotoDTO.vue";
 
 const props = defineProps({
     page: Object,
-    templates: Array<ISelectItem>,
+    templates: Array,
     pages: Array,
 })
 
-const editPage = ref(false)
-const form = reactive({
+// --- Исходные данные из пропсов (эталон для отмены) ---
+const initialInfo = {
     name: props.page.name,
-    slug: props.page.slug,
-    parent_id: props.page.parent_id,
+    slug: props.page.slug ?? '',
+    parent_id: props.page.parent_id ?? null,
     template: props.page.template,
-    svg: props.page.svg,
-
-    image: null,
-    clear_image: false,
-    meta_title: props.page.meta.title,
-    meta_description: props.page.meta.description,
-})
-
-
-function setPage() {
-    router.visit(route('admin.content.page.set-info', {page: props.page.id}), {
-        method: "post",
-        data: form,
-        preserveScroll: true,
-        preserveState: true,
-        onSuccess: page => {
-            editPage.value = false;
-        }
-    })
+    svg: props.page.svg ?? '',
+    meta_title: props.page.meta?.title ?? '',
+    meta_description: props.page.meta?.description ?? '',
 }
 
-function onSelectImage(val: any) {
-    form.clear_image = val.clear_file
-    form.image = val.file
+const info = reactive({...initialInfo})
+
+// --- Отслеживание изменений ---
+const hasChanges = computed(() => {
+    for (const key of Object.keys(initialInfo)) {
+        const a = JSON.stringify(info[key])
+        const b = JSON.stringify(initialInfo[key])
+        if (a !== b) return true
+    }
+    return false
+})
+
+function onCancel() {
+    Object.assign(info, {...initialInfo})
+}
+
+function onSetInfo() {
+    router.visit(
+        route('admin.content.page.set-info', {page: props.page.id}), {
+            method: "post",
+            data: {...info},
+            onSuccess: page => {
+                Object.assign(initialInfo, JSON.parse(JSON.stringify(info)))
+            }
+        }
+    );
 }
 
 </script>
+
+<style scoped>
+
+</style>
