@@ -43,8 +43,6 @@ class PageService
         $page->template = $request->string('template')->value();
         $page->meta->fromRequest($request);
         $page->save();
-
-        $page->saveImage($request->file('image'), $request->boolean('clear_image'));
     }
 
     public function up(Page $page): void
