@@ -25,16 +25,16 @@ class PhotoService
 
     private Settings $settings;
     private array $thumbs = [];
-    public bool $createThumbsOnSave;
-    private bool $createThumbsOnRequest;
+    //   public bool $createThumbsOnSave;
+    //  private bool $createThumbsOnRequest;
 
     public function __construct()
     {
         $this->settings = app()->make(Settings::class);
 
         $this->thumbs = $this->settings->image->thumbs ?? [];
-        $this->createThumbsOnSave = $this->settings->image->createThumbsOnSave ?? false;
-        $this->createThumbsOnRequest = $this->settings->image->createThumbsOnRequest ?? false;
+        //    $this->createThumbsOnSave = $this->settings->image->createThumbsOnSave ?? false;
+        //   $this->createThumbsOnRequest = $this->settings->image->createThumbsOnRequest ?? false;
 
         $this->catalogUpload = public_path() . self::URL_UPLOAD;
         $this->catalogThumb = public_path() . self::URL_THUMB;
@@ -44,7 +44,7 @@ class PhotoService
      * Генерация пути: /{slug_basename_class}/{imageable_id}/
      * Для model_type "catalog.room" используем "room" как имя папки
      */
-    public function patternGeneratePath(string $modelType, int $imageableId): string
+    private function patternGeneratePath(string $modelType, int $imageableId): string
     {
         [$module, $model] = explode('.', $modelType);
         return '/' . $module . '/' . $model . '/' . $imageableId . '/';
@@ -55,7 +55,7 @@ class PhotoService
      * Удаляет старый файл и все thumbs
      * Возвращает имя файла
      */
-    public function uploadFile(string $modelType, int $imageableId, UploadedFile $file, ?string $oldFileName = null, bool $thumb = true): string
+    public function uploadFile(string $modelType, int $imageableId, UploadedFile $file, ?string $oldFileName = null): string
     {
         $path = $this->patternGeneratePath($modelType, $imageableId);
         $uploadDir = $this->catalogUpload . $path;
@@ -63,25 +63,13 @@ class PhotoService
         // Удаляем старый файл, если есть
         if ($oldFileName) {
             $oldFile = $uploadDir . $oldFileName;
-            if (is_file($oldFile)) {
-                unlink($oldFile);
-            }
+            if (is_file($oldFile)) unlink($oldFile);
             // Очищаем thumbs от старого файла
             $this->clearThumbs($modelType, $imageableId, $oldFileName);
         }
 
         // Создаем каталог для загрузок
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        // Создаем каталог для thumbs
-        if ($thumb) {
-            $thumbDir = $this->catalogThumb . $path;
-            if (!is_dir($thumbDir)) {
-                mkdir($thumbDir, 0777, true);
-            }
-        }
+        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
         $fileName = $file->getClientOriginalName();
         copy($file->getPath() . '/' . $file->getFilename(), $uploadDir . $fileName);
@@ -94,9 +82,8 @@ class PhotoService
      */
     public function getUploadUrl(string $modelType, int $imageableId, string $fileName): string
     {
-        if (empty($fileName)) {
-            return '';
-        }
+        if (empty($fileName)) return '';
+
         return self::URL_UPLOAD . $this->patternGeneratePath($modelType, $imageableId) . $fileName;
     }
 
@@ -110,141 +97,119 @@ class PhotoService
 
         $file = self::URL_THUMB . $path . $this->nameFileThumb($photoId, $fileName, $thumb);
 
-        //if (!is_file($file)) { //$this->createThumbsOnRequest
-            $this->createThumbs($photoId, $modelType, $imageableId, $fileName, $thumb);
-        //}
+        $this->createThumbs($photoId, $modelType, $imageableId, $fileName, $thumb);
 
-        return $file; //self::URL_THUMB . $path . $this->nameFileThumb($photoId, $fileName, $thumb);
+        return $file;
     }
 
     /**
      * Создаёт все thumbs для файла (по настройкам из Settings)
      */
-    public function createThumbs(int $photoId, string $modelType, int $imageableId, string $fileName, string $thumb): void
+    private function createThumbs(int $photoId, string $modelType, int $imageableId, string $fileName, string $thumb): void
     {
-        $uploadPath = $this->catalogUpload . $this->patternGeneratePath($modelType, $imageableId) . $fileName;
+        $generatePath = $this->patternGeneratePath($modelType, $imageableId);
+
+        $uploadPath = $this->catalogUpload . $generatePath . $fileName;
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
 
-        if (!is_file($uploadPath)) {
-            return;
-        }
+        if (!is_file($uploadPath)) return; //Нет загруженного файла
 
-        if (!in_array(mb_strtolower($ext), ['jpg', 'jpeg', 'png', 'webp'], true)) {
-            return;
-        }
+        if (!in_array(mb_strtolower($ext), ['jpg', 'jpeg', 'png', 'webp'], true)) return; //Расширение невверное
+
         foreach ($this->thumbs as $items) {
             if ($items['name'] == $thumb) {
                 $params = $items;
                 break;
             }
         }
+        if (!isset($params)) return; //Нет параметров для thumb файла
 
-        if (!isset($params))  return;
+        $thumbFile = $this->catalogThumb
+            . $generatePath
+            . $this->nameFileThumb($photoId, $fileName, $params['name']);
+        if (is_file($thumbFile)) return; // Файл уже есть
 
-       // foreach ($this->thumbs as $params) {
-            $thumbFile = $this->catalogThumb
-                . $this->patternGeneratePath($modelType, $imageableId)
-                . $this->nameFileThumb($photoId, $fileName, $params['name']);
-            if (is_file($thumbFile)) {
-                return; // уже есть
-            }
+        $thumbDir = $this->catalogThumb . $generatePath; //Создать директорию если нет
+        if (!is_dir($this->catalogThumb . $generatePath)) mkdir($thumbDir, 0777, true);
 
-            $manager = new ImageManager();
-            try {
-                $img = $manager->make($uploadPath);
-            } catch (\Throwable $e) {
-                return;
-            }
-            /*
+
+        $manager = new ImageManager();
+        try {
+            $img = $manager->make($uploadPath);
+        } catch (\Throwable $e) {
+            return;
+        }
+
+        // 1. ПРИВОДИМ К ПРОПОРЦИЯМ КОНЕЧНОГО ИЗОБРАЖЕНИЯ (БЕЗ РЕСАЙЗА)
         if (isset($params['width'], $params['height'])) {
+            $targetAspect = $params['width'] / $params['height'];
+
             if (!empty($params['fit'])) {
-                $img->fit($params['width'], $params['height']);
-            } else {
-                $scaleW = $img->width() / $params['width'];
-                $scaleH = $img->height() / $params['height'];
-                $scale = max($scaleW, $scaleH);
-                $img->fit((int)($img->width() / $scale), (int)($img->height() / $scale));
-                $img->resizeCanvas($params['width'], $params['height']);
-            }
-        }*/
-            // 1. ПРИВОДИМ К ПРОПОРЦИЯМ КОНЕЧНОГО ИЗОБРАЖЕНИЯ (БЕЗ РЕСАЙЗА)
-            if (isset($params['width'], $params['height'])) {
-                $targetAspect = $params['width'] / $params['height'];
-
-                if (!empty($params['fit'])) {
-                    // ОБРЕЗКА: Вырезаем по центру кусок в нужной пропорции.
-                    $currentAspect = $img->width() / $img->height();
-                    if ($currentAspect > $targetAspect) {
-                        $cropW = (int)($img->height() * $targetAspect);
-                        $cropH = $img->height();
-                    } else {
-                        $cropW = $img->width();
-                        $cropH = (int)($img->width() / $targetAspect);
-                    }
-                    $img->crop($cropW, $cropH);
+                // ОБРЕЗКА: Вырезаем по центру кусок в нужной пропорции.
+                $currentAspect = $img->width() / $img->height();
+                if ($currentAspect > $targetAspect) {
+                    $cropW = (int)($img->height() * $targetAspect);
+                    $cropH = $img->height();
                 } else {
-                    // БЕЗ ОБРЕЗКИ: Создаем БОЛЬШОЙ холст в нужной пропорции и добавляем белые поля
-                    $canvasH = $img->height();
-                    $canvasW = (int)($canvasH * $targetAspect);
-
-                    if ($canvasW < $img->width()) {
-                        $canvasW = $img->width();
-                        $canvasH = (int)($canvasW / $targetAspect);
-                    }
-                    $img->resizeCanvas($canvasW, $canvasH, 'center', false, '#ffffff');
+                    $cropW = $img->width();
+                    $cropH = (int)($img->width() / $targetAspect);
                 }
-            }
+                $img->crop($cropW, $cropH);
+            } else {
+                // БЕЗ ОБРЕЗКИ: Создаем БОЛЬШОЙ холст в нужной пропорции и добавляем белые поля
+                $canvasH = $img->height();
+                $canvasW = (int)($canvasH * $targetAspect);
 
-            if (!empty($params['watermark'])) {
-                $watermark = $manager->make(public_path() . $this->settings->image->watermark_file);
-                $watermark->resize(
-                    (int)($img->width() * $this->settings->image->watermark_size),
-                    (int)($img->width() * $this->settings->image->watermark_size)
-                );
-                $img->insert(
-                    $watermark,
-                    $this->settings->image->watermark_position,
-                    $this->settings->image->watermark_offset,
-                    $this->settings->image->watermark_offset
-                );
+                if ($canvasW < $img->width()) {
+                    $canvasW = $img->width();
+                    $canvasH = (int)($canvasW / $targetAspect);
+                }
+                $img->resizeCanvas($canvasW, $canvasH, 'center', false, '#ffffff');
             }
-            if (isset($params['width'], $params['height'])) {
-                $img->resize($params['width'], $params['height']);
-            }
-            $thumbDir = pathinfo($thumbFile, PATHINFO_DIRNAME);
-            if (!is_dir($thumbDir)) {
-                mkdir($thumbDir, 0777, true);
-            }
+        }
 
-            if (in_array(mb_strtolower($ext), ['jpg', 'jpeg', 'webp'], true)) {
-                $img->encode(null, 70);
-            }
-            $img->save($thumbFile);
+        if (!empty($params['watermark'])) {
+            $watermark = $manager->make(public_path() . $this->settings->image->watermark_file);
+            $watermark->resize(
+                (int)($img->width() * $this->settings->image->watermark_size),
+                (int)($img->width() * $this->settings->image->watermark_size)
+            );
+            $img->insert(
+                $watermark,
+                $this->settings->image->watermark_position,
+                $this->settings->image->watermark_offset,
+                $this->settings->image->watermark_offset
+            );
+        }
+        if (isset($params['width'], $params['height'])) {
+            $img->resize($params['width'], $params['height']);
+        }
+        $thumbDir = pathinfo($thumbFile, PATHINFO_DIRNAME);
+        if (!is_dir($thumbDir)) {
+            mkdir($thumbDir, 0777, true);
+        }
+
+        if (in_array(mb_strtolower($ext), ['jpg', 'jpeg', 'webp'], true)) {
+            $img->encode(null, 70);
+        }
+        $img->save($thumbFile);
         //}
     }
 
     /**
      * Удаляет все thumb-файлы для изображения
      */
-    public function clearThumbs(string $modelType, int $imageableId, string $fileName): void
+    private function clearThumbs(string $modelType, int $imageableId, string $fileName): void
     {
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
-        if (!$ext) {
-            return;
-        }
-
+        if (!$ext) return;
         $path = $this->catalogThumb . $this->patternGeneratePath($modelType, $imageableId);
-
-        if (!is_dir($path)) {
-            return;
-        }
+        if (!is_dir($path)) return;
 
         foreach ($this->thumbs as $params) {
             $thumbFile = $path . $params['name'] . '_*.' . $ext;
             foreach (glob($thumbFile) as $file) {
-                if (is_file($file)) {
-                    unlink($file);
-                }
+                if (is_file($file)) unlink($file);
             }
         }
     }

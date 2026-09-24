@@ -12,10 +12,10 @@ use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
 
-class PhotoRepository implements PhotoRepositoryInterface
+readonly class PhotoRepository implements PhotoRepositoryInterface
 {
     public function __construct(
-        private readonly PhotoService $photoService,
+        private PhotoService $photoService,
     )
     {
     }
@@ -185,7 +185,6 @@ class PhotoRepository implements PhotoRepositoryInterface
                 $model->imageable_id,
                 $data['file'],
                 $model->file,
-                $data['thumb'] ?? $model->thumb,
             );
         }
 
