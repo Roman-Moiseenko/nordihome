@@ -10,7 +10,7 @@
             list-type="picture-card"
             :limit="1"
             :auto-upload="false"
-            :file-list="fileList"
+            v-model:file-list="fileList"
             :on-change="onFileChange"
             :on-remove="handleRemove"
             :on-preview="handlePreview"
@@ -27,7 +27,7 @@
             :action="uploadAction"
             list-type="picture-card"
             :auto-upload="false"
-            :file-list="fileList"
+            v-model:file-list="fileList"
             :on-change="onFileChange"
             :on-remove="handleRemove"
             :on-preview="handlePreview"
@@ -158,13 +158,21 @@ function onFileChange(uploadFile: UploadFile) {
         }
     }).then(response => {
         if (props.type === 'gallery') {
+            const data = {
+                name: response.data.url,
+                id: response.data.id,
+                url: response.data.url,
+                alt: response.data.alt || '',
+                title: response.data.title || '',
+                description: response.data.description || '',
+            }
+
             const index = fileList.value.findIndex(f => f.uid === uploadFile.uid)
             if (index !== -1) {
-                fileList.value[index].id = response.data.id
-                fileList.value[index].url = response.data.url
-                fileList.value[index].alt = response.data.alt || ''
-                fileList.value[index].title = response.data.title || ''
-                fileList.value[index].description = response.data.description || ''
+                fileList.value[index] = { ...fileList.value[index], ...data }
+            } else {
+                // Если элемент не найден в списке — перезагружаем галерею из базы
+                loadImages()
             }
         } else {
             fileList.value = [{

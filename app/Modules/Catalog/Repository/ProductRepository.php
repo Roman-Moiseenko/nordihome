@@ -196,7 +196,7 @@ class ProductRepository
                     'quantity' => $product->pivot->quantity,
                 ];
             }),
-            'photos' => $product->gallery()->where('imageable_id', $product->id)->get()->map(function (Photo $photo) {
+            /*'photos' => $product->gallery()->where('imageable_id', $product->id)->get()->map(function (Photo $photo) {
                 return [
                     'id' => $photo->id,
                     'name' => $photo->file,
@@ -205,7 +205,7 @@ class ProductRepository
                     'title' => $photo->title,
                     'description' => $photo->description,
                 ];
-            }),
+            }),*/
         ]);
     }
 

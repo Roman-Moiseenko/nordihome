@@ -18,14 +18,29 @@ readonly class GetPhotoByEntityUseCase
     {
     }
 
-    public function execute(PhotoByEntityData $dto): ?PhotoEntity
+    /**
+     * @return PhotoEntity|PhotoEntity[]|null
+     * Для одиночных типов (icon/image) возвращает одно фото,
+     * для gallery — массив фото.
+     */
+    public function execute(PhotoByEntityData $dto, UserPermission $userPermission): PhotoEntity|array|null
     {
         // Без проверки прав доступа
 
-        return $this->photoRepository->findByEntity(
+        $type = new PhotoType($dto->type);
+
+        if ($type->isSingle()) {
+            return $this->photoRepository->findByEntity(
+                (int) $dto->imageableId,
+                $dto->modelType,
+                $type,
+            );
+        }
+
+        return $this->photoRepository->findAllByEntity(
             (int) $dto->imageableId,
             $dto->modelType,
-            new PhotoType($dto->type),
+            $type,
         );
     }
 }

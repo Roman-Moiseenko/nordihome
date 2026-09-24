@@ -207,16 +207,6 @@ Route::group([
         Route::post('/restore/{id}', [ProductController::class, 'restore'])->name('restore');
         Route::delete('/full-delete/{id}', [ProductController::class, 'full_delete'])->name('full-delete');
 
-        Route::group([
-            'prefix' => 'image',
-            'as' => 'image.',
-        ], function () {
-            Route::post('/add/{product}', [ProductController::class, 'add_image'])->name('add');
-            Route::post('/get/{product}', [ProductController::class, 'get_images'])->name('get');
-            Route::delete('/del/{product}', [ProductController::class, 'del_image'])->name('del');;
-            Route::post('/set/{product}', [ProductController::class, 'set_image'])->name('set');
-            Route::post('/move/{product}', [ProductController::class, 'move_image'])->name('move');
-        });
         // Связь Product → Rooms
         Route::get('/{id}/rooms', [RoomProductController::class, 'productRooms'])->name('rooms');
         Route::post('/{id}/rooms/sync', [RoomProductController::class, 'assignProductRooms'])->name('rooms.sync');

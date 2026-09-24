@@ -19,6 +19,7 @@ use App\Modules\Shared\Application\DTOs\Photo\PhotoSaveData;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoUploadData;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoThumbData;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoSortData;
+use App\Modules\Shared\Domain\Entities\PhotoEntity;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -84,14 +85,24 @@ class PhotoController
     public function getByEntity(Request $request, UserPermission $userPermission): JsonResponse
     {
         $dto = PhotoByEntityData::validateAndCreate($request->all());
-        $photo = $this->getPhotoByEntityUseCase->execute($dto, $userPermission);
+        $result = $this->getPhotoByEntityUseCase->execute($dto, $userPermission);
 
-        if ($photo === null) {
+        if ($result === null) {
             return response()->json(null, Response::HTTP_OK);
         }
 
+        if (is_array($result)) {
+            return response()->json(
+                array_map(
+                    static fn(PhotoEntity $photo): PhotoViewData => PhotoViewData::fromEntity($photo),
+                    $result,
+                ),
+                Response::HTTP_OK
+            );
+        }
+
         return response()->json(
-            PhotoViewData::fromEntity($photo),
+            PhotoViewData::fromEntity($result),
             Response::HTTP_OK
         );
     }

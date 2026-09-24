@@ -35,8 +35,8 @@ class ProductController extends Controller
     private ProductRepository $repository;
 
     public function __construct(
-        ProductService     $service,
-        ProductRepository  $repository,
+        ProductService                        $service,
+        ProductRepository                     $repository,
         private readonly ProductSearchService $productSearchService,
     )
     {
@@ -79,11 +79,8 @@ class ProductController extends Controller
 
     public function store(ProductCreateRequest $request): RedirectResponse
     {
-        //dd($request->all());
-
         $product = $this->service->createFull($request);
         return redirect()->route('admin.catalog.product.edit', $product)->with('success', 'Товар создан');
-
     }
 
 
@@ -219,62 +216,8 @@ class ProductController extends Controller
 
     public function search_add(Request $request): JsonResponse
     {
-       // $result = [];
-        //$products = $this->repository->search($request['search']);
-
-        //Применить map()
-            $result = $this->productSearchService->search($request['search']);
-            return response()->json($result);
-    }
-
-    public function get_images(Product $product)
-    {
-        $result = [];
-        foreach ($product->gallery as $photo) {
-            $result[] = [
-                'id' => $photo->id,
-                'url' => $photo->getUploadUrl(),
-                'alt' => $photo->alt,
-                'sort' => $photo->sort,
-            ];
-        }
-        return \response()->json($result);
-    }
-
-    public function del_image(Request $request, Product $product)
-    {
-        $this->service->delPhoto($request, $product);
-        return redirect()->back()->with('success', 'Удалено');
-    }
-
-    public function set_image(Request $request, Product $product)
-    {
-        $this->service->setPhoto($request, $product);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
-
-    public function move_image(Request $request, Product $product): RedirectResponse
-    {
-        try {
-            $this->service->movePhoto($request, $product);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\Throwable $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-
-    }
-
-    public function add_image(Request $request, Product $product)
-    {
-        try {
-            $photo = $this->service->addPhoto($request, $product);
-            return \response()->json([
-                'id' => $photo->id,
-                'url' => $photo->getUploadUrl(),
-            ]);
-        } catch (\Throwable $e) {
-            return \response()->json($e->getMessage());
-        }
+        $result = $this->productSearchService->search($request['search']);
+        return response()->json($result);
     }
 
     /**
