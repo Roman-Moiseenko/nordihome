@@ -62,7 +62,7 @@ class GroupService
             'slug' => empty($slug) ? Str::slug($name) : $slug,
             'published' => $request->boolean('published')
         ]);
-        $group->saveImage($request->file('file'), $request->boolean('clear_file'));
+
         return $group;
     }
 

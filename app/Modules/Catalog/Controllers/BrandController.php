@@ -9,6 +9,9 @@ use App\Modules\Catalog\Application\Actions\Brand\ListBrandUseCase;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Repository\BrandRepository;
 use App\Modules\Catalog\Service\BrandService;
+use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
+use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
+use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use App\Modules\Parser\Service\ParserAbstract;
 use App\UseCase\PaginationService;
 use Illuminate\Http\JsonResponse;
@@ -22,7 +25,8 @@ class BrandController extends Controller
     public function __construct(
         private readonly BrandService     $service,
         private readonly BrandRepository  $repository,
-        private readonly ListBrandUseCase $listBrandUseCase)
+        private readonly ListBrandUseCase $listBrandUseCase,
+        private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase)
     {
     }
 
@@ -50,9 +54,13 @@ class BrandController extends Controller
 
     public function show(Brand $brand, Request $request): \Inertia\Response
     {
+        $dto = new ContentBlockContainerData($brand->id, ContainerType::BRAND);
+        $blocks = $this->listContentBlockByContainerUseCase->execute($dto);
+
         return Inertia::render('Catalog/Brand/Show', [
             'brand' => $this->repository->BrandWithToArray($brand, $request),
             'currencies' => Currency::getModels(),
+            'blocks' => $blocks,
         ]);
     }
 

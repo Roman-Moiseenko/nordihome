@@ -1,54 +1,40 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl">Группа товаров {{ group.name }}</h1>
+        <div class="flex">
+            <h1 class="font-medium text-xl">Группа товаров {{ group.name }}</h1>
+            <el-tooltip content="Помощь" placement="bottom-start" effect="dark">
+                <el-button circle class="ml-2" @click="showHelp = !showHelp">
+                    <i class="fa-light fa-lightbulb-on text-orange-500"></i>
+                </el-button>
+            </el-tooltip>
+        </div>
         <div class="p-5 bg-white rounded-md">
             <GroupInfo :group="group" />
-        </div>
-        <div class="flex mt-5">
-            <SearchAddProduct
-                :route="route('admin.catalog.group.add-product', {group: group.id})"
-                :search="route('admin.catalog.group.search', {group: group.id})"
-            />
-            <SearchAddProducts :route="route('admin.catalog.group.add-products', {group: group.id})" class="ml-3"/>
+
+            <HelpBlock v-if="showHelp">
+                <p><b>Название Группы</b> является обязательным полем.</p>
+                <p>Поле <b>Slug</b> (ссылка на группу) можно не заполнять, тогда оно заполнится автоматически.
+                    При заполнении использовать латинский алфавит. Ссылка используется, если у группы есть своя
+                    страница на стороне клиента.</p>
+                <p>Рекомендуемое разрешение для <b>картинок</b> в карточку 700х700.</p>
+            </HelpBlock>
         </div>
 
-        <div class="p-5 bg-white rounded-md">
-            <el-table
-                :data="tableData"
-                header-cell-class-name="nordihome-header"
-                style="width: 100%; cursor: pointer;"
-                @row-click="routeClick"
-                v-loading="store.getLoading"
-            >
-                <el-table-column prop="code" label="Артикул" width="160"/>
-                <el-table-column prop="name" label="Товар" width="300" show-overflow-tooltip/>
-                <el-table-column prop="category" label="Основная категория" width="" show-overflow-tooltip />
-
-                <el-table-column label="Действия" align="right">
-                    <template #default="scope">
-                        <el-button v-if="!scope.row.completed"
-                            size="small"
-                            type="danger"
-                            @click.stop="handleDeleteEntity(scope.row)"
-                        >
-                            Delete
-                        </el-button>
-                    </template>
-                </el-table-column>
-            </el-table>
-        </div>
+        <el-tabs>
+            <PanelProducts :group="group" />
+            <PanelBlocks :blocks="blocks || []" :group-id="group.id"/>
+        </el-tabs>
     </el-config-provider>
-    <DeleteEntityModal name_entity="Товар из серии" />
 </template>
 <script lang="ts" setup>
 import {inject, ref, defineProps} from "vue";
 import {Head} from '@inertiajs/vue3'
-import {useStore} from "@Res/store.js"
 import ru from 'element-plus/dist/locale/ru.mjs'
-import SearchAddProduct from '@Comp/Search/AddProduct.vue'
-import SearchAddProducts from '@Comp/Search/AddProducts.vue'
 import GroupInfo from  './Block/Info.vue'
+import HelpBlock from "@Comp/HelpBlock.vue";
+import PanelProducts from "./Panels/Products.vue";
+import PanelBlocks from "./Panels/Blocks.vue";
 
 const props = defineProps({
     group: Object,
@@ -56,15 +42,9 @@ const props = defineProps({
         type: String,
         default: 'Карточка группы товаров',
     },
-
+    blocks: Array,
 })
-const store = useStore();
-const $delete_entity = inject("$delete_entity")
-const tableData = ref([...props.group.products.data])
 
-function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.catalog.group.del-product', {group: props.group.id, product_id: row.id}));
-}
+const showHelp = ref(false);
 
 </script>
-

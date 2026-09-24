@@ -81,7 +81,7 @@ class AttributeService
             }
             //2. Изменяем значения старых и добавляем новые
             foreach ($variants as $i => $item) {
-                $file = $request->file('variants.'. $i.'.file');
+                //$file = $request->file('variants.'. $i.'.file');
 
                 if (!is_null($item['id'])) { //2.1 Изменяем старые значения
 
@@ -89,9 +89,9 @@ class AttributeService
                     $variant->name = $item['name'];
                     $variant->save();
 
-                    $variant->saveImage($file, (bool)$item['clear_file']);
+                 //   $variant->saveImage($file, (bool)$item['clear_file']);
                 } else { //2.2 Добавляем новые
-                    $attribute->addVariant($item['name'], $file);
+                    $attribute->addVariant($item['name']);
                 }
             }
            // $attribute->push();

@@ -1,18 +1,9 @@
 <template>
     <el-row :gutter="10" v-if="!showEdit">
         <el-col :span="6">
-            <el-image
-                style="width: 200px; height: 200px"
-                :src="attribute.image"
-                :zoom-rate="1.2"
-                :max-scale="7"
-                :min-scale="0.2"
-                :initial-index="4"
-                :preview-src-list="[attribute.image]"
-                fit="cover"
-            />
+            <PhotoDTO model-type="catalog.attribute" :entity-id="attribute.id" />
         </el-col>
-        <el-col :span="8">
+        <el-col :span="18">
             <el-descriptions :column="1" border class="mb-5">
                 <el-descriptions-item label="Группа">
                     {{ attribute.group }}
@@ -22,21 +13,24 @@
                 </el-descriptions-item>
                 <el-descriptions-item label="Тип">
                     {{ attribute.type_text }}
+                    <span class="flex">
                     <div v-if="attribute.is_variant" v-for="item in attribute.variants" class="flex mb-1">
 
                         <el-tag type="info" class="my-auto ml-1">{{ item.name }}</el-tag>
-                        <el-image v-if="item.image"
-                            style="width: 40px; height: 40px"
-                            :src="item.image"
-                            :zoom-rate="1.2"
-                            :max-scale="7"
-                            :min-scale="0.2"
-                            :initial-index="4"
-                            :preview-src-list="[item.image]"
-                            fit="cover"
-                            class="ml-2"
+
+                        <el-image v-if="item.image && item.image !== 'images/no-image.jpg'"
+                                  style="width: 40px; height: 40px"
+                                  :src="item.image"
+                                  :zoom-rate="1.2"
+                                  :max-scale="7"
+                                  :min-scale="0.2"
+                                  :initial-index="4"
+                                  :preview-src-list="[item.image]"
+                                  fit="cover"
+                                  class="ml-2"
                         />
                     </div>
+                        </span>
                 </el-descriptions-item>
                 <el-descriptions-item label="Множественный выбор">
                     <Active :active="attribute.multiple"/>
@@ -55,14 +49,15 @@
         <i class="fa-light fa-pen-to-square"></i>&nbsp;Редактировать
     </el-button>
     <el-row :gutter="10" v-if="showEdit">
-        <el-col :span="12">
+        <el-col :span="14">
             <el-form label-width="auto">
                 <el-form-item label="Название атрибута">
                     <el-input v-model="info.name"/>
                 </el-form-item>
                 <el-form-item label="Категория">
                     <el-select v-model="info.categories" filterable multiple>
-                        <el-option v-for="item in useCatalog.categories" :key="item.id" :value="item.id" :label="item.name"/>
+                        <el-option v-for="item in useCatalog.categories" :key="item.id" :value="item.id"
+                                   :label="item.name"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Группа">
@@ -94,7 +89,6 @@
                         v-for="item in Variants" :key="item"
                         :id="item.id"
                         :name="item.name"
-                        :image="item.image"
                         @update:fields="val => onUpdateVariant(val, item.identity)"
                         @remove:fields="onRemoveVariant(item.identity)"
                     />
@@ -108,14 +102,8 @@
                 </el-button>
             </el-form>
         </el-col>
-        <el-col :span="4">
-            <UploadImageFile
-                label="Изображение для сайта"
-                v-model:image="attribute.image"
-                @selectImageFile="onSelectImage"
-            />
-        </el-col>
-        <el-col :span="8">
+
+        <el-col :span="10">
             <HelpBlock>
                 <p><b>Название атрибута</b> не является уникальным полем, для несмежных категорий оно может
                     совпадать.</p>
@@ -143,6 +131,7 @@ import Active from "@Comp/Elements/Active.vue";
 import VarianField from "./VarianField.vue";
 import HelpBlock from "@Comp/HelpBlock.vue";
 import {useCatalogStore} from "@Res/catalogStore.ts";
+import PhotoDTO from "@Comp/PhotoDTO.vue";
 
 const useCatalog = useCatalogStore()
 
@@ -163,8 +152,6 @@ const info = reactive({
     sameAs: props.attribute.sameAs,
     type: props.attribute.type,
 
-    file: null,
-    clear_file: false,
     variants: null,
 })
 const showEdit = ref(false)
@@ -183,18 +170,11 @@ function onSetInfo() {
     );
 }
 
-function onSelectImage(val) {
-    info.clear_file = val.clear_file;
-    info.file = val.file
-}
-
 //Варианты
 interface IVariantData {
     id: Number,
     name: String,
     image: String,
-    file: Object,
-    clear_file: Boolean,
     identity: String,
 }
 
@@ -206,13 +186,9 @@ if (props.attribute.is_variant) {
             id: item.id,
             name: item.name,
             image: item.image,
-            file: null,
-            clear_file: false,
             identity: Math.random().toString(36).slice(2),
         })
     })
-    console.log(Variants)
-    console.log(props.attribute.variants)
 }
 
 function addVariant() {
@@ -220,8 +196,6 @@ function addVariant() {
         id: null,
         name: null,
         image: null,
-        file: null,
-        clear_file: false,
         identity: Math.random().toString(36).slice(2),
     })
     // console.log(Variants.value)
@@ -231,8 +205,6 @@ function onUpdateVariant(val, identity) {
     Variants.value.forEach(function (item) {
         if (item.identity === identity) {
             item.name = val.name
-            item.file = val.file
-            item.clear_file = val.clear_file
         }
     })
 

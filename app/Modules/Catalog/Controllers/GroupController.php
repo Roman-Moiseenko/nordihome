@@ -7,6 +7,9 @@ use App\Modules\Catalog\Application\Actions\Group\ListGroupUseCase;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Repository\GroupRepository;
 use App\Modules\Catalog\Service\GroupService;
+use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
+use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
+use App\Modules\Content\Domain\ValueObjects\ContainerType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -22,6 +25,7 @@ class GroupController extends Controller
         GroupService $service,
         GroupRepository $repository,
         private readonly ListGroupUseCase $listGroupUseCase,
+        private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
     )
     {
         $this->service = $service;
@@ -48,8 +52,12 @@ class GroupController extends Controller
 
     public function show(Group $group, Request $request): Response
     {
+        $dto = new ContentBlockContainerData($group->id, ContainerType::GROUP);
+        $blocks = $this->listContentBlockByContainerUseCase->execute($dto);
+
         return Inertia::render('Catalog/Group/Show', [
             'group' => $this->repository->GroupWithToArray($group, $request),
+            'blocks' => $blocks,
         ]);
     }
 

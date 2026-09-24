@@ -1,108 +1,84 @@
 <template>
-    <el-row :gutter="10" v-if="!showEdit">
-        <el-col :span="8">
-            <el-descriptions :column="2" border class="mb-5">
-                <el-descriptions-item label="Группа">
-                    {{ group.name }}
-                    <el-button class="ml-2" type="warning" size="small" @click="showEdit = true">
-                        <i class="fa-light fa-pen-to-square"></i>
-                    </el-button>
-                </el-descriptions-item>
-            </el-descriptions>
-        </el-col>
-        <el-col :span="8">
-            <el-descriptions :column="2" border class="mb-5">
-                <el-descriptions-item label="Описание">
-                    {{ group.description }}
-                </el-descriptions-item>
-            </el-descriptions>
-        </el-col>
-        <el-col :span="8">
-            <el-descriptions :column="3" border class="mb-5">
-                <el-descriptions-item label="Своя страница">
-                    <Active :active="group.published" />
-                </el-descriptions-item>
-            </el-descriptions>
-        </el-col>
-    </el-row>
-
-    <el-row :gutter="10" v-if="showEdit">
-        <el-col :span="8">
-            <el-form label-width="auto">
+    <el-form label-width="auto">
+        <el-row :gutter="10">
+            <el-col :span="4">
+                <el-tooltip content="Изображение для карточек" placement="top-start" effect="dark">
+                    <PhotoDTO model-type="catalog.group" :entity-id="group.id" type="image"/>
+                </el-tooltip>
+            </el-col>
+            <el-col :span="10">
                 <el-form-item label="Название группы">
-                    <el-input v-model="info.name" />
+                    <el-input v-model="info.name"/>
                 </el-form-item>
                 <el-form-item label="Ссылка">
-                    <el-input v-model="info.slug"/>
+                    <el-input v-model="info.slug" clearable placeholder="Slug"/>
                 </el-form-item>
                 <el-form-item label="Страница на сайте">
-                    <el-checkbox v-model="info.published"  :checked="info.published"/>
+                    <el-switch v-model="info.published"/>
                 </el-form-item>
+            </el-col>
+            <el-col :span="10">
                 <el-form-item label="Описание">
-                    <el-input v-model="info.description" type="textarea" :rows="3" />
+                    <el-input v-model="info.description" type="textarea" :rows="5"/>
                 </el-form-item>
-
-                <el-button type="info" size="small" @click="showEdit = false" style="margin-left: 4px">
-                    Отмена
-                </el-button>
-                <el-button type="success" size="small" @click="onSetInfo">
-                    Сохранить
-                </el-button>
-            </el-form>
-        </el-col>
-        <el-col :span="8">
-            <UploadImageFile
-                label="Изображение для сайта"
-                v-model:image="group.image"
-                @selectImageFile="onSelectImage"
-            />
-
-        </el-col>
-        <el-col :span="8">
-            <HelpBlock>
-                <p><b>Название Группы</b> является обязательным полем.</p>
-                <p>Поле <b>Slug</b> (ссылка на группу) можно не заполнять, тогда оно заполнится автоматически. При заполнении использовать латинский алфавит. Ссылка используется, если у группы есть своя траница на стороне клиента</p>
-                <p>Рекомендуемое разрешение для <b>картинок</b> в карточку 700х700.</p>
-            </HelpBlock>
-        </el-col>
-    </el-row>
+            </el-col>
+        </el-row>
+        <el-button v-if="hasChanges" type="info" @click="onCancel" style="margin-left: 4px">
+            Отмена
+        </el-button>
+        <el-button v-if="hasChanges" type="success" @click="onSetInfo">
+            Сохранить
+        </el-button>
+    </el-form>
 </template>
 
 <script setup>
-import {func} from '@Res/func.js'
-import {reactive, ref} from "vue";
+import {reactive, computed} from "vue";
 import {router} from "@inertiajs/vue3";
-import UploadImageFile from '@Comp/UploadImageFile.vue'
-import Active from "@Comp/Elements/Active.vue";
-import HelpBlock from "@Comp/HelpBlock.vue";
+import PhotoDTO from "@Comp/PhotoDTO.vue";
 
 const props = defineProps({
     group: Object,
 })
-const iSavingInfo = ref(false)
-const info = reactive({
+
+// --- Исходные данные из пропсов (эталон для отмены) ---
+const initialInfo = {
     name: props.group.name,
-    description: props.group.description,
-    slug: props.group.slug,
-    published: props.group.published,
-    file: null,
-    clear_file: false,
+    slug: props.group.slug ?? '',
+    description: props.group.description ?? '',
+    published: !!props.group.published,
+}
+
+const info = reactive({...initialInfo})
+
+// --- Отслеживание изменений ---
+const hasChanges = computed(() => {
+    for (const key of Object.keys(initialInfo)) {
+        const a = JSON.stringify(info[key])
+        const b = JSON.stringify(initialInfo[key])
+        if (a !== b) return true
+    }
+    return false
 })
-const showEdit = ref(false)
+
+function onCancel() {
+    Object.assign(info, {...initialInfo})
+}
 
 function onSetInfo() {
     router.visit(
         route('admin.catalog.group.set-info', {group: props.group.id}), {
             method: "post",
-            data: info,
+            data: {...info},
             onSuccess: page => {
-                showEdit.value = false;
+                Object.assign(initialInfo, JSON.parse(JSON.stringify(info)))
             }
         }
     );
 }
-function onSelectImage(val) {
-    info.clear_file = val.clear_file;
-    info.file = val.file
-}
+
 </script>
+
+<style scoped>
+
+</style>

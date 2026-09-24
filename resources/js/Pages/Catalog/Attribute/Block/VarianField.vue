@@ -10,14 +10,11 @@
 
 <script setup lang="ts">
 import { reactive } from "vue";
-import UploadImageFile from "@Comp/UploadImageFile.vue";
 import PhotoDTO from "@Comp/PhotoDTO.vue";
 
 const props = defineProps({
     id: Number,
     name: String,
-    image: String,
-
 })
 const $emit = defineEmits(['update:fields', 'remove:fields'])
 const form = reactive({
@@ -28,11 +25,7 @@ const form = reactive({
 function onEmit() {
     $emit('update:fields', form)
 }
-function onSelectImage(val) {
-    form.clear_file = val.clear_file;
-    form.file = val.file
-    onEmit();
-}
+
 function onRemove() {
     $emit('remove:fields', true)
 }

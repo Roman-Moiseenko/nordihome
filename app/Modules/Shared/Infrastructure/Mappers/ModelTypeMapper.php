@@ -3,10 +3,6 @@
 declare(strict_types=1);
 
 namespace App\Modules\Shared\Infrastructure\Mappers;
-
-
-
-
 /**
  * Маппинг model_type ({модуль}.{сущность}) в полное имя класса (FQCN) для imageable_type
  */
@@ -20,11 +16,13 @@ class ModelTypeMapper
         'catalog.group' => \App\Modules\Catalog\Infrastructure\Models\Group::class,
         'catalog.tag' => \App\Modules\Catalog\Infrastructure\Models\Tag::class,
         'catalog.attribute-variant' => \App\Modules\Catalog\Infrastructure\Models\AttributeVariant::class,
+        'catalog.attribute' => \App\Modules\Catalog\Infrastructure\Models\Attribute::class,
 
         'parser.category' => \App\Modules\Parser\Infrastructure\Models\ParserCategory::class,
         'parser.product' => \App\Modules\Parser\Infrastructure\Models\ParserProduct::class,
 
         'content.post' => \App\Modules\Content\Infrastructure\Models\Post::class,
+       // 'content.page' => \App\Modules\Content\Infrastructure\Models\Page::class,
         'content.banner-widget-item' => \App\Modules\Content\Entity\Widgets\BannerWidgetItem::class,
 
         'discount.promotion' => \App\Modules\Discount\Infrastructure\Models\Promotion::class,
