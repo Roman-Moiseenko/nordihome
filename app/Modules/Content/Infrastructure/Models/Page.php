@@ -1,15 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Content\Entity;
+namespace App\Modules\Content\Infrastructure\Models;
 
-use App\Modules\Base\Casts\MetaCast;
-use App\Modules\Base\Entity\Meta;
-use App\Modules\Base\Traits\IconField;
-use App\Modules\Base\Traits\ImageField;
 use App\Modules\Content\Entity\Renders\RenderPage;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 

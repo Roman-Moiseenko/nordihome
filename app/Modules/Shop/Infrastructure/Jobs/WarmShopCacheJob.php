@@ -6,7 +6,7 @@ namespace App\Modules\Shop\Infrastructure\Jobs;
 
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Room;
-use App\Modules\Content\Entity\Page;
+use App\Modules\Content\Infrastructure\Models\Page;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Shared\Domain\ValueObjects\QueueName;

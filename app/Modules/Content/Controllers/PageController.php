@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Content\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Content\Entity\Page;
+use App\Modules\Content\Infrastructure\Models\Page;
 use App\Modules\Content\Repository\PageRepository;
 use App\Modules\Content\Repository\TemplateRepository;
 use App\Modules\Content\Service\PageService;

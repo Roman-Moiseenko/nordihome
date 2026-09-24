@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Service;
 
-use App\Modules\Content\Entity\Page;
 use App\Modules\Content\Entity\Widgets\ProductWidget;
 use App\Modules\Content\Entity\Widgets\Template;
+use App\Modules\Content\Infrastructure\Models\Page;
 use App\Modules\Content\Repository\TemplateRepository;
 use Illuminate\Http\Request;
 

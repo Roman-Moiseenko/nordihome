@@ -10,7 +10,7 @@ use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Content\Entity\Contact;
 use App\Modules\Content\Entity\Menu;
 use App\Modules\Content\Entity\MenuItem;
-use App\Modules\Content\Entity\Page;
+use App\Modules\Content\Infrastructure\Models\Page;
 use App\Modules\Content\Infrastructure\Models\Post;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Output\Infrastructure\Models\Feed;

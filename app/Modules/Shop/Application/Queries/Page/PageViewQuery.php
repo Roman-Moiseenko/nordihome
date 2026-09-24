@@ -2,12 +2,11 @@
 
 namespace App\Modules\Shop\Application\Queries\Page;
 
-use App\Modules\Content\Entity\Page;
 use App\Modules\Content\Entity\Widgets\Template;
+use App\Modules\Content\Infrastructure\Models\Page;
 use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\PageViewPageData;
-use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
 use Illuminate\Support\Facades\Cache;

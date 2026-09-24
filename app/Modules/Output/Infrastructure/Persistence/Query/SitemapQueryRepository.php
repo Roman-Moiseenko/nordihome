@@ -7,7 +7,7 @@ namespace App\Modules\Output\Infrastructure\Persistence\Query;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
-use App\Modules\Content\Entity\Page;
+use App\Modules\Content\Infrastructure\Models\Page;
 use App\Modules\Content\Infrastructure\Models\Post;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;

@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Repository;
 
-use App\Modules\Content\Entity\Page;
+use App\Modules\Content\Infrastructure\Models\Page;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
