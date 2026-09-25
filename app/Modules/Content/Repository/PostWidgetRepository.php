@@ -17,8 +17,6 @@ class PostWidgetRepository
     public function PostWithToArray(PostWidget $widget): array
     {
         return array_merge($widget->toArray(), [
-            'image' => $widget->getImage(),
-            'icon' => $widget->getIcon(),
             'category' => [
                 'name' => is_null($widget->category_id) ? 'Все' : $widget->category->name,
             ]

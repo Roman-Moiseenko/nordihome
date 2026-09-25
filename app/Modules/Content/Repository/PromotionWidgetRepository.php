@@ -21,7 +21,6 @@ class PromotionWidgetRepository
         return array_merge($widget->toArray(), [
             'banner' => $widget->banner,
             'promotion' => $widget->promotion_id == null ? null : $widget->promotion,
-            'image' => $widget->getImage(),
         ]);
     }
 }

@@ -49,7 +49,7 @@ class FormWidgetController extends Controller
     {
         $templates = $this->templates->getTemplates('form');
         return Inertia::render('Content/Widget/Form/Show', [
-            'widget' => $this->repository->WidgetWithToArray($widget),
+            'widget' => $widget->toArray(),
             'templates' => $templates,
         ]);
     }
