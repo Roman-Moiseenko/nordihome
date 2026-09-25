@@ -120,12 +120,6 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-fill',
             ],
-            'cache' => [
-                'title' => 'Кеш страниц',
-                'route_name' => 'admin.content.cache.index',
-                'vue' => true,
-                'font_awesome' => 'fa-light fa-database',
-            ],
             'widget' => [
                 'title' => 'Виджеты',
                 'route_name' => 'admin.content.widget.index',

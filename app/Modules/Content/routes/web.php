@@ -59,20 +59,6 @@ Route::group(
         });
 
 
-        Route::group([
-            'prefix' => 'cache',
-            'as' => 'cache.' //'CacheController@remove'
-        ], function () {
-            Route::post('/remove', [CacheController::class, 'clear'])->name('remove');
-            Route::post('/create', [CacheController::class, 'create'])->name('create');
-            Route::post('/categories', [CacheController::class, 'categories'])->name('categories');
-            Route::post('/products', [CacheController::class, 'products'])->name('products');
-            Route::post('/pages', [CacheController::class, 'pages'])->name('pages');
-
-            Route::post('/clear', [CacheController::class, 'clear'])->name('clear');
-            Route::get('/', [CacheController::class, 'index'])->name('index');
-        });
-
         //Виджеты
         Route::group([
             'prefix' => 'widget',

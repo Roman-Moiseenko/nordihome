@@ -99,13 +99,6 @@ Breadcrumbs::for('admin.content.widget.post.show', function (BreadcrumbTrail $tr
 });
 //////WIDGETS//////
 
-//CACHE
-Breadcrumbs::for('admin.content.cache.index', function (BreadcrumbTrail $trail) {
-    $trail->parent('admin.home');
-    $trail->push('Кеш страниц', route('admin.content.cache.index'));
-});
-
-
 //PAGE
 Breadcrumbs::for('admin.content.page.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
