@@ -29,12 +29,6 @@ return [
         'vue' => true,
         'font_awesome' => 'fa-light fa-desktop',
         'sub_menu' => [
-            /*'news' => [
-                'title' => 'Новости',
-                'route_name' => 'admin.content.news.index',
-                'vue' => true,
-                'font_awesome' => 'fa-light fa-files',
-            ],*/
             'pages' => [
                 'title' => 'Страницы',
                 'route_name' => 'admin.content.page.index',
@@ -53,12 +47,6 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-folders',
             ],
-            /*   'maps' => [
-                   'icon' => 'map-pinned',
-                   'title' => 'Карты',
-                   'route_name' => 'admin.home',
-               ],*/
-
             'banners' => [
                 'title' => 'Баннеры (Виджет)',
                 'route_name' => 'admin.content.widget.banner.index',
