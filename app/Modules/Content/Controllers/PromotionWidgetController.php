@@ -8,6 +8,7 @@ use App\Modules\Content\Entity\Widgets\PromotionWidget;
 use App\Modules\Content\Repository\PromotionWidgetRepository;
 use App\Modules\Content\Repository\TemplateRepository;
 use App\Modules\Content\Service\PromotionWidgetService;
+use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -54,7 +55,7 @@ class PromotionWidgetController extends Controller
     {
         $templates = $this->templates->getTemplates('promotion');
         $banners = BannerWidget::orderBy('name')->getModels();
-        $promotions = Promotion::orderBy('name')->where('active', true)->getModels();
+        $promotions = Promotion::orderBy('name')->where('status', PromotionStatus::STARTED)->getModels();
 
         return Inertia::render('Content/Widget/Promotion/Show', [
             'widget' => $this->repository->PromotionWithToArray($widget),

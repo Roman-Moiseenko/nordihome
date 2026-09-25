@@ -83,14 +83,14 @@ Route::group(
                 'as' => 'product.'
             ], function () {
                 Route::post('/set-widget/{widget}', [ProductWidgetController::class, 'set_widget'])->name('set-widget');
-                Route::post('/add-item/{widget}', [ProductWidgetController::class, 'add_item'])->name('add-item');
-                Route::post('/set-item/{item}', [ProductWidgetController::class, 'set_item'])->name('set-item');
-                Route::delete('/del-item/{item}', [ProductWidgetController::class, 'del_item'])->name('del-item');
+          //      Route::post('/add-item/{widget}', [ProductWidgetController::class, 'add_item'])->name('add-item');
+          //      Route::post('/set-item/{item}', [ProductWidgetController::class, 'set_item'])->name('set-item');
+           //     Route::delete('/del-item/{item}', [ProductWidgetController::class, 'del_item'])->name('del-item');
                 Route::post('/toggle/{widget}', [ProductWidgetController::class, 'toggle'])->name('toggle');
-                Route::post('/up-item/{item}', [ProductWidgetController::class, 'up_item'])->name('up-item');
-                Route::post('/down-item/{item}', [ProductWidgetController::class, 'down_item'])->name('down-item');
+          //      Route::post('/up-item/{item}', [ProductWidgetController::class, 'up_item'])->name('up-item');
+              //  Route::post('/down-item/{item}', [ProductWidgetController::class, 'down_item'])->name('down-item');
 
-                Route::get('/{widget}', [ProductWidgetController::class, 'show'])->name('show');
+              //  Route::get('/{widget}', [ProductWidgetController::class, 'show'])->name('show');
                 Route::post('/', [ProductWidgetController::class, 'store'])->name('store');
                 Route::delete('/{widget}', [ProductWidgetController::class, 'destroy'])->name('destroy');
                 Route::get('/', [ProductWidgetController::class, 'index'])->name('index');

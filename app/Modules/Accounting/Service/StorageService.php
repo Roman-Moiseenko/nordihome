@@ -36,8 +36,7 @@ class StorageService
             );
         if ($request->has('latitude') && $request->has('longitude'))
             $storage->setCoordinate($request->float('latitude'), $request->float('longitude'));
-
-        $storage->saveImage($request->file('file'), $request->boolean('clear_file'));
+        //TODO Для Storage сделать модель изображения .... возможно
 
         if ($request->has('default')) {
             Storage::where('default', true)->update(['default' => false]);

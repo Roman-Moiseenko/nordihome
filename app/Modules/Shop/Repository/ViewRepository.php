@@ -3,22 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Repository;
 
-use App\Modules\Base\Helpers\CacheHelper;
-use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Content\Entity\News;
-use App\Modules\Content\Entity\PostCategory;
-use App\Modules\Content\Entity\Widgets\Template;
-use App\Modules\Content\Infrastructure\Models\Post;
 use App\Modules\Content\Repository\MetaTemplateRepository;
-use App\Modules\Parser\Infrastructure\Models\ParserCategory;
-use App\Modules\Parser\Infrastructure\Models\ParserProduct;
-use App\Modules\Setting\Entity\Settings;
-use App\Modules\Setting\Entity\Web;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
-use JetBrains\PhpStorm\Deprecated;
 
 class ViewRepository
 {

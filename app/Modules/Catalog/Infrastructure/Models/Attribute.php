@@ -122,12 +122,11 @@ class Attribute extends Model
         return $this->hasMany(AttributeVariant::class, 'attribute_id', 'id');
     }
 
-    public function addVariant(string $name, $file = null): AttributeVariant
+    public function addVariant(string $name): AttributeVariant
     {
         $variant = AttributeVariant::register($name);
         $this->variants()->save($variant);
         $variant->refresh();
-        if (!is_null($file)) $variant->saveImage($file);
         return $variant;
     }
 

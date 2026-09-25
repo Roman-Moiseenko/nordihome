@@ -3,13 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Infrastructure\Models;
 
-use App\Modules\Base\Traits\IconField;
-use App\Modules\Base\Traits\ImageField;
-use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Entity\Renders\RenderPage;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+
 /**
  * @property int $id
  * @property int $category_id

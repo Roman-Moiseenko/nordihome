@@ -52,21 +52,6 @@ class ProductWidgetController extends Controller
         //route('admin.content.widget.product.show', $widget)
     }
 
-    public function show(ProductWidget $widget)
-    {
-       /* $groups = $this->repository->getGroups($widget);
-
-        $banners = BannerWidget::orderBy('name')->getModels();
-        $templates = $this->templates->getTemplates('product');
-        return Inertia::render('Content/Widget/Product/Show', [
-            'widget' => $this->repository->WidgetWithToArray($widget),
-            'templates' => $templates,
-            'groups' => $groups,
-            'banners' => $banners,
-        ]);
-*/
-        //return view('admin.content.widget.show', compact('widget'));
-    }
 
     public function set_widget(Request $request, ProductWidget $widget): RedirectResponse
     {
@@ -84,36 +69,6 @@ class ProductWidgetController extends Controller
     {
         $message = $this->service->toggle($widget);
         return redirect()->back()->with('success', $message);
-    }
-
-    public function add_item(ProductWidget $widget, Request $request): RedirectResponse
-    {
-        $this->service->addItem($widget, $request);
-        return redirect()->back()->with('success', 'Элемент добавлен');
-    }
-
-    public function set_item(ProductWidgetItem $item, Request $request): RedirectResponse
-    {
-        $this->service->setItem($item, $request);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
-
-    public function del_item(ProductWidgetItem $item): RedirectResponse
-    {
-        $this->service->delItem($item);
-        return redirect()->back()->with('success', 'Удалено');
-    }
-
-    public function up_item(ProductWidgetItem $item): RedirectResponse
-    {
-        $this->service->upItem($item);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
-
-    public function down_item(ProductWidgetItem $item): RedirectResponse
-    {
-        $this->service->downItem($item);
-        return redirect()->back()->with('success', 'Сохранено');
     }
 
 }

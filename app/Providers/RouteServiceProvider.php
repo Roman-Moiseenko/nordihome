@@ -13,7 +13,7 @@ use App\Modules\Accounting\Entity\RefundDocument;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Content\Entity\PostCategory;
+use App\Modules\Content\Infrastructure\Models\PostCategory;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 use App\Modules\Order\Entity\Order\OrderPayment;

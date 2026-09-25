@@ -22,8 +22,6 @@ class BannerWidgetRepository
             'items' => $widget->items()->get()->map(fn(BannerWidgetItem $item) => array_merge($item->toArray(), [
                 'image_file' => $item->getImage(),
             ])),
-            'image' => $widget->getImage(),
-            'icon' => $widget->getIcon(),
         ]);
     }
 

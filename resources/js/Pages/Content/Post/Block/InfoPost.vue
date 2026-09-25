@@ -33,9 +33,9 @@
                     </el-select>
                 </el-form-item>
 
-                <el-form-item label="Старый рендер">
+                <!--el-form-item label="Старый рендер">
                     <el-switch v-model="info.oldRender"/>
-                </el-form-item>
+                </el-form-item-->
                 <el-button v-if="hasChanges" type="info" @click="onCancel" style="margin-left: 4px">
                     Отмена
                 </el-button>

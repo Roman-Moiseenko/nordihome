@@ -21,6 +21,7 @@ class ModelTypeMapper
         'parser.category' => \App\Modules\Parser\Infrastructure\Models\ParserCategory::class,
         'parser.product' => \App\Modules\Parser\Infrastructure\Models\ParserProduct::class,
 
+        'content.post-category' => \App\Modules\Content\Infrastructure\Models\PostCategory::class,
         'content.post' => \App\Modules\Content\Infrastructure\Models\Post::class,
         'content.page' => \App\Modules\Content\Infrastructure\Models\Page::class,
         'content.banner-widget-item' => \App\Modules\Content\Entity\Widgets\BannerWidgetItem::class,

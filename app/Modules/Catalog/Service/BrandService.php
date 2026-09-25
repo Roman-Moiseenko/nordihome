@@ -23,8 +23,6 @@ class BrandService
         $brand->currency_id  = $request->input('currency_id');
         $brand->setSameAs($request['sameAs']);
         $brand->save();
-
-        $brand->saveImage($request->file('file'), $request->boolean('clear_file'));
     }
 
     public function delete(Brand $brand): void

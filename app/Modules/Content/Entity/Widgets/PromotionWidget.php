@@ -18,7 +18,7 @@ class PromotionWidget extends Widget
 
     protected $table="widget_promotions";
 
-    use ImageField, IconField;
+    use ImageField;
 
 
     public function banner(): BelongsTo

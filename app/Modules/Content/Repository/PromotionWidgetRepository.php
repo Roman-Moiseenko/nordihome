@@ -22,7 +22,6 @@ class PromotionWidgetRepository
             'banner' => $widget->banner,
             'promotion' => $widget->promotion_id == null ? null : $widget->promotion,
             'image' => $widget->getImage(),
-            'icon' => $widget->getIcon(),
         ]);
     }
 }

@@ -22,15 +22,15 @@
                 <p>Поля <b>Meta</b> используются в SEO. Для заполнения обязательны.</p>
             </HelpBlock>
         </div>
+        <!-- TinyMCE -->
+        <!--div class="mt-3 p-3 bg-white rounded-lg ">
 
-        <div class="mt-3 p-3 bg-white rounded-lg ">
-            <!-- TinyMCE -->
             <editor
                 :api-key="tiny_api" v-model="text"
                 :init="store.tiny"
                 @change="saveText"
             />
-        </div>
+        </div-->
         <!-- ContentBlock Editor -->
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <ContentBlockEditor
@@ -62,7 +62,7 @@ const props = defineProps({
         default: 'Карточка Записи',
     },
     templates: Array,
-    tiny_api: String,
+   // tiny_api: String,
     blocks: Array,
 })
 const text = ref(props.post.text)

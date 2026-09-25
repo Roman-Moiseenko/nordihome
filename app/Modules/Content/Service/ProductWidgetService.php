@@ -49,24 +49,5 @@ class ProductWidgetService extends WidgetService
         $widget->delete();
     }
 
-    public function addItem(ProductWidget $widget, Request $request): void
-    {
-        $group_id = $request->integer('group_id');
-        $item = ProductWidgetItem::register($widget->id, $group_id);
-        $item->group->published = true;
-        $item->group->save();
-    }
-
-
-    public function setItem(ProductWidgetItem $item, Request $request): void
-    {
-        $item->saveImage($request->file('file'), $request->boolean('clear_file'));
-
-        $item->slug = $request->string('slug')->trim()->value();
-        $item->url = $request->string('url')->trim()->value();
-        $item->caption = $request->string('caption')->trim()->value();
-        $item->description = $request->string('description')->trim()->value();
-        $item->save();
-    }
 
 }

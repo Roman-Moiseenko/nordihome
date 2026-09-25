@@ -17,8 +17,8 @@ abstract class WidgetService
         $widget->description = $request->string('description')->trim()->value();
         $widget->name = $request->string('name')->trim()->value();
 
-        $widget->saveImage($request->file('image'), $request->boolean('clear_image'));
-        $widget->saveIcon($request->file('icon'), $request->boolean('clear_icon'));
+      //  $widget->saveImage($request->file('image'), $request->boolean('clear_image'));
+      //  $widget->saveIcon($request->file('icon'), $request->boolean('clear_icon'));
 
         $widget->save();
     }

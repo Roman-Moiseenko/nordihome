@@ -19,8 +19,6 @@ use Illuminate\Database\Schema\Blueprint;
  */
 abstract class Widget extends Model
 {
-    use ImageField, IconField;
-
     public $timestamps = false;
 
     public function __construct(array $attributes = [])

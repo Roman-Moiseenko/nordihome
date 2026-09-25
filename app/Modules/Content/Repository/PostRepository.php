@@ -2,8 +2,8 @@
 
 namespace App\Modules\Content\Repository;
 
-use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Infrastructure\Models\Post;
+use App\Modules\Content\Infrastructure\Models\PostCategory;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -19,7 +19,6 @@ class PostRepository
     {
         return array_merge($category->toArray(), [
             'image' => $category->getImage(),
-            'icon' => $category->getIcon(),
             'meta' => $category->meta->toArray(),
             'posts' => $category->posts()->get()->map(fn(Post $post) => $this->PostWithToArray($post)),
         ]);

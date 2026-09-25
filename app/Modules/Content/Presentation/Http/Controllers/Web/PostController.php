@@ -11,14 +11,13 @@ use App\Modules\Content\Application\Actions\Post\TogglePostUseCase;
 use App\Modules\Content\Application\Actions\Post\UpdatePostUseCase;
 use App\Modules\Content\Application\Actions\Post\ViewPostUseCase;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
-use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockViewData;
 use App\Modules\Content\Application\DTOs\Post\PostCreateData;
 use App\Modules\Content\Application\DTOs\Post\PostUpdateData;
 use App\Modules\Content\Application\DTOs\Post\PostViewData;
 use App\Modules\Content\Application\Services\CopyPostService;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
-use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Infrastructure\Models\Post;
+use App\Modules\Content\Infrastructure\Models\PostCategory;
 use App\Modules\Content\Repository\PostRepository;
 use App\Modules\Content\Repository\TemplateRepository;
 use App\Modules\Content\Service\PostService;
@@ -28,7 +27,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use function Symfony\Component\Translation\t;
 
 class PostController extends Controller
 {
@@ -75,7 +73,7 @@ class PostController extends Controller
         return Inertia::render('Content/Post/Category', [
             'category' => Inertia::always($this->repository->CategoryWithToArray($category)),
             'templates' => $templates,
-            'tiny_api' => config('shop.tinymce'),
+      //      'tiny_api' => config('shop.tinymce'),
         ]);
     }
 
@@ -118,7 +116,7 @@ class PostController extends Controller
 
         return Inertia::render('Content/Post/Post', [
             'post' => Inertia::always(PostViewData::fromEntity($post)), //Заменить на useCase $this->repository->PostWithToArray($post)
-            'tiny_api' => config('shop.tinymce'), //Удалить
+           // 'tiny_api' => config('shop.tinymce'), //Удалить
             'blocks' => $blocks,
         ]);
     }

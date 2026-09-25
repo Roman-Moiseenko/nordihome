@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Modules\Content\Entity;
+namespace App\Modules\Content\Infrastructure\Models;
 
 use App\Modules\Base\Casts\MetaCast;
 use App\Modules\Base\Entity\Meta;
 use App\Modules\Base\Traits\IconField;
 use App\Modules\Base\Traits\ImageField;
 use App\Modules\Content\Entity\Widgets\Template;
-use App\Modules\Content\Infrastructure\Models\Post;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
@@ -24,7 +23,7 @@ use Illuminate\Support\Str;
  */
 class PostCategory extends Model
 {
-    use ImageField, IconField;
+    use ImageField;
 
     public $timestamps = false;
     protected $attributes = [

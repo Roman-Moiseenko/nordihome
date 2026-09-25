@@ -1,8 +1,6 @@
 @php
 
-    use App\Modules\Content\Entity\PostCategory;
-    use App\Modules\Content\Infrastructure\Models\Post;
-    use App\Modules\Shop\Application\DTOs\Pages\PostIndexPageData;
+    use App\Modules\Content\Infrastructure\Models\Post;use App\Modules\Content\Infrastructure\Models\PostCategory;use App\Modules\Shop\Application\DTOs\Pages\PostIndexPageData;
 
     /** @var PostCategory $category */
     /** @var Post[] $posts */

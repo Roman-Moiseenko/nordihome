@@ -2,8 +2,8 @@
 
 namespace App\Modules\Content\Service;
 
-use App\Modules\Content\Entity\PostCategory;
 use App\Modules\Content\Infrastructure\Models\Post;
+use App\Modules\Content\Infrastructure\Models\PostCategory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
@@ -31,9 +31,6 @@ class PostService
         $category->paginate = $request->input('paginate');
         $category->meta->fromRequest($request);
         $category->save();
-
-        $category->saveImage($request->file('image'), $request->boolean('clear_image'));
-        $category->saveIcon($request->file('icon'), $request->boolean('clear_icon'));
     }
 
     public function destroyCategory(PostCategory $category): void

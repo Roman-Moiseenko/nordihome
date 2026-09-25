@@ -1,7 +1,7 @@
 <!--template:Категории тест-->
 @php
 
-    /** @var \App\Modules\Content\Entity\PostCategory $category */
+    /** @var \App\Modules\Content\Infrastructure\Models\PostCategory $category */
     /** @var \App\Modules\Content\Infrastructure\Models\Post[] $posts */
     /**
     * $category->getImage();

@@ -32,9 +32,6 @@ class ProductWidgetRepository
             'button_name' => $widget->button_name,
             'url' => $widget->url,
             'active' => $widget->active,
-
-            'image' => $widget->getImage(),
-            'icon' => $widget->getIcon(),
             'modelable_name' => $modelable?->name,
             'modelable_key' => $modelableKey !== false ? $modelableKey : null,
             //'modelable' => ProductGroupType::modelKey($widget->modelable_type),
@@ -43,19 +40,4 @@ class ProductWidgetRepository
         ]);
     }
 
-    public function WidgetWithToArray(ProductWidget $widget): array
-    {
-        return array_merge($this->WidgetToArray($widget), [
-            'items' => $widget->items()->get()->map(fn(ProductWidgetItem $item) => array_merge($item->toArray(), [
-                'image_file' => $item->getImage(),
-                'group' => $item->group,
-            ]))
-        ]);
-    }
-
-    public function getGroups(ProductWidget $widget): array
-    {
-        $ids = ProductWidgetItem::where('widget_id', $widget->id)->pluck('group_id')->toArray();
-        return Group::orderBy('name')->whereNotIn('id', $ids)->getModels();
-    }
 }

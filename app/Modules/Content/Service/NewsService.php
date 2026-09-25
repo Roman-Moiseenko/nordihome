@@ -20,7 +20,7 @@ class NewsService
         $news = News::register(
             $request->string('title')->trim()->value(),
             $request->string('text')->trim()->value());
-        $news->saveImage($request->file('file'));
+
        // $news->save();
         return $news;
     }
@@ -31,7 +31,6 @@ class NewsService
         $news->text = $request->string('text')->trim()->value();
         $news->published_at = $request->input('published_at');
         $news->save();
-        $news->saveImage($request->file('file'), $request->boolean('clear_file'));
     }
 
     public function destroy(News $news): void

@@ -7,18 +7,6 @@
         <div class="mt-3 p-3 bg-white rounded-lg ">
             <WidgetInfo :widget="widget" :templates="templates" :banners="banners" :promotions="promotions"/>
         </div>
-        <!--div class="mt-3 p-3 bg-white rounded-lg ">
-            <div class="flex" style="width: 450px;">
-            <el-select v-model="group_id" clearable>
-                <el-option v-for="item in groups" :value="item.id" :label="item.name" />
-            </el-select>
-            <el-button type="primary" @click="onAddItem">Добавить группу</el-button>
-            </div>
-        </div-->
-        <div class="mt-3 p-3 bg-white rounded-lg ">
-            <!-- WidgetItems :items="promotion.items" /-->
-        </div>
-
     </el-config-provider>
 </template>
 
@@ -28,9 +16,6 @@ import {defineProps, inject, reactive, ref} from "vue";
 import ru from 'element-plus/dist/locale/ru.mjs'
 
 import WidgetInfo from './Block/Info.vue'
-///import WidgetItems from './Block/Items.vue'
-import UploadImageFile from "@Comp/UploadImageFile.vue";
-import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({
     widget: Object,
@@ -41,10 +26,6 @@ const props = defineProps({
         type: String,
         default: 'Карточка Виджета Акции',
     },
-})
-const form = reactive({
-    file: null,
-    clear_file: false,
 })
 
 

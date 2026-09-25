@@ -54,29 +54,6 @@ class Category extends Model
         'icon',
     ];
 
-    //TODO убрать $title = '', $description = '' заменить на Meta
-    public static function register($name, $parent_id = null, $slug = '', $title = '', $description = ''): self
-    {
-        $slug = empty($slug) ? Str::slug($name) : $slug;
-        if (!empty(self::where('slug', $slug)->first())) {
-            if (!is_null($parent_id)) {
-                $parent = Category::find($parent_id);
-                $slug .= '-' . $parent->slug;
-            } else {
-                $slug .= Str::random(4);
-            }
-        }
-        return self::create([
-            'name' => $name,
-            'parent_id' => $parent_id,
-            'slug' => $slug,
-            'title' => $title,
-            'description' => $description,
-            'published' => false,
-        ]);
-    }
-
-
     public function getChildrenIdAll(): array
     {
         return Category::orderBy('id')->where('_lft', '>=', $this->_lft)->where('_rgt', '<=', $this->_rgt)->pluck('id')->toArray();

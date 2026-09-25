@@ -47,7 +47,6 @@ class AttributeService
             $attribute->type = $request->integer('type');
             $attribute->sameAs = $request->string('sameAs')->trim()->value();
             $attribute->save();
-            $attribute->saveImage($request->file('file'), $request->boolean('clear_file'));
 
             //Работа с категориями
             $array_old = [];
@@ -81,20 +80,16 @@ class AttributeService
             }
             //2. Изменяем значения старых и добавляем новые
             foreach ($variants as $i => $item) {
-                //$file = $request->file('variants.'. $i.'.file');
-
                 if (!is_null($item['id'])) { //2.1 Изменяем старые значения
 
                     $variant = AttributeVariant::find($item['id']);
                     $variant->name = $item['name'];
                     $variant->save();
 
-                 //   $variant->saveImage($file, (bool)$item['clear_file']);
                 } else { //2.2 Добавляем новые
                     $attribute->addVariant($item['name']);
                 }
             }
-           // $attribute->push();
         });
     }
 
@@ -104,28 +99,4 @@ class AttributeService
         $attribute->delete();
     }
 
-    public function image(Attribute $attribute, Request $request): void
-    {
-        $attribute->saveImage($request->file('file'));
-
-        /*
-        if ($request->file('file') == null) return;
-        if (!empty($attribute->image)) {
-            $attribute->image->newUploadFile($request->file('file'));
-        } else {
-            $attribute->image()->save(Photo::upload($request->file('file')));
-        }
-        $attribute->refresh(); */
-    }
-
-    /*
-    public function image_variant(AttributeVariant $variant, Request $request)
-    {
-        if (!empty($variant->image)) {
-            $variant->image->newUploadFile($request->file('file'));
-        } else {
-            $variant->image()->save(Photo::upload($request->file('file')));
-        }
-        $variant->refresh();
-    } */
 }

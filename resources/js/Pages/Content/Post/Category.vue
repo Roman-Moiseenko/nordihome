@@ -1,7 +1,26 @@
 <template>
     <Head><title>{{ title }}</title></Head>
+    <div class="flex">
+        <h1 class="font-medium text-xl">Рубрика {{ category.name }}</h1>
+        <el-tooltip content="Помощь" placement="bottom-start" effect="dark">
+            <el-button circle class="ml-2" @click="showHelp = !showHelp">
+                <i class="fa-light fa-lightbulb-on text-orange-500"></i>
+            </el-button>
+        </el-tooltip>
+    </div>
     <div class="mt-3 p-3 bg-white rounded-lg ">
         <InfoCategory :category="category" :templates="templates" />
+
+        <HelpBlock v-if="showHelp">
+            <p><b>Название рубрики</b> является обязательным полем.</p>
+            <p><b>Шаблон записи</b> - шаблон по-умолчанию, для каждой записи можно выбрать свой шаблон.</p>
+            <p>Поле <b>Slug</b> (ссылка на рубрику) можно не заполнять, тогда оно заполнится автоматически. При
+                заполнении использовать латинский алфавит.</p>
+            <p>Рекомендуемое разрешение для <b>картинок</b> в карточку категории 700х700.</p>
+            <p><b>Иконки</b> для меню рекомендуется сохранять в форматах разрешающие прозрачный цвет - png, svg.
+                Разрешение не более 200х200.</p>
+            <p>Поля <b>Meta</b> используются в SEO. Для заполнения обязательны.</p>
+        </HelpBlock>
     </div>
 
     <el-popover :visible="visible_create" placement="bottom-start" :width="246">
@@ -30,6 +49,7 @@ import {useStore} from '@Res/store.js'
 import {ISelectItem} from '@Res/interface.d.ts'
 
 import InfoCategory from "./Block/InfoCategory.vue";
+import HelpBlock from "@Comp/HelpBlock.vue";
 import PanelPosts from "./Panels/AllPosts.vue"
 
 const store = useStore();
@@ -45,6 +65,7 @@ const props = defineProps({
 
 })
 const visible_create = ref(false)
+const showHelp = ref(false);
 const form = reactive({
     name: null,
     categoryId: props.category.id,
