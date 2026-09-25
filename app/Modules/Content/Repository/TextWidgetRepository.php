@@ -20,8 +20,6 @@ class TextWidgetRepository
         return array_merge($widget->toArray(), [
             'items' => $widget->items()->get()->map(fn(TextWidgetItem $item) => array_merge($item->toArray(), [
             ])),
-            'image' => $widget->getImage(),
-            'icon' => $widget->getIcon(),
         ]);
     }
 }
