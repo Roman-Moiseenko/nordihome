@@ -2,6 +2,7 @@
 
 namespace App\Modules\Shared\Providers;
 
+use App\Modules\Shared\Application\Interfaces\PhotoStorageInterface;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
 use App\Modules\Shared\Domain\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\Interfaces\SettingRepositoryInterface;
@@ -10,8 +11,11 @@ use App\Modules\Shared\Infrastructure\Persistence\PhotoRepository;
 use App\Modules\Shared\Infrastructure\Persistence\SettingRepository;
 use App\Modules\Shared\Infrastructure\Persistence\UserPermissionRepositoryFromAuth;
 use App\Modules\Shared\Infrastructure\Services\LaravelTransactionManager;
+use App\Modules\Shared\Infrastructure\Storage\LocalPhotoStorage;
+use App\Modules\Shared\Infrastructure\Storage\S3PhotoStorage;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -106,6 +110,17 @@ class SharedServiceProvider extends ServiceProvider
             PhotoRepositoryInterface::class,
             PhotoRepository::class
         );
+        $this->app->singleton(PhotoStorageInterface::class, function ($app) {
+            $driver = config('shop.storage_driver', 'local');
+
+            return match ($driver) {
+                's3' => new S3PhotoStorage(
+                    Storage::disk(config('shop.s3_disk', 's3')),
+                    config('shop.s3_url_prefix')
+                ),
+                default => new LocalPhotoStorage(public_path()),
+            };
+        });
     }
 
     // =====================================================================

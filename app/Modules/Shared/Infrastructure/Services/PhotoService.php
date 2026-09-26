@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Shared\Infrastructure\Services;
 
 use App\Modules\Setting\Entity\Settings;
+use App\Modules\Shared\Application\Interfaces\PhotoStorageInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
@@ -19,25 +20,14 @@ class PhotoService
 {
     public const string URL_UPLOAD = '/uploads';
     public const string URL_THUMB = '/cache';
-
-    private string $catalogUpload;
-    private string $catalogThumb;
-
-    private Settings $settings;
     private array $thumbs = [];
-    //   public bool $createThumbsOnSave;
-    //  private bool $createThumbsOnRequest;
 
-    public function __construct()
+    public function __construct(
+        private readonly PhotoStorageInterface $storage,
+        private readonly Settings $settings,
+    )
     {
-        $this->settings = app()->make(Settings::class);
-
         $this->thumbs = $this->settings->image->thumbs ?? [];
-        //    $this->createThumbsOnSave = $this->settings->image->createThumbsOnSave ?? false;
-        //   $this->createThumbsOnRequest = $this->settings->image->createThumbsOnRequest ?? false;
-
-        $this->catalogUpload = public_path() . self::URL_UPLOAD;
-        $this->catalogThumb = public_path() . self::URL_THUMB;
     }
 
     /**
@@ -57,22 +47,24 @@ class PhotoService
      */
     public function uploadFile(string $modelType, int $imageableId, UploadedFile $file, ?string $oldFileName = null): string
     {
-        $path = $this->patternGeneratePath($modelType, $imageableId);
-        $uploadDir = $this->catalogUpload . $path;
+        $path = self::URL_UPLOAD .  $this->patternGeneratePath($modelType, $imageableId);
+      //  $uploadDir = $this->catalogUpload . $path;
 
         // Удаляем старый файл, если есть
-        if ($oldFileName) {
-            $oldFile = $uploadDir . $oldFileName;
-            if (is_file($oldFile)) unlink($oldFile);
-            // Очищаем thumbs от старого файла
-            $this->clearThumbs($modelType, $imageableId, $oldFileName);
-        }
+        if ($oldFileName) $this->deleteFile($modelType, $imageableId, $oldFileName);
 
-        // Создаем каталог для загрузок
-        if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
+
+
+        //if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
         $fileName = $file->getClientOriginalName();
-        copy($file->getPath() . '/' . $file->getFilename(), $uploadDir . $fileName);
+        // Кладем файл в хранилище
+        $this->storage->putFromLocalFile(
+            $path . $fileName,
+            $file->getPath() . '/' . $file->getFilename()
+        );
+
+        //copy($file->getPath() . '/' . $file->getFilename(), $uploadDir . $fileName);
 
         return $fileName;
     }
@@ -83,8 +75,10 @@ class PhotoService
     public function getUploadUrl(string $modelType, int $imageableId, string $fileName): string
     {
         if (empty($fileName)) return '';
-
-        return self::URL_UPLOAD . $this->patternGeneratePath($modelType, $imageableId) . $fileName;
+        return $this->storage->url(
+            self::URL_UPLOAD . $this->patternGeneratePath($modelType, $imageableId) . $fileName
+        );
+       // return self::URL_UPLOAD . $this->patternGeneratePath($modelType, $imageableId) . $fileName;
     }
 
     /**
@@ -94,12 +88,12 @@ class PhotoService
     public function getThumbUrl(int $photoId, string $modelType, int $imageableId, string $fileName, string $thumb): string
     {
         $path = $this->patternGeneratePath($modelType, $imageableId);
-
-        $file = self::URL_THUMB . $path . $this->nameFileThumb($photoId, $fileName, $thumb);
+        $thumbName = $this->nameFileThumb($photoId, $fileName, $thumb);
+       // $file = self::URL_THUMB . $path . $this->nameFileThumb($photoId, $fileName, $thumb);
 
         $this->createThumbs($photoId, $modelType, $imageableId, $fileName, $thumb);
-
-        return $file;
+        return $this->storage->url(self::URL_THUMB . $path . $thumbName);
+      //  return $file;
     }
 
     /**
@@ -108,12 +102,13 @@ class PhotoService
     private function createThumbs(int $photoId, string $modelType, int $imageableId, string $fileName, string $thumb): void
     {
         $generatePath = $this->patternGeneratePath($modelType, $imageableId);
+        $uploadRelative = self::URL_UPLOAD . $generatePath . $fileName;
+        //$uploadPath = $this->catalogUpload . $generatePath . $fileName;
 
-        $uploadPath = $this->catalogUpload . $generatePath . $fileName;
+       // if (!is_file($uploadPath)) return;
+        if (!$this->storage->exists($uploadRelative)) return;//Нет загруженного файла
+
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
-
-        if (!is_file($uploadPath)) return; //Нет загруженного файла
-
         if (!in_array(mb_strtolower($ext), ['jpg', 'jpeg', 'png', 'webp'], true)) return; //Расширение невверное
 
         foreach ($this->thumbs as $items) {
@@ -124,6 +119,12 @@ class PhotoService
         }
         if (!isset($params)) return; //Нет параметров для thumb файла
 
+        $thumbRelative = self::URL_THUMB . $generatePath . $this->nameFileThumb($photoId, $fileName, $params['name']);
+        if ($this->storage->exists($thumbRelative)) return;
+        $localSource = $this->storage->localCopy($uploadRelative);
+        if (!$localSource) return;
+
+/*
         $thumbFile = $this->catalogThumb
             . $generatePath
             . $this->nameFileThumb($photoId, $fileName, $params['name']);
@@ -132,11 +133,12 @@ class PhotoService
         $thumbDir = $this->catalogThumb . $generatePath; //Создать директорию если нет
         if (!is_dir($this->catalogThumb . $generatePath)) mkdir($thumbDir, 0777, true);
 
-
+*/
         $manager = new ImageManager();
         try {
-            $img = $manager->make($uploadPath);
+            $img = $manager->make($localSource);
         } catch (\Throwable $e) {
+            $this->cleanupTemp($localSource);
             return;
         }
 
@@ -184,18 +186,34 @@ class PhotoService
         if (isset($params['width'], $params['height'])) {
             $img->resize($params['width'], $params['height']);
         }
+        if (in_array(mb_strtolower($ext), ['jpg', 'jpeg', 'webp'], true)) {
+            $img->encode(null, 70);
+        }
+        $tmpThumb = tempnam(sys_get_temp_dir(), 'thumb_') . '.' . $ext;
+        $img->save($tmpThumb);
+        try {
+            $this->storage->putFromLocalFile($thumbRelative, $tmpThumb);
+        } finally {
+            @unlink($tmpThumb);
+            $this->cleanupTemp($localSource);
+        }
+
+/*
         $thumbDir = pathinfo($thumbFile, PATHINFO_DIRNAME);
         if (!is_dir($thumbDir)) {
             mkdir($thumbDir, 0777, true);
         }
-
-        if (in_array(mb_strtolower($ext), ['jpg', 'jpeg', 'webp'], true)) {
-            $img->encode(null, 70);
-        }
         $img->save($thumbFile);
+        */
         //}
     }
-
+    private function cleanupTemp(string $path): void
+    {
+        // Only delete if it's in temp dir (i.e. was a copy from S3)
+        if (str_starts_with($path, sys_get_temp_dir())) {
+            @unlink($path);
+        }
+    }
     /**
      * Удаляет все thumb-файлы для изображения
      */
@@ -203,14 +221,15 @@ class PhotoService
     {
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
         if (!$ext) return;
-        $path = $this->catalogThumb . $this->patternGeneratePath($modelType, $imageableId);
-        if (!is_dir($path)) return;
-
+      //  $path = $this->catalogThumb . $this->patternGeneratePath($modelType, $imageableId);
+     //   if (!is_dir($path)) return;
+        $thumbDir = self::URL_THUMB . $this->patternGeneratePath($modelType, $imageableId);
         foreach ($this->thumbs as $params) {
-            $thumbFile = $path . $params['name'] . '_*.' . $ext;
-            foreach (glob($thumbFile) as $file) {
+            $this->storage->deleteMatching($thumbDir, $params['name'] . '_*.' . $ext);
+          //  $thumbFile = $path . $params['name'] . '_*.' . $ext;
+          /*  foreach (glob($thumbFile) as $file) {
                 if (is_file($file)) unlink($file);
-            }
+            }*/
         }
     }
 
@@ -225,10 +244,15 @@ class PhotoService
 
         $this->clearThumbs($modelType, $imageableId, $fileName);
 
+        $this->storage->delete(
+            self::URL_UPLOAD . $this->patternGeneratePath($modelType, $imageableId) . $fileName
+        );
+
+        /*
         $uploadPath = $this->catalogUpload . $this->patternGeneratePath($modelType, $imageableId) . $fileName;
         if (is_file($uploadPath)) {
             unlink($uploadPath);
-        }
+        }*/
     }
 
     /**
