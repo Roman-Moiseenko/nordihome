@@ -68,7 +68,6 @@ class PhotoController
      */
     public function upload(Request $request, UserPermission $userPermission): JsonResponse
     {
-        \Log::warning(json_encode($request->all()));
         $dto = PhotoUploadData::validateAndCreate($request->all());
         $dto->file  = $request->file('file');
         $photo = $this->uploadPhotoUseCase->execute($dto, $userPermission);

@@ -3,6 +3,8 @@
 namespace App\Modules\Content\Providers;
 
 use App\Modules\Content\Application\Services\WidgetRendererService;
+use App\Modules\Content\Console\Commands\SyncWidgetTemplatesFromFilesCommand;
+use App\Modules\Content\Console\Commands\SyncWidgetTemplatesToFilesCommand;
 use App\Modules\Content\Database\Seeders\ContentRoleSeeder;
 use App\Modules\Content\Database\Seeders\MetaSeeder;
 use App\Modules\Content\Domain\Interfaces\ContentBlockRepositoryInterface;
@@ -156,7 +158,8 @@ class ContentServiceProvider extends ServiceProvider
     protected function registerCommands()
     {
         $this->commands([
-            // Add command classes here
+            SyncWidgetTemplatesFromFilesCommand::class,
+            SyncWidgetTemplatesToFilesCommand::class,
         ]);
     }
 

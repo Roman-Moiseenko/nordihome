@@ -38,6 +38,11 @@ final class WidgetEntity
         set => $this->schema = $value;
     }
 
+    public ?string $template = null {
+        get => $this->template;
+        set => $this->template = $value;
+    }
+
     public ?DateTimeImmutable $createdAt = null {
         get => $this->createdAt;
         set => $this->createdAt = $value;
@@ -54,6 +59,7 @@ final class WidgetEntity
         WidgetCategory $category,
         WidgetSchema $schema,
         ?string $description = null,
+        ?string $template = null,
         bool $isContainer = false,
     ) {
         $this->name = $name;
@@ -61,5 +67,6 @@ final class WidgetEntity
         $this->category = $category;
         $this->schema = $schema;
         $this->description = $description;
+        $this->template = $template;
     }
 }
