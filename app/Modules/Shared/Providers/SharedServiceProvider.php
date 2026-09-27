@@ -2,8 +2,10 @@
 
 namespace App\Modules\Shared\Providers;
 
+use App\Modules\Shared\Application\Actions\MigratePhotosToS3UseCase;
 use App\Modules\Shared\Application\Interfaces\PhotoStorageInterface;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
+use App\Modules\Shared\Console\Commands\MigratePhotosToS3Command;
 use App\Modules\Shared\Domain\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\Interfaces\SettingRepositoryInterface;
 use App\Modules\Shared\Domain\Interfaces\UserPermissionRepositoryInterface;
@@ -121,6 +123,24 @@ class SharedServiceProvider extends ServiceProvider
                 default => new LocalPhotoStorage(public_path()),
             };
         });
+
+        $this->app->bind(LocalPhotoStorage::class, static function (): LocalPhotoStorage {
+            return new LocalPhotoStorage(public_path());
+        });
+
+        $this->app->bind(S3PhotoStorage::class, static function (): S3PhotoStorage {
+            return new S3PhotoStorage(
+                Storage::disk(config('shop.s3_disk', 's3')),
+                config('shop.s3_url_prefix')
+            );
+        });
+
+        $this->app->bind(MigratePhotosToS3UseCase::class, static function ($app): MigratePhotosToS3UseCase {
+            return new MigratePhotosToS3UseCase(
+                $app->make(LocalPhotoStorage::class),
+                $app->make(S3PhotoStorage::class)
+            );
+        });
     }
 
     // =====================================================================
@@ -135,7 +155,7 @@ class SharedServiceProvider extends ServiceProvider
     protected function registerCommands()
     {
         $this->commands([
-            // Add command classes here
+            MigratePhotosToS3Command::class,
         ]);
     }
 

@@ -10,7 +10,6 @@
 
        use App\Modules\Content\Entity\Widgets\ProductWidget;
        /** @var ProductWidget $widget  */
-// $_product->getImage('catalog')
 @endphp
 <div class="text-center mt-5 py-4 widget-home-3-group container-xl">
     <h2 class="fw-semibold mt-5">{{ $widget->caption }}</h2>
