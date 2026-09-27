@@ -7,6 +7,7 @@ use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\PromotionGroup;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -60,7 +61,7 @@ class GroupRepository
     {
         return array_merge($group->toArray(), [
             'quantity' => $group->products()->count(),
-            'image' => $group->getImage(),
+            'image' => GetPhotoStatic::get('catalog.group', $group->id),
         ]);
     }
 

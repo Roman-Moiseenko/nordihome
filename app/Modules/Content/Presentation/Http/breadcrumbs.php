@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use App\Modules\Content\Entity\Contact;
-use App\Modules\Content\Entity\Gallery;
 use App\Modules\Content\Entity\News;
 use App\Modules\Content\Entity\Widgets\BannerWidget;
 use App\Modules\Content\Entity\Widgets\CatalogWidget;
@@ -11,6 +10,7 @@ use App\Modules\Content\Entity\Widgets\PostWidget;
 use App\Modules\Content\Entity\Widgets\ProductWidget;
 use App\Modules\Content\Entity\Widgets\PromotionWidget;
 use App\Modules\Content\Entity\Widgets\TextWidget;
+use App\Modules\Content\Infrastructure\Models\Gallery;
 use App\Modules\Content\Infrastructure\Models\Page;
 use App\Modules\Content\Infrastructure\Models\Post;
 use App\Modules\Content\Infrastructure\Models\PostCategory;

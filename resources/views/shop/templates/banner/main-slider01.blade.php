@@ -12,6 +12,7 @@
     * $item->description - string
     */
     /** @var \App\Modules\Content\Entity\Widgets\BannerWidget $widget */
+    //$item->getImage()
 @endphp
 <div class="main-specials">
     <div class="container">
@@ -29,7 +30,8 @@
                        "title": @json($item->title ?? ''),
                        "url": @json($item->url)
                    }'>
-                        <img src="{{ $item->getImage() }}"/>
+
+                        <img src="{{ App\Modules\Shared\Application\Actions\GetPhotoStatic::get('content.banner-widget-item', $item->id) }}"/>
                     </a>
                 </div>
             @endforeach

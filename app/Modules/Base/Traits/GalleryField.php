@@ -12,13 +12,11 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  */
 trait GalleryField
 {
-    protected bool $is_thumb = true;
-
     public function gallery(): MorphMany
     {
         return $this->morphMany(Photo::class, 'imageable')->orderBy('sort');
     }
-
+/*
     public function photos(): MorphMany
     {
         if ($this instanceof Product) {
@@ -31,59 +29,16 @@ trait GalleryField
         }
         return $this->gallery();
     }
-
-    public function getImageBySort(int $sort, ?string $thumb = null): string
+*/
+  /*  public function getImage(?string $thumb = null): string
     {
-        /** @var Photo $image */
-        $image = $this->photos()->where('sort', $sort)->first();
+        $image = $this->photos()->where('sort', 0)->first();
 
         if (is_null($image)) return '/images/no-image.jpg';
         return is_null($thumb) ? $image->getUploadUrl() : $image->getThumbUrl($thumb);
     }
 
-    public function getImage(?string $thumb = null): string
-    {
-        return $this->getImageBySort(0, $thumb);
-    }
 
-    public function getImageNext(?string $thumb = null): string
-    {
-        return $this->getImageBySort(1, $thumb);
-    }
-
-    public function getImageData(?string $thumb = null): array
-    {
-        $image = $this->photos()->first();
-        return $this->ImageToData($image, $thumb);
-
-    }
-
-    public function getImageNextData(?string $thumb = null): array
-    {
-        $image = $this->photos()->skip(1)->first();
-        if (is_null($image)) $image = $this->photos()->first();
-        return $this->ImageToData($image, $thumb);
-    }
-
-    private function ImageToData(Photo|null $image, ?string $thumb = null): array
-    {
-        if (is_null($image)) return [
-            'src' => '/images/no-image.jpg',
-            'alt' => '',
-            'title' => '',
-            'description' => '',
-        ];
-        return [
-            'src' => is_null($thumb) ? $image->getUploadUrl() : $image->getThumbUrl($thumb),
-            'alt' => $image->alt,
-            'title' => $image->alt,
-            'description' => $image->description,
-        ];
-    }
-
-    /**
-     * Для списка товаров в админке
-     */
     public function miniImage(): string
     {
         $image = $this->gallery()->first();
@@ -93,94 +48,6 @@ trait GalleryField
         }
         return $image->getThumbUrl('mini');
     }
-
-    public function addImage($file): Photo
-    {
-        if (empty($file)) throw new \DomainException('Нет файла');
-
-        $sort = count($this->gallery);
-        $photo = Photo::upload(file: $file, sort: $sort);
-        $this->gallery()->save($photo);
-        $photo->refresh();
-        return $photo;
-    }
-
-    public function addImageByUrl(string $url): ?Photo
-    {
-        if (empty($url)) return null;
-
-        $sort = count($this->gallery);
-        $photo = Photo::uploadByUrl(url: $url, sort: $sort);
-        $this->gallery()->save($photo);
-        $photo->refresh();
-        return $photo;
-    }
-
-    public function delImage(int $photo_id): void
-    {
-        $photo = Photo::find($photo_id);
-        $photo->delete();
-        $this->reSort();
-    }
-
-    public function setAlt(int $photo_id, string $alt = '', string $title = '', string $description = ''): void
-    {
-        foreach ($this->gallery as $photo) {
-            if ($photo->id === $photo_id) {
-                $photo->update([
-                    'alt' => $alt,
-                    'title' => $title,
-                    'description' => $description,
-                ]);
-            }
-        }
-    }
-
-    public function upImage(int $photo_id): void
-    {
-        $photos = [];
-        foreach ($this->gallery as $photo) {
-            $photos[] = $photo;
-        }
-
-        for ($i = 1; $i < count($photos); $i++) {
-            if ($photos[$i]->id == $photo_id) {
-                $prev = $photos[$i - 1]->sort;
-                $next = $photos[$i]->sort;
-                $photos[$i]->update(['sort' => $prev]);
-                $photos[$i - 1]->update(['sort' => $next]);
-            }
-        }
-    }
-
-    public function downImage(int $photo_id): void
-    {
-        $photos = [];
-        foreach ($this->gallery as $photo) {
-            $photos[] = $photo;
-        }
-        for ($i = 0; $i < count($photos) - 1; $i++) {
-            if ($photos[$i]->id == $photo_id) {
-                $prev = $photos[$i + 1]->sort;
-                $next = $photos[$i]->sort;
-                $photos[$i]->update(['sort' => $prev]);
-                $photos[$i + 1]->update(['sort' => $next]);
-            }
-        }
-    }
-
-    public function reSort(): void
-    {
-        foreach ($this->gallery as $i => $photo) {
-            $photo->update(['sort' => $i]);
-        }
-    }
-
-    public function copyImage(Photo $image): void
-    {
-        $sort = count($this->gallery);
-        $photo = Photo::copyByPath(path: $image->getUploadFile(), sort: $sort);
-        $this->gallery()->save($photo);
-    }
+*/
 
 }

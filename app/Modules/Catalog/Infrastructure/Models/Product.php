@@ -12,7 +12,6 @@ use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Casts\DimensionsCast;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Video;
-use App\Modules\Base\Traits\GalleryField;
 use App\Modules\Cabinet\Infrastructure\Models\Wish;
 use App\Modules\Cart\Infrastructure\Models\CartCookie;
 use App\Modules\Cart\Infrastructure\Models\CartStorage;
@@ -36,6 +35,7 @@ use App\Modules\Guide\Entity\VAT;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -143,7 +143,7 @@ use JetBrains\PhpStorm\Pure;
  */
 class Product extends Model
 {
-    use SoftDeletes, GalleryField;
+    use SoftDeletes;//, GalleryField;
     protected $touches = ['categories', 'category', 'rooms'];
     const int FREQUENCY_MAJOR = 101;
     const int FREQUENCY_AVERAGE = 102;
@@ -217,6 +217,11 @@ class Product extends Model
     protected $with = [
         'brand',
     ];
+
+    public function gallery(): MorphMany
+    {
+        return $this->morphMany(Photo::class, 'imageable')->orderBy('sort');
+    }
 
     public function sluggable()
     {
@@ -400,14 +405,6 @@ class Product extends Model
     public function weight(): float|int
     {
         return 0;
-   /*     $weight = 0;
-        if ($this->composites()->count() > 0) {
-            foreach ($this->composites as $composite)
-            $weight += $composite->weight() * $composite->pivot->quantity;
-        } else {
-            $weight = $this->packages->weight();
-        }
-        return ceil($weight * 1000) /1000;*/
     }
 
     public function volume(): float|int
@@ -439,7 +436,6 @@ class Product extends Model
      * Текущая (Предыдущая $previous = true) цена для клиента (с учетом цен клиента, Розничная, или Оптовые)
      * Показывать на сайте (Фронтенд)
      */
-    //TODO Переделать, везде запрашивать $user
     public function getPrice(bool $previous = false, ?Client $client = null): float
     {
         $price = 0;
@@ -495,18 +491,6 @@ class Product extends Model
         if (empty($model)) return null;
         return $model->amount;
         //TODO ТЕСТ
-        /*
-        if ($this->pricesRetail()->count() == 0) return 0;
-        if ($previous) {
-
-            $model = $this->pricesRetail()->skip(1)->first();
-            if (empty($model)) return 0;
-        } else {
-            $model = $this->pricesRetail()->skip(0)->first();
-        }
-        return $model->value;
-
-        */
     }
 
     public function getPriceBulk(bool $previous = false):? float
@@ -983,7 +967,7 @@ class Product extends Model
             'name' => $this->name,
             'code' => $this->code,
             'code_search' => $this->code_search,
-            'image' => $this->getImage(),
+            //'image' => $this->getImage(),
             'price' => $this->getPrice(),
             'url' => route('admin.catalog.product.edit', $this),
             'count' => $this->getQuantitySell(),

@@ -15,7 +15,7 @@
     $galleryItems = [];
     foreach ($widget->items as $item) {
         $galleryItems[] = [
-            'src' => $item->getImage(),
+            'src' => App\Modules\Shared\Application\Actions\GetPhotoStatic::get('content.banner-widget-item', $item->id),
             'caption' => '',
         ];
     }
@@ -25,7 +25,7 @@
     <div class="container-fluid">
         <div id="main-slider-reviews" class="owl-carousel owl-theme">
             @foreach($widget->items as $index => $item)
-                <img src="{{ $item->getImage('slide') }}" class="review-image" data-index="{{ $index }}" style="cursor: pointer;"/>
+                <img src="{{ App\Modules\Shared\Application\Actions\GetPhotoStatic::get('content.banner-widget-item', $item->id, 'slide') }}" class="review-image" data-index="{{ $index }}" style="cursor: pointer;"/>
             @endforeach
         </div>
     </div>

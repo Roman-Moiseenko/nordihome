@@ -43,10 +43,9 @@
                     :key="gallery.id"
                     class="gallery-tab-item"
                     :class="{ active: selectedGalleryId === gallery.id }"
-                    @click="selectedGalleryId = gallery.id"
+                    @click="selectGallery(gallery.id)"
                 >
                     <div class="gallery-tab-name">{{ gallery.name }}</div>
-                    <div class="gallery-tab-count">{{ gallery.images.length }}</div>
                 </div>
             </div>
 
@@ -60,6 +59,9 @@
                         :show-file-list="false"
                         :action="uploadAction"
                         :headers="uploadHeaders"
+                        :data="uploadData"
+                        :name="'file'"
+                        :before-upload="onBeforeUpload"
                         :on-success="onUploadSuccess"
                         :on-error="onUploadError"
                     >
@@ -143,15 +145,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { Plus, Upload } from '@element-plus/icons-vue'
-import axios from 'axios'
-import api from '@Res/api'
 // @ts-ignore
 import { route } from 'ziggy-js'
+import api from '@Res/api'
 
 interface ImageData {
-    id: number | null
+    id: number
     url: string
     src: string
     alt: string
@@ -163,8 +164,10 @@ interface GalleryData {
     id: number
     name: string
     slug: string
-    images: ImageData[]
 }
+
+const GALLERY_MODEL_TYPE = 'content.gallery'
+const PHOTO_TYPE = 'gallery'
 
 const props = defineProps<{
     modelValue: ImageData | null
@@ -177,6 +180,8 @@ const emit = defineEmits<{
 const dialogVisible = ref(false)
 const galleries = ref<GalleryData[]>([])
 const selectedGalleryId = ref<number | null>(null)
+const widgetGalleryId = ref<number | null>(null)
+const currentGalleryImages = ref<ImageData[]>([])
 const selectedImage = ref<ImageData | null>(null)
 const uploading = ref(false)
 const uploadRef = ref<any>(null)
@@ -185,31 +190,98 @@ const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('co
 const uploadHeaders = computed(() => ({
     'X-CSRF-TOKEN': csrf,
 }))
-const uploadAction = computed(() => route('admin.content.gallery.upload-to-widget'))
+const uploadAction = computed(() => route('admin.photo.upload'))
+const uploadData = computed(() => ({
+    imageableId: selectedGalleryId.value ?? widgetGalleryId.value ?? 0,
+    modelType: GALLERY_MODEL_TYPE,
+    type: PHOTO_TYPE,
+}))
 
-const currentGalleryImages = computed(() => {
-    const gallery = galleries.value.find(g => g.id === selectedGalleryId.value)
-    return gallery ? gallery.images : []
-})
+function normalizePhoto(photo: any): ImageData {
+    return {
+        id: Number(photo.id),
+        url: photo.url,
+        src: photo.url,
+        alt: photo.alt || '',
+        title: photo.title || '',
+        description: photo.description || '',
+    }
+}
+
+async function loadWidgetGalleryId() {
+    try {
+        const data = await api.get(route('admin.content.gallery.widget-id'), {}, { showSuccess: false })
+        widgetGalleryId.value = Number(data)
+    } catch (e) {
+        console.error('Ошибка получения id галереи виджета:', e)
+    }
+}
 
 async function loadGalleries() {
     try {
         const data = await api.post(route('admin.content.gallery.get-tree'), {}, { showSuccess: false })
-        galleries.value = data
-
-        // Выбираем первую галерею по умолчанию
-        if (galleries.value.length > 0 && !selectedGalleryId.value) {
-            selectedGalleryId.value = galleries.value[0].id
-        }
+        galleries.value = (Array.isArray(data) ? data : []) as GalleryData[]
     } catch (e) {
         console.error('Ошибка загрузки галерей:', e)
+        galleries.value = []
     }
 }
 
-function openPicker() {
+async function loadImages(galleryId: number | null) {
+    if (!galleryId) {
+        currentGalleryImages.value = []
+        return
+    }
+
+    try {
+        const data = await api.get(
+            route('admin.photo.get-by-entity'),
+            {
+                imageableId: galleryId,
+                modelType: GALLERY_MODEL_TYPE,
+                type: PHOTO_TYPE,
+            },
+            { showSuccess: false }
+        )
+        currentGalleryImages.value = Array.isArray(data)
+            ? data.map(normalizePhoto)
+            : []
+    } catch (e) {
+        console.error('Ошибка загрузки изображений галереи:', e)
+        currentGalleryImages.value = []
+    }
+}
+
+function determineDefaultGallery() {
+    if (widgetGalleryId.value) {
+        const widget = galleries.value.find(g => g.id === widgetGalleryId.value)
+        if (widget) {
+            selectedGalleryId.value = widget.id
+            return
+        }
+    }
+
+    selectedGalleryId.value = galleries.value.length > 0
+        ? galleries.value[0].id
+        : (widgetGalleryId.value ?? null)
+}
+
+async function openPicker() {
     selectedImage.value = props.modelValue ? { ...props.modelValue } : null
-    loadGalleries()
     dialogVisible.value = true
+
+    await loadWidgetGalleryId()
+    await loadGalleries()
+    determineDefaultGallery()
+    await loadImages(selectedGalleryId.value)
+}
+
+async function selectGallery(galleryId: number) {
+    if (selectedGalleryId.value === galleryId) return
+
+    selectedGalleryId.value = galleryId
+    selectedImage.value = null
+    await loadImages(galleryId)
 }
 
 function selectImage(image: ImageData) {
@@ -219,10 +291,10 @@ function selectImage(image: ImageData) {
 async function confirmSelection() {
     if (!selectedImage.value) return
 
-    // Сохраняем изменения alt/title/description на сервер
+    // Сохраняем изменения alt/title/description через admin.photo.save-data
     try {
         await api.post(
-            route('admin.content.gallery.image-set-widget', { photo: selectedImage.value.id }),
+            route('admin.photo.save-data', { id: selectedImage.value.id }),
             {
                 alt: selectedImage.value.alt,
                 title: selectedImage.value.title,
@@ -252,27 +324,17 @@ function removeImage() {
     emit('update:modelValue', null)
 }
 
-function onUploadSuccess(response: any) {
+function onBeforeUpload() {
+    uploading.value = true
+    return true
+}
+
+async function onUploadSuccess(response: any) {
     uploading.value = false
-    // После загрузки добавляем изображение в галерею "Виджет" и обновляем список
-    const newImage: ImageData = {
-        id: response.id,
-        url: response.url,
-        src: response.url,
-        alt: response.alt || '',
-        title: response.title || '',
-        description: response.description || '',
-    }
 
-    // Находим галерею "Виджет" и добавляем в неё
-    const widgetGallery = galleries.value.find(g => g.slug === 'widget')
-    if (widgetGallery) {
-        widgetGallery.images.unshift(newImage)
-        selectedGalleryId.value = widgetGallery.id
-    }
-
-    // Автоматически выбираем загруженное изображение
-    selectImage(newImage)
+    // Перечитываем изображения текущей галереи и выбираем загруженное фото
+    await loadImages(selectedGalleryId.value)
+    selectImage(normalizePhoto(response))
 }
 
 function onUploadError() {
@@ -328,15 +390,6 @@ function onUploadError() {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-.gallery-tab-count {
-    font-size: 11px;
-    color: #9ca3af;
-    background: #e5e7eb;
-    border-radius: 10px;
-    padding: 1px 6px;
-    margin-left: 6px;
 }
 
 /* Центральная панель — сетка изображений */

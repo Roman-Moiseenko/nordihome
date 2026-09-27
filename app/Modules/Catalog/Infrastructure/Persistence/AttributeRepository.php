@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\DTOs\Attribute\AttributeCategoryData;
 use App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 
 class AttributeRepository implements AttributeRepositoryInterface
 {
@@ -37,7 +38,8 @@ class AttributeRepository implements AttributeRepositoryInterface
                 group: $attribute->group->name,
                 filter: $attribute->filter,
                 type_text: $attribute->typeText(),
-                image: $attribute->getImage(),
+                //TODO Заменить на UseCase
+                image: GetPhotoStatic::get('catalog.attribute', $attribute->id),
             );
         }, $attributes);
     }

@@ -5,7 +5,6 @@ use App\Modules\Content\Controllers\CacheController;
 use App\Modules\Content\Controllers\CatalogWidgetController;
 use App\Modules\Content\Controllers\ContactController;
 use App\Modules\Content\Controllers\FormWidgetController;
-use App\Modules\Content\Controllers\GalleryController;
 use App\Modules\Content\Controllers\MenuController;
 use App\Modules\Content\Controllers\MetaTemplateController;
 use App\Modules\Content\Controllers\NewsController;
@@ -15,6 +14,7 @@ use App\Modules\Content\Controllers\ProductWidgetController;
 use App\Modules\Content\Controllers\PromotionWidgetController;
 use App\Modules\Content\Controllers\TextWidgetController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\ContentBlockController;
+use App\Modules\Content\Presentation\Http\Controllers\Web\GalleryController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\LabelController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\PostController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\WidgetController;
@@ -288,6 +288,7 @@ Route::group(
             'as' => 'gallery.'
         ], function () {
             Route::post('/get-tree', [GalleryController::class, 'get_tree'])->name('get-tree');
+            Route::get('/widget-id', [GalleryController::class, 'widget_id'])->name('widget-id');
             Route::post('/set-info/{gallery}', [GalleryController::class, 'set_info'])->name('set-info');
             Route::get('/{gallery}', [GalleryController::class, 'show'])->name('show');
             Route::delete('/image-del/{photo}', [GalleryController::class, 'image_del'])->name('image-del');

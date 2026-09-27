@@ -66,7 +66,7 @@ class Photo extends Model
     }
 
     //Генерация пути
-    public function patternGeneratePath(): string
+    private function patternGeneratePath(): string
     {
         //if (is_null($this->imageable)) dd([$this->imageable_type, $this->imageable_id, Str::slug(class_basename($this->imageable_type))]);
         if (!empty($this->model_type)) {

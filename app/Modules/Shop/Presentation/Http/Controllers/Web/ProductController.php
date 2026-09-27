@@ -13,19 +13,15 @@ use Illuminate\Http\Request;
 
 class ProductController extends ShopAbstractController
 {
-    //  private ShopRepository $repository;
-    private ViewRepository $views;
 
     public function __construct(
-        ViewRepository             $views,
-        private ProductViewQuery   $productViewQuery,
-        private ProductSearchQuery $productSearchQuery,
-        private FullSearchQuery    $fullSearchQuery,
-        private TrackSearchService $trackSearchService,
+        private readonly ProductViewQuery   $productViewQuery,
+        private readonly ProductSearchQuery $productSearchQuery,
+        private readonly FullSearchQuery    $fullSearchQuery,
+        private readonly TrackSearchService $trackSearchService,
     )
     {
-        $this->middleware(['role:admin'])->only(['view_draft']);
-        $this->views = $views;
+        $this->middleware(['role:admin|staff'])->only(['view_draft']);
     }
 
     public function view(Request $request, $slug)
@@ -67,17 +63,16 @@ class ProductController extends ShopAbstractController
         return \response()->json($data);
     }
 
-    public function view_draft(Product $product)
+    public function view_draft(Request $request, Product $product)
     {
-        if ($product->isPublished()) {
-            flash('Товар опубликован, неверная ссылка');
-            return redirect()->back();
-        }
-//TODO Переделать под UseCase
+        //FixMe переделать под id без Product
+        $client = $this->getClient($request);
+        $data = $this->productViewQuery->execute($product->slug, $client, false);
 
-        return $this->views->product_draft($product->slug);
+        return view('shop.product.view', [
+            'pageData' => $data,
+        ]);
     }
-
 
 
     //TODO Переименовать

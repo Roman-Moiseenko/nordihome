@@ -19,12 +19,8 @@ readonly class GetLatestPricesQuery
     /**
      * @return array<string, float>
      */
-    public function execute(int $productId, UserPermission $userPermission): array
+    public function execute(int $productId): array
     {
-        if (!$userPermission->can('accounting.price.view')) {
-            throw new AccessDeniedException();
-        }
-
         return $this->priceRepository->findCurrentPrices($productId);
     }
 }

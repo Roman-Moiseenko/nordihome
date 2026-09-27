@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Content\Entity;
+namespace App\Modules\Content\Infrastructure\Models;
 
 use App\Modules\Shared\Infrastructure\Models\Photo;
 use Carbon\Carbon;

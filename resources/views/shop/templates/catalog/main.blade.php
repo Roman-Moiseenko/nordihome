@@ -20,7 +20,7 @@
                     <a href="{{ $item->url() }}">
                         <div>
                             <img
-                                src="{{ $item->image('catalog-free') ?? '/images/no-image.jpg' }}"
+                                src="{{ App\Modules\Shared\Application\Actions\GetPhotoStatic::get('catalog.category', $item->model_id, 'catalog-free') }}"
                                 alt={{ $item->name() }}>
                             <span>{{ $item->name() }}</span>
                         </div>

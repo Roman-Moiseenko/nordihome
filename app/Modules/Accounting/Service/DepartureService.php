@@ -123,10 +123,11 @@ class DepartureService extends AccountingService
 
     public function upload(DepartureDocument $departure, Request $request): void
     {
-        $files = $request->file('files') ?? [];
+      /*  $files = $request->file('files') ?? [];
         foreach ($files as $file) {
             $departure->photos()->save(Photo::upload(file: $file));
         }
+        */
     }
 
     public function deletePhoto(DepartureDocument $departure, Request $request)

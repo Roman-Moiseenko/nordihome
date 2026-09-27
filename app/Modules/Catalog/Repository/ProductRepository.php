@@ -11,6 +11,7 @@ use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Catalog\Infrastructure\Models\Tag;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use App\Modules\Shared\Infrastructure\Models\Photo;
 
 class ProductRepository
@@ -53,7 +54,7 @@ class ProductRepository
     private function ProductToArray(Product $product): array
     {
         return array_merge($product->toArray(), [
-            'image' => $product->miniImage(),
+            'image' => GetPhotoStatic::gallery('catalog.product', $product->id, 'mini'),
             'category_name' => $product->category->getParentNames(),
             'price' => $product->getPriceRetail(),
             'bulk' => $product->getPriceBulk(),
@@ -79,7 +80,7 @@ class ProductRepository
                         'id' => $product->id,
                         'code' => $product->code,
                         'name' => $product->name,
-                        'image' => $product->miniImage(),
+                        'image' => GetPhotoStatic::gallery('catalog.product', $product->id, 'mini'),
                     ];
                 }),
             ];
@@ -150,7 +151,7 @@ class ProductRepository
                 'attributes' => array_map(function (Attribute $attribute) {
                     return [
                         'name' => $attribute->name,
-                        'image' => $attribute->getImage(),
+                        'image' => GetPhotoStatic::get('catalog.attribute', $attribute->id),
                     ];
                 }, $product->modification->prod_attributes),
                 'products' => $product->modification->products()->get()->map(function (Product $product) {
@@ -158,7 +159,7 @@ class ProductRepository
                         'id' => $product->id,
                         'name' => $product->name,
                         'code' => $product->code,
-                        'image' => $product->miniImage(),
+                        'image' => GetPhotoStatic::gallery('catalog.product', $product->id, 'mini'),
                         'attributes' => array_map(function (Attribute $attribute) use ($product) {
                             return [
                                 'name' => $attribute->getVariant($product->Value($attribute->id))->name,
@@ -173,7 +174,7 @@ class ProductRepository
                     'id' => $product->id,
                     'name' => $product->name,
                     'code' => $product->code,
-                    'image' => $product->miniImage(),
+                    'image' => GetPhotoStatic::gallery('catalog.product', $product->id, 'mini'),
                 ];
             }),
 
@@ -182,7 +183,7 @@ class ProductRepository
                     'id' => $product->id,
                     'name' => $product->name,
                     'code' => $product->code,
-                    'image' => $product->miniImage(),
+                    'image' => GetPhotoStatic::gallery('catalog.product', $product->id, 'mini'),
                     'price' => $product->getPriceRetail(),
                     'discount' => $product->pivot->discount,
                 ];
@@ -192,7 +193,7 @@ class ProductRepository
                     'id' => $product->id,
                     'name' => $product->name,
                     'code' => $product->code,
-                    'image' => $product->miniImage(),
+                    'image' => GetPhotoStatic::gallery('catalog.product', $product->id, 'mini'),
                     'quantity' => $product->pivot->quantity,
                 ];
             }),

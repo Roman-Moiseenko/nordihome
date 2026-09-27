@@ -36,8 +36,8 @@ Route::group([
             'prefix' => 'wish'
         ], function () {
             Route::get('/', [WishAbstractController::class, 'index'])->name('index');
-            Route::post('/clear', [WishAbstractController::class, 'clear'])->name('clear');
-            Route::post('/get', [WishAbstractController::class, 'get'])->name('get');
+            //Route::post('/clear', [WishAbstractController::class, 'clear'])->name('clear');
+            //Route::post('/get', [WishAbstractController::class, 'get'])->name('get');
             Route::post('/toggle/{product}', [WishAbstractController::class, 'toggle'])->name('toggle');
         });
 

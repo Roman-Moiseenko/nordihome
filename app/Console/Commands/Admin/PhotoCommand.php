@@ -23,23 +23,9 @@ class PhotoCommand extends Command
         }
 
         $this->info('Процесс исправления запущен');
-        /** @var Product[] $products */
-        $products = Product::withTrashed()->get();
-        $this->info('Кол-во товаров - ' . $products->count());
-        $_count = 0;
-        foreach ($products as $product) {
-            $change = false;
 
-            $product->reSort();
-
-
-            if ($change) {
-                $_count++;
-                $this->info('   ***** ' . $product->name . ' Изображений ' . $product->photos()->count());
-            }
-
-        }
-        $this->info('Отсортированы изображения ' . $_count. ' товаров');
+        //FixMe если нужно, то сделать через PhotoEntity и Job для каждого товара
+        $this->info('Отсортированы изображения ' . 0 . ' товаров');
 
         return true;
     }

@@ -5,6 +5,7 @@ namespace App\Modules\Content\Repository;
 
 use App\Modules\Content\Entity\Widgets\BannerWidget;
 use App\Modules\Content\Entity\Widgets\BannerWidgetItem;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use Illuminate\Http\Request;
 
 class BannerWidgetRepository
@@ -20,7 +21,7 @@ class BannerWidgetRepository
     {
         return array_merge($widget->toArray(), [
             'items' => $widget->items()->get()->map(fn(BannerWidgetItem $item) => array_merge($item->toArray(), [
-                'image_file' => $item->getImage(),
+                'image_file' => GetPhotoStatic::get('content.banner-widget-item', $item->id),
             ])),
         ]);
     }

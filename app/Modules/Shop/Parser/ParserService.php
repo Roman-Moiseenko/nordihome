@@ -72,6 +72,7 @@ class ParserService
         $this->common = $settings->common;
     }
 
+    #[Deprecated]
     public function findProduct(string $search): Product
     {
         $code = $this->formatCode($search);
@@ -100,7 +101,7 @@ class ParserService
             }
 
             $product->save();
-            $product->addImageByUrl($parser_product['image']);
+           // $product->addImageByUrl($parser_product['image']);
             $product->refresh();
 
             //Проверяем есть ли товары в составе

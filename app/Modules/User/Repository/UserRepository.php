@@ -100,7 +100,7 @@ class UserRepository
 
         ]);
     }
-
+/*
     public function getWish(?int $clientId): array
     {
         if (is_null($clientId)) return [];
@@ -117,6 +117,7 @@ class UserRepository
             ];
         }, $client->wishes()->getModels());
     }
+    */
 
     public function getUsersBySubscription(string $class): array
     {

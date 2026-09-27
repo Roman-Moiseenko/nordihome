@@ -45,21 +45,4 @@ class WishAbstractController extends ShopAbstractController
         ]);
     }
 
-    public function get(Request $request)
-    {
-        $client = $this->getClient($request);
-        $products = $this->repository->getWish($client->id);
-        return response()->json([
-            'items' => $products,
-        ]);
-    }
-
-    public function clear(Request $request)
-    {
-        /** @var User $user */
-       // $this->service->clear($user->id);
-
-        return response()->json(true);
-    }
-
 }

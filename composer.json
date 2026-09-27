@@ -26,6 +26,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.2",
+        "league/flysystem-aws-s3-v3": "3.0",
         "livewire/livewire": "^3.5",
         "mpdf/mpdf": "^v8.2.5",
         "nesbot/carbon": "^3.8",

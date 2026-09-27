@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Modules\Content\Controllers;
+namespace App\Modules\Content\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Content\Entity\Gallery;
+use App\Modules\Content\Infrastructure\Models\Gallery;
 use App\Modules\Content\Repository\GalleryRepository;
 use App\Modules\Content\Service\GalleryService;
 use App\Modules\Shared\Infrastructure\Models\Photo;
@@ -91,29 +91,34 @@ class GalleryController extends Controller
     }
 
     /**
-     * Возвращает все галереи с изображениями для виджета выбора фото.
+     * Возвращает все галереи (только данные, без изображений) для виджета выбора фото.
+     * Список изображений галереи запрашивается отдельно через admin.photo.get-by-entity.
      */
     public function get_tree(): JsonResponse
     {
         $galleries = Gallery::orderBy('name')
-            ->with(['photos' => function ($query) {
-                $query->orderBy('sort');
-            }])
             ->get()
             ->map(fn(Gallery $gallery) => [
                 'id' => $gallery->id,
                 'name' => $gallery->name,
                 'slug' => $gallery->slug,
-                'images' => $gallery->photos->map(fn(Photo $photo) => [
-                    'id' => $photo->id,
-                    'url' => $photo->getUploadUrl(),
-                    'alt' => $photo->alt,
-                    'title' => $photo->title,
-                    'description' => $photo->description,
-                ]),
             ]);
 
         return response()->json($galleries);
+    }
+
+    /**
+     * Возвращает id галереи "Виджет" (widget), создавая её при необходимости.
+     * Используется как галерея по умолчанию для загрузки изображений в ImagePicker.
+     */
+    public function widget_id(): JsonResponse
+    {
+        $gallery = Gallery::firstOrCreate(
+            ['slug' => 'widget'],
+            ['name' => 'Виджет']
+        );
+
+        return response()->json($gallery->id);
     }
 
     /**

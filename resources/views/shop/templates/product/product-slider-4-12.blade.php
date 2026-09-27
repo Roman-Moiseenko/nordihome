@@ -10,6 +10,7 @@
 
        use App\Modules\Content\Entity\Widgets\ProductWidget;
        /** @var ProductWidget $widget  */
+// $_product->getImage('catalog')
 @endphp
 <div class="text-center mt-5 py-4 widget-home-3-group container-xl">
     <h2 class="fw-semibold mt-5">{{ $widget->caption }}</h2>
@@ -20,7 +21,7 @@
             <div style="">
                 <a href="{{ route('shop.product.view', $_product->slug) }}"
                    style="max-width: 100%; overflow: hidden;">
-                    <img loading="lazy" src="{{ $_product->getImage('catalog') }}"
+                    <img loading="lazy" src="{{  App\Modules\Shared\Application\Actions\GetPhotoStatic::gallery('catalog.product', $_product->id, 'catalog') }}"
                          alt="{{ $_product->getName() }}" style="width: 100%;"/>
                     <div class="name f-w_600 m-b_10">{{ $_product->getName() }}</div>
                     <div class="price m-b_10">{{ price($_product->getPrice()) }}</div>

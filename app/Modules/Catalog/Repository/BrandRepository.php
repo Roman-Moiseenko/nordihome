@@ -5,6 +5,7 @@ namespace App\Modules\Catalog\Repository;
 
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -32,7 +33,7 @@ class BrandRepository
     {
         return array_merge($brand->toArray(), [
             'quantity' => $brand->products()->count(),
-            'image' => $brand->getImage(),
+            'image' => GetPhotoStatic::get('catalog.brand', $brand->id),
         ]);
     }
 

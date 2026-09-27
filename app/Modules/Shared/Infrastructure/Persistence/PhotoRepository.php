@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 
 readonly class PhotoRepository implements PhotoRepositoryInterface
 {
+    //FIXME Убрать private PhotoService $photoService,
     public function __construct(
         private PhotoService $photoService,
     )
@@ -153,6 +154,7 @@ readonly class PhotoRepository implements PhotoRepositoryInterface
         }
 
         $models = Photo::whereIn('id', $ids)->get();
+        return $models->map(fn($model) => $this->hydrate($model))->toArray();
 
         $result = [];
         foreach ($models as $model) {

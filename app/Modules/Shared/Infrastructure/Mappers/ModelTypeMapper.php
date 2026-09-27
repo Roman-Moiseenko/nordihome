@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 namespace App\Modules\Shared\Infrastructure\Mappers;
+
 /**
  * Маппинг model_type ({модуль}.{сущность}) в полное имя класса (FQCN) для imageable_type
  */
@@ -26,6 +27,7 @@ class ModelTypeMapper
         'content.page' => \App\Modules\Content\Infrastructure\Models\Page::class,
         'content.banner-widget-item' => \App\Modules\Content\Entity\Widgets\BannerWidgetItem::class,
 
+        'content.gallery' => \App\Modules\Content\Infrastructure\Models\Gallery::class, //MAINDO Перенести и в Базе данных, также добавиль model_type
         'discount.promotion' => \App\Modules\Discount\Infrastructure\Models\Promotion::class,
 
     ];

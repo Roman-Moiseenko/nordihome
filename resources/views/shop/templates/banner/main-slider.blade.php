@@ -28,7 +28,8 @@
                        "title": @json($item->title ?? ''),
                        "url": @json($item->url)
                    }'>
-                    <img src="{{ $item->getImage() }}"/>
+
+                    <img src="{{ App\Modules\Shared\Application\Actions\GetPhotoStatic::get('content.banner-widget-item', $item->id) }}"/>
                 </a>
             </div>
         @endforeach

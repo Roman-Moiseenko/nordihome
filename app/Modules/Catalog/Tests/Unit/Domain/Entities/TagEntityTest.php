@@ -19,7 +19,7 @@ class TagEntityTest extends TestCase
         $this->assertSame('Скидка', $tag->name);
         $this->assertSame('skidka', $tag->slug->getValue());
         $this->assertFalse($tag->isMain);
-        $this->assertNull($tag->image_url);
+
         $this->assertNull($tag->id);
     }
 

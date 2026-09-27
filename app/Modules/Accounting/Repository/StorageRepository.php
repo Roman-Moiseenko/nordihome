@@ -42,7 +42,7 @@ class StorageRepository extends AccountingRepository
     {
         return array_merge($storage->toArray(), [
             'quantity' => $storage->getQuantity(),
-            'image' => $storage->getImage(),
+           // 'image' => $storage->getImage(),
         ]);
     }
 

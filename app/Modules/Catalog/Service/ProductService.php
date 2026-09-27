@@ -112,19 +112,6 @@ class ProductService
     }
 
 
-
-    public function moderation(Product $product): void
-    {
-        //TODO Проверка на заполнение
-        // $product->setModeration();
-    }
-
-    public function approved(Product $product): void
-    {
-        //TODO Проверка на заполнение
-        //$product->setApproved();
-    }
-
     //УДАЛЕНИЕ ВОССТАНОВЛЕНИ
     public function destroy(Product $product): void
     {
@@ -156,27 +143,7 @@ class ProductService
         StorageItem::onlyTrashed()->where('product_id', $id)->restore();
     }
 
-    public function notSale(Product $product): void
-    {
-        $product->not_sale = true;
-        $product->save();
-    }
 
-    public function CheckNotSale(Product $product): void
-    {
-        if ($product->getQuantity() == 0 && $product->isSale()) {
-            $product->setNotSale();
-            event(new ProductHasBlocked($product));
-            return;
-        }
-
-        if ($this->common_set->group_last_id > 0 && $product->getQuantity() != 0) {
-            /** @var Group $group */
-            $group = Group::find($this->common_set->group_last_id);
-            $this->groupService->addProduct($group, $product->id);
-        }
-
-    }
 
     public function editCommon(Product $product, Request $request): void
     {
@@ -521,39 +488,6 @@ class ProductService
         }
     }
 
-    ///Работа с Фото Продукта
-    public function addPhoto(Request $request, Product $product): Photo
-    {
-        $photo = $product->addImage($request->file('file'));
-        return $photo;
-    }
-
-    public function delPhoto(Request $request, Product $product): void
-    {
-        $product->delImage($request->integer('photo_id'));
-    }
-
-    public function movePhoto(Request $request, Product $product): void
-    {
-        $new_sort = $request->input('new_sort');
-
-        foreach ($new_sort as $i => $id) {
-            $photo = Photo::find($id);
-            $photo->sort = $i;
-            $photo->save();
-        }
-    }
-
-    public function setPhoto(Request $request, Product $product): void
-    {
-        $id = $request->integer('photo_id');
-        $product->setAlt(photo_id: $id,
-            alt: $request->string('alt')->trim()->value(),
-            title: $request->string('title')->trim()->value(),
-            description: $request->string('description')->trim()->value(),
-        );
-    }
-
     public function published(Product $product): void
     {
         //TODO Проверка на заполнение и на модерацию - добавить другие проверки
@@ -573,11 +507,7 @@ class ProductService
             }
         }
 
-        //throw new \DomainException('Для товара ' . $product->name . ' не задана цена');
 
-        if ($product->photos()->count() == 0) {
-            throw new \DomainException('Для товара ' . $product->name . ' нет изображений');
-        }
         $product->setPublished();
         if (!is_null($product->modification) && ($product->modification->base_product_id == $product->id)) {
             foreach ($product->modification->products as $_product) {
@@ -689,25 +619,7 @@ class ProductService
                     'price' => isset($item[2]) ? (float)str_replace(' ', '', $item[2]) : 0,
                     'price2' => isset($item[3]) ? (float)str_replace(' ', '', $item[3]) : 0,
                 ];
-
-
-                /*   if (is_null($product = Product::whereCode($item[0])->first())) {
-                       if (is_null($brand)) continue;
-
-                       $parser_class = $brand->parser_class;
-                       $parser = app()->make($parser_class);
-                       $product = $parser->findProduct($item[0]);
-                   }
-                   if (!is_null($product))
-                       $products[] = [
-                           'product_id' => $product->id,
-                           'quantity' => isset($item[1]) ? (float)$item[1] : 1,
-                           'price' => isset($item[2]) ? (float)str_replace(' ', '', $item[2]) : 0,
-                           'price2' => isset($item[3]) ? (float)str_replace(' ', '', $item[3]) : 0,
-                       ];
-                   */
             }
-            // throw new \DomainException(json_encode($products));
 
             set_time_limit(30);
             return ['products' => $products];

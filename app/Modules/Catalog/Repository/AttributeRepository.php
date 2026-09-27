@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Repository;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\AttributeCategory;
 use App\Modules\Catalog\Infrastructure\Models\AttributeVariant;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -44,7 +45,7 @@ class AttributeRepository
     private function AttributeToArray(Attribute $attribute): array
     {
         return array_merge($attribute->toArray(), [
-            'image' => $attribute->getImage('mini'),
+            'image' => GetPhotoStatic::get('catalog.attribute', $attribute->id, 'mini'),
             'categories' => $attribute->categories()->get()->toArray(),
             'group' => $attribute->group->name,
             'type_text' => $attribute->typeText(),
@@ -59,10 +60,10 @@ class AttributeRepository
                 return [
                     'id' => $variant->id,
                     'name' => $variant->name,
-                    'image' => $variant->getImage(),
+                    'image' => GetPhotoStatic::get('catalog.attribute-variant', $variant->id),
                 ];
             }),
-            'image' => $attribute->getImage(),
+            'image' => GetPhotoStatic::get('catalog.attribute', $attribute->id),
         ]);
     }
 

@@ -39,7 +39,11 @@ readonly class GetPhotoThumbUseCase
 
         // Если thumb не передан — возвращаем url оригинального файла
         if ($dto->thumb === null || $dto->thumb === '') {
-            return $photo->uploadUrl;
+            return $this->photoService->getUploadUrl(
+                $photo->modelType,
+                $photo->imageableId,
+                $photo->file,
+            );
         }
 
         // Возвращаем url thumb (копии)

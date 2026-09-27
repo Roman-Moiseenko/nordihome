@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Output\Application\Queries\ECommerce;
 
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetLatestPricesQuery;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
+use App\Modules\Accounting\Infrastructure\Persistence\PriceRepository;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Output\Application\DTOs\ECommerce\ECommerceData;
 use App\Modules\Output\Application\DTOs\ECommerce\ECommerceEventData;
@@ -11,6 +14,12 @@ use App\Modules\Output\Application\DTOs\ECommerce\ECommerceItemData;
 
 readonly class GetECommerceQuery
 {
+    public function __construct(private GetLatestPricesQuery $pricesQuery,
+    private PriceRepository $priceRepository,
+    )
+    {
+
+    }
     public function execute(ECommerceEventData $data): ECommerceData
     {
         return new ECommerceData(
@@ -54,10 +63,11 @@ readonly class GetECommerceQuery
                 continue;
             }
 
+            $prices = $this->pricesQuery->execute($product->id);
             $items[] = ECommerceItemData::from([
                 'id' => $product->code,
                 'name' => $product->name,
-                'price' => $product->getPrice(),
+                'price' => $prices[PriceType::RETAIL],
                 'brand' => $product->brand->name,
                 'category' => $product->category->getParentNames(),
                 'quantity' => $qty,

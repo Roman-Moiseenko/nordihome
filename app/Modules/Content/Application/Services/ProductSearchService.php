@@ -7,6 +7,8 @@ namespace App\Modules\Content\Application\Services;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Content\Application\DTOs\ProductWidget\ProductSearchResultData;
+use App\Modules\Shared\Application\Actions\GetPhotoByEntityListUseCase;
+use App\Modules\Shared\Application\DTOs\Photo\PhotoByEntityListData;
 use App\Modules\Shared\Domain\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\ValueObjects\PhotoType;
 
@@ -15,6 +17,7 @@ final readonly class ProductSearchService
     public function __construct(
         private ProductRepositoryInterface $productRepository,
         private PhotoRepositoryInterface $photoRepository,
+        private GetPhotoByEntityListUseCase $photoByEntityListUseCase,
     ) {}
 
     private const string MODEL_TYPE = 'catalog.product';
@@ -74,8 +77,9 @@ final readonly class ProductSearchService
 
         $type = new PhotoType(self::PHOTO_TYPE);
         // findByEntities возвращает array<int, string> — imageableId => uploadUrl первого фото
-        $firstPhotos = $this->photoRepository->findByEntities($productIds, self::MODEL_TYPE, $type);
-
+        //$firstPhotos = $this->photoRepository->findByEntities($productIds, self::MODEL_TYPE, $type);
+        $dto = new PhotoByEntityListData($productIds, self::MODEL_TYPE, $type->getValue());
+        $firstPhotos = $this->photoByEntityListUseCase->execute($dto);
         $result = [];
         foreach ($productIds as $id) {
             $result[$id] = [

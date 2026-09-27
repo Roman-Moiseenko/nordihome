@@ -19,10 +19,7 @@ class TagEntity
         get => $this->slug;
         set => $this->slug = $value;
     }
-    public ?string $image_url = null {
-        get => $this->image_url;
-        set => $this->image_url = $value;
-    }
+
     public bool $isMain  = false {
         get => $this->isMain;
         set => $this->isMain = $value;

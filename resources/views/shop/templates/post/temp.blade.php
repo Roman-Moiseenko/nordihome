@@ -14,7 +14,7 @@
 
 @section('content')
     <h1 class="my-4">{{ $post->title }}</h1>
-    <img src="{{ $post->getImage('catalog') }}"/>
+    <img src="{{ App\Modules\Shared\Application\Actions\GetPhotoStatic::get('content.post', $post->id, 'catalog') }}"/>
     <div class="mt-4">
         {{ $post->description }}
     </div>

@@ -31,7 +31,7 @@ class ProductViewQueryRepository
      * @param ClientContext $client
      * @return ProductData
      */
-    public function getProductBySlug(string $slug, ClientContext $client): ProductData
+    public function getProductBySlug(string $slug, ClientContext $client, bool $published = true): ProductData
     {
         $now = now();
         // Single comprehensive query with subqueries for:
@@ -43,6 +43,7 @@ class ProductViewQueryRepository
         //   - wish and cart flags for the client
         $query = DB::table('products')
             ->where('products.slug', $slug)
+            ->where('products.published', $published)
             ->join('categories', 'products.main_category_id', '=', 'categories.id')
             ->join('brands', 'products.brand_id', '=', 'brands.id')
             ->leftJoin('promotions_products', function ($join) use ($now) {

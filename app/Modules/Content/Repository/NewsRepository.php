@@ -19,7 +19,7 @@ class NewsRepository
     private function NewsToArray(News $news): array
     {
         return array_merge($news->toArray(), [
-            'image' => $news->getImage(),
+          //  'image' => $news->getImage(),
         ]);
     }
 }

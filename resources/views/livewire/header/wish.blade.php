@@ -19,7 +19,7 @@
                         Товаров в избранном <span id="widget-wish-all-count">{{ $count }}</span>
                     </div>
                     <div>
-                        <button id="clear-wish" href="#" data-route="{{ route('cabinet.wish.clear') }}" wire:click="remove_all">Очистить избранное</button>
+                        <button id="clear-wish" wire:click="remove_all">Очистить избранное</button>
                     </div>
                 </div>
                 <div class="wish-body">

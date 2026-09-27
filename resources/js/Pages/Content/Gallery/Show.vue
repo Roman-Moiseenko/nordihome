@@ -4,7 +4,7 @@
     <div class="mt-3 p-3 bg-white rounded-lg ">
         <GalleryInfo :gallery="gallery" :errors="errors"/>
     </div>
-    <el-upload
+    <!--el-upload
         ref="upload"
         v-model:file-list="fileList"
         :action="route('admin.content.gallery.image-add', {gallery: props.gallery.id})"
@@ -17,7 +17,9 @@
         <el-icon>
             <Plus/>
         </el-icon>
-    </el-upload>
+    </el-upload-->
+    <PhotoDTO model-type="content.gallery" :entity-id="gallery.id" type="gallery" />
+
     <el-dialog v-model="dialogVisible" width="90%">
         <div class="flex">
             <div style="width: 80%; height: 90vh">
@@ -63,6 +65,7 @@ import {Head, router} from "@inertiajs/vue3";
 import type { UploadProps, UploadUserFile, UploadRawFile  } from 'element-plus'
 
 import GalleryInfo from './Block/Info.vue'
+import PhotoDTO from "@Comp/PhotoDTO.vue";
 const props = defineProps({
     gallery: Object,
     errors: Object,

@@ -25,7 +25,7 @@ readonly class GetSellPriceQuery
     }
     public function execute(int $id, PriceType $priceType): ProductSellPriceData
     {
-        $prices = $this->pricesUseCase->execute($id, new UserPermission(null, [] , ['accounting.price.view']));
+        $prices = $this->pricesUseCase->execute($id);
 
         $discountId = null;
         $discountType = null;

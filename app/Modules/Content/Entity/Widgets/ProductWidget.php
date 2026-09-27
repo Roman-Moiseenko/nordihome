@@ -72,7 +72,6 @@ class ProductWidget extends Widget
         if ($quantity === null) {
             return $products;
         }
-
         return array_slice($products, 0, $quantity);
     }
 

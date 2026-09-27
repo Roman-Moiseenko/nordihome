@@ -29,15 +29,15 @@ readonly class ProductViewQuery
     {
     }
 
-    public function execute(string $slug, ClientContext $clientContext): ProductViewPageData
+    public function execute(string $slug, ClientContext $clientContext, bool $published = true): ProductViewPageData
     {
         $web = $this->webSettingsUseCase->execute();
 
-        $product = $this->repository->getProductBySlug($slug, $clientContext);
+        $product = $this->repository->getProductBySlug($slug, $clientContext, $published);
         $product = $this->regionalPriceCalculator->productData(
             $product, $clientContext->region
         );
-        
+
         $attributes = $this->repository->getAttributes($product);
 
         $meta = $this->seoAdapter->getSeo('catalog.product', $product);

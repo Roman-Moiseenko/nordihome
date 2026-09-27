@@ -10,7 +10,6 @@ class TagViewData
         public int $id,
         public string $name,
         public string $slug,
-        public string $image,
         public bool $isMain,
       //  public int $count
     )
@@ -24,7 +23,6 @@ class TagViewData
             id: $tagEntity->id,
             name: $tagEntity->name,
             slug: $tagEntity->slug,
-            image: $tagEntity->image_url,
             isMain: $tagEntity->isMain,
         );
     }

@@ -28,7 +28,7 @@ interface PhotoRepositoryInterface
      * Для каждого imageableId возвращается первое фото (по sort), если тип gallery.
      *
      * @param array<int> $imageableIds
-     * @return array<int, string>  — массив пар imageableId => uploadUrl
+     * @return PhotoEntity[]  — массив пар imageableId => uploadUrl
      */
     public function findByEntities(array $imageableIds, string $modelType, PhotoType $type): array;
 

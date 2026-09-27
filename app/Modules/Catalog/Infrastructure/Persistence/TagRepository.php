@@ -77,7 +77,6 @@ class TagRepository implements TagRepositoryInterface
             slug: new Slug($model->slug),
         );
         $tag->id = $model->id;
-        $tag->image_url = $model->getImage() ?? '';
         $tag->isMain = $model->is_main;
 
         return $tag;

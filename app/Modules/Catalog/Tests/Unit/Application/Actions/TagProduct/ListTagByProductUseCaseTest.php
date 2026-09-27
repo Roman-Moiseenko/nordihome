@@ -48,7 +48,6 @@ class ListTagByProductUseCaseTest extends TestCase
     {
         $tag = new TagEntity('Скидка', new Slug('Скидка'));
         $tag->id = 3;
-        $tag->image_url = 'https://example.com/skidka.jpg';
 
         $this->tagProductRepository->shouldReceive('getTagsByProductId')->with(5)->once()->andReturn([3]);
         $this->tagRepository->shouldReceive('findByIds')->with([3])->once()->andReturn([$tag]);

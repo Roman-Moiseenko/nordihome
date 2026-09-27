@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-lg-6 padding_0 b-radius-right_12"
-                         style="background: url({{ $item->getImage() }}) center center / cover no-repeat;"></div>
+                         style="background: url({{ App\Modules\Shared\Application\Actions\GetPhotoStatic::get('content.banner-widget-item', $item->id) }}) center center / cover no-repeat;"></div>
                 </div>
             @endforeach
         </div>

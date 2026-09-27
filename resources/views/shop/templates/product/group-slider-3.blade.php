@@ -20,7 +20,7 @@
             <div style="">
                 <a href="{{ route('shop.product.view', $_product->slug) }}"
                    style="max-width: 100%; overflow: hidden;">
-                    <img loading="lazy" src="{{ $_product->getImage('catalog') }}"
+                    <img loading="lazy" src="{{ App\Modules\Shared\Application\Actions\GetPhotoStatic::gallery('catalog.product', $_product->id, 'catalog') }}"
                          alt="{{ $_product->getName() }}" style="width: 100%;"/>
                 </a>
                 <a href="{{ route('shop.product.view', $_product->slug) }}">

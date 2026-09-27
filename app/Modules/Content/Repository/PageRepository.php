@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Content\Repository;
 
 use App\Modules\Content\Infrastructure\Models\Page;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -25,7 +26,7 @@ class PageRepository
     public function PageWithToArray(Page $page): array
     {
         return array_merge($this->PageToArray($page), [
-            'image' => $page->getImage(),
+            'image' => GetPhotoStatic::get('content.page', $page->id),
         ]);
     }
 }

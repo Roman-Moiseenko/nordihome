@@ -1,7 +1,7 @@
 <!--template:Запись шаблон по-умолчанию-->
 @php
     /** @var \App\Modules\Content\Infrastructure\Models\Post $post */
-    $photo = photo_std('main_001', 'card');
+    //$photo = photo_std('main_001', 'card');
 @endphp
 @extends('layouts.main')
 
@@ -19,7 +19,7 @@
     </div>
 
     <div>
-        <img src="{{ $post->getImage('post') }}" alt="{{ $post->title }}" class="img-alignright" width="450">
+        <img src="{{ App\Modules\Shared\Application\Actions\GetPhotoStatic::get('content.post', $post->id, 'catalog') }}" alt="{{ $post->title }}" class="img-alignright" width="450">
         {!! $post->text !!}
     </div>
 @endsection

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Content\Service;
 
-use App\Modules\Content\Entity\Gallery;
+use App\Modules\Content\Infrastructure\Models\Gallery;
 use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;

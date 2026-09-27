@@ -20,6 +20,7 @@ use App\Modules\Parser\Infrastructure\Models\ParserCategory;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use App\Modules\Shared\Infrastructure\Models\Photo;
 use Carbon\Carbon;
 use Illuminate\Contracts\Support\Arrayable;
@@ -45,7 +46,7 @@ class ShopRepository
         $this->settings = $settings;
         $this->slugs = $slugs;
     }
-
+/*
     public function search(string $search, int $take_cat = 3, int $take_prod = 7): array
     {
         $result = [];
@@ -73,7 +74,7 @@ class ShopRepository
         }
         return $result;
     }
-
+*/
     public function filter(array $request, array $product_ids)
     {
         $query = Product::orderByDesc('priority');
@@ -186,357 +187,15 @@ class ShopRepository
         }
     }
 
-    /*
-        public function searchProduct(string $search, int $take = 10, array $include_ids = [], bool $isInclude = true)
-        {
-            $search_back = $this->avto_replace($search);
-
-            $query = Product::orderBy('name')->where(function ($query) use ($search, $search_back) {
-                $query->where('code_search', 'LIKE', "%{$search}%")
-                    ->orWhere('name', 'LIKE', "% {$search}%")->orWhere('name', 'LIKE', "{$search}%")
-                    ->orWhere('name', 'LIKE', "% {$search_back}%")->orWhere('name', 'LIKE', "{$search_back}%");
-            });
-
-            if (!empty($include_ids)) {
-                if ($isInclude) {
-                    $query = $query->whereIn('id', $include_ids);
-                } else {
-                    $query = $query->whereNotIn('id', $include_ids);
-                }
-            }
-
-            if (!is_null($take)) {
-                $query = $query->take($take);
-            } else {
-                //$query = $query->all();
-            }
-            return $query->get();
-        }
-    */
-    public function ProductsByCategory(Category $category = null)
-    {
-        if (is_null($category)) {
-            $lft = Category::get()->min('_lft');
-            $rgt = Category::get()->max('_rgt');
-
-        } else {
-            $lft = $category->_lft;
-            $rgt = $category->_rgt;
-        }
-
-        $query = Product::where('published', true) //Опубликован AND
-        ->where(function ($query) use ($lft, $rgt) { //Категории входят в выбранную AND
-            $query->whereHas('category', function ($query) use ($lft, $rgt) {
-                $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
-            })->orWhereHas('categories', function ($query) use ($lft, $rgt) {
-                $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
-            });
-        })->where(function ($query) { //Либо не содержит модификаций, либо Является базовым товаром для модификации
-            $query->doesntHave('modification')->orWhere(function ($query) {
-                $query->has('main_modification')->whereHas('main_modification', function ($query) {
-                    $query->where('not_sale', false);
-                });
-            });
-        });
-
-        return $query->get();
-    }
-
-    ////КАТЕГОРИИ
-    ///
-
-    public function getChildren(int $parent_id = null): Arrayable
-    {
-        return Category::defaultOrder()->where('parent_id', $parent_id)
-            ->where('slug', '<>', Category::NO_PARSE)
-            ->get()
-            ->map(function (Category $category) {
-                return [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'slug' => $category->slug,
-                    'image' => $category->getImage(),
-                ];
-            });
-    }
-
-    public function getChildrenParser(int $parent_id = null): Arrayable
-    {
-        return ParserCategory::defaultOrder()->where('parent_id', $parent_id)
-            ->where('active', true)
-            ->get()
-            ->map(function (ParserCategory $category) {
-                return [
-                    'id' => $category->id,
-                    'name' => $category->name,
-                    'slug' => $category->slug,
-                    'image' => $category->getImage(),
-                    'children' => $category->children()->get()->map(fn(ParserCategory $child) => [
-                        'id' => $child->id,
-                        'name' => $child->name,
-                        'slug' => $child->slug,
-                    ])->toArray(),
-                ];
-            });
-    }
-
-
     public function getTree(int $parent_id = null)
     {
         if (is_null($parent_id)) return Category::defaultOrder()->get()->toTree();
         return Category::defaultOrder()->descendantsOf($parent_id)->toTree();
     }
 
-    public function toShopForSubMenu(Category $category): array
-    {
-        $children = [];
-        if (!empty($category->children)) {
-            foreach ($category->children as $child) {
-                $children[] = $this->toShopForSubMenu($child);
-            }
-        }
-
-        return [
-            'id' => $category->id,
-            'name' => $category->name,
-            'url' => route('shop.category.view', $category->slug),
-            'image' => !is_null($category->image) ? $category->image->getUploadUrl() : '',
-            'products' => count($category->products),
-            'children' => $children,
-        ];
-    }
-    ///PARSER
-
-    public function ParserProductsByCategory(ParserCategory $category = null)
-    {
-        if (is_null($category)) {
-            $lft = ParserCategory::get()->min('_lft');
-            $rgt = ParserCategory::get()->max('_rgt');
-
-        } else {
-            $lft = $category->_lft;
-            $rgt = $category->_rgt;
-        }
-
-        return ParserProduct::where('availability', true) //Опубликован AND
-        ->where(function ($query) use ($lft, $rgt) { //Категории входят в выбранную AND
-            $query->whereHas('categories', function ($query) use ($lft, $rgt) {
-                $query->where('_lft', '>=', $lft)->where('_rgt', '<=', $rgt);
-            });
-        });
-    }
-    public function ParserProductToArrayCard(ParserProduct $product): array
-    {
-        return array_merge($this->ParserProductToArray($product), [
-            'images' => [
-                'catalog' => $product->product->getImageData('catalog'),
-            ],
-            'images-next' => [
-                'catalog' => $product->product->getImageNextData('catalog'),
-            ],
-        ]);
-    }
-    private function ParserProductToArray(ParserProduct $product): array
-    {
-        return [
-            'id' => $product->id,
-            'code' => $product->product->code,
-            'name' => $product->product->name,
-            'slug' => $product->slug,
-            'price' => $product->price_sell * $this->settings->parser->parser_coefficient,
-            'image' => [
-                'src' => $product->product->getImage('card'),
-            ],
 
 
-        ];
-    }
 
-    public function ParserProductToArrayView(ParserProduct $product): array
-    {
-        return array_merge($this->ParserProductToArray($product), [
-            'created_at' => $product->created_at,
-            'updated_at' => $product->updated_at,
-            'description' => $product->product->description,
-            'short' => $product->product->short,
-
-            'gallery' => $product->product->photos()->get()->map(function (Photo $photo) {
-                return [
-                    'mini' => $photo->getThumbUrl('mini'),
-                    'src' => $photo->getThumbUrl('card'),
-                    'alt' => $photo->alt,
-                    'title' => $photo->alt,
-                    'description' => $photo->description,
-                ];
-            }),
-            'categories' => $product->categories()->get()->map(fn(ParserCategory $category) => [
-                'id' => $category->id,
-                'slug' => $category->slug,
-                'name' => $category->name,
-            ])->toArray(),
-
-
-            'dimensions' => [
-                'width' => $product->product->dimensions->width,
-                'height' => $product->product->dimensions->height,
-                'depth' => $product->product->dimensions->depth,
-                'weight' => $product->product->weight(),
-                'volume' => $product->product->volume(),
-                'captions' => Dimensions::CAPTION_TYPES[$product->product->dimensions->type],
-            ],
-            'local' => $product->product->local,
-            'delivery' => $product->product->delivery,
-
-        ]);
-
-    }
-
-    /// <=====
-
-    ////АТРИБУТЫ
-    ///
-    public function AttributeCommon(array $categories_id, array $product_ids): array
-    {
-        $attrs_cat = Attribute::whereHas('categories', function ($query) use ($categories_id) {
-            $query->whereIn('category_id', $categories_id);
-        })->pluck('id')->toArray();
-
-        $attrs_prod = Attribute::whereHas('products', function ($query) use ($product_ids) {
-            $query->whereIn('id', $product_ids);
-        })->pluck('id')->toArray();
-
-        //Включая и товары из модификации
-        $product_ids = array_merge(
-            $product_ids,
-            Product::whereHas('modification', function ($query) use ($product_ids) {
-                $query->whereHas('products', function ($query) use ($product_ids) {
-                    $query->whereIn('id', $product_ids);
-                });
-            })->pluck('id')->toArray()
-        );
-
-        $_attr_intersect = array_intersect($attrs_cat, $attrs_prod); //Общие id атрибутов для товаров и категорий
-
-        $attributes = Attribute::whereIn('id', $_attr_intersect)->where('filter', '=', true)->orderBy('group_id')->get();
-        $prod_attributes = [];
-
-        /** @var Attribute $attribute */
-        foreach ($attributes as $attribute) {  //Заполняем варианты и мин.и макс. значения из возможных для данных товаров
-            if ($attribute->isNumeric()) $prod_attributes[] = $this->getNumericAttribute($attribute, $product_ids);
-            if ($attribute->isVariant()) {
-
-                $prod_attributes[] = $this->getVariantAttribute($attribute, $product_ids);
-            }
-            if (!$attribute->isNumeric() && !$attribute->isVariant()) {
-                if ($attribute->isBool()) {
-                    $prod_attributes[] = [
-                        'id' => $attribute->id,
-                        'name' => $attribute->name,
-                        'isBool' => true,
-                    ];
-                } else {
-                    $prod_attributes[] = [
-                        'id' => $attribute->id,
-                        'name' => $attribute->name,
-                    ];
-                }
-            }
-        }
-
-        return $prod_attributes;
-    }
-
-    private function getNumericAttribute(Attribute $attribute, array $product_ids): array
-    {
-        $attr = array_map(function ($item) {
-            return json_decode($item);
-        }, AttributeProduct::where('attribute_id', '=', $attribute->id)->whereIn('product_id', $product_ids)->pluck('value')->toArray());
-
-        return [
-            'id' => $attribute->id,
-            'name' => $attribute->name,
-            'isNumeric' => true,
-            'min' => min($attr),
-            'max' => max($attr)
-        ];
-    }
-
-    private function getVariantAttribute(Attribute $attribute, array $product_ids): array
-    {
-        $values = array_map(function ($item) {
-            return json_decode($item);
-        }, AttributeProduct::where('attribute_id', '=', $attribute->id)->whereIn('product_id', $product_ids)->pluck('value')->toArray());
-
-
-        $variant_ids = [];
-        foreach ($values as $item) {
-            if (is_array($item)) {
-                $variant_ids = array_merge($variant_ids, $item);
-            } else {
-                $variant_ids[] = $item;
-            }
-        }
-        $variant_ids = array_unique($variant_ids);
-        $variants = [];
-        foreach ($variant_ids as $item) {
-            $_var = AttributeVariant::find($item);
-            //if (is_null($_var)) dd($item);
-            $variants[] = [
-                'id' => $_var->id,
-                'name' => $_var->name,
-                'image' => empty($_var->image->file) ? '' : $_var->getImage(),
-            ];
-        }
-
-        //Сортировка по имени $variants
-        $_count = count($variants);
-        for ($i = 0; $i < $_count; $i++) {
-            for ($j = 0; $j < $_count - $i - 1; $j++) {
-                if (strcasecmp($variants[$j]['name'], $variants[($j + 1)]['name']) >= 0) {
-                    $p = $variants[$j];
-                    $variants[$j] = $variants[$j + 1];
-                    $variants[$j + 1] = $p;
-                }
-            }
-        }
-
-        $result = [
-            'id' => $attribute->id,
-            'name' => $attribute->name,
-            'isVariant' => true,
-            'variants' => $variants
-        ];
-
-        return $result;
-    }
-
-    ////ТЕГИ
-    ///
-    public function TagsByProducts(array $product_ids): Arrayable
-    {
-        return Tag::whereHas('products', function ($query) use ($product_ids) {
-            $query->whereIn('id', $product_ids);
-        })->get();
-    }
-
-    //////
-
-
-    ///КУПОНЫ И СКИДКИ
-
-    public function getCoupon(string $code, int $user_id = null): ?Coupon
-    {
-        if (is_null($user_id)) $user_id = Auth::guard('web')->user()->id;
-
-        $coupon = Coupon::where('code', $code)
-            ->where('client_id', $user_id)
-            ->where('started_at', '<', Carbon::now())
-            ->where('finished_at', '>', Carbon::now())
-            ->where('status', Coupon::NEW)
-            ->first();
-        if (!empty($coupon)) return $coupon;
-        return null;
-    }
 
 
     ///КАТЕГОРИИ
@@ -553,13 +212,9 @@ class ShopRepository
         ];
     }
 
-    public function getRootCategories()
-    {
-        return Category::where('parent_id', null)->orderBy('_lft')->get();
-    }
 
     ///ТОВАРЫ
-
+/*
     private function ProductsForSearch(Product $product): array
     {
         return [
@@ -572,7 +227,7 @@ class ShopRepository
         ];
     }
 
-
+*/
     private function avto_replace(string $str): string
     {
         $output = '';
@@ -633,25 +288,13 @@ class ShopRepository
 
     //Product to Array для Frontend
 
-    public function ProductToArrayCard(Product $product): array
-    {
-        return array_merge($this->ProductToArray($product), [
-            'images' => [
-                'catalog' => $product->getImageData('catalog'),
-            ],
-            'images-next' => [
-                'catalog' => $product->getImageNextData('catalog'),
-            ],
-        ]);
-    }
-
     private function ModificationToArray(Modification $modification): array
     {
         $attributes = [];
         foreach ($modification->prod_attributes as $attribute) {
             $attributes[$attribute->id] = [
                 'name' => $attribute->name,
-                'image' => $attribute->getImage(),
+                'image' => GetPhotoStatic::get('catalog.attribute', $attribute->id), //FixMe $attribute->getImage(),
             ];
         }
 
@@ -665,7 +308,7 @@ class ShopRepository
                             'id' => $product->id,
                             'name' => $product->name,
                             'slug' => $product->slug,
-                            'image' => $product->miniImage(),
+                            'image' => GetPhotoStatic::gallery('catalog.product', $product->id, 'mini'),
                         ];
                     }
                 }
@@ -678,7 +321,7 @@ class ShopRepository
         return $attributes;
     }
 
-
+/*
     public function ProductToArrayView(Product $product): array
     {
         $_product = null;
@@ -706,7 +349,7 @@ class ShopRepository
             'short' => $product->short,
             'quantity' => $product->getQuantitySell(),
             'brand' => [
-                'src' => $product->brand->getImage(),
+                'src' => GetPhotoStatic::get('catalog.brand', $product->brand_id), //FixMe
                 'name' => $product->brand->name,
             ],
             'gallery' => $product->photos()->get()->map(function (Photo $photo) {
@@ -812,4 +455,5 @@ class ShopRepository
             ],
         ];
     }
+*/
 }

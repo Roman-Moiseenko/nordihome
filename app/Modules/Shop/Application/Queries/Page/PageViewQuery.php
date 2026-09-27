@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Application\Queries\Page;
 use App\Modules\Content\Entity\Widgets\Template;
 use App\Modules\Content\Infrastructure\Models\Page;
 use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\PageViewPageData;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
@@ -59,8 +60,9 @@ readonly class PageViewQuery
 
         $meta->canonical = route('shop.page.view', $page->slug);
         $meta->ogSiteName = $web->web_name;
+
         $meta->ogImages[] = new OgImage(
-            url: $page->getImage(),
+            url: GetPhotoStatic::get('content.page', $page->id), //FixMe Page в PageEntity изображение, через UseCase
         );
         $meta->articleModifiedTime = $page->updated_at->toIso8601String();
         $meta->articlePublishedTime = $page->published_at->toIso8601String();

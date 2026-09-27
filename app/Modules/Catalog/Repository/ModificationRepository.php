@@ -8,6 +8,7 @@ use App\Modules\Catalog\Entity\ModificationProduct;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\AttributeVariant;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -43,7 +44,7 @@ class ModificationRepository
             'name_attributes' => array_map(function (Attribute $item) {
                 return $item->name;
             }, $modification->prod_attributes),
-            'image' => $modification->base_product->miniImage(),
+            'image' => GetPhotoStatic::gallery('catalog.product', $modification->base_product_id, 'mini'),
         ]);
     }
 
@@ -56,12 +57,12 @@ class ModificationRepository
                 return [
                     'id' => $attribute->id,
                     'name' => $attribute->name,
-                    'image' => $attribute->getImage(),
+                    'image' => GetPhotoStatic::get('catalog.attribute', $attribute->id),
                     'variants' => $attribute->variants()->get()->map(function (AttributeVariant $variant) {
                         return [
                             'id' => $variant->id,
                             'name' => $variant->name,
-                            'image' => $variant->getImage(),
+                            'image' => GetPhotoStatic::get('catalog.attribute-variant', $variant->id),
                         ];
                     }),
                 ];
@@ -73,7 +74,7 @@ class ModificationRepository
                     $variants[] = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
                 }
                 return array_merge($product->toArray(), [
-                    'image' => $product->miniImage(),
+                    'image' => GetPhotoStatic::gallery('catalog.product', $product->id, 'mini'),
                     'variants' => $variants,
                 ]);
             }),
