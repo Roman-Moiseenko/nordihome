@@ -22,8 +22,6 @@ class WidgetUpdateData extends Data
         public readonly array $schema,
         #[Nullable, StringType, Max(255)]
         public readonly ?string $description = null,
-        #[Nullable, StringType]
-        public readonly ?string $template = null,
         #[Nullable, BooleanType]
         public readonly ?bool $isContainer = false,
     ) {}

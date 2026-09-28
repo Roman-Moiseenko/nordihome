@@ -7,6 +7,7 @@ namespace App\Modules\Content\Application\Actions\Widget;
 use App\Modules\Content\Application\DTOs\Widget\WidgetContentUpdateData;
 use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Infrastructure\Services\WidgetFileService;
+use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
@@ -15,6 +16,7 @@ readonly class SaveWidgetTemplateUseCase
     public function __construct(
         private WidgetRepositoryInterface $widgetRepository,
         private WidgetFileService $widgetFileService,
+        private TransactionManagerInterface $transactionManager,
     )
     {
     }
@@ -26,11 +28,16 @@ readonly class SaveWidgetTemplateUseCase
         }
 
         $widget = $this->widgetRepository->getById($id);
+        $this->transactionManager->execute(function () use ($widget, $userPermission, $dto) {
+            $widget->template = $dto->content;
+            $this->widgetRepository->save($widget);
 
-        $this->widgetFileService->saveContent(
-            (string) $widget->category,
-            $widget->slug,
-            $dto->content,
-        );
+            $this->widgetFileService->saveContent(
+                (string) $widget->category,
+                $widget->slug,
+                $dto->content,
+            );
+        });
+
     }
 }
