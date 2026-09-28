@@ -33,6 +33,8 @@ class RoomController extends ShopAbstractController
             $request->all(),
             $this->getClient($request)
         );
+        if (is_null($data)) abort(404, 'Комната не найдена');
+
         return view('shop.product.index', [
             'pageData' => $data,
             'request' => $request->all(),

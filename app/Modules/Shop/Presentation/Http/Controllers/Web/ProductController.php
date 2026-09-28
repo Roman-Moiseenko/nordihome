@@ -29,6 +29,7 @@ class ProductController extends ShopAbstractController
         $client = $this->getClient($request);
         $data = $this->productViewQuery->execute($slug, $client);
 
+        if (is_null($data)) abort(404, 'Товар не найден');
         return view('shop.product.view', [
             'pageData' => $data,
         ]);
@@ -68,6 +69,7 @@ class ProductController extends ShopAbstractController
         //FixMe переделать под id без Product
         $client = $this->getClient($request);
         $data = $this->productViewQuery->execute($product->slug, $client, false);
+        if (is_null($data)) abort(404, 'Товар не найден');
 
         return view('shop.product.view', [
             'pageData' => $data,

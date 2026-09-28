@@ -29,11 +29,12 @@ readonly class ProductViewQuery
     {
     }
 
-    public function execute(string $slug, ClientContext $clientContext, bool $published = true): ProductViewPageData
+    public function execute(string $slug, ClientContext $clientContext, bool $published = true):? ProductViewPageData
     {
-        $web = $this->webSettingsUseCase->execute();
-
         $product = $this->repository->getProductBySlug($slug, $clientContext, $published);
+        if (is_null($product)) return null;
+
+        $web = $this->webSettingsUseCase->execute();
         $product = $this->regionalPriceCalculator->productData(
             $product, $clientContext->region
         );

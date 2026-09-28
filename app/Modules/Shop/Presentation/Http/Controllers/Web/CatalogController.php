@@ -34,8 +34,8 @@ class CatalogController extends ShopAbstractController
     {
         //$start = microtime(true);
 
-        $data = $this->categoryPageQuery->execute($slug, $request->all(),
-            $this->getClient($request));
+        $data = $this->categoryPageQuery->execute($slug, $request->all(), $this->getClient($request));
+        if (is_null($data)) abort(404, 'Категория не найдена');
 
        // $time = (microtime(true) - $start);
    //     \Log::info("CategoryPageQuery::execute время: " . number_format($time, 3, '.', '') . " сек");

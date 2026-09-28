@@ -43,6 +43,7 @@ readonly class RoomPageQuery
     {
         $web = $this->webSettingsUseCase->execute();
         $mainInfo = $this->repository->getRoom($slug);
+        if (is_null($mainInfo)) return null;
 
         $key_cache = str_replace('{id}', (string)$mainInfo->id, CacheInvalidationRegistry::ROOM_PRODUCTS_ID);
 

@@ -31,7 +31,7 @@ class ProductViewQueryRepository
      * @param ClientContext $client
      * @return ProductData
      */
-    public function getProductBySlug(string $slug, ClientContext $client, bool $published = true): ProductData
+    public function getProductBySlug(string $slug, ClientContext $client, bool $published = true):? ProductData
     {
         $now = now();
         // Single comprehensive query with subqueries for:
@@ -152,9 +152,7 @@ class ProductViewQueryRepository
             )
             ->first();
 
-        if (!$row) {
-            throw new \DomainException("Product not found by slug: {$slug}");
-        }
+        if (!$row) return null;
 
         // Get all photos sorted by sort (separate query for gallery)
         $photoRows = DB::table('photos')
