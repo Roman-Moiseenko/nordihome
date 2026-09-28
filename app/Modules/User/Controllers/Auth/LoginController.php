@@ -49,7 +49,7 @@ class LoginController extends Controller
 
         return property_exists($this, 'redirectTo') ? $this->redirectTo : '/home';
     }
-
+/*
     public function showLoginForm(): View
     {
         return view('user.auth.login'); //Своя форма аутентификации
@@ -61,49 +61,14 @@ class LoginController extends Controller
         return \response()->json($result);
          //Своя форма аутентификации
     }
+*/
 
-    /**
-     * Handle a login request to the application.
-     *
-     * @param Request $request
-     * @return Response
-     *
-     * @throws ValidationException
-     */
     public function login(Request $request)
     {
         return ;
-        if (method_exists($this, 'hasTooManyLoginAttempts') &&
-            $this->hasTooManyLoginAttempts($request)) {
-            $this->fireLockoutEvent($request);
-            return $this->sendLockoutResponse($request);
-        }
 
-        $intended = empty($request['intended']) ? '****' : $request['intended'];
-       $authenticate = $this->guard()->attempt(
-            $request->only(['email', 'password']),
-            true//$request->filled('remember')
-        );
-
-        if ($authenticate) {
-            $request->session()->regenerate();
-            $this->clearLoginAttempts($request);
-
-            //$user = Auth::user(); //Auth::guard('web')->user();
-
-            /*if ($user->status != User::STATUS_ACTIVE) {
-                Auth::logout();
-                flash('Пользователь не верифицирован', 'danger');
-                return back();
-            }*/
-
-                flash($intended, 'danger');
-                return redirect($intended);//->intended($request['intended'] ?? '');
-        }
-        $this->incrementLoginAttempts($request);
-        throw ValidationException::withMessages(['email' => [trans('auth.failed')]]);
     }
-
+/*
     public function login_registration(Request $request): JsonResponse
     {
         try {
@@ -133,7 +98,7 @@ class LoginController extends Controller
             );
 
             if ($authenticate) {
-                /** @var User $user */
+
                 $user = Auth::user(); //Auth::guard('web')->user();
                 if ($user->isWait()) {
                     Auth::logout();
@@ -149,24 +114,13 @@ class LoginController extends Controller
             return \response()->json(['error' => [$e->getMessage(), $e->getFile(), $e->getLine()]]);
         }
     }
+*/
 
-    /**
-     * Get the needed authorization credentials from the request.
-     *
-     * @param Request $request
-     * @return array
-     */
-    protected function credentials(Request $request)
+ /*   protected function credentials(Request $request)
     {
         return $request->only($this->username(), 'password');
     }
 
-    /**
-     * Send the response after the user was authenticated.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
-     */
     protected function sendLoginResponse(Request $request)
     {
         $request->session()->regenerate();
@@ -182,27 +136,15 @@ class LoginController extends Controller
             : redirect()->intended($this->redirectPath());
     }
 
-    /**
-     * Get the failed login response instance.
-     *
-     * @param Request $request
-     * @return Response
-     *
-     * @throws ValidationException
-     */
+
+
     protected function sendFailedLoginResponse(Request $request)
     {
         throw ValidationException::withMessages([
             $this->username() => [trans('auth.failed')],
         ]);
     }
-
-    /**
-     * Log the user out of the application.
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
-     */
+*/
     public function logout(Request $request)
     {
         $this->guard()->logout();
@@ -221,12 +163,7 @@ class LoginController extends Controller
             : redirect('/');
     }
 
-    /**
-     * The user has logged out of the application.
-     *
-     * @param Request $request
-     * @return mixed
-     */
+
     protected function loggedOut(Request $request)
     {
         //
