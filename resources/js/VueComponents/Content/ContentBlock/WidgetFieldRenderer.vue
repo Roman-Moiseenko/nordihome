@@ -118,11 +118,24 @@
                                             Удалить
                                         </el-button>
                                     </div>
-                                    <div v-if="field.format === 'image'" class="image-object-field">
-                                        <ImagePicker
-                                            :model-value="item || null"
-                                            @update:model-value="(val) => onArrayImageFieldChange(field.name, itemIdx, val)"
-                                        />
+                                    <div v-if="field.format === 'image'" class="image-object-field image-item-layout">
+                                        <div class="image-item-picker">
+                                            <ImagePicker
+                                                :model-value="item || null"
+                                                @update:model-value="(val) => onArrayImageFieldChange(field.name, itemIdx, val)"
+                                            />
+                                        </div>
+                                        <div
+                                            v-if="imageExtraFieldInstances(field, itemIdx).length > 0"
+                                            class="image-item-extra"
+                                        >
+                                            <WidgetFieldRenderer
+                                                :fields="imageExtraFieldInstances(field, itemIdx)"
+                                                :disabled="disabled"
+                                                :showSaveButton="false"
+                                                @save="(vals) => onArrayItemSave(field.name, itemIdx, vals)"
+                                            />
+                                        </div>
                                     </div>
                                     <div v-else class="product-object-field">
                                         <ProductPicker
@@ -522,6 +535,19 @@ function nestedFieldInstances(
     }))
 }
 
+/** Стандартные поля изображения — заполняются автоматически из ImagePicker */
+const IMAGE_STANDARD_FIELDS = ['id', 'src', 'alt', 'title', 'description']
+
+/**
+ * Дополнительные поля элемента массива изображений — все поля, кроме стандартных
+ * (id, src, alt, title, description). Их пользователь заполняет вручную.
+ */
+function imageExtraFieldInstances(field: WidgetFormFieldData, itemIndex: number): WidgetFormFieldData[] {
+    if (!field.nestedFields) return []
+    return nestedFieldInstances(field.nestedFields, field.name, itemIndex)
+        .filter(f => !IMAGE_STANDARD_FIELDS.includes(f.name))
+}
+
 function onObjectSave(parentName: string, vals: Record<string, any>) {
     formModel[parentName] = {
         ...(formModel[parentName] || {}),
@@ -585,7 +611,12 @@ function onArrayImageFieldChange(parentName: string, itemIndex: number, value: a
     if (value === null) {
         formModel[parentName].splice(itemIndex, 1)
     } else {
-        formModel[parentName][itemIndex] = { ...value }
+        // Мержим с существующим элементом, чтобы сохранить
+        // дополнительные поля, заполняемые пользователем
+        formModel[parentName][itemIndex] = {
+            ...(formModel[parentName][itemIndex] || {}),
+            ...value,
+        }
     }
 }
 
@@ -788,4 +819,52 @@ function onSave() {
 .object-field {
     max-width: 100%;
 }
+
+/* Раскладка элемента массива изображений: изображение слева, доп. поля справа */
+.image-item-layout {
+    display: flex;
+    align-items: flex-start;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+.image-item-picker {
+    flex: 0 0 auto;
+    max-width: 260px;
+}
+.image-item-extra {
+    flex: 1 1 auto;
+    min-width: 220px;
+}
+
+/* Метки дополнительных полей изображения — слева от поля, поле на всю ширину */
+.image-item-extra :deep(.el-form-item) {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+.image-item-extra :deep(.el-form-item__label) {
+    flex: 0 0 auto;
+    white-space: nowrap;
+    padding: 0;
+    text-align: left;
+    float: none;
+    width: auto;
+    line-height: 28px;
+}
+.image-item-extra :deep(.el-form-item__content) {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+.image-item-extra :deep(.el-form-item__content .el-input),
+.image-item-extra :deep(.el-form-item__content .el-textarea),
+.image-item-extra :deep(.el-form-item__content .el-select),
+.image-item-extra :deep(.el-form-item__content .el-input-number) {
+    width: 100%;
+}
 </style>
+
+
+
+
