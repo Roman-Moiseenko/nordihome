@@ -72,6 +72,7 @@ final readonly class WidgetDataEnricherService
             }
         }
 
+
         return new WidgetPageData(
             id: $widget->id,
             category: $widget->category,

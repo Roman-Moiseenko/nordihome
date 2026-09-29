@@ -37,11 +37,17 @@ readonly class PostPageQuery
 
         // 2. Получить все контент-блоки для поста (один SQL-запрос, сортировка по sort_order)
         $blocks = $this->blockRepository->getBlocksByContainer('post', $post->id);
-
         // 3. Обогатить каждый блок: заменить ID дочерних виджетов на WidgetPageData
-        foreach ($blocks as $block) {
-            $block->widget = $this->widgetEnricher->enrich($block->widget);
+
+        try {
+            foreach ($blocks as $index => $block) {
+                $block->widget = $this->widgetEnricher->enrich($block->widget);
+            }
+//FixMe Удалить потом
+        } catch (\Throwable $exception) {
+            dd('Ошибка в блоке #' . $index + 1);
         }
+
         // 4. SEO
         $meta = $this->seoAdapter->getSeo('content.post', $post);
         $meta->canonical = route('shop.post.view', $post->slug);
