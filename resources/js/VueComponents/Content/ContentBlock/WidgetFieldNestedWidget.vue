@@ -19,10 +19,10 @@
 
             <div class="ml-auto flex items-center gap-2" @click.stop>
                 <template v-if="modelValue?.id">
-                    <el-button size="small" @click="openSelector">
+                    <el-button size="small" native-type="button" @click="openSelector">
                         Заменить
                     </el-button>
-                    <el-button size="small" type="danger" text @click="removeInstance">
+                    <el-button size="small" type="danger" text native-type="button" @click="removeInstance">
                         Удалить
                     </el-button>
                 </template>
@@ -30,6 +30,7 @@
                     v-else
                     size="small"
                     type="primary"
+                    native-type="button"
                     @click="openSelector"
                 >
                     + Выбрать

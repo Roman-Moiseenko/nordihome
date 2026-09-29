@@ -90,6 +90,7 @@
                 <el-button
                     v-if="!disabled && showSaveButton"
                     type="success"
+                    native-type="button"
                     :loading="cascadingSaving"
                     @click="onCascadingSave"
                 >
