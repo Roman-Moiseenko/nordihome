@@ -33,6 +33,8 @@ class PostController extends ShopAbstractController
     {
         $data = $this->postPageQuery->execute($slug);
 
+        if (is_null($data)) return abort(404, 'Запись блога не найдена');
+
         return view('shop.content.post', [
             'pageData' => $data,
         ]);

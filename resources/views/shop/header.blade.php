@@ -157,7 +157,6 @@
                     <span class="fs-8">Каталог</span>
                 </a>
             </li>
-
             <li class="menu-item">
                 <livewire:header.cart-mobile />
             </li>

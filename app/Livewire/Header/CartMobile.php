@@ -31,4 +31,5 @@ class CartMobile extends Component
     {
         return view('livewire.header.cart-mobile');
     }
+
 }

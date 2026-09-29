@@ -18,7 +18,7 @@ class PostViewQueryRepository
     {
     }
 
-    public function getPostBySlug(string $slug): PostData
+    public function getPostBySlug(string $slug):? PostData
     {
         $row = DB::table('posts')
             ->where('posts.slug', $slug)
@@ -49,9 +49,7 @@ class PostViewQueryRepository
             )
             ->first();
 
-        if (!$row) {
-            throw new \DomainException("Post not found by slug: {$slug}");
-        }
+        if (!$row) return null;
 
         $meta = json_decode($row->meta ?? '{}', true);
 

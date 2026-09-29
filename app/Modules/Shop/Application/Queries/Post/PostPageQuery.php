@@ -28,11 +28,12 @@ readonly class PostPageQuery
     {
     }
 
-    public function execute(string $slug): PostViewPageData
+    public function execute(string $slug):? PostViewPageData
     {
         $web = $this->webSettingsUseCase->execute();
         // 1. Получить PostData (один SQL-запрос с фото)
         $post = $this->postRepository->getPostBySlug($slug);
+        if (is_null($post)) return null;
 
         // 2. Получить все контент-блоки для поста (один SQL-запрос, сортировка по sort_order)
         $blocks = $this->blockRepository->getBlocksByContainer('post', $post->id);
