@@ -5,6 +5,7 @@
             :model="formModel"
             size="small"
             label-position="top"
+            @submit.prevent
         >
             <!-- Поля на всю ширину (string без формата, long text, html) -->
             <div class="fullwidth-fields">

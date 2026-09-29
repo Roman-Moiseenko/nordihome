@@ -235,37 +235,64 @@ function onSelectNestedWidget(fieldName: string) {
  */
 async function onNestedWidgetInstanceSelected(instance: any) {
     showInstanceSelector.value = false
-    if (nestedWidgetFieldName.value === null) return
 
-    // Устанавливаем значение в поле формы
-    fieldRendererRef.value?.setFieldValue(nestedWidgetFieldName.value, {
-        id: instance.id,
-        title: instance.title,
-        widgetName: instance.widgetName,
-        widgetId: instance.widgetId,
-    })
-
+    // Сохраняем имя поля ДО сброса — оно нужно для записи значения и params
+    const fieldName = nestedWidgetFieldName.value
+    if (fieldName === null) return
     nestedWidgetFieldName.value = null
 
-    // Сохраняем родительскую форму, чтобы ID дочернего экземпляра попал в params
-    // Затем перезагружаем форму, чтобы бекенд вернул поля дочернего виджета
     const instanceId = props.block.widgetInstance?.id
-    if (instanceId) {
-        saving.value = true
-        try {
-            // Получаем текущие params из формы
-            const params = fieldRendererRef.value?.formModel ? { ...fieldRendererRef.value.formModel } : {}
-            // Заменяем ссылку на ID
-            params[nestedWidgetFieldName.value] = instance.id
 
-            await updateWidgetInstance(instanceId, { params })
-            // Перезагружаем форму — бекенд вернёт поля дочернего виджета
-            await loadForm()
-        } catch (e) {
-            console.error('Ошибка сохранения при выборе вложенного виджета:', e)
-        } finally {
-            saving.value = false
+    if (!instanceId) {
+        // Родителя нет — просто ставим значение локально
+        fieldRendererRef.value?.setFieldValue(fieldName, {
+            id: instance.id,
+            title: instance.title,
+            widgetName: instance.widgetName,
+            widgetId: instance.widgetId,
+            fields: instance.fields || [],
+        })
+        return
+    }
+
+    // Сохраняем родительскую форму, чтобы ID дочернего экземпляра попал в params
+    saving.value = true
+    try {
+        // Собираем актуальные params из formModel, преобразуя widget-поля в ID
+        const raw = fieldRendererRef.value?.formModel
+            ? JSON.parse(JSON.stringify(fieldRendererRef.value.formModel))
+            : {}
+        const params: Record<string, any> = {}
+        for (const [key, val] of Object.entries(raw)) {
+            if (val && typeof val === 'object' && !Array.isArray(val) && val.id && val.widgetId) {
+                params[key] = val.id
+            } else {
+                params[key] = val
+            }
         }
+        // Гарантируем, что выбранное поле хранит именно ID экземпляра
+        params[fieldName] = instance.id
+
+        // updateWidgetInstance уже возвращает обновлённую форму родителя —
+        // используем её напрямую, без повторного GET-запроса loadForm()
+        const data = await updateWidgetInstance(instanceId, { params })
+        formFields.value = data.fields || []
+
+        // Обновляем вложенное поле, чтобы сразу отобразились поля дочернего виджета
+        const widgetField = (data.fields || []).find(
+            (f: WidgetFormFieldData) => f.name === fieldName && f.format === 'widget',
+        )
+        fieldRendererRef.value?.setFieldValue(fieldName, widgetField?.value ?? {
+            id: instance.id,
+            title: instance.title,
+            widgetName: instance.widgetName,
+            widgetId: instance.widgetId,
+            fields: instance.fields || [],
+        })
+    } catch (e) {
+        console.error('Ошибка сохранения при выборе вложенного виджета:', e)
+    } finally {
+        saving.value = false
     }
 }
 
