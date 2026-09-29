@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Content\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Content\Application\Actions\ContentBlock\CopyContentBlockUseCase;
 use App\Modules\Content\Application\Actions\ContentBlock\CreateContentBlockUseCase;
 use App\Modules\Content\Application\Actions\ContentBlock\RemoveContentBlockUseCase;
 use App\Modules\Content\Application\Actions\ContentBlock\SortContentBlockUseCase;
@@ -29,6 +30,7 @@ class ContentBlockController extends Controller
         private readonly SortContentBlockUseCase $sortContentBlockUseCase,
         private readonly RemoveContentBlockUseCase $removeContentBlockUseCase,
         private readonly ToggleContentBlockUseCase $toggleContentBlockUseCase,
+        private readonly CopyContentBlockUseCase $copyContentBlockUseCase,
     ) {}
 
     /**
@@ -112,6 +114,21 @@ class ContentBlockController extends Controller
 
         return response()->json(
             ContentBlockViewData::fromEntity($block),
+        );
+    }
+
+    /**
+     * Скопировать ContentBlock (вместе с экземпляром виджета).
+     * Копия вставляется сразу после исходного блока.
+     * POST /admin/content/content-blocks/{id}/copy
+     */
+    public function copy(int $id): JsonResponse
+    {
+        $block = $this->copyContentBlockUseCase->execute($id);
+
+        return response()->json(
+            ContentBlockViewData::fromEntity($block),
+            201,
         );
     }
 

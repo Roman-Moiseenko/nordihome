@@ -28,4 +28,10 @@ interface ContentBlockRepositoryInterface
      */
     public function updateSortOrder(int $blockId, int $newSort): void;
 
+    /**
+     * Вставить блок на указанную позицию.
+     * Сдвигает существующие блоки (sort_order >= position) вниз.
+     */
+    public function insertAt(ContentBlockEntity $contentBlock, int $position): ContentBlockEntity;
+
 }

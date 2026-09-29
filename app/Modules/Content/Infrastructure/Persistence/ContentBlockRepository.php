@@ -119,6 +119,22 @@ class ContentBlockRepository implements ContentBlockRepositoryInterface
         $block->sort_order = $newSort;
         $block->save();
     }
+
+    public function insertAt(ContentBlockEntity $contentBlock, int $position): ContentBlockEntity
+    {
+        $containerType = (string) $contentBlock->containerType;
+        $containerId = $contentBlock->containerId;
+
+        // Сдвигаем вниз блоки, стоящие на позиции $position и ниже
+        ContentBlock::where('container_type', $containerType)
+            ->where('container_id', $containerId)
+            ->where('sort_order', '>=', $position)
+            ->increment('sort_order');
+
+        $contentBlock->sort = $position;
+
+        return $this->save($contentBlock);
+    }
     /**
      * Базовая гидратация одной сущности ContentBlock.
      * @throws \DateMalformedStringException

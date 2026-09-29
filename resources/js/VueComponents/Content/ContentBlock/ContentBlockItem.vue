@@ -40,6 +40,9 @@
                 <el-button size="small" type="primary" link @click="$emit('edit', block.id)">
                     Изменить
                 </el-button>
+                <el-button size="small" type="primary" link @click="$emit('copy', block.id)">
+                    Копировать
+                </el-button>
                 <el-button size="small" type="danger" text @click="$emit('delete', block.id)">
                     Удалить блок
                 </el-button>
@@ -135,6 +138,7 @@ const emit = defineEmits<{
     (e: 'addWidget', id: number): void
     (e: 'removeWidget', id: number): void
     (e: 'edit', id: number): void
+    (e: 'copy', id: number): void
     (e: 'toggleActive', id: number, active: boolean): void
 }>()
 

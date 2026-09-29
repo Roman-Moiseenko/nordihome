@@ -17,6 +17,7 @@
                 :collapsed="collapsedIds.has(element.id)"
                 @toggle="toggleCollapse"
                 @edit="openEditDialog"
+                @copy="copyBlock"
                 @delete="confirmDelete"
                 @add-widget="openWidgetSelector"
                 @remove-widget="confirmRemoveWidget"
@@ -67,6 +68,7 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted, nextTick } from 'vue'
+import { ElMessageBox } from 'element-plus'
 import Sortable from 'sortablejs'
 import { useContentBlock } from '@Res/composables/useContentBlock'
 import { useContentStore } from '@Res/contentStore'
@@ -93,7 +95,7 @@ const props = defineProps<{
 }>()
 
 console.log(props)
-const { loading, createBlock: apiCreateBlock, updateBlock: apiUpdateBlock, deleteBlock: apiDeleteBlock, sortBlock: apiSortBlock, toggleBlock: apiToggleBlock, createWidgetInstance, deleteWidgetInstance } = useContentBlock()
+const { loading, createBlock: apiCreateBlock, updateBlock: apiUpdateBlock, deleteBlock: apiDeleteBlock, sortBlock: apiSortBlock, toggleBlock: apiToggleBlock, copyBlock: apiCopyBlock, createWidgetInstance, deleteWidgetInstance } = useContentBlock()
 const contentStore = useContentStore()
 
 const localBlocks = ref<ContentBlockData[]>([])
@@ -168,6 +170,20 @@ async function onWidgetSelected(widget: any) {
 async function confirmRemoveWidget(blockId: number) {
     const block = localBlocks.value.find(b => b.id === blockId)
     if (!block || !block.widgetInstance) return
+
+    try {
+        await ElMessageBox.confirm(
+            'Удалить виджет из блока?',
+            'Подтверждение действия',
+            {
+                confirmButtonText: 'Удалить',
+                cancelButtonText: 'Отмена',
+                type: 'warning',
+            },
+        )
+    } catch {
+        return
+    }
 
     await deleteWidgetInstance(block.widgetInstance.id)
 
@@ -268,8 +284,55 @@ async function createBlock() {
     await nextTick(initSortable)
 }
 
+// --- Копирование ---
+async function copyBlock(id: number) {
+    const index = localBlocks.value.findIndex(b => b.id === id)
+    if (index === -1) return
+
+    try {
+        await ElMessageBox.confirm(
+            'Скопировать блок? Копия будет вставлена сразу после исходного.',
+            'Подтверждение действия',
+            {
+                confirmButtonText: 'Скопировать',
+                cancelButtonText: 'Отмена',
+                type: 'info',
+            },
+        )
+    } catch {
+        return
+    }
+
+    const copied = await apiCopyBlock(id)
+
+    // Вставляем копию сразу после исходного блока
+    localBlocks.value.splice(index + 1, 0, copied)
+
+    // Пересчитываем sort для актуальности (бэкенд уже сдвинул последующие блоки)
+    localBlocks.value = localBlocks.value.map((b, i) => ({ ...b, sort: i + 1 }))
+
+    // Копия свёрнута по умолчанию
+    collapsedIds.value.add(copied.id)
+
+    await nextTick(initSortable)
+}
+
 // --- Удаление ---
 async function confirmDelete(id: number) {
+    try {
+        await ElMessageBox.confirm(
+            'Удалить блок? Действие необратимо.',
+            'Подтверждение действия',
+            {
+                confirmButtonText: 'Удалить',
+                cancelButtonText: 'Отмена',
+                type: 'warning',
+            },
+        )
+    } catch {
+        return
+    }
+
     await apiDeleteBlock(id)
     localBlocks.value = localBlocks.value.filter(b => b.id !== id)
     collapsedIds.value.delete(id)

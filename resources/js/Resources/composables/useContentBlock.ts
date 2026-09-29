@@ -138,6 +138,21 @@ export function useContentBlock() {
         }
     }
 
+    /** Скопировать ContentBlock (вместе с экземпляром виджета) */
+    async function copyBlock(id: number): Promise<ContentBlockData> {
+        loading.value = true
+        try {
+            const res = await api.post<ContentBlockData>(
+                route('admin.content.content-blocks.copy', { id }),
+                null,
+                { successMessage: 'Блок скопирован' },
+            )
+            return res
+        } finally {
+            loading.value = false
+        }
+    }
+
     // ---- WidgetInstance ----
 
     /** Создать WidgetInstance (опционально с привязкой к ContentBlock) */
@@ -215,6 +230,7 @@ export function useContentBlock() {
         sortBlock,
         deleteBlock,
         toggleBlock,
+        copyBlock,
         createWidgetInstance,
         getWidgetInstance,
         updateWidgetInstance,

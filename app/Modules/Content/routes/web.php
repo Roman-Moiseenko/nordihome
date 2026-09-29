@@ -40,6 +40,7 @@ Route::group(
             Route::get('/sections', [ContentBlockController::class, 'sections'])->name('sections');
             Route::post('/sort', [ContentBlockController::class, 'sort'])->name('sort');
             Route::post('/{id}/toggle', [ContentBlockController::class, 'toggle'])->name('toggle');
+            Route::post('/{id}/copy', [ContentBlockController::class, 'copy'])->name('copy');
             Route::get('/{id}', [ContentBlockController::class, 'show'])->name('show');
             Route::post('/', [ContentBlockController::class, 'store'])->name('store');
             Route::put('/{id}', [ContentBlockController::class, 'update'])->name('update');
