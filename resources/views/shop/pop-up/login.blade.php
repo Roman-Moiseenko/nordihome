@@ -22,6 +22,13 @@
                             <button id="show-hide-password" class="btn btn-secondary" type="button" data-target-input="#password"><i class="fa-light fa-eye"></i></button>
                         </div>
                         <div id="password-error" class="fs-7 text-danger" style="display: none">Неверный пароль</div>
+                        <div class="form-floating input-group mt-3" id="repeat-password" style="display: none">
+                            <input type="password" class="form-control" name="password_confirmation" id="password-confirmation"
+                                   placeholder="Повторите пароль" minlength="6" autocomplete="off">
+                            <label for="password-confirmation" style="z-index: 9999 !important;">Повторите пароль</label>
+                            <button id="show-hide-password-confirmation" class="btn btn-secondary" type="button" data-target-input="#password-confirmation"><i class="fa-light fa-eye"></i></button>
+                        </div>
+                        <div id="password-confirmation-error" class="fs-7 text-danger mt-2" style="display: none">Пароли не совпадают</div>
                         <div class="form-floating my-3">
                             <input type="text" class="form-control" name="verify_token" id="verify_token"
                                    placeholder="Код верификации" autocomplete="off">
