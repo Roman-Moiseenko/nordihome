@@ -8,85 +8,28 @@
         >
             <!-- Поля на всю ширину (string без формата, long text, html) -->
             <div class="fullwidth-fields">
-                <template v-for="field in fullwidthFields" :key="field.name">
-                    <el-form-item
-                        :label="field.label"
-                        :required="field.required"
-                        :prop="field.name"
-                    >
-                        <!-- html — WYSIWYG-редактор (@erag/text-editor-vue) -->
-                        <RichTextEditor
-                            v-if="field.format === 'html'"
-                            :model-value="formModel[field.name] || ''"
-                            @update:model-value="(val) => formModel[field.name] = val"
-                            :disabled="disabled"
-                            :placeholder="field.label"
-                            :height="300"
-                        />
-                        <!-- textarea если длинное значение -->
-                        <el-input
-                            v-else-if="isLongText(field)"
-                            v-model="formModel[field.name]"
-                            type="textarea"
-                            :rows="4"
-                            :disabled="disabled"
-                            :placeholder="field.label"
-                        />
-                        <!-- обычное строковое поле -->
-                        <el-input
-                            v-else
-                            v-model="formModel[field.name]"
-                            :disabled="disabled"
-                            :placeholder="field.label"
-                        />
-                    </el-form-item>
-                </template>
+                <WidgetFieldSimple
+                    v-for="field in fullwidthFields"
+                    :key="field.name"
+                    :field="field"
+                    :model-value="formModel[field.name]"
+                    :disabled="disabled"
+                    variant="fullwidth"
+                    @update:model-value="(val) => onFieldChange(field.name, val)"
+                />
             </div>
 
             <!-- Компактные поля в ряд (все остальные) -->
             <div class="compact-fields">
-                <div class="compact-row" v-for="field in compactFields" :key="field.name">
-                    <el-form-item
-                        :label="field.label"
-                        :required="field.required"
-                        :prop="field.name"
-                    >
-                        <!-- color -->
-                        <el-color-picker
-                            v-if="field.format === 'color'"
-                            v-model="formModel[field.name]"
-                            :disabled="disabled"
-                        />
-                        <!-- enum / select -->
-                        <el-select
-                            v-else-if="field.options && field.options.length > 0"
-                            v-model="formModel[field.name]"
-                            :disabled="disabled"
-                            :multiple="field.type === 'array'"
-                            clearable
-                        >
-                            <el-option
-                                v-for="opt in field.options"
-                                :key="opt"
-                                :label="opt"
-                                :value="opt"
-                            />
-                        </el-select>
-                        <!-- boolean -->
-                        <el-switch
-                            v-else-if="field.type === 'boolean'"
-                            v-model="formModel[field.name]"
-                            :disabled="disabled"
-                        />
-                        <!-- number / integer -->
-                        <el-input-number
-                            v-else-if="field.type === 'integer' || field.type === 'number'"
-                            v-model="formModel[field.name]"
-                            :disabled="disabled"
-                            :min="0"
-                        />
-                    </el-form-item>
-                </div>
+                <WidgetFieldSimple
+                    v-for="field in compactFields"
+                    :key="field.name"
+                    :field="field"
+                    :model-value="formModel[field.name]"
+                    :disabled="disabled"
+                    variant="compact"
+                    @update:model-value="(val) => onFieldChange(field.name, val)"
+                />
             </div>
 
             <!-- Составные поля: array с nestedFields, object с nestedFields, widget -->
@@ -99,88 +42,12 @@
                         :required="field.required"
                         :prop="field.name"
                     >
-                        <div class="array-object-field">
-                            <div
-                                v-for="(item, itemIdx) in arrayItems(field.name)"
-                                :key="itemIdx"
-                                class="array-object-item border rounded p-3 mb-2"
-                            >
-                                <!-- image/product — без сворачивания -->
-                                <template v-if="field.format === 'image' || field.format === 'product'">
-                                    <div class="flex items-center justify-between mb-2">
-                                        <span class="text-sm font-medium">Элемент #{{ itemIdx + 1 }}</span>
-                                        <el-button
-                                            size="small"
-                                            type="danger"
-                                            text
-                                            @click="removeArrayItem(field.name, itemIdx)"
-                                        >
-                                            Удалить
-                                        </el-button>
-                                    </div>
-                                    <div v-if="field.format === 'image'" class="image-object-field image-item-layout">
-                                        <div class="image-item-picker">
-                                            <ImagePicker
-                                                :model-value="item || null"
-                                                @update:model-value="(val) => onArrayImageFieldChange(field.name, itemIdx, val)"
-                                            />
-                                        </div>
-                                        <div
-                                            v-if="imageExtraFieldInstances(field, itemIdx).length > 0"
-                                            class="image-item-extra"
-                                        >
-                                            <WidgetFieldRenderer
-                                                :fields="imageExtraFieldInstances(field, itemIdx)"
-                                                :disabled="disabled"
-                                                :showSaveButton="false"
-                                                @save="(vals) => onArrayItemSave(field.name, itemIdx, vals)"
-                                            />
-                                        </div>
-                                    </div>
-                                    <div v-else class="product-object-field">
-                                        <ProductPicker
-                                            :model-value="item || null"
-                                            @update:model-value="(val) => onArrayProductFieldChange(field.name, itemIdx, val)"
-                                        />
-                                    </div>
-                                </template>
-                                <!-- обычный объект — сворачиваемый -->
-                                <template v-else>
-                                    <div class="composite-field-wrapper border rounded-lg bg-white shadow-sm w-full">
-                                        <div
-                                            class="flex items-center gap-2 px-3 py-2 cursor-pointer select-none"
-                                            @click="toggleCompositeCollapse(getArrayItemCollapseKey(field.name, itemIdx))"
-                                        >
-                                            <el-icon class="text-gray-400" :class="{ 'rotate-90': collapsedComposites[getArrayItemCollapseKey(field.name, itemIdx)] }">
-                                                <i :class="collapsedComposites[getArrayItemCollapseKey(field.name, itemIdx)] ? 'fa-light fa-chevron-right' : 'fa-light fa-chevron-down'" />
-                                            </el-icon>
-                                            <span class="text-sm font-medium text-gray-600">Элемент #{{ itemIdx + 1 }}</span>
-                                            <div class="ml-auto flex items-center gap-2" @click.stop>
-                                                <el-button
-                                                    size="small"
-                                                    type="danger"
-                                                    text
-                                                    @click="removeArrayItem(field.name, itemIdx)"
-                                                >
-                                                    Удалить
-                                                </el-button>
-                                            </div>
-                                        </div>
-                                        <div v-show="!collapsedComposites[getArrayItemCollapseKey(field.name, itemIdx)]" class="border-t px-3 py-3">
-                                            <WidgetFieldRenderer
-                                                :fields="nestedFieldInstances(field.nestedFields, field.name, itemIdx)"
-                                                :disabled="disabled"
-                                                :showSaveButton="false"
-                                                @save="(vals) => onArrayItemSave(field.name, itemIdx, vals)"
-                                            />
-                                        </div>
-                                    </div>
-                                </template>
-                            </div>
-                            <el-button v-if="!disabled" size="small" type="primary" plain @click="addArrayItem(field.name, field.nestedFields!, field.format)">
-                                + Добавить элемент
-                            </el-button>
-                        </div>
+                        <WidgetFieldArray
+                            :field="field"
+                            :model-value="formModel[field.name]"
+                            :disabled="disabled"
+                            @update:model-value="(val) => onFieldChange(field.name, val)"
+                        />
                     </el-form-item>
 
                     <!-- object с nestedFields -->
@@ -190,55 +57,12 @@
                         :required="field.required"
                         :prop="field.name"
                     >
-                        <div v-if="field.format === 'image'" class="image-object-field w-full">
-                            <ImagePicker
-                                :model-value="formModel[field.name] || null"
-                                @update:model-value="(val) => onImageFieldChange(field.name, val)"
-                            />
-                        </div>
-                        <div v-else-if="field.format === 'product'" class="product-object-field w-full">
-                            <ProductPicker
-                                :model-value="formModel[field.name] || null"
-                                @update:model-value="(val) => onProductFieldChange(field.name, val)"
-                            />
-                        </div>
-                        <div v-else-if="field.format === 'product_group'" class="product-group-field w-full">
-                            <ProductGroupPicker
-                                :model-value="formModel[field.name] || null"
-                                @update:model-value="(val) => onProductGroupFieldChange(field.name, val)"
-                            />
-                            <el-form-item label="Максимум товаров">
-                                <el-input-number
-                                    :model-value="formModel[field.name]?.limit ?? 0"
-                                    @update:model-value="(val) => onProductGroupLimitChange(field.name, val)"
-                                    :min="0"
-                                    :disabled="disabled"
-                                    placeholder="Максимум товаров"
-                                />
-                            </el-form-item>
-                        </div>
-                        <div v-else class="composite-field-wrapper border rounded-lg bg-white shadow-sm w-full">
-                            <!-- Шапка объекта -->
-                            <div
-                                class="flex items-center gap-2 px-3 py-2 cursor-pointer select-none"
-                                @click="toggleCompositeCollapse(field.name)"
-                            >
-                                <el-icon class="text-gray-400" :class="{ 'rotate-90': collapsedComposites[field.name] }">
-                                    <i :class="collapsedComposites[field.name] ? 'fa-light fa-chevron-right' : 'fa-light fa-chevron-down'" />
-                                </el-icon>
-                                <span class="text-sm font-medium text-gray-600">{{ field.label || field.name }}</span>
-                            </div>
-
-                            <!-- Разворачиваемая часть — поля объекта -->
-                            <div v-show="!collapsedComposites[field.name]" class="border-t px-3 py-3">
-                                <WidgetFieldRenderer
-                                    :fields="nestedFieldInstances(field.nestedFields, field.name)"
-                                    :disabled="disabled"
-                                    :showSaveButton="false"
-                                    @save="(vals) => onObjectSave(field.name, vals)"
-                                />
-                            </div>
-                        </div>
+                        <WidgetFieldObject
+                            :field="field"
+                            :model-value="formModel[field.name]"
+                            :disabled="disabled"
+                            @update:model-value="(val) => onObjectFieldChange(field.name, val)"
+                        />
                     </el-form-item>
 
                     <!-- widget — вложенный виджет (сворачиваемый блок) -->
@@ -248,61 +72,14 @@
                         :required="field.required"
                         class="nested-widget-form-item"
                     >
-                        <div class="nested-widget-block border rounded-lg bg-white shadow-sm w-full">
-                            <!-- Шапка блока (всегда видна) -->
-                            <div
-                                class="flex items-center gap-2 px-3 py-2 cursor-pointer select-none"
-                                @click="toggleCompositeCollapse(field.name)"
-                            >
-                                <el-icon class="text-gray-400" :class="{ 'rotate-90': collapsedComposites[field.name] }">
-                                    <i :class="collapsedComposites[field.name] ? 'fa-light fa-chevron-right' : 'fa-light fa-chevron-down'" />
-                                </el-icon>
-
-                                <span class="text-sm font-medium text-gray-600">
-                                    {{ field.label || field.name }}
-                                </span>
-
-                                <el-tag v-if="formModel[field.name]?.widgetName" size="small" type="success">
-                                    {{ formModel[field.name].widgetName }}
-                                </el-tag>
-
-                                <div class="ml-auto flex items-center gap-2" @click.stop>
-                                    <template v-if="formModel[field.name]?.id">
-                                        <el-button size="small" @click="openNestedWidgetSelector(field.name)">
-                                            Заменить
-                                        </el-button>
-                                        <el-button size="small" type="danger" text @click="removeNestedWidgetInstance(field.name)">
-                                            Удалить
-                                        </el-button>
-                                    </template>
-                                    <el-button
-                                        v-else
-                                        size="small"
-                                        type="primary"
-                                        @click="openNestedWidgetSelector(field.name)"
-                                    >
-                                        + Выбрать
-                                    </el-button>
-                                </div>
-                            </div>
-
-                            <!-- Разворачиваемая часть — поля дочернего виджета -->
-                            <div v-show="!collapsedComposites[field.name]" class="border-t px-3 py-3">
-                                <div v-if="formModel[field.name]?.fields?.length > 0">
-                                    <WidgetFieldRenderer
-                                        :key="'nested-widget-' + field.name"
-                                        :ref="(el: any) => registerNestedRenderer(field.name, el)"
-                                        :fields="formModel[field.name].fields"
-                                        :disabled="disabled"
-                                        :showSaveButton="false"
-                                        @save="(vals: Record<string, any>) => onNestedWidgetFormSave(field.name, vals)"
-                                    />
-                                </div>
-                                <div v-else class="text-gray-400 text-xs py-2">
-                                    Выберите экземпляр виджета для настройки
-                                </div>
-                            </div>
-                        </div>
+                        <WidgetFieldNestedWidget
+                            :field="field"
+                            :model-value="formModel[field.name]"
+                            :disabled="disabled"
+                            :register-renderer="(el: any) => registerNestedRenderer(field.name, el)"
+                            @update:model-value="(val) => onFieldChange(field.name, val)"
+                            @select-nested-widget="(fieldName: string) => emit('select-nested-widget', fieldName)"
+                        />
                     </el-form-item>
                 </template>
             </div>
@@ -327,10 +104,10 @@
 <script setup lang="ts">
 import { ref, reactive, watch, computed } from 'vue'
 import type { WidgetFormFieldData } from '@Res/composables/useContentBlock'
-import ImagePicker from './ImagePicker.vue'
-import ProductPicker from './ProductPicker.vue'
-import ProductGroupPicker from './ProductGroupPicker.vue'
-import RichTextEditor from './RichTextEditor.vue'
+import WidgetFieldSimple from './WidgetFieldSimple.vue'
+import WidgetFieldArray from './WidgetFieldArray.vue'
+import WidgetFieldObject from './WidgetFieldObject.vue'
+import WidgetFieldNestedWidget from './WidgetFieldNestedWidget.vue'
 
 const props = defineProps<{
     fields: WidgetFormFieldData[]
@@ -353,9 +130,6 @@ function setFieldValue(name: string, value: any) {
 const formModel = reactive<Record<string, any>>({})
 
 defineExpose({ setFieldValue, formModel })
-
-// --- Состояние сворачивания для составных полей (объекты, массивы, виджеты) ---
-const collapsedComposites = reactive<Record<string, boolean>>({})
 
 /**
  * Храним сигнатуру полей (имена + значения на момент инициализации),
@@ -393,18 +167,6 @@ watch(() => props.fields, (fields) => {
             }
         } else if (field.type === 'array' && field.nestedFields) {
             formModel[field.name] = Array.isArray(field.value) ? [...field.value] : []
-            // Инициализируем коллапсы для каждого элемента массива (кроме image/product)
-            if (field.format !== 'image' && field.format !== 'product') {
-                const arr = formModel[field.name]
-                if (Array.isArray(arr)) {
-                    arr.forEach((_, idx) => {
-                        const key = getArrayItemCollapseKey(field.name, idx)
-                        if (!(key in collapsedComposites)) {
-                            collapsedComposites[key] = true
-                        }
-                    })
-                }
-            }
         } else if (field.format === 'widget') {
             // Для поля виджета — value это объект {id, title, widgetName, widgetId, fields}
             formModel[field.name] = field.value && typeof field.value === 'object' && field.value !== null
@@ -414,13 +176,6 @@ watch(() => props.fields, (fields) => {
             formModel[field.name] = field.value !== undefined && field.value !== null
                 ? field.value
                 : field.default ?? null
-        }
-
-        // Инициализируем сворачивание для объектов и виджетов
-        if ((field.type === 'object' && field.nestedFields && field.format !== 'image' && field.format !== 'product' && field.format !== 'product_group') || field.format === 'widget') {
-            if (!(field.name in collapsedComposites)) {
-                collapsedComposites[field.name] = true
-            }
         }
     }
 }, { immediate: true, deep: false })
@@ -463,10 +218,6 @@ const widgetFields = computed(() => {
     return props.fields.filter(f => f.format === 'widget')
 })
 
-function toggleCompositeCollapse(fieldName: string) {
-    collapsedComposites[fieldName] = !collapsedComposites[fieldName]
-}
-
 // --- Вложенные рендереры дочерних виджетов ---
 const nestedRenderers = ref<Record<string, any>>({})
 const cascadingSaving = ref(false)
@@ -477,108 +228,18 @@ function registerNestedRenderer(fieldName: string, el: any) {
     }
 }
 
-// --- Вспомогательные функции ---
-
-function arrayItems(fieldName: string): any[] {
-    const val = formModel[fieldName]
-    return Array.isArray(val) ? val : []
+/** Обычное присвоение значения полю (простые поля, массивы, вложенные виджеты) */
+function onFieldChange(name: string, value: any) {
+    formModel[name] = value
 }
 
-function addArrayItem(fieldName: string, nestedFields: WidgetFormFieldData[], format?: string | null) {
-    if (!Array.isArray(formModel[fieldName])) {
-        formModel[fieldName] = []
+/** Присвоение значения объектному полю: null означает удаление ключа */
+function onObjectFieldChange(name: string, value: any) {
+    if (value === null) {
+        delete formModel[name]
+    } else {
+        formModel[name] = value
     }
-    if (format === 'image') {
-        formModel[fieldName].push({ id: null, src: '', alt: '', title: '', description: '' })
-        return
-    }
-    if (format === 'product') {
-        formModel[fieldName].push({ id: null, name: null, url: null, short: null, price: null, image_src: null, image_alt: null, image_next_src: null, image_next_alt: null })
-        return
-    }
-    const newItem: Record<string, any> = {}
-    for (const nf of nestedFields) {
-        newItem[nf.name] = nf.default ?? null
-    }
-    formModel[fieldName].push(newItem)
-    collapsedComposites[getArrayItemCollapseKey(fieldName, formModel[fieldName].length - 1)] = true
-}
-
-function removeArrayItem(fieldName: string, index: number) {
-    if (Array.isArray(formModel[fieldName])) {
-        formModel[fieldName].splice(index, 1)
-    }
-}
-
-function getArrayItemCollapseKey(parentName: string, itemIndex: number): string {
-    return `${parentName}__item__${itemIndex}`
-}
-
-function nestedFieldInstances(
-    nestedFields: WidgetFormFieldData[],
-    parentName: string,
-    itemIndex?: number,
-): WidgetFormFieldData[] {
-    if (itemIndex !== undefined) {
-        const arr = formModel[parentName]
-        const itemValue = (Array.isArray(arr) && arr[itemIndex]) ? arr[itemIndex] : {}
-        return nestedFields.map(f => ({
-            ...f,
-            value: itemValue[f.name] !== undefined ? itemValue[f.name] : f.default ?? null,
-        }))
-    }
-    const objValue = formModel[parentName]
-    const val = (objValue && typeof objValue === 'object' && !Array.isArray(objValue)) ? objValue : {}
-    return nestedFields.map(f => ({
-        ...f,
-        value: val[f.name] !== undefined ? val[f.name] : f.default ?? null,
-    }))
-}
-
-/** Стандартные поля изображения — заполняются автоматически из ImagePicker */
-const IMAGE_STANDARD_FIELDS = ['id', 'src', 'alt', 'title', 'description']
-
-/**
- * Дополнительные поля элемента массива изображений — все поля, кроме стандартных
- * (id, src, alt, title, description). Их пользователь заполняет вручную.
- */
-function imageExtraFieldInstances(field: WidgetFormFieldData, itemIndex: number): WidgetFormFieldData[] {
-    if (!field.nestedFields) return []
-    return nestedFieldInstances(field.nestedFields, field.name, itemIndex)
-        .filter(f => !IMAGE_STANDARD_FIELDS.includes(f.name))
-}
-
-function onObjectSave(parentName: string, vals: Record<string, any>) {
-    formModel[parentName] = {
-        ...(formModel[parentName] || {}),
-        ...vals,
-    }
-}
-
-function onArrayItemSave(parentName: string, itemIndex: number, vals: Record<string, any>) {
-    if (!Array.isArray(formModel[parentName])) {
-        formModel[parentName] = []
-    }
-    if (!formModel[parentName][itemIndex]) {
-        formModel[parentName][itemIndex] = {}
-    }
-    formModel[parentName][itemIndex] = {
-        ...formModel[parentName][itemIndex],
-        ...vals,
-    }
-}
-
-function removeNestedWidgetInstance(fieldName: string) {
-    formModel[fieldName] = null
-}
-
-function openNestedWidgetSelector(fieldName: string) {
-    emit('select-nested-widget', fieldName)
-}
-
-function isLongText(field: WidgetFormFieldData): boolean {
-    const val = formModel[field.name]
-    return typeof val === 'string' && val.length > 80
 }
 
 /**
@@ -591,76 +252,6 @@ watch(formModel, () => {
         emit('save', snapshot)
     }
 }, { deep: true })
-
-function onFieldChange(name: string, value: any) {
-    formModel[name] = value
-}
-
-function onImageFieldChange(parentName: string, value: any) {
-    if (value === null) {
-        delete formModel[parentName]
-    } else {
-        formModel[parentName] = { ...value }
-    }
-}
-
-function onArrayImageFieldChange(parentName: string, itemIndex: number, value: any) {
-    if (!Array.isArray(formModel[parentName])) {
-        formModel[parentName] = []
-    }
-    if (value === null) {
-        formModel[parentName].splice(itemIndex, 1)
-    } else {
-        // Мержим с существующим элементом, чтобы сохранить
-        // дополнительные поля, заполняемые пользователем
-        formModel[parentName][itemIndex] = {
-            ...(formModel[parentName][itemIndex] || {}),
-            ...value,
-        }
-    }
-}
-
-/**
- * Обработчик данных дочернего виджета — при showSaveButton=false
- * данные уже синхронизированы через formModel родителя, ничего не делаем.
- */
-function onNestedWidgetFormSave(fieldName: string, vals: Record<string, any>) {
-    // Данные уже в formModel[fieldName] через автоматическую синхронизацию
-}
-
-function onProductFieldChange(parentName: string, value: any) {
-    if (value === null) {
-        delete formModel[parentName]
-    } else {
-        formModel[parentName] = { ...value }
-    }
-}
-
-function onArrayProductFieldChange(parentName: string, itemIndex: number, value: any) {
-    if (!Array.isArray(formModel[parentName])) {
-        formModel[parentName] = []
-    }
-    if (value === null) {
-        formModel[parentName].splice(itemIndex, 1)
-    } else {
-        formModel[parentName][itemIndex] = { ...value }
-    }
-}
-
-function onProductGroupFieldChange(parentName: string, value: any) {
-    if (value === null) {
-        delete formModel[parentName]
-    } else {
-        formModel[parentName] = { ...value }
-    }
-}
-
-function onProductGroupLimitChange(parentName: string, value: number | null) {
-    if (!formModel[parentName] || typeof formModel[parentName] !== 'object') {
-        formModel[parentName] = { entity_type: null, entity_id: null, title: null }
-    }
-    formModel[parentName].limit = value ?? 0
-}
 
 /**
  * Собрать params для родителя — преобразовать format:'widget' обратно в ID
@@ -718,76 +309,15 @@ function onCascadingSave() {
 
     emit('cascading-save', parentSnapshot, children)
 }
-
-function onSave() {
-    // Этот метод больше не используется напрямую — используем onCascadingSave
-    const snapshot = buildParentParamsSnapshot()
-    emit('save', snapshot)
-}
 </script>
 
 <style scoped>
-.widget-field-renderer {
-
-}
-
-/* Поля на всю ширину — label сверху */
-.fullwidth-fields :deep(.el-form-item) {
-    display: block;
-    margin-bottom: 16px;
-}
-.fullwidth-fields :deep(.el-form-item__label) {
-    display: block;
-    text-align: left;
-    padding-bottom: 4px;
-}
-.fullwidth-fields :deep(.el-form-item__content) {
-    display: block;
-}
-.fullwidth-fields :deep(.el-form-item__content .el-input),
-.fullwidth-fields :deep(.el-form-item__content .el-textarea) {
-    width: 100%;
-}
-
-/* Компактные поля — в ряд, label слева */
+/* Компактные поля — в ряд */
 .compact-fields {
     display: flex;
     flex-wrap: wrap;
     gap: 8px 16px;
     margin-bottom: 16px;
-}
-.compact-row {
-    flex: 0 1 auto;
-    min-width: 180px;
-}
-.compact-fields :deep(.el-form-item) {
-    margin-bottom: 0;
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center;
-    gap: 6px;
-}
-.compact-fields :deep(.el-form-item__label) {
-    white-space: nowrap;
-    padding: 0;
-    text-align: left;
-    float: none;
-    display: inline-block;
-    width: auto;
-    line-height: 28px;
-}
-.compact-fields :deep(.el-form-item__content) {
-    display: inline-flex;
-    flex: 0 1 auto;
-    width: auto;
-    min-width: 120px;
-}
-.compact-fields :deep(.el-form-item__content .el-select) {
-    width: 100%;
-    min-width: 140px;
-}
-.compact-fields :deep(.el-form-item__content .el-switch) {
-    margin-top: 0;
 }
 
 /* Составные поля */
@@ -798,73 +328,4 @@ function onSave() {
     display: block;
     margin-bottom: 16px;
 }
-
-/* Блок дочернего виджета — как ContentBlock */
-.nested-widget-block {
-    border: 1px solid #e5e7eb;
-}
-.nested-widget-block:hover {
-    border-color: #d1d5db;
-}
-.rotate-90 {
-    transform: rotate(90deg);
-}
-
-.array-object-field {
-    width: 100%;
-}
-.array-object-item {
-    background: #f9fafb;
-}
-.object-field {
-    max-width: 100%;
-}
-
-/* Раскладка элемента массива изображений: изображение слева, доп. поля справа */
-.image-item-layout {
-    display: flex;
-    align-items: flex-start;
-    flex-wrap: wrap;
-    gap: 16px;
-}
-.image-item-picker {
-    flex: 0 0 auto;
-    max-width: 260px;
-}
-.image-item-extra {
-    flex: 1 1 auto;
-    min-width: 220px;
-}
-
-/* Метки дополнительных полей изображения — слева от поля, поле на всю ширину */
-.image-item-extra :deep(.el-form-item) {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 10px;
-}
-.image-item-extra :deep(.el-form-item__label) {
-    flex: 0 0 auto;
-    white-space: nowrap;
-    padding: 0;
-    text-align: left;
-    float: none;
-    width: auto;
-    line-height: 28px;
-}
-.image-item-extra :deep(.el-form-item__content) {
-    flex: 1 1 auto;
-    min-width: 0;
-}
-.image-item-extra :deep(.el-form-item__content .el-input),
-.image-item-extra :deep(.el-form-item__content .el-textarea),
-.image-item-extra :deep(.el-form-item__content .el-select),
-.image-item-extra :deep(.el-form-item__content .el-input-number) {
-    width: 100%;
-}
 </style>
-
-
-
-
