@@ -52,6 +52,7 @@ class Cart extends Component
         $this->count = $data->quantity;
     }
 
+
     public function del_item($id, RemoveCartItemUseCase $useCase): void
     {
         $context = app(ClientContextFactory::class)->make();
