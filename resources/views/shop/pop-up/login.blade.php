@@ -36,16 +36,24 @@
                                 </div>
                             </div>
                             <div class="form-check mt-2 p-0">
-                                <input class="form-check-input" type="checkbox" name="newsletter" id="newsletter" value="1" checked>
+                                <input class="form-check-input" type="checkbox" name="newsletter" id="newsletter" value="1">
                                 <label class="form-check-label f-z_14" for="newsletter">Согласен получать новости, акции и специальные предложения по электронной почте</label>
                             </div>
                             <span id="token-error" class="fs-7 text-danger" style="display: none">Неверный код подтверждения</span>
                         </div>
-                        <div class="fs-7 mt-3" id="forgot-password">
-                            <a href="{{ route('password.request') }}">Забыли пароль?</a>
+                        <div class="d-flex" style="justify-content: space-between">
+                            <div class="fs-7 mt-3" id="forgot-password">
+                                <a href="{{ route('password.request') }}">Забыли пароль?</a>
+                            </div>
+                            <div class="fs-7 mt-3" id="registration">
+                                <a href="#">Регистрация</a>
+                            </div>
                         </div>
+
+
+
                         <div class="d-flex justify-content-center my-5">
-                            <button id="button-login" type="button" class="btn btn-dark fs-5 py-2 px-3">Отправить</button>
+                            <button id="button-login" type="button" class="btn btn-dark fs-5 py-2 px-3">Войти</button>
                         </div>
                     </div>
                     <div class="modal-footer justify-content-center">
