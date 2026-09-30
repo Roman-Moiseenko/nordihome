@@ -51,7 +51,7 @@
         <div class="menu-container container-xl">
             <div class="menu-bottom-catalog d-flex">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    <img src="/uploads/gallery/7/nordi-home-rus.svg" alt="Nordi Home" class="img-fluid img-logo">
+                    <img src="/images/nordi-home-rus.svg" alt="Nordi Home" class="img-fluid img-logo">
                     <div class="h-city-text">склады находятся в г.Калининград</div>
                 </a>
 
