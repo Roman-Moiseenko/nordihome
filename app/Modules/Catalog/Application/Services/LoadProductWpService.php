@@ -18,6 +18,7 @@ use App\Modules\Catalog\Application\DTOs\Product\ProductFastCreateData;
 use App\Modules\Catalog\Application\DTOs\Product\ProductUpdateData;
 use App\Modules\Catalog\Domain\Entities\BrandEntity;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
+use App\Modules\Parser\Application\Actions\Product\FindAndAttachToParserUseCase;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\QueueName;
@@ -42,6 +43,7 @@ readonly class LoadProductWpService
         private AttachTagsToProductUseCase       $attachTagsToProductUseCase,
         private AttachAttributeProductService    $attachAttributeProductService,
         private DimensionsFromAttributeService   $dimensionsFromAttributeService,
+        private FindAndAttachToParserUseCase     $findAndAttachToParserUseCase,
     )
     {
     }
@@ -162,15 +164,17 @@ readonly class LoadProductWpService
             price: (float)$product['price'],
             priceType: PriceType::RETAIL,
         );
-        $this->setProductPriceUseCase->execute($dtoPrice, $userPermission);
+        $this->setProductPriceUseCase->execute($dtoPrice);
         //Минимальная
         $dtoPrice = new SetProductPriceData(
             productId: $productEntity->id,
             price: (float)$product['price'] / 2,
             priceType: PriceType::MINIMAL,
         );
-        $this->setProductPriceUseCase->execute($dtoPrice, $userPermission);
+        $this->setProductPriceUseCase->execute($dtoPrice);
 
+        //Присоединяем к товарам из парсера, если есть
+        $this->findAndAttachToParserUseCase->execute($productEntity->id, $productEntity->code->getCodeSearch());
         return true;
     }
 
