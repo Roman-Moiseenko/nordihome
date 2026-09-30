@@ -20,6 +20,7 @@ use App\Modules\Parser\Domain\ValueObjects\ParserStatus;
 use App\Modules\Parser\Infrastructure\Jobs\LoadProductIkeaJob;
 use App\Modules\Parser\Infrastructure\Jobs\LoadProductsIkeaJob;
 use App\Modules\Parser\Infrastructure\Services\IkeaProductDataMapper;
+use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\QueueName;
@@ -29,6 +30,7 @@ class LoadParserProductIkeaService
 {
     private UserPermission $userPermission;
     private bool $isTest = false;
+    private bool $isProxy;
 
     public function __construct(
         private readonly TranslateService                  $translate,
@@ -57,6 +59,9 @@ class LoadParserProductIkeaService
                 'parser.product.create',
             ]
         );
+
+        $settings = app()->make(Settings::class);
+        $this->isProxy = $settings->parser->with_proxy ?? false;
     }
 
     //Запускаем полный парсинг
@@ -227,6 +232,7 @@ class LoadParserProductIkeaService
                 modelType: 'parser.product',
                 type: 'gallery',
                 url: $imageItem['url'],
+                isProxy: $this->isProxy,
                 alt: $altImage,
             );
             LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission)->onQueue(QueueName::PHOTO);

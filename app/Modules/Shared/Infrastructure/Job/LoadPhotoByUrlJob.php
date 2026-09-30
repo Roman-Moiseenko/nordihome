@@ -37,6 +37,7 @@ class LoadPhotoByUrlJob implements ShouldQueue
             modelType: $this->dto->modelType,
             type: $this->dto->type,
             url: $this->dto->url,
+            isProxy: $this->dto->isProxy,
         );
 
         $photo = $uploadPhotoByUrlUseCase->execute($uploadDto, $this->userPermission);

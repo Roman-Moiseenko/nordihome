@@ -54,7 +54,8 @@ class LoadRoomWpService
                     $room->id,
                     'catalog.room',
                     'image',
-                    $roomData['img']
+                    $roomData['img'],
+                    false,
                 );
                 $this->uploadPhotoByUrlUseCase->execute($dtoPhoto, $this->userPermission);
             }

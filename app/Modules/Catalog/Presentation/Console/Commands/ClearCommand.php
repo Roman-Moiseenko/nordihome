@@ -19,14 +19,14 @@ class ClearCommand extends Command
     use ConfirmableTrait;
 
     protected $signature = 'wp:clear
-        {--catalog= : 1 / "Да" } {--product= : 1 / "Да" } {--room= : 1 / "Да" }';
+        {--catalog } {--product } {--room }';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Очистка данных {--catalog= : 1 / "Да" } {--product= : 1 / "Да" } {--room= : 1 / "Да" }';
+    protected $description = 'Очистка данных {--catalog } {--product } {--room }';
 
     /**
      * Execute the console command.
@@ -37,9 +37,9 @@ class ClearCommand extends Command
             return false;
         }
 
-        $catalog = $this->option('catalog');
-        $product = $this->option('product');
-        $room = $this->option('room');
+        $catalog = (bool)$this->option('catalog');
+        $product = (bool)$this->option('product');
+        $room = (bool)$this->option('room');
 
         //dd($catalog, $product, $room);
 

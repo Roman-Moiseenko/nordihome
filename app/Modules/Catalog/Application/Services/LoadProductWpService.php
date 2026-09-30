@@ -152,6 +152,7 @@ readonly class LoadProductWpService
                 modelType: 'catalog.product',
                 type: 'gallery',
                 url: $imageData['url'],
+                isProxy: false,
                 alt: $imageData['alt'],
             );
             LoadPhotoByUrlJob::dispatch($dtoImage, $userPermission)->onQueue(QueueName::PHOTO);

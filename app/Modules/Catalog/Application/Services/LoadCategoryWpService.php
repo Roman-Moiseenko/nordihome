@@ -59,7 +59,8 @@ class LoadCategoryWpService
                     $category->id,
                     'catalog.category',
                     'image',
-                    $categoryData['img']
+                    $categoryData['img'],
+                    false,
                 );
                 $this->uploadPhotoByUrlUseCase->execute($dtoPhoto, $this->userPermission);
             }

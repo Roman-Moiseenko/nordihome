@@ -13,6 +13,7 @@ class JobPhotoLoadData extends Data
         public readonly string $modelType,
         public readonly string $type,
         public readonly string $url,
+        public readonly bool $isProxy,
         public readonly ?int $sort = null,
         public readonly ?string $alt = null,
     )
