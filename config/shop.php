@@ -69,6 +69,6 @@ return [
     ],
     'storage_driver' => env('PHOTO_STORAGE_DRIVER', 'local'), // local | s3
     's3_disk' => env('PHOTO_S3_DISK', 's3'),
-    's3_url_prefix' => env('PHOTO_S3_URL_PREFIX'), // например https://cdn.example.com
+    's3_url_prefix' => env('AWS_URL'), // например https://cdn.example.com
 
 ];

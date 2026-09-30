@@ -41,8 +41,6 @@ class MigratePhotosToS3Command extends Command
             $this->localStorage->listFiles('/cache'),
         );
 
-      // dd(count($files));
-
         if ($files === []) {
             $this->info('Файлов для переноса не найдено.');
             return self::SUCCESS;
