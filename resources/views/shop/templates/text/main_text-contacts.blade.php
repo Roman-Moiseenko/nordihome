@@ -40,7 +40,7 @@
                     <a href="{{ $contacts['telegram_bot']->url }}" class="link" target="_blank"
                        data-analytics-action="contact_click"
                        data-analytics-payload='{"channel":"{{ $contacts['telegram_bot']->channel }}","placement":"contacts-block"}'
-                    ><img src="/uploads/gallery/7/telegram-logo.png" alt="Лого телеграм"></a>
+                    ><img src="/images/icons/telegram-logo.png" alt="Лого телеграм"></a>
                 @endif
                 @if(isset($contacts['max_bot_1']))
                 <a href="{{ $contacts['max_bot_1']->url }}" class="link" target="_blank"
