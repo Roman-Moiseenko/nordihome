@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Shared\Console\Commands;
+namespace App\Modules\Shared\Presentation\Console\Commands;
 
 use App\Modules\Shared\Application\DTOs\JobPhotoMigrateData;
 use App\Modules\Shared\Domain\ValueObjects\QueueName;
@@ -14,7 +14,9 @@ class MigratePhotosToS3Command extends Command
 {
     protected $signature = 'photo:migrate-to-s3
                             {--remove-source : Удалять локальный файл после успешной загрузки в S3}
-                            {--chunk=100 : Количество файлов в одной задаче очереди}';
+                            {--chunk=100 : Количество файлов в одной задаче очереди}
+                            {--test : Тест, запуск одной очереди}';
+
 
     protected $description = 'Перенос изображений из локального хранилища в облачное S3 (задачи ставятся в очередь photo)';
 
@@ -32,11 +34,14 @@ class MigratePhotosToS3Command extends Command
         }
 
         $removeSource = (bool) $this->option('remove-source');
+        $test = (bool) $this->option('test');
 
         $files = array_merge(
             $this->localStorage->listFiles('/uploads'),
             $this->localStorage->listFiles('/cache'),
         );
+
+      // dd(count($files));
 
         if ($files === []) {
             $this->info('Файлов для переноса не найдено.');
@@ -53,6 +58,10 @@ class MigratePhotosToS3Command extends Command
             )->onQueue(QueueName::PHOTO);
 
             $progress->advance();
+            if ($test) {
+                $this->info('Тестовый запуск');
+                break;
+            }
         }
 
         $progress->finish();

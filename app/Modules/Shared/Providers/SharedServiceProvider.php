@@ -5,7 +5,6 @@ namespace App\Modules\Shared\Providers;
 use App\Modules\Shared\Application\Actions\MigratePhotosToS3UseCase;
 use App\Modules\Shared\Application\Interfaces\PhotoStorageInterface;
 use App\Modules\Shared\Application\Interfaces\TransactionManagerInterface;
-use App\Modules\Shared\Console\Commands\MigratePhotosToS3Command;
 use App\Modules\Shared\Domain\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\Interfaces\SettingRepositoryInterface;
 use App\Modules\Shared\Domain\Interfaces\UserPermissionRepositoryInterface;
@@ -15,6 +14,7 @@ use App\Modules\Shared\Infrastructure\Persistence\UserPermissionRepositoryFromAu
 use App\Modules\Shared\Infrastructure\Services\LaravelTransactionManager;
 use App\Modules\Shared\Infrastructure\Storage\LocalPhotoStorage;
 use App\Modules\Shared\Infrastructure\Storage\S3PhotoStorage;
+use App\Modules\Shared\Presentation\Console\Commands\MigratePhotosToS3Command;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
