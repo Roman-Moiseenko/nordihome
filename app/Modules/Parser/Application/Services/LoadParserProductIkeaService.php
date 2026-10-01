@@ -101,6 +101,7 @@ class LoadParserProductIkeaService
     public function RenameParserProduct(ParserProductEntity $parser): void
     {
         $productData = $this->ikeaProductApi->getProductByCode($parser->code);
+        if (is_null($productData)) throw new \DomainException('Product not found ' . $parser->code);
         $parser->name = $productData['name'];
         $this->productRepository->save($parser);
     }
