@@ -23,9 +23,17 @@ class IkeaRenameCommand extends Command
     public function handle(ParserProductRepositoryInterface $repository): void
     {
         $products = $repository->getAll();
+
+        $this->info('Отправка задач на переименование: ' . count($products));
+
+        $this->output->progressStart(count($products));
+
         foreach ($products as $product) {
             RenameIkeaJob::dispatch($product); //Цена
+            $this->output->progressAdvance();
         }
+
+        $this->output->progressFinish();
     }
 
 }
