@@ -16,6 +16,7 @@ use App\Modules\Parser\Presentation\Console\Commands\IkeaAvailablePriceCommand;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaCategoryCommand;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaClearData;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaProductCommand;
+use App\Modules\Parser\Presentation\Console\Commands\IkeaRenameCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -139,6 +140,7 @@ class ParserServiceProvider extends ServiceProvider
             IkeaCategoryCommand::class,
             IkeaClearData::class,
             IkeaProductCommand::class,
+            IkeaRenameCommand::class,
         ]);
     }
 
