@@ -7,10 +7,12 @@ namespace App\Modules\Catalog\Presentation\Console\Commands;
 use App\Modules\Catalog\Infrastructure\Job\JobSetSeriesProduct;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use Illuminate\Console\Command;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * Устанавливает серию товарам по имени из связанного ParserProduct
  */
+#[Deprecated]
 class SetSeriesCommand extends Command
 {
     protected $signature = 'catalog:set-series';
