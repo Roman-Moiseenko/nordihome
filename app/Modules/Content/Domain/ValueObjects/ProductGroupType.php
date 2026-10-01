@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Domain\ValueObjects;
 
-use App\Modules\Catalog\Entity\Series;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Room;
+use App\Modules\Catalog\Infrastructure\Models\Series;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use InvalidArgumentException;
 

@@ -9,7 +9,6 @@ final class BrandEntity
     public const int DEFAULT_ID = 1;
     public const string IKEA = 'Икеа';
     public const string NONAME = 'NONAME';
-    public const string NB = 'New Balance';
 
     // ======================== Основные поля ========================
     public ?int $id = null {

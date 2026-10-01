@@ -5,7 +5,7 @@ namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Application\Actions\Series\ListSeriesUseCase;
-use App\Modules\Catalog\Entity\Series;
+use App\Modules\Catalog\Infrastructure\Models\Series;
 use App\Modules\Catalog\Repository\SeriesRepository;
 use App\Modules\Catalog\Service\SeriesService;
 use Illuminate\Http\JsonResponse;
