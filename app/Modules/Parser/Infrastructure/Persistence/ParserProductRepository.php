@@ -75,6 +75,14 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         return $this->hydrate($model);
     }
 
+
+    public function getAll(): array
+    {
+        return ParserProduct::get()
+            ->map(fn(ParserProduct $model) => $this->hydrate($model))
+            ->toArray();
+    }
+
     public function getByProductId(int $productId): ?ParserProductEntity
     {
         $model = ParserProduct::where('product_id', $productId)->first();
@@ -188,4 +196,5 @@ class ParserProductRepository implements ParserProductRepositoryInterface
             ->withQueryString()
             ->through(fn(ParserProduct $model) => $this->hydrate($model));
     }
+
 }

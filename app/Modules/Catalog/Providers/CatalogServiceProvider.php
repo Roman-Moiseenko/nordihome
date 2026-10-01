@@ -9,6 +9,7 @@ use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\RoomProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\SeriesRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeRepository;
@@ -18,6 +19,7 @@ use App\Modules\Catalog\Infrastructure\Persistence\CategoryRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\ProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\SeriesRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\TagProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\TagRepository;
 use App\Modules\Catalog\Presentation\Console\Commands\ClearCommand;
@@ -146,6 +148,11 @@ class CatalogServiceProvider extends ServiceProvider
         $this->app->bind(
             TagProductRepositoryInterface::class,
             TagProductRepository::class
+        );
+
+        $this->app->bind(
+            SeriesRepositoryInterface::class,
+            SeriesRepository::class
         );
 
     }

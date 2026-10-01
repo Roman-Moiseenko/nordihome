@@ -3,6 +3,7 @@
 namespace App\Modules\Parser\Application\Services;
 
 use App\Modules\Base\Service\TranslateService;
+use App\Modules\Catalog\Application\Services\SetSeriesToProductByNameService;
 use App\Modules\Parser\Application\Actions\CategoryProduct\AttachCategoriesToProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\CreateParserProductUseCase;
 use App\Modules\Parser\Application\Actions\Product\FindAndAttachToProductUseCase;
@@ -45,7 +46,9 @@ class LoadParserProductIkeaService
         private readonly IkeaProductDataMapper                 $ikeaDataMapper,
         private readonly IkeaProductApiInterface               $ikeaProductApi,
         private readonly SetDimensionsProductFromParserUseCase $dimensionsProductFromParserUseCase,
+        private readonly SetSeriesToProductByNameService       $setSeriesToProductByNameService,
 
+        private readonly ParserProductRepositoryInterface $productRepository
     )
     {
         $this->userPermission = new UserPermission(
@@ -92,6 +95,17 @@ class LoadParserProductIkeaService
     }
 
     /**
+     * Временная функция для переименовывания name как в оригинале
+     */
+
+    public function RenameParserProduct(ParserProductEntity $parser): void
+    {
+        $productData = $this->ikeaProductApi->getProductByCode($parser->code);
+        $parser->name = $productData['name'];
+        $this->productRepository->save($parser);
+    }
+
+    /**
      * Парсит полные данные о товаре, связывает с Catalog\Product
      * Public - для запуска Job
      * @param array $product
@@ -102,8 +116,8 @@ class LoadParserProductIkeaService
         $code = $product['itemNoGlobal'];
         if (!is_null($this->parserProductRepository->getByCode($code))) return null;
 
-
-        $name = $this->translate->translate($product['name']);
+        //Имя не переводим, будет в дальнейшем серией.
+        $name = $product['name']; //$this->translate->translate($product['name']);
         //DTO из $product
         $dto = new ParserProductCreateData(
             name: $name,
@@ -218,9 +232,10 @@ class LoadParserProductIkeaService
 
         //UseCase связать товары (UseCase сам ищет совпадение по $code)
         $__product = $this->findAndAttachToProductUseCase->execute($productEntity->id, $productEntity->code);
-        //Если есть, заполняем габариты и упаковки
+        //Если есть, заполняем габариты и упаковки, назначаем серию
         if (!is_null($__product)) {
             $this->dimensionsProductFromParserUseCase->execute($__product->id, $productEntity->id);
+            $this->setSeriesToProductByNameService->execute($__product->id, $productEntity->name);
         }
 
         //Запус Job загрузки изображений

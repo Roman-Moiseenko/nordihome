@@ -44,6 +44,7 @@ readonly class LoadProductWpService
         private AttachAttributeProductService    $attachAttributeProductService,
         private DimensionsFromAttributeService   $dimensionsFromAttributeService,
         private FindAndAttachToParserUseCase     $findAndAttachToParserUseCase,
+        private SetSeriesToProductByNameService  $seriesToProductByNameService,
     )
     {
     }
@@ -174,8 +175,10 @@ readonly class LoadProductWpService
         );
         $this->setProductPriceUseCase->execute($dtoPrice);
 
-        //Присоединяем к товарам из парсера, если есть
-        $this->findAndAttachToParserUseCase->execute($productEntity->id, $productEntity->code->getCodeSearch());
+        //Присоединяем к товарам из парсера, если есть и устанавливаем серию
+        if (!is_null($parser = $this->findAndAttachToParserUseCase->execute($productEntity->id, $productEntity->code->getCodeSearch()))) {
+            $this->seriesToProductByNameService->execute($productEntity->id, $parser->name);
+        }
         return true;
     }
 

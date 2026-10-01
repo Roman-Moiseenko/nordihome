@@ -2,6 +2,7 @@
 
 namespace App\Modules\Parser\Application\Actions\Product;
 
+use App\Modules\Parser\Domain\Entities\ParserProductEntity;
 use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 
 readonly class FindAndAttachToParserUseCase
@@ -12,11 +13,12 @@ readonly class FindAndAttachToParserUseCase
     {
     }
 
-    public function execute(int $productId, string $code): void
+    public function execute(int $productId, string $code):? ParserProductEntity
     {
         if (!is_null($parser = $this->repositoryParserProduct->getByCode($code))) {
             $parser->productId = $productId;
-            $this->repositoryParserProduct->save($parser);
+            return $this->repositoryParserProduct->save($parser);
         }
+        return null;
     }
 }

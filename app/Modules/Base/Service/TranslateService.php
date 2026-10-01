@@ -25,6 +25,6 @@ class TranslateService
             if (strlen($foreign) < 64) Translate::register($foreign, $value);
             return $value;
 
-        return '';
+        //return '';
     }
 }
