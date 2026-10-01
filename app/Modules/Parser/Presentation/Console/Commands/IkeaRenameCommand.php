@@ -9,10 +9,12 @@ use App\Modules\Parser\Infrastructure\Jobs\UpdateProductIkeaJob;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Parser\Job\ParserAvailablePriceProduct;
 use Illuminate\Console\Command;
+use JetBrains\PhpStorm\Deprecated;
 
 /**
  * Проверяем на Икеа доступность товара и новую цену
  */
+#[Deprecated]
 class IkeaRenameCommand extends Command
 {
     use CreatesApplication;

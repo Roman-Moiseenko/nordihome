@@ -26,6 +26,7 @@ use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\QueueName;
 use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
+use JetBrains\PhpStorm\Deprecated;
 
 class LoadParserProductIkeaService
 {
@@ -97,7 +98,7 @@ class LoadParserProductIkeaService
     /**
      * Временная функция для переименовывания name как в оригинале
      */
-
+    #[Deprecated]
     public function RenameParserProduct(ParserProductEntity $parser): void
     {
         $productData = $this->ikeaProductApi->getProductByCode($parser->code);

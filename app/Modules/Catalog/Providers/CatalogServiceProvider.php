@@ -25,6 +25,7 @@ use App\Modules\Catalog\Infrastructure\Persistence\TagRepository;
 use App\Modules\Catalog\Presentation\Console\Commands\ClearCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\LoadCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\ResetPublishedCommand;
+use App\Modules\Catalog\Presentation\Console\Commands\SetSeriesCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
@@ -172,6 +173,7 @@ class CatalogServiceProvider extends ServiceProvider
             ClearCommand::class,
             LoadCommand::class,
             ResetPublishedCommand::class,
+            SetSeriesCommand::class,
         ]);
     }
 
