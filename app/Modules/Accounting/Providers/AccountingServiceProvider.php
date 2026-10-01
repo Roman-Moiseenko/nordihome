@@ -2,8 +2,10 @@
 
 namespace App\Modules\Accounting\Providers;
 
+use App\Modules\Accounting\Domain\Interfaces\PriceOutboxRepositoryInterface;
 use App\Modules\Accounting\Domain\Interfaces\StockRepositoryInterface;
 use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
+use App\Modules\Accounting\Infrastructure\Persistence\PriceOutboxRepository;
 use App\Modules\Accounting\Infrastructure\Persistence\PriceRepository;
 use App\Modules\Accounting\Infrastructure\Persistence\StockRepository;
 use App\Modules\Accounting\Database\Seeders\AccountingRoleSeeder;
@@ -93,6 +95,11 @@ class AccountingServiceProvider extends ServiceProvider
         $this->app->bind(
             StockRepositoryInterface::class,
             StockRepository::class
+        );
+
+        $this->app->bind(
+            PriceOutboxRepositoryInterface::class,
+            PriceOutboxRepository::class
         );
 
 

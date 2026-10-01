@@ -20,6 +20,8 @@ Route::group([
     function () {
         Route::post('/stock', [ExchangeController::class, 'stock'])->name('stock');
         Route::post('/price', [ExchangeController::class, 'price'])->name('price');
+        Route::post('/price-out', [ExchangeController::class, 'priceOut'])->name('price-out');
+        Route::post('/price-ack', [ExchangeController::class, 'priceAck'])->name('price-ack');
     }
 );
 
