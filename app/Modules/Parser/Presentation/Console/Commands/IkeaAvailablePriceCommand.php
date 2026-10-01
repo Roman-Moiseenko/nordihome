@@ -23,7 +23,7 @@ class IkeaAvailablePriceCommand extends Command
         $products = ParserProduct::where('availability', true)->get();
         foreach ($products as $product) {
             UpdateProductIkeaJob::dispatch($product->id); //Цена
-            //TODO добавить парсинг кол-ва по складам
+            //MAINDO добавить парсинг кол-ва по складам
         }
     }
 

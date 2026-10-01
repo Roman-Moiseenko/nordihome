@@ -27,7 +27,7 @@ class UpdateProductIkeaJob implements ShouldQueue
     {
         try {
             $status = $service->UpdateParserProduct($this->productId);
-            if (is_null($status)) return; //Изменений неи
+            if (is_null($status)) return; //Изменений нет
 
             $dto = new ParserLogCreateData(
                 status: $status,
