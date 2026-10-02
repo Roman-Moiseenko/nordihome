@@ -67,7 +67,7 @@ class CatalogWidgetController extends Controller
         $templates = $this->templates->getTemplates('catalog');
         $widget = array_merge($widget->toArray(), [
             'items' => $widget->items()->get()->map(fn(CatalogWidgetItem $item) => array_merge($item->toArray(), [
-                'image' => GetPhotoStatic::get($item->model_type, $item->id),
+                'image' => GetPhotoStatic::get($item->model_type, $item->model_id),
                 'url' => $item->url(),
                 'name' => $item->name(),
             ])),
