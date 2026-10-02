@@ -22,7 +22,6 @@ use App\Modules\Shop\Infrastructure\Persistence\Query\GroupPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
-use Illuminate\Support\Facades\Cache;
 
 readonly class GroupPageQuery
 {
@@ -50,7 +49,7 @@ readonly class GroupPageQuery
 
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
-        $allProductIds = Cache::remember(
+        $allProductIds = cache_remember(
             $key_cache,
             now()->addDay(),
             fn() => $this->repository->getProductIdsInGroup($mainInfo->id),
@@ -149,7 +148,7 @@ readonly class GroupPageQuery
     {
         $key_cache = str_replace('{id}', (string)$promotionId, CacheInvalidationRegistry::GROUP_FILTERS_ID);
 
-        return Cache::remember(
+        return cache_remember(
             $key_cache,
             now()->addDay(),
             function () use ($productIds, $categoryIds) {

@@ -21,7 +21,6 @@ use App\Modules\Shop\Infrastructure\Persistence\Query\ContentBlockQueryRepositor
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
-use Illuminate\Support\Facades\Cache;
 
 readonly class RoomPageQuery
 {
@@ -54,7 +53,7 @@ readonly class RoomPageQuery
         /**
          * $allProductIds - Список всех ID товаров без фильтрации
          */
-        $allProductIds = Cache::remember(
+        $allProductIds = cache_remember(
             $key_cache,
             now()->addDay(),
             fn() => $this->repository->getProductIdsInRoom($mainInfo->id),
@@ -156,7 +155,7 @@ readonly class RoomPageQuery
     {
         $key_cache = str_replace('{id}', (string)$roomId, CacheInvalidationRegistry::ROOM_FILTERS_ID);
 
-        return Cache::remember(
+        return cache_remember(
             $key_cache,
             now()->addDay(),
             function () use ($productIds, $categoryIds) {

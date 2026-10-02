@@ -22,11 +22,11 @@ use InvalidArgumentException;
  */
 final class ProductGroupType
 {
-    public const string CATEGORY = 'category';
-    public const string ROOM = 'room';
-    public const string GROUP = 'group';
-    public const string PROMOTION = 'promotion';
-    public const string SERIES = 'series';
+    public const string CATEGORY = 'catalog.category';
+    public const string ROOM = 'catalog.room';
+    public const string GROUP = 'catalog.group';
+    public const string PROMOTION = 'discount.promotion';
+    public const string SERIES = 'catalog.series';
 
     /**
      * @var array<string, array{label: string, model: class-string}>

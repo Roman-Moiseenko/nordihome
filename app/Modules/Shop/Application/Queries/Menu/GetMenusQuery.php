@@ -7,7 +7,6 @@ namespace App\Modules\Shop\Application\Queries\Menu;
 use App\Modules\Shop\Application\DTOs\Menu\MenuData;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\MenuQueryRepository;
-use Illuminate\Support\Facades\Cache;
 
 readonly class GetMenusQuery
 {
@@ -22,7 +21,7 @@ readonly class GetMenusQuery
      */
     public function execute(): array
     {
-        return Cache::remember(
+        return cache_remember(
             CacheInvalidationRegistry::MENUS,
             now()->addDay(),
             function (): array {

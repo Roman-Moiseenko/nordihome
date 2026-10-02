@@ -20,6 +20,11 @@ class GetIkeaTreeQuery
      */
     public function execute(): array
     {
+        // В локальном окружении кеш не используем — данные получаем сразу
+        if (app()->environment('local')) {
+            return $this->repository->getFullTree();
+        }
+
         // Попытка прочитать из кеша
         if ($cached = Cache::get(self::CACHE_KEY)) {
             return $cached;

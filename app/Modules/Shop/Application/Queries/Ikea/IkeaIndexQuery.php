@@ -8,7 +8,6 @@ use App\Modules\Shop\Application\DTOs\Pages\IkeaIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaTreeQueryRepository;
-use Illuminate\Support\Facades\Cache;
 
 readonly class IkeaIndexQuery
 {
@@ -24,7 +23,7 @@ readonly class IkeaIndexQuery
     {
         $web = $this->webSettingsUseCase->execute();
 
-        $categories = Cache::remember(
+        $categories = cache_remember(
             CacheInvalidationRegistry::IKEA_CATEGORY_INDEX_PAGE,
             now()->addDay(),
             fn() => $this->treeRepo->getFullTree(),

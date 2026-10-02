@@ -24,6 +24,11 @@ readonly class PageViewQuery
     }
     public function execute(string $slug):? PageViewPageData
     {
+        // В локальном окружении кеш не используем — данные получаем сразу
+        if (app()->environment('local')) {
+            return $this->build($slug);
+        }
+
         $key = str_replace('{slug}', $slug, CacheInvalidationRegistry::PAGE_BY_SLUG);
 
         $cached = Cache::get($key);

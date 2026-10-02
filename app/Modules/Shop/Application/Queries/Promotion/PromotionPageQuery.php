@@ -22,7 +22,6 @@ use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepositor
 use App\Modules\Shop\Infrastructure\Persistence\Query\PromotionPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomPageQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
-use Illuminate\Support\Facades\Cache;
 
 readonly class PromotionPageQuery
 {
@@ -49,7 +48,7 @@ readonly class PromotionPageQuery
 
         $perPage = 20;
         $page = (int)($params['page'] ?? 1);
-        $allProductIds = Cache::remember(
+        $allProductIds = cache_remember(
             $key_cache,
             now()->addDay(),
             fn() => $this->repository->getProductIdsInPromotion($mainInfo->id),
@@ -143,7 +142,7 @@ readonly class PromotionPageQuery
     {
         $key_cache = str_replace('{id}', (string)$promotionId, CacheInvalidationRegistry::PROMOTION_FILTERS_ID);
 
-        return Cache::remember(
+        return cache_remember(
             $key_cache,
             now()->addDay(),
             function () use ($productIds, $categoryIds) {

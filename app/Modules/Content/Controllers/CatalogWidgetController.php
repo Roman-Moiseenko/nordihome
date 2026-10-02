@@ -12,6 +12,7 @@ use App\Modules\Content\Repository\BannerWidgetRepository;
 use App\Modules\Content\Repository\TemplateRepository;
 use App\Modules\Content\Service\BannerWidgetService;
 use App\Modules\Content\Service\CatalogWidgetService;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use App\Modules\Shared\Application\Actions\UploadPhotoUseCase;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoUploadData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -66,7 +67,7 @@ class CatalogWidgetController extends Controller
         $templates = $this->templates->getTemplates('catalog');
         $widget = array_merge($widget->toArray(), [
             'items' => $widget->items()->get()->map(fn(CatalogWidgetItem $item) => array_merge($item->toArray(), [
-                'image' => $item->image(),
+                'image' => GetPhotoStatic::get($item->model_type, $item->id),
                 'url' => $item->url(),
                 'name' => $item->name(),
             ])),

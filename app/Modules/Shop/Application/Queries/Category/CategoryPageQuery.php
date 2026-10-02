@@ -25,7 +25,6 @@ use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryPageQueryRepositor
 use App\Modules\Shop\Infrastructure\Persistence\Query\ContentBlockQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
-use Illuminate\Support\Facades\Cache;
 
 readonly class CategoryPageQuery
 {
@@ -56,7 +55,7 @@ readonly class CategoryPageQuery
         $page = (int)($params['page'] ?? 1);
 
         //Список всех ID товаров без фильтрации
-        $allProductIds = Cache::remember(
+        $allProductIds = cache_remember(
             $key_cache,
             now()->addDay(),
             fn() => $this->repository->getProductIdsInCategory($mainInfo->id),
@@ -241,7 +240,7 @@ readonly class CategoryPageQuery
     {
         $key_cache = str_replace('{id}', (string)$categoryId, CacheInvalidationRegistry::CATEGORY_FILTERS_ID);
 
-        return Cache::remember(
+        return cache_remember(
             $key_cache,
             now()->addDay(),
             function () use ($categoryId, $allProductIds) {

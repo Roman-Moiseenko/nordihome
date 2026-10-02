@@ -173,3 +173,18 @@ if (!function_exists('photo_std')) {
         return $result;
     }
 }
+
+if (!function_exists('cache_remember')) {
+    /**
+     * Кеширование данных с отключением кеша в локальном окружении (APP_ENV=local).
+     * В локальном окружении данные возвращаются сразу, без сохранения в кеш.
+     */
+    function cache_remember(string $key, $ttl, \Closure $callback): mixed
+    {
+        if (app()->environment('local')) {
+            return $callback();
+        }
+
+        return \Illuminate\Support\Facades\Cache::remember($key, $ttl, $callback);
+    }
+}
