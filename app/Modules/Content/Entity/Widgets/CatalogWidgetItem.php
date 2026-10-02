@@ -43,7 +43,9 @@ class CatalogWidgetItem extends WidgetItem
     public function url(): string
     {
         $model = $this->getModel();
-        return route('shop.' . $this->model_type . '.view', $model->slug);
+        $parts = explode('.', $this->model_type);
+        $type = $parts[1] ?? null;
+        return route('shop.' . $type . '.view', $model->slug);
     }
 
     public function image(string $thumb = ''):? string
