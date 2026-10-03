@@ -11,6 +11,7 @@ use App\Modules\Shop\Application\DTOs\Pages\CatalogIndexPageData;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategoryTreeQueryRepository;
+use Illuminate\Support\Facades\Cache;
 
 readonly class CategoryIndexQuery
 {
@@ -26,7 +27,7 @@ readonly class CategoryIndexQuery
     {
         $web = $this->webSettingsUseCase->execute();
 
-        $categories = cache_remember(
+        $categories = Cache::remember(
             CacheInvalidationRegistry::CATEGORY_INDEX_PAGE,
             now()->addDay(),
             fn() => array_map(

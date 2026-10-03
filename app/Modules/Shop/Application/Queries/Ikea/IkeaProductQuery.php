@@ -11,6 +11,7 @@ use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\IkeaTreeQueryRepository;
+use Illuminate\Support\Facades\Cache;
 
 readonly class IkeaProductQuery
 {
@@ -28,7 +29,7 @@ readonly class IkeaProductQuery
     {
         $web = $this->webSettingsUseCase->execute();
 
-        $categories = cache_remember(
+        $categories = Cache::remember(
             CacheInvalidationRegistry::IKEA_CATEGORY_INDEX_PAGE,
             now()->addDay(),
             fn() => $this->treeRepo->getFullTree(),
