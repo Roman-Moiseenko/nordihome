@@ -57,6 +57,7 @@ function onCheck(node, info) {
         category_ids: ids,
     }, {
         preserveScroll: true,
+        preserveState: true,
         onError: () => {
             // Вернуть галочку в прежнее (ненажатое) состояние при ошибке сохранения
             treeRef.value?.setChecked(clickedKey, !isChecked, false)

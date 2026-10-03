@@ -18,6 +18,7 @@ use App\Modules\Shared\Domain\Entities\UserPermission;
 use DomainException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -90,7 +91,7 @@ class PricingRuleController extends Controller
         try {
             $this->syncPricingRuleCategoriesUseCase->execute($id, $categoryIds, $userPermission);
         } catch (DomainException $e) {
-            return response()->json(['message' => $e->getMessage()], 422);
+            throw ValidationException::withMessages(['category' => $e->getMessage()]);
         }
 
         return redirect()->back()->with('success', 'Категории сохранены');
