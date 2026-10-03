@@ -84,7 +84,7 @@ const expandedKeys = computed(() => {
 function onCheck(node, info) {
     const ids = [...info.checkedKeys].map(Number)
     const clickedKey = node.id
-х    const isCheckedNow = info.checkedKeys.some((key) => String(key) === String(clickedKey))
+    const isCheckedNow = info.checkedKeys.some((key) => String(key) === String(clickedKey))
 
     router.post(route('admin.accounting.pricing-rule.categories.sync', {id: props.rule.id}), {
         category_ids: ids,
