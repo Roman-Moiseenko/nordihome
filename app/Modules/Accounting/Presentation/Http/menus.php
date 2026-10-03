@@ -73,6 +73,13 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-circle-dollar',
             ],
+            'pricing-rule' => [
+                'icon' => 'calculator',
+                'title' => 'Правила расчета цены',
+                'route_name' => 'admin.accounting.pricing-rule.index',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-calculator-simple',
+            ],
 /*
             'inventory' => [
                 'icon' => 'badge-russian-ruble',

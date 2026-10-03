@@ -13,12 +13,8 @@ readonly class NewSellPriceParserProductUseCase
         private ParserProductRepositoryInterface $productRepository,
     ) {}
 
-    public function execute(int $id, float $priceSell, UserPermission $userPermission): ParserProductEntity
+    public function execute(int $id, float $priceSell): ParserProductEntity
     {
-        if (!$userPermission->can('parser.product.edit')) {
-            throw new AccessDeniedException();
-        }
-
         $product = $this->productRepository->getById($id);
         $product->priceSell = $priceSell;
 

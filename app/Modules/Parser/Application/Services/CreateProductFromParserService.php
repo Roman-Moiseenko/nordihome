@@ -2,7 +2,10 @@
 
 namespace App\Modules\Parser\Application\Services;
 
+use App\Modules\Accounting\Application\Actions\PriceOutbox\CreatePriceOutboxUseCase;
+use App\Modules\Accounting\Application\Actions\ProductPrice\CalculateRetailPriceUseCase;
 use App\Modules\Accounting\Application\Actions\ProductPrice\SetPriceUseCase;
+use App\Modules\Accounting\Application\DTOs\PriceOutbox\PriceOutboxCreateData;
 use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Base\Entity\Dimensions;
@@ -42,6 +45,8 @@ readonly class CreateProductFromParserService
         private SetDimensionsProductFromParserUseCase $dimensionsProductFromParserUseCase,
         private PhotoRepositoryInterface              $photoRepository,
         private SettingRepository                     $settingRepository,
+        private CalculateRetailPriceUseCase $calculateRetailPriceUseCase,
+        private CreatePriceOutboxUseCase $createPriceOutboxUseCase,
     )
     {
 
@@ -111,26 +116,46 @@ readonly class CreateProductFromParserService
             );
             CopyPhotoByIdJob::dispatch($dtoImage, $userPermission)->onQueue(QueueName::PHOTO);
         }
-        // DTO ProductCreate
 
-
+        /**
+         * Процедуры с ценообразованием
+         */
+        $prices = $this->calculateRetailPriceUseCase->execute($parserEntity);
+        $dtoOut = new PriceOutboxCreateData(
+            code: codeIkea($parserEntity->code),
+            retail: $prices->retail,
+            sellIkea: $parserEntity->priceSell,
+            bulk: $prices->bulk,
+        );
+        $this->createPriceOutboxUseCase->execute($dtoOut); //Сохраняем цену для выгрузки в 1С
 
         //Установить цену из для товаров в злотах по курсу
         $ratio = $this->settingRepository->getParser()->parser_coefficient;
         //Рыночная цена
         $dtoPrice = new SetProductPriceData(
             productId: $productEntity->id,
-            price: (float)$parserEntity->priceSell * $ratio,
+            price: $prices->retail <= 0 ? (float)$parserEntity->priceSell * $ratio : $prices->retail,
             priceType: PriceType::RETAIL,
         );
-        $this->setProductPriceUseCase->execute($dtoPrice, $userPermission);
+        $this->setProductPriceUseCase->execute($dtoPrice);
+
+        //Оптовая цена
+        if ($prices->bulk > 0) {
+            $dtoPrice = new SetProductPriceData(
+                productId: $productEntity->id,
+                price: $prices->bulk,
+                priceType: PriceType::BULK,
+            );
+            $this->setProductPriceUseCase->execute($dtoPrice);
+        }
+
         //Минимальная
         $dtoPrice = new SetProductPriceData(
             productId: $productEntity->id,
             price: (float)$parserEntity->priceSell * $ratio,
             priceType: PriceType::MINIMAL,
         );
-        $this->setProductPriceUseCase->execute($dtoPrice, $userPermission);
+        $this->setProductPriceUseCase->execute($dtoPrice);
 
         //Сохраняем id product для $parserEntity
         $this->attachProductToParserUseCase->execute($parserEntity->id, $productEntity->id);

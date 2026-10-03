@@ -1,5 +1,13 @@
 <?php
 
+use Illuminate\Console\Scheduling\Schedule as ScheduleDays;
+
 //Обновляем данные по товарам уже спарсенным
-//MAINDO Запустить ежедневный парсинг остатков и цены
-Schedule::command('ikea:products-update')->dailyAt('01:01');//dailyAt('02:01');
+//Цену и доступность
+Schedule::command('ikea:products-update')
+    ->days([ScheduleDays::MONDAY, ScheduleDays::FRIDAY])
+    ->at('02:00');
+//Кол-во на складах и доступность
+Schedule::command('ikea:products-store')
+    ->days([ScheduleDays::WEDNESDAY, ScheduleDays::SATURDAY])
+    ->at('02:00');

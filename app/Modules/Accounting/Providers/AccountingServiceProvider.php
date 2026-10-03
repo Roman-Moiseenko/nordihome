@@ -3,10 +3,14 @@
 namespace App\Modules\Accounting\Providers;
 
 use App\Modules\Accounting\Domain\Interfaces\PriceOutboxRepositoryInterface;
+use App\Modules\Accounting\Domain\Interfaces\PricingRuleCategoryRepositoryInterface;
+use App\Modules\Accounting\Domain\Interfaces\PricingRuleRepositoryInterface;
 use App\Modules\Accounting\Domain\Interfaces\StockRepositoryInterface;
 use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
 use App\Modules\Accounting\Infrastructure\Persistence\PriceOutboxRepository;
 use App\Modules\Accounting\Infrastructure\Persistence\PriceRepository;
+use App\Modules\Accounting\Infrastructure\Persistence\PricingRuleCategoryRepository;
+use App\Modules\Accounting\Infrastructure\Persistence\PricingRuleRepository;
 use App\Modules\Accounting\Infrastructure\Persistence\StockRepository;
 use App\Modules\Accounting\Database\Seeders\AccountingRoleSeeder;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
@@ -100,6 +104,16 @@ class AccountingServiceProvider extends ServiceProvider
         $this->app->bind(
             PriceOutboxRepositoryInterface::class,
             PriceOutboxRepository::class
+        );
+
+        $this->app->bind(
+            PricingRuleRepositoryInterface::class,
+            PricingRuleRepository::class
+        );
+
+        $this->app->bind(
+            PricingRuleCategoryRepositoryInterface::class,
+            PricingRuleCategoryRepository::class
         );
 
 

@@ -13,6 +13,7 @@ use App\Modules\Parser\Application\Actions\Product\ToggleProductAvailabilityUseC
 use App\Modules\Parser\Application\Actions\Product\UpdateParserProductUseCase;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductCreateData;
 use App\Modules\Parser\Application\DTOs\Product\ParserProductUpdateData;
+use App\Modules\Parser\Application\DTOs\Product\ParserStatusUpdateData;
 use App\Modules\Parser\Application\Interfaces\IkeaProductApiInterface;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
 use App\Modules\Parser\Domain\Interfaces\ParserCategoryRepositoryInterface;
@@ -261,17 +262,13 @@ class LoadParserProductIkeaService
     /**
      * Парсит цену и наличие товара на складах, уже ранее спарсенного товара
      * Public - для запуска Job
-     * @param int $productId
-     * @return ParserStatus|null
+     * @param ParserProductEntity $productEntity
+     * @return ParserStatusUpdateData|null
      */
-    public function UpdateParserProduct(int $productId): ?ParserStatus
+    public function UpdateParserProduct(ParserProductEntity $productEntity): ?ParserStatusUpdateData
     {
-        $productEntity = $this->parserProductRepository->getById($productId);
         $productData = $this->ikeaProductApi->getProductByCode($productEntity->code);
-        if (is_null($productData)) {
-            $this->toggleProductAvailabilityUseCase->execute($productEntity->id, $this->userPermission);
-            return ParserStatus::deleted();
-        }
+        if (is_null($productData)) return new ParserStatusUpdateData(status: ParserStatus::deleted()); //Товар не найден
 
         $itemPrice = $productData['salesPrice'];
         $price = $itemPrice['numeral'];
@@ -280,38 +277,26 @@ class LoadParserProductIkeaService
             if ($_previous > (float)$price) $price = $_previous;
         }
         //Изменилась цена
-        if ($productEntity->priceSell != $price) {
-            $this->newSellPriceParserProductUseCase->execute($productEntity->id, $price, $this->userPermission);
+        if ($productEntity->priceSell != $price)
+            return new ParserStatusUpdateData(status: ParserStatus::priceChanged(), previousPrice: $productEntity->priceSell, newPrice: $price);
 
-            return ParserStatus::priceChanged();
-        }
+        //Ничего не изменилось
         return null;
     }
 
     /**
      * Парсим остатки товара, пока не используется.
      * Public - для запуска Job. Можно использовать без очередей
-     * @param int $productId
+     * @param ParserProductEntity $productEntity
      * @return ParserStatus|null
      */
-    public function remainsProduct(int $productId): ?ParserStatus
+    public function remainsProduct(ParserProductEntity $productEntity): ?array
     {
-        $productEntity = $this->parserProductRepository->getById($productId);
-
-        /*
-                $url = sprintf(self::API_URL_QUANTITY, $productEntity->code);
-                $json_product = $this->httpPage->getPage($url, '_cache');
-
-                $_array = json_decode($json_product, true);
-        */
         $availabilities = $this->ikeaProductApi->getAvailability($productEntity->code);
-        $_result = [];
-        if ($availabilities == null) {
-            //Товар не нашелся, удаляем из доступности
-            $this->toggleProductAvailabilityUseCase->execute($productEntity->id, $this->userPermission);
-            return ParserStatus::deleted();
-        }
 
+        if ($availabilities == null) return null;
+
+        $_result = [];
         foreach ($availabilities as $item) {
             if (isset($item['availableForCashCarry'])) {
                 $_store = (int)$item['classUnitKey']['classUnitCode']; //Номер склада
@@ -324,7 +309,7 @@ class LoadParserProductIkeaService
             }
         }
 
-        return null;
+        return $_result;
     }
 
     public function FindByCode(string $code): ?ParserProductEntity

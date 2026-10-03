@@ -8,6 +8,7 @@ use App\Modules\Parser\Application\DTOs\Product\ParserProductFilterData;
 use App\Modules\Parser\Domain\Entities\ParserProductEntity;
 use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Domain\ValueObjects\Package;
+use App\Modules\Parser\Domain\ValueObjects\Store;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -59,6 +60,9 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         $model->variants = $product->variants;
 
         $model->composite = $product->composite;
+
+        // stores — массив Store[], сохраняем в виде ассоциативного массива ['код_магазина' => кол-во]
+        $model->stores = Store::collectionToAssociative($product->stores);
 
         // packages — массив Package[]
         $model->packages = array_map(
@@ -155,6 +159,9 @@ class ParserProductRepository implements ParserProductRepositoryInterface
         $entity->variants = (array)$model->variants;
 
         $entity->composite = $model->composite ?? [];
+
+        // stores — ассоциативный массив ['код_магазина' => кол-во] -> Store[]
+        $entity->stores = Store::collectionFromAssociative($model->stores ?? []);
 
         // packages
         $entity->packages = array_map(

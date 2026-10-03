@@ -18,8 +18,9 @@ readonly class CreatePriceOutboxUseCase
     {
         $entity = new PriceOutboxEntity(
             code: $dto->code,
-            price: $dto->price,
-            priceIkea: $dto->priceIkea,
+            retail: $dto->retail,
+            sellIkea: $dto->sellIkea,
+            bulk: $dto->bulk,
         );
 
         return $this->priceOutboxRepository->save($entity);

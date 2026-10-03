@@ -11,7 +11,7 @@ class ParserLogCreateData extends Data
     public function __construct(
         public readonly ParserStatus $status,
         public readonly ?int $parserId = null,
-        public readonly ?PriceChangePayload $payload = null,
+        public ?PriceChangePayload $payload = null,
         public readonly ?string $error = null,
     )
     {

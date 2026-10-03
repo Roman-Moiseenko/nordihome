@@ -15,7 +15,7 @@ readonly class LoadPriceOutboxService
 
     /**
      * Возвращает все записи, помечает их progress = true и
-     * преобразует в массив DTO (code, price, priceIkea).
+     * преобразует в массив DTO (code, retail, sellIkea, bulk).
      *
      * @return PriceOutboxViewData[]
      */

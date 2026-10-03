@@ -16,14 +16,19 @@ final class PriceOutboxEntity
         set => $this->code = $value;
     }
 
-    public int $price {
-        get => $this->price;
-        set => $this->price = $value;
+    public int $retail {
+        get => $this->retail;
+        set => $this->retail = $value;
     }
 
-    public float $priceIkea {
-        get => $this->priceIkea;
-        set => $this->priceIkea = $value;
+    public float $sellIkea {
+        get => $this->sellIkea;
+        set => $this->sellIkea = $value;
+    }
+
+    public int $bulk = 0 {
+        get => $this->bulk;
+        set => $this->bulk = $value;
     }
 
     public bool $progress = false {
@@ -33,12 +38,14 @@ final class PriceOutboxEntity
 
     public function __construct(
         string $code,
-        int $price,
-        float $priceIkea = 0.0,
+        int $retail,
+        float $sellIkea = 0.0,
+        int $bulk = 0,
     ) {
         $this->code = $code;
-        $this->price = $price;
-        $this->priceIkea = $priceIkea;
+        $this->retail = $retail;
+        $this->sellIkea = $sellIkea;
+        $this->bulk = $bulk;
     }
 
     public function markAsProgress(): void

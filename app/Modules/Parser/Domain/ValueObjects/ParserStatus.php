@@ -10,6 +10,7 @@ final class ParserStatus implements \Stringable
     private const string DELETED = 'deleted';
     private const string ERROR = 'error';
     private const string PRICE_CHANGED = 'price_changed';
+
     private const array ALLOWED = [
         self::NEW,
         self::DELETED,

@@ -17,9 +17,12 @@ class PriceOutboxCreateData extends Data
         public readonly string $code,
 
         #[Required, Numeric]
-        public readonly int $price,
+        public readonly int $retail,
 
         #[Required, Numeric]
-        public readonly float $priceIkea,
+        public readonly float $sellIkea,
+
+        #[Required, Numeric]
+        public readonly int $bulk,
     ) {}
 }

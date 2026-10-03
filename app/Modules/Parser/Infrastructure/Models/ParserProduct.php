@@ -35,7 +35,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property int $packs - Количество упаковок
  *
  * @property array $composite список id товаров входящих в состав
- * @property array $quantity  Кол-во на складах
+ * @property array $stores  Кол-во товаров на складах
  * @property array $colors Цвета
  * @property array $packages Упаковки
  *
@@ -53,7 +53,7 @@ class ParserProduct extends Model
     protected $table = 'parser_products';
     protected $attributes = [
         'composite' => '{}',
-        'quantity' => '{}',
+        'stores' => '{}',
         'colors' => '[]',
         'materials' => '[]',
         'dimensions' => '[]',
@@ -67,7 +67,7 @@ class ParserProduct extends Model
         'dimensions' => 'json',
         'variants' => 'json',
         'composite' => 'json',
-        'quantity' => 'json',
+        'stores' => 'json',
         'packages' => 'json',
         'price_base' => 'float',
         'price_sell' => 'float',

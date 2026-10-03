@@ -20,10 +20,13 @@ class AccountingRoleSeeder extends Seeder
         $this->addRole('accounting', 'Работа с товарным учетом');
         $stock = $this->fillArrayPermissions('accounting', 'stock', $this->listPermissions(false, true));
         $price = $this->fillArrayPermissions('accounting', 'price', $this->listPermissions(true, true));
+        $pricingRule = $this->fillArrayPermissions('accounting', 'pricing', $this->listPermissions(false, false));
         $this->createPermission($stock);
         $this->createPermission($price);
+        $this->createPermission($pricingRule);
         $this->setPermissions('accounting', $stock);
         $this->setPermissions('accounting', $price);
+        $this->setPermissions('accounting', $pricingRule);
 
         $this->adminSet();
     }

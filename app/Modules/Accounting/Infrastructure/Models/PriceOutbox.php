@@ -7,8 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $code
- * @property int $price
- * @property float $price_ikea
+ * @property int $retail
+ * @property float $sell_ikea
+ * @property int $bulk
  * @property bool $progress
  */
 class PriceOutbox extends Model
@@ -19,14 +20,16 @@ class PriceOutbox extends Model
 
     protected $fillable = [
         'code',
-        'price',
-        'price_ikea',
+        'retail',
+        'sell_ikea',
+        'bulk',
         'progress',
     ];
 
     protected $casts = [
-        'price' => 'integer',
-        'price_ikea' => 'float',
+        'retail' => 'integer',
+        'sell_ikea' => 'float',
+        'bulk' => 'integer',
         'progress' => 'boolean',
     ];
 }

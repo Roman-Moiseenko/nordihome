@@ -11,16 +11,18 @@ class PriceOutboxViewData extends Data
 {
     public function __construct(
         public readonly string $code,
-        public readonly int $price,
-        public readonly float $priceIkea,
+        public readonly int $retail,
+        public readonly float $sellIkea,
+        public readonly int $bulk,
     ) {}
 
     public static function fromEntity(PriceOutboxEntity $entity): self
     {
         return new self(
             code: $entity->code,
-            price: $entity->price,
-            priceIkea: $entity->priceIkea,
+            retail: $entity->retail,
+            sellIkea: $entity->sellIkea,
+            bulk: $entity->bulk,
         );
     }
 }

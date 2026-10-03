@@ -277,3 +277,16 @@ Breadcrumbs::for('admin.accounting.refund.show', function (BreadcrumbTrail $trai
     $trail->parent('admin.accounting.refund.index');
     $trail->push($refund->number . ' от ' . $refund->created_at->format('d-m-Y'), route('admin.accounting.refund.show', $refund));
 });
+
+//PRICING RULE
+Breadcrumbs::for('admin.accounting.pricing-rule.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.home');
+    $trail->push('Правила расчета цены', route('admin.accounting.pricing-rule.index'));
+});
+
+Breadcrumbs::for('admin.accounting.pricing-rule.show', function (BreadcrumbTrail $trail, int|string $id) {
+    $repository = app(\App\Modules\Accounting\Domain\Interfaces\PricingRuleRepositoryInterface::class);
+    $rule = $repository->getById((int) $id);
+    $trail->parent('admin.accounting.pricing-rule.index');
+    $trail->push($rule->name, route('admin.accounting.pricing-rule.show', $rule->id));
+});

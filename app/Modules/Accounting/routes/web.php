@@ -14,6 +14,7 @@ use App\Modules\Accounting\Controllers\StorageController;
 use App\Modules\Accounting\Controllers\SupplyController;
 use App\Modules\Accounting\Controllers\SurplusController;
 use App\Modules\Accounting\Controllers\TraderController;
+use App\Modules\Accounting\Presentation\Http\Controllers\Web\PricingRuleController;
 use App\Modules\Accounting\Presentation\Http\Controllers\Web\StockController;
 use Illuminate\Support\Facades\Route;
 
@@ -310,5 +311,13 @@ Route::group([
     Route::post('/stock/add-product', [StockController::class, 'addProduct'])->name('stock.add-product');
     Route::post('/stock/add-products', [StockController::class, 'addProducts'])->name('stock.add-products');
 
+    //PRICING RULE (правила расчета цены)
+
+    Route::get('/pricing-rule', [PricingRuleController::class, 'index'])->name('pricing-rule.index');
+    Route::post('/pricing-rule', [PricingRuleController::class, 'store'])->name('pricing-rule.store');
+    Route::get('/pricing-rule/{id}', [PricingRuleController::class, 'show'])->name('pricing-rule.show');
+    Route::put('/pricing-rule/{id}', [PricingRuleController::class, 'update'])->name('pricing-rule.update');
+    Route::delete('/pricing-rule/{id}', [PricingRuleController::class, 'destroy'])->name('pricing-rule.destroy');
+    Route::post('/pricing-rule/{id}/categories/sync', [PricingRuleController::class, 'syncCategories'])->name('pricing-rule.categories.sync');
 
 });

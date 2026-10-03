@@ -4,6 +4,7 @@ namespace App\Modules\Parser\Domain\Entities;
 
 use App\Modules\Parser\Domain\ValueObjects\Composite;
 use App\Modules\Parser\Domain\ValueObjects\Package;
+use App\Modules\Parser\Domain\ValueObjects\Store;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 final class ParserProductEntity
@@ -127,6 +128,12 @@ final class ParserProductEntity
         $this->name = $name;
         $this->code = $code;
         $this->slug = new Slug($name);
+    }
+
+    /** @var Store[] $stores */
+    public array $stores = [] {
+        get => $this->stores;
+        set => $this->stores = $value;
     }
 
     public function weight(): float

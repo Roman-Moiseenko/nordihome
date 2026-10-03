@@ -30,8 +30,9 @@ class PriceOutboxRepository implements PriceOutboxRepositoryInterface
             : new PriceOutbox();
 
         $model->code = $outbox->code;
-        $model->price = $outbox->price;
-        $model->price_ikea = $outbox->priceIkea;
+        $model->retail = $outbox->retail;
+        $model->sell_ikea = $outbox->sellIkea;
+        $model->bulk = $outbox->bulk;
         $model->progress = $outbox->isProgress();
 
         $model->save();
@@ -65,8 +66,9 @@ class PriceOutboxRepository implements PriceOutboxRepositoryInterface
     {
         $entity = new PriceOutboxEntity(
             code: $model->code,
-            price: $model->price,
-            priceIkea: $model->price_ikea,
+            retail: $model->retail,
+            sellIkea: $model->sell_ikea,
+            bulk: $model->bulk,
         );
 
         $entity->id = $model->id;
