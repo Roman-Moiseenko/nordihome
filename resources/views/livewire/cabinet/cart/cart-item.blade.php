@@ -4,11 +4,11 @@
             <input type="checkbox" wire:model="check" wire:change="check_item">
         </div>
         <div class="image">
-            <a href="{{ $item['url'] }}" target="_blank"><img src="{{ $item['image'] }}"/></a>
+            <a href="{{ $item['url'] }}"><img src="{{ $item['image'] }}"/></a>
         </div>
         <div class="info">
             <div>
-                <a href="{{ $item['url'] }}" target="_blank"><span>{{ $item['name'] }}</span></a>
+                <a href="{{ $item['url'] }}"><span>{{ $item['name'] }}</span></a>
             </div>
             <div class="discount"
                  @if(is_null($item['discountPrice'])) style="display: none" @endif>
