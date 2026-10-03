@@ -2,6 +2,7 @@
 
 namespace App\Modules\Analytics\Providers;
 
+use App\Modules\Analytics\Presentation\Console\Commands\ClearAnalyticsCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -142,7 +143,7 @@ class AnalyticsServiceProvider extends ServiceProvider
     protected function registerCommands()
     {
         $this->commands([
-            // Add command classes here
+            ClearAnalyticsCommand::class,
         ]);
     }
 
