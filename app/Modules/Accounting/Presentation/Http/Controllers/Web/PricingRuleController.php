@@ -80,7 +80,7 @@ class PricingRuleController extends Controller
             ->with('success', 'Правило удалено');
     }
 
-    public function syncCategories(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    public function syncCategories(int $id, Request $request, UserPermission $userPermission)
     {
         $categoryIds = array_map(
             'intval',
@@ -90,7 +90,7 @@ class PricingRuleController extends Controller
         try {
             $this->syncPricingRuleCategoriesUseCase->execute($id, $categoryIds, $userPermission);
         } catch (DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return response()->json(['message' => $e->getMessage()], 422);
         }
 
         return redirect()->back()->with('success', 'Категории сохранены');

@@ -10,8 +10,9 @@
         <div class="p-5 bg-white rounded-md mt-3">
             <h2 class="font-medium text-lg mb-3">Категории товаров</h2>
             <el-tree
+                ref="treeRef"
                 class="!bg-green-50"
-
+                style="max-width: 600px"
                 :data="catalog.categoriesTree"
                 show-checkbox
                 check-strictly
@@ -25,6 +26,7 @@
 </template>
 
 <script setup lang="ts">
+import {ref} from "vue";
 import {Head, router} from "@inertiajs/vue3";
 import ru from 'element-plus/dist/locale/ru.mjs'
 import PricingRuleInfo from "./Block/Info.vue";
@@ -39,6 +41,7 @@ const props = defineProps({
 })
 
 const catalog = useCatalogStore()
+const treeRef = ref()
 
 const defaultProps = {
     children: 'children',
@@ -47,11 +50,17 @@ const defaultProps = {
 
 function onCheck(node, info) {
     const ids = [...info.checkedKeys].map(Number)
+    const clickedKey = node.id
+    const isChecked = info.checkedKeys.some((key) => String(key) === String(clickedKey))
 
     router.post(route('admin.accounting.pricing-rule.categories.sync', {id: props.rule.id}), {
         category_ids: ids,
     }, {
         preserveScroll: true,
+        onError: () => {
+            // Вернуть галочку в прежнее (ненажатое) состояние при ошибке сохранения
+            treeRef.value?.setChecked(clickedKey, !isChecked, false)
+        },
     })
 }
 </script>
