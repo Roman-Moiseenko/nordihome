@@ -20,6 +20,8 @@ interface BrandRepositoryInterface
 
     public function delete(int $id): void;
 
+    public function hasProducts(int $id): bool;
+
     public function getByName(string $name): ?BrandEntity;
 
     /** @return BrandEntity[] */

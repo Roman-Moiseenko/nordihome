@@ -14,7 +14,7 @@
                     <el-input v-model="info.url" clearable placeholder="https://"/>
                 </el-form-item>
                 <el-form-item label="Валюта парсера">
-                    <el-select v-model="info.currency_id" clearable placeholder="Валюта">
+                    <el-select v-model="info.currencyId" clearable placeholder="Валюта">
                         <el-option v-for="item in currencies" :key="item.id" :value="item.id" :label="item.name"/>
                     </el-select>
                 </el-form-item>
@@ -38,20 +38,23 @@
 import {reactive, computed} from "vue";
 import {router} from "@inertiajs/vue3";
 import PhotoDTO from "@Comp/PhotoDTO.vue";
+import {useAccountingStore} from "@Res/accountingStore";
 
 const props = defineProps({
     brand: Object,
     parsers: Array,
-    currencies: Array,
 })
+
+const accounting = useAccountingStore()
+const currencies = computed(() => accounting.currencies)
 
 // --- Исходные данные из пропсов (эталон для отмены) ---
 const initialInfo = {
     name: props.brand.name,
     url: props.brand.url ?? '',
-    currency_id: props.brand.currency_id ?? null,
+    currencyId: props.brand.currencyId ?? null,
     description: props.brand.description ?? '',
-    sameAs: props.brand.sameAs ?? '',
+    sameAs: props.brand.sameAs ?? [],
 }
 
 const info = reactive({...initialInfo})
@@ -72,8 +75,8 @@ function onCancel() {
 
 function onSetInfo() {
     router.visit(
-        route('admin.catalog.brand.set-info', {brand: props.brand.id}), {
-            method: "post",
+        route('admin.catalog.brand.update', {id: props.brand.id}), {
+            method: "put",
             data: {...info},
             onSuccess: page => {
                 Object.assign(initialInfo, JSON.parse(JSON.stringify(info)))

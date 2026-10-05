@@ -42,13 +42,6 @@ class BrandRepository
     {
         return array_merge($this->BrandToArray($brand), [
             'currency' => $brand->currency,
-            'products' => $brand->products()->paginate($request->input('size', 20))
-                ->withQueryString()->through(fn(Product $product) => [
-                    'id' => $product->id,
-                    'code' => $product->code,
-                    'name' => $product->name,
-                    'category' => $product->category->getParentNames(),
-                ]),
         ]);
     }
 

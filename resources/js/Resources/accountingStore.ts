@@ -7,14 +7,18 @@ import {route} from "ziggy-js";
 export const useAccountingStore = defineStore('accounting', () => {
     const loaded = ref(false)
     const traders = ref<any[]>([])
+    const currencies = ref<any[]>([])
 
     async function fetchData() {
         const [
             listTradersRes,
+            listCurrenciesRes,
         ] = await Promise.all([
             axios.get(route('admin.accounting.trader.list')),
+            axios.get(route('admin.accounting.currency.list')),
         ])
         traders.value = listTradersRes.data
+        currencies.value = listCurrenciesRes.data
     }
 
     ;(async () => {
@@ -40,5 +44,6 @@ export const useAccountingStore = defineStore('accounting', () => {
         loaded,
         reload,
         traders,
+        currencies,
     }
 })

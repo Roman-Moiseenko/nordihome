@@ -51,8 +51,6 @@ Route::group([
         'as' => 'brand.',
     ], function () {
         Route::get('/list', [BrandController::class, 'list'])->name('list');
-        Route::post('/set-info/{brand}', [BrandController::class, 'set_info'])->name('set-info');
-
         // Товары бренда (прямая связь brand_id в products)
         Route::get('/{id}/products', [BrandController::class, 'brandProducts'])->name('products');
 
@@ -188,7 +186,7 @@ Route::group([
     });
 
     //resource
-    Route::resource('brand', BrandController::class); //CRUD
+    Route::resource('brand', BrandController::class)->parameters(['brand' => 'id']); //CRUD
 
     Route::resource('attribute', AttributeController::class); //CRUD
     Route::resource('equivalent', EquivalentController::class); //CRUD

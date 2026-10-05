@@ -92,13 +92,13 @@ const filter = reactive({
 const new_brand = ref('')
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.catalog.brand.destroy', {brand: row.id}));
+    $delete_entity.show(route('admin.catalog.brand.destroy', {id: row.id}));
 }
 function createButton() {
     router.post(route('admin.catalog.brand.store', {name: new_brand.value}))
     useCatalogStore().reload()
 }
 function routeClick(row) {
-    router.get(route('admin.catalog.brand.show', {brand: row.id}))
+    router.get(route('admin.catalog.brand.show', {id: row.id}))
 }
 </script>

@@ -4,14 +4,17 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Accounting\Entity\Currency;
+use App\Modules\Catalog\Application\Actions\Brand\CreateBrandUseCase;
 use App\Modules\Catalog\Application\Actions\Brand\IndexBrandQuery;
 use App\Modules\Catalog\Application\Actions\Brand\ListBrandUseCase;
+use App\Modules\Catalog\Application\Actions\Brand\RemoveBrandUseCase;
+use App\Modules\Catalog\Application\Actions\Brand\UpdateBrandUseCase;
+use App\Modules\Catalog\Application\Actions\Brand\ViewBrandQuery;
 use App\Modules\Catalog\Application\Actions\Product\ListProductByBrandUseCase;
+use App\Modules\Catalog\Application\DTOs\Brand\BrandCreateData;
+use App\Modules\Catalog\Application\DTOs\Brand\BrandUpdateData;
+use App\Modules\Catalog\Application\DTOs\Brand\BrandViewData;
 use App\Modules\Catalog\Application\DTOs\Brand\FilterBrandIndexData;
-use App\Modules\Catalog\Infrastructure\Models\Brand;
-use App\Modules\Catalog\Repository\BrandRepository;
-use App\Modules\Catalog\Service\BrandService;
 use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
@@ -25,12 +28,14 @@ class BrandController extends Controller
 {
 
     public function __construct(
-        private readonly BrandService     $service,
-        private readonly BrandRepository  $repository,
         private readonly ListBrandUseCase $listBrandUseCase,
         private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
         private readonly ListProductByBrandUseCase $listProductByBrandUseCase,
         private readonly IndexBrandQuery $indexBrandQuery,
+        private readonly CreateBrandUseCase $createBrandUseCase,
+        private readonly ViewBrandQuery $viewBrandQuery,
+        private readonly UpdateBrandUseCase $updateBrandUseCase,
+        private readonly RemoveBrandUseCase $removeBrandUseCase,
     )
     {
     }
@@ -38,53 +43,46 @@ class BrandController extends Controller
     public function index(Request $request, UserPermission $userPermission): \Inertia\Response
     {
         $filters = FilterBrandIndexData::validateAndCreate($request->all());
-        $brands = $this->indexBrandQuery->execute($filters, $userPermission); // $this->repository->getIndex($request, $filters);
+        $brands = $this->indexBrandQuery->execute($filters, $userPermission);
         return Inertia::render('Catalog/Brand/Index', [
             'brands' => $brands,
             'filters' => $filters,
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string'
-        ]);
-        try {
-            $brand = $this->service->create($request);
-            return redirect()->route('admin.catalog.brand.show', $brand)->with('success', 'Бренд создан');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $dto = BrandCreateData::validateAndCreate($request->all());
+
+        $brand = $this->createBrandUseCase->execute($dto, $userPermission);
+        return redirect()->route('admin.catalog.brand.show', $brand->id)->with('success', 'Бренд создан');
     }
 
-    public function show(Brand $brand, Request $request): \Inertia\Response
+    public function show(int $id, UserPermission $userPermission): \Inertia\Response
     {
+        $brand = $this->viewBrandQuery->execute($id, $userPermission);
         $dto = new ContentBlockContainerData($brand->id, ContainerType::BRAND);
         $blocks = $this->listContentBlockByContainerUseCase->execute($dto);
 
         return Inertia::render('Catalog/Brand/Show', [
-            'brand' => $this->repository->BrandWithToArray($brand, $request),
-            'currencies' => Currency::getModels(),
+            'brand' => BrandViewData::fromEntity($brand),
             'blocks' => $blocks,
         ]);
     }
 
-    public function set_info(Request $request, Brand $brand): RedirectResponse
+    public function update(int $id, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        try {
-            $this->service->setInfo($request, $brand);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $dto = BrandUpdateData::validateAndCreate($request->all());
+
+        $brand = $this->updateBrandUseCase->execute($id, $dto, $userPermission);
+        return redirect()->route('admin.catalog.brand.show', $brand->id)->with('success', 'Сохранено');
     }
 
-    public function destroy(Brand $brand): RedirectResponse
+    public function destroy(int $id, UserPermission $userPermission): RedirectResponse
     {
         try {
-            $this->service->delete($brand);
-            return redirect()->back()->with('success', 'Удалено');
+            $this->removeBrandUseCase->execute($id, $userPermission);
+            return redirect()->back()->with('success', 'Бренд удален');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

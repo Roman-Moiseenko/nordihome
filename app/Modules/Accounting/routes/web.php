@@ -171,6 +171,14 @@ Route::group([
             Route::post('/set-info/{trader}', [TraderController::class, 'set_info'])->name('set-info');
             Route::get('/list/', [TraderController::class, 'listTraders'])->name('list');
         });
+    //CURRENCY
+    Route::group([
+        'prefix' => 'currency',
+        'as' => 'currency.',
+    ],
+        function () {
+            Route::get('/list/', [CurrencyController::class, 'listCurrencies'])->name('list');
+        });
     //SUPPLY
     Route::group([
         'prefix' => 'supply',

@@ -63,6 +63,17 @@ class BrandRepository implements BrandRepositoryInterface
         $model->delete();
     }
 
+    public function hasProducts(int $id): bool
+    {
+        $model = Brand::find($id);
+
+        if (!$model) {
+            throw new ModelNotFoundException("Brand with id {$id} not found");
+        }
+
+        return $model->products()->exists();
+    }
+
     public function getByName(string $name): ?BrandEntity
     {
         $model = Brand::where('name', $name)->first();

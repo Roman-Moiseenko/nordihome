@@ -10,7 +10,7 @@
             </el-tooltip>
         </div>
         <div class="p-5 bg-white rounded-md">
-            <BrandInfo :brand="brand" :parsers="parsers" :currencies="currencies"/>
+            <BrandInfo :brand="brand" :parsers="parsers"/>
 
             <HelpBlock v-if="showHelp">
                 <p><b>Название Бренда</b> является обязательным полем.</p>
@@ -42,7 +42,6 @@ const props = defineProps({
         type: String,
         default: 'Карточка бренда товаров',
     },
-    currencies: Array,
     blocks: Array,
 })
 

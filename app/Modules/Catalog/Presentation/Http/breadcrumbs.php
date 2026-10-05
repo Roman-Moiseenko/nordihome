@@ -4,7 +4,6 @@ declare(strict_types=1);
 use App\Modules\Catalog\Entity\Equivalent;
 use App\Modules\Catalog\Entity\Modification;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
-use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Series;
@@ -42,13 +41,15 @@ Breadcrumbs::for('admin.catalog.brand.create', function (BreadcrumbTrail $trail)
     $trail->parent('admin.catalog.brand.index');
     $trail->push('Добавить новый', route('admin.catalog.brand.create'));
 });
-Breadcrumbs::for('admin.catalog.brand.show', function (BreadcrumbTrail $trail, Brand $brand) {
+Breadcrumbs::for('admin.catalog.brand.show', function (BreadcrumbTrail $trail, int|string $id) {
+    $brandRepository = app(\App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface::class);
+    $brand = $brandRepository->getById((int) $id);
     $trail->parent('admin.catalog.brand.index');
-    $trail->push($brand->name, route('admin.catalog.brand.show', $brand));
+    $trail->push($brand->name, route('admin.catalog.brand.show', $brand->id));
 });
-Breadcrumbs::for('admin.catalog.brand.edit', function (BreadcrumbTrail $trail, Brand $brand) {
-    $trail->parent('admin.catalog.brand.show', $brand);
-    $trail->push('Редактировать', route('admin.catalog.brand.edit', $brand));
+Breadcrumbs::for('admin.catalog.brand.edit', function (BreadcrumbTrail $trail, int|string $id) {
+    $trail->parent('admin.catalog.brand.show', $id);
+    $trail->push('Редактировать', route('admin.catalog.brand.edit', $id));
 });
 
 //CATEGORY

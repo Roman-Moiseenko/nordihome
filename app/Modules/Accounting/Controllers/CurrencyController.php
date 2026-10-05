@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Accounting\Application\Actions\Currency\ListCurrenciesUseCase;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Service\CurrencyService;
 use Illuminate\Http\RedirectResponse;
@@ -15,7 +16,10 @@ class CurrencyController extends Controller
 {
     private CurrencyService $service;
 
-    public function __construct(CurrencyService $service)
+    public function __construct(
+        CurrencyService $service,
+        private readonly ListCurrenciesUseCase $listCurrenciesUseCase,
+    )
     {
         $this->service = $service;
     }
@@ -58,5 +62,11 @@ class CurrencyController extends Controller
     {
         $this->service->destroy($currency);
         return redirect()->back()->with('success', 'Валюта удалена');
+    }
+
+    public function listCurrencies(): \Illuminate\Http\JsonResponse
+    {
+        $list = $this->listCurrenciesUseCase->execute();
+        return \response()->json($list);
     }
 }
