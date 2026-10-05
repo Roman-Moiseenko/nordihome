@@ -7,7 +7,6 @@ use App\Modules\Catalog\Controllers\OnOrderController;
 use App\Modules\Catalog\Controllers\ParserController;
 use App\Modules\Catalog\Controllers\PriorityController;
 use App\Modules\Catalog\Controllers\ProductController;
-use App\Modules\Catalog\Controllers\SeriesController;
 use App\Modules\Catalog\Controllers\TagController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\BrandController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryController;
@@ -16,6 +15,7 @@ use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomProductController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\SeriesController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
@@ -135,9 +135,9 @@ Route::group([
         'as' => 'series.',
     ], function () {
         Route::get('/list', [SeriesController::class, 'list'])->name('list');
-        Route::post('/add-product/{series}', [SeriesController::class, 'add_product'])->name('add-product');
-        Route::post('/add-products/{series}', [SeriesController::class, 'add_products'])->name('add-products');
-        Route::delete('/del-product/{series}', [SeriesController::class, 'del_product'])->name('del-product');
+        Route::post('/add-product/{id}', [SeriesController::class, 'add_product'])->name('add-product');
+        Route::post('/add-products/{id}', [SeriesController::class, 'add_products'])->name('add-products');
+        Route::delete('/del-product/{id}', [SeriesController::class, 'del_product'])->name('del-product');
     });
     //Приоритеты
     Route::group([
@@ -192,7 +192,7 @@ Route::group([
     Route::resource('equivalent', EquivalentController::class); //CRUD
     Route::resource('group', GroupController::class)->except(['create', 'edit']); //CRUD
     Route::resource('modification', ModificationController::class); //CRUD
-    Route::resource('series', SeriesController::class)->except(['create', 'edit']); //CRUD
+    Route::resource('series', SeriesController::class)->except(['create', 'edit'])->parameters(['series' => 'id']); //CRUD
 
 
     //PRODUCT

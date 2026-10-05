@@ -220,4 +220,19 @@ class ProductRepository implements ProductRepositoryInterface
             ->pluck('count', 'brand_id')
             ->toArray();
     }
+
+    public function countProductsBySeriesIds(array $seriesIds): array
+    {
+        if (empty($seriesIds)) {
+            return [];
+        }
+
+        return Product::query()
+            ->select('series_id')
+            ->selectRaw('COUNT(*) as count')
+            ->whereIn('series_id', $seriesIds)
+            ->groupBy('series_id')
+            ->pluck('count', 'series_id')
+            ->toArray();
+    }
 }

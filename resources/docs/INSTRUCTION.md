@@ -41,6 +41,7 @@ app/Modules/{ModuleName}/
 - Методы состояния (`publish()`, `unpublish()`, `isPublished()`) — тут
 - `children`, связанные сущности — массив, заполняется репозиторием
 - Именование - к названию сщности добавляем `Entity`, например сущность Товар - `ProductEntity`
+- **Сущность НЕ содержит полей, которых нет в Eloquent-модели** (например, вычисляемые `quantity`, `count` и т.п.). Такие агрегаты (кол-во товаров и пр.) получаются отдельно — в Query/UseCase через репозиторий (по аналогии с [`IndexBrandQuery`](app/Modules/Catalog/Application/Actions/Brand/IndexBrandQuery.php:23) и `countProductsByBrandIds`)
 
 **Пример:**
 

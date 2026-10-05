@@ -92,4 +92,10 @@ interface ProductRepositoryInterface
     public function search(string $query, int $limit = 10): array;
 
     public function countProductsByBrandIds($brandIds): array;
+
+    /**
+     * @param int[] $seriesIds
+     * @return array<int, int>
+     */
+    public function countProductsBySeriesIds(array $seriesIds): array;
 }

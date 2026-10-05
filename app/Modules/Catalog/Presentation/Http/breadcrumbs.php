@@ -6,7 +6,6 @@ use App\Modules\Catalog\Entity\Modification;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Catalog\Infrastructure\Models\Series;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -174,9 +173,11 @@ Breadcrumbs::for('admin.catalog.series.index', function (BreadcrumbTrail $trail)
     $trail->parent('admin.catalog.product.index');
     $trail->push('Серии товаров', route('admin.catalog.series.index'));
 });
-Breadcrumbs::for('admin.catalog.series.show', function (BreadcrumbTrail $trail, Series $series) {
+Breadcrumbs::for('admin.catalog.series.show', function (BreadcrumbTrail $trail, int|string $id) {
+    $seriesRepository = app(\App\Modules\Catalog\Domain\Interfaces\SeriesRepositoryInterface::class);
+    $series = $seriesRepository->getById((int) $id);
     $trail->parent('admin.catalog.series.index');
-    $trail->push($series->name, route('admin.catalog.series.show', $series));
+    $trail->push($series->name, route('admin.catalog.series.show', $series->id));
 });
 //PRIORITY
 Breadcrumbs::for('admin.catalog.priority.index', function (BreadcrumbTrail $trail) {
