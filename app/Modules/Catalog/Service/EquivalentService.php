@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Service;
 
-use App\Modules\Catalog\Entity\Equivalent;
+use App\Modules\Catalog\Infrastructure\Models\Equivalent;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Http\Request;
 

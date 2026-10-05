@@ -1,7 +1,6 @@
 <?php
 
 use App\Modules\Catalog\Controllers\AttributeController;
-use App\Modules\Catalog\Controllers\EquivalentController;
 use App\Modules\Catalog\Controllers\ModificationController;
 use App\Modules\Catalog\Controllers\OnOrderController;
 use App\Modules\Catalog\Controllers\ParserController;
@@ -11,6 +10,7 @@ use App\Modules\Catalog\Controllers\TagController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\BrandController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryProductController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\EquivalentController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;

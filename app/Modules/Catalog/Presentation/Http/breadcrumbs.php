@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-use App\Modules\Catalog\Entity\Equivalent;
 use App\Modules\Catalog\Entity\Modification;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Catalog\Infrastructure\Models\Equivalent;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Diglactic\Breadcrumbs\Breadcrumbs;

@@ -577,6 +577,12 @@ Route::group([
 });
 ```
 
+> **Параметр `{id}`:** если контроллер принимает `show(int $id)` / `update(int $id)` / `destroy(int $id)`, а не модель, используем `->parameters(['room' => 'id'])`, чтобы Laravel и Ziggy использовали имя параметра `id`:
+> ```php
+> Route::resource('room', RoomController::class)->except(['create', 'edit'])->parameters(['room' => 'id']);
+> ```
+> Дополнительные маршруты с параметром (например `add-product/{id}`, `del-product/{id}`) объявляются аналогично.
+
 ---
 
 ## 11. Связи многие-ко-многим (pivot)
@@ -787,6 +793,52 @@ readonly class OrderIndexData
         public float $refund,
     ) {}
 }
+```
+
+---
+
+## 13. Связь «один-ко-многим» через внешний ключ (hasMany)
+
+**Назначение:** Когда дочерняя сущность ссылается на родителя через FK-колонку (например `Series` ← `Product.series_id`), отдельный pivot-подмодуль **не нужен**. Методы привязки/отвязки добавляются в основной `{Entity}RepositoryInterface` и реализуются в `{Entity}Repository` (пример — [`SeriesRepository`](app/Modules/Catalog/Infrastructure/Persistence/SeriesRepository.php:100)).
+
+**Методы в RepositoryInterface:**
+
+```php
+/** @return array<int, array{id: int, code: string, name: string, category: string}> */
+public function getProducts(int $seriesId): array;   // список дочерних для карточки
+
+/** @param int[] $productIds */
+public function attachProducts(int $seriesId, array $productIds): void;
+
+public function detachProduct(int $seriesId, int $productId): void;
+
+public function detachAllProducts(int $seriesId): void; // отвязка всех перед удалением родителя
+```
+
+**Правила:**
+- `attachProducts` принимает **список id** (`products`), **убирает дубликаты** (`array_unique`) и **пропускает уже привязанные** сущности — повторные товары не должны вызывать ошибку.
+- `detachAllProducts` вызывается в `Remove{Entity}UseCase` перед `delete`, чтобы не оставить «висячие» FK.
+- Привязка/отвязка — через `AttachProductsTo{Entity}UseCase` / `DetachProductFrom{Entity}UseCase` (права `catalog.product.edit`).
+- Входной формат `products` — массив id товаров. Контроллер может дополнительно нормализовать элементы вида `['product_id' => ...]` (пример — [`CategoryProductController::attachCategoryProducts`](app/Modules/Catalog/Presentation/Http/Controllers/Web/CategoryProductController.php:71)).
+- Кол-во дочерних сущностей (`quantity`) **НЕ** хранится в Entity: считается через count-метод репозитория дочерних (`ProductRepositoryInterface::countProductsBySeriesIds`) в `Index{Entity}Query`.
+
+---
+
+## 14. Хлебные крошки (Breadcrumbs)
+
+**Где лежит:** `app/Modules/{ModuleName}/Presentation/Http/breadcrumbs.php`
+
+**Правила:**
+- Если маршрут использует параметр `{id}` (после `->parameters(['...' => 'id'])`), крошка принимает `int|string $id`, а сущность резолвит через репозиторий — **не** через модель:
+
+```php
+Breadcrumbs::for('admin.catalog.series.show', function (BreadcrumbTrail $trail, int|string $id) {
+    $repository = app(\App\Modules\Catalog\Domain\Interfaces\SeriesRepositoryInterface::class);
+    $series = $repository->getById((int) $id);
+
+    $trail->parent('admin.catalog.series.index');
+    $trail->push($series->name, route('admin.catalog.series.show', $series->id));
+});
 ```
 
 ---

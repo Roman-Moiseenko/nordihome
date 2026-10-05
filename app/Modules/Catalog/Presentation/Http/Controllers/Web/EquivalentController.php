@@ -1,18 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Controllers;
+namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Equivalent;
-
+use App\Modules\Catalog\Infrastructure\Models\Equivalent;
 use App\Modules\Catalog\Repository\EquivalentRepository;
 use App\Modules\Catalog\Service\EquivalentService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 use Inertia\Response;
 
