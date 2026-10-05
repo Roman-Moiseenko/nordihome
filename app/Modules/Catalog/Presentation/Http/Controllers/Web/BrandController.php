@@ -1,19 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Controllers;
+namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Catalog\Application\Actions\Brand\ListBrandUseCase;
+use App\Modules\Catalog\Application\Actions\Product\ListProductByBrandUseCase;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Repository\BrandRepository;
 use App\Modules\Catalog\Service\BrandService;
 use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
-use App\Modules\Parser\Service\ParserAbstract;
-use App\UseCase\PaginationService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,7 +25,8 @@ class BrandController extends Controller
         private readonly BrandService     $service,
         private readonly BrandRepository  $repository,
         private readonly ListBrandUseCase $listBrandUseCase,
-        private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase)
+        private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
+        private readonly ListProductByBrandUseCase $listProductByBrandUseCase)
     {
     }
 
@@ -87,6 +87,20 @@ class BrandController extends Controller
     public function list(): JsonResponse
     {
         $list = $this->listBrandUseCase->execute();
+        return response()->json($list);
+    }
+
+    /**
+     * Список товаров бренда (с пагинацией).
+     * GET /admin/catalog/brand/{id}/products
+     */
+    public function brandProducts(int $id, Request $request): JsonResponse
+    {
+        $page = $request->integer('page', 1);
+        $perPage = $request->integer('per_page', 15);
+
+        $list = $this->listProductByBrandUseCase->execute($id, $perPage, $page);
+
         return response()->json($list);
     }
 }

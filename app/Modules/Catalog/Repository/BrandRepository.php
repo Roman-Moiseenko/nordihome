@@ -38,11 +38,6 @@ class BrandRepository
     }
 
 
-    public function byName(string $name): Brand
-    {
-        return Brand::where('name', '=', $name)->first();
-    }
-
     public function BrandWithToArray(Brand $brand, Request $request): array
     {
         return array_merge($this->BrandToArray($brand), [

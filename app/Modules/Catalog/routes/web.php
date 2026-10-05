@@ -1,7 +1,6 @@
 <?php
 
 use App\Modules\Catalog\Controllers\AttributeController;
-use App\Modules\Catalog\Controllers\BrandController;
 use App\Modules\Catalog\Controllers\EquivalentController;
 use App\Modules\Catalog\Controllers\ModificationController;
 use App\Modules\Catalog\Controllers\OnOrderController;
@@ -10,6 +9,7 @@ use App\Modules\Catalog\Controllers\PriorityController;
 use App\Modules\Catalog\Controllers\ProductController;
 use App\Modules\Catalog\Controllers\SeriesController;
 use App\Modules\Catalog\Controllers\TagController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\BrandController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupController;
@@ -52,6 +52,9 @@ Route::group([
     ], function () {
         Route::get('/list', [BrandController::class, 'list'])->name('list');
         Route::post('/set-info/{brand}', [BrandController::class, 'set_info'])->name('set-info');
+
+        // Товары бренда (прямая связь brand_id в products)
+        Route::get('/{id}/products', [BrandController::class, 'brandProducts'])->name('products');
 
     });
     //CATEGORY

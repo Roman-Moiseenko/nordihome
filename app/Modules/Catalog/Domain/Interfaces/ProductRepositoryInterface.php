@@ -65,6 +65,16 @@ interface ProductRepositoryInterface
     public function findAllByCategoryId(int $categoryId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
 
     /**
+     * Найти товары по прямому полю brand_id (с пагинацией).
+     *
+     * @param int $brandId
+     * @param int $perPage
+     * @param int $page
+     * @return LengthAwarePaginator<ProductEntity>
+     */
+    public function findAllByBrandId(int $brandId, int $perPage = 15, int $page = 1): LengthAwarePaginator;
+
+    /**
      * Найти товары по ID
      *
      * @param array $ids

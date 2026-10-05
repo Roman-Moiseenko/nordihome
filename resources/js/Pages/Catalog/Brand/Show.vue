@@ -21,7 +21,7 @@
         </div>
 
         <el-tabs>
-            <PanelProducts :brand="brand" />
+            <PanelProducts :brand-id="brand.id" />
             <PanelBlocks :blocks="blocks || []" :brand-id="brand.id"/>
         </el-tabs>
     </el-config-provider>

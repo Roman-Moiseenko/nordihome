@@ -121,6 +121,14 @@ class ProductRepository implements ProductRepositoryInterface
             ->through(fn(Product $model) => $this->hydrate($model));
     }
 
+    public function findAllByBrandId(int $brandId, int $perPage = 15, int $page = 1): LengthAwarePaginator
+    {
+        return Product::where('brand_id', $brandId)
+            ->orderBy('name')
+            ->paginate($perPage, ['*'], 'page', $page)
+            ->through(fn(Product $model) => $this->hydrate($model));
+    }
+
     public function findByIds(array $ids): array
     {
         if (empty($ids)) return [];
