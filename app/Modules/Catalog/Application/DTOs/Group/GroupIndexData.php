@@ -16,12 +16,12 @@ class GroupIndexData
         public string $description,
     ) {}
 
-    public static function fromEntity(GroupEntity $group): self
+    public static function fromEntity(GroupEntity $group, $quantity): self
     {
         return new self(
             id: $group->id,
             name: $group->name,
-            quantity: $group->quantity,
+            quantity: $quantity,
             published: $group->isPublished(),
             description: $group->description,
         );

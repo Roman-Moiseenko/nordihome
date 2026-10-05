@@ -30,17 +30,12 @@
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
-                <el-table-column prop="image" label="IMG" width="60">
-                    <template #default="scope">
-                        <img :src="scope.row.image" style="width: 100%">
-                    </template>
-                </el-table-column>
                 <el-table-column prop="name" label="Название бренда"/>
                 <el-table-column prop="url" label="Ссылка"/>
                 <el-table-column prop="quantity" label="Кол-во товаров" />
-                <el-table-column prop="parser_class" label="Парсер">
+                <el-table-column prop="parserClass" label="Парсер">
                     <template #default="scope">
-                        <Active :active="scope.row.parser_class" />
+                        <Active :active="scope.row.parserClass" />
                     </template>
                 </el-table-column>
                 <el-table-column label="Действия" align="right">

@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Domain\Interfaces;
 
+use App\Modules\Catalog\Application\DTOs\Brand\FilterBrandIndexData;
+use App\Modules\Catalog\Application\DTOs\Group\FilterGroupIndexData;
 use App\Modules\Catalog\Domain\Entities\BrandEntity;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 interface BrandRepositoryInterface
 {
@@ -25,4 +28,5 @@ interface BrandRepositoryInterface
     public function getIkeaId(): int;
 
     public function getNbId(): int;
+    public function filteredPaginated(FilterBrandIndexData $filter): LengthAwarePaginator;
 }

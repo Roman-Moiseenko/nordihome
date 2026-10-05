@@ -205,4 +205,19 @@ class ProductRepository implements ProductRepositoryInterface
 
         return $entity;
     }
+
+    public function countProductsByBrandIds($brandIds): array
+    {
+        if (empty($brandIds)) {
+            return [];
+        }
+
+        return Product::query()
+            ->select('brand_id')
+            ->selectRaw('COUNT(*) as count')
+            ->whereIn('brand_id', $brandIds)
+            ->groupBy('brand_id')
+            ->pluck('count', 'brand_id')
+            ->toArray();
+    }
 }

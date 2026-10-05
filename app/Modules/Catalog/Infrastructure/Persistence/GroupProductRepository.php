@@ -72,4 +72,18 @@ class GroupProductRepository implements GroupProductRepositoryInterface
     {
         GroupProduct::where('group_id', $groupId)->delete();
     }
+
+    public function countProductsByGroupIds(array $groupIds): array
+    {
+        if (empty($groupIds)) {
+            return [];
+        }
+
+        return GroupProduct::select('group_id')
+            ->selectRaw('COUNT(*) as count')
+            ->whereIn('group_id', $groupIds)
+            ->groupBy('group_id')
+            ->pluck('count', 'group_id')
+            ->toArray();
+    }
 }

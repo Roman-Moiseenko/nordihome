@@ -48,4 +48,10 @@ interface GroupProductRepositoryInterface
      * @param int $groupId
      */
     public function detachAllProducts(int $groupId): void;
+    /**
+     * Возвращает ассоциативный массив [group_id => count] для переданных ID групп.
+     * @param int[] $groupIds
+     * @return array<int, int>
+     */
+    public function countProductsByGroupIds(array $groupIds): array;
 }

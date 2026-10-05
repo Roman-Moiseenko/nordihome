@@ -90,4 +90,6 @@ interface ProductRepositoryInterface
      * @return ProductEntity[]
      */
     public function search(string $query, int $limit = 10): array;
+
+    public function countProductsByBrandIds($brandIds): array;
 }

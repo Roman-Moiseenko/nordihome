@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
+use App\Modules\Catalog\Application\DTOs\Brand\FilterBrandIndexData;
 use App\Modules\Catalog\Domain\Entities\BrandEntity;
 use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class BrandRepository implements BrandRepositoryInterface
 {
@@ -122,4 +124,19 @@ class BrandRepository implements BrandRepositoryInterface
         return $entity;
     }
 
+    public function filteredPaginated(FilterBrandIndexData $filter): LengthAwarePaginator
+    {
+        $query = Brand::withCount('products')->orderByDesc('id');
+
+        $filter->count = 0;
+
+        if (!is_null($filter->name) && trim($filter->name) !== '') {
+            $name = trim($filter->name);
+            $query->where('name', 'like', "%{$name}%");
+            $filter->count++;
+        }
+
+        return $query->paginate($filter->perPage)
+            ->through(fn(Brand $model) => $this->hydrate($model));
+    }
 }

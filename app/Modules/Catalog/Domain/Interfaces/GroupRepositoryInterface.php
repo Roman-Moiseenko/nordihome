@@ -28,7 +28,7 @@ interface GroupRepositoryInterface
     /**
      * @return LengthAwarePaginator<GroupEntity>
      */
-    public function getFilteredPaginated(FilterGroupIndexData &$filter): LengthAwarePaginator;
+    public function filterPaginate(FilterGroupIndexData &$filter): LengthAwarePaginator;
 
     /**
      * @return GroupEntity[]

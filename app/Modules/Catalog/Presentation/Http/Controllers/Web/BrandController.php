@@ -5,14 +5,17 @@ namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Entity\Currency;
+use App\Modules\Catalog\Application\Actions\Brand\IndexBrandQuery;
 use App\Modules\Catalog\Application\Actions\Brand\ListBrandUseCase;
 use App\Modules\Catalog\Application\Actions\Product\ListProductByBrandUseCase;
+use App\Modules\Catalog\Application\DTOs\Brand\FilterBrandIndexData;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Repository\BrandRepository;
 use App\Modules\Catalog\Service\BrandService;
 use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,13 +29,16 @@ class BrandController extends Controller
         private readonly BrandRepository  $repository,
         private readonly ListBrandUseCase $listBrandUseCase,
         private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
-        private readonly ListProductByBrandUseCase $listProductByBrandUseCase)
+        private readonly ListProductByBrandUseCase $listProductByBrandUseCase,
+        private readonly IndexBrandQuery $indexBrandQuery,
+    )
     {
     }
 
-    public function index(Request $request): \Inertia\Response
+    public function index(Request $request, UserPermission $userPermission): \Inertia\Response
     {
-        $brands = $this->repository->getIndex($request, $filters);
+        $filters = FilterBrandIndexData::validateAndCreate($request->all());
+        $brands = $this->indexBrandQuery->execute($filters, $userPermission); // $this->repository->getIndex($request, $filters);
         return Inertia::render('Catalog/Brand/Index', [
             'brands' => $brands,
             'filters' => $filters,

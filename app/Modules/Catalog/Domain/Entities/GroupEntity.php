@@ -39,12 +39,6 @@ final class GroupEntity
         set => $this->meta = $value;
     }
 
-    /** Кол-во товаров в группе (заполняется репозиторием через withCount) */
-    public int $quantity = 0 {
-        get => $this->quantity;
-        set => $this->quantity = $value;
-    }
-
     public function __construct(
         string $name,
         Slug $slug,

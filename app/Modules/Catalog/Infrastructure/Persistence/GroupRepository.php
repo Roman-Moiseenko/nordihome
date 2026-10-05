@@ -84,7 +84,7 @@ class GroupRepository implements GroupRepositoryInterface
         return $query->exists();
     }
 
-    public function getFilteredPaginated(FilterGroupIndexData &$filter): LengthAwarePaginator
+    public function filterPaginate(FilterGroupIndexData &$filter): LengthAwarePaginator
     {
         $query = Group::withCount('products')->orderByDesc('id');
 
@@ -107,7 +107,6 @@ class GroupRepository implements GroupRepositoryInterface
         }
 
         return $query->paginate($filter->perPage)
-            ->withQueryString()
             ->through(fn(Group $model) => $this->hydrate($model));
     }
 
