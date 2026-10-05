@@ -10,7 +10,7 @@ class BrandIndexData
         public int $id,
         public string $name,
         public int $quantity,
-        public string $parserClass,
+        public ?string $parserClass,
     ) {}
 
 
