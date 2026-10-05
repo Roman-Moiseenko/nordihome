@@ -6,6 +6,8 @@ use App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\CategoryProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\EquivalentProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\EquivalentRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\GroupProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\GroupRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
@@ -18,6 +20,8 @@ use App\Modules\Catalog\Infrastructure\Persistence\AttributeRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\BrandRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\CategoryProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\CategoryRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\EquivalentProductRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\EquivalentRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\GroupProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\GroupRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\ProductRepository;
@@ -168,6 +172,16 @@ class CatalogServiceProvider extends ServiceProvider
         $this->app->bind(
             SeriesRepositoryInterface::class,
             SeriesRepository::class
+        );
+
+        $this->app->bind(
+            EquivalentRepositoryInterface::class,
+            EquivalentRepository::class
+        );
+
+        $this->app->bind(
+            EquivalentProductRepositoryInterface::class,
+            EquivalentProductRepository::class
         );
 
     }

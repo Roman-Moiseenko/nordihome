@@ -4,122 +4,153 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Infrastructure\Models\Equivalent;
-use App\Modules\Catalog\Repository\EquivalentRepository;
-use App\Modules\Catalog\Service\EquivalentService;
+use App\Modules\Catalog\Application\Actions\Equivalent\CreateEquivalentUseCase;
+use App\Modules\Catalog\Application\Actions\Equivalent\IndexEquivalentQuery;
+use App\Modules\Catalog\Application\Actions\Equivalent\RemoveEquivalentUseCase;
+use App\Modules\Catalog\Application\Actions\Equivalent\UpdateEquivalentUseCase;
+use App\Modules\Catalog\Application\Actions\Equivalent\ViewEquivalentQuery;
+use App\Modules\Catalog\Application\Actions\EquivalentProduct\AssignProductsToEquivalentUseCase;
+use App\Modules\Catalog\Application\Actions\EquivalentProduct\AttachProductsToEquivalentUseCase;
+use App\Modules\Catalog\Application\Actions\EquivalentProduct\DetachProductsFromEquivalentUseCase;
+use App\Modules\Catalog\Application\Actions\EquivalentProduct\ListProductByEquivalentUseCase;
+use App\Modules\Catalog\Application\DTOs\Equivalent\EquivalentCreateData;
+use App\Modules\Catalog\Application\DTOs\Equivalent\EquivalentUpdateData;
+use App\Modules\Catalog\Application\DTOs\Equivalent\EquivalentViewData;
+use App\Modules\Catalog\Application\DTOs\Equivalent\FilterEquivalentIndexData;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class EquivalentController extends Controller
 {
-
-    private EquivalentService $service;
-    private EquivalentRepository $repository;
-
     public function __construct(
-        EquivalentService    $service,
-        EquivalentRepository $repository,
-        )
+        private readonly IndexEquivalentQuery $indexEquivalentQuery,
+        private readonly CreateEquivalentUseCase $createEquivalentUseCase,
+        private readonly ViewEquivalentQuery $viewEquivalentQuery,
+        private readonly UpdateEquivalentUseCase $updateEquivalentUseCase,
+        private readonly RemoveEquivalentUseCase $removeEquivalentUseCase,
+        private readonly ListProductByEquivalentUseCase $listProductByEquivalentUseCase,
+        private readonly AttachProductsToEquivalentUseCase $attachProductsToEquivalentUseCase,
+        private readonly DetachProductsFromEquivalentUseCase $detachProductsFromEquivalentUseCase,
+        private readonly AssignProductsToEquivalentUseCase $assignProductsToEquivalentUseCase,
+    )
     {
-        $this->service = $service;
-        $this->repository = $repository;
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request, UserPermission $userPermission): Response
     {
-        $equivalents = $this->repository->getIndex($request, $filters);
+        $filters = FilterEquivalentIndexData::validateAndCreate($request->all());
+        $equivalents = $this->indexEquivalentQuery->execute($filters, $userPermission);
+
         return Inertia::render('Catalog/Equivalent/Index', [
             'equivalents' => $equivalents,
             'filters' => $filters,
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string',
-            'category_id' => 'integer|exists:categories,id',
-        ]);
-        try {
-            $equivalent = $this->service->register($request);
-            return redirect()->route('admin.catalog.equivalent.show', $equivalent)->with('success', 'Группа создана');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $dto = EquivalentCreateData::validateAndCreate($request->all());
+        $equivalent = $this->createEquivalentUseCase->execute($dto, $userPermission);
+
+        return redirect()->route('admin.catalog.equivalent.show', $equivalent->id)->with('success', 'Группа создана');
     }
 
-    public function show(Equivalent $equivalent): Response
+    public function show(int $id, UserPermission $userPermission): Response
     {
+        $equivalent = $this->viewEquivalentQuery->execute($id, $userPermission);
+
         return Inertia::render('Catalog/Equivalent/Show', [
-            'equivalent' => $this->repository->EquivalentWithToArray($equivalent),
+            'equivalent' => EquivalentViewData::fromEntity($equivalent),
         ]);
     }
 
-
-    public function add_product(Request $request, Equivalent $equivalent): RedirectResponse
+    public function update(int $id, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $request->validate([
-            'product_id' => 'required|integer',
-        ]);
-        try {
-            $this->service->addProductByIds($equivalent->id, (int)$request['product_id']);
-            return redirect()->back()->with('success', 'Товар добавлен в группу');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $dto = EquivalentUpdateData::validateAndCreate($request->all());
+        $equivalent = $this->updateEquivalentUseCase->execute($id, $dto, $userPermission);
+
+        return redirect()->route('admin.catalog.equivalent.show', $equivalent->id)->with('success', 'Сохранено');
     }
 
-    public function del_product(Equivalent $equivalent, Request $request): RedirectResponse
+    public function destroy(int $id, UserPermission $userPermission): RedirectResponse
     {
-        try {
-            $this->service->delProductByIds($equivalent->id, $request->integer('product_id'));
-            return redirect()->back()->with('success', 'Товар удален из группы');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->removeEquivalentUseCase->execute($id, $userPermission);
+
+        return redirect()->back()->with('success', 'Группа удалена');
     }
 
-    public function rename(Request $request, Equivalent $equivalent): RedirectResponse
+    /**
+     * Список товаров группы аналогов (для TableRelation).
+     * GET /admin/catalog/equivalent/{id}/products
+     */
+    public function products(int $id, Request $request): JsonResponse
     {
-        try {
-            $this->service->rename($request, $equivalent);
-            return redirect()->back()->with('success', 'Переименовано');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $page = $request->integer('page', 1);
+        $perPage = $request->integer('per_page', 15);
+
+        $list = $this->listProductByEquivalentUseCase->execute($id, $perPage, $page);
+
+        return response()->json($list, SymfonyResponse::HTTP_OK);
     }
 
-    public function destroy(Equivalent $equivalent): RedirectResponse
+    /**
+     * Назначить товары группе аналогов (sync — заменяет весь набор).
+     * POST /admin/catalog/equivalent/{id}/products/sync
+     */
+    public function assignProducts(int $id, Request $request, UserPermission $userPermission): JsonResponse
     {
-        try {
-            $this->service->delete($equivalent);
-            return redirect()->back()->with('success', 'Группа удалена');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $productIds = $request->input('products', []);
+
+        $this->assignProductsToEquivalentUseCase->execute($id, $productIds, $userPermission);
+
+        return response()->json(['message' => 'Товары назначены'], SymfonyResponse::HTTP_OK);
     }
 
-    public function search(Equivalent $equivalent, Request $request): JsonResponse
+    /**
+     * Добавить товары к группе аналогов (attach — дополняет существующие).
+     * POST /admin/catalog/equivalent/{id}/products/attach
+     */
+    public function attachProducts(int $id, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        try {
-            $products = $this->repository->search($equivalent, $request);
-            return \response()->json($products);
-        } catch (\Throwable $e) {
-            return \response()->json(['error' => $e->getMessage()]);
+        $productIds = [];
+
+        if ($request->has('product_id')) {
+            $productIds[] = $request->integer('product_id');
+        } else {
+            $data = $request->input('products', []);
+            if (count($data) === 0) {
+                throw new \DomainException('Нет данных');
+            }
+
+            if (is_array($data[0])) {
+                foreach ($data as $item) {
+                    $productIds[] = $item['product_id'];
+                }
+            } else {
+                $productIds = $data;
+            }
         }
+
+        $this->attachProductsToEquivalentUseCase->execute($id, $productIds, $userPermission);
+
+        return redirect()->back()->with('success', 'Товары добавлены');
     }
 
-    //AJAX
-    public function json_products(Equivalent $equivalent)
+    /**
+     * Отвязать товары от группы аналогов.
+     * DELETE /admin/catalog/equivalent/{id}/products/detach
+     */
+    public function detachProducts(int $id, Request $request, UserPermission $userPermission): JsonResponse
     {
-        $result = [];
-        foreach ($equivalent->products as $product) {
-            $result[] = $product->name;
-        }
-        return \response()->json($result);
-    }
+        $productIds = $request->input('products', []);
 
+        $this->detachProductsFromEquivalentUseCase->execute($id, $productIds, $userPermission);
+
+        return response()->json(['message' => 'Товары откреплены'], SymfonyResponse::HTTP_OK);
+    }
 }

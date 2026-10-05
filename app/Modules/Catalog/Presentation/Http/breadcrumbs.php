@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 use App\Modules\Catalog\Entity\Modification;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
-use App\Modules\Catalog\Infrastructure\Models\Equivalent;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -132,9 +131,11 @@ Breadcrumbs::for('admin.catalog.equivalent.index', function (BreadcrumbTrail $tr
     $trail->parent('admin.catalog.product.index');
     $trail->push('Аналоги', route('admin.catalog.equivalent.index'));
 });
-Breadcrumbs::for('admin.catalog.equivalent.show', function (BreadcrumbTrail $trail, Equivalent $equivalent) {
+Breadcrumbs::for('admin.catalog.equivalent.show', function (BreadcrumbTrail $trail, int|string $id) {
+    $equivalentRepository = app(\App\Modules\Catalog\Domain\Interfaces\EquivalentRepositoryInterface::class);
+    $equivalent = $equivalentRepository->getById((int) $id);
     $trail->parent('admin.catalog.equivalent.index');
-    $trail->push($equivalent->name, route('admin.catalog.equivalent.show', $equivalent));
+    $trail->push($equivalent->name, route('admin.catalog.equivalent.show', $equivalent->id));
 });
 
 //GROUP

@@ -109,11 +109,11 @@ Route::group([
         'prefix' => 'equivalent',
         'as' => 'equivalent.',
     ], function () {
-        Route::post('/rename/{equivalent}', [EquivalentController::class, 'rename'])->name('rename');
-        Route::post('/add-product/{equivalent}', [EquivalentController::class, 'add_product'])->name('add-product');
-        Route::delete('/del-product/{equivalent}', [EquivalentController::class, 'del_product'])->name('del-product');
-        Route::post('/json-products/{equivalent}', [EquivalentController::class, 'json_products'])->name('json-products');
-        Route::post('/search/{equivalent}', [EquivalentController::class, 'search'])->name('search');
+        // Связь Equivalent → Products (через pivot)
+        Route::get('/{id}/products', [EquivalentController::class, 'products'])->name('products');
+        Route::post('/{id}/products/sync', [EquivalentController::class, 'assignProducts'])->name('products.sync');
+        Route::post('/{id}/products/attach', [EquivalentController::class, 'attachProducts'])->name('products.attach');
+        Route::delete('/{id}/products/detach', [EquivalentController::class, 'detachProducts'])->name('products.detach');
     });
     //Группа товаров
     Route::group([
@@ -189,7 +189,7 @@ Route::group([
     Route::resource('brand', BrandController::class)->parameters(['brand' => 'id']); //CRUD
 
     Route::resource('attribute', AttributeController::class); //CRUD
-    Route::resource('equivalent', EquivalentController::class); //CRUD
+    Route::resource('equivalent', EquivalentController::class)->parameters(['equivalent' => 'id']); //CRUD
     Route::resource('group', GroupController::class)->except(['create', 'edit']); //CRUD
     Route::resource('modification', ModificationController::class); //CRUD
     Route::resource('series', SeriesController::class)->except(['create', 'edit'])->parameters(['series' => 'id']); //CRUD

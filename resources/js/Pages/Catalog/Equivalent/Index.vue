@@ -11,8 +11,8 @@
                     </el-button>
                 </template>
                 <el-input v-model="form.name" placeholder="Название"/>
-                <el-select v-model="form.category_id" placeholder="Категория" class="mt-1" filterable>
-                    <el-option v-for="item in useCatalog.categories" :value="item.id" :label="item.name" />
+                <el-select v-model="form.categoryId" placeholder="Категория" class="mt-1" filterable clearable>
+                    <el-option v-for="item in useCatalog.categories" :value="item.id" :label="item.name" :key="item.id" />
                 </el-select>
                 <div class="mt-2">
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
@@ -22,7 +22,7 @@
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-input v-model="filter.product" placeholder="Товар" class="mt-1"/>
                 <el-input v-model="filter.name" placeholder="Группа" class="mt-1"/>
-                <el-select v-model="filter.room" placeholder="Категория" class="mt-1">
+                <el-select v-model="filter.category" placeholder="Категория" class="mt-1" clearable>
                     <el-option v-for="item in useCatalog.categories" :value="item.id" :label="item.name" :key="item.id" />
                 </el-select>
             </TableFilter>
@@ -33,15 +33,10 @@
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
-                :row-class-name="classes.TableCompleted"
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
-                <el-table-column prop="name" label="Название Группы">
-                    <template #default="scope">
-                        <EditField :field="scope.row.name" @update:field="val => onSetName(val, scope.row.id)"/>
-                    </template>
-                </el-table-column>
+                <el-table-column prop="name" label="Название Группы" show-overflow-tooltip/>
                 <el-table-column prop="category" label="Категория"/>
                 <el-table-column prop="quantity" label="Кол-во товаров" />
                 <el-table-column label="Действия" align="right">
@@ -64,7 +59,7 @@
         />
 
     </el-config-provider>
-    <DeleteEntityModal name_entity="Бренд" />
+    <DeleteEntityModal name_entity="Группу аналогов" />
 </template>
 <script lang="ts" setup>
 import {inject, reactive, ref, defineProps} from "vue";
@@ -72,11 +67,7 @@ import {Head, router} from '@inertiajs/vue3'
 import Pagination from '@Comp/Pagination.vue'
 import {useStore} from "@Res/store.js"
 import TableFilter from '@Comp/TableFilter.vue'
-import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
-import Active from '@Comp/Elements/Active.vue'
-import EditField from "@Comp/Elements/EditField.vue";
-import {classes} from "@Res/className"
 import {useCatalogStore} from "@Res/catalogStore.ts";
 
 const useCatalog = useCatalogStore()
@@ -87,7 +78,7 @@ const props = defineProps({
         type: String,
         default: 'Группы аналогов',
     },
-    filters: Array,
+    filters: Object,
 })
 const store = useStore();
 const visible_create = ref(false)
@@ -96,28 +87,20 @@ const tableData = ref([...props.equivalents.data])
 const filter = reactive({
     name: props.filters.name,
     product: props.filters.product,
-    room: props.filters.room,
+    category: props.filters.category,
 })
 
 const form = reactive({
     name: null,
-    category_id: null,
+    categoryId: null,
 })
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.catalog.equivalent.destroy', {equivalent: row.id}));
+    $delete_entity.show(route('admin.catalog.equivalent.destroy', {id: row.id}));
 }
 function createButton() {
     router.post(route('admin.catalog.equivalent.store', form))
 }
 function routeClick(row) {
-    router.get(route('admin.catalog.equivalent.show', {equivalent: row.id}))
-}
-function onSetName(val, id) {
-    router.visit(route('admin.catalog.equivalent.rename', {equivalent: id, name: val}), {
-        method: "post",
-        preserveScroll: true,
-        preserveState: false,
-    })
+    router.get(route('admin.catalog.equivalent.show', {id: row.id}))
 }
 </script>
-
