@@ -1,15 +1,20 @@
 <?php
 
-namespace App\Modules\Catalog\Controllers;
+namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Catalog\Application\Actions\Group\CreateGroupUseCase;
+use App\Modules\Catalog\Application\Actions\Group\IndexGroupQuery;
 use App\Modules\Catalog\Application\Actions\Group\ListGroupUseCase;
+use App\Modules\Catalog\Application\DTOs\Group\FilterGroupIndexData;
+use App\Modules\Catalog\Application\DTOs\Group\GroupCreateData;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Repository\GroupRepository;
 use App\Modules\Catalog\Service\GroupService;
 use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,28 +31,31 @@ class GroupController extends Controller
         GroupRepository $repository,
         private readonly ListGroupUseCase $listGroupUseCase,
         private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
+        private readonly IndexGroupQuery $indexGroupQuery,
+        private readonly CreateGroupUseCase $createGroupUseCase,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
     }
 
-    public function index(Request $request)
+    public function index(Request $request, UserPermission $userPermission)
     {
-        $groups = $this->repository->getIndex($request, $filters);
+        $filterDto = FilterGroupIndexData::validateAndCreate($request->all());
+        $groups = $this->indexGroupQuery->execute($filterDto, $userPermission);
+
         return Inertia::render('Catalog/Group/Index', [
             'groups' => $groups,
-            'filters' => $filters,
+            'filters' => $filterDto,
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string'
-        ]);
-        $group = $this->service->create($request);
-        return redirect()->route('admin.catalog.group.show', $group)->with('success', 'Группа создана');
+        $dto = GroupCreateData::validateAndCreate($request->all());
+        $group = $this->createGroupUseCase->execute($dto, $userPermission);
+
+        return redirect()->route('admin.catalog.group.show', $group->id)->with('success', 'Группа создана');
     }
 
     public function show(Group $group, Request $request): Response

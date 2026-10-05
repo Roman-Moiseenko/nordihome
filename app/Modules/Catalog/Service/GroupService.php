@@ -9,13 +9,6 @@ use Illuminate\Support\Str;
 
 class GroupService
 {
-    public function create(Request $request): Group
-    {
-        return Group::register(
-            name: $request->string('name')->trim()->value()
-        );
-    }
-
     public function addProduct(Group $group, int $product_id): void
     {
         if ($group->isProduct($product_id)) throw new \DomainException('Товар уже добавлен в группу');

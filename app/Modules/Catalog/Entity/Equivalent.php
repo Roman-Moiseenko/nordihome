@@ -43,16 +43,6 @@ class Equivalent extends Model
         return $this->belongsToMany(Product::class, 'equivalents_products', 'equivalent_id', 'product_id');
     }
 
-    public function getCrumbsCategory(): string
-    {
-        $result = '';
-        $categories = $this->category->getParentAll();
-        foreach ($categories as $category) {
-            $result = $result . '/' . $category->name;
-        }
-        return $result;
-    }
-
     public function isProduct($id): bool
     {
         foreach ($this->products as $product) {
