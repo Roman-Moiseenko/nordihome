@@ -37,6 +37,7 @@ class GroupRepository implements GroupRepositoryInterface
     public function getAll(): array
     {
         return Group::orderBy('name')
+            ->get()
             ->map(fn(Group $model) => $this->hydrate($model))
             ->toArray();
     }
@@ -66,6 +67,11 @@ class GroupRepository implements GroupRepositoryInterface
         $model->save();
 
         return $this->hydrate($model->fresh()->loadCount('products'));
+    }
+
+    public function delete(int $id): void
+    {
+        Group::findOrFail($id)->delete();
     }
 
     public function existsSlug(string $slug, ?int $excludeId = null): bool

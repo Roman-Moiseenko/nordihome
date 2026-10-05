@@ -13,6 +13,7 @@ use App\Modules\Catalog\Controllers\TagController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomProductController;
 use Illuminate\Support\Facades\Route;
@@ -21,7 +22,7 @@ Route::group([
     'middleware' => 'role:admin|staff',
     'prefix' => 'admin/catalog',
     'as' => 'admin.catalog.',
-],    function () {
+], function () {
 
     Route::post('/action', [ProductController::class, 'action'])->name('action');
     Route::post('/upload', [ProductController::class, 'upload'])->name('product.upload');
@@ -66,6 +67,7 @@ Route::group([
         Route::get('/products/{id}', [CategoryController::class, 'products'])->name('products');
         Route::get('/attributes/{id}', [CategoryController::class, 'attributes'])->name('attributes');
         // Связь Category → Products (через pivot)
+        Route::get('/{id}/products/second', [CategoryProductController::class, 'categoryProducts'])->name('products.second');
         Route::post('/{id}/products/sync', [CategoryProductController::class, 'assignCategoryProducts'])->name('products.sync');
         Route::post('/{id}/products/attach', [CategoryProductController::class, 'attachCategoryProducts'])->name('products.attach');
         Route::delete('/{id}/products/detach', [CategoryProductController::class, 'detachCategoryProducts'])->name('products.detach');
@@ -118,12 +120,13 @@ Route::group([
         'as' => 'group.',
     ], function () {
         Route::get('/list', [GroupController::class, 'list'])->name('list');
+        //Route::post('/search/{group}', [GroupController::class, 'search'])->name('search');
 
-        Route::post('/add-products/{group}', [GroupController::class, 'add_products'])->name('add-products');
-        Route::post('/add-product/{group}', [GroupController::class, 'add_product'])->name('add-product');
-        Route::post('/set-info/{group}', [GroupController::class, 'set_info'])->name('set-info');
-        Route::delete('/del-product/{group}', [GroupController::class, 'del_product'])->name('del-product');
-        Route::post('/search/{group}', [GroupController::class, 'search'])->name('search');
+        // Связь Group → Products (через pivot)
+        Route::get('/{id}/products', [GroupProductController::class, 'groupProducts'])->name('products');
+        Route::post('/{id}/products/sync', [GroupProductController::class, 'assignGroupProducts'])->name('products.sync');
+        Route::post('/{id}/products/attach', [GroupProductController::class, 'attachGroupProducts'])->name('products.attach');
+        Route::delete('/{id}/products/detach', [GroupProductController::class, 'detachGroupProducts'])->name('products.detach');
     });
     //Серия товаров
     Route::group([
@@ -186,7 +189,7 @@ Route::group([
 
     Route::resource('attribute', AttributeController::class); //CRUD
     Route::resource('equivalent', EquivalentController::class); //CRUD
-    Route::resource('group', GroupController::class)->except(['create', 'edit', 'update']); //CRUD
+    Route::resource('group', GroupController::class)->except(['create', 'edit']); //CRUD
     Route::resource('modification', ModificationController::class); //CRUD
     Route::resource('series', SeriesController::class)->except(['create', 'edit']); //CRUD
 
@@ -217,7 +220,6 @@ Route::group([
         Route::post('/{id}/category/sync', [CategoryProductController::class, 'assignProductCategories'])->name('categories.sync');
         Route::post('/{id}/category/attach', [CategoryProductController::class, 'attachProductCategories'])->name('categories.attach');
         Route::delete('/{id}/category/detach', [CategoryProductController::class, 'detachProductCategories'])->name('categories.detach');
-
 
 
         Route::group([

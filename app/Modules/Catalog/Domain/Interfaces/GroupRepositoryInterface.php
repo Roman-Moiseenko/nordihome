@@ -21,6 +21,8 @@ interface GroupRepositoryInterface
 
     public function save(GroupEntity $group): GroupEntity;
 
+    public function delete(int $id): void;
+
     public function existsSlug(string $slug, ?int $excludeId = null): bool;
 
     /**

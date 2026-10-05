@@ -1,15 +1,13 @@
 <template>
+    <el-form label-width="auto">
     <el-row :gutter="10">
         <el-col :span="4">
             <el-tooltip content="Изображение для каталога" placement="top-start" effect="dark">
                 <PhotoDTO model-type="catalog.room" :entity-id="room.id" type="image"/>
             </el-tooltip>
-            <el-tooltip content="Иконка для меню" placement="top-start" effect="dark">
-                <PhotoDTO model-type="catalog.room" :entity-id="room.id" type="icon"/>
-            </el-tooltip>
         </el-col>
-        <el-col :span="9">
-            <el-form label-width="auto">
+        <el-col :span="10">
+
                 <el-form-item label="Родительская комната">
                     <el-select v-model="info.parentId">
                         <template v-for="item in useCatalog.rooms" :key="item.id">
@@ -24,38 +22,26 @@
                     <el-input v-model="info.slug" clearable/>
                 </el-form-item>
                 <el-form-item label="SVG">
-                    <el-input v-model="info.svgIcon" clearable type="textarea" :rows="3"/>
-                </el-form-item>
-                <el-form-item label="Meta-Title">
-                    <el-input v-model="info.metaTitle"/>
-                </el-form-item>
-                <el-form-item label="Meta-Description">
-                    <el-input v-model="info.metaDescription" type="textarea" :rows="5"/>
+                    <el-input v-model="info.svgIcon" clearable type="textarea" :rows="1"/>
                 </el-form-item>
 
-                <el-button v-if="hasChanges" type="info" @click="onCancel" style="margin-left: 4px">
-                    Отмена
-                </el-button>
-                <el-button v-if="hasChanges" type="success" @click="onSetInfo">
-                    Сохранить
-                </el-button>
-            </el-form>
         </el-col>
-        <el-col :span="1"></el-col>
-        <el-col :span="8">
-            <HelpBlock>
-                <p><b>Название комнаты</b> является обязательным полем.</p>
-                <p>Поле <b>Slug</b> (ссылка на категорию) можно не заполнять, тогда оно заполнится автоматически. При
-                    заполнении использовать латинский алфавит.</p>
-                <p>Рекомендуемое разрешение для <b>картинок</b> в карточку категории 700х700.</p>
-                <p><b>Иконки</b> для меню рекомендуется сохранять в форматах разрешающие прозрачный цвет - png, svg.
-                    Разрешение не более 200х200.</p>
-                <p>Поля <b>Meta</b> используются в SEO. Для того, чтоб они заполнялись автоматически, оставьте их
-                    пустыми.</p>
-            </HelpBlock>
+        <el-col :span="10">
+            <el-form-item label="Meta-Title">
+                <el-input v-model="info.metaTitle"/>
+            </el-form-item>
+            <el-form-item label="Meta-Description">
+                <el-input v-model="info.metaDescription" type="textarea" :rows="5"/>
+            </el-form-item>
         </el-col>
     </el-row>
-
+    <el-button v-if="hasChanges" type="info" @click="onCancel" style="margin-left: 4px">
+        Отмена
+    </el-button>
+    <el-button v-if="hasChanges" type="success" @click="onSetInfo">
+        Сохранить
+    </el-button>
+    </el-form>
 
 </template>
 

@@ -41,24 +41,26 @@ const props = defineProps({
     group: Object,
 })
 
-// --- Исходные данные из пропсов (эталон для отмены) ---
-const initialInfo = {
+// --- Исходные данные из пропсов (эталон для отмены и сравнения) ---
+const initialInfo = reactive({
     name: props.group.name,
     slug: props.group.slug ?? '',
     description: props.group.description ?? '',
     published: !!props.group.published,
-}
+})
 
-const info = reactive({...initialInfo})
+const info = reactive({
+    name: initialInfo.name,
+    slug: initialInfo.slug,
+    description: initialInfo.description,
+    published: initialInfo.published,
+})
 
 // --- Отслеживание изменений ---
 const hasChanges = computed(() => {
-    for (const key of Object.keys(initialInfo)) {
-        const a = JSON.stringify(info[key])
-        const b = JSON.stringify(initialInfo[key])
-        if (a !== b) return true
-    }
-    return false
+    return ['name', 'slug', 'description', 'published'].some(
+        key => JSON.stringify(info[key]) !== JSON.stringify(initialInfo[key])
+    )
 })
 
 function onCancel() {
@@ -67,10 +69,13 @@ function onCancel() {
 
 function onSetInfo() {
     router.visit(
-        route('admin.catalog.group.set-info', {group: props.group.id}), {
-            method: "post",
+        route('admin.catalog.group.update', {id: props.group.id}), {
+            method: "put",
             data: {...info},
-            onSuccess: page => {
+            preserveState: true,
+            preserveScroll: true,
+            onSuccess: () => {
+                // Обновляем эталон реактивно — кнопки "Сохранить"/"Отмена" скроются
                 Object.assign(initialInfo, JSON.parse(JSON.stringify(info)))
             }
         }

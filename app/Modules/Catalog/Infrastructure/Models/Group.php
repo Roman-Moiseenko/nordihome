@@ -36,29 +36,12 @@ class Group extends Model
         'meta' => 'array',
     ];
 
-    public static function register(string $name, string $description = '', string $slug = '', bool $published = false): static
-    {
-        return static::create([
-            'name' => $name,
-            'description' => $description,
-            'slug' => empty($slug) ? Str::slug($name) : $slug,
-            'published' => $published,
-        ]);
-    }
 
     public function products(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'groups_products', 'group_id', 'product_id');
     }
 
-
-    public function isProduct(int $id): bool
-    {
-        foreach ($this->products as $product) {
-            if ($product->id == $id) return true;
-        }
-        return false;
-    }
 
     public function scopeActive($query)
     {

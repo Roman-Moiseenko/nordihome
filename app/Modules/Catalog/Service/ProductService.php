@@ -37,7 +37,7 @@ class ProductService
     private StorageService $storageService;
     private Common $common_set;
     private Parser $parser_set;
-    private GroupService $groupService;
+
 
 
     public function __construct(
@@ -47,7 +47,7 @@ class ProductService
         SeriesService     $seriesService,
         StorageService    $storageService,
         Settings          $settings,
-        GroupService      $groupService,
+
     )
     {
         //Конфигурация
@@ -57,10 +57,8 @@ class ProductService
         $this->equivalentService = $equivalentService;
         $this->seriesService = $seriesService;
         $this->storageService = $storageService;
-
         $this->common_set = $settings->common;
         $this->parser_set = $settings->parser;
-        $this->groupService = $groupService;
     }
 
 

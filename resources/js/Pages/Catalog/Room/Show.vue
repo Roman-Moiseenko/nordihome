@@ -1,13 +1,31 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl">Комната {{ room.name }}</h1>
+        <div class="flex">
+            <h1 class="font-medium text-xl">Комната {{ room.name }}</h1>
+            <el-tooltip content="Помощь" placement="bottom-start" effect="dark">
+                <el-button circle class="ml-2" @click="showHelp = !showHelp">
+                    <i class="fa-light fa-lightbulb-on text-orange-500"></i>
+                </el-button>
+            </el-tooltip>
+        </div>
         <div class="p-5 bg-white rounded-md">
-            <RoomInfo :room="room" />
+            <RoomInfo :room="room"/>
+            <HelpBlock v-if="showHelp">
+                <p><b>Название комнаты</b> является обязательным полем.</p>
+                <p>Поле <b>Slug</b> (ссылка на категорию) можно не заполнять, тогда оно заполнится автоматически. При
+                    заполнении использовать латинский алфавит.</p>
+                <p>Рекомендуемое разрешение для <b>картинок</b> в карточку категории 700х700.</p>
+                <p><b>Иконки</b> для меню рекомендуется сохранять в форматах разрешающие прозрачный цвет - png, svg.
+                    Разрешение не более 200х200.</p>
+                <p>Поля <b>Meta</b> используются в SEO. Для того, чтоб они заполнялись автоматически, оставьте их
+                    пустыми.</p>
+            </HelpBlock>
+
         </div>
         <el-tabs>
-            <PanelChildren :room="room" />
-            <PanelProducts :room-id="room.id" />
+            <PanelChildren :room="room"/>
+            <PanelProducts :room-id="room.id"/>
             <PanelBlocks :blocks="blocks || []" :room-id="room.id"/>
         </el-tabs>
 
@@ -24,6 +42,7 @@ import RoomInfo from "./Block/Info.vue";
 import PanelChildren from "./Panels/Children.vue";
 import PanelProducts from "./Panels/Products.vue";
 import PanelBlocks from "./Panels/Blocks.vue";
+import HelpBlock from "@Comp/HelpBlock.vue";
 
 const props = defineProps({
     room: Object,
@@ -33,6 +52,8 @@ const props = defineProps({
     },
     blocks: Array,
 })
+const showHelp = ref(false);
+
 </script>
 
 <style scoped>

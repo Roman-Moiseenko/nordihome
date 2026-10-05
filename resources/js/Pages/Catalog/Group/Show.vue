@@ -22,7 +22,7 @@
         </div>
 
         <el-tabs>
-            <PanelProducts :group="group" />
+            <PanelProducts :group-id="group.id" />
             <PanelBlocks :blocks="blocks || []" :group-id="group.id"/>
         </el-tabs>
     </el-config-provider>

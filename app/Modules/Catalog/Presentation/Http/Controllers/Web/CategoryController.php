@@ -52,7 +52,6 @@ class CategoryController extends Controller
     {
     }
 
-
     public function index(UserPermission $userPermission): Response
     {
         $categories = $this->indexCategoryUseCase->execute($userPermission);
@@ -125,6 +124,7 @@ class CategoryController extends Controller
         $categories = $this->treeCategoryUseCase->execute();
         return response()->json(CategoryTreeData::fromEntityArray($categories), SymfonyResponse::HTTP_OK);
     }
+
 
     public function products(int $id, Request $request): JsonResponse
     {

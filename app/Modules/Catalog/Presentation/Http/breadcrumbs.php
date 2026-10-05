@@ -143,7 +143,8 @@ Breadcrumbs::for('admin.catalog.group.index', function (BreadcrumbTrail $trail) 
     $trail->push('Группы', route('admin.catalog.group.index'));
 });
 
-Breadcrumbs::for('admin.catalog.group.show', function (BreadcrumbTrail $trail, Group $group) {
+Breadcrumbs::for('admin.catalog.group.show', function (BreadcrumbTrail $trail, int $id) {
+    $group = Group::find($id);
     $trail->parent('admin.catalog.group.index');
     $trail->push($group->name, route('admin.catalog.group.show', $group));
 });

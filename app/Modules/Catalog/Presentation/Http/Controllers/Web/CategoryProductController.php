@@ -47,6 +47,7 @@ readonly class CategoryProductController
 
         $list = $this->listProductByCategoryUseCase->execute($id, $perPage, $page);
 
+
         return response()->json($list, Response::HTTP_OK);
     }
 

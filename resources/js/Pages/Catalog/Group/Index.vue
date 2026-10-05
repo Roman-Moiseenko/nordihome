@@ -40,7 +40,7 @@
                 <el-table-column prop="description" label="Описание" show-overflow-tooltip/>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        <el-button v-if="!scope.row.completed"
+                        <el-button v-if="!scope.row.published"
                             size="small"
                             type="danger"
                             @click.stop="handleDeleteEntity(scope.row)"
@@ -92,13 +92,13 @@ const new_group = ref('')
 
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.catalog.group.destroy', {group: row.id}));
+    $delete_entity.show(route('admin.catalog.group.destroy', {id: row.id}));
 }
 function createButton() {
     router.post(route('admin.catalog.group.store', {name: new_group.value}))
 }
 function routeClick(row) {
-    router.get(route('admin.catalog.group.show', {group: row.id}))
+    router.get(route('admin.catalog.group.show', {id: row.id}))
 }
 </script>
 
