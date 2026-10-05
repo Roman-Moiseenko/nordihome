@@ -54,7 +54,6 @@ class ProductRepository
     private function ProductToArray(Product $product): array
     {
         return array_merge($product->toArray(), [
-            'image' => GetPhotoStatic::gallery('catalog.product', $product->id, 'mini'),
             'category_name' => $product->category->getParentNames(),
             'price' => $product->getPriceRetail(),
             'bulk' => $product->getPriceBulk(),

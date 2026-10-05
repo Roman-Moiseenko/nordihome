@@ -45,7 +45,7 @@
                 <el-table-column type="selection" width="55"/>
                 <el-table-column prop="image" label="IMG" width="60">
                     <template #default="scope">
-                        <img :src="scope.row.image" style="width: 100%">
+                        <img v-if="scope.row.image" :src="scope.row.image" style="width: 100%">
                     </template>
                 </el-table-column>
                 <el-table-column prop="code" label="Артикул" width="120"/>
@@ -132,8 +132,9 @@ import Active from "@Comp/Elements/Active.vue";
 import Pagination from "@Comp/Pagination.vue";
 import TableFilter from "@Comp/TableFilter.vue";
 import {Head, Link, router} from "@inertiajs/vue3";
-import {defineProps, inject, reactive, ref} from "vue";
+import {defineProps, inject, onMounted, reactive, ref} from "vue";
 import {route} from "ziggy-js";
+import axios from "axios";
 import SelectActions from "./SelectActions.vue";
 import {ElLoading} from "element-plus";
 import {useCatalogStore} from "@Res/catalogStore.ts";
@@ -157,6 +158,28 @@ const filter = reactive({
     name: props.filters.name,
     room: props.filters.room,
     show: props.filters.show,
+})
+
+function loadImages() {
+    const ids = tableData.value.map((p: any) => p.id)
+    if (ids.length === 0) return
+
+    axios.get(route('admin.photo.get-by-ids'), {
+        params: {
+            imageableIds: ids,
+            modelType: 'catalog.product',
+            type: 'gallery',
+        }
+    }).then(photoResponse => {
+        tableData.value = tableData.value.map((product: any) => ({
+            ...product,
+            image: photoResponse.data[product.id] || null,
+        }))
+    })
+}
+
+onMounted(() => {
+    loadImages()
 })
 
 
@@ -220,6 +243,7 @@ function onPublishedToggle(row) {
         preserveScroll: true,
         onSuccess: page => {
             tableData.value = [...page.props.products.data]
+            loadImages()
         }
     })
 }
