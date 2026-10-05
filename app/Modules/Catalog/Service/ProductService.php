@@ -185,33 +185,6 @@ class ProductService
             }
             $product->main_category_id = $request->integer('category_id');
             $product->brand_id = $request->integer('brand_id');
-            //Проверить изменения в списке категорий
-            /*           $array_old = [];
-                       $array_new = $request['categories'] ?? null;
-
-
-                       foreach ($product->categories as $category) $array_old[] = $category->id;
-                       foreach ($array_old as $key => $item) {
-                           if (!is_null($array_new) && in_array($item, $array_new)) {
-                               $key_new = array_search($item, $array_new);
-                               unset($array_old[$key]);
-                               unset($array_new[$key_new]);
-                           }
-                       }
-                       if (!empty($array_old)) { //Список категорий, которые надо удалить
-                           $update_attributes = true;
-                           foreach ($array_old as $item) {
-                               $product->categories()->detach((int)$item);
-                           }
-                       }
-                       if (!is_null($array_new)) {//Список категорий, которые надо добавить
-                           $update_attributes = true;
-                           foreach ($array_new as $item) {
-                               $product->categories()->attach((int)$item);
-                           }
-                       }
-           */
-
             $product->comment = $request->string('comment')->trim()->value();
             $product->country_id = $request->input('country_id');
             $product->vat_id = $request->integer('vat_id');

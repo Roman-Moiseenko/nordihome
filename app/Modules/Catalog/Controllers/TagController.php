@@ -13,9 +13,6 @@ use App\Modules\Catalog\Application\Actions\Tag\ViewTagUseCase;
 use App\Modules\Catalog\Application\DTOs\Tag\TagCreateData;
 use App\Modules\Catalog\Application\DTOs\Tag\TagUpdateData;
 use App\Modules\Catalog\Application\DTOs\Tag\TagViewData;
-use App\Modules\Catalog\Infrastructure\Models\Tag;
-use App\Modules\Catalog\Repository\TagRepository;
-use App\Modules\Catalog\Service\TagService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -25,12 +22,8 @@ use Inertia\Response;
 
 class TagController extends Controller
 {
-    private TagService $service;
-    private TagRepository $repository;
 
     public function __construct(
-        TagService                        $service,
-        TagRepository                     $repository,
         private readonly IndexTagQuery    $indexTagUseCase,
         private readonly CreateTagUseCase $createTagUseCase,
         private readonly UpdateTagUseCase $updateTagUseCase,
@@ -39,8 +32,6 @@ class TagController extends Controller
         private readonly ListTagsQuery $listTagsQuery,
     )
     {
-        $this->service = $service;
-        $this->repository = $repository;
     }
 
     public function index(Request $request, UserPermission $userPermission): Response
