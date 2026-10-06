@@ -57,12 +57,9 @@ class AttributeController extends Controller
     {
         $dto = AttributeCreateData::validateAndCreate($request->all());
 
-        try {
-            $attribute = $this->createAttributeUseCase->execute($dto, $userPermission);
-            return redirect()->route('admin.catalog.attribute.show', $attribute->id)->with('success', 'Атрибут создан');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $attribute = $this->createAttributeUseCase->execute($dto, $userPermission);
+        return redirect()->route('admin.catalog.attribute.show', $attribute->id)->with('success', 'Атрибут создан');
+
     }
 
     public function show(int $id): Response
@@ -76,22 +73,15 @@ class AttributeController extends Controller
     {
         $dto = AttributeUpdateData::validateAndCreate($request->all());
 
-        try {
-            $this->updateAttributeUseCase->execute($id, $dto, $userPermission);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->updateAttributeUseCase->execute($id, $dto, $userPermission);
+        return redirect()->back()->with('success', 'Сохранено');
+
     }
 
     public function destroy(int $id, UserPermission $userPermission): RedirectResponse
     {
-        try {
-            $this->removeAttributeUseCase->execute($id, $userPermission);
-            return redirect()->back()->with('success', 'Атрибут удален');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->removeAttributeUseCase->execute($id, $userPermission);
+        return redirect()->back()->with('success', 'Атрибут удален');
     }
 
     /*
