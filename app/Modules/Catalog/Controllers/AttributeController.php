@@ -7,7 +7,10 @@ use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Application\Actions\Attribute\CreateAttributeUseCase;
 use App\Modules\Catalog\Application\Actions\Attribute\IndexAttributeQuery;
 use App\Modules\Catalog\Application\Actions\Attribute\ListAttributeGroupQuery;
+use App\Modules\Catalog\Application\Actions\Attribute\RemoveAttributeUseCase;
+use App\Modules\Catalog\Application\Actions\Attribute\UpdateAttributeUseCase;
 use App\Modules\Catalog\Application\DTOs\Attribute\AttributeCreateData;
+use App\Modules\Catalog\Application\DTOs\Attribute\AttributeUpdateData;
 use App\Modules\Catalog\Application\DTOs\Attribute\FilterAttributeIndexData;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Repository\AttributeRepository;
@@ -27,11 +30,13 @@ class AttributeController extends Controller
 
 
     public function __construct(
-        AttributeService         $service,
-        AttributeRepository      $repository,
+        AttributeService                         $service,
+        AttributeRepository                      $repository,
         private readonly ListAttributeGroupQuery $listAttributeGroupQuery,
-        private readonly IndexAttributeQuery $indexAttributeQuery,
-        private readonly CreateAttributeUseCase $createAttributeUseCase,
+        private readonly IndexAttributeQuery     $indexAttributeQuery,
+        private readonly CreateAttributeUseCase  $createAttributeUseCase,
+        private readonly UpdateAttributeUseCase  $updateAttributeUseCase,
+        private readonly RemoveAttributeUseCase  $removeAttributeUseCase,
     )
     {
         $this->service = $service;
@@ -60,27 +65,29 @@ class AttributeController extends Controller
         }
     }
 
-    public function show(Attribute $attribute): Response
+    public function show(int $id): Response
     {
         return Inertia::render('Catalog/Attribute/Show', [
-            'attribute' => $this->repository->AttributeWithToArray($attribute),
+            'attribute' => $this->repository->AttributeWithToArray(Attribute::findOrFail($id)),
         ]);
     }
 
-    public function set_info(Request $request, Attribute $attribute): RedirectResponse
+    public function update(int $id, Request $request, UserPermission $userPermission): RedirectResponse
     {
+        $dto = AttributeUpdateData::validateAndCreate($request->all());
+
         try {
-            $this->service->setInfo($request, $attribute);
+            $this->updateAttributeUseCase->execute($id, $dto, $userPermission);
             return redirect()->back()->with('success', 'Сохранено');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
 
-    public function destroy(Attribute $attribute): RedirectResponse
+    public function destroy(int $id, UserPermission $userPermission): RedirectResponse
     {
         try {
-            $this->service->delete($attribute);
+            $this->removeAttributeUseCase->execute($id, $userPermission);
             return redirect()->back()->with('success', 'Атрибут удален');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());

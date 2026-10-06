@@ -52,6 +52,7 @@ final class AttributeEntity
     /** @var AttributeVariantEntity[] */
     public array $variants = [] {
         get => $this->variants;
+        set => $this->variants = $value;
     }
 
     public function __construct(

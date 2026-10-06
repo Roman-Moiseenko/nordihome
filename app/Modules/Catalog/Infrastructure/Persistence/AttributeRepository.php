@@ -14,11 +14,17 @@ use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\AttributeVariant;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Shared\Application\Actions\GetPhotoStatic;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 
 class AttributeRepository implements AttributeRepositoryInterface
 {
+    /**
+     * Модель Photo для вариантов атрибута (используется в поле model_type).
+     */
+    private const string VARIANT_PHOTO_MODEL_TYPE = 'catalog.attribute-variant';
+
     /**
      * @inheritDoc
      */
@@ -96,6 +102,16 @@ class AttributeRepository implements AttributeRepositoryInterface
     public function delete(int $id): void
     {
         $model = Attribute::findOrFail($id);
+
+        $variantIds = AttributeVariant::where('attribute_id', $model->id)
+            ->pluck('id')
+            ->all();
+
+        // Удаляем фото вариантов до удаления самих вариантов,
+        // чтобы модель Photo могла очистить оригинал и thumbs.
+        foreach ($variantIds as $variantId) {
+            $this->deleteVariantPhotos((int) $variantId);
+        }
 
         AttributeVariant::where('attribute_id', $model->id)->delete();
         $model->delete();
@@ -192,7 +208,24 @@ class AttributeRepository implements AttributeRepositoryInterface
 
         $removeIds = array_values(array_diff($existingIds, $keepIds));
         if (!empty($removeIds)) {
+            // Удаляем фото вариантов до удаления самих вариантов,
+            // чтобы модель Photo могла очистить оригинал и thumbs.
+            foreach ($removeIds as $variantId) {
+                $this->deleteVariantPhotos((int) $variantId);
+            }
+
             AttributeVariant::whereIn('id', $removeIds)->delete();
         }
+    }
+
+    /**
+     * Удаляет записи Photo варианта (вместе с файлами и thumbs).
+     */
+    private function deleteVariantPhotos(int $variantId): void
+    {
+        Photo::where('model_type', self::VARIANT_PHOTO_MODEL_TYPE)
+            ->where('imageable_id', $variantId)
+            ->get()
+            ->each(fn (Photo $photo) => $photo->delete());
     }
 }

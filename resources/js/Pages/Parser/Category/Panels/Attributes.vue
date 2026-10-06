@@ -64,6 +64,6 @@ const props = defineProps({
 })
 console.log(props.room.attributes)
 function routeClick(row) {
-    router.get(route('admin.catalog.attribute.show', {attribute: row.id}))
+    router.get(route('admin.catalog.attribute.show', {id: row.id}))
 }
 </script>

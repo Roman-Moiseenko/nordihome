@@ -152,8 +152,8 @@ function onSetInfo() {
     if (info.type === variantType) info.variants = Variants.value
 
     router.visit(
-        route('admin.catalog.attribute.set-info', {attribute: props.attribute.id}), {
-            method: "post",
+        route('admin.catalog.attribute.update', {id: props.attribute.id}), {
+            method: "put",
             data: info,
             onSuccess: page => {
                 showEdit.value = false;

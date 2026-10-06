@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use App\Modules\Catalog\Entity\Modification;
-use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Diglactic\Breadcrumbs\Breadcrumbs;
@@ -95,17 +94,21 @@ Breadcrumbs::for('admin.catalog.attribute.create', function (BreadcrumbTrail $tr
     $trail->parent('admin.catalog.attribute.index');
     $trail->push('Добавить новый', route('admin.catalog.attribute.create'));
 });
-Breadcrumbs::for('admin.catalog.attribute.show', function (BreadcrumbTrail $trail, Attribute $attribute) {
+Breadcrumbs::for('admin.catalog.attribute.show', function (BreadcrumbTrail $trail, int|string $id) {
+    $repository = app(\App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface::class);
+    $attribute = $repository->getById((int) $id);
     $trail->parent('admin.catalog.attribute.index');
-    $trail->push($attribute->name, route('admin.catalog.attribute.show', $attribute));
+    $trail->push($attribute->name, route('admin.catalog.attribute.show', $attribute->id));
 });
-Breadcrumbs::for('admin.catalog.attribute.edit', function (BreadcrumbTrail $trail, Attribute $attribute) {
-    $trail->parent('admin.catalog.attribute.show', $attribute);
-    $trail->push('Редактировать', route('admin.catalog.attribute.edit', $attribute));
+Breadcrumbs::for('admin.catalog.attribute.edit', function (BreadcrumbTrail $trail, int|string $id) {
+    $trail->parent('admin.catalog.attribute.show', $id);
+    $trail->push('Редактировать', route('admin.catalog.attribute.edit', $id));
 });
-Breadcrumbs::for('admin.catalog.attribute.update', function (BreadcrumbTrail $trail, Attribute $attribute) {
+Breadcrumbs::for('admin.catalog.attribute.update', function (BreadcrumbTrail $trail, int|string $id) {
+    $repository = app(\App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface::class);
+    $attribute = $repository->getById((int) $id);
     $trail->parent('admin.catalog.attribute.index');
-    $trail->push($attribute->name, route('admin.catalog.attribute.show', $attribute));
+    $trail->push($attribute->name, route('admin.catalog.attribute.show', $attribute->id));
 });
 
 Breadcrumbs::for('admin.catalog.attribute-group.index', function (BreadcrumbTrail $trail) {

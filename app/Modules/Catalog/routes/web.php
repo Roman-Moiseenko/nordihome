@@ -34,9 +34,6 @@ Route::group([
         'as' => 'attribute.',
     ], function () {
         Route::get('/types', [AttributeController::class, 'types'])->name('types');
-
-        //Доп. - сменить категорию, добавить фото
-        Route::post('/set-info/{attribute}', [AttributeController::class, 'set_info'])->name('set-info');
     });
 
     //Группы атрибутов
@@ -194,7 +191,7 @@ Route::group([
     //resource
     Route::resource('brand', BrandController::class)->parameters(['brand' => 'id']); //CRUD
 
-    Route::resource('attribute', AttributeController::class); //CRUD
+    Route::resource('attribute', AttributeController::class)->parameters(['attribute' => 'id']); //CRUD
     Route::resource('equivalent', EquivalentController::class)->parameters(['equivalent' => 'id']); //CRUD
     Route::resource('group', GroupController::class)->except(['create', 'edit']); //CRUD
     Route::resource('modification', ModificationController::class); //CRUD

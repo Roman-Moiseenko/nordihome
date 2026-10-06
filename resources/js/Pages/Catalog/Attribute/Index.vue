@@ -126,13 +126,13 @@ const form = reactive({
 
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.catalog.attribute.destroy', {attribute: row.id}));
+    $delete_entity.show(route('admin.catalog.attribute.destroy', {id: row.id}));
 }
 function createButton() {
     router.post(route('admin.catalog.attribute.store', form))
 }
 function routeClick(row) {
-    router.get(route('admin.catalog.attribute.show', {attribute: row.id}))
+    router.get(route('admin.catalog.attribute.show', {id: row.id}))
 }
 function handleGroup() {
     router.get(route('admin.catalog.attribute-group.index'))
