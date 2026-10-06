@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Controllers;
+namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Application\Actions\Tag\CreateTagUseCase;

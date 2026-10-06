@@ -1,7 +1,7 @@
 <template>
     <el-row :gutter="10" v-if="!showEdit">
         <el-col :span="4">
-            <PhotoDTO model-type="catalog.attribute" :entity-id="attribute.id" />
+            <PhotoDTO model-type="catalog.attribute" :entity-id="attribute.id"/>
         </el-col>
         <el-col :span="20">
             <el-descriptions :column="1" border class="mb-5">
@@ -48,9 +48,11 @@
     <el-button v-if="!showEdit" class="ml-2" type="warning" @click="showEdit = true">
         <i class="fa-light fa-pen-to-square"></i>&nbsp;Редактировать
     </el-button>
-    <el-row :gutter="10" v-if="showEdit">
-        <el-col :span="14">
-            <el-form label-width="auto">
+    <el-form label-width="auto" v-if="showEdit">
+        <el-row :gutter="10">
+
+            <el-col :span="10">
+
                 <el-form-item label="Название атрибута">
                     <el-input v-model="info.name"/>
                 </el-form-item>
@@ -62,24 +64,16 @@
                 </el-form-item>
                 <el-form-item label="Группа">
                     <el-select v-model="info.group_id" filterable>
-                        <el-option v-for="item in useCatalog.attrGroups" :key="item.id" :value="item.id" :label="item.name"/>
+                        <el-option v-for="item in useCatalog.attrGroups" :key="item.id" :value="item.id"
+                                   :label="item.name"/>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="Ссылка на википедию">
-                    <el-input v-model="info.sameAs"/>
-                </el-form-item>
-                <el-form-item label="Множественный выбор">
-                    <el-checkbox v-model="info.multiple" :checked="info.multiple"/>
-                </el-form-item>
-                <el-form-item label="Используется для фильтрации">
-                    <el-checkbox v-model="info.filter" :checked="info.filter"/>
-                </el-form-item>
-                <el-form-item label="Показывать в поиске и описании">
-                    <el-checkbox v-model="info.show_in" :checked="info.show_in"/>
-                </el-form-item>
+
+
                 <el-form-item label="Тип значения атрибута ">
                     <el-select v-model="info.type">
-                        <el-option v-for="item in useCatalog.attrTypes" :key="item.value" :value="item.value" :label="item.label"/>
+                        <el-option v-for="item in useCatalog.attrTypes" :key="item.value" :value="item.value"
+                                   :label="item.label"/>
                     </el-select>
                 </el-form-item>
 
@@ -94,32 +88,32 @@
                     />
                     <el-button @click="addVariant">Добавить вариант</el-button>
                 </div>
-                <el-button type="info" @click="showEdit = false" style="margin-left: 4px">
-                    Отмена
-                </el-button>
-                <el-button type="success" @click="onSetInfo">
-                    Сохранить
-                </el-button>
-            </el-form>
-        </el-col>
 
-        <el-col :span="10">
-            <HelpBlock>
-                <p><b>Название атрибута</b> не является уникальным полем, для несмежных категорий оно может
-                    совпадать.</p>
-                <p>Поле <b>категория</b> привязывает атрибут к категории и его дочерним категориям.</p>
-                <p class="mt-2">Поле <b>группа</b> позволяет сгруппировать характеристики на странице товара.</p>
-                <p class="mt-2">Для <b>картинок</b> используйте форматы с прозрачным фоном и размером не более
-                    200х200. Рекомендуем использовать SVG-файлы</p>
+            </el-col>
+            <el-col :span="10">
+                <el-form-item label="Множественный выбор">
+                    <el-checkbox v-model="info.multiple" :checked="info.multiple"/>
+                </el-form-item>
+                <el-form-item label="Используется для фильтрации">
+                    <el-checkbox v-model="info.filter" :checked="info.filter"/>
+                </el-form-item>
+                <el-form-item label="Показывать в поиске и описании">
+                    <el-checkbox v-model="info.show_in" :checked="info.show_in"/>
+                </el-form-item>
+                <el-form-item label="Ссылка на википедию">
+                    <el-input v-model="info.sameAs"/>
+                </el-form-item>
+            </el-col>
 
-                <p>Для типа <b>варианты</b> к каждому значению варианта атрибута предусмотрена возможность
-                    установления
-                    изображения, например для цвета. Привязать изображение к варианту можно после сохранения
-                    атрибута в режиме просмотра.
-                </p>
-            </HelpBlock>
-        </el-col>
-    </el-row>
+        </el-row>
+        <el-button type="info" @click="showEdit = false" style="margin-left: 4px">
+            Отмена
+        </el-button>
+        <el-button type="success" @click="onSetInfo">
+            Сохранить
+        </el-button>
+    </el-form>
+
 </template>
 
 <script lang="ts" setup>

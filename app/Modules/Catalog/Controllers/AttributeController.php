@@ -4,8 +4,10 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Catalog\Application\Actions\Attribute\CreateAttributeUseCase;
 use App\Modules\Catalog\Application\Actions\Attribute\IndexAttributeQuery;
 use App\Modules\Catalog\Application\Actions\Attribute\ListAttributeGroupQuery;
+use App\Modules\Catalog\Application\DTOs\Attribute\AttributeCreateData;
 use App\Modules\Catalog\Application\DTOs\Attribute\FilterAttributeIndexData;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Repository\AttributeRepository;
@@ -29,6 +31,7 @@ class AttributeController extends Controller
         AttributeRepository      $repository,
         private readonly ListAttributeGroupQuery $listAttributeGroupQuery,
         private readonly IndexAttributeQuery $indexAttributeQuery,
+        private readonly CreateAttributeUseCase $createAttributeUseCase,
     )
     {
         $this->service = $service;
@@ -45,17 +48,13 @@ class AttributeController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $request->validate([
-            'categories' => 'required|array',
-            'group_id' => 'required|integer',
-            'name' => 'required|string',
-            'type' => 'required|string',
-        ]);
+        $dto = AttributeCreateData::validateAndCreate($request->all());
+
         try {
-            $attribute = $this->service->create($request);
-            return redirect()->route('admin.catalog.attribute.show', $attribute)->with('success', 'Атрибут создан');
+            $attribute = $this->createAttributeUseCase->execute($dto, $userPermission);
+            return redirect()->route('admin.catalog.attribute.show', $attribute->id)->with('success', 'Атрибут создан');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

@@ -6,7 +6,6 @@ use App\Modules\Catalog\Controllers\OnOrderController;
 use App\Modules\Catalog\Controllers\ParserController;
 use App\Modules\Catalog\Controllers\PriorityController;
 use App\Modules\Catalog\Controllers\ProductController;
-use App\Modules\Catalog\Controllers\TagController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\AttributeGroupController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\BrandController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryController;
@@ -17,6 +16,7 @@ use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupProductController
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\SeriesController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\TagController;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
