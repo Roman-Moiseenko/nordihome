@@ -143,7 +143,7 @@ function routeClick(row) {
     router.get(route('admin.catalog.attribute.show', {attribute: row.id}))
 }
 function handleGroup() {
-    router.get(route('admin.catalog.attribute.groups'))
+    router.get(route('admin.catalog.attribute-group.index'))
 }
 </script>
 

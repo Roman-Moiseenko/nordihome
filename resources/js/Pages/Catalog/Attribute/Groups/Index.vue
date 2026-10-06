@@ -12,39 +12,30 @@
                 </template>
                 <el-input v-model="new_group" placeholder="Группа"/>
                 <div class="mt-2">
-                    <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
+                    <el-button @click="visible_create = false">Отмена</el-button>
+                    <el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
         </div>
 
         <div class="mt-2 p-5 bg-white rounded-md">
             <el-table
+                ref="tableRef"
                 :data="tableData"
+                row-key="id"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%;"
                 @row-click="routeClick"
             >
-                <el-table-column prop="name" label="Группа" >
-                    <template #default="scope">
-                        <EditField :field="scope.row.name" @update:field="val => onRename(val, scope.row)" />
+                <el-table-column label="" width="48" align="center">
+                    <template #default>
+                        <i class="fa-light fa-grip-vertical drag-handle"></i>
                     </template>
                 </el-table-column>
+                <el-table-column prop="name" label="Группа" />
                 <el-table-column prop="quantity" label="Атрибуты" align="center"/>
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        <el-button size="small"
-                                   type="primary"
-                                   @click.stop="onUp(scope.row)"
-                        >
-                            <i class="fa-light fa-arrow-up"></i>
-                        </el-button>
-                        <el-button size="small"
-                                   type="primary"
-                                   @click.stop="onDown(scope.row)"
-                        >
-                            <i class="fa-light fa-arrow-down"></i>
-                        </el-button>
-
                         <el-button size="small"
                                    type="danger"
                                    @click.stop="handleDeleteEntity(scope.row)"
@@ -61,26 +52,28 @@
 </template>
 
 <script setup lang="ts">
-import {inject, reactive, ref, defineProps} from "vue";
+import {inject, nextTick, onBeforeUnmount, onMounted, ref} from "vue";
 import {Head, router} from '@inertiajs/vue3'
+import axios from 'axios'
+import Sortable from 'sortablejs'
 import ru from 'element-plus/dist/locale/ru.mjs'
-import Active from "@Comp/Elements/Active.vue";
-import EditField from "@Comp/Elements/EditField.vue";
-
 
 const props = defineProps({
-    groups: Object,
+    groups: Array,
     title: {
         type: String,
         default: 'Группы атрибутов',
     },
 })
 const tableData = ref([...props.groups])
+const tableRef = ref()
 const visible_create = ref(false)
 const new_group = ref('')
 const $delete_entity = inject("$delete_entity")
+let sortable: Sortable | null = null
+
 function createButton() {
-    router.visit(route('admin.catalog.attribute.group-add'), {
+    router.visit(route('admin.catalog.attribute-group.store'), {
         method: "post",
         data: {
             name: new_group.value,
@@ -89,35 +82,53 @@ function createButton() {
         preserveState: false,
     })
 }
-function onRename(val, row) {
-    router.visit(route('admin.catalog.attribute.group-rename', {group: row.id}), {
-        method: "post",
-        data: {
-            name: val,
-        },
-        preserveScroll: true,
-        preserveState: false,
-    })
-}
-function onUp(row) {
-    router.visit(route('admin.catalog.attribute.group-up', {group: row.id}), {
-        method: "post",
-        preserveScroll: true,
-        preserveState: false,
-    })
-}
-function onDown(row) {
-    router.visit(route('admin.catalog.attribute.group-down', {group: row.id}), {
-        method: "post",
-        preserveScroll: true,
-        preserveState: false,
-    })
-}
+
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.catalog.attribute.group-destroy', {group: row.id}));
+    $delete_entity.show(route('admin.catalog.attribute-group.destroy', {id: row.id}));
 }
 
 function routeClick(row) {
-    router.get(route('admin.catalog.attribute.show', {attribute: row.id}))
+    router.get(route('admin.catalog.attribute-group.show', {id: row.id}))
 }
+
+function initSortable() {
+    const el = tableRef.value?.$el?.querySelector('.el-table__body-wrapper tbody')
+    if (!el) return
+
+    if (sortable) {
+        sortable.destroy()
+        sortable = null
+    }
+
+    sortable = Sortable.create(el, {
+        handle: '.drag-handle',
+        animation: 150,
+        onEnd: (evt) => {
+            const oldIndex = evt.oldIndex
+            const newIndex = evt.newIndex
+            if (oldIndex === undefined || newIndex === undefined || oldIndex === newIndex) return
+
+            const moved = tableData.value.splice(oldIndex, 1)[0]
+            tableData.value.splice(newIndex, 0, moved)
+
+            axios.post(route('admin.catalog.attribute-group.sort'), {
+                id: moved.id,
+                sort: newIndex + 1,
+            }).catch(() => {
+                router.reload({preserveScroll: true, preserveState: false})
+            })
+        },
+    })
+}
+
+onMounted(() => {
+    nextTick(initSortable)
+})
+
+onBeforeUnmount(() => {
+    if (sortable) {
+        sortable.destroy()
+        sortable = null
+    }
+})
 </script>

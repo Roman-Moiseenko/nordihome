@@ -5,10 +5,8 @@ namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
-use App\Modules\Catalog\Infrastructure\Models\AttributeGroup;
 use App\Modules\Catalog\Repository\AttributeGroupRepository;
 use App\Modules\Catalog\Repository\AttributeRepository;
-use App\Modules\Catalog\Service\AttributeGroupService;
 use App\Modules\Catalog\Service\AttributeService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -19,7 +17,6 @@ class AttributeController extends Controller
 {
 
     private AttributeService $service;
-    private AttributeGroupService $groupService;
 
     private AttributeRepository $repository;
     private AttributeGroupRepository $groupRepository;
@@ -27,13 +24,11 @@ class AttributeController extends Controller
 
     public function __construct(
         AttributeService         $service,
-        AttributeGroupService    $groupService,
         AttributeRepository      $repository,
         AttributeGroupRepository $groupRepository,
     )
     {
         $this->service = $service;
-        $this->groupService = $groupService;
         $this->repository = $repository;
         $this->groupRepository = $groupRepository;
     }
@@ -92,73 +87,6 @@ class AttributeController extends Controller
         try {
             $this->service->delete($attribute);
             return redirect()->back()->with('success', 'Атрибут удален');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    //ГРУППЫ АТРИБУТОВ
-    public function group_add(Request $request): RedirectResponse
-    {
-        try {
-            $this->groupService->create($request);
-            return redirect()->back()->with('success', 'Группа добавлена');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function groups(Request $request): Response
-    {
-        $groups = $this->groupRepository->get(order_by: 'sort');
-        return Inertia::render('Catalog/Attribute/Groups/Index', [
-            'groups' => $groups,
-        ]);
-    }
-
-    public function groupShow(Request $request): Response
-    {
-        $groups = $this->groupRepository->get(order_by: 'sort');
-        return Inertia::render('Catalog/Attribute/Groups/Show', [
-            'groups' => $groups,
-        ]);
-    }
-
-    public function group_up(AttributeGroup $group): RedirectResponse
-    {
-        try {
-            $this->groupService->up($group);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function group_down(AttributeGroup $group): RedirectResponse
-    {
-        try {
-            $this->groupService->down($group);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function group_rename(Request $request, AttributeGroup $group): RedirectResponse
-    {
-        try {
-            $this->groupService->update($request, $group);
-            return redirect()->back()->with('success', 'Группа переименована');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function group_destroy(AttributeGroup $group): RedirectResponse
-    {
-        try {
-            $this->groupService->delete($group);
-            return redirect()->back()->with('success', 'Группа удалена');
         } catch (\DomainException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }

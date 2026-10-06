@@ -108,9 +108,16 @@ Breadcrumbs::for('admin.catalog.attribute.update', function (BreadcrumbTrail $tr
     $trail->push($attribute->name, route('admin.catalog.attribute.show', $attribute));
 });
 
-Breadcrumbs::for('admin.catalog.attribute.groups', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('admin.catalog.attribute-group.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.catalog.attribute.index');
-    $trail->push('Группы', route('admin.catalog.attribute.groups'));
+    $trail->push('Группы', route('admin.catalog.attribute-group.index'));
+});
+
+Breadcrumbs::for('admin.catalog.attribute-group.show', function (BreadcrumbTrail $trail, int|string $id) {
+    $repository = app(\App\Modules\Catalog\Domain\Interfaces\AttributeGroupRepositoryInterface::class);
+    $group = $repository->getById((int) $id);
+    $trail->parent('admin.catalog.attribute-group.index');
+    $trail->push($group->name, route('admin.catalog.attribute-group.show', $group->id));
 });
 
 //TAGS

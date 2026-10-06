@@ -7,6 +7,7 @@ use App\Modules\Catalog\Controllers\ParserController;
 use App\Modules\Catalog\Controllers\PriorityController;
 use App\Modules\Catalog\Controllers\ProductController;
 use App\Modules\Catalog\Controllers\TagController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\AttributeGroupController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\BrandController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryProductController;
@@ -33,18 +34,19 @@ Route::group([
         'as' => 'attribute.',
     ], function () {
         //Доп. - сменить категорию, добавить фото
-        Route::get('/groups', [AttributeController::class, 'groups'])->name('groups');
-        Route::delete('/group-destroy/{group}', [AttributeController::class, 'group_destroy'])->name('group-destroy');
-
-        Route::post('/group-add', [AttributeController::class, 'group_add'])->name('group-add');
-        Route::post('/group-rename/{group}', [AttributeController::class, 'group_rename'])->name('group-rename');
-        //Route::post('/variant-image/{variant}', [AttributeController::class, 'variant_image'])->name('variant-image');
-
-        Route::post('/group-up/{group}', [AttributeController::class, 'group_up'])->name('group-up');
         Route::post('/set-info/{attribute}', [AttributeController::class, 'set_info'])->name('set-info');
-
-        Route::post('/group-down/{group}', [AttributeController::class, 'group_down'])->name('group-down');
     });
+
+    //Группы атрибутов
+    Route::group([
+        'prefix' => 'attribute-group',
+        'as' => 'attribute-group.',
+    ], function () {
+        Route::post('/sort', [AttributeGroupController::class, 'sort'])->name('sort');
+    });
+    Route::resource('attribute-group', AttributeGroupController::class)
+        ->except(['create', 'edit'])
+        ->parameters(['attribute_group' => 'id']);
     //BRAND
     Route::group([
         'prefix' => 'brand',
