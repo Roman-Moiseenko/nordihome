@@ -9,12 +9,10 @@ use App\Modules\Catalog\Application\Actions\Attribute\IndexAttributeQuery;
 use App\Modules\Catalog\Application\Actions\Attribute\ListAttributeGroupQuery;
 use App\Modules\Catalog\Application\Actions\Attribute\RemoveAttributeUseCase;
 use App\Modules\Catalog\Application\Actions\Attribute\UpdateAttributeUseCase;
+use App\Modules\Catalog\Application\Actions\Attribute\ViewAttributeQuery;
 use App\Modules\Catalog\Application\DTOs\Attribute\AttributeCreateData;
 use App\Modules\Catalog\Application\DTOs\Attribute\AttributeUpdateData;
 use App\Modules\Catalog\Application\DTOs\Attribute\FilterAttributeIndexData;
-use App\Modules\Catalog\Infrastructure\Models\Attribute;
-use App\Modules\Catalog\Repository\AttributeRepository;
-use App\Modules\Catalog\Service\AttributeService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -24,23 +22,15 @@ use Inertia\Response;
 
 class AttributeController extends Controller
 {
-
-    private AttributeService $service;
-    private AttributeRepository $repository;
-
-
     public function __construct(
-        AttributeService                         $service,
-        AttributeRepository                      $repository,
         private readonly ListAttributeGroupQuery $listAttributeGroupQuery,
         private readonly IndexAttributeQuery     $indexAttributeQuery,
+        private readonly ViewAttributeQuery      $viewAttributeQuery,
         private readonly CreateAttributeUseCase  $createAttributeUseCase,
         private readonly UpdateAttributeUseCase  $updateAttributeUseCase,
         private readonly RemoveAttributeUseCase  $removeAttributeUseCase,
     )
     {
-        $this->service = $service;
-        $this->repository = $repository;
     }
 
     public function index(Request $request, UserPermission $userPermission): Response
@@ -62,10 +52,10 @@ class AttributeController extends Controller
 
     }
 
-    public function show(int $id): Response
+    public function show(int $id, UserPermission $userPermission): Response
     {
         return Inertia::render('Catalog/Attribute/Show', [
-            'attribute' => $this->repository->AttributeWithToArray(Attribute::findOrFail($id)),
+            'attribute' => $this->viewAttributeQuery->execute($id, $userPermission),
         ]);
     }
 
@@ -84,13 +74,6 @@ class AttributeController extends Controller
         return redirect()->back()->with('success', 'Атрибут удален');
     }
 
-    /*
-    //Варианты
-    public function variant_image(Request $request, AttributeVariant $variant)
-    {
-        $this->service->image_variant($variant, $request);
-        return redirect()->back();
-    }*/
     public function types(): JsonResponse
     {
         $list = $this->listAttributeGroupQuery->execute();

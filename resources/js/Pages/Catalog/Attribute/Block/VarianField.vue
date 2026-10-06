@@ -2,7 +2,16 @@
     <div class="flex">
         <el-input v-model="form.name" placeholder="Вариант" class="input-variant" @change="onEmit"/>
 
-        <PhotoDTO model-type="catalog.attribute-variant" :entity-id="id" type="image" :mini="true" />
+        <PhotoDTO v-if="id" model-type="catalog.attribute-variant" :entity-id="id" type="image" :mini="true" />
+        <el-tooltip
+            v-else
+            content="Сначала сохраните атрибут, чтобы добавить изображение варианта"
+            placement="top"
+            effect="dark"
+        >
+            <i class="fa-light fa-floppy-disk variant-image-placeholder"></i>
+        </el-tooltip>
+
         <el-button type="danger" class="button-variant" @click="onRemove">-</el-button>
     </div>
 
@@ -42,5 +51,15 @@ function onRemove() {
     max-height: 32px;
     margin: auto 0;
     margin-left: 8px;
+}
+.variant-image-placeholder {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    margin: auto 0;
+    margin-left: 8px;
+    color: var(--el-text-color-secondary);
 }
 </style>
