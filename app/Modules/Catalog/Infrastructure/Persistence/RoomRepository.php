@@ -62,7 +62,7 @@ class RoomRepository implements RoomRepositoryInterface
      */
     public function getTree(): array
     {
-        $roots = Room::with(['image', 'icon'])
+        $roots = Room::with(['image'])
             ->defaultOrder()
             ->withDepth()
             ->get()

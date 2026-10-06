@@ -63,7 +63,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function getTree(): array
     {
-        $roots = Category::with(['image', 'icon'])
+        $roots = Category::with(['image'])
             ->defaultOrder()
             ->withDepth()
             ->get()
