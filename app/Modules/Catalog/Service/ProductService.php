@@ -160,7 +160,7 @@ class ProductService
                 $values = json_decode($product->pivot->values_json, true);
                 $variants = [];
                 foreach ($values as $attr_id => $variant_id) {
-                    $variants[] = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
+                    $variants[] = $product->getProdAttribute($attr_id)->getVariant((int)$variant_id)->name;
                 }
                 $variants_line = ' ' . implode(' ', $variants);
             } else {

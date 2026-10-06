@@ -160,7 +160,7 @@ class ProductRepository
                         'image' => GetPhotoStatic::gallery('catalog.product', $product->id, 'mini'),
                         'attributes' => array_map(function (Attribute $attribute) use ($product) {
                             return [
-                                'name' => $attribute->getVariant($product->Value($attribute->id))->name,
+                                'name' => $attribute->getVariant((int)$product->Value($attribute->id))->name,
                             ];
                         }, $product->modification->prod_attributes)
                     ];
