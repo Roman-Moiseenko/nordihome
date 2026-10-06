@@ -16,6 +16,14 @@ interface AttributeGroupRepositoryInterface
 
     public function getById(int $id): AttributeGroupEntity;
 
+    /**
+     * Имена групп по списку ID (без N+1).
+     *
+     * @param int[] $ids
+     * @return array<int, string>
+     */
+    public function getNamesByIds(array $ids): array;
+
     public function save(AttributeGroupEntity $group): AttributeGroupEntity;
 
     public function delete(int $id): void;

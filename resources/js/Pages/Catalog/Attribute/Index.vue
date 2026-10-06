@@ -61,7 +61,7 @@
                         <Active :active="scope.row.filter" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="type_text" label="Тип" align="center" show-overflow-tooltip width="80"/>
+                <el-table-column prop="typeText" label="Тип" align="center" show-overflow-tooltip width="80"/>
 
                 <el-table-column label="Действия" align="right" width="80">
                     <template #default="scope">

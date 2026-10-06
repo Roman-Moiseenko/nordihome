@@ -2,6 +2,7 @@
 
 namespace App\Modules\Catalog\Providers;
 
+use App\Modules\Catalog\Domain\Interfaces\AttributeCategoryRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\AttributeGroupRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
@@ -17,6 +18,7 @@ use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\SeriesRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
+use App\Modules\Catalog\Infrastructure\Persistence\AttributeCategoryRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeGroupRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\BrandRepository;
@@ -144,6 +146,11 @@ class CatalogServiceProvider extends ServiceProvider
         $this->app->bind(
             AttributeRepositoryInterface::class,
             AttributeRepository::class
+        );
+
+        $this->app->bind(
+            AttributeCategoryRepositoryInterface::class,
+            AttributeCategoryRepository::class
         );
 
         $this->app->bind(

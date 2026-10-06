@@ -28,6 +28,17 @@ class AttributeGroupRepository implements AttributeGroupRepositoryInterface
         return $this->hydrate(AttributeGroup::findOrFail($id));
     }
 
+    public function getNamesByIds(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        return AttributeGroup::whereIn('id', $ids)
+            ->pluck('name', 'id')
+            ->toArray();
+    }
+
     public function save(AttributeGroupEntity $group): AttributeGroupEntity
     {
         $model = $group->id

@@ -4,10 +4,13 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Catalog\Application\Actions\Attribute\IndexAttributeQuery;
 use App\Modules\Catalog\Application\Actions\Attribute\ListAttributeGroupQuery;
+use App\Modules\Catalog\Application\DTOs\Attribute\FilterAttributeIndexData;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Repository\AttributeRepository;
 use App\Modules\Catalog\Service\AttributeService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,15 +28,17 @@ class AttributeController extends Controller
         AttributeService         $service,
         AttributeRepository      $repository,
         private readonly ListAttributeGroupQuery $listAttributeGroupQuery,
+        private readonly IndexAttributeQuery $indexAttributeQuery,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request, UserPermission $userPermission): Response
     {
-        $attributes = $this->repository->getIndex($request, $filters);
+        $filters = FilterAttributeIndexData::validateAndCreate($request->all());
+        $attributes = $this->indexAttributeQuery->execute($filters, $userPermission);
         return Inertia::render('Catalog/Attribute/Index', [
             'attributes' => $attributes,
             'filters' => $filters,

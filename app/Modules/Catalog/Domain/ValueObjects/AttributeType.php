@@ -73,6 +73,36 @@ final class AttributeType
         return $this->value === $other->value;
     }
 
+    public function isString(): bool
+    {
+        return $this->value === self::TYPE_STRING;
+    }
+
+    public function isInteger(): bool
+    {
+        return $this->value === self::TYPE_INTEGER;
+    }
+
+    public function isBool(): bool
+    {
+        return $this->value === self::TYPE_BOOL;
+    }
+
+    public function isFloat(): bool
+    {
+        return $this->value === self::TYPE_FLOAT;
+    }
+
+    public function isDate(): bool
+    {
+        return $this->value === self::TYPE_DATE;
+    }
+
+    public function isNumeric(): bool
+    {
+        return $this->isInteger() || $this->isFloat();
+    }
+
     public function __toString(): string
     {
         return $this->value;
