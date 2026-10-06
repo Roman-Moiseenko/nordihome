@@ -3,7 +3,7 @@
 namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Modification;
+use App\Modules\Catalog\Infrastructure\Models\Modification;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Repository\ModificationRepository;
 use App\Modules\Catalog\Repository\ProductRepository;

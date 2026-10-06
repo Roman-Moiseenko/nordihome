@@ -3,10 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Repository;
 
-use App\Modules\Catalog\Entity\Modification;
-use App\Modules\Catalog\Entity\ModificationProduct;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\AttributeVariant;
+use App\Modules\Catalog\Infrastructure\Models\Modification;
+use App\Modules\Catalog\Infrastructure\Models\ModificationProduct;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use Illuminate\Contracts\Support\Arrayable;

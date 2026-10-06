@@ -3,27 +3,15 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Repository;
 
-use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Auth\Infrastructure\Models\User;
-use App\Modules\Base\Entity\Dimensions;
-use App\Modules\Catalog\Entity\Modification;
-use App\Modules\Catalog\Entity\Review;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\AttributeProduct;
-use App\Modules\Catalog\Infrastructure\Models\AttributeVariant;
 use App\Modules\Catalog\Infrastructure\Models\Category;
+use App\Modules\Catalog\Infrastructure\Models\Modification;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Catalog\Infrastructure\Models\Tag;
-use App\Modules\Discount\Entity\Coupon;
-use App\Modules\Parser\Infrastructure\Models\ParserCategory;
-use App\Modules\Parser\Infrastructure\Models\ParserProduct;
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Setting\Entity\Web;
 use App\Modules\Shared\Application\Actions\GetPhotoStatic;
-use App\Modules\Shared\Infrastructure\Models\Photo;
-use Carbon\Carbon;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Auth;
 
 class ShopRepository

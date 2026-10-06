@@ -15,8 +15,6 @@ use App\Modules\Base\Entity\Video;
 use App\Modules\Cabinet\Infrastructure\Models\Wish;
 use App\Modules\Cart\Infrastructure\Models\CartCookie;
 use App\Modules\Cart\Infrastructure\Models\CartStorage;
-use App\Modules\Catalog\Entity\Modification;
-use App\Modules\Catalog\Entity\ModificationProduct;
 use App\Modules\Catalog\Entity\ProductPriceBulk;
 use App\Modules\Catalog\Entity\ProductPriceCost;
 use App\Modules\Catalog\Entity\ProductPriceMin;
