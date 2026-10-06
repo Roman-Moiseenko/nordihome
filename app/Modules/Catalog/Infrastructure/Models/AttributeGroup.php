@@ -3,12 +3,14 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Models;
 
+use App\Modules\Base\Traits\ImageField;
 use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int $id
  * @property string $name
+ * @property string $svg
  * @property Photo $icon
  * @property Attribute[] $attributes
  * @property int $sort
@@ -16,11 +18,12 @@ use Illuminate\Database\Eloquent\Model;
 class AttributeGroup extends Model
 {
 
+    use ImageField;
+
     public $timestamps = false;
-    public $thumbs = false;
 
     protected $fillable = [
-        'name', 'sort',
+        'name', 'sort', 'svg',
     ];
 
     public static function register(string $name): self
@@ -37,10 +40,6 @@ class AttributeGroup extends Model
         return $this->id == $id;
     }
 
-    public function icon()
-    {
-        return $this->morphOne(Photo::class, 'imageable')->withDefault();
-    }
     public function attributes(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(Attribute::class, 'group_id', 'id');

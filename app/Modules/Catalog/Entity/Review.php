@@ -5,7 +5,7 @@ namespace App\Modules\Catalog\Entity;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Entity\Video;
-use App\Modules\Base\Traits\PhotoField;
+use App\Modules\Base\Traits\ImageField;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\DiscountReview;
 use Carbon\Carbon;
@@ -28,7 +28,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Review extends Model
 {
-    use PhotoField;
+    use ImageField;
 
     const string STATUS_DRAFT = 'draft';
     const string STATUS_MODERATED = 'moderated';

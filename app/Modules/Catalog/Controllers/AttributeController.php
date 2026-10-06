@@ -111,7 +111,15 @@ class AttributeController extends Controller
     public function groups(Request $request): Response
     {
         $groups = $this->groupRepository->get(order_by: 'sort');
-        return Inertia::render('Catalog/Attribute/Groups', [
+        return Inertia::render('Catalog/Attribute/Groups/Index', [
+            'groups' => $groups,
+        ]);
+    }
+
+    public function groupShow(Request $request): Response
+    {
+        $groups = $this->groupRepository->get(order_by: 'sort');
+        return Inertia::render('Catalog/Attribute/Groups/Show', [
             'groups' => $groups,
         ]);
     }

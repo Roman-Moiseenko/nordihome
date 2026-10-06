@@ -31,7 +31,7 @@ use Kalnoy\Nestedset\NodeTrait;
  */
 class Category extends Model
 {
-    use NodeTrait, HasFactory, ImageField, IconField;
+    use NodeTrait, HasFactory, ImageField;
 
     const string NO_PARSE = 'no_parse';
 
@@ -51,7 +51,6 @@ class Category extends Model
         'parent',
         'prod_attributes',
         'image',
-        'icon',
     ];
 
     public function getChildrenIdAll(): array

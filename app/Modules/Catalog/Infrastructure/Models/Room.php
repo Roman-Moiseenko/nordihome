@@ -26,7 +26,7 @@ use Kalnoy\Nestedset\NodeTrait;
  */
 class Room extends Model
 {
-    use NodeTrait, ImageField, IconField;
+    use NodeTrait, ImageField;
 
     protected $table = 'rooms';
 

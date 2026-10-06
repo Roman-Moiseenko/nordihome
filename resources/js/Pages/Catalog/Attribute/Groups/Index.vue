@@ -22,6 +22,7 @@
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%;"
+                @row-click="routeClick"
             >
                 <el-table-column prop="name" label="Группа" >
                     <template #default="scope">
@@ -114,5 +115,9 @@ function onDown(row) {
 }
 function handleDeleteEntity(row) {
     $delete_entity.show(route('admin.catalog.attribute.group-destroy', {group: row.id}));
+}
+
+function routeClick(row) {
+    router.get(route('admin.catalog.attribute.show', {attribute: row.id}))
 }
 </script>

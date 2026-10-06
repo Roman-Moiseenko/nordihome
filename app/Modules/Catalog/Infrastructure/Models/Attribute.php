@@ -110,8 +110,8 @@ class Attribute extends Model
     {
         return $this->belongsTo(AttributeGroup::class, 'group_id', 'id');
     }
-
-    /*    public function category()
+/*
+        public function category()
         {
             return $this->belongsTo(Category::class, 'group_id', 'id');
         }
