@@ -26,11 +26,11 @@ readonly class UpdateAttributeGroupUseCase
 
         $group = $this->attributeGroupRepository->getById($groupId);
 
-        $group->name = $dto->name;
+        if ($dto->svg !== null) $group->svg = $dto->svg;
 
-        if ($dto->svg !== null) {
+        if ($dto->svg !== null)
             $group->svg = trim($dto->svg) === '' ? null : $dto->svg;
-        }
+
 
         return $this->attributeGroupRepository->save($group);
     }

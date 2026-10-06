@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Entity;
 
+use App\Modules\Catalog\Domain\ValueObjects\AttributeType;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Database\Eloquent\Model;
@@ -36,7 +37,7 @@ class Modification extends Model
         if (empty($attributes)) throw new \DomainException('Не заданы атрибуты');
         /** @var Attribute $attribute */
         foreach ($attributes as $attribute) {
-            if ($attribute->type !== Attribute::TYPE_VARIANT) {
+            if ($attribute->type !== AttributeType::TYPE_VARIANT) {
                 throw new \DomainException('Неверный тип атрибутов. Должен быть Вариант!');
             }
         }

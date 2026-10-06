@@ -33,6 +33,8 @@ Route::group([
         'prefix' => 'attribute',
         'as' => 'attribute.',
     ], function () {
+        Route::get('/types', [AttributeController::class, 'types'])->name('types');
+
         //Доп. - сменить категорию, добавить фото
         Route::post('/set-info/{attribute}', [AttributeController::class, 'set_info'])->name('set-info');
     });
@@ -42,11 +44,13 @@ Route::group([
         'prefix' => 'attribute-group',
         'as' => 'attribute-group.',
     ], function () {
+        Route::get('/list', [AttributeGroupController::class, 'list'])->name('list');
         Route::post('/sort', [AttributeGroupController::class, 'sort'])->name('sort');
     });
     Route::resource('attribute-group', AttributeGroupController::class)
         ->except(['create', 'edit'])
         ->parameters(['attribute_group' => 'id']);
+
     //BRAND
     Route::group([
         'prefix' => 'brand',

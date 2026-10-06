@@ -4,10 +4,11 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Catalog\Application\Actions\Attribute\ListAttributeGroupQuery;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
-use App\Modules\Catalog\Repository\AttributeGroupRepository;
 use App\Modules\Catalog\Repository\AttributeRepository;
 use App\Modules\Catalog\Service\AttributeService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,31 +18,25 @@ class AttributeController extends Controller
 {
 
     private AttributeService $service;
-
     private AttributeRepository $repository;
-    private AttributeGroupRepository $groupRepository;
 
 
     public function __construct(
         AttributeService         $service,
         AttributeRepository      $repository,
-        AttributeGroupRepository $groupRepository,
+        private readonly ListAttributeGroupQuery $listAttributeGroupQuery,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->groupRepository = $groupRepository;
     }
 
     public function index(Request $request): Response
     {
-        $groups = $this->groupRepository->get(order_by: 'name');
         $attributes = $this->repository->getIndex($request, $filters);
         return Inertia::render('Catalog/Attribute/Index', [
             'attributes' => $attributes,
             'filters' => $filters,
-            'groups' => $groups,
-            'types' => array_select(Attribute::ATTRIBUTES),
         ]);
     }
 
@@ -51,7 +46,7 @@ class AttributeController extends Controller
             'categories' => 'required|array',
             'group_id' => 'required|integer',
             'name' => 'required|string',
-            'type' => 'required|integer',
+            'type' => 'required|string',
         ]);
         try {
             $attribute = $this->service->create($request);
@@ -63,12 +58,8 @@ class AttributeController extends Controller
 
     public function show(Attribute $attribute): Response
     {
-        $groups = $this->groupRepository->get(order_by: 'name');
         return Inertia::render('Catalog/Attribute/Show', [
             'attribute' => $this->repository->AttributeWithToArray($attribute),
-            'groups' => $groups,
-            'types' => array_select(Attribute::ATTRIBUTES),
-            'variant' => Attribute::TYPE_VARIANT,
         ]);
     }
 
@@ -99,4 +90,9 @@ class AttributeController extends Controller
         $this->service->image_variant($variant, $request);
         return redirect()->back();
     }*/
+    public function types(): JsonResponse
+    {
+        $list = $this->listAttributeGroupQuery->execute();
+        return \response()->json($list);
+    }
 }

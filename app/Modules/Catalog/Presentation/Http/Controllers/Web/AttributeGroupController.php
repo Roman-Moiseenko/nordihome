@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Application\Actions\AttributeGroup\CreateAttributeGroupUseCase;
 use App\Modules\Catalog\Application\Actions\AttributeGroup\IndexAttributeGroupQuery;
 use App\Modules\Catalog\Application\Actions\AttributeGroup\ListAttributeGroupAttributesQuery;
+use App\Modules\Catalog\Application\Actions\AttributeGroup\ListAttributeGroupUseCase;
 use App\Modules\Catalog\Application\Actions\AttributeGroup\RemoveAttributeGroupUseCase;
 use App\Modules\Catalog\Application\Actions\AttributeGroup\SortAttributeGroupUseCase;
 use App\Modules\Catalog\Application\Actions\AttributeGroup\UpdateAttributeGroupUseCase;
@@ -33,6 +34,7 @@ class AttributeGroupController extends Controller
         private readonly UpdateAttributeGroupUseCase $updateAttributeGroupUseCase,
         private readonly RemoveAttributeGroupUseCase $removeAttributeGroupUseCase,
         private readonly SortAttributeGroupUseCase $sortAttributeGroupUseCase,
+        private readonly ListAttributeGroupUseCase $listAttributeGroupUseCase,
     )
     {
     }
@@ -92,5 +94,11 @@ class AttributeGroupController extends Controller
         $this->sortAttributeGroupUseCase->execute($dto, $userPermission);
 
         return response()->json(['message' => 'Порядок сортировки обновлён']);
+    }
+
+    public function list()
+    {
+        $list = $this->listAttributeGroupUseCase->execute();
+        return response()->json($list);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Application\Actions\Group\CreateGroupUseCase;
 use App\Modules\Catalog\Application\Actions\Group\IndexGroupQuery;
-use App\Modules\Catalog\Application\Actions\Group\ListGroupUseCase;
+use App\Modules\Catalog\Application\Actions\Group\ListGroupQuery;
 use App\Modules\Catalog\Application\Actions\Group\RemoveGroupUseCase;
 use App\Modules\Catalog\Application\Actions\Group\UpdateGroupUseCase;
 use App\Modules\Catalog\Application\Actions\Group\ViewGroupQuery;
@@ -27,13 +27,13 @@ class GroupController extends Controller
 {
 
     public function __construct(
-        private readonly ListGroupUseCase $listGroupUseCase,
+        private readonly ListGroupQuery                     $listGroupUseCase,
         private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
-        private readonly IndexGroupQuery $indexGroupQuery,
-        private readonly CreateGroupUseCase $createGroupUseCase,
-        private readonly ViewGroupQuery $viewGroupQuery,
-        private readonly UpdateGroupUseCase $updateGroupUseCase,
-        private readonly RemoveGroupUseCase $removeGroupUseCase,
+        private readonly IndexGroupQuery                    $indexGroupQuery,
+        private readonly CreateGroupUseCase                 $createGroupUseCase,
+        private readonly ViewGroupQuery                     $viewGroupQuery,
+        private readonly UpdateGroupUseCase                 $updateGroupUseCase,
+        private readonly RemoveGroupUseCase                 $removeGroupUseCase,
     )
     {
     }

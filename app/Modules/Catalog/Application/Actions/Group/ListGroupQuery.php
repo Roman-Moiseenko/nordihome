@@ -5,7 +5,7 @@ namespace App\Modules\Catalog\Application\Actions\Group;
 use App\Modules\Catalog\Domain\Interfaces\GroupRepositoryInterface;
 use App\Modules\Shared\Application\DTOs\ListNamePublishedData;
 
-readonly class ListGroupUseCase
+readonly class ListGroupQuery
 {
     public function __construct(
         private GroupRepositoryInterface $groupRepository,

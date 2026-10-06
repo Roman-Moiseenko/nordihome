@@ -9,7 +9,7 @@ use App\Modules\Catalog\Application\Actions\Series\CreateSeriesUseCase;
 use App\Modules\Catalog\Application\Actions\Series\DetachProductFromSeriesUseCase;
 use App\Modules\Catalog\Application\Actions\Series\IndexSeriesQuery;
 use App\Modules\Catalog\Application\Actions\Series\ListSeriesProductsQuery;
-use App\Modules\Catalog\Application\Actions\Series\ListSeriesUseCase;
+use App\Modules\Catalog\Application\Actions\Series\ListSeriesQuery;
 use App\Modules\Catalog\Application\Actions\Series\RemoveSeriesUseCase;
 use App\Modules\Catalog\Application\Actions\Series\UpdateSeriesUseCase;
 use App\Modules\Catalog\Application\Actions\Series\ViewSeriesQuery;
@@ -27,14 +27,14 @@ use Inertia\Response;
 class SeriesController extends Controller
 {
     public function __construct(
-        private readonly ListSeriesUseCase $listSeriesUseCase,
-        private readonly IndexSeriesQuery $indexSeriesQuery,
-        private readonly CreateSeriesUseCase $createSeriesUseCase,
-        private readonly ViewSeriesQuery $viewSeriesQuery,
-        private readonly ListSeriesProductsQuery $listSeriesProductsQuery,
-        private readonly UpdateSeriesUseCase $updateSeriesUseCase,
-        private readonly RemoveSeriesUseCase $removeSeriesUseCase,
-        private readonly AttachProductsToSeriesUseCase $attachProductsToSeriesUseCase,
+        private readonly ListSeriesQuery                $listSeriesUseCase,
+        private readonly IndexSeriesQuery               $indexSeriesQuery,
+        private readonly CreateSeriesUseCase            $createSeriesUseCase,
+        private readonly ViewSeriesQuery                $viewSeriesQuery,
+        private readonly ListSeriesProductsQuery        $listSeriesProductsQuery,
+        private readonly UpdateSeriesUseCase            $updateSeriesUseCase,
+        private readonly RemoveSeriesUseCase            $removeSeriesUseCase,
+        private readonly AttachProductsToSeriesUseCase  $attachProductsToSeriesUseCase,
         private readonly DetachProductFromSeriesUseCase $detachProductFromSeriesUseCase,
     )
     {

@@ -1,9 +1,9 @@
 <template>
     <el-row :gutter="10" v-if="!showEdit">
-        <el-col :span="6">
+        <el-col :span="4">
             <PhotoDTO model-type="catalog.attribute" :entity-id="attribute.id" />
         </el-col>
-        <el-col :span="18">
+        <el-col :span="20">
             <el-descriptions :column="1" border class="mb-5">
                 <el-descriptions-item label="Группа">
                     {{ attribute.group }}
@@ -62,7 +62,7 @@
                 </el-form-item>
                 <el-form-item label="Группа">
                     <el-select v-model="info.group_id" filterable>
-                        <el-option v-for="item in groups" :key="item.id" :value="item.id" :label="item.name"/>
+                        <el-option v-for="item in useCatalog.attrGroups" :key="item.id" :value="item.id" :label="item.name"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Ссылка на википедию">
@@ -79,13 +79,13 @@
                 </el-form-item>
                 <el-form-item label="Тип значения атрибута ">
                     <el-select v-model="info.type">
-                        <el-option v-for="item in types" :key="item.value" :value="item.value" :label="item.label"/>
+                        <el-option v-for="item in useCatalog.attrTypes" :key="item.value" :value="item.value" :label="item.label"/>
                     </el-select>
                 </el-form-item>
 
-                <div v-if="info.type === variant" class="mb-5">
+                <div v-if="info.type === variantType" class="mb-5">
                     <h2>Варианты</h2>
-                    <VarianField
+                    <VariantField
                         v-for="item in Variants" :key="item"
                         :id="item.id"
                         :name="item.name"
@@ -123,24 +123,21 @@
 </template>
 
 <script lang="ts" setup>
-import {func} from '@Res/func.js'
 import {reactive, ref} from "vue";
 import {router} from "@inertiajs/vue3";
-import UploadImageFile from '@Comp/UploadImageFile.vue'
 import Active from "@Comp/Elements/Active.vue";
-import VarianField from "./VarianField.vue";
+import VariantField from "./VarianField.vue";
 import HelpBlock from "@Comp/HelpBlock.vue";
 import {useCatalogStore} from "@Res/catalogStore.ts";
 import PhotoDTO from "@Comp/PhotoDTO.vue";
+import {route} from "ziggy-js";
 
 const useCatalog = useCatalogStore()
 
 const props = defineProps({
     attribute: Object,
-    groups: Array,
-    types: Array,
-    variant: Number,
 })
+
 const iSavingInfo = ref(false)
 const info = reactive({
     name: props.attribute.name,
@@ -155,9 +152,10 @@ const info = reactive({
     variants: null,
 })
 const showEdit = ref(false)
+const variantType = useCatalog.attrTypes.find(t => t.isVariant)?.value
 
 function onSetInfo() {
-    if (info.type === props.variant) info.variants = Variants.value
+    if (info.type === variantType) info.variants = Variants.value
 
     router.visit(
         route('admin.catalog.attribute.set-info', {attribute: props.attribute.id}), {

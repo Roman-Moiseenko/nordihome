@@ -24,7 +24,7 @@ class AttributeService
             $attribute = Attribute::register(
                 $request->string('name')->trim()->value(),
                 $request->integer('group_id'),
-                $request->integer('type')
+                $request->string('type')->value()
             );
 
             foreach ($request->input('categories') as $category_id) {
@@ -44,7 +44,7 @@ class AttributeService
             $attribute->multiple = $request->boolean('multiple');
             $attribute->filter = $request->boolean('filter');
             $attribute->show_in = $request->boolean('show-in');
-            $attribute->type = $request->integer('type');
+            $attribute->type = $request->string('type')->value();
             $attribute->sameAs = $request->string('sameAs')->trim()->value();
             $attribute->save();
 

@@ -15,10 +15,10 @@
                     <el-option v-for="item in useCatalog.categories" :value="item.id" :label="item.name"/>
                 </el-select>
                 <el-select v-model="form.group_id" placeholder="Группа" class="mt-1" filterable>
-                    <el-option v-for="item in groups" :value="item.id" :label="item.name"/>
+                    <el-option v-for="item in useCatalog.attrGroups" :value="item.id" :label="item.name"/>
                 </el-select>
                 <el-select v-model="form.type" placeholder="Тип значения" class="mt-1" filterable>
-                    <el-option v-for="item in types" :value="item.value" :label="item.label"/>
+                    <el-option v-for="item in useCatalog.attrTypes" :value="item.value" :label="item.label"/>
                 </el-select>
                 <div class="mt-2">
                     <el-button @click="visible_create = false">Отмена</el-button><el-button @click="createButton" type="primary">Создать</el-button>
@@ -31,7 +31,7 @@
                     <el-option v-for="item in useCatalog.categories" :key="item.id" :value="item.id" :label="item.name" />
                 </el-select>
                 <el-select v-model="filter.group_id" placeholder="Группа" class="mt-1">
-                    <el-option v-for="item in groups" :key="item.id" :value="item.id" :label="item.name" />
+                    <el-option v-for="item in useCatalog.attrGroups" :key="item.id" :value="item.id" :label="item.name" />
                 </el-select>
                 <el-select v-model="filter._filter" placeholder="Фильтр" class="mt-1">
                     <el-option :key="null" :value="null" label="Все" />
@@ -49,27 +49,21 @@
                 @row-click="routeClick"
                 v-loading="store.getLoading"
             >
-                <el-table-column prop="image" label="Иконка" width="80">
-                    <template #default="scope">
-                        <img v-if="scope.row.image" :src="scope.row.image" style="width: 40px; height: 40px; ">
-                    </template>
-                </el-table-column>
-                <el-table-column prop="name" label="Атрибут"  width="220" show-overflow-tooltip/>
+                <el-table-column prop="name" label="Атрибут"  width="160" show-overflow-tooltip/>
                 <el-table-column prop="categories" label="Категории" align="center">
                     <template #default="scope">
                         <el-tag type="info" v-for="item in scope.row.categories" class="ml-1">{{ item.name }}</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column prop="group" label="Группа" width="220" show-overflow-tooltip/>
-                <el-table-column prop="filter" label="Фильтр" width="160" align="center">
+                <el-table-column prop="group" label="Группа" width="160" align="center" show-overflow-tooltip/>
+                <el-table-column prop="filter" label="Фильтр" width="100" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.filter" />
                     </template>
                 </el-table-column>
-                <el-table-column prop="type_text" label="Тип" show-overflow-tooltip/>
+                <el-table-column prop="type_text" label="Тип" align="center" show-overflow-tooltip width="80"/>
 
-
-                <el-table-column label="Действия" align="right">
+                <el-table-column label="Действия" align="right" width="80">
                     <template #default="scope">
                         <el-button v-if="!scope.row.completed"
                             size="small"
@@ -112,8 +106,6 @@ const props = defineProps({
         default: 'Атрибуты товаров',
     },
     filters: Array,
-    groups: Array,
-    types: Array,
 })
 const store = useStore();
 const visible_create = ref(false)

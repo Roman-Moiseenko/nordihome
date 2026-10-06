@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands\Admin;
 
+use App\Modules\Catalog\Domain\ValueObjects\AttributeType;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Console\Command;
@@ -13,7 +14,7 @@ class AttributeCommand extends Command
 
     public function handle()
     {
-        $attributes = Attribute::where('type', Attribute::TYPE_VARIANT)->get();
+        $attributes = Attribute::where('type', AttributeType::TYPE_VARIANT)->get();
 
         foreach ($attributes as $attribute) {
             ///$this->info('Атрибут ' . $attribute->name);

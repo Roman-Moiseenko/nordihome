@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Infrastructure\Models;
 
 use App\Modules\Base\Traits\ImageField;
+use App\Modules\Catalog\Domain\ValueObjects\AttributeType;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -15,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property AttributeGroup $group
  * @property Product[] $products
  * @property Category[] $categories
- * @property int $type
+ * @property string $type
  * @property AttributeVariant[] $variants
  * @property bool $multiple
  * @property bool $filter
@@ -25,25 +26,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Attribute extends Model
 {
     use ImageField;
-    const int TYPE_STRING = 101;
-    const int TYPE_INTEGER = 103;
-    const int TYPE_BOOL = 102;
-    const int TYPE_VARIANT = 104;
-    const int TYPE_FLOAT = 105;
-    const int TYPE_DATE = 106;
-
-    const array ATTRIBUTES = [
-        self::TYPE_STRING => 'Строка',
-        self::TYPE_INTEGER => 'Число',
-        self::TYPE_BOOL => 'Флажок',
-        self::TYPE_VARIANT => 'Варианты',
-        self::TYPE_FLOAT => 'Дробное',
-        self::TYPE_DATE => 'Дата',
-    ];
 
     //public array $variants;
     public $timestamps = false;
-    public bool $thumbs = false;
 
     protected $casts = [
         'filter' => 'bool',
@@ -64,7 +49,7 @@ class Attribute extends Model
         'show_in',
     ];
 
-    public static function register(string $name, int $group_id, int $type): self
+    public static function register(string $name, int $group_id, string $type): self
     {
         return self::create([
             'name' => $name,
@@ -75,27 +60,27 @@ class Attribute extends Model
 
     public function isVariant(): bool
     {
-        return $this->type == self::TYPE_VARIANT;
+        return $this->type == AttributeType::TYPE_VARIANT;
     }
 
     public function isBool(): bool
     {
-        return $this->type == self::TYPE_BOOL;
+        return $this->type == AttributeType::TYPE_BOOL;
     }
 
     public function isNumeric(): bool
     {
-        return $this->type == self::TYPE_INTEGER || $this->type == self::TYPE_FLOAT;
+        return $this->type == AttributeType::TYPE_INTEGER || $this->type == AttributeType::TYPE_FLOAT;
     }
 
     public function isString(): bool
     {
-        return $this->type == self::TYPE_STRING;
+        return $this->type == AttributeType::TYPE_STRING;
     }
 
     public function isDate(): bool
     {
-        return $this->type == self::TYPE_DATE;
+        return $this->type == AttributeType::TYPE_DATE;
     }
 
     public function isValue($value): bool
@@ -195,7 +180,7 @@ class Attribute extends Model
 
     public function typeText(): string
     {
-        return self::ATTRIBUTES[$this->type];
+        return AttributeType::ATTRIBUTES[$this->type];
     }
 
 }

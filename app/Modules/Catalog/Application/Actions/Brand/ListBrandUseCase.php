@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\Actions\Brand;
 
+use App\Modules\Catalog\Application\DTOs\Brand\BrandListData;
 use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
 
 readonly class ListBrandUseCase
@@ -21,10 +22,6 @@ readonly class ListBrandUseCase
     {
         $brands = $this->brandRepository->getAll();
 
-        return array_map(fn($brand) => [
-            'id' => $brand->id,
-            'name' => $brand->name,
-            'parser' => $brand->parserClass,
-        ], $brands);
+        return array_map(fn($brand) => BrandListData::fromEntity($brand),  $brands);
     }
 }

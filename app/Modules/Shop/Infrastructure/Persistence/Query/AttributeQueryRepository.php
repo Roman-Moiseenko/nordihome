@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
-use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Catalog\Domain\ValueObjects\AttributeType;
 use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameImageData;
 use App\Modules\Shop\Application\DTOs\Entities\AttributeFilterData;
@@ -89,7 +89,7 @@ class AttributeQueryRepository
 
         $result = [];
         foreach ($attributes as $attr) {
-            if ($attr->type == Attribute::TYPE_INTEGER || $attr->type == Attribute::TYPE_FLOAT) {
+            if ($attr->type == AttributeType::TYPE_INTEGER || $attr->type == AttributeType::TYPE_FLOAT) {
                 // Numeric (Integer/Float)
                 $values = DB::table('attributes_products')
                     ->where('attribute_id', $attr->id)
@@ -109,7 +109,7 @@ class AttributeQueryRepository
                         max: (float)max($decoded),
                     );
                 }
-            } elseif ($attr->type == Attribute::TYPE_VARIANT) {
+            } elseif ($attr->type == AttributeType::TYPE_VARIANT) {
                 // Variant
                 $values = DB::table('attributes_products')
                     ->where('attribute_id', $attr->id)
@@ -159,7 +159,7 @@ class AttributeQueryRepository
                         variants: $variantDtoList,
                     );
                 }
-            } elseif ($attr->type == Attribute::TYPE_BOOL) {
+            } elseif ($attr->type == AttributeType::TYPE_BOOL) {
                 // Bool
                 $result[] = new AttributeFilterData(
                     id: $attr->id,
@@ -365,12 +365,12 @@ class AttributeQueryRepository
             if (!$type) continue;
 
             switch ($type) {
-                case Attribute::TYPE_BOOL:
+                case AttributeType::TYPE_BOOL:
                     $query->whereHas('prod_attributes', fn($q) => $q->where('attribute_id', $attrId));
                     break;
 
-                case Attribute::TYPE_INTEGER:
-                case Attribute::TYPE_FLOAT:
+                case AttributeType::TYPE_INTEGER:
+                case AttributeType::TYPE_FLOAT:
                     $min = $value[0] ?? null;
                     $max = $value[1] ?? null;
                     if (!is_null($min) || !is_null($max)) {
@@ -386,7 +386,7 @@ class AttributeQueryRepository
                     }
                     break;
 
-                case Attribute::TYPE_VARIANT:
+                case AttributeType::TYPE_VARIANT:
                     $variantIds = array_map('intval', (array)$value);
                     if (!empty($variantIds)) {
                         $query->whereIn('id', function ($sub) use ($attrId, $variantIds) {

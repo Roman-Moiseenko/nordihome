@@ -3,7 +3,7 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Атрибут {{ attribute.name }}</h1>
         <div class="p-5 bg-white rounded-md">
-            <AttributeInfo :attribute="attribute" :groups="groups" :types="types" :variant="variant"/>
+            <AttributeInfo :attribute="attribute"/>
         </div>
     </el-config-provider>
 </template>
@@ -21,9 +21,6 @@ const props = defineProps({
         type: String,
         default: 'Карточка атрибута',
     },
-    groups: Array,
-    types: Array,
-    variant: Number,
 })
 
 </script>

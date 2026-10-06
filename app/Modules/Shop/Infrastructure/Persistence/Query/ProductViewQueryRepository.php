@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Shop\Infrastructure\Persistence\Query;
 
 use App\Modules\Base\Entity\Dimensions;
-use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Catalog\Domain\ValueObjects\AttributeType;
 use App\Modules\Discount\Domain\ValueObjects\PromotionStatus;
 use App\Modules\Shared\Application\Actions\GetImageThumbByRowUseCase;
 use App\Modules\Shop\Application\DTOs\ClientContext;
@@ -292,7 +292,7 @@ class ProductViewQueryRepository
             ->leftJoin('attribute_groups', 'attributes.group_id', '=', 'attribute_groups.id')
             ->leftJoin('attribute_variants', function ($join) {
                 $join->on('attributes.id', '=', 'attribute_variants.attribute_id')
-                    ->where('attributes.type', '=', Attribute::TYPE_VARIANT);
+                    ->where('attributes.type', '=', AttributeType::TYPE_VARIANT);
             })
             ->where('attributes_products.product_id', $productId)
             ->select(
@@ -331,7 +331,7 @@ class ProductViewQueryRepository
             $value = json_decode($attr['pivot_value'], true);
 
             // Для variant-атрибутов преобразуем id в имена
-            if ($attr['type'] == Attribute::TYPE_VARIANT && !empty($attr['variants'])) {
+            if ($attr['type'] == AttributeType::TYPE_VARIANT && !empty($attr['variants'])) {
                 if (is_array($value)) {
                     $names = [];
                     foreach ($value as $vid) {
@@ -344,7 +344,7 @@ class ProductViewQueryRepository
             }
 
             // Для bool
-            if ($attr['type'] == Attribute::TYPE_BOOL) {
+            if ($attr['type'] == AttributeType::TYPE_BOOL) {
                 $value = true;
             }
 

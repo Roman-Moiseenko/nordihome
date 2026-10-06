@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Database\Seeders;
 
+use App\Modules\Catalog\Domain\ValueObjects\AttributeType;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\AttributeGroup;
 use App\Modules\Catalog\Infrastructure\Models\Category;
@@ -35,7 +36,7 @@ class AttributeSeeder extends Seeder
             $attribute = Attribute::firstOrCreate(
                 [
                     'name' => $name,
-                    'type' => Attribute::TYPE_VARIANT,
+                    'type' => AttributeType::TYPE_VARIANT,
                 ],
                 [
                     'group_id' => $group->id,
