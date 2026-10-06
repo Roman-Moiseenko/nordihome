@@ -5,19 +5,11 @@ namespace App\Modules\Catalog\Service;
 
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\AttributeVariant;
-use App\Modules\Catalog\Repository\AttributeGroupRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AttributeService
 {
-    private AttributeGroupRepository $groups;
-
-    public function __construct( AttributeGroupRepository $groups)
-    {
-        $this->groups = $groups;
-    }
-
     public function create(Request $request): Attribute
     {
         DB::transaction(function () use ($request, &$attribute) {

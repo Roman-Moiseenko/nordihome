@@ -6,6 +6,7 @@ namespace App\Modules\Catalog\Infrastructure\Models;
 use App\Modules\Base\Traits\ImageField;
 use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -26,21 +27,8 @@ class AttributeGroup extends Model
         'name', 'sort', 'svg',
     ];
 
-    public static function register(string $name): self
-    {
-        $max = AttributeGroup::max('sort');
-        return self::create([
-            'name' => $name,
-            'sort' => $max + 1,
-        ]);
-    }
 
-    public function isId(int $id): bool
-    {
-        return $this->id == $id;
-    }
-
-    public function attributes(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function attributes(): HasMany
     {
         return $this->hasMany(Attribute::class, 'group_id', 'id');
     }
