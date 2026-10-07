@@ -3,14 +3,22 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
+use App\Modules\Catalog\Application\DTOs\Modification\ModificationAttributeViewData;
 use App\Modules\Catalog\Application\DTOs\Modification\ModificationIndexData;
+use App\Modules\Catalog\Application\DTOs\Modification\ModificationProductViewData;
+use App\Modules\Catalog\Application\DTOs\Modification\ModificationVariantViewData;
+use App\Modules\Catalog\Application\DTOs\Modification\ModificationViewData;
 use App\Modules\Catalog\Domain\Entities\ModificationEntity;
 use App\Modules\Catalog\Domain\Entities\ModificationProductEntity;
 use App\Modules\Catalog\Domain\Interfaces\ModificationRepositoryInterface;
+use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Catalog\Infrastructure\Models\AttributeVariant;
 use App\Modules\Catalog\Infrastructure\Models\Modification;
 use App\Modules\Catalog\Infrastructure\Models\ModificationAttribute;
 use App\Modules\Catalog\Infrastructure\Models\ModificationProduct;
 use App\Modules\Catalog\Infrastructure\Models\ModificationProductValue;
+use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class ModificationRepository implements ModificationRepositoryInterface
@@ -18,6 +26,79 @@ class ModificationRepository implements ModificationRepositoryInterface
     public function getById(int $id): ModificationEntity
     {
         return $this->hydrate(Modification::findOrFail($id));
+    }
+
+    public function getViewData(int $id): ModificationViewData
+    {
+        $model = Modification::with(['attributes.variants', 'products'])
+            ->findOrFail($id);
+
+        $attributes = $model->attributes
+            ->map(fn(Attribute $attribute) => new ModificationAttributeViewData(
+                id: $attribute->id,
+                name: $attribute->name,
+                variants: $attribute->variants
+                    ->map(fn(AttributeVariant $variant) => new ModificationVariantViewData(
+                        id: $variant->id,
+                        name: $variant->name,
+                    ))
+                    ->all(),
+            ))
+            ->all();
+
+        $attributeIds = array_map(
+            fn(ModificationAttributeViewData $attribute) => $attribute->id,
+            $attributes,
+        );
+
+        $pivotIds = $model->products
+            ->map(fn(Product $product) => (int) $product->pivot->id)
+            ->all();
+
+        $valueRows = ModificationProductValue::whereIn('modification_product_id', $pivotIds)->get();
+
+        $variantNames = AttributeVariant::whereIn('id', $valueRows->pluck('variant_id')->unique()->all())
+            ->pluck('name', 'id')
+            ->all();
+
+        $products = $model->products->map(
+            function (Product $product) use ($valueRows, $variantNames, $attributeIds) {
+                $pivotId = (int) $product->pivot->id;
+
+                $rowValues = $valueRows
+                    ->where('modification_product_id', $pivotId)
+                    ->mapWithKeys(
+                        fn(ModificationProductValue $value) => [
+                            (int) $value->attribute_id => (int) $value->variant_id,
+                        ],
+                    )
+                    ->all();
+
+                $values = [];
+                foreach ($attributeIds as $attributeId) {
+                    if (isset($rowValues[$attributeId]) && isset($variantNames[$rowValues[$attributeId]])) {
+                        $values[] = $variantNames[$rowValues[$attributeId]];
+                    }
+                }
+
+                return new ModificationProductViewData(
+                    id: $pivotId,
+                    productId: (int) $product->id,
+                    name: $product->name,
+                    code: $product->code,
+                    image: GetPhotoStatic::gallery('catalog.product', $product->id, 'mini'),
+                    values: $values,
+                    isPrimary: (bool) $product->pivot->is_primary,
+                );
+            },
+        )->all();
+
+        return new ModificationViewData(
+            id: $model->id,
+            name: $model->name,
+            attributes: $attributes,
+            products: $products,
+        );
     }
 
     public function getUsedProductIds(): array

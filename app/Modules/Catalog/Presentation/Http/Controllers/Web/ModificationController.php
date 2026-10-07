@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\Catalog\Application\Actions\Modification\CreateModificationUseCase;
 use App\Modules\Catalog\Application\Actions\Modification\IndexModificationQuery;
 use App\Modules\Catalog\Application\Actions\Modification\SearchModificationCreateQuery;
+use App\Modules\Catalog\Application\Actions\Modification\ViewModificationQuery;
 use App\Modules\Catalog\Application\DTOs\Modification\ModificationCreateData;
 use App\Modules\Catalog\Infrastructure\Models\Modification;
 use App\Modules\Catalog\Infrastructure\Models\Product;
@@ -32,6 +33,7 @@ class ModificationController extends Controller
         private readonly CreateModificationUseCase $createModificationUseCase,
         private readonly IndexModificationQuery    $indexModificationQuery,
         private readonly SearchModificationCreateQuery $searchModificationCreateQuery,
+        private readonly ViewModificationQuery     $viewModificationQuery,
     )
     {
         $this->service = $service;
@@ -69,11 +71,10 @@ class ModificationController extends Controller
         );
     }
 
-    public function show(Modification $modification): Response
+    public function show(Modification $modification, UserPermission $permission): Response
     {
-
         return Inertia::render('Catalog/Modification/Show', [
-            'modification' => $this->repository->ModificationWithToArray($modification),
+            'modification' => $this->viewModificationQuery->execute($modification->id, $permission),
         ]);
     }
 
