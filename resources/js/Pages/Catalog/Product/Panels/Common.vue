@@ -60,7 +60,7 @@
                     </el-form-item>
                     <el-form-item label="Бренд">
                         <el-select v-model="form.brand_id" @change="onAutoSave" :disabled="isSaving" filterable>
-                            <el-option v-for="item in brands" :value="item.id" :label="item.name"/>
+                            <el-option v-for="item in useCatalog.brands" :value="item.id" :label="item.name"/>
                         </el-select>
                         <div v-if="errors.brand_id" class="text-red-700">{{ errors.brand_id }}</div>
                     </el-form-item>
@@ -117,7 +117,6 @@ const useCatalog = useCatalogStore()
 const props = defineProps({
     product: Object,
     errors: Object,
-    brands: Array,
     country: Array,
     vat: Array,
     measuring: Array,

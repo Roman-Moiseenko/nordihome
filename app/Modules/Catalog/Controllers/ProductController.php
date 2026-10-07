@@ -67,9 +67,6 @@ class ProductController extends Controller
     public function create(Request $request): Response
     {
         return Inertia::render('Catalog/Product/Create', [
-            'brands' => Brand::orderBy('name')->getModels(),
-            'tags' => Tag::orderBy('name')->getModels(),
-            'series' => Series::orderBy('name')->getModels(),
             'country' => Country::orderBy('name')->getModels(),
             'vat' => VAT::orderBy('value')->getModels(),
             'measuring' => Measuring::orderBy('name')->getModels(),
@@ -97,10 +94,6 @@ class ProductController extends Controller
     {
         return Inertia::render('Catalog/Product/Edit', [
             'product' => $this->repository->ProductWithToArray($product),
-            'brands' => Brand::orderBy('name')->getModels(),
-            'tags' => Tag::orderBy('name')->getModels(),
-            'series' => Series::orderBy('name')->getModels(),
-            'groups' => AttributeGroup::orderBy('name')->get(),
             'country' => Country::orderBy('name')->getModels(),
             'vat' => VAT::orderBy('value')->getModels(),
             'measuring' => Measuring::orderBy('name')->getModels(),
@@ -237,110 +230,6 @@ class ProductController extends Controller
         return \response()->json($result);
     }
 
-    //Vue3 Edit
 
-    public function edit_common(ProductCreateRequest $request, Product $product): RedirectResponse
-    {
-        try {
-            $this->service->editCommon($product, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-
-    }
-
-    public function edit_description(Request $request, Product $product): RedirectResponse
-    {
-        try {
-            $this->service->editDescription($product, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function edit_dimensions(Request $request, Product $product): RedirectResponse
-    {
-        try {
-            $this->service->editDimensions($product, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function edit_video(Request $request, Product $product): RedirectResponse
-    {
-        try {
-            $this->service->editVideo($product, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function edit_attribute(Request $request, Product $product): RedirectResponse
-    {
-        try {
-            $this->service->editAttribute($product, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function edit_management(Request $request, Product $product): RedirectResponse
-    {
-        //return redirect()->back()->with('error', $request->boolean('pre_order'));
-
-        //   dd($request->boolean('pre_order'));
-        try {
-            $this->service->editManagement($product, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function edit_equivalent(Request $request, Product $product): RedirectResponse
-    {
-        try {
-            $this->service->editEquivalent($product, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function edit_related(Request $request, Product $product): RedirectResponse
-    {
-        try {
-            $this->service->editRelated($product, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function edit_bonus(Request $request, Product $product): RedirectResponse
-    {
-        try {
-            $this->service->editBonus($product, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function edit_composite(Request $request, Product $product): RedirectResponse
-    {
-        try {
-            $this->service->editComposite($product, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
 
 }

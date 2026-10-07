@@ -13,6 +13,7 @@ use App\Modules\Catalog\Presentation\Http\Controllers\Web\EquivalentController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\ModificationController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\ProductEditController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\SeriesController;
@@ -232,16 +233,16 @@ Route::group([
             'prefix' => 'edit',
             'as' => 'edit.'
         ], function () {
-            Route::post('/common/{product}', [ProductController::class, 'edit_common'])->name('common');
-            Route::post('/description/{product}', [ProductController::class, 'edit_description'])->name('description');
-            Route::post('/dimensions/{product}', [ProductController::class, 'edit_dimensions'])->name('dimensions');
-            Route::post('/video/{product}', [ProductController::class, 'edit_video'])->name('video');
-            Route::post('/attribute/{product}', [ProductController::class, 'edit_attribute'])->name('attribute');
-            Route::post('/management/{product}', [ProductController::class, 'edit_management'])->name('management');
-            Route::post('/equivalent/{product}', [ProductController::class, 'edit_equivalent'])->name('equivalent');
-            Route::post('/related/{product}', [ProductController::class, 'edit_related'])->name('related');
-            Route::post('/bonus/{product}', [ProductController::class, 'edit_bonus'])->name('bonus');
-            Route::post('/composite/{product}', [ProductController::class, 'edit_composite'])->name('composite');
+            Route::post('/common/{product}', [ProductEditController::class, 'common'])->name('common');
+            Route::post('/description/{product}', [ProductEditController::class, 'description'])->name('description');
+            Route::post('/dimensions/{product}', [ProductEditController::class, 'dimensions'])->name('dimensions');
+            Route::post('/video/{product}', [ProductEditController::class, 'video'])->name('video');
+            Route::post('/attribute/{product}', [ProductEditController::class, 'attribute'])->name('attribute');
+            Route::post('/management/{product}', [ProductEditController::class, 'management'])->name('management');
+            Route::post('/equivalent/{product}', [ProductEditController::class, 'equivalent'])->name('equivalent');
+            Route::post('/related/{product}', [ProductEditController::class, 'related'])->name('related');
+            Route::post('/bonus/{product}', [ProductEditController::class, 'bonus'])->name('bonus');
+            Route::post('/composite/{product}', [ProductEditController::class, 'composite'])->name('composite');
         });
     });
     Route::resource('product', ProductController::class)->except(['update']);

@@ -38,13 +38,13 @@
                     <!-- Повторить -->
                     <el-form-item label="Метки" label-position="left">
                         <el-select v-model="form.tags" @change="onAutoSave" :disabled="isSaving" multiple filterable allow-create>
-                            <el-option v-for="item in tags" :key="item.id" :value="item.id" :label="item.name" />
+                            <el-option v-for="item in useCatalog.tags" :key="item.id" :value="item.id" :label="item.name" />
                         </el-select>
                         <div v-if="errors.tags" class="text-red-700">{{ errors.tags }}</div>
                     </el-form-item>
                     <el-form-item label="Серия" label-position="left">
                         <el-select v-model="form.series_id" @change="onAutoSave" :disabled="isSaving" filterable allow-create clearable>
-                            <el-option v-for="item in series" :key="item.id" :value="item.id" :label="item.name" />
+                            <el-option v-for="item in useCatalog.series" :key="item.id" :value="item.id" :label="item.name" />
                         </el-select>
                         <div v-if="errors.tags" class="text-red-700">{{ errors.tags }}</div>
                     </el-form-item>
@@ -74,16 +74,13 @@
 <script setup lang="ts">
 import {reactive, ref, defineProps, computed } from "vue"
 import {router} from "@inertiajs/vue3"
-
-
-
+import {useCatalogStore} from "@Res/catalogStore";
 
 const props = defineProps({
     product: Object,
     errors: Object,
-    tags: Array,
-    series: Array,
 })
+const useCatalog = useCatalogStore()
 
 console.log(props.product)
 const autoSave = ref(true)
