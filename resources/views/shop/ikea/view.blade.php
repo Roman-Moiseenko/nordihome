@@ -8,16 +8,18 @@
 
 @section('content')
 
-    <h1>{{ $pageData->category->name }}. Товаров {{ $pageData->paginator->total }}</h1>
+    <h1>{{ $pageData->category->name }} </h1>
+
 
     <div class="row">
-        <div class="col-lg-3">
+        <div class="col-lg-3 d-none_990">
             @include('shop.ikea.card-categories', [
                 'categories' => $pageData->categories,
                 'currentId' => $pageData->category->id
                 ])
         </div>
         <div class="col-lg-9">
+            <div class="t-color_dark-gray f-z_14 m-b_10">Найдено: {{ $pageData->paginator->total }} товаров</div>
             <div class="products">
                 <div class="row">
                     @foreach($pageData->products as $product)

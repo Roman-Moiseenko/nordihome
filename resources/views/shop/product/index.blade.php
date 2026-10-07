@@ -13,10 +13,10 @@ $total = $pageData->paginator->total;
 @section('content')
     <div class="title-page">
         <div class="products-page-title">
-            <div class="title h1">
-                <h1>{{ $pageData->mainInfo->name }} </h1>
-                <span>&nbsp;{{ count_product($pageData->mainInfo->totalProducts) }} </span>
-            </div>
+                <h1>{{ $pageData->mainInfo->name }}</h1>
+        </div>
+        <div class="d-flex align-items-center justify-content-end">
+            <div class="t-color_dark-gray m-r_5 f-z_14"><span>Найдено: {{ count_product($pageData->mainInfo->totalProducts) }} </span></div>
             <div class="order btn-group">
                 <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     Сортировка
@@ -42,13 +42,9 @@ $total = $pageData->paginator->total;
     </div>
     <!-- Показать на мобиле -->
     <div Class="catalog-subcategories-mob">
-        <div class="row">
         @foreach($pageData->mainInfo->children as $child)
-            <div class="col-6 col-sm-4 col-md-3">
                 <a href="{{ route('shop.' . $pageData->mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
-            </div>
         @endforeach
-        </div>
     </div>
     <form action="" method="GET">
         <div class="mobile-manager">

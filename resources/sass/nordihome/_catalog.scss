@@ -58,13 +58,12 @@
     a {
         text-decoration: none;
         background: #e8e8e8;
-        display: block;
+        display: inline-block;
         border-radius: 12px;
         text-align: center;
-        padding: 15px 10px;
+        padding: 5px 10px;
         font-size: 14px;
         margin: 0 0 10px 0;
-        min-height: 68px;
     }
 }
 @media screen and (max-width: 991px){
@@ -74,18 +73,22 @@
             font-size: 16px;
         }
     }
-    .catalog-subcategories-mob {display:block;}
+    .catalog-subcategories-mob {
+        display:block;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-right: 5px;
+        flex-shrink: 0;
+        justify-content: start;
+        scrollbar-width: thin;
+        white-space: nowrap;
+    }
 }
 @media (max-width: 576px) {
     .catalog-subcategories-mob a {
-        text-decoration: none;
-        background: #e8e8e8;
-        display: block;
-        border-radius: 12px;
-        text-align: center;
-        padding: 15px 5px;
+        padding: 5px 10px;
         font-size: 13px;
         margin: 0 0 10px 0;
-        min-height: 68px;
     }
 }

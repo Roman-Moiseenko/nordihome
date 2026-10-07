@@ -242,3 +242,12 @@ button.to-wish, button.is-wish {
         }
     }
 }
+@media screen and (max-width: 992px) {
+    .top-tags {
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding-right: 5px;
+        white-space: nowrap;
+        scrollbar-width: thin;
+    }
+}

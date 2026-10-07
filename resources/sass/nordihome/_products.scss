@@ -1,11 +1,7 @@
 /* PRODUCTS PAGE */
 .products-page-title  {
-    display: flex;
-    justify-content: space-between;
     >.title {
-        display: flex;
     }
-
 }
 .view-info-product {
     h1 {
@@ -88,7 +84,6 @@
 
         background: var(--bs-white);
         transition: $transition-slow;
-        padding-top: 45px;
         .borders {
             border: 1px solid var(--bs-gray-400);
             border-radius: $radius-card;

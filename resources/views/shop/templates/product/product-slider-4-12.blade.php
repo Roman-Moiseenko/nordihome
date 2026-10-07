@@ -11,18 +11,18 @@
        use App\Modules\Content\Entity\Widgets\ProductWidget;
        /** @var ProductWidget $widget  */
 @endphp
-<div class="text-center mt-5 py-4 widget-home-3-group container-xl">
-    <h2 class="fw-semibold mt-5">{{ $widget->caption }}</h2>
-    <h3>{{ $widget->description }}</h3>
+<div class="mt-5 py-4 widget-home-3-group container-xl">
+    <h3 class="fw-semibold mt-5">{{ $widget->caption }}</h3>
+    <p>{{ $widget->description }}</p>
 
     <div id="" class="owl-carousel owl-theme slider-images-product">
         @foreach($widget->products(12) as $_product)
-            <div style="">
+            <div style="" class="text-center">
                 <a href="{{ route('shop.product.view', $_product->slug) }}"
                    style="max-width: 100%; overflow: hidden;">
                     <img loading="lazy" src="{{  App\Modules\Shared\Application\Actions\GetPhotoStatic::gallery('catalog.product', $_product->id, 'catalog') }}"
                          alt="{{ $_product->getName() }}" style="width: 100%;"/>
-                    <div class="name f-w_600 m-b_10">{{ $_product->getName() }}</div>
+                    <div class="name f-w_600 m-b_10 m-t_10">{{ $_product->getName() }}</div>
                     <div class="price m-b_10">{{ price($_product->getPrice()) }}</div>
                 </a>
                 <div>
@@ -35,7 +35,7 @@
     </div>
     @if(!empty($widget->getUrl()))
         <div class="t-a_center m-t_10">
-            <a href="{{ $widget->getUrl() }}">{{ $widget->button_name }}</a>
+            <a href="{{ $widget->getUrl() }}" class="btn btn-white-b">{{ $widget->button_name }}</a>
         </div>
     @endif
 </div>

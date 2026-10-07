@@ -36,7 +36,7 @@
             <div class="row">
                 <div class="col-lg-4">
                     <div class="heading">ТАРИФЫ НА ДОСТАВКУ ИЗ ПОЛЬШИ</div>
-                    <div>МИНИМАЛЬНАЯ СТОИМОСТЬ ДОСТАВКИ 1 000 РУБ<br>стоимость за 1 кг</div>
+                    <div>МИНИМАЛЬНАЯ СТОИМОСТЬ ДОСТАВКИ <span class="white-space_nowrap">1 000 РУБ</span><br>стоимость за 1 кг</div>
                     <div class="tariffs-items">
                         <div class="item">
                             <div>0-5 КГ</div>
@@ -104,7 +104,7 @@
                             <div></div>
                         </div>
                     </div>
-                    <div class="t-color_orange m-t_20 m-b_20">Отправления свыше 30 кг или более 150 см рассчитываются по индивидуальному тарифу, как негабаритные грузы.<br>Связаться с нами можно на странице <a href="/kontakty/" class="t-color_orange">КОНТАКТЫ</a></div>
+                    <div class="t-color_orange m-t_20 m-b_20">Отправления свыше 30 кг или более 150 см рассчитываются по индивидуальному тарифу, как негабаритные грузы.<br>Связаться с нами можно на странице <a href="/page/kontaktnye-dannye" class="t-color_orange">КОНТАКТЫ</a></div>
                 </div>
                 <div class="col-lg-4">
                     <div class="heading">ДОСТАВКА ПО ГОРОДУ И ОБЛАСТИ</div>

@@ -158,6 +158,21 @@
             });
         });
     });
+    // Добавляем класс active к якорям в меню на мобе Каталог и Комнаты
+    document.querySelectorAll('.header-menu-mobile-buttons a').forEach(button => {
+        button.addEventListener('click', function(event) {
+            event.preventDefault();
+
+            // 1. Находим текущую активную ссылку внутри этого блока и удаляем у неё класс
+            const currentActive = document.querySelector('.header-menu-mobile-buttons a.active');
+            if (currentActive) {
+                currentActive.classList.remove('active');
+            }
+
+            // 2. Добавляем класс active той ссылке, по которой кликнули
+            this.classList.add('active');
+        });
+    });
 
 })();
 
