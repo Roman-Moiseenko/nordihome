@@ -91,6 +91,14 @@ interface ProductRepositoryInterface
      */
     public function search(string $query, int $limit = 10): array;
 
+    /**
+     * Поиск товаров по строке, исключая переданные ID.
+     *
+     * @param int[] $excludeIds
+     * @return ProductEntity[]
+     */
+    public function searchExcluding(string $query, array $excludeIds, int $limit = 10): array;
+
     public function countProductsByBrandIds($brandIds): array;
 
     /**
@@ -98,4 +106,8 @@ interface ProductRepositoryInterface
      * @return array<int, int>
      */
     public function countProductsBySeriesIds(array $seriesIds): array;
+
+    public function exists(int $productId): bool;
+
+
 }

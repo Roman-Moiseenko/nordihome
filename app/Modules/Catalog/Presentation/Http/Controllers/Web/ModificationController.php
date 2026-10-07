@@ -1,13 +1,18 @@
 <?php
 
-namespace App\Modules\Catalog\Controllers;
+namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Catalog\Application\Actions\Modification\CreateModificationUseCase;
+use App\Modules\Catalog\Application\Actions\Modification\IndexModificationQuery;
+use App\Modules\Catalog\Application\Actions\Modification\SearchModificationCreateQuery;
+use App\Modules\Catalog\Application\DTOs\Modification\ModificationCreateData;
 use App\Modules\Catalog\Infrastructure\Models\Modification;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Repository\ModificationRepository;
 use App\Modules\Catalog\Repository\ProductRepository;
 use App\Modules\Catalog\Service\ModificationService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,35 +25,55 @@ class ModificationController extends Controller
     private ProductRepository $products;
     private ModificationRepository $repository;
 
-    public function __construct(ModificationService $service, ProductRepository $products, ModificationRepository $repository)
+    public function __construct(
+        ModificationService                        $service,
+        ProductRepository                          $products,
+        ModificationRepository                     $repository,
+        private readonly CreateModificationUseCase $createModificationUseCase,
+        private readonly IndexModificationQuery    $indexModificationQuery,
+        private readonly SearchModificationCreateQuery $searchModificationCreateQuery,
+    )
     {
         $this->service = $service;
         $this->products = $products;
         $this->repository = $repository;
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request, UserPermission $permission): Response
     {
-        $modifications = $this->repository->getIndex($request, $filters);
+        $modifications = $this->indexModificationQuery->execute(
+            $permission,
+            (int) $request->input('size', 20),
+            (int) $request->input('page', 1),
+        );
+
         return Inertia::render('Catalog/Modification/Index', [
             'modifications' => $modifications,
-            'filters' => $filters,
+            'filters' => [],
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $permission): RedirectResponse
     {
-        $request->validate([
+        $dto = ModificationCreateData::validateAndCreate($request->all());
+        /*$request->validate([
             'name' => 'required|string',
             'product_id' => 'required',
             'attributes' => 'required|array',
         ]);
-        try {
-            $modification = $this->service->create($request);
-            return redirect()->route('admin.catalog.modification.show', $modification)->with('success', 'Модификация создана');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        */
+        $modification = $this->createModificationUseCase->execute($dto, $permission);
+//        $modification = $this->service->create($request);
+        return redirect()->route('admin.catalog.modification.show', $modification->id)->with('success', 'Модификация создана');
+    }
+
+    public function search_create(Request $request): JsonResponse
+    {
+        $query = $request->string('search')->trim()->value();
+
+        return response()->json(
+            $this->searchModificationCreateQuery->execute($query)
+        );
     }
 
     public function show(Modification $modification): Response
@@ -69,8 +94,8 @@ class ModificationController extends Controller
 
     public function destroy(Modification $modification): RedirectResponse
     {
-            $this->service->delete($modification);
-            return redirect()->back()->with('success', 'Модификация удалена');
+        $this->service->delete($modification);
+        return redirect()->back()->with('success', 'Модификация удалена');
     }
 
     public function set_base(Request $request, Modification $modification): RedirectResponse
@@ -81,8 +106,8 @@ class ModificationController extends Controller
 
     public function del_product(Request $request, Modification $modification): RedirectResponse
     {
-            $this->service->delProduct($request, $modification);
-            return redirect()->back()->with('success', 'Товар убран из модификации');
+        $this->service->delProduct($request, $modification);
+        return redirect()->back()->with('success', 'Товар убран из модификации');
     }
 
 //AJAX

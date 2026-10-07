@@ -1,125 +1,153 @@
 <?php
+declare(strict_types=1);
 
 namespace App\Modules\Catalog\Domain\Entities;
-use App\Modules\Catalog\Domain\ValueObjects\ModificationAttributes;
-use App\Modules\Catalog\Domain\ValueObjects\ModificationName;
 
 /**
  * Aggregate root «Модификация товара».
  *
- * Сознательно НЕ содержит:
- *  - base_product_id    — роль на pivot (modifications_products.is_primary);
- *  - список товаров     — связи, загружаются репозиторием;
- *  - ModificationValues — принадлежат связям, не агрегату.
- *
- * Держит только:
- *  - идентичность (id, private(set));
- *  - название (VO ModificationName);
- *  - оси модификации (VO ModificationAttributes).
- *
- * PHP 8.4 property hooks:
- *  - `private(set)` — id доступен на чтение всем, на запись — только внутри;
- *  - `set`-хуки на name/attributes принимают и raw-значение, и готовый VO,
- *    нормализуя первое во второе. Никаких ручных сеттеров.
+ * Сознательно НЕ содержит base_product_id — роль базового товара
+ * хранится на связи (modifications_products.is_primary).
  */
 final class ModificationEntity
 {
-    /**
-     * Идентичность. Присваивается только внутри класса
-     * (конструктор / withId). Снаружи — read-only.
-     */
-    public private(set) ?int $id = null;
+    public ?int $id = null {
+        get => $this->id;
+        set => $this->id = $value;
+    }
 
-    /**
-     * Название модификации.
-     *
-     * Set-хук принимает string или ModificationName.
-     * Валидация — на стороне VO (пустота, длина).
-     */
-    public ModificationName $name {
-        set (ModificationName|string $value) {
-            $this->name = $value instanceof ModificationName
-                ? $value
-                : new ModificationName($value);
-        }
+    public string $name {
+        get => $this->name;
+        set => $this->name = $value;
     }
 
     /**
-     * Оси модификации.
+     * Оси модификации — ID атрибутов-вариантов.
      *
-     * Set-хук принимает array<int> или ModificationAttributes.
-     * Валидация — на стороне VO (1..MAX, без дубликатов).
+     * @var int[]
      */
-    public ModificationAttributes $attributes {
-        set (ModificationAttributes|array $value) {
-            $this->attributes = $value instanceof ModificationAttributes
-                ? $value
-                : new ModificationAttributes($value);
-        }
+    public array $attributes {
+        get => $this->attributes;
+        set => $this->attributes = $value;
     }
 
     /**
-     * @param ModificationName|string       $name
-     * @param ModificationAttributes|array  $attributes
+     * Связи «товар → значения». Ключ — product_id.
+     *
+     * @var array<int, ModificationProductEntity>
+     */
+    public array $products = [] {
+        &get => $this->products;
+    }
+
+    /**
+     * @param int[] $attributes
+     * @param ModificationProductEntity[] $products
      */
     public function __construct(
-        ?int $id,
-        ModificationName|string $name,
-        ModificationAttributes|array $attributes,
+        string $name,
+        array $attributes,
+        array $products = [],
     ) {
-        $this->id         = $id;
-        $this->name       = $name;       // ← triggers set hook
-        $this->attributes = $attributes; // ← triggers set hook
+        $this->name = $name;
+        $this->attributes = $attributes;
+
+        foreach ($products as $product) {
+            $this->products[$product->productId] = $product;
+        }
     }
 
     /**
-     * Фабрика для новой модификации (id ещё нет).
+     * @param int[] $attributes
      */
-    public static function create(
-        ModificationName|string $name,
-        ModificationAttributes|array $attributes,
-    ): self {
-        return new self(null, $name, $attributes);
-    }
-
-    public function isNew(): bool
+    public static function create(string $name, array $attributes): self
     {
-        return $this->id === null;
+        return new self(name: $name, attributes: $attributes);
     }
 
-    /**
-     * Переименование. Валидация — в VO ModificationName.
-     */
-    public function rename(ModificationName|string $newName): void
+    public function rename(string $name): void
     {
-        $this->name = $newName; // ← triggers set hook
+        $this->name = $name;
     }
 
     /**
-     * Смена осей модификации.
-     *
-     * Domain позволяет, но Application обязан проверить,
-     * что все товары внутри всё ещё покрывают новые оси
-     * (или что модификация пустая). Эта проверка — на уровне Action,
-     * потому что требует доступа к товарам.
+     * @param array<int, int> $values attribute_id => variant_id
      */
-    public function changeAttributes(ModificationAttributes|array $newAttributes): void
+    public function addProduct(int $productId, array $values, bool $primary = false): ModificationProductEntity
     {
-        $this->attributes = $newAttributes; // ← triggers set hook
+        if (isset($this->products[$productId])) {
+            throw new \DomainException("Product {$productId} is already in modification");
+        }
+
+        if ($primary) {
+            $this->demotePrimary();
+        }
+
+        // первый товар всегда primary
+        if ($this->products === []) {
+            $primary = true;
+        }
+
+        $product = new ModificationProductEntity(
+            productId: $productId,
+            values: $values,
+            isPrimary: $primary,
+        );
+
+        $this->products[$productId] = $product;
+
+        return $product;
     }
 
-    /**
-     * Возвращает копию с проставленным id.
-     * Используется репозиторием после INSERT.
-     *
-     * Присваивание id работает, потому что мы внутри класса
-     * (private(set) разрешает запись только изнутри).
-     */
+    public function removeProduct(int $productId): void
+    {
+        if (!isset($this->products[$productId])) {
+            throw new \DomainException("Product {$productId} is not in modification");
+        }
+
+        $wasPrimary = $this->products[$productId]->isPrimary;
+        unset($this->products[$productId]);
+
+        // если удалили primary — назначаем первого из оставшихся
+        if ($wasPrimary && $this->products !== []) {
+            $firstId = array_key_first($this->products);
+            $this->products[$firstId]->makePrimary();
+        }
+    }
+
+    public function setPrimary(int $productId): void
+    {
+        if (!isset($this->products[$productId])) {
+            throw new \DomainException("Product {$productId} is not in modification");
+        }
+
+        $this->demotePrimary();
+        $this->products[$productId]->makePrimary();
+    }
+
+    public function primaryProductId(): ?int
+    {
+        foreach ($this->products as $product) {
+            if ($product->isPrimary) {
+                return $product->productId;
+            }
+        }
+
+        return null;
+    }
+
     public function withId(int $id): self
     {
-        $clone     = clone $this;
+        $clone = clone $this;
         $clone->id = $id;
 
         return $clone;
+    }
+
+    private function demotePrimary(): void
+    {
+        foreach ($this->products as $product) {
+            $product->demote();
+        }
     }
 }

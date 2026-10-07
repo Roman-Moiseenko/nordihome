@@ -1,7 +1,6 @@
 <?php
 
 use App\Modules\Catalog\Controllers\AttributeController;
-use App\Modules\Catalog\Controllers\ModificationController;
 use App\Modules\Catalog\Controllers\OnOrderController;
 use App\Modules\Catalog\Controllers\ParserController;
 use App\Modules\Catalog\Controllers\PriorityController;
@@ -13,6 +12,7 @@ use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryProductControl
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\EquivalentController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupProductController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\ModificationController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\SeriesController;
@@ -183,6 +183,7 @@ Route::group([
         //Route::post('/set-modifications/{modification}', [ModificationController::class, 'set_modifications'])->name('set-modifications');
         Route::post('/set-base/{modification}', [ModificationController::class, 'set_base'])->name('set-base');
         Route::post('/search', [ModificationController::class, 'search'])->name('search');
+        Route::post('/search-create', [ModificationController::class, 'search_create'])->name('search-create');
         Route::post('/rename/{modification}', [ModificationController::class, 'rename'])->name('rename');
         Route::post('/add-product/{modification}', [ModificationController::class, 'add_product'])->name('add-product');
         Route::delete('/del-product/{modification}', [ModificationController::class, 'del_product'])->name('del-product');

@@ -11,6 +11,7 @@ use App\Modules\Catalog\Domain\Entities\AttributeVariantEntity;
 use App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\AttributeType;
 use App\Modules\Catalog\Infrastructure\Models\Attribute;
+use App\Modules\Catalog\Infrastructure\Models\AttributeProduct;
 use App\Modules\Catalog\Infrastructure\Models\AttributeVariant;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Shared\Application\Actions\GetPhotoStatic;
@@ -41,6 +42,25 @@ class AttributeRepository implements AttributeRepositoryInterface
     public function getById(int $id): AttributeEntity
     {
         return $this->hydrate(Attribute::with('variants')->findOrFail($id));
+    }
+
+    public function getModificationAttributesForProducts(array $productIds): array
+    {
+        if (empty($productIds)) {
+            return [];
+        }
+
+        $attributeIds = AttributeProduct::whereIn('product_id', $productIds)
+            ->distinct()
+            ->pluck('attribute_id');
+
+        return Attribute::whereIn('id', $attributeIds)
+            ->where('type', AttributeType::TYPE_VARIANT)
+            ->where('multiple', false)
+            ->orderBy('name')
+            ->get()
+            ->map(fn(Attribute $model) => $this->hydrate($model))
+            ->all();
     }
 
     public function getFilteredPaginated(FilterAttributeIndexData &$filter): LengthAwarePaginator

@@ -42,4 +42,12 @@ interface AttributeRepositoryInterface
     public function save(AttributeEntity $attribute): AttributeEntity;
 
     public function delete(int $id): void;
+
+    /**
+     * Атрибуты-варианты (без множественного выбора), которые есть у найденных товаров.
+     *
+     * @param int[] $productIds
+     * @return AttributeEntity[]
+     */
+    public function getModificationAttributesForProducts(array $productIds): array;
 }

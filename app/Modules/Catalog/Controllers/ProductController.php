@@ -13,6 +13,7 @@ use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Equivalent;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Series;
+use App\Modules\Catalog\Application\Actions\Product\SearchProductQuery;
 use App\Modules\Catalog\Infrastructure\Models\Tag;
 use App\Modules\Catalog\Repository\ProductRepository;
 use App\Modules\Catalog\Request\ProductCreateRequest;
@@ -38,6 +39,7 @@ class ProductController extends Controller
         ProductService                        $service,
         ProductRepository                     $repository,
         private readonly ProductSearchService $productSearchService,
+        private readonly SearchProductQuery   $searchProductQuery,
     )
     {
         $this->service = $service;
@@ -184,16 +186,14 @@ class ProductController extends Controller
 
     public function search(Request $request): JsonResponse
     {
-        $result = [];
         try {
-            $products = $this->repository->search($request['search']);
-            /** @var Product $product */
-            foreach ($products as $product) {
-                $result[] = $product->toArrayForSearch();
-            }
-            return \response()->json($result);
+            $products = $this->searchProductQuery->execute(
+                $request->string('search')->trim()->value()
+            );
+
+            return response()->json($products);
         } catch (\Throwable $e) {
-            return \response()->json(['error' => $e->getMessage(),]);
+            return response()->json(['error' => $e->getMessage()]);
         }
     }
 

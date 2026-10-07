@@ -17,6 +17,9 @@ class ModificationProductValue extends Model
 {
     public $timestamps = false;
 
+    // Составной первичный ключ (modification_product_id, attribute_id) — без автоинкремента.
+    public $incrementing = false;
+
     protected $table = 'modification_product_values';
 
     protected $fillable = [

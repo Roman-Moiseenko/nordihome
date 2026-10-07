@@ -2,6 +2,8 @@
 
 namespace App\Modules\Catalog\Domain\ValueObjects;
 
+use JsonSerializable;
+
 final readonly class ModificationValues implements JsonSerializable
 {
     /** @var array<int, int> */
