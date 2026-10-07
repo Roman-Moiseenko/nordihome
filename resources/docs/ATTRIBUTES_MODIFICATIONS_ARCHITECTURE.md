@@ -404,7 +404,7 @@ Presentation
 }
 ```
 
-Изображение базового товара на фронтенде подгружается отдельно по `primary_product_id` через `admin.photo.get-by-ids` (как в [`TableRelation.vue`](resources/js/VueComponents/Product/TableRelation.vue:53)).
+Изображение базового товара на фронтенде подгружается отдельно по `primary_product_id` через `admin.photo.get-by-ids` в [`Index.vue`](resources/js/Pages/Catalog/Modification/Index.vue:118).
 
 ### 5.9. Ответ карточки атрибута (Clean Architecture, `AttributeViewData`)
 
