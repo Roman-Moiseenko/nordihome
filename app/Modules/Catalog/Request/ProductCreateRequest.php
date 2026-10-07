@@ -25,8 +25,6 @@ class ProductCreateRequest extends FormRequest
             'code' => 'required|unique:products,code,' . $this->id,
             'category_id' => 'required',
             'brand_id' => 'required',
-            //'country_id' => 'required',
-            'vat_id' => 'required',
             'measuring_id' => 'required',
         ];
     }
@@ -43,8 +41,6 @@ class ProductCreateRequest extends FormRequest
             'code.unique' => 'Артикул уже существует',
             'category_id.required' => 'Выберите основную категорию',
             'brand_id.required' => 'Выберите бренд',
-            //'country_id.required' => 'Выберите страну происхождения',
-            'vat_id.required' => 'Укажите налог',
             'measuring_id.required' => 'Обязательное поле',
 
         ];

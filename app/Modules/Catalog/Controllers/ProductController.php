@@ -67,12 +67,7 @@ class ProductController extends Controller
     public function create(Request $request): Response
     {
         return Inertia::render('Catalog/Product/Create', [
-            'country' => Country::orderBy('name')->getModels(),
-            'vat' => VAT::orderBy('value')->getModels(),
-            'measuring' => Measuring::orderBy('name')->getModels(),
-            'markingType' => MarkingType::orderBy('name')->getModels(),
             'distributors' => Distributor::orderBy('name')->getModels(),
-            'vat_trader' => Trader::default()->organization->vat_id,
         ]);
     }
 
@@ -94,14 +89,11 @@ class ProductController extends Controller
     {
         return Inertia::render('Catalog/Product/Edit', [
             'product' => $this->repository->ProductWithToArray($product),
-            'country' => Country::orderBy('name')->getModels(),
-            'vat' => VAT::orderBy('value')->getModels(),
-            'measuring' => Measuring::orderBy('name')->getModels(),
-            'markingType' => MarkingType::orderBy('name')->getModels(),
+            //FixMe перенести в useStore (Catalog или Guide)
+
             'distributors' => Distributor::orderBy('name')->getModels(),
             'dimensions' => array_select(Dimensions::TYPES),
             'complexities' => array_select(Packages::COMPLEXITIES),
-            'frequencies' => array_select(Product::FREQUENCIES),
             'equivalents' => Equivalent::orderBy('name')
                 ->whereHas('category', function ($query) use ($product) {
                     $query->where('_lft', '<=', $product->category->_lft)

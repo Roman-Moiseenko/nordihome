@@ -14,10 +14,6 @@
 
                 <PanelCommon :product="product"
                              :errors="errors"
-                             :country="country"
-                             :vat="vat"
-                             :measuring="measuring"
-                             :markingType="markingType"
                 />
                 <PanelDescription :product="product"
                                   :errors="errors"
@@ -38,7 +34,6 @@
                 />
                 <PanelManagement :product="product"
                                  :errors="errors"
-                                 :frequencies="frequencies"
                 />
                 <PanelModification :product="product"
                                    :errors="errors"
@@ -90,7 +85,6 @@ const props = defineProps({
     markingType: Array,
     distributors: Array,
     dimensions: Array,
-    frequencies: Array,
     equivalents: Array,
     complexities: Array,
     title: {

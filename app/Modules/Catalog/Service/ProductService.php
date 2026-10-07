@@ -81,7 +81,7 @@ class ProductService
             $product->name_print = $request->string('name_print')->trim()->value();
             $product->comment = $request->string('comment')->trim()->value();
             $product->country_id = $request->input('country_id');
-            $product->vat_id = $request->integer('vat_id');
+
             $product->measuring_id = $request->integer('measuring_id');
             $product->fractional = $request->boolean('fractional');
             $product->marking_type_id = $request->input('marking_type_id');
@@ -187,7 +187,6 @@ class ProductService
             $product->brand_id = $request->integer('brand_id');
             $product->comment = $request->string('comment')->trim()->value();
             $product->country_id = $request->input('country_id');
-            $product->vat_id = $request->integer('vat_id');
             $product->measuring_id = $request->integer('measuring_id');
             $product->fractional = $request->boolean('fractional');
             $product->marking_type_id = $request->input('marking_type_id');
@@ -330,7 +329,7 @@ class ProductService
             $product->pre_order = $request->boolean('pre_order');
             $product->priority = $request->boolean('priority');
             $product->hide_price = $request->boolean('hide_price');
-            $product->frequency = $request->integer('frequency');
+
             $product->price_reduced = $request->boolean('reduced');
             $product->only_on_order = $request->boolean('only_on_order');
             $product->save();

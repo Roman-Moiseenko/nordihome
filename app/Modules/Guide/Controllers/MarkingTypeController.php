@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class MarkingTypeController extends Controller
 {
@@ -45,5 +46,11 @@ class MarkingTypeController extends Controller
     {
         $this->service->destroy($markingType);
         return redirect()->back()->with('success', 'Маркировка удалена');
+    }
+
+    public function list()
+    {
+        $list = MarkingType::orderBy('name')->getModels();
+        return response()->json($list, SymfonyResponse::HTTP_OK);
     }
 }

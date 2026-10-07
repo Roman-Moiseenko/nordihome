@@ -128,7 +128,7 @@ class ProductRepository
                     'is_date' => $attribute->isDate(),
                     'is_string' => $attribute->isString(),
                     'multiple' => $attribute->multiple,
-                    'is_modification' => $product->AttributeIsModification($attribute->id),
+                   // 'is_modification' => $product->AttributeIsModification($attribute->id),
                 ];
             }),
             'storages' => $product->storageItems()->get()->map(function (StorageItem $item) {
@@ -142,7 +142,7 @@ class ProductRepository
             'modification' => is_null($product->modification) ? null : [
                 'id' => $product->modification->id,
                 'name' => $product->modification->name,
-                'base_product_id' => $product->modification->base_product_id,
+
                 'attributes' => array_map(function (Attribute $attribute) {
                     return [
                         'name' => $attribute->name,

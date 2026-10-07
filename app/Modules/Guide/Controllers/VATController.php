@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class VATController extends Controller
 {
@@ -45,5 +46,11 @@ class VATController extends Controller
     {
         $this->service->destroy($vat);
         return redirect()->back()->with('success', 'Налог удален');
+    }
+
+    public function list()
+    {
+        $list = VAT::orderBy('value')->getModels();
+        return response()->json($list, SymfonyResponse::HTTP_OK);
     }
 }

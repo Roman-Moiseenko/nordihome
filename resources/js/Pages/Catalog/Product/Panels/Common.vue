@@ -66,7 +66,7 @@
                     </el-form-item>
                     <el-form-item label="Страна происхождения">
                         <el-select v-model="form.country_id" @change="onAutoSave" :disabled="isSaving" filterable clearable>
-                            <el-option v-for="item in country" :key="item.id" :value="item.id" :label="item.name"/>
+                            <el-option v-for="item in useGuide.countries" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
                         <div v-if="errors.country_id" class="text-red-700">{{ errors.country_id }}</div>
                     </el-form-item>
@@ -77,20 +77,14 @@
             <!-- Колонка 3 -->
             <el-col :span="8">
                 <el-form label-width="auto">
-                    <el-form-item label="НДС">
-                        <el-select v-model="form.vat_id" @change="onAutoSave" :disabled="isSaving" filterable>
-                            <el-option v-for="item in vat" :key="item.id" :value="item.id" :label="item.name"/>
-                        </el-select>
-                        <div v-if="errors.vat_id" class="text-red-700">{{ errors.vat_id }}</div>
-                    </el-form-item>
                     <el-form-item label="Вид продукции ИС">
                         <el-select v-model="form.marking_type_id" @change="onAutoSave" :disabled="isSaving" filterable clearable>
-                            <el-option v-for="item in markingType" :key="item.id" :value="item.id" :label="item.name"/>
+                            <el-option v-for="item in useGuide.markingType" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="Ед.измерения">
                         <el-select v-model="form.measuring_id" @change="onAutoSave" :disabled="isSaving" >
-                            <el-option v-for="item in measuring" :key="item.id" :value="item.id" :label="item.name"/>
+                            <el-option v-for="item in useGuide.measuring" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
                         <div v-if="errors.measuring_id" class="text-red-700">{{ errors.measuring_id }}</div>
                     </el-form-item>
@@ -111,16 +105,13 @@ import {router} from "@inertiajs/vue3";
 import {useCatalogStore} from "@Res/catalogStore.ts";
 import api from "@Res/api";
 import {route} from "ziggy-js";
+import {useGuideStore} from "@Res/guideStore";
 
 const useCatalog = useCatalogStore()
-
+const useGuide = useGuideStore()
 const props = defineProps({
     product: Object,
     errors: Object,
-    country: Array,
-    vat: Array,
-    measuring: Array,
-    markingType: Array,
 })
 const autoSave = ref(true)
 const isSaving = ref(false)

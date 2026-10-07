@@ -80,18 +80,7 @@
             </el-col>
             <!-- Колонка 3 -->
             <el-col :span="8">
-                <el-form label-width="auto">
-                    <h2>Периодичность покупки</h2>
-                    <el-form-item label-position="top" label="Для расчета показов">
-                        <el-radio-group v-model="form.frequency" style="display: block;" @change="onAutoSave" :disabled="isSaving">
-                            <div v-for="item in frequencies">
-                            <el-radio :value="item.value" :label="item.label" />
-                            </div>
-                        </el-radio-group>
-                    </el-form-item>
-                    <!-- Повторить -->
 
-                </el-form>
             </el-col>
 
         </el-row>
@@ -107,7 +96,6 @@ import {router} from "@inertiajs/vue3"
 const props = defineProps({
     product: Object,
     errors: Object,
-    frequencies: Array,
 })
 
 const autoSave = ref(true)
@@ -120,7 +108,6 @@ const form = reactive({
     hide_price: props.product.hide_price,
     storages: [...props.product.storages],
     balance: props.product.balance,
-    frequency: props.product.frequency,
     modification: props.product.modification,
     pre_order: props.product.pre_order,
     only_on_order: props.product.only_on_order,
