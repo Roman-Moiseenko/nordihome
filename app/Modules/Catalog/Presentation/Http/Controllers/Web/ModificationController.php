@@ -56,14 +56,7 @@ class ModificationController extends Controller
     public function store(Request $request, UserPermission $permission): RedirectResponse
     {
         $dto = ModificationCreateData::validateAndCreate($request->all());
-        /*$request->validate([
-            'name' => 'required|string',
-            'product_id' => 'required',
-            'attributes' => 'required|array',
-        ]);
-        */
         $modification = $this->createModificationUseCase->execute($dto, $permission);
-//        $modification = $this->service->create($request);
         return redirect()->route('admin.catalog.modification.show', $modification->id)->with('success', 'Модификация создана');
     }
 
@@ -78,6 +71,7 @@ class ModificationController extends Controller
 
     public function show(Modification $modification): Response
     {
+
         return Inertia::render('Catalog/Modification/Show', [
             'modification' => $this->repository->ModificationWithToArray($modification),
         ]);

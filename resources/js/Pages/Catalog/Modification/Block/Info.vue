@@ -15,13 +15,13 @@
                 <el-descriptions-item v-for="(item, index) in modification.attributes" :label-class-name="'index-' + index">
                     <template #label>
                         <div class="flex items-center">
-                            <img v-if="item.image" :src="item.image" width="40" height="40"/> <h2 class="font-medium ml-2">{{ item.name }}</h2>
+                            <h2 class="font-medium ml-2">{{ item.name }}</h2>
                         </div>
                     </template>
 
                     <div class="flex flex-wrap mt-1">
                         <div v-for="variant in item.variants" class="flex ml-1">
-                            <img v-if="variant.image" :src="variant.image" width="30" height="30"/> <h2 class="font-medium ml-2">{{ variant.name }}</h2>
+                            <h2 class="font-medium ml-2">{{ variant.name }}</h2>
                         </div>
                     </div>
                 </el-descriptions-item>
