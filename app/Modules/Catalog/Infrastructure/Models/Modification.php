@@ -12,8 +12,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property string $name
  * @property Product[] $products
  * @property Attribute[] $prod_attributes
- * @property Product|null $base_product
- * @property int|null $base_product_id
  */
 class Modification extends Model
 {
@@ -52,67 +50,6 @@ class Modification extends Model
             'id'
         )
             ->withPivot(['id', 'is_primary']);
-    }
-
-    /**
-     * Базовый товар — товар с is_primary = true.
-     */
-    public function baseProduct(): ?Product
-    {
-        return $this->products()->wherePivot('is_primary', true)->first();
-    }
-
-    /**
-     * Совместимость с легаси-кодом: $modification->prod_attributes (массив Attribute).
-     */
-    public function getProdAttributesAttribute(): array
-    {
-        return $this->attributes()->get()->all();
-    }
-
-    /**
-     * Совместимость с легаси-кодом: $modification->base_product.
-     */
-    public function getBaseProductAttribute(): ?Product
-    {
-        return $this->baseProduct();
-    }
-
-    /**
-     * Совместимость с легаси-кодом: $modification->base_product_id.
-     */
-    public function getBaseProductIdAttribute(): ?int
-    {
-        return $this->baseProduct()?->id;
-    }
-
-    public static function register(string $name, int $base_product_id, array $attributes = []): self
-    {
-        if (empty($attributes)) {
-            throw new \DomainException('Не заданы атрибуты');
-        }
-
-        /** @var Attribute $attribute */
-        foreach ($attributes as $attribute) {
-            if ($attribute->type !== AttributeType::TYPE_VARIANT) {
-                throw new \DomainException('Неверный тип атрибутов. Должен быть Вариант!');
-            }
-        }
-
-        $prefix = '';
-        if (self::where('name', $name)->exists()) {
-            $prefix = \Str::random(6);
-        }
-
-        $modification = self::create(['name' => $name . $prefix]);
-
-        foreach ($attributes as $sort => $attribute) {
-            $modification->attributes()->attach($attribute->id, ['sort' => $sort]);
-        }
-
-        $modification->products()->attach($base_product_id, ['is_primary' => true]);
-
-        return $modification;
     }
 
     public function productByVariant(array $var): ?Product

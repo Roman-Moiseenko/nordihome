@@ -17,20 +17,6 @@ class ModificationService
         $this->attributes = $attributes;
     }
 
-    public function create(Request $request): Modification
-    {
-        $attributes = [];
-        foreach ($request['attributes'] as $id) {
-            if ($_attr = $this->attributes->existAndGet((int)$id)) $attributes[] = $_attr;
-        }
-        $modification = Modification::register(
-            $request->string('name')->trim()->value(),
-            $request->integer('product_id'),
-            $attributes);
-        $product = Product::find($request->integer('product_id'));
-        $this->attachProduct($modification, $product);
-        return $modification;
-    }
 
     public function rename(Request $request, Modification $modification): void
     {
