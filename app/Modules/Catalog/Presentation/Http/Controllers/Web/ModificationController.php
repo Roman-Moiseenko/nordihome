@@ -3,9 +3,13 @@
 namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Catalog\Application\Actions\Modification\AddProductToModificationUseCase;
 use App\Modules\Catalog\Application\Actions\Modification\CreateModificationUseCase;
 use App\Modules\Catalog\Application\Actions\Modification\IndexModificationQuery;
+use App\Modules\Catalog\Application\Actions\Modification\RemoveProductFromModificationUseCase;
 use App\Modules\Catalog\Application\Actions\Modification\SearchModificationCreateQuery;
+use App\Modules\Catalog\Application\Actions\Modification\SearchModificationProductQuery;
+use App\Modules\Catalog\Application\Actions\Modification\SetPrimaryModificationProductUseCase;
 use App\Modules\Catalog\Application\Actions\Modification\ViewModificationQuery;
 use App\Modules\Catalog\Application\DTOs\Modification\ModificationCreateData;
 use App\Modules\Catalog\Infrastructure\Models\Modification;
@@ -33,6 +37,10 @@ class ModificationController extends Controller
         private readonly CreateModificationUseCase $createModificationUseCase,
         private readonly IndexModificationQuery    $indexModificationQuery,
         private readonly SearchModificationCreateQuery $searchModificationCreateQuery,
+        private readonly SearchModificationProductQuery $searchModificationProductQuery,
+        private readonly AddProductToModificationUseCase $addProductToModificationUseCase,
+        private readonly RemoveProductFromModificationUseCase $removeProductFromModificationUseCase,
+        private readonly SetPrimaryModificationProductUseCase $setPrimaryModificationProductUseCase,
         private readonly ViewModificationQuery     $viewModificationQuery,
     )
     {
@@ -71,6 +79,18 @@ class ModificationController extends Controller
         );
     }
 
+    public function search_product(Request $request, Modification $modification): JsonResponse
+    {
+        $query = $request->string('search')->trim()->value();
+
+        /** @var array<int, int> $variants attribute_id => variant_id */
+        $variants = $request->input('variants', []);
+
+        return response()->json(
+            $this->searchModificationProductQuery->execute($modification->id, $query, $variants)
+        );
+    }
+
     public function show(Modification $modification, UserPermission $permission): Response
     {
         return Inertia::render('Catalog/Modification/Show', [
@@ -93,15 +113,23 @@ class ModificationController extends Controller
         return redirect()->back()->with('success', 'Модификация удалена');
     }
 
-    public function set_base(Request $request, Modification $modification): RedirectResponse
+    public function set_base(Request $request, Modification $modification, UserPermission $permission): RedirectResponse
     {
-        $this->service->setBase($modification, $request->integer('product_id'));
-        return redirect()->back()->with('success', 'Сохранено');
+        $this->setPrimaryModificationProductUseCase->execute(
+            $modification->id,
+            $request->integer('product_id'),
+            $permission,
+        );
+        return redirect()->back()->with('success', 'Базовый товар изменён');
     }
 
-    public function del_product(Request $request, Modification $modification): RedirectResponse
+    public function del_product(Request $request, Modification $modification, UserPermission $permission): RedirectResponse
     {
-        $this->service->delProduct($request, $modification);
+        $this->removeProductFromModificationUseCase->execute(
+            $modification->id,
+            $request->integer('product_id'),
+            $permission,
+        );
         return redirect()->back()->with('success', 'Товар убран из модификации');
     }
 
@@ -145,12 +173,16 @@ class ModificationController extends Controller
         return \response()->json($result);
     }
 
-    public function add_product(Request $request, Modification $modification): RedirectResponse
+    public function add_product(Request $request, Modification $modification, UserPermission $permission): RedirectResponse
     {
         try {
-            $this->service->addProduct($request, $modification);
+            $this->addProductToModificationUseCase->execute(
+                $modification->id,
+                $request->integer('product_id'),
+                $permission,
+            );
             return redirect()->back()->with('success', 'Товар добавлен');
-        } catch (\DomainException $e) {
+        } catch (\DomainException|\InvalidArgumentException $e) {
             return redirect()->back()->with('error', $e->getMessage());
         }
     }

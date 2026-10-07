@@ -66,9 +66,6 @@ class ProductRepository
     {
         $_product = $product;
         $equivalent = null;
-        if (is_null($product->equivalent_product) && !is_null($product->modification) && is_null($product->main_modification)) {
-            $_product = $product->modification->base_product;
-        }
         if (!is_null($_product->equivalent_product)) {
             $equivalent = [
                 'id' => $_product->equivalent_product->equivalent_id,

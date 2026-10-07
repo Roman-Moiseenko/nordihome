@@ -1,13 +1,5 @@
 <template>
-    <el-row :gutter="10">
-        <el-col :span="8">
-            <el-descriptions :column="1" border class="mb-5">
-                <el-descriptions-item label="Модификация">
-                    {{ modification.name }}
-                </el-descriptions-item>
-            </el-descriptions>
-        </el-col>
-        <el-col :span="16">
+
             <el-descriptions :column="1" border class="mb-5">
                 <el-descriptions-item v-for="(item, index) in modification.attributes" :key="item.id" :label-class-name="'index-' + index">
                     <template #label>
@@ -21,8 +13,7 @@
                     </div>
                 </el-descriptions-item>
             </el-descriptions>
-        </el-col>
-    </el-row>
+
 </template>
 
 <script setup>

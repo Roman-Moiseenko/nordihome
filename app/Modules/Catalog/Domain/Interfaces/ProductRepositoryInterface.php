@@ -99,6 +99,19 @@ interface ProductRepositoryInterface
      */
     public function searchExcluding(string $query, array $excludeIds, int $limit = 10): array;
 
+    /**
+     * Поиск товаров для добавления в модификацию.
+     *
+     * Товар должен иметь ВСЕ оси модификации ($attributeIds) и, если заданы
+     * фильтры, соответствовать выбранным вариантам ($variantFilters).
+     *
+     * @param int[] $attributeIds
+     * @param array<int, int> $variantFilters attribute_id => variant_id
+     * @param int[] $excludeIds
+     * @return ProductEntity[]
+     */
+    public function searchForModification(string $query, array $attributeIds, array $variantFilters, array $excludeIds, int $limit = 10): array;
+
     public function countProductsByBrandIds($brandIds): array;
 
     /**

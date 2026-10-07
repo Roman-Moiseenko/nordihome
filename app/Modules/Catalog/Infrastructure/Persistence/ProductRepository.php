@@ -171,6 +171,43 @@ class ProductRepository implements ProductRepositoryInterface
         return $models->map(fn(Product $model) => $this->hydrate($model))->all();
     }
 
+    public function searchForModification(string $query, array $attributeIds, array $variantFilters, array $excludeIds, int $limit = 10): array
+    {
+        $models = Product::orderBy('name')
+            ->whereNull('deleted_at')
+            ->where(function ($q) use ($query) {
+                $q->where('code_search', 'LIKE', "%{$query}%")
+                    ->orWhere('code', 'LIKE', "%{$query}%")
+                    ->orWhereRaw("LOWER(name) LIKE LOWER('%{$query}%')");
+            })
+            ->when(!empty($excludeIds), fn($q) => $q->whereNotIn('id', $excludeIds))
+            ->when(!empty($attributeIds), function ($q) use ($attributeIds) {
+                foreach ($attributeIds as $attributeId) {
+                    $q->whereExists(function ($sub) use ($attributeId) {
+                        $sub->selectRaw('1')
+                            ->from('attributes_products')
+                            ->whereColumn('attributes_products.product_id', 'products.id')
+                            ->where('attributes_products.attribute_id', (int) $attributeId);
+                    });
+                }
+            })
+            ->when(!empty($variantFilters), function ($q) use ($variantFilters) {
+                foreach ($variantFilters as $attributeId => $variantId) {
+                    $q->whereExists(function ($sub) use ($attributeId, $variantId) {
+                        $sub->selectRaw('1')
+                            ->from('attributes_products')
+                            ->whereColumn('attributes_products.product_id', 'products.id')
+                            ->where('attributes_products.attribute_id', (int) $attributeId)
+                            ->whereJsonContains('attributes_products.value', (int) $variantId);
+                    });
+                }
+            })
+            ->take($limit)
+            ->get();
+
+        return $models->map(fn(Product $model) => $this->hydrate($model))->all();
+    }
+
     private function hydrate(Product $model): ProductEntity
     {
         $entity = new ProductEntity(
