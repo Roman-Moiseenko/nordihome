@@ -66,19 +66,23 @@ class IkeaProductApi implements IkeaProductApiInterface
     public function getProductPage(string $pipUrl): ?array
     {
         $pageProduct = $this->httpPage->getPage($pipUrl);
+
         if (is_null($pageProduct)) return null;
 
-        $pattern = '#<script type="text\/hydrate">(.+?)<\/script>#su';
+        $pattern =  '#<script type="text/hydrate"[^>]*>(.+?)</script>#su';// '#<script type="text\/hydrate">(.+?)<\/script>#su';
         preg_match_all($pattern, $pageProduct, $res);
 
-        foreach ($res[1] as $item_res) {
-            $_data = json_decode($item_res, true);
+        //dd(json_decode($res[1][6], true));
+        foreach ($res[1] as  $item_res) {
+            $_itemArray = json_decode($item_res, true);
+            if (!isset($_itemArray['data'])) continue;
+            $data = $_itemArray['data'];
+            if (isset($data["pageProps"])) {
 
-            if (isset($_data["pageProps"])) {
-                $productDetail = $_data["pageProps"]['productInformationSectionProps']['productDetailsProps'];
+                $productDetail = $data["pageProps"]['productInformationSectionProps']['productDetailsProps'];
                 $care_materials = $productDetail['accordionObject']['materialsAndCare']['contentProps'];
-                $measurements = $_data["pageProps"]['productInformationSectionProps']['measurementsProps'];
-                $result['product'] = $_data["pageProps"]['product'];
+                $measurements = $data["pageProps"]['productInformationSectionProps']['measurementsProps'];
+                $result['product'] = $data["pageProps"]['product'];
                 $result['materials'] = $care_materials['materials'][0]['materials'] ?? [];
                 $result['care'] = (!empty($care_materials['careInstructions'])) ? $care_materials['careInstructions'][0]['texts'] : [];
                 $result['info']['paragraphs'] = $productDetail['productDescriptionProps']['paragraphs'];

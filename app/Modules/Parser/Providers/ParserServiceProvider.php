@@ -14,6 +14,7 @@ use App\Modules\Parser\Infrastructure\Persistence\ParserProductRepository;
 use App\Modules\Parser\Infrastructure\Services\IkeaProductApi;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaAvailablePriceCommand;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaCategoryCommand;
+use App\Modules\Parser\Presentation\Console\Commands\IkeaCheckCommand;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaClearData;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaProductCommand;
 use App\Modules\Parser\Presentation\Console\Commands\IkeaRenameCommand;
@@ -141,6 +142,7 @@ class ParserServiceProvider extends ServiceProvider
             IkeaClearData::class,
             IkeaProductCommand::class,
             IkeaRenameCommand::class,
+            IkeaCheckCommand::class,
         ]);
     }
 
