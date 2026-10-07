@@ -19,7 +19,7 @@
                 <a href="/catalog/" class="btn btn-white f-z_14">ПЕРЕЙТИ В КАТАЛОГ</a>
                 </div>
             </div>
-            <div class="col-lg-6 m-b_10"><iframe width="100%" height="525px" src="https://rutube.ru/play/embed/7830ed8fa412c41a487ef504dda25e6b/" class="b-radius_12 is-style-default overflow_hidden" style="border: none;" allow="clipboard-write; autoplay" allowFullScreen></iframe></div>
+            <div class="col-lg-6 m-b_10"><iframe width="100%" height="525px" src="https://rutube.ru/play/embed/7830ed8fa412c41a487ef504dda25e6b/" class="b-radius_12 d-block is-style-default overflow_hidden" style="border: none;" allow="clipboard-write; autoplay" allowFullScreen></iframe></div>
         </div>
     </div>
     <div class="container-xl">

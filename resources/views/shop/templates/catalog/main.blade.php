@@ -29,4 +29,5 @@
             </div>
         @endforeach
     </div>
+    <div class="t-a_center"><a href="/catalog/" class="btn btn-black">Посмотреть весь каталог</a></div>
 </div>

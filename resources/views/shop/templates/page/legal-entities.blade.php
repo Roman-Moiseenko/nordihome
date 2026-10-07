@@ -192,19 +192,19 @@
                 <h3 class="m-t_0 t-a_center m-b_50">Что мы предлагаем</h3>
                 <div class="row">
                     <div class="col-md-6 col-lg-3">
-                        <img src="/images/pages/legal-entities/ur-licam13.jpg" alt="Огромный выбор товаров напрямую из Европы" class="d-block b-radius_15 m-b_20 width_100">
+                        <img src="/images/pages/legal-entities/ur-licam13.jpg" alt="Огромный выбор товаров напрямую из Европы" class="d-block b-radius_16 m-b_20 width_100">
                         <div class="f-z_16 t-a_center m-b_20">Огромный выбор товаров напрямую из Европы с доставкой по РФ или самовывоз в Калининграде.</div>
                     </div>
                     <div class="col-md-6 col-lg-3">
-                        <img src="/images/pages/legal-entities/ur-licam14.jpg" alt="Взаимовыгодное сотрудничество с дизайнерами" class="d-block b-radius_15 m-b_20 width_100">
+                        <img src="/images/pages/legal-entities/ur-licam14.jpg" alt="Взаимовыгодное сотрудничество с дизайнерами" class="d-block b-radius_16 m-b_20 width_100">
                         <div class="f-z_16 t-a_center m-b_20">Взаимовыгодное сотрудничество с дизайнерами и студиями дизайна.</div>
                     </div>
                     <div class="col-md-6 col-lg-3">
-                        <a href="/page/podarocnyi-sertifikat-v-nordi-xoum-nordi-home/"><img src="/images/pages/legal-entities/ur-licam15.jpg" alt="Готовые подарки" class="d-block b-radius_15 m-b_20 width_100"></a>
+                        <a href="/page/podarocnyi-sertifikat-v-nordi-xoum-nordi-home/"><img src="/images/pages/legal-entities/ur-licam15.jpg" alt="Готовые подарки" class="d-block b-radius_16 m-b_20 width_100"></a>
                         <div class="f-z_16 t-a_center m-b_20">Готовые подарки для коллег и партнеров. Номиналы от 500 до 50 000 рублей - на ваш выбор.</div>
                     </div>
                     <div class="col-md-6 col-lg-3">
-                        <img src="/images/pages/legal-entities/ur-licam16-1.jpg" alt="Девелоперам недвижимости" class="d-block b-radius_15 m-b_20 width_100">
+                        <img src="/images/pages/legal-entities/ur-licam16-1.jpg" alt="Девелоперам недвижимости" class="d-block b-radius_16 m-b_20 width_100">
                         <div class="f-z_16 t-a_center m-b_20">Приятные бонусы и спецпредложения для ваших клиентов при обустройстве нового жилья.</div>
                     </div>
                 </div>
@@ -212,7 +212,7 @@
             <div class="m-b_50 m-t_50">
                 <h3 class="m-t_0 t-a_center m-b_50">Нам доверяют:</h3>
                 <div class="row">
-                    <div class="col-lg-6 bg-black b-radius-left_15 m-b_10 page-ur-mrl">
+                    <div class="col-lg-6 bg-black b-radius-left_16 m-b_10 page-ur-mrl">
                         <div class="p-block_15 t-a_center height_stretch d-flex flex-direction_column justify-content-center align-items-center">
                             <svg width="255" height="38" viewBox="0 0 255 38" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M5.60118 28.0989L5.6001 14.2515L20.9558 24.8772V17.4948L24.3265 19.823V31.3205L8.95998 20.6882L8.96429 28.0989H5.60118Z" fill="white"></path>
@@ -225,12 +225,12 @@
                         </div>
                     </div>
                     <div class="col-lg-6 padding_0 m-b_10">
-                        <img src="/images/pages/legal-entities/ur-licam17.jpg" alt="Команда Норди Хоум" class="d-block b-radius-right_15 width_100">
+                        <img src="/images/pages/legal-entities/ur-licam17.jpg" alt="Команда Норди Хоум" class="d-block b-radius-right_16 width_100">
                     </div>
                 </div>
             </div>
             @include('shop.widgets.block-rating')
-            <div class="bg-black b-radius_15 m-t_50 m-b_50 p-block_30">
+            <div class="bg-black b-radius_16 m-t_50 m-b_50 p-block_30">
                 <div class="row">
                     <div class="col-md-12 col-lg-6">
                         <h3 class="t-color_orange">Приглашаем Вас к сотрудничеству и предлагаем гибкие начальные условия</h3>
@@ -243,7 +243,7 @@
                         <div class="m-b_20">Мы открыты к сотрудничеству и рады обсудить это на личной встрече по адресу: г. Калининград, ул. Советский проспект 103А, корпус 1</div>
                     </div>
                     <div class="col-md-12 col-lg-6">
-                        <div class="bg-white b-radius_15 p-block_30 form-urlica">
+                        <div class="bg-white b-radius_16 p-block_30 form-urlica">
                             <h3>Заполните заявку</h3>
                             <div id="legal-entities_1-form" class="feedback-form">
                                 <form>

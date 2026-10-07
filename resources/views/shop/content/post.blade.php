@@ -64,7 +64,7 @@
                         </label>
                     </div>
                     <div class="col-md-3 col-lg-2">
-                        <label><button class="btn-form" type="button">ОТПРАВИТЬ</button></label>
+                        <label><button class="btn btn-black" type="button">ОТПРАВИТЬ</button></label>
                     </div>
                     <div class="col-12">
                         <label class="f-z_14">

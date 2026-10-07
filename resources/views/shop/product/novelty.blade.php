@@ -9,10 +9,10 @@
 @section('content')
     <div class="title-page">
         <div class="products-page-title">
-            <div class="title h1">
                 <h1>{{ $pageData->mainInfo->name }}</h1>
-                <span>&nbsp;{{ count_product($pageData->mainInfo->totalProducts) }} </span>
-            </div>
+        </div>
+        <div class="d-flex align-items-center justify-content-end">
+            <div class="t-color_dark-gray m-r_5 f-z_14"><span>Найдено: {{ count_product($pageData->mainInfo->totalProducts) }} </span></div>
             <div class="order btn-group">
                 <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     Сортировка

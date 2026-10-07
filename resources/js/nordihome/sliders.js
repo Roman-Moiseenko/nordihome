@@ -17,14 +17,18 @@ window.$ = jQuery;
         margin: 10,
         loop: true,
         dots: true,
-        nav: true,
+        nav: false,
         navText: ['<i class="fa fa-chevron-left"></i>', '<i class="fa fa-chevron-right"></i>'],
         singleItem: true,
         transitionStyle: "fade",
         touchDrag: true,
         mouseDrag: true,
         dotsEach: 1,
-
+        responsive: {
+            990: {
+                nav: true
+            }
+        }
     };
 
     if (document.querySelectorAll('.widget-slider-common') !== null) {
