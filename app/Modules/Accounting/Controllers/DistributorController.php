@@ -154,4 +154,10 @@ class DistributorController extends Controller
             return redirect()->back()->with('error', $e->getMessage());
         }
     }
+
+    public function listDistributors(): \Illuminate\Http\JsonResponse
+    {
+        $list = Distributor::orderBy('name')->getModels();
+        return \response()->json($list);
+    }
 }

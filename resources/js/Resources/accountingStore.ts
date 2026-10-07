@@ -8,17 +8,21 @@ export const useAccountingStore = defineStore('accounting', () => {
     const loaded = ref(false)
     const traders = ref<any[]>([])
     const currencies = ref<any[]>([])
+    const distributors = ref<any[]>([])
 
     async function fetchData() {
         const [
             listTradersRes,
             listCurrenciesRes,
+            distributorsRes,
         ] = await Promise.all([
             axios.get(route('admin.accounting.trader.list')),
             axios.get(route('admin.accounting.currency.list')),
+            axios.get(route('admin.accounting.distributor.list')),
         ])
         traders.value = listTradersRes.data
         currencies.value = listCurrenciesRes.data
+        distributors.value = distributorsRes.data
     }
 
     ;(async () => {
@@ -45,5 +49,6 @@ export const useAccountingStore = defineStore('accounting', () => {
         reload,
         traders,
         currencies,
+        distributors,
     }
 })

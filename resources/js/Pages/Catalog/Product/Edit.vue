@@ -83,7 +83,6 @@ const props = defineProps({
     vat: Array,
     measuring: Array,
     markingType: Array,
-    distributors: Array,
     dimensions: Array,
     equivalents: Array,
     complexities: Array,

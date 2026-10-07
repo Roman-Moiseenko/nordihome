@@ -48,7 +48,7 @@
                         </el-form-item>
                         <el-form-item label="Поставщик">
                             <el-select v-model="form.distributor_id" filterable clearable>
-                                <el-option v-for="item in distributors" :value="item.id" :label="item.name"/>
+                                <el-option v-for="item in useAccounting.distributors" :value="item.id" :label="item.name"/>
                             </el-select>
                         </el-form-item>
                     </el-form>
@@ -84,10 +84,11 @@ import {Head, router} from "@inertiajs/vue3";
 import {reactive} from "vue";
 import {useCatalogStore} from "@Res/catalogStore.ts";
 import {useGuideStore} from "@Res/guideStore";
+import {useAccountingStore} from "@Res/accountingStore";
 
 const props = defineProps({
     errors: Object,
-    distributors: Array,
+
     title: {
         type: String,
         default: 'Создание нового товара',
@@ -95,6 +96,7 @@ const props = defineProps({
 })
 const useCatalog = useCatalogStore()
 const useGuide = useGuideStore()
+const useAccounting = useAccountingStore()
 
 const form = reactive({
     name: null,

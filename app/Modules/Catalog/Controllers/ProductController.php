@@ -66,9 +66,7 @@ class ProductController extends Controller
 
     public function create(Request $request): Response
     {
-        return Inertia::render('Catalog/Product/Create', [
-            'distributors' => Distributor::orderBy('name')->getModels(),
-        ]);
+        return Inertia::render('Catalog/Product/Create');
     }
 
     public function store(ProductCreateRequest $request): RedirectResponse
@@ -89,11 +87,9 @@ class ProductController extends Controller
     {
         return Inertia::render('Catalog/Product/Edit', [
             'product' => $this->repository->ProductWithToArray($product),
-            //FixMe перенести в useStore (Catalog или Guide)
-
-            'distributors' => Distributor::orderBy('name')->getModels(),
             'dimensions' => array_select(Dimensions::TYPES),
             'complexities' => array_select(Packages::COMPLEXITIES),
+
             'equivalents' => Equivalent::orderBy('name')
                 ->whereHas('category', function ($query) use ($product) {
                     $query->where('_lft', '<=', $product->category->_lft)
