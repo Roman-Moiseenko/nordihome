@@ -12,9 +12,9 @@ use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 final readonly class RemoveProductFromModificationUseCase
 {
     public function __construct(
-        private TransactionManagerInterface $transactionManager,
         private ModificationRepositoryInterface $modificationRepository,
-    ) {
+    )
+    {
     }
 
     public function execute(int $modificationId, int $productId, UserPermission $permission): ModificationEntity
@@ -22,13 +22,9 @@ final readonly class RemoveProductFromModificationUseCase
         if (!$permission->can('catalog.product.edit')) {
             throw new AccessDeniedException();
         }
+        $entity = $this->modificationRepository->getById($modificationId);
+        $entity->removeProduct($productId);
 
-        return $this->transactionManager->execute(function () use ($modificationId, $productId): ModificationEntity {
-            $entity = $this->modificationRepository->getById($modificationId);
-
-            $entity->removeProduct($productId);
-
-            return $this->modificationRepository->save($entity);
-        });
+        return $this->modificationRepository->save($entity);
     }
 }

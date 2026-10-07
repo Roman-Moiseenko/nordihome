@@ -181,11 +181,11 @@ Route::group([
         'as' => 'modification.',
     ], function () {
         //Route::post('/set-modifications/{modification}', [ModificationController::class, 'set_modifications'])->name('set-modifications');
-        Route::post('/set-base/{modification}', [ModificationController::class, 'set_base'])->name('set-base');
+        Route::post('/set-primary/{modification}', [ModificationController::class, 'setPrimary'])->name('set-primary');
         Route::post('/search', [ModificationController::class, 'search'])->name('search');
         Route::post('/search-create', [ModificationController::class, 'search_create'])->name('search-create');
         Route::post('/search-product/{modification}', [ModificationController::class, 'search_product'])->name('search-product');
-        Route::post('/rename/{modification}', [ModificationController::class, 'rename'])->name('rename');
+        Route::post('/rename/{id}', [ModificationController::class, 'rename'])->name('rename');
         Route::post('/add-product/{modification}', [ModificationController::class, 'add_product'])->name('add-product');
         Route::delete('/del-product/{modification}', [ModificationController::class, 'del_product'])->name('del-product');
     });

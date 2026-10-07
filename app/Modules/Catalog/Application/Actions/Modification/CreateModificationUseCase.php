@@ -16,11 +16,11 @@ use InvalidArgumentException;
 final readonly class CreateModificationUseCase
 {
     public function __construct(
-        private ProductRepositoryInterface $productRepository,
-        private TransactionManagerInterface $transactionManager,
+        private ProductRepositoryInterface      $productRepository,
         private ModificationRepositoryInterface $modificationRepository,
-        private ModificationValuesResolver $modificationValuesResolver,
-    ) {
+        private ModificationValuesResolver      $modificationValuesResolver,
+    )
+    {
     }
 
     public function execute(ModificationCreateData $dto, UserPermission $permission): ModificationEntity
@@ -33,27 +33,25 @@ final readonly class CreateModificationUseCase
             throw new InvalidArgumentException('Товар не найден ' . $dto->productId);
         }
 
-        return $this->transactionManager->execute(function () use ($dto): ModificationEntity {
-            $entity = ModificationEntity::create(
-                name: $dto->name,
-                attributes: $dto->attributes,
-            );
+        $entity = ModificationEntity::create(
+            name: $dto->name,
+            attributes: $dto->attributes,
+        );
 
-            // Разрешаем значения первого товара по осям модификации.
-            // Результат — ModificationValues{attribute_id: variant_id}.
-            $values = $this->modificationValuesResolver->forProduct(
-                productId: $dto->productId,
-                attributes: $dto->attributes,
-            );
+        // Разрешаем значения первого товара по осям модификации.
+        // Результат — ModificationValues{attribute_id: variant_id}.
+        $values = $this->modificationValuesResolver->forProduct(
+            productId: $dto->productId,
+            attributes: $dto->attributes,
+        );
 
-            // Первый товар автоматически становится primary.
-            $entity->addProduct(
-                productId: $dto->productId,
-                values: $values->toArray(),
-                primary: true,
-            );
+        // Первый товар автоматически становится primary.
+        $entity->addProduct(
+            productId: $dto->productId,
+            values: $values->toArray(),
+            primary: true,
+        );
 
-            return $this->modificationRepository->save($entity);
-        });
+        return $this->modificationRepository->save($entity);
     }
 }

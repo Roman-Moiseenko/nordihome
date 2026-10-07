@@ -15,11 +15,11 @@ use InvalidArgumentException;
 final readonly class AddProductToModificationUseCase
 {
     public function __construct(
-        private ProductRepositoryInterface $productRepository,
-        private TransactionManagerInterface $transactionManager,
+        private ProductRepositoryInterface      $productRepository,
         private ModificationRepositoryInterface $modificationRepository,
-        private ModificationValuesResolver $modificationValuesResolver,
-    ) {
+        private ModificationValuesResolver      $modificationValuesResolver,
+    )
+    {
     }
 
     public function execute(int $modificationId, int $productId, UserPermission $permission): ModificationEntity
@@ -27,29 +27,22 @@ final readonly class AddProductToModificationUseCase
         if (!$permission->can('catalog.product.edit')) {
             throw new AccessDeniedException();
         }
-
         if (!$this->productRepository->exists($productId)) {
             throw new InvalidArgumentException('Товар не найден ' . $productId);
         }
+        $entity = $this->modificationRepository->getById($modificationId);
+        $values = $this->modificationValuesResolver->forProduct(
+            productId: $productId,
+            attributes: $entity->attributes,
+        );
+        if ($entity->hasProductWithValues($values->toArray())) {
+            throw new \DomainException('Товар с таким набором вариантов уже есть в модификации');
+        }
+        $entity->addProduct(
+            productId: $productId,
+            values: $values->toArray(),
+        );
 
-        return $this->transactionManager->execute(function () use ($modificationId, $productId): ModificationEntity {
-            $entity = $this->modificationRepository->getById($modificationId);
-
-            $values = $this->modificationValuesResolver->forProduct(
-                productId: $productId,
-                attributes: $entity->attributes,
-            );
-
-            if ($entity->hasProductWithValues($values->toArray())) {
-                throw new \DomainException('Товар с таким набором вариантов уже есть в модификации');
-            }
-
-            $entity->addProduct(
-                productId: $productId,
-                values: $values->toArray(),
-            );
-
-            return $this->modificationRepository->save($entity);
-        });
+        return $this->modificationRepository->save($entity);
     }
 }

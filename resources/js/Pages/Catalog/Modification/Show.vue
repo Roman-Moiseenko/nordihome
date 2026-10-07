@@ -78,7 +78,7 @@ function openRename() {
 }
 
 function onRename() {
-    router.post(route('admin.catalog.modification.rename', {modification: props.modification.id}), {
+    router.post(route('admin.catalog.modification.rename', {id: props.modification.id}), {
         name: form.name,
     }, {
         preserveScroll: true,
@@ -102,7 +102,7 @@ function handleAddProduct(productId) {
 }
 
 function onSetPrimary(product) {
-    router.post(route('admin.catalog.modification.set-base', {modification: props.modification.id}), {
+    router.post(route('admin.catalog.modification.set-primary', {modification: props.modification.id}), {
         product_id: product.product_id,
     }, {
         preserveScroll: true,

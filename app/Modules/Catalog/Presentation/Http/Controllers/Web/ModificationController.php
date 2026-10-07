@@ -7,11 +7,13 @@ use App\Modules\Catalog\Application\Actions\Modification\AddProductToModificatio
 use App\Modules\Catalog\Application\Actions\Modification\CreateModificationUseCase;
 use App\Modules\Catalog\Application\Actions\Modification\IndexModificationQuery;
 use App\Modules\Catalog\Application\Actions\Modification\RemoveProductFromModificationUseCase;
+use App\Modules\Catalog\Application\Actions\Modification\RenameModificationUseCase;
 use App\Modules\Catalog\Application\Actions\Modification\SearchModificationCreateQuery;
 use App\Modules\Catalog\Application\Actions\Modification\SearchModificationProductQuery;
 use App\Modules\Catalog\Application\Actions\Modification\SetPrimaryModificationProductUseCase;
 use App\Modules\Catalog\Application\Actions\Modification\ViewModificationQuery;
 use App\Modules\Catalog\Application\DTOs\Modification\ModificationCreateData;
+use App\Modules\Catalog\Application\DTOs\Modification\ModificationRenameData;
 use App\Modules\Catalog\Infrastructure\Models\Modification;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Repository\ModificationRepository;
@@ -41,6 +43,7 @@ class ModificationController extends Controller
         private readonly AddProductToModificationUseCase $addProductToModificationUseCase,
         private readonly RemoveProductFromModificationUseCase $removeProductFromModificationUseCase,
         private readonly SetPrimaryModificationProductUseCase $setPrimaryModificationProductUseCase,
+        private readonly RenameModificationUseCase $renameModificationUseCase,
         private readonly ViewModificationQuery     $viewModificationQuery,
     )
     {
@@ -98,12 +101,10 @@ class ModificationController extends Controller
         ]);
     }
 
-    public function rename(Request $request, Modification $modification): RedirectResponse
+    public function rename(Request $request, int $id, UserPermission $permission): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string',
-        ]);
-        $this->service->rename($request, $modification);
+        $dto = ModificationRenameData::validateAndCreate($request->all());
+        $this->renameModificationUseCase->execute($id, $dto, $permission);
         return redirect()->back()->with('success', 'Сохранено');
     }
 
@@ -113,7 +114,7 @@ class ModificationController extends Controller
         return redirect()->back()->with('success', 'Модификация удалена');
     }
 
-    public function set_base(Request $request, Modification $modification, UserPermission $permission): RedirectResponse
+    public function setPrimary(Request $request, Modification $modification, UserPermission $permission): RedirectResponse
     {
         $this->setPrimaryModificationProductUseCase->execute(
             $modification->id,
