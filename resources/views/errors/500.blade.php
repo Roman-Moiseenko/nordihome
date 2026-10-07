@@ -1,6 +1,11 @@
 @extends('layouts.blank')
 @section('title', 'Страница 500')
 @section('main', 'error')
+
+@section('breadcrumbs')
+    &nbsp;
+@endsection
+
 @section('content')
 
     <div class="container-xl mt-5">

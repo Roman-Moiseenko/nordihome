@@ -1,6 +1,11 @@
 @extends('layouts.blank')
 @section('title', 'Страница 403')
 @section('main', 'error')
+
+@section('breadcrumbs')
+    &nbsp;
+@endsection
+
 @section('content')
 <div class="container-xl mt-5">
     <h1>Ай-ай-ай,Вам сюда нельзя! Ошибка доступа</h1>

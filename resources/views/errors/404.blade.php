@@ -1,6 +1,11 @@
-@extends('layouts.blank')
+@extends('layouts.main')
 @section('title', 'Страница 404')
 @section('main', 'error')
+
+@section('breadcrumbs')
+    &nbsp;
+@endsection
+
 @section('content')
 
     <div class="container-xl mt-5">
@@ -10,7 +15,7 @@
                 <img src="/images/nordihome/404-img-min.png" alt="Nordihome мебель из ИКЕА">
             </div>
             <div class="col-lg-5">
-                <h3 class="heading m-b_20">Ой, что-то пошло не так...</h3>
+                  <h3 class="heading m-b_20">Ой, что-то пошло не так...</h3>
                 <div class="m-b_20 f-z_17">Мы потеряли эту страницу, возможно, она была удалена с нашего сайта.<br>Пожалуйста, не уходите: воспользуйтесь поиском или перейдите в наш каталог.</div>
                 <div><section id="block-13" class="widget widget_block"></section></div>
                 <div class="d-flex justify-content-between">

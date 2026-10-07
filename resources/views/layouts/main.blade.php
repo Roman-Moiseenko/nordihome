@@ -86,11 +86,13 @@
 
 @include('shop.widgets.flash')
 
-@section('breadcrumbs')
+@hasSection('breadcrumbs')
+    @yield('breadcrumbs')
+@else
     <div class="container-xl">
         {{ \Diglactic\Breadcrumbs\Breadcrumbs::view('shop.breadcrumbs') }}
     </div>
-@show
+@endif
 
 <main class="@yield('main')">
     @yield('content')
