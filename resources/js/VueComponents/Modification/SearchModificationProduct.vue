@@ -34,7 +34,9 @@
                 :key="variant.id"
                 :value="variant.id"
                 :label="variant.name"
-            />
+            >
+                <el-tag :effect="isUsed(variant.id) ? 'dark' : 'light'" size="small">{{ variant.name }}</el-tag>
+            </el-option>
         </el-select>
 
         <el-button type="primary" @click="onAdd" class="ml-2" :disabled="form.productId === null">
@@ -64,6 +66,10 @@ const form = reactive({ productId: null })
 const filters = reactive({})
 for (const attribute of props.modification.attributes) {
     filters[attribute.id] = null
+}
+
+function isUsed(variantId) {
+    return (props.modification.used_variant_ids || []).includes(variantId)
 }
 
 function buildFilters() {

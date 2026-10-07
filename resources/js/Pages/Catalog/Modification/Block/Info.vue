@@ -9,7 +9,7 @@
                     </template>
 
                     <div class="flex flex-wrap mt-1">
-                        <el-tag v-for="variant in item.variants" :key="variant.id" class="ml-1">{{ variant.name }}</el-tag>
+                        <el-tag v-for="variant in item.variants" :key="variant.id" class="ml-1" :effect="isUsed(variant.id) ? 'dark' : 'light'">{{ variant.name }}</el-tag>
                     </div>
                 </el-descriptions-item>
             </el-descriptions>
@@ -20,6 +20,10 @@
 const props = defineProps({
     modification: Object,
 })
+
+function isUsed(variantId) {
+    return (props.modification.used_variant_ids || []).includes(variantId)
+}
 </script>
 <style lang="scss">
 .el-descriptions__label.el-descriptions__cell.is-bordered-label {

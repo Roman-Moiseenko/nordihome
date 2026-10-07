@@ -136,6 +136,23 @@ final class ModificationEntity
         return null;
     }
 
+    /**
+     * Есть ли уже товар с точно таким же набором значений вариантов
+     * (защита от дублирования комбинаций для 1, 2 и 3 осей).
+     *
+     * @param array<int, int> $values attribute_id => variant_id
+     */
+    public function hasProductWithValues(array $values): bool
+    {
+        foreach ($this->products as $product) {
+            if ($product->values == $values) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function withId(int $id): self
     {
         $clone = clone $this;

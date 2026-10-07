@@ -1,7 +1,12 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl">Модификация {{ modification.name }}</h1>
+        <h1 class="font-medium text-xl flex items-center">
+            Модификация {{ modification.name }}
+            <el-button circle size="small" class="ml-2" @click="openRename">
+                <i class="fa-light fa-pencil"></i>
+            </el-button>
+        </h1>
 
         <div class="mt-4 p-5 bg-white rounded-md">
             <ModificationInfo :modification="modification" />
@@ -33,6 +38,16 @@
                 <el-button type="danger" size="small" class="ml-3" @click="handleDeleteEntity(product)">Delete</el-button>
             </div>
         </div>
+
+        <el-dialog v-model="dialogRename" title="Переименовать модификацию" width="400">
+            <el-input v-model="form.name" placeholder="Название модификации" />
+            <template #footer>
+                <div class="dialog-footer">
+                    <el-button @click="dialogRename = false">Отмена</el-button>
+                    <el-button type="primary" @click="onRename">Сохранить</el-button>
+                </div>
+            </template>
+        </el-dialog>
     </el-config-provider>
     <DeleteEntityModal name_entity="Товар из модификации"/>
 </template>
@@ -43,7 +58,7 @@ import {Head, Link, router} from "@inertiajs/vue3";
 import ModificationInfo from './Block/Info.vue'
 import SearchModificationProduct from "@Comp/Modification/SearchModificationProduct.vue"
 import {route} from "ziggy-js";
-import {inject} from "vue";
+import {inject, reactive, ref} from "vue";
 
 const props = defineProps({
     modification: Object,
@@ -53,6 +68,23 @@ const props = defineProps({
     },
 })
 const $delete_entity = inject("$delete_entity")
+
+const dialogRename = ref(false)
+const form = reactive({name: ''})
+
+function openRename() {
+    form.name = props.modification.name
+    dialogRename.value = true
+}
+
+function onRename() {
+    router.post(route('admin.catalog.modification.rename', {modification: props.modification.id}), {
+        name: form.name,
+    }, {
+        preserveScroll: true,
+    })
+    dialogRename.value = false
+}
 
 function getType(index) {
     if (index === 0) return 'primary'

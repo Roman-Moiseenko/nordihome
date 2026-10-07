@@ -61,6 +61,12 @@ class ModificationRepository implements ModificationRepositoryInterface
             ->pluck('name', 'id')
             ->all();
 
+        $usedVariantIds = $valueRows->pluck('variant_id')
+            ->map(fn($variantId) => (int) $variantId)
+            ->unique()
+            ->values()
+            ->all();
+
         $products = $model->products->map(
             function (Product $product) use ($valueRows, $variantNames, $attributeIds) {
                 $pivotId = (int) $product->pivot->id;
@@ -98,6 +104,7 @@ class ModificationRepository implements ModificationRepositoryInterface
             name: $model->name,
             attributes: $attributes,
             products: $products,
+            usedVariantIds: $usedVariantIds,
         );
     }
 

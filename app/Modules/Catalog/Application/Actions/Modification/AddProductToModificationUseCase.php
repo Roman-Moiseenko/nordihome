@@ -40,6 +40,10 @@ final readonly class AddProductToModificationUseCase
                 attributes: $entity->attributes,
             );
 
+            if ($entity->hasProductWithValues($values->toArray())) {
+                throw new \DomainException('Товар с таким набором вариантов уже есть в модификации');
+            }
+
             $entity->addProduct(
                 productId: $productId,
                 values: $values->toArray(),
