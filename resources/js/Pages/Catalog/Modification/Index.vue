@@ -184,10 +184,10 @@ function saveModification() {
 }
 
 function routeClick(row) {
-    router.get(route('admin.catalog.modification.show', {modification: row.id}))
+    router.get(route('admin.catalog.modification.show', {id: row.id}))
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.catalog.modification.destroy', {modification: row.id}));
+    $delete_entity.show(route('admin.catalog.modification.destroy', {id: row.id}));
 }
 </script>

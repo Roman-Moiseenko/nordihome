@@ -94,7 +94,7 @@ function getType(index) {
 }
 
 function handleAddProduct(productId) {
-    router.post(route('admin.catalog.modification.add-product', {modification: props.modification.id}), {
+    router.post(route('admin.catalog.modification.add-product', {id: props.modification.id}), {
         product_id: productId,
     }, {
         preserveScroll: true,
@@ -102,7 +102,7 @@ function handleAddProduct(productId) {
 }
 
 function onSetPrimary(product) {
-    router.post(route('admin.catalog.modification.set-primary', {modification: props.modification.id}), {
+    router.post(route('admin.catalog.modification.set-primary', {id: props.modification.id}), {
         product_id: product.product_id,
     }, {
         preserveScroll: true,
@@ -111,7 +111,7 @@ function onSetPrimary(product) {
 
 function handleDeleteEntity(product) {
     $delete_entity.show(route('admin.catalog.modification.del-product', {
-        modification: props.modification.id,
+        id: props.modification.id,
         product_id: product.product_id,
     }));
 }

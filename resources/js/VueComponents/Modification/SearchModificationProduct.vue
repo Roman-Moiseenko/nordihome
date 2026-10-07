@@ -56,7 +56,7 @@ const props = defineProps({
 })
 const emit = defineEmits(['update:product_id'])
 
-const searchUrl = route('admin.catalog.modification.search-product', {modification: props.modification.id})
+const searchUrl = route('admin.catalog.modification.search-product', {id: props.modification.id})
 
 const options = ref([])
 const loading = ref(false)

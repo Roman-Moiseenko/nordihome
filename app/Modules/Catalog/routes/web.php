@@ -181,13 +181,13 @@ Route::group([
         'as' => 'modification.',
     ], function () {
         //Route::post('/set-modifications/{modification}', [ModificationController::class, 'set_modifications'])->name('set-modifications');
-        Route::post('/set-primary/{modification}', [ModificationController::class, 'setPrimary'])->name('set-primary');
-        Route::post('/search', [ModificationController::class, 'search'])->name('search');
+        Route::post('/set-primary/{id}', [ModificationController::class, 'setPrimary'])->name('set-primary');
+
         Route::post('/search-create', [ModificationController::class, 'search_create'])->name('search-create');
-        Route::post('/search-product/{modification}', [ModificationController::class, 'search_product'])->name('search-product');
+        Route::post('/search-product/{id}', [ModificationController::class, 'search_product'])->name('search-product');
         Route::post('/rename/{id}', [ModificationController::class, 'rename'])->name('rename');
-        Route::post('/add-product/{modification}', [ModificationController::class, 'add_product'])->name('add-product');
-        Route::delete('/del-product/{modification}', [ModificationController::class, 'del_product'])->name('del-product');
+        Route::post('/add-product/{id}', [ModificationController::class, 'add_product'])->name('add-product');
+        Route::delete('/del-product/{id}', [ModificationController::class, 'del_product'])->name('del-product');
     });
 
     //resource
@@ -196,7 +196,7 @@ Route::group([
     Route::resource('attribute', AttributeController::class)->parameters(['attribute' => 'id']); //CRUD
     Route::resource('equivalent', EquivalentController::class)->parameters(['equivalent' => 'id']); //CRUD
     Route::resource('group', GroupController::class)->except(['create', 'edit']); //CRUD
-    Route::resource('modification', ModificationController::class); //CRUD
+    Route::resource('modification', ModificationController::class)->parameters(['modification' => 'id']); //CRUD
     Route::resource('series', SeriesController::class)->except(['create', 'edit'])->parameters(['series' => 'id']); //CRUD
 
 
