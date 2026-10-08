@@ -3,12 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Parser;
 
-use App\Events\ProductHasParsed;
+
 use App\Modules\Base\Entity\Package;
 use App\Modules\Base\Service\GoogleTranslateForFree;
 use App\Modules\Base\Service\HttpPage;
-use App\Modules\Catalog\Service\ProductService;
-use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Settings;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
@@ -57,16 +55,14 @@ class ParserService
     ];
 
     private HttpPage $httpPage;
-    private ProductService $productService;
-    private Common $common;
 
 
 
-    public function __construct(HttpPage $httpPage, ProductService $productService, Settings $settings)
+
+    public function __construct(HttpPage $httpPage,Settings $settings)
     {
         $this->httpPage = $httpPage;
-        $this->productService = $productService;
-        $this->common = $settings->common;
+
     }
 
 
