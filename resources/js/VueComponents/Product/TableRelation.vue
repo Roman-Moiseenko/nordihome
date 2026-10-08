@@ -80,7 +80,7 @@ function onFullDelete(row) {
 }
 
 function onEdit(row) {
-    router.visit(route('admin.catalog.product.edit', {product: row.id}), {
+    router.visit(route('admin.catalog.product.edit', {id: row.id}), {
         method: "get",
         preserveState: true,
         preserveScroll: true,

@@ -20,7 +20,8 @@ Breadcrumbs::for('admin.catalog.product.show', function (BreadcrumbTrail $trail,
     $trail->parent('admin.catalog.product.index');
     $trail->push($product->name, route('admin.catalog.product.show', $product));
 });
-Breadcrumbs::for('admin.catalog.product.edit', function (BreadcrumbTrail $trail, Product $product) {
+Breadcrumbs::for('admin.catalog.product.edit', function (BreadcrumbTrail $trail, int $id) {
+    $product = Product::find($id);
     $trail->parent('admin.catalog.product.show', $product);
     $trail->push('Редактировать', route('admin.catalog.product.edit', $product));
 });

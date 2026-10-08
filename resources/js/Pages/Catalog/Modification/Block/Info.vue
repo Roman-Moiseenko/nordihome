@@ -22,7 +22,7 @@ const props = defineProps({
 })
 
 function isUsed(variantId) {
-    return (props.modification.used_variant_ids || []).includes(variantId)
+    return (props.modification.usedVariantIds || []).includes(variantId)
 }
 </script>
 <style lang="scss">

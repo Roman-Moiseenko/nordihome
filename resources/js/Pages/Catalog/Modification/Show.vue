@@ -26,13 +26,13 @@
                     {{ product.code }}
                 </div>
                 <div class="ml-4" style="min-width: 350px;">
-                    <Link type="primary" :href="route('admin.catalog.product.edit', {product: product.product_id})">{{ product.name }}</Link>
+                    <Link type="primary" :href="route('admin.catalog.product.edit', {id: product.productId})">{{ product.name }}</Link>
                 </div>
                 <div>
                     <el-tag v-for="(value, index) in product.values" :key="index" :type="getType(index)" class="ml-1">{{ value }}</el-tag>
                 </div>
 
-                <el-tag v-if="product.is_primary" type="danger" class="ml-3">Базовый</el-tag>
+                <el-tag v-if="product.isPrimary" type="danger" class="ml-3">Базовый</el-tag>
                 <el-button v-else type="success" size="small" class="ml-3" @click="onSetPrimary(product)">Сделать первым</el-button>
 
                 <el-button type="danger" size="small" class="ml-3" @click="handleDeleteEntity(product)">Delete</el-button>
@@ -103,7 +103,7 @@ function handleAddProduct(productId) {
 
 function onSetPrimary(product) {
     router.post(route('admin.catalog.modification.set-primary', {id: props.modification.id}), {
-        product_id: product.product_id,
+        product_id: product.productId,
     }, {
         preserveScroll: true,
     })
@@ -112,7 +112,7 @@ function onSetPrimary(product) {
 function handleDeleteEntity(product) {
     $delete_entity.show(route('admin.catalog.modification.del-product', {
         id: props.modification.id,
-        product_id: product.product_id,
+        product_id: product.productId,
     }));
 }
 </script>

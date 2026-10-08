@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\DTOs\Modification;
 
-use Spatie\LaravelData\Attributes\MapOutputName;
 use Spatie\LaravelData\Data;
 
 /**
@@ -21,13 +20,11 @@ class ModificationProductViewData extends Data
         /** id связи modifications_products (для будущего удаления товара из модификации). */
         public readonly int $id,
         /** id товара (для ссылки на карточку товара). */
-        #[MapOutputName('product_id')]
         public readonly int $productId,
         public readonly string $name,
         public readonly string $code,
         public readonly string $image,
         public readonly array $values = [],
-        #[MapOutputName('is_primary')]
         public readonly bool $isPrimary = false,
     ) {
     }

@@ -1,7 +1,7 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl my-2">Редактирование товара {{ product.name }}</h1>
+        <h1 class="font-medium text-xl my-2">{{ header }}</h1>
         <div class="mt-2 p-3 bg-white rounded-md">
             <el-radio-group v-model="tabPosition" style="margin-bottom: 30px">
                 <el-radio-button value="top">top</el-radio-button>
@@ -12,42 +12,42 @@
 
             <el-tabs :tab-position="tabPosition" v-model="activePanel">
 
-                <PanelCommon :product-id="product.id"
+                <PanelCommon :product-id="productId"
                              :active="activePanel === 'common'"
+                             @update:header="onHeader"
                 />
-                <PanelDescription :product-id="product.id"
+                <PanelDescription :product-id="productId"
                                   :active="activePanel === 'description'"
                 />
-                <PanelDimensions :product-id="product.id"
+                <PanelDimensions :product-id="productId"
                                  :active="activePanel === 'dimensions'"
                 />
-                <PanelImage :product-id="product.id"
+                <PanelImage :product-id="productId"
                             :active="activePanel === 'image'"
                 />
-                <PanelVideo :product-id="product.id"
+                <PanelVideo :product-id="productId"
                             :active="activePanel === 'video'"
                 />
-                <PanelAttribute :product-id="product.id"
+                <PanelAttribute :product-id="productId"
                                 :active="activePanel === 'attribute'"
                 />
-                <PanelManagement :product="product"
-                                 :errors="errors"
+                <PanelManagement :product-id="productId"
+                                 :active="activePanel === 'management'"
                 />
-                <PanelModification :product="product"
-                                   :errors="errors"
+                <PanelModification :product-id="productId"
+                                   :active="activePanel === 'modification'"
                 />
-                <PanelEquivalent :product="product"
-                                 :errors="errors"
-                                 :equivalents="equivalents"
+                <PanelEquivalent :product-id="productId"
+                                 :active="activePanel === 'equivalent'"
                 />
-                <PanelRelated :product="product"
-                              :errors="errors"
+                <PanelRelated :product-id="productId"
+                              :active="activePanel === 'related'"
                 />
-                <PanelBonus :product="product"
-                            :errors="errors"
+                <PanelBonus :product-id="productId"
+                            :active="activePanel === 'bonus'"
                 />
-                <PanelComposite :product="product"
-                                :errors="errors"
+                <PanelComposite :product-id="productId"
+                                :active="activePanel === 'composite'"
                 />
             </el-tabs>
         </div>
@@ -75,21 +75,22 @@ import PanelComposite from './Panels/Composite.vue'
 
 
 const props = defineProps({
-    product: Object,
-    errors: Object,
-    country: Array,
-    vat: Array,
-    measuring: Array,
-    markingType: Array,
-    dimensions: Array,
-    equivalents: Array,
-    complexities: Array,
+    productId: Number,
+
     title: {
         type: String,
         default: 'Редактирование товара',
     },
 })
 const tabPosition = ref<TabsInstance['tabPosition']>('left')
+
+// Заголовок страницы. Пока панель «Общие параметры» не загрузила данные,
+// показываем нейтральный заголовок; после загрузки — «Название (Артикул)».
+const header = ref('Редактирование товара')
+
+function onHeader({ name, code }) {
+    header.value = `${name} (${code})`
+}
 
 // Активная панель. По умолчанию — первая (Общие параметры).
 // Если страница открыта с ?panel=xxx, эта панель становится активной сразу.

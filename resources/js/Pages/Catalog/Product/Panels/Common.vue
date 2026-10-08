@@ -131,6 +131,8 @@ const props = defineProps({
     },
 })
 
+const emit = defineEmits(['update:header'])
+
 const autoSave = ref(true)
 const isSaving = ref(false)
 const hasModification = ref(false)
@@ -182,6 +184,8 @@ function applyData(data) {
     form.measuringId = data.measuringId
     form.fractional = data.fractional
     hasModification.value = data.hasModification
+
+    emit('update:header', { name: data.name, code: data.code })
 }
 
 // Автозагрузка при активации панели.

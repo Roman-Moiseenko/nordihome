@@ -13,6 +13,13 @@ interface EquivalentRepositoryInterface
     public function getById(int $id): EquivalentEntity;
 
     /**
+     * Полный список групп аналогов (для панели товара).
+     *
+     * @return array<int, array{id: int, name: string}>
+     */
+    public function getAll(): array;
+
+    /**
      * @param int[] $ids
      * @return EquivalentEntity[]
      */

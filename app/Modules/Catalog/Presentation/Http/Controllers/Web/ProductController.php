@@ -66,18 +66,18 @@ class ProductController extends Controller
     }
 
 
-    public function show(Product $product): Response
+    public function show(int $id): Response
     {
         return Inertia::render('Catalog/Product/Show', [
-            'product' => $product
+            'product' => Product::findOrFail($id)
         ]);
     }
 
-    public function edit(Product $product): Response
+    public function edit(int $id): Response
     {
         return Inertia::render('Catalog/Product/Edit', [
-            'product' => $this->repository->ProductWithToArray($product),
-            'dimensions' => array_select(Dimensions::TYPES),
+            'productId' => $id, //$this->repository->ProductWithToArray($product),
+        /*    'dimensions' => array_select(Dimensions::TYPES),
             'complexities' => array_select(Packages::COMPLEXITIES),
 
             'equivalents' => Equivalent::orderBy('name')
@@ -85,7 +85,7 @@ class ProductController extends Controller
                     $query->where('_lft', '<=', $product->category->_lft)
                         ->where('_rgt', '>=', $product->category->_rgt);
                 })
-                ->getModels(),
+                ->getModels(),*/
         ]);
 
     }
@@ -98,9 +98,9 @@ class ProductController extends Controller
     }
 
 
-    public function destroy(Product $product): RedirectResponse
+    public function destroy(int $id): RedirectResponse
     {
-        $this->service->destroy($product);
+        $this->service->destroy(Product::findOrFail($id));
         return redirect()->back()->with('success', 'Товар помечен на удаление');
     }
 
