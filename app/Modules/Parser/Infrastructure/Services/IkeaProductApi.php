@@ -72,11 +72,11 @@ class IkeaProductApi implements IkeaProductApiInterface
         $pattern =  '#<script type="text/hydrate"[^>]*>(.+?)</script>#su';// '#<script type="text\/hydrate">(.+?)<\/script>#su';
         preg_match_all($pattern, $pageProduct, $res);
 
-        //dd(json_decode($res[1][6], true));
+        //dd($res);
         foreach ($res[1] as  $item_res) {
             $_itemArray = json_decode($item_res, true);
-            if (!isset($_itemArray['data'])) continue;
-            $data = $_itemArray['data'];
+            if (!isset($_itemArray[0]['loaderData'])) continue;
+            $data = $_itemArray[0]['loaderData'];
             if (isset($data["pageProps"])) {
 
                 $productDetail = $data["pageProps"]['productInformationSectionProps']['productDetailsProps'];

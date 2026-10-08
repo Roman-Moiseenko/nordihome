@@ -26,6 +26,7 @@ class IkeaCheckCommand extends Command
             $this->warn('Нет связи');
             return;
         }
+        $this->info($product['pipUrl']);
         $dataPage = $api->getProductPage($product['pipUrl']);
         dd($dataPage);
     }
