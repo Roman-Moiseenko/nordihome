@@ -235,10 +235,14 @@ Route::group([
         ], function () {
             Route::get('/common/{id}', [ProductEditController::class, 'loadCommon'])->name('common');
             Route::post('/common/{id}', [ProductEditController::class, 'saveCommon'])->name('common');
-            Route::post('/description/{product}', [ProductEditController::class, 'description'])->name('description');
-            Route::post('/dimensions/{product}', [ProductEditController::class, 'dimensions'])->name('dimensions');
-            Route::post('/video/{product}', [ProductEditController::class, 'video'])->name('video');
-            Route::post('/attribute/{product}', [ProductEditController::class, 'attribute'])->name('attribute');
+            Route::get('/description/{id}', [ProductEditController::class, 'loadDescription'])->name('description');
+            Route::post('/description/{id}', [ProductEditController::class, 'saveDescription'])->name('description');
+            Route::get('/dimensions/{id}', [ProductEditController::class, 'loadDimensions'])->name('dimensions');
+            Route::post('/dimensions/{id}', [ProductEditController::class, 'saveDimensions'])->name('dimensions');
+            Route::get('/video/{id}', [ProductEditController::class, 'loadVideo'])->name('video');
+            Route::post('/video/{id}', [ProductEditController::class, 'saveVideo'])->name('video');
+            Route::get('/attribute/{id}', [ProductEditController::class, 'loadAttribute'])->name('attribute');
+            Route::post('/attribute/{id}', [ProductEditController::class, 'saveAttribute'])->name('attribute');
             Route::post('/management/{product}', [ProductEditController::class, 'management'])->name('management');
             Route::post('/equivalent/{product}', [ProductEditController::class, 'equivalent'])->name('equivalent');
             Route::post('/related/{product}', [ProductEditController::class, 'related'])->name('related');

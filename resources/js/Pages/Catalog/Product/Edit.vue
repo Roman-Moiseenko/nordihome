@@ -15,22 +15,20 @@
                 <PanelCommon :product-id="product.id"
                              :active="activePanel === 'common'"
                 />
-                <PanelDescription :product="product"
-                                  :errors="errors"
+                <PanelDescription :product-id="product.id"
+                                  :active="activePanel === 'description'"
                 />
-                <PanelDimensions :product="product"
-                                 :errors="errors"
-                                 :dimensions="dimensions"
-                                 :complexities="complexities"
+                <PanelDimensions :product-id="product.id"
+                                 :active="activePanel === 'dimensions'"
                 />
-                <PanelImage :product="product"
-                            :errors="errors"
+                <PanelImage :product-id="product.id"
+                            :active="activePanel === 'image'"
                 />
-                <PanelVideo :product="product"
-                            :errors="errors"
+                <PanelVideo :product-id="product.id"
+                            :active="activePanel === 'video'"
                 />
-                <PanelAttribute :product="product"
-                                :errors="errors"
+                <PanelAttribute :product-id="product.id"
+                                :active="activePanel === 'attribute'"
                 />
                 <PanelManagement :product="product"
                                  :errors="errors"

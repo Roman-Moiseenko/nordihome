@@ -20,6 +20,7 @@ use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\SeriesRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\VideoRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeCategoryRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeGroupRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeProductRepository;
@@ -38,6 +39,7 @@ use App\Modules\Catalog\Infrastructure\Persistence\RoomRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\SeriesRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\TagProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\TagRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\VideoRepository;
 use App\Modules\Catalog\Presentation\Console\Commands\ClearCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\LoadCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\ResetPublishedCommand;
@@ -194,6 +196,11 @@ class CatalogServiceProvider extends ServiceProvider
         $this->app->bind(
             TagProductRepositoryInterface::class,
             TagProductRepository::class
+        );
+
+        $this->app->bind(
+            VideoRepositoryInterface::class,
+            VideoRepository::class
         );
 
         $this->app->bind(

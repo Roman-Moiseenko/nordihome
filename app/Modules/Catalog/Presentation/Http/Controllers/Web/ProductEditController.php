@@ -8,9 +8,21 @@ use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Packages;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\GetAttributeProductQuery;
 use App\Modules\Catalog\Application\Actions\Product\EditPage\GetCommonProductQuery;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\GetDescriptionProductQuery;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\GetDimensionsProductQuery;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\GetVideoProductQuery;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\SetAttributeProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\EditPage\SetCommonProductUseCase;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\SetDescriptionProductUseCase;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\SetDimensionsProductUseCase;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\SetVideoProductUseCase;
+use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateAttributeProductData;
 use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateCommonProductData;
+use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateDescriptionProductData;
+use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateDimensionsProductData;
+use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateVideoProductData;
 use App\Modules\Catalog\Infrastructure\Models\AttributeGroup;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Equivalent;
@@ -40,6 +52,14 @@ class ProductEditController extends Controller
         ProductService $service,
         private readonly GetCommonProductQuery $getCommonProductQuery,
         private readonly SetCommonProductUseCase $setCommonProductUseCase,
+        private readonly GetDescriptionProductQuery $getDescriptionProductQuery,
+        private readonly SetDescriptionProductUseCase $setDescriptionProductUseCase,
+        private readonly GetDimensionsProductQuery $getDimensionsProductQuery,
+        private readonly SetDimensionsProductUseCase $setDimensionsProductUseCase,
+        private readonly GetVideoProductQuery $getVideoProductQuery,
+        private readonly SetVideoProductUseCase $setVideoProductUseCase,
+        private readonly GetAttributeProductQuery $getAttributeProductQuery,
+        private readonly SetAttributeProductUseCase $setAttributeProductUseCase,
     )
     {
         $this->service = $service;
@@ -59,28 +79,56 @@ class ProductEditController extends Controller
         return \response()->json($data);
     }
 
-    public function description(Request $request, Product $product): RedirectResponse
+    public function loadDescription(int $id)
     {
-        $this->service->editDescription($product, $request);
-        return redirect()->back()->with('success', 'Сохранено');
+        $data = $this->getDescriptionProductQuery->execute($id);
+        return \response()->json($data);
+    }
+    public function saveDescription(Request $request, int $id)
+    {
+        $dto = UpdateDescriptionProductData::validateAndCreate($request->all());
+        $this->setDescriptionProductUseCase->execute($id, $dto);
+        $data = $this->getDescriptionProductQuery->execute($id);
+        return \response()->json($data);
     }
 
-    public function dimensions(Request $request, Product $product): RedirectResponse
+    public function loadDimensions(int $id)
     {
-        $this->service->editDimensions($product, $request);
-        return redirect()->back()->with('success', 'Сохранено');
+        $data = $this->getDimensionsProductQuery->execute($id);
+        return \response()->json($data);
+    }
+    public function saveDimensions(Request $request, int $id)
+    {
+        $dto = UpdateDimensionsProductData::validateAndCreate($request->all());
+        $this->setDimensionsProductUseCase->execute($id, $dto);
+        $data = $this->getDimensionsProductQuery->execute($id);
+        return \response()->json($data);
     }
 
-    public function video(Request $request, Product $product): RedirectResponse
+    public function loadVideo(int $id)
     {
-        $this->service->editVideo($product, $request);
-        return redirect()->back()->with('success', 'Сохранено');
+        $data = $this->getVideoProductQuery->execute($id);
+        return \response()->json($data);
+    }
+    public function saveVideo(Request $request, int $id)
+    {
+        $dto = UpdateVideoProductData::validateAndCreate($request->all());
+        $this->setVideoProductUseCase->execute($id, $dto);
+        $data = $this->getVideoProductQuery->execute($id);
+        return \response()->json($data);
     }
 
-    public function attribute(Request $request, Product $product): RedirectResponse
+    public function loadAttribute(int $id)
     {
-        $this->service->editAttribute($product, $request);
-        return redirect()->back()->with('success', 'Сохранено');
+        $data = $this->getAttributeProductQuery->execute($id);
+        return \response()->json($data);
+    }
+    public function saveAttribute(Request $request, int $id)
+    {
+        $dto = UpdateAttributeProductData::validateAndCreate($request->all());
+        $this->setAttributeProductUseCase->execute($id, $dto);
+        $data = $this->getAttributeProductQuery->execute($id);
+        return \response()->json($data);
     }
 
     public function management(Request $request, Product $product): RedirectResponse
