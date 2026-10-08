@@ -1,28 +1,18 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Catalog\Controllers;
+namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Accounting\Entity\Distributor;
-use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Packages;
-use App\Modules\Catalog\Infrastructure\Models\AttributeGroup;
-use App\Modules\Catalog\Infrastructure\Models\Brand;
+use App\Modules\Catalog\Application\Actions\Product\SearchProductQuery;
 use App\Modules\Catalog\Infrastructure\Models\Equivalent;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Catalog\Infrastructure\Models\Series;
-use App\Modules\Catalog\Application\Actions\Product\SearchProductQuery;
-use App\Modules\Catalog\Infrastructure\Models\Tag;
 use App\Modules\Catalog\Repository\ProductRepository;
 use App\Modules\Catalog\Request\ProductCreateRequest;
 use App\Modules\Catalog\Service\ProductService;
 use App\Modules\Content\Application\Services\ProductSearchService;
-use App\Modules\Guide\Entity\Country;
-use App\Modules\Guide\Entity\MarkingType;
-use App\Modules\Guide\Entity\Measuring;
-use App\Modules\Guide\Entity\VAT;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

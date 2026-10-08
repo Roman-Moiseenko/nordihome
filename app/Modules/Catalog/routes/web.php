@@ -4,7 +4,6 @@ use App\Modules\Catalog\Controllers\AttributeController;
 use App\Modules\Catalog\Controllers\OnOrderController;
 use App\Modules\Catalog\Controllers\ParserController;
 use App\Modules\Catalog\Controllers\PriorityController;
-use App\Modules\Catalog\Controllers\ProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\AttributeGroupController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\BrandController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryController;
@@ -13,6 +12,7 @@ use App\Modules\Catalog\Presentation\Http\Controllers\Web\EquivalentController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\ModificationController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\ProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\ProductEditController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomProductController;
@@ -233,7 +233,8 @@ Route::group([
             'prefix' => 'edit',
             'as' => 'edit.'
         ], function () {
-            Route::post('/common/{product}', [ProductEditController::class, 'common'])->name('common');
+            Route::get('/common/{id}', [ProductEditController::class, 'loadCommon'])->name('common');
+            Route::post('/common/{id}', [ProductEditController::class, 'saveCommon'])->name('common');
             Route::post('/description/{product}', [ProductEditController::class, 'description'])->name('description');
             Route::post('/dimensions/{product}', [ProductEditController::class, 'dimensions'])->name('dimensions');
             Route::post('/video/{product}', [ProductEditController::class, 'video'])->name('video');

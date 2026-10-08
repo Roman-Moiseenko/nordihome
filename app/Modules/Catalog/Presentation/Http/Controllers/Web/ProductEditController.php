@@ -8,6 +8,9 @@ use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Packages;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\GetCommonProductQuery;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\SetCommonProductUseCase;
+use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateCommonProductData;
 use App\Modules\Catalog\Infrastructure\Models\AttributeGroup;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Equivalent;
@@ -36,17 +39,26 @@ class ProductEditController extends Controller
 
     public function __construct(
         ProductService $service,
+        private readonly GetCommonProductQuery $getCommonProductQuery,
+        private readonly SetCommonProductUseCase $setCommonProductUseCase,
     )
     {
         $this->service = $service;
     }
 
     //Vue3 Edit
-
-    public function common(ProductCreateRequest $request, Product $product): RedirectResponse
+    public function loadCommon(int $id)
     {
-        $this->service->editCommon($product, $request);
-        return redirect()->back()->with('success', 'Сохранено');
+        $data = $this->getCommonProductQuery->execute($id);
+        return \response()->json($data);
+    }
+    public function saveCommon(ProductCreateRequest $request, int $id)
+    {
+        $dto = UpdateCommonProductData::validateAndCreate($request->all());
+        $this->setCommonProductUseCase->execute($id, $dto);
+        $data = $this->getCommonProductQuery->execute($id);
+        return \response()->json($data);
+
     }
 
     public function description(Request $request, Product $product): RedirectResponse
@@ -112,5 +124,7 @@ class ProductEditController extends Controller
         return redirect()->back()->with('success', 'Сохранено');
 
     }
+
+
 
 }
