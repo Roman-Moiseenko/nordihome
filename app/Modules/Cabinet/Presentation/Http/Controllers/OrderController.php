@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
 
-use App\Modules\Cabinet\Application\Queries\GetOrderClientQuery;
-use App\Modules\Cabinet\Application\Queries\GetOrdersClientQuery;
+use App\Modules\Cabinet\Application\Queries\PageOrderClientQuery;
+use App\Modules\Cabinet\Application\Queries\PageOrdersClientQuery;
 use App\Modules\Cabinet\Application\Queries\PageNewOrderQuery;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
@@ -16,12 +16,12 @@ use function view;
 /**
  * Контроллер для просмотра заказов клиента
  */
-class OrderAbstractController extends ShopAbstractController
+class OrderController extends ShopAbstractController
 {
     public function __construct(
-        private readonly GetOrdersClientQuery $getOrdersClientQuery,
-        private readonly GetOrderClientQuery $getOrderClientQuery,
-        private readonly PageNewOrderQuery $pageNewOrderQuery,
+        private readonly PageOrdersClientQuery $getOrdersClientQuery,
+        private readonly PageOrderClientQuery  $getOrderClientQuery,
+        private readonly PageNewOrderQuery     $pageNewOrderQuery,
     )
     {
     }

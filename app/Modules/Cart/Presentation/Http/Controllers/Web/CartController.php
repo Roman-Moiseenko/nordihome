@@ -15,7 +15,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 
-class CartAbstractController extends ShopAbstractController
+class CartController extends ShopAbstractController
 {
     use RecordsAnalyticsAction;
 

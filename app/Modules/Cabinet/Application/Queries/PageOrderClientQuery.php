@@ -2,14 +2,14 @@
 
 namespace App\Modules\Cabinet\Application\Queries;
 
-use App\Modules\Cabinet\Application\Actions\GetOrderClientData;
+use App\Modules\Cabinet\Application\Actions\GetOrderClientQuery;
 use App\Modules\Cabinet\Application\DTOs\OrderClientPageData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 
-readonly class GetOrderClientQuery
+readonly class PageOrderClientQuery
 {
     public function __construct(
-        private GetOrderClientData $getOrderClientData,
+        private GetOrderClientQuery $getOrderClientData,
 
     )
     {

@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use function response;
 use function view;
 
-class WishAbstractController extends ShopAbstractController
+class WishController extends ShopAbstractController
 {
     private WishService $service;
     private UserRepository $repository;

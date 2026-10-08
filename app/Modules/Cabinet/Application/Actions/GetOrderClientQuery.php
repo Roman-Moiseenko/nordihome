@@ -15,7 +15,7 @@ use App\Modules\Shared\Application\Actions\GetPhotoThumbUseCase;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoThumbData;
 use Illuminate\Support\Carbon;
 
-readonly class GetOrderClientData
+readonly class GetOrderClientQuery
 {
     public function __construct(
         private OrderRepositoryInterface  $repository,

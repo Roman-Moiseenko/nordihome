@@ -7,7 +7,7 @@ use App\Modules\Output\Application\Queries\ECommerce\GetECommerceQuery;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
 use Illuminate\Http\Request;
 
-class ECommerceAbstractController extends ShopAbstractController
+class ECommerceController extends ShopAbstractController
 {
     public function __construct(
         private readonly GetECommerceQuery $eCommerceQuery,

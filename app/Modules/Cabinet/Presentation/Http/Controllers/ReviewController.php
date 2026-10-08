@@ -9,7 +9,7 @@ use App\Modules\Catalog\Entity\Review;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
 use Illuminate\Http\Request;
 
-class ReviewAbstractController extends ShopAbstractController
+class ReviewController extends ShopAbstractController
 {
     public function __construct(
         public PageReviewQuery $pageReviewQuery

@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
 use function response;
 use function view;
 
-class CabinetAbstractController extends ShopAbstractController
+class CabinetController extends ShopAbstractController
 {
 
     private UserService $service;

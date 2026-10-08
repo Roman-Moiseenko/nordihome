@@ -1,7 +1,7 @@
 <?php
 
 
-use App\Modules\Output\Presentation\Http\Controllers\Web\ECommerceAbstractController;
+use App\Modules\Output\Presentation\Http\Controllers\Web\ECommerceController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\CatalogController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\CheckoutController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\GroupController;

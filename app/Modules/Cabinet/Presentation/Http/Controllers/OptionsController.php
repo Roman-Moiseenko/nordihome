@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use function response;
 use function view;
 
-class OptionsAbstractController extends ShopAbstractController
+class OptionsController extends ShopAbstractController
 {
 
     private SubscriptionService $service;
