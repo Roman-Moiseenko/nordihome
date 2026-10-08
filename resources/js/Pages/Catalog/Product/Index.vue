@@ -8,15 +8,15 @@
             </el-button>
             <div class="ml-3 my-auto">
                 <Link type="primary" :href="route('admin.catalog.product.index')">Все</Link>
-                ({{ count.all }}) |
+                ({{ filters.all }}) |
                 <Link type="primary" :href="route('admin.catalog.product.index', {show: 'active'})">Опубликованные</Link>
-                ({{ count.active }}) |
+                ({{ filters.active }}) |
                 <Link type="primary" :href="route('admin.catalog.product.index', {show: 'not_sale'})">Снятые с продажи</Link>
-                ({{ count.not_sale }}) |
+                ({{ filters.notSale }}) |
                 <Link type="primary" :href="route('admin.catalog.product.index', {show: 'draft'})">Черновики</Link>
-                ({{ count.draft }})
+                ({{ filters.draft }})
                 <Link type="primary" :href="route('admin.catalog.product.index', {show: 'delete'})">Удаленные</Link>
-                ({{ count.delete }})
+                ({{ filters.delete }})
             </div>
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-input v-model="filter.name" placeholder="Товар"/>
@@ -54,7 +54,7 @@
                         <div>
                             {{ scope.row.name }}
                             <el-tag v-if="!scope.row.published" type="info" class="ml-2">Черновик</el-tag>
-                            <el-tag v-if="scope.row.not_sale" type="warning" class="ml-1">Снят с продажи</el-tag>
+                            <el-tag v-if="scope.row.notSale" type="warning" class="ml-1">Снят с продажи</el-tag>
                         </div>
                         <div>
                             <div class="show-on-hover items-center">
@@ -87,7 +87,7 @@
                                     </el-link>
                                     &nbsp;|&nbsp;
                                     <el-link type="warning" :underline="false" @click="onSaleToggle(scope.row)">
-                                        {{ scope.row.not_sale ? 'Вернуть в продажу' : 'Снять с продажи' }}
+                                        {{ scope.row.notSale ? 'Вернуть в продажу' : 'Снять с продажи' }}
                                     </el-link>
                                     &nbsp;|&nbsp;
                                     <el-link type="success" :underline="false" @click="onPublishedToggle(scope.row)">
@@ -98,16 +98,16 @@
                         </div>
                     </template>
                 </el-table-column>
-                <el-table-column prop="category_name" label="Категория" width="250" align="center"
+                <el-table-column prop="categoryName" label="Категория" width="250" align="center"
                                  show-overflow-tooltip/>
                 <el-table-column prop="published" label="Опубликован" width="120" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.published"/>
                     </template>
                 </el-table-column>
-                <el-table-column prop="not_sale" label="В продаже" width="100" align="center">
+                <el-table-column prop="notSale" label="В продаже" width="100" align="center">
                     <template #default="scope">
-                        <Active :active="!scope.row.not_sale"/>
+                        <Active :active="!scope.row.notSale"/>
                     </template>
                 </el-table-column>
 
@@ -147,8 +147,7 @@ const props = defineProps({
         type: String,
         default: 'Список всех товаров',
     },
-    filters: Array,
-    count: Array,
+    filters: Object,
 })
 
 const store = useStore();

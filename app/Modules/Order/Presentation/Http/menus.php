@@ -38,13 +38,13 @@ return [
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-cart-plus',
             ],
-            'product' => [
+         /*   'product' => [
                 'icon' => 'package-open',
                 'title' => 'Все Товары',
                 'route_name' => 'admin.order.product.index',
                 'vue' => true,
                 'font_awesome' => 'fa-light fa-box-open',
-            ],
+            ],*/
             'payment' => [
                 'icon' => 'credit-card',
                 'title' => 'Платежи',

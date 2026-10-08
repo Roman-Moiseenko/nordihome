@@ -46,4 +46,12 @@ interface CategoryRepositoryInterface
     public function bulkTogglePublished(array $ids, bool $published): void;
 
     public function getBySlug(string $slug):? CategoryEntity;
+
+    /**
+     * Имена родительских категорий для переданных ID (для списка товаров).
+     *
+     * @param int[] $ids
+     * @return array<int, string> map category_id => строка имён родительских категорий
+     */
+    public function getParentNamesByIds(array $ids): array;
 }

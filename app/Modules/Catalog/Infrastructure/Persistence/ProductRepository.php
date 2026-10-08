@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Persistence;
 
+use App\Modules\Catalog\Application\DTOs\Product\FilterProductIndexData;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
+use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\CategoryProduct;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Parser\Domain\ValueObjects\Package;
@@ -236,7 +238,7 @@ class ProductRepository implements ProductRepositoryInterface
         $entity->local = (bool)$model->local;
         $entity->priority = (bool)$model->priority;
         $entity->notSale = (bool)$model->not_sale;
-        $entity->priceReduced = (bool)$model->price_reduced;
+       // $entity->priceReduced = (bool)$model->price_reduced;
         $entity->onlyOnOrder = (bool)$model->only_on_order;
         $entity->fractional = (bool)$model->fractional;
         $entity->hidePrice = (bool)$model->hide_price;
@@ -294,5 +296,72 @@ class ProductRepository implements ProductRepositoryInterface
     public function exists(int $productId): bool
     {
         return Product::where('id', $productId)->exists();
+    }
+
+    public function filteredPaginated(FilterProductIndexData &$filter): LengthAwarePaginator
+    {
+        $query = Product::orderBy('name');
+
+        $filter->count = 0;
+
+        $this->fillIndexCounts($filter);
+
+        if (!is_null($filter->name) && trim($filter->name) !== '') {
+            $name = trim($filter->name);
+            $query->where(function ($q) use ($name) {
+                $q->whereRaw("LOWER(name) LIKE LOWER(?)", ["%{$name}%"])
+                    ->orWhere('code', 'like', "%{$name}%")
+                    ->orWhere('code_search', 'like', "%{$name}%");
+            });
+            $filter->count++;
+        }
+
+        if (!is_null($filter->room) && $filter->room > 0) {
+            $category = Category::find($filter->room);
+            if ($category !== null) {
+                $categories = $category->getChildrenIdAll();
+                $query->where(function ($q) use ($categories) {
+                    $q->whereHas('categories', fn($sub) => $sub->whereIn('id', $categories))
+                        ->orWhereIn('main_category_id', $categories);
+                });
+                $filter->count++;
+            }
+        }
+
+        if (!is_null($filter->show) && $filter->show !== '') {
+            if ($filter->show === 'active') {
+                $query->where('published', true);
+            } elseif ($filter->show === 'draft') {
+                $query->where('published', false);
+            } elseif ($filter->show === 'not_sale') {
+                $query->where('not_sale', true);
+            } elseif ($filter->show === 'delete') {
+                $query->onlyTrashed();
+            }
+            $filter->count++;
+        }
+
+        return $query->paginate($filter->perPage)
+            ->withQueryString()
+            ->through(fn(Product $model) => $this->hydrate($model));
+    }
+
+    private function fillIndexCounts(FilterProductIndexData $filter): void
+    {
+        $result = Product::withTrashed()
+            ->selectRaw('
+                SUM(CASE WHEN products.deleted_at IS NULL THEN 1 ELSE 0 END) as all_count,
+                SUM(CASE WHEN products.deleted_at IS NULL AND products.published = 1 THEN 1 ELSE 0 END) as active_count,
+                SUM(CASE WHEN products.deleted_at IS NULL AND products.published = 0 THEN 1 ELSE 0 END) as draft_count,
+                SUM(CASE WHEN products.deleted_at IS NULL AND products.not_sale = 1 THEN 1 ELSE 0 END) as not_sale_count,
+                SUM(CASE WHEN products.deleted_at IS NOT NULL THEN 1 ELSE 0 END) as delete_count
+            ')
+            ->first();
+
+        $filter->all = (int) ($result->all_count ?? 0);
+        $filter->active = (int) ($result->active_count ?? 0);
+        $filter->draft = (int) ($result->draft_count ?? 0);
+        $filter->notSale = (int) ($result->not_sale_count ?? 0);
+        $filter->delete = (int) ($result->delete_count ?? 0);
     }
 }

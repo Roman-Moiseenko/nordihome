@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Domain\Interfaces;
 
+use App\Modules\Catalog\Application\DTOs\Product\FilterProductIndexData;
 use App\Modules\Catalog\Application\DTOs\Product\ProductCategoryData;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -122,5 +123,14 @@ interface ProductRepositoryInterface
 
     public function exists(int $productId): bool;
 
+    /**
+     * Отфильтрованный список товаров (Catalog/Product/Index).
+     *
+     * Репозиторий применяет только непустые поля фильтра и пишет в
+     * $filter->count число применённых фильтров.
+     *
+     * @return LengthAwarePaginator<ProductEntity>
+     */
+    public function filteredPaginated(FilterProductIndexData &$filter): LengthAwarePaginator;
 
 }

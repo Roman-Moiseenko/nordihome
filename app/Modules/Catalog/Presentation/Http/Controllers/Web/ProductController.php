@@ -6,13 +6,15 @@ namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Packages;
+use App\Modules\Catalog\Application\Actions\Product\IndexProductQuery;
 use App\Modules\Catalog\Application\Actions\Product\SearchProductQuery;
+use App\Modules\Catalog\Application\DTOs\Product\FilterProductIndexData;
 use App\Modules\Catalog\Infrastructure\Models\Equivalent;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Catalog\Repository\ProductRepository;
 use App\Modules\Catalog\Request\ProductCreateRequest;
 use App\Modules\Catalog\Service\ProductService;
 use App\Modules\Content\Application\Services\ProductSearchService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -23,34 +25,25 @@ use Log;
 class ProductController extends Controller
 {
     private ProductService $service;
-    private ProductRepository $repository;
 
     public function __construct(
         ProductService                        $service,
-        ProductRepository                     $repository,
         private readonly ProductSearchService $productSearchService,
         private readonly SearchProductQuery   $searchProductQuery,
+        private readonly IndexProductQuery    $indexProductQuery,
     )
     {
         $this->service = $service;
-        $this->repository = $repository;
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request, UserPermission $userPermission): Response
     {
-        $count = [
-            'all' => Product::count(),
-            'active' => Product::where('published', true)->count(),
-            'draft' => Product::where('published', false)->count(),
-            'not_sale' => Product::where('not_sale', true)->count(),
-            'delete' => Product::onlyTrashed()->count(),
-        ];
+        $filterDto = FilterProductIndexData::validateAndCreate($request->all());
+        $products = $this->indexProductQuery->execute($filterDto, $userPermission);
 
-        $products = $this->repository->getIndex($request, $filters);
         return Inertia::render('Catalog/Product/Index', [
             'products' => $products,
-            'filters' => $filters,
-            'count' => $count,
+            'filters' => $filterDto,
         ]);
     }
 
