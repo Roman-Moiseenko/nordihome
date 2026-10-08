@@ -198,7 +198,7 @@ class LoadParserProductIkeaService
                 //Если вариант еще не спарсен
                 if (!$this->parserProductRepository->existsByCode($varCode)) {
                     $productVar = $this->ikeaProductApi->getProductByCode($varCode);
-                    LoadProductIkeaJob::dispatch($productVar);
+                    if (!is_null($productVar)) LoadProductIkeaJob::dispatch($productVar);
                 }
             }
         }

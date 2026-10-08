@@ -22,6 +22,10 @@ class IkeaCheckCommand extends Command
         $code = '40178888';
         $product = $api->getProductByCode($code);
 
+        if (is_null($product)) {
+            $this->warn('Нет связи');
+            return;
+        }
         $dataPage = $api->getProductPage($product['pipUrl']);
         dd($dataPage);
     }
