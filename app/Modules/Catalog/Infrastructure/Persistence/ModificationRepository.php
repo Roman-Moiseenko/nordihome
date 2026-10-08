@@ -108,6 +108,18 @@ class ModificationRepository implements ModificationRepositoryInterface
         );
     }
 
+    public function findViewDataByProductId(int $productId): ?ModificationViewData
+    {
+        $modificationId = ModificationProduct::where('product_id', $productId)
+            ->value('modification_id');
+
+        if ($modificationId === null) {
+            return null;
+        }
+
+        return $this->getViewData((int) $modificationId);
+    }
+
     public function getUsedProductIds(): array
     {
         return ModificationProduct::query()

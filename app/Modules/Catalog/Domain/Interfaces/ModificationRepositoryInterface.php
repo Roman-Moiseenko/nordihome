@@ -19,6 +19,13 @@ interface ModificationRepositoryInterface
     public function getViewData(int $id): ModificationViewData;
 
     /**
+     * Данные карточки модификации по ID одного из товаров,
+     * входящих в модификацию. Если товар не входит ни в одну
+     * модификацию — возвращает null.
+     */
+    public function findViewDataByProductId(int $productId): ?ModificationViewData;
+
+    /**
      * @return LengthAwarePaginator<ModificationIndexData>
      */
     public function findAll(int $perPage = 20, int $page = 1): LengthAwarePaginator;

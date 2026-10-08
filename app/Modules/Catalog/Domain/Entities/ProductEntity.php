@@ -176,6 +176,11 @@ final class ProductEntity
         set => $this->fractional = $value;
     }
 
+    public bool $hasModification = false {
+        get => $this->hasModification;
+        set => $this->hasModification = $value;
+    }
+
     public bool $hidePrice = false {
         get => $this->hidePrice;
         set => $this->hidePrice = $value;

@@ -19,7 +19,6 @@ use App\Modules\Catalog\Infrastructure\Models\Series;
 use App\Modules\Catalog\Application\Actions\Product\SearchProductQuery;
 use App\Modules\Catalog\Infrastructure\Models\Tag;
 use App\Modules\Catalog\Repository\ProductRepository;
-use App\Modules\Catalog\Request\ProductCreateRequest;
 use App\Modules\Catalog\Service\ProductService;
 use App\Modules\Content\Application\Services\ProductSearchService;
 use App\Modules\Guide\Entity\Country;
@@ -52,13 +51,12 @@ class ProductEditController extends Controller
         $data = $this->getCommonProductQuery->execute($id);
         return \response()->json($data);
     }
-    public function saveCommon(ProductCreateRequest $request, int $id)
+    public function saveCommon(Request $request, int $id)
     {
         $dto = UpdateCommonProductData::validateAndCreate($request->all());
         $this->setCommonProductUseCase->execute($id, $dto);
         $data = $this->getCommonProductQuery->execute($id);
         return \response()->json($data);
-
     }
 
     public function description(Request $request, Product $product): RedirectResponse

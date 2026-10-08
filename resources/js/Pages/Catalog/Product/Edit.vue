@@ -10,10 +10,10 @@
                 <el-radio-button value="left">left</el-radio-button>
             </el-radio-group>
 
-            <el-tabs :tab-position="tabPosition">
+            <el-tabs :tab-position="tabPosition" v-model="activePanel">
 
-                <PanelCommon :product="product"
-                             :errors="errors"
+                <PanelCommon :product-id="product.id"
+                             :active="activePanel === 'common'"
                 />
                 <PanelDescription :product="product"
                                   :errors="errors"
@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {Head, router} from "@inertiajs/vue3";
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import type {TabsInstance} from 'element-plus'
 //Панели
 import PanelCommon from './Panels/Common.vue'
@@ -92,6 +92,28 @@ const props = defineProps({
     },
 })
 const tabPosition = ref<TabsInstance['tabPosition']>('left')
+
+// Активная панель. По умолчанию — первая (Общие параметры).
+// Если страница открыта с ?panel=xxx, эта панель становится активной сразу.
+const activePanel = ref<string | number>('common')
+
+const urlParams = new URLSearchParams(window.location.search)
+const initialPanel = urlParams.get('panel')
+if (initialPanel) {
+    activePanel.value = initialPanel
+}
+
+// При переключении панели пишем get-параметр ?panel=xxx в URL
+// без перезагрузки страницы (сохраняем history.state Inertia).
+watch(activePanel, (value) => {
+    const url = new URL(window.location.href)
+    if (value && String(value) !== '') {
+        url.searchParams.set('panel', String(value))
+    } else {
+        url.searchParams.delete('panel')
+    }
+    window.history.replaceState(window.history.state, '', url.toString())
+})
 </script>
 
 <style scoped>

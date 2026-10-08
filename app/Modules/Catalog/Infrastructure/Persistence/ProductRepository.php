@@ -36,8 +36,6 @@ class ProductRepository implements ProductRepositoryInterface
         $model->comment = $product->comment;
         $model->model = $product->model;
         $model->barcode = $product->barcode;
-        $model->frequency = $product->frequency;
-        $model->vat_id = $product->vatId;
         $model->country_id = $product->countryId;
         $model->measuring_id = $product->measuringId;
         $model->marking_type_id = $product->markingTypeId;
@@ -86,7 +84,7 @@ class ProductRepository implements ProductRepositoryInterface
 
     public function getById(int $id): ProductEntity
     {
-        $model = Product::findOrFail($id);
+        $model = Product::with('modification')->findOrFail($id);
 
         return $this->hydrate($model);
     }
@@ -242,6 +240,10 @@ class ProductRepository implements ProductRepositoryInterface
         $entity->onlyOnOrder = (bool)$model->only_on_order;
         $entity->fractional = (bool)$model->fractional;
         $entity->hidePrice = (bool)$model->hide_price;
+
+        if ($model->relationLoaded('modification')) {
+            $entity->hasModification = $model->modification !== null;
+        }
 
         $entity->complexity = $model->complexity;
 
