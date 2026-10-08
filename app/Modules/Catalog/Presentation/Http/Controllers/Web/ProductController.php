@@ -16,8 +16,8 @@ use App\Modules\Catalog\Application\Actions\Product\TogglePublishedProductUseCas
 use App\Modules\Catalog\Application\Actions\Product\ToggleSaleProductUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\FilterProductIndexData;
 use App\Modules\Catalog\Application\DTOs\Product\ProductCreateData;
+use App\Modules\Catalog\Application\Services\ProductImportService;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Catalog\Service\ProductService;
 use App\Modules\Content\Application\Services\ProductSearchService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
@@ -29,24 +29,21 @@ use Log;
 
 class ProductController extends Controller
 {
-    private ProductService $service;
-
     public function __construct(
-        ProductService                         $service,
-        private readonly ProductSearchService  $productSearchService,
-        private readonly SearchProductQuery    $searchProductQuery,
-        private readonly IndexProductQuery     $indexProductQuery,
-        private readonly CreateProductUseCase  $createProductUseCase,
-        private readonly RenameProductUseCase  $renameProductUseCase,
-        private readonly RemoveProductUseCase  $removeProductUseCase,
-        private readonly RestoreProductUseCase $restoreProductUseCase,
-        private readonly ForceDeleteProductUseCase $forceDeleteProductUseCase,
-        private readonly ToggleSaleProductUseCase $toggleSaleProductUseCase,
+        private readonly ProductSearchService          $productSearchService,
+        private readonly SearchProductQuery            $searchProductQuery,
+        private readonly IndexProductQuery             $indexProductQuery,
+        private readonly CreateProductUseCase          $createProductUseCase,
+        private readonly RenameProductUseCase          $renameProductUseCase,
+        private readonly RemoveProductUseCase          $removeProductUseCase,
+        private readonly RestoreProductUseCase         $restoreProductUseCase,
+        private readonly ForceDeleteProductUseCase     $forceDeleteProductUseCase,
+        private readonly ToggleSaleProductUseCase      $toggleSaleProductUseCase,
         private readonly TogglePublishedProductUseCase $togglePublishedProductUseCase,
-        private readonly MassActionProductUseCase $massActionProductUseCase,
+        private readonly MassActionProductUseCase      $massActionProductUseCase,
+        private readonly ProductImportService          $productImportService,
     )
     {
-        $this->service = $service;
     }
 
     public function index(Request $request, UserPermission $userPermission): Response
@@ -115,8 +112,8 @@ class ProductController extends Controller
 
     public function full_delete(int $id, UserPermission $userPermission): RedirectResponse
     {
-            $this->forceDeleteProductUseCase->execute($id, $userPermission);
-            return redirect()->back()->with('success', 'Товар удален полностью');
+        $this->forceDeleteProductUseCase->execute($id, $userPermission);
+        return redirect()->back()->with('success', 'Товар удален полностью');
     }
 
     public function sale(Product $product, UserPermission $userPermission): RedirectResponse
@@ -138,12 +135,12 @@ class ProductController extends Controller
     public function action(Request $request, UserPermission $userPermission): RedirectResponse
     {
 
-            $this->massActionProductUseCase->execute(
-                $request->string('action')->value(),
-                $request->input('ids', []),
-                $userPermission,
-            );
-            return redirect()->back()->with('success', 'Сохранено');
+        $this->massActionProductUseCase->execute(
+            $request->string('action')->value(),
+            $request->input('ids', []),
+            $userPermission,
+        );
+        return redirect()->back()->with('success', 'Сохранено');
 
     }
 
@@ -162,18 +159,7 @@ class ProductController extends Controller
 
     public function upload(Request $request): JsonResponse
     {
-        try {
-            $file = $request->file('file');
-            $result = $this->service->uploadByXlsx($file, $request->input('brand_id'));
-            return response()->json($result);
-        } catch (\Throwable $e) {
-            return response()->json($e->getMessage());
-        }
-    }
-
-    public function find_parser(Request $request)
-    {
-        $result = $this->service->findParser($request->string('code')->value(), $request->integer('brand_id'));
+        $result = $this->productImportService->uploadByXlsx($request->file('file'));
         return response()->json($result);
     }
 
@@ -199,7 +185,6 @@ class ProductController extends Controller
         }
         return \response()->json($result);
     }
-
 
 
 }

@@ -28,7 +28,7 @@ Route::group([
 
     Route::post('/action', [ProductController::class, 'action'])->name('action');
     Route::post('/upload', [ProductController::class, 'upload'])->name('product.upload');
-    Route::post('/find-parser', [ProductController::class, 'find_parser'])->name('product.find-parser');
+    //Route::post('/find-parser', [ProductController::class, 'find_parser'])->name('product.find-parser');
     //Атрибуты
     Route::group([
         'prefix' => 'attribute',
