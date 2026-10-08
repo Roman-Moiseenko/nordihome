@@ -3,48 +3,26 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Service;
 
-use App\Events\ParserPriceHasChange;
-use App\Events\ProductHasBlocked;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Accounting\Service\StorageService;
-use App\Modules\Base\Entity\Dimensions;
-use App\Modules\Base\Entity\Video;
-use App\Modules\Catalog\Entity\Bonus;
-use App\Modules\Catalog\Entity\Composite;
-use App\Modules\Catalog\Infrastructure\Models\Attribute;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
-use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Catalog\Repository\TagRepository;
-use App\Modules\Parser\Domain\ValueObjects\Package;
 use App\Modules\Setting\Entity\Common;
-use App\Modules\Setting\Entity\Parser;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\Shared\Infrastructure\Models\Photo;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
 
 class ProductService
 {
-    private TagRepository $tags;
-    private TagService $tagService;
-    private EquivalentService $equivalentService;
-    private SeriesService $seriesService;
+
     private StorageService $storageService;
     private Common $common_set;
-    private Parser $parser_set;
+
 
 
 
     public function __construct(
-        TagRepository     $tags,
-        TagService        $tagService,
-        EquivalentService $equivalentService,
-        SeriesService     $seriesService,
         StorageService    $storageService,
         Settings          $settings,
 
@@ -52,13 +30,10 @@ class ProductService
     {
         //Конфигурация
 
-        $this->tags = $tags;
-        $this->tagService = $tagService;
-        $this->equivalentService = $equivalentService;
-        $this->seriesService = $seriesService;
+
         $this->storageService = $storageService;
         $this->common_set = $settings->common;
-        $this->parser_set = $settings->parser;
+
     }
 
 
@@ -96,20 +71,6 @@ class ProductService
         return $product;
     }
 
-    public function create_parser(string $name, string $code, int $category_id, array $arguments): Product
-    {
-        $product = Product::register(
-            $name,
-            $code,
-            $category_id,
-            '',
-            $arguments
-        );
-        $this->storageService->add_product($product);
-        return $product;
-    }
-
-
     //УДАЛЕНИЕ ВОССТАНОВЛЕНИ
     public function destroy(Product $product): void
     {
@@ -142,321 +103,6 @@ class ProductService
     }
 
 
-
-    public function editCommon(Product $product, Request $request): void
-    {
-        $update_attributes = false;
-        //Индивидуальные данные
-
-        $name = $request->string('name')->trim()->value();
-        $name_print = $request->string('name_print')->trim()->value();
-        $product->code = $request->string('code')->trim()->value();
-        $product->save();
-
-        /** @var Product[] $products */
-        $products = $this->list($product, $request->boolean('modification'));
-        foreach ($products as $product) {
-            if (count($products) > 1) {
-                $values = json_decode($product->pivot->values_json, true);
-                $variants = [];
-                foreach ($values as $attr_id => $variant_id) {
-                    $variants[] = $product->getProdAttribute($attr_id)->getVariant($variant_id)->name;
-                }
-                $variants_line = ' ' . implode(' ', $variants);
-            } else {
-                $variants_line = '';
-
-            }
-
-            if ($product->name != $name) $product->name = $name . $variants_line;
-            if ($product->name_print != $name_print) $product->name_print = $name_print . $variants_line;
-            if ($request->boolean('modification')) {
-                //Для модификаций только если пустой
-                if (empty($request->string('slug')->value())) $product->slug = Str::slug($product->name);
-            } else {
-                $product->slug = empty($request->string('slug')->value())
-                    ? Str::slug($product->name)
-                    : $request->string('slug')->value();
-            }
-
-            if ($product->main_category_id != $request->integer('category_id')) {
-                $product->main_category_id = $request->integer('category_id');
-                $update_attributes = true;
-            }
-            $product->main_category_id = $request->integer('category_id');
-            $product->brand_id = $request->integer('brand_id');
-            $product->comment = $request->string('comment')->trim()->value();
-            $product->country_id = $request->input('country_id');
-            $product->measuring_id = $request->integer('measuring_id');
-            $product->fractional = $request->boolean('fractional');
-            $product->marking_type_id = $request->input('marking_type_id');
-            $product->save();
-
-            //Проверка атрибутов, в случае смены категории
-            if ($update_attributes) {
-                $product->refresh();
-                $array = array_map(function (Attribute $attribute) {
-                    return $attribute->id;
-                }, $product->getPossibleAttribute());
-
-                foreach ($product->prod_attributes as $attribute) {
-                    if (!in_array($attribute->id, $array)) {
-                        $product->prod_attributes()->detach($attribute->id);
-                    }
-                }
-            }
-        }
-
-    }
-
-    public function editDescription(Product $product, Request $request): void
-    {
-        $products = $this->list($product, $request->boolean('modification'));
-        foreach ($products as $product) {
-            $product->description = $request->string('description')->trim()->value();
-            $product->short = $request->string('short')->trim()->value();
-            $product->care = $request->string('care')->trim()->value();
-            $product->model = $request->string('model')->trim()->value();
-            $product->tags()->detach();
-            $this->tags($request->input('tags'), $product);
-            $this->series($request, $product);
-            $product->save();
-        }
-    }
-
-    public function editDimensions(Product $product, Request $request): void
-    {
-        $products = $this->list($product, $request->boolean('modification'));
-        foreach ($products as $product) {
-            $product->dimensions = Dimensions::create(params: $request->input('dimensions'));
-           //
-            $packages = [];
-            foreach ($request->input('packages') as $array) {
-                $packages[] = Package::fromArray($array);
-            }
-            $product->packages = $packages;
-            $product->delivery = $request->boolean('delivery');
-            $product->local = $request->boolean('local');
-            $product->complexity = $request->string('complexity')->trim()->value();
-            $product->save();
-        }
-    }
-
-    public function editVideo(Product $product, Request $request): void
-    {
-        $products = $this->list($product, $request->boolean('modification'));
-        foreach ($products as $product) {
-            $product->videos()->delete();
-            foreach ($request->input('videos') as $i => $item) {
-                $product->videos()->save(Video::register(
-                    $item['url'],
-                    $item['caption'] ?? '',
-                    $item['description'] ?? '', $i));
-                $product->save();
-            }
-        }
-    }
-
-    public function editAttribute(Product $product, Request $request): void
-    {
-        DB::transaction(function () use ($product, $request) {
-            $no_detach = [];
-            if (!is_null($product->modification)) {
-                foreach ($product->modification->prod_attributes as $attribute)
-                    $no_detach[] = $attribute->id;
-            }
-
-            /** @var Product[] $products */
-
-
-            $products = $this->list($product, $request->boolean('modification'));
-
-            foreach ($products as $product) {
-
-                if (!is_null($product->modification)) {
-                    foreach ($product->prod_attributes as $attribute) {
-                        if (!in_array($attribute->id, $no_detach)) {
-                            $product->prod_attributes()->detach($attribute->id);
-                        }
-                    }
-                } else {
-                    $product->prod_attributes()->detach();
-                }
-
-
-                foreach ($request->input('attributes') as $item) {
-                    $attribute_id = (int)$item['id'];
-                    if (!in_array($attribute_id, $no_detach)) {
-                        $attribute = Attribute::find($item['id']);
-
-                        $value = null;
-                        if (!isset($item['value'])) {
-                            if ($attribute->isBool()) $value = false;
-                            if ($attribute->isNumeric()) $value = 0;
-                            if ($attribute->isString()) $value = '';
-                        } else {
-                            if ($attribute->isNumeric()) {
-                                $value = (float)$item['value'];
-                            } else {
-                                $value = $item['value'];
-                            }
-                        }
-                        $product->prod_attributes()->attach($attribute->id, ['value' => json_encode($value)]);
-                    }
-                }
-            }
-
-        });
-
-
-    }
-
-    public function editManagement(Product $product, Request $request): void
-    {
-        $products = $this->list($product, $request->boolean('modification'));
-        /** @var Product $product */
-        foreach ($products as $product) {
-            if ($request->boolean('published')) {
-                $product->setPublished();
-            } else {
-                $product->setDraft();
-            }
-            if ($request->boolean('not_sale')) {
-                $product->setNotSale();
-            } else {
-                $product->setForSale();
-            }
-            $product->pre_order = $request->boolean('pre_order');
-            $product->priority = $request->boolean('priority');
-            $product->hide_price = $request->boolean('hide_price');
-
-            $product->price_reduced = $request->boolean('reduced');
-            $product->only_on_order = $request->boolean('only_on_order');
-            $product->save();
-
-            $product->balance->min = $request->integer('balance.min');
-            $product->balance->max = $request->input('balance.max');
-            $product->balance->buy = $request->boolean('balance.buy');
-            $product->push();
-
-            foreach ($request->input('storages') as $item) {
-                $storageItem = StorageItem::find($item['id']);
-                $storageItem->cell = $item['cell'];
-                $storageItem->save();
-            }
-        }
-    }
-
-    public function editEquivalent(Product $product, Request $request): void
-    {
-        //Если есть Модификация, то в группу добавляем базовый товар
-        if (!is_null($product->modification))
-            $product = $product->modification->base_product;
-
-        $equivalent_id = $request->integer('equivalent_id');
-        if ($equivalent_id == 0 && !is_null($product->equivalent)) {
-            $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
-        }
-        if ($equivalent_id != 0) {
-            if (is_null($product->equivalent)) {
-                $this->equivalentService->addProductByIds($equivalent_id, $product->id);
-            } elseif ($equivalent_id !== $product->equivalent->id) {
-                $this->equivalentService->delProductByIds($product->equivalent->id, $product->id);
-                $this->equivalentService->addProductByIds($equivalent_id, $product->id);
-            }
-        }
-        $product->save();
-    }
-
-    public function editRelated(Product $product, Request $request): void
-    {
-        $products = $this->list($product, $request->boolean('modification'));
-        foreach ($products as $product) {
-            $product_id = $request->integer('product_id');
-            if ($request->string('action')->value() == 'remove') {
-                $product->related()->detach($product_id);
-            } else {
-                if ($product->isRelated($product_id)) throw new \DomainException('Товар уже добавлен в Аксессуары');
-                $product->related()->attach($product_id);
-            }
-            $product->save();
-        }
-    }
-
-    public function editBonus(Product $product, Request $request): void
-    {
-        $products = $this->list($product, $request->boolean('modification'));
-        foreach ($products as $product) {
-            $product_id = $request->integer('product_id');
-            $action = $request->string('action')->value();
-            if (empty($action)) {
-                if ($product->id === $product_id) throw new \DomainException('Товар совпадает с текущим');
-                if ($product->isBonus($product_id)) throw new \DomainException('Товар уже добавлен в Бонусные');
-                $bonus = Bonus::where('bonus_id', $product_id)->first();
-                if (!is_null($bonus)) throw new \DomainException('Товар уже назначен бонусным у товара ' . $bonus->product->name);
-                $bonus_add = Product::find($product_id);
-                $product->bonus()->attach($product_id, ['discount' => $bonus_add->getPriceRetail()]);
-            }
-            if ($action == 'remove') {
-                $product->bonus()->detach($product_id);
-            }
-            if ($action == 'edit') {
-                foreach ($request->input('bonus') as $item) {
-                    $product->bonus()->updateExistingPivot($item['id'], ['discount' => (int)$item['discount']]);
-                }
-            }
-        }
-    }
-
-    public function editComposite(Product $product, Request $request): void
-    {
-        $product_id = $request->integer('product_id');
-        $action = $request->string('action')->value();
-
-
-        if (empty($action)) {
-            if ($product->id == $product_id) throw new \DomainException('Товар совпадает с текущим');
-            if ($product->isComposite($product_id)) throw new \DomainException('Товар уже добавлен в Составной');
-
-            if (!is_null(Composite::where('child_id', $product->id)->first()))
-                throw new \DomainException('Текущий товар уже является составным');
-            $quantity = $request->integer('quantity');
-            $product->composites()->attach($product_id, ['quantity' => $quantity]);
-        }
-        if ($action == 'remove') {
-            $product->composites()->detach($product_id);
-        }
-        if ($action == 'edit') {
-            foreach ($request->input('composite') as $item) {
-                $product->composites()->updateExistingPivot($item['id'], ['quantity' => $item['quantity']]);
-            }
-        }
-    }
-
-    private function tags($tags, Product &$product): void
-    {
-        if (empty($tags)) return;
-        foreach ($tags as $index => $tag_id) {
-            if ($this->tags->exists($tag_id)) {
-                $product->tags()->attach((int)$tag_id);
-            } else {
-                $tag = $this->tagService->create($tag_id);
-                $product->tags()->attach($tag->id);
-            }
-        }
-    }
-
-    private function series(Request $request, Product &$product): void
-    {
-        if (empty($_series = $request['series_id'])) return;
-        if (is_array($_series)) $_series = $_series[0]; //Если массив, берем первый элемент
-        if (is_numeric($_series)) {
-            $product->series_id = (int)$_series;
-        } else {
-            $series = $this->seriesService->create($_series); //Создаем Серию
-            $product->series_id = $series->id;
-        }
-    }
 
     public function published(Product $product): void
     {
@@ -508,61 +154,8 @@ class ProductService
         }
     }
 
-    /**
-     * Расчет цены для товаров Икеа (через Парсинг)
-     * вызывать при изменении одно параметра: цена в Икеа, коэф.наценки, коэф-ты для товаров (хруп., санкцц.)
-     */
 
-    public function setCostProductIkea(int $product_id, string $founded, bool $event = true): void
-    {
-        /** @var Product $product */
-        $product = Product::find($product_id);
-        if (is_null($product->parser)) {
-            Log::info('товара Икеа не имеет запись в парсере ' . $product->code);
-            return;
-        }
-        $bulk = ($product->parser->price * $this->parser_set->parser_coefficient +
-                $product->weight() * ($product->parser->isFragile() ? $this->parser_set->cost_weight_fragile : $this->parser_set->cost_weight)) *
-            ($product->parser->isSanctioned() ? (1 + $this->parser_set->cost_sanctioned / 100) : 1);
 
-        $retail = ceil($bulk * (1 + $this->parser_set->cost_retail / 100));
-        $retail = (int)ceil($retail / 100) * 100 - 10;
-
-        $pre = $product->parser->price * $this->parser_set->parser_coefficient;
-        $min = (int)($retail / 2);
-
-        if ($product->getPriceBulk() != $bulk)
-            $product->pricesBulk()->create(['value' => $bulk, 'founded' => $founded]);
-
-        if ($product->getPriceRetail() != $retail) {
-            $product->pricesRetail()->create(['value' => $retail, 'founded' => $founded]);
-            $product->pricesMin()->create(['value' => $min, 'founded' => $founded]);
-        }
-        if ($product->getPricePre() != $pre)
-            $product->pricesPre()->create(['value' => $pre, 'founded' => $founded]);
-
-        if ($event) event(new ParserPriceHasChange($product->parser));
-    }
-
-    public function updateCostAllProductsIkea(): void
-    {
-        $products = Product::where('published', true)->where('not_sale', false)->pluck('id')->toArray();
-        foreach ($products as $product_id) {
-            $this->setCostProductIkea($product_id, 'Изменение коэффициентов наценки', false);
-        }
-    }
-
-    /**
-     * Если у товара есть модификация и выбрано сохранить для всех, возвращаем список всех товаров из модификации, в противном случае сам товар в массиве
-     */
-    private function list(Product $product, bool $save_modification): array|Arrayable
-    {
-        if (is_null($product->modification) || !$save_modification) {
-            $ar[] = $product;
-            return $ar;
-        };
-        return $product->modification->products;
-    }
 
     public function uploadByXlsx($file, $brand_id): array
     {

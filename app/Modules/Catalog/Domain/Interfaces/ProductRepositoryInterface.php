@@ -123,6 +123,12 @@ interface ProductRepositoryInterface
 
     public function exists(int $productId): bool;
 
+    public function delete(int $id): void;
+
+    public function restore(int $id): void;
+
+    public function forceDelete(int $id): void;
+
     /**
      * Отфильтрованный список товаров (Catalog/Product/Index).
      *

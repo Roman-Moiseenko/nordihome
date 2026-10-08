@@ -4,14 +4,19 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Base\Entity\Dimensions;
-use App\Modules\Base\Entity\Packages;
+use App\Modules\Catalog\Application\Actions\Product\CreateProductUseCase;
+use App\Modules\Catalog\Application\Actions\Product\ForceDeleteProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\IndexProductQuery;
+use App\Modules\Catalog\Application\Actions\Product\MassActionProductUseCase;
+use App\Modules\Catalog\Application\Actions\Product\RemoveProductUseCase;
+use App\Modules\Catalog\Application\Actions\Product\RenameProductUseCase;
+use App\Modules\Catalog\Application\Actions\Product\RestoreProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\SearchProductQuery;
+use App\Modules\Catalog\Application\Actions\Product\TogglePublishedProductUseCase;
+use App\Modules\Catalog\Application\Actions\Product\ToggleSaleProductUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\FilterProductIndexData;
-use App\Modules\Catalog\Infrastructure\Models\Equivalent;
+use App\Modules\Catalog\Application\DTOs\Product\ProductCreateData;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Catalog\Request\ProductCreateRequest;
 use App\Modules\Catalog\Service\ProductService;
 use App\Modules\Content\Application\Services\ProductSearchService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -27,10 +32,18 @@ class ProductController extends Controller
     private ProductService $service;
 
     public function __construct(
-        ProductService                        $service,
-        private readonly ProductSearchService $productSearchService,
-        private readonly SearchProductQuery   $searchProductQuery,
-        private readonly IndexProductQuery    $indexProductQuery,
+        ProductService                         $service,
+        private readonly ProductSearchService  $productSearchService,
+        private readonly SearchProductQuery    $searchProductQuery,
+        private readonly IndexProductQuery     $indexProductQuery,
+        private readonly CreateProductUseCase  $createProductUseCase,
+        private readonly RenameProductUseCase  $renameProductUseCase,
+        private readonly RemoveProductUseCase  $removeProductUseCase,
+        private readonly RestoreProductUseCase $restoreProductUseCase,
+        private readonly ForceDeleteProductUseCase $forceDeleteProductUseCase,
+        private readonly ToggleSaleProductUseCase $toggleSaleProductUseCase,
+        private readonly TogglePublishedProductUseCase $togglePublishedProductUseCase,
+        private readonly MassActionProductUseCase $massActionProductUseCase,
     )
     {
         $this->service = $service;
@@ -52,10 +65,12 @@ class ProductController extends Controller
         return Inertia::render('Catalog/Product/Create');
     }
 
-    public function store(ProductCreateRequest $request): RedirectResponse
+    public function store(Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $product = $this->service->createFull($request);
-        return redirect()->route('admin.catalog.product.edit', $product)->with('success', 'Товар создан');
+        $dto = ProductCreateData::validateAndCreate($request->all());
+        $product = $this->createProductUseCase->execute($dto, $userPermission);
+
+        return redirect()->route('admin.catalog.product.edit', $product->id)->with('success', 'Товар создан');
     }
 
 
@@ -69,83 +84,67 @@ class ProductController extends Controller
     public function edit(int $id): Response
     {
         return Inertia::render('Catalog/Product/Edit', [
-            'productId' => $id, //$this->repository->ProductWithToArray($product),
-        /*    'dimensions' => array_select(Dimensions::TYPES),
-            'complexities' => array_select(Packages::COMPLEXITIES),
-
-            'equivalents' => Equivalent::orderBy('name')
-                ->whereHas('category', function ($query) use ($product) {
-                    $query->where('_lft', '<=', $product->category->_lft)
-                        ->where('_rgt', '>=', $product->category->_rgt);
-                })
-                ->getModels(),*/
+            'productId' => $id,
         ]);
 
     }
 
-    public function rename(Product $product, Request $request): RedirectResponse
+    public function rename(Product $product, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        //Переименование товара для всех
-        $product->update(['name' => $request->string('name')->trim()->value()]);
+        $this->renameProductUseCase->execute(
+            $product->id,
+            $request->string('name')->trim()->value(),
+            $userPermission,
+        );
+
         return redirect()->back()->with('success', 'Сохранено');
     }
 
 
-    public function destroy(int $id): RedirectResponse
+    public function destroy(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->destroy(Product::findOrFail($id));
+        $this->removeProductUseCase->execute($id, $userPermission);
         return redirect()->back()->with('success', 'Товар помечен на удаление');
     }
 
-    public function restore(int $id): RedirectResponse
+    public function restore(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->restore($id);
-        flash('Товар восстановлен', 'success');
-        return redirect()->back();
+        $this->restoreProductUseCase->execute($id, $userPermission);
+        return redirect()->back()->with('success', 'Товар восстановлен');
     }
 
-    public function full_delete(int $id): RedirectResponse
+    public function full_delete(int $id, UserPermission $userPermission): RedirectResponse
     {
-        try {
-            $this->service->full_delete($id);
+            $this->forceDeleteProductUseCase->execute($id, $userPermission);
             return redirect()->back()->with('success', 'Товар удален полностью');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
     }
 
-    public function sale(Product $product): RedirectResponse
+    public function sale(Product $product, UserPermission $userPermission): RedirectResponse
     {
-        $product->not_sale = !$product->not_sale;
-        $product->save();
-        if ($product->isSale()) {
-            $message = 'Товар возвращен в продажу';
-        } else {
-            $message = 'Товар убран из продажи';
-        }
+        $updated = $this->toggleSaleProductUseCase->execute($product->id, $userPermission);
+        $message = $updated->notSale ? 'Товар убран из продажи' : 'Товар возвращен в продажу';
+
         return redirect()->back()->with('success', $message);
     }
 
-    public function toggle(Product $product): RedirectResponse //Переключение между Опубликовано и Черновик
+    public function toggle(Product $product, UserPermission $userPermission): RedirectResponse //Переключение между Опубликовано и Черновик
     {
-        if ($product->isPublished()) {
-            $this->service->draft($product);
-            $message = 'Товар отправлен в черновики';
-        } else {
-            $this->service->published($product);
-            $message = 'Товар опубликован';
-        }
-        return redirect()->back()->with('success', $message);;
+        $updated = $this->togglePublishedProductUseCase->execute($product->id, $userPermission);
+        $message = $updated->isPublished() ? 'Товар опубликован' : 'Товар отправлен в черновики';
+
+        return redirect()->back()->with('success', $message);
     }
 
-    public function action(Request $request): RedirectResponse
+    public function action(Request $request, UserPermission $userPermission): RedirectResponse
     {
-        try {
-            $this->service->action($request->string('action')->value(), $request->input('ids'));
+
+            $this->massActionProductUseCase->execute(
+                $request->string('action')->value(),
+                $request->input('ids', []),
+                $userPermission,
+            );
             return redirect()->back()->with('success', 'Сохранено');
-        } catch (\Throwable $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+
     }
 
     public function search(Request $request): JsonResponse

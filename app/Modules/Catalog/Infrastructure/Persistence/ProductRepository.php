@@ -298,6 +298,21 @@ class ProductRepository implements ProductRepositoryInterface
         return Product::where('id', $productId)->exists();
     }
 
+    public function delete(int $id): void
+    {
+        Product::findOrFail($id)->delete();
+    }
+
+    public function restore(int $id): void
+    {
+        Product::onlyTrashed()->where('id', $id)->firstOrFail()->restore();
+    }
+
+    public function forceDelete(int $id): void
+    {
+        Product::onlyTrashed()->where('id', $id)->firstOrFail()->forceDelete();
+    }
+
     public function filteredPaginated(FilterProductIndexData &$filter): LengthAwarePaginator
     {
         $query = Product::orderBy('name');

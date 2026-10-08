@@ -11,8 +11,8 @@
                             <div v-if="errors.name" class="text-red-700">{{ errors.name }}</div>
                         </el-form-item>
                         <el-form-item label="Название для печати">
-                            <el-input v-model="form.name_print" />
-                            <div v-if="errors.name_print" class="text-red-700">{{ errors.name_print }}</div>
+                            <el-input v-model="form.namePrint" />
+                            <div v-if="errors.namePrint" class="text-red-700">{{ errors.namePrint }}</div>
                         </el-form-item>
                         <el-form-item label="Ссылка">
                             <el-input v-model="form.slug" placeholder="Заполнится автоматически" clearable/>
@@ -29,25 +29,25 @@
                 <el-col :span="8">
                     <el-form label-width="auto">
                         <el-form-item label="Главная категория">
-                            <el-select v-model="form.category_id" filterable>
+                            <el-select v-model="form.categoryId" filterable>
                                 <el-option v-for="item in useCatalog.categories" :value="item.id" :label="item.name"/>
                             </el-select>
-                            <div v-if="errors.category_id" class="text-red-700">{{ errors.category_id }}</div>
+                            <div v-if="errors.categoryId" class="text-red-700">{{ errors.categoryId }}</div>
                         </el-form-item>
                         <el-form-item label="Бренд">
-                            <el-select v-model="form.brand_id" filterable>
+                            <el-select v-model="form.brandId" filterable>
                                 <el-option v-for="item in useCatalog.brands" :value="item.id" :label="item.name"/>
                             </el-select>
-                            <div v-if="errors.brand_id" class="text-red-700">{{ errors.brand_id }}</div>
+                            <div v-if="errors.brandId" class="text-red-700">{{ errors.brandId }}</div>
                         </el-form-item>
                         <el-form-item label="Страна происхождения">
-                            <el-select v-model="form.country_id" filterable clearable>
+                            <el-select v-model="form.countryId" filterable clearable>
                                 <el-option v-for="item in useGuide.countries" :value="item.id" :label="item.name"/>
                             </el-select>
-                            <div v-if="errors.country_id" class="text-red-700">{{ errors.country_id }}</div>
+                            <div v-if="errors.countryId" class="text-red-700">{{ errors.countryId }}</div>
                         </el-form-item>
                         <el-form-item label="Поставщик">
-                            <el-select v-model="form.distributor_id" filterable clearable>
+                            <el-select v-model="form.distributorId" filterable clearable>
                                 <el-option v-for="item in useAccounting.distributors" :value="item.id" :label="item.name"/>
                             </el-select>
                         </el-form-item>
@@ -57,15 +57,15 @@
                     <el-form label-width="auto">
 
                         <el-form-item label="Вид продукции ИС">
-                            <el-select v-model="form.marking_type_id" filterable clearable>
+                            <el-select v-model="form.markingTypeId" filterable clearable>
                                 <el-option v-for="item in useGuide.markingType" :value="item.id" :label="item.name"/>
                             </el-select>
                         </el-form-item>
                         <el-form-item label="Ед.измерения">
-                            <el-select v-model="form.measuring_id" @change="onMeasuring">
+                            <el-select v-model="form.measuringId" @change="onMeasuring">
                                 <el-option v-for="item in useGuide.measuring" :value="item.id" :label="item.name"/>
                             </el-select>
-                            <div v-if="errors.measuring_id" class="text-red-700">{{ errors.measuring_id }}</div>
+                            <div v-if="errors.measuringId" class="text-red-700">{{ errors.measuringId }}</div>
                         </el-form-item>
                         <el-form-item label="Дробление количества">
                             <el-checkbox v-model="form.fractional" :checked="form.fractional" />
@@ -100,16 +100,16 @@ const useAccounting = useAccountingStore()
 
 const form = reactive({
     name: null,
-    name_print: null,
+    namePrint: null,
     slug: null,
     code: null,
     comment: null,
-    category_id: null,
-    brand_id: null,
-    country_id: null,
-    distributor_id: null,
-    marking_type_id: null,
-    measuring_id: null,
+    categoryId: null,
+    brandId: null,
+    countryId: null,
+    distributorId: null,
+    markingTypeId: null,
+    measuringId: null,
     fractional: false,
 })
 
@@ -121,7 +121,7 @@ function onMeasuring(val) {
     })
 }
 function onName() {
-    if (form.name_print === null) form.name_print = form.name
+    if (form.namePrint === null) form.namePrint = form.name
 }
 
 
