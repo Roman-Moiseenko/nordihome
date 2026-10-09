@@ -8,6 +8,7 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\Application\Queries\Product\ProductViewQuery;
 use App\Modules\Shop\Application\Queries\Search\CatalogSearchQuery;
 use App\Modules\Shop\Application\Queries\Search\PageProductSearchQuery;
+use App\Modules\Shop\Application\Queries\Search\SearchQuery;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
 
@@ -19,6 +20,7 @@ class ProductController extends ShopAbstractController
         private readonly PageProductSearchQuery $productSearchQuery,
         private readonly CatalogSearchQuery     $fullSearchQuery,
         private readonly TrackSearchService     $trackSearchService,
+        private readonly SearchQuery            $searchQuery,
     )
     {
         $this->middleware(['role:admin|staff'])->only(['view_draft']);
