@@ -57,12 +57,12 @@ class ProductController extends ShopAbstractController
         $search = $request->string('search')->trim()->value();
         if (empty($search)) return \response()->json(false);
         $client = $this->getClient($request);
-        $data = $this->fullSearchQuery->execute($search, $client);
+        $data = $this->searchQuery->execute($search, $client);
 
         //Учитываем только нулевой результат
-        if (empty($data->products)) {
+      /*  if (empty($data->products)) {
             $this->trackSearchService->execute($search, 0);
-        }
+        }*/
         return \response()->json($data);
     }
 

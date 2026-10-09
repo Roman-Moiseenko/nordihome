@@ -105,7 +105,8 @@ window.$ = jQuery;
         console.log(item)
         let img = '<i class="fa-light fa-magnifying-glass"></i>';
 
-        let price = item.price + ' ₽';
+        const currency = item.isParser === true ? ' zł' : ' ₽';
+        let price = item.price + currency;
         let name = item.name;
         if (item.image !== null) {
             img = '<img class="" src="' + item.image + '"/>';
@@ -114,6 +115,10 @@ window.$ = jQuery;
             name = '<strong>' + name + '</strong>'
             price = '';
         }
+
+        const underOrder = item.isParser === true
+            ? ' <span class="suggest--under-order" style="color: red;">Под заказ</span>'
+            : '';
 
         const button = (item.code !== null) ? ('<button class="to-cart btn btn-small btn-black e-add" data-product="' + item.id + '"><i class="fa-sharp fa-light fa-cart-plus"></i></button>') : '';
 
@@ -124,7 +129,7 @@ window.$ = jQuery;
             ' data-result-position="' + position + '"' +
             ' data-search-query="' + _escapeAttr(presearchInput.val() || '') + '">\n' +
             '   <span class="suggest--icon">' + img + '</span>\n' +
-            '   <span class="suggest--label">' + name + '</span>\n' +
+            '   <span class="suggest--label">' + name + underOrder + '</span>\n' +
             '   <span class="suggest--price">' + price + '</span>\n' +
 
             '</a>' + button + '</div>'
