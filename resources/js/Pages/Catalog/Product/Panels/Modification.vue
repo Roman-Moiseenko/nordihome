@@ -107,7 +107,8 @@ const {load, loading, loaded, setCache} = useProductPanel(() => `modification:${
 watch(() => [props.active, props.productId], async ([active]) => {
     if (!active) return
     const {data: responseData} = await load()
-    data.value = responseData ?? null
+    // Принимаем только валидную модификацию (с id), иначе считаем, что её нет.
+    data.value = responseData?.id ? responseData : null
 }, {immediate: true})
 
 // Создание модификации из текущего товара
