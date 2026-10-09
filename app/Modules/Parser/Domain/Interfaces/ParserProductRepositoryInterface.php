@@ -36,4 +36,6 @@ interface ParserProductRepositoryInterface
      * @return ParserProductEntity[]
      */
     public function getAll(): array;
+
+    public function getAllId();
 }

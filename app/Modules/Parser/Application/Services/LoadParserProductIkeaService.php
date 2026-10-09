@@ -243,7 +243,9 @@ class LoadParserProductIkeaService
 
         //Запус Job загрузки изображений
 
-        foreach ($product['allProductImage'] as $imageItem) {
+        $this->jobLoadImages($productEntity->id, $product['allProductImage']);
+
+       /* foreach ($product['allProductImage'] as $imageItem) {
             $altImage = $this->translate->translate($imageItem['altText']);
             $dtoPhoto = new JobPhotoLoadData(
                 imageableId: $productEntity->id,
@@ -254,7 +256,7 @@ class LoadParserProductIkeaService
                 alt: $altImage,
             );
             LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission)->onQueue(QueueName::PHOTO);
-        }
+        }*/
 
         return $productEntity;
     }
@@ -318,6 +320,33 @@ class LoadParserProductIkeaService
         if (is_null($productData)) return null;
 
         return $this->CreateParserProduct($productData);
+    }
+
+    public function parsePhotos(int $productId, string $code): void
+    {
+
+        $productData = $this->ikeaProductApi->getProductByCode($code);
+        $items = $productData['gprDescription']['variants'][0]['allProductImage'];
+
+        $this->jobLoadImages($productId, $items);
+    }
+
+    private function jobLoadImages(int $productId, array $items): void
+    {
+        //Запус Job загрузки изображений
+
+        foreach ($items as $imageItem) {
+            $altImage = $this->translate->translate($imageItem['altText']);
+            $dtoPhoto = new JobPhotoLoadData(
+                imageableId: $productId,
+                modelType: 'parser.product',
+                type: 'gallery',
+                url: $imageItem['url'],
+                isProxy: $this->isProxy,
+                alt: $altImage,
+            );
+            LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission)->onQueue(QueueName::PHOTO);
+        }
     }
 
 }

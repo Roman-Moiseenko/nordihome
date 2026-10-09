@@ -87,6 +87,13 @@ class ParserProductRepository implements ParserProductRepositoryInterface
             ->toArray();
     }
 
+    public function getAllId(): array
+    {
+        return ParserProduct::where('availability', true)
+            ->pluck('id')
+            ->toArray();
+    }
+
     public function getByProductId(int $productId): ?ParserProductEntity
     {
         $model = ParserProduct::where('product_id', $productId)->first();
