@@ -68,6 +68,8 @@ readonly class CreateProductFromParserService
             slug: null,
         );
         $productEntity = $this->fastCreateProductUseCase->execute($dto, $userPermission);
+        //Сохраняем id product для $parserEntity
+        $parserEntity = $this->attachProductToParserUseCase->execute($parserEntity->id, $productEntity->id);
 
         //Описание
         $productEntity->short = $parserEntity->short;
@@ -156,9 +158,6 @@ readonly class CreateProductFromParserService
             priceType: PriceType::MINIMAL,
         );
         $this->setProductPriceUseCase->execute($dtoPrice);
-
-        //Сохраняем id product для $parserEntity
-        $this->attachProductToParserUseCase->execute($parserEntity->id, $productEntity->id);
 
         return $productEntity;
     }

@@ -25,7 +25,10 @@ export function useProductPanel(panel, loader) {
 
     // Ключ кэша. Можно передать строку или функцию () => string,
     // чтобы различать кэш по товару (например () => `common:${productId}`).
-    const cacheKey = () => (typeof panel === 'function' ? panel() : panel)
+    // Для строкового ключа добавляем путь текущей страницы, чтобы при SPA-навигации
+    // (например, redirect из парсера на страницу другого товара) не подтягивались
+    // закэшированные данные предыдущего товара.
+    const cacheKey = () => (typeof panel === 'function' ? panel() : `${panel}:${window.location.pathname}`)
 
     async function load(force = false) {
         const key = cacheKey()

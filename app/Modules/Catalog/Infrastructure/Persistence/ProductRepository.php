@@ -27,7 +27,7 @@ class ProductRepository implements ProductRepositoryInterface
         $model->name_print = $product->namePrint;
         $model->code = $product->code->getCode();
         $model->code_search = $product->code->getCodeSearch();
-        $model->slug = (string)$product->slug;
+        $model->slug = $this->makeUniqueSlug((string)$product->slug, $product->id);
         $model->old_slug = $product->oldSlug;
         $model->main_category_id = $product->mainCategoryId;
         $model->brand_id = $product->brandId;
@@ -378,5 +378,29 @@ class ProductRepository implements ProductRepositoryInterface
         $filter->draft = (int) ($result->draft_count ?? 0);
         $filter->notSale = (int) ($result->not_sale_count ?? 0);
         $filter->delete = (int) ($result->delete_count ?? 0);
+    }
+
+    /**
+     * Возвращает уникальный slug, добавляя порядковый номер через дефис: name-1, name-2 и т.д.
+     */
+    private function makeUniqueSlug(string $slug, ?int $ignoreId = null): string
+    {
+        $original = $slug;
+        $counter = 1;
+
+        while ($this->slugExists($slug, $ignoreId)) {
+            $slug = $original . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+
+    private function slugExists(string $slug, ?int $ignoreId = null): bool
+    {
+        return Product::withTrashed()
+            ->where('slug', $slug)
+            ->when($ignoreId !== null, fn($q) => $q->where('id', '!=', $ignoreId))
+            ->exists();
     }
 }

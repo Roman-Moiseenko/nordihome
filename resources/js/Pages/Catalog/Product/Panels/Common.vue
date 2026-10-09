@@ -65,7 +65,7 @@
                     </el-form-item>
                     <el-form-item label="Бренд">
                         <el-select v-model="form.brandId" @change="onAutoSave" :disabled="isSaving" filterable>
-                            <el-option v-for="item in useCatalog.brands" :value="item.id" :label="item.name"/>
+                            <el-option v-for="item in useCatalog.brands" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
                         <div v-if="errors.brandId" class="text-red-700">{{ errors.brandId }}</div>
                     </el-form-item>
