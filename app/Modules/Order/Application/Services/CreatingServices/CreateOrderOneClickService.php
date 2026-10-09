@@ -46,7 +46,7 @@ readonly class CreateOrderOneClickService
 
     public function execute(OneClickOrderData $dto, ClientContext $context): ?OrderEntity
     {
-        $this->transactionManager->execute(function () use ($dto, &$orderEntity, $context) {
+        return $this->transactionManager->execute(function () use ($dto, $context) {
             $client = $this->findOrCreateClientService->execute($dto); //Ищем или создаем клиента
             //Получаем данные о товаре
             $product = $this->sellPriceUseCase->execute($dto->productId, $client->priceType);
@@ -94,7 +94,7 @@ readonly class CreateOrderOneClickService
 
             $log = new OrderLoggerCreateData(action: 'Заказ создан в один клик',);
             $this->loggerUseCase->execute($orderEntity->id, $log);
+            return $orderEntity;
         });
-        return $orderEntity;
     }
 }

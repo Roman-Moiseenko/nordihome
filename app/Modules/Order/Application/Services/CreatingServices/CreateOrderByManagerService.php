@@ -38,7 +38,7 @@ readonly class CreateOrderByManagerService
     {
         if (!$permission->can('order.order.create')) throw new AccessDeniedException();
 
-        $this->transactionManager->execute(function () use ($clientId, $staffId, $permission) {
+        return $this->transactionManager->execute(function () use ($clientId, $staffId, $permission) {
 
             //1. Создаем Заказ
             $orderEntity = $this->createOrderUseCase->execute($clientId, $staffId, $permission);
@@ -61,10 +61,9 @@ readonly class CreateOrderByManagerService
             //6. Записываем лог
             $log = new OrderLoggerCreateData(action: 'Заказ создан менеджером');
             $this->loggerUseCase->execute($orderEntity->id, $log);
-
             return $orderEntity;
         });
-        return null;
+
     }
 
 }

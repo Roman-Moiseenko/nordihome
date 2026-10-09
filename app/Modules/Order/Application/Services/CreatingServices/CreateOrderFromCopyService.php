@@ -38,7 +38,7 @@ readonly class CreateOrderFromCopyService
     public function execute(int $orderId, int $staffId, UserPermission $permission):? OrderEntity
     {
         if (!$permission->can('order.order.create')) throw new AccessDeniedException();
-        $this->transactionManager->execute(function () use ($orderId, $staffId) {
+        return $this->transactionManager->execute(function () use ($orderId, $staffId) {
 
             $orderEntity = $this->repository->getById($orderId);
 
@@ -69,7 +69,5 @@ readonly class CreateOrderFromCopyService
 
             return $orderEntity;
         });
-
-        return null;
     }
 }

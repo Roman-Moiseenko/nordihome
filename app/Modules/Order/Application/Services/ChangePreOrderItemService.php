@@ -28,7 +28,7 @@ readonly class ChangePreOrderItemService
     {
     }
 
-    public function execute(int $orderId, OrderItemPreData $dto, UserPermission $permission)
+    public function execute(int $orderId, OrderItemPreData $dto, UserPermission $permission): void
     {
         if (!$permission->can('order.order.edit')) throw new AccessDeniedException();
         $this->transactionManager->execute(function () use ($orderId, $dto, $permission) {

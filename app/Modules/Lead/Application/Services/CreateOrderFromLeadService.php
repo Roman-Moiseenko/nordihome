@@ -30,7 +30,7 @@ readonly class CreateOrderFromLeadService
     public function execute(int $leadId, UserPermission $permission):? OrderEntity
     {
         if (!$permission->can('lead.lead.edit')) throw new AccessDeniedException();
-        $this->transactionManager->execute(function () use ($leadId, $permission) {
+        return $this->transactionManager->execute(function () use ($leadId, $permission) {
 
             $leadEntity = $this->leadRepository->findById($leadId);
             //Создаем пустой заказ
@@ -51,6 +51,5 @@ readonly class CreateOrderFromLeadService
 
             return $orderEntity;
         });
-        return null;
     }
 }
