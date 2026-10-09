@@ -23,7 +23,7 @@ Route::group([
         'as' => 'addition.',
     ], function () {
         Route::get('/', [AdditionController::class, 'index'])->name('index');
-        Route::get('/group', [AdditionController::class, 'groupList'])->name('group');
+        Route::get('/list', [AdditionController::class, 'groupList'])->name('list');
         Route::post('/', [AdditionController::class, 'store'])->name('store');
         Route::put('/{id}', [AdditionController::class, 'update'])->name('update');
         Route::delete('/{id}', [AdditionController::class, 'destroy'])->name('destroy');
@@ -35,6 +35,7 @@ Route::group([
         'as' => 'country.',
     ], function () {
         Route::get('/', [CountryController::class, 'index'])->name('index');
+        Route::get('/list', [CountryController::class, 'list'])->name('list');
         Route::post('/', [CountryController::class, 'store'])->name('store');
         Route::put('/{country}', [CountryController::class, 'update'])->name('update');
         Route::delete('/{country}', [CountryController::class, 'destroy'])->name('destroy');
@@ -45,6 +46,7 @@ Route::group([
         'as' => 'marking-type.',
     ], function () {
         Route::get('/', [MarkingTypeController::class, 'index'])->name('index');
+        Route::get('/list', [MarkingTypeController::class, 'list'])->name('list');
         Route::post('/', [MarkingTypeController::class, 'store'])->name('store');
         Route::put('/{marking_type}', [MarkingTypeController::class, 'update'])->name('update');
         Route::delete('/{marking_type}', [MarkingTypeController::class, 'destroy'])->name('destroy');
@@ -55,6 +57,7 @@ Route::group([
         'as' => 'measuring.',
     ], function () {
         Route::get('/', [MeasuringController::class, 'index'])->name('index');
+        Route::get('/list', [MeasuringController::class, 'list'])->name('list');
         Route::post('/', [MeasuringController::class, 'store'])->name('store');
         Route::put('/{measuring}', [MeasuringController::class, 'update'])->name('update');
         Route::delete('/{measuring}', [MeasuringController::class, 'destroy'])->name('destroy');
@@ -65,6 +68,7 @@ Route::group([
         'as' => 'vat.',
     ], function () {
         Route::get('/', [VATController::class, 'index'])->name('index');
+        Route::get('/list', [VATController::class, 'list'])->name('list');
         Route::post('/', [VATController::class, 'store'])->name('store');
         Route::put('/{vat}', [VATController::class, 'update'])->name('update');
         Route::delete('/{vat}', [VATController::class, 'destroy'])->name('destroy');

@@ -24,6 +24,17 @@ class EquivalentRepository implements EquivalentRepositoryInterface
         return $this->hydrate($model);
     }
 
+    public function getAll(): array
+    {
+        return Equivalent::orderBy('name')
+            ->get()
+            ->map(fn(Equivalent $model) => [
+                'id' => $model->id,
+                'name' => $model->name,
+            ])
+            ->toArray();
+    }
+
     public function findByIds(array $ids): array
     {
         if (empty($ids)) {

@@ -4,6 +4,7 @@ namespace App\Modules\Catalog\Providers;
 
 use App\Modules\Catalog\Domain\Interfaces\AttributeCategoryRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\AttributeGroupRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\AttributeProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\AttributeRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\CategoryProductRepositoryInterface;
@@ -12,14 +13,17 @@ use App\Modules\Catalog\Domain\Interfaces\EquivalentProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\EquivalentRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\GroupProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\GroupRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ModificationRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\RoomProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\SeriesRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\TagRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\VideoRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeCategoryRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeGroupRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\AttributeProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\AttributeRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\BrandRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\CategoryProductRepository;
@@ -28,12 +32,14 @@ use App\Modules\Catalog\Infrastructure\Persistence\EquivalentProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\EquivalentRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\GroupProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\GroupRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\ModificationRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\ProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\SeriesRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\TagProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\TagRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\VideoRepository;
 use App\Modules\Catalog\Presentation\Console\Commands\ClearCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\LoadCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\ResetPublishedCommand;
@@ -139,6 +145,11 @@ class CatalogServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
+            ModificationRepositoryInterface::class,
+            ModificationRepository::class
+        );
+
+        $this->app->bind(
             ProductRepositoryInterface::class,
             ProductRepository::class
         );
@@ -151,6 +162,10 @@ class CatalogServiceProvider extends ServiceProvider
         $this->app->bind(
             AttributeCategoryRepositoryInterface::class,
             AttributeCategoryRepository::class
+        );
+        $this->app->bind(
+            AttributeProductRepositoryInterface::class,
+            AttributeProductRepository::class
         );
 
         $this->app->bind(
@@ -181,6 +196,11 @@ class CatalogServiceProvider extends ServiceProvider
         $this->app->bind(
             TagProductRepositoryInterface::class,
             TagProductRepository::class
+        );
+
+        $this->app->bind(
+            VideoRepositoryInterface::class,
+            VideoRepository::class
         );
 
         $this->app->bind(

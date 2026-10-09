@@ -17,7 +17,6 @@ export const useCatalogStore = defineStore('catalog', () => {
     const attrGroups = ref<any[]>([])
     const attrTypes = ref<any[]>([])
 
-
     async function fetchData() {
         const [
             roomsRes, categoriesRes, brandsRes, groupsRes, promotionsRes, seriesRes, tagsRes,

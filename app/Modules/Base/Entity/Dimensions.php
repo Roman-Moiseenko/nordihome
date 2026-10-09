@@ -24,13 +24,13 @@ class Dimensions
     const TYPE_LENGTH = 2;
     const TYPE_DIAMETER = 3;
 
-    const CAPTION_TYPES = [
+    const array CAPTION_TYPES = [
         self::TYPE_DEPTH => ['Высота', 'Ширина', 'Глубина'],
         self::TYPE_LENGTH => ['Высота', 'Ширина', 'Длина'],
         self::TYPE_DIAMETER => ['Высота', 'Диаметр', ''],
     ];
 
-    const TYPES = [
+    const array TYPES = [
         self::TYPE_DEPTH => 'Глубина',
         self::TYPE_LENGTH => 'Длина',
         self::TYPE_DIAMETER => 'Диаметр',

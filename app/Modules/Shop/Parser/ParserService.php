@@ -3,15 +3,10 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Parser;
 
-use App\Events\ProductHasParsed;
+
 use App\Modules\Base\Entity\Package;
 use App\Modules\Base\Service\GoogleTranslateForFree;
 use App\Modules\Base\Service\HttpPage;
-use App\Modules\Catalog\Infrastructure\Models\Brand;
-use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\Catalog\Service\ProductService;
-use App\Modules\Setting\Entity\Common;
 use App\Modules\Setting\Entity\Settings;
 use JetBrains\PhpStorm\ArrayShape;
 use JetBrains\PhpStorm\Deprecated;
@@ -60,90 +55,15 @@ class ParserService
     ];
 
     private HttpPage $httpPage;
-    private ProductService $productService;
-    private Common $common;
 
 
 
-    public function __construct(HttpPage $httpPage, ProductService $productService, Settings $settings)
+
+    public function __construct(HttpPage $httpPage,Settings $settings)
     {
         $this->httpPage = $httpPage;
-        $this->productService = $productService;
-        $this->common = $settings->common;
+
     }
-
-    #[Deprecated]
-    public function findProduct(string $search): Product
-    {
-        $code = $this->formatCode($search);
-        /** @var Product $product */
-        $product = Product::where('code_search', $code)->first();//Ищем товар в базе
-
-        if (empty($product)) {//1. Добавляем черновик товара (Артикул, Главное фото, Название, Краткое описание, Базовая цена, published = false)
-            $parser_product = $this->parsingData($code); //Парсим основные данные
-            $arguments = [      //Опции магазина
-                'pre_order' => $this->common->pre_order,
-                'only_offline' => $this->common->only_offline,
-                'not_local' => !$this->common->delivery_local,
-                'not_delivery' => !$this->common->delivery_all,
-            ];
-
-            $product = $this->productService->create_parser(
-                $parser_product['name'],
-                $this->toCode($code),
-                (Category::where('name', 'Прочее')->first())->id,
-                $arguments);
-
-            $product->short = $parser_product['description'];
-            $product->brand_id = (Brand::where('name', Brand::IKEA)->first())->id;
-            foreach ($parser_product['packages'] as $item) {
-                $product->packages->add($item);
-            }
-
-            $product->save();
-           // $product->addImageByUrl($parser_product['image']);
-            $product->refresh();
-
-            //Проверяем есть ли товары в составе
-            foreach ($parser_product['composite'] as $composite) {
-                $_prod = $this->findProduct($composite['code']);
-                $product->composites()->attach($_prod, ['quantity' => $composite['quantity']]);
-            }
-
-            //4. Создаем ProductParsing
-            $productParser = $this->createProductParsing($product->id, $parser_product);
-            $quantity = $this->parsingQuantity($code);
-            $productParser->setQuantity($quantity);
-
-            event(new ProductHasParsed($product));
-            return $product;
-        } elseif (empty($product->packages->packages)) {
-            $parser_product = $this->parsingData($code);
-
-            foreach ($parser_product['packages'] as $item) {
-                $product->packages->add($item);
-            }
-
-            $product->save();
-        }
-
-
-        $productParser = ProductParser::where('product_id', $product->id)->first();
-        if (empty($productParser)) {
-            $parser_product = $this->parsingData($product->code_search);
-            $productParser = $this->createProductParsing($product->id, $parser_product);
-        } else {
-            if ($productParser->isBlock())
-                throw new \DomainException('Данный товар ' . $code . ' не доступен для заказа');
-        }
-
-        if ($productParser->updated_at->lt(now()->addHours(3))) {
-            $quantity = $this->parsingQuantity($code);
-            $productParser->setQuantity($quantity);
-        }
-        return $product;
-    }
-
 
 
     /** Добавить в Cron для парсинга кол-ва в базе */

@@ -178,6 +178,22 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @param int[] $ids
+     * @return array<int, string>
+     */
+    public function getParentNamesByIds(array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        return Category::whereIn('id', $ids)
+            ->get()
+            ->mapWithKeys(fn(Category $model) => [$model->id => $model->getParentNames()])
+            ->toArray();
+    }
+
+    /**
      * Преобразует Eloquent модель в Domain Entity.
      * Ссылки на изображения формируются через полиморфные связи Photo (трейты ImageField/IconField).
      */

@@ -1,11 +1,9 @@
 <?php
 
 use App\Modules\Catalog\Controllers\AttributeController;
-use App\Modules\Catalog\Controllers\ModificationController;
 use App\Modules\Catalog\Controllers\OnOrderController;
 use App\Modules\Catalog\Controllers\ParserController;
 use App\Modules\Catalog\Controllers\PriorityController;
-use App\Modules\Catalog\Controllers\ProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\AttributeGroupController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\BrandController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryController;
@@ -13,6 +11,9 @@ use App\Modules\Catalog\Presentation\Http\Controllers\Web\CategoryProductControl
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\EquivalentController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\GroupProductController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\ModificationController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\ProductController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\ProductEditController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\SeriesController;
@@ -27,7 +28,7 @@ Route::group([
 
     Route::post('/action', [ProductController::class, 'action'])->name('action');
     Route::post('/upload', [ProductController::class, 'upload'])->name('product.upload');
-    Route::post('/find-parser', [ProductController::class, 'find_parser'])->name('product.find-parser');
+    //Route::post('/find-parser', [ProductController::class, 'find_parser'])->name('product.find-parser');
     //Атрибуты
     Route::group([
         'prefix' => 'attribute',
@@ -181,11 +182,13 @@ Route::group([
         'as' => 'modification.',
     ], function () {
         //Route::post('/set-modifications/{modification}', [ModificationController::class, 'set_modifications'])->name('set-modifications');
-        Route::post('/set-base/{modification}', [ModificationController::class, 'set_base'])->name('set-base');
-        Route::post('/search', [ModificationController::class, 'search'])->name('search');
-        Route::post('/rename/{modification}', [ModificationController::class, 'rename'])->name('rename');
-        Route::post('/add-product/{modification}', [ModificationController::class, 'add_product'])->name('add-product');
-        Route::delete('/del-product/{modification}', [ModificationController::class, 'del_product'])->name('del-product');
+        Route::post('/set-primary/{id}', [ModificationController::class, 'setPrimary'])->name('set-primary');
+
+        Route::post('/search-create', [ModificationController::class, 'search_create'])->name('search-create');
+        Route::post('/search-product/{id}', [ModificationController::class, 'search_product'])->name('search-product');
+        Route::post('/rename/{id}', [ModificationController::class, 'rename'])->name('rename');
+        Route::post('/add-product/{id}', [ModificationController::class, 'add_product'])->name('add-product');
+        Route::delete('/del-product/{id}', [ModificationController::class, 'del_product'])->name('del-product');
     });
 
     //resource
@@ -194,7 +197,7 @@ Route::group([
     Route::resource('attribute', AttributeController::class)->parameters(['attribute' => 'id']); //CRUD
     Route::resource('equivalent', EquivalentController::class)->parameters(['equivalent' => 'id']); //CRUD
     Route::resource('group', GroupController::class)->except(['create', 'edit']); //CRUD
-    Route::resource('modification', ModificationController::class); //CRUD
+    Route::resource('modification', ModificationController::class)->parameters(['modification' => 'id']); //CRUD
     Route::resource('series', SeriesController::class)->except(['create', 'edit'])->parameters(['series' => 'id']); //CRUD
 
 
@@ -230,17 +233,29 @@ Route::group([
             'prefix' => 'edit',
             'as' => 'edit.'
         ], function () {
-            Route::post('/common/{product}', [ProductController::class, 'edit_common'])->name('common');
-            Route::post('/description/{product}', [ProductController::class, 'edit_description'])->name('description');
-            Route::post('/dimensions/{product}', [ProductController::class, 'edit_dimensions'])->name('dimensions');
-            Route::post('/video/{product}', [ProductController::class, 'edit_video'])->name('video');
-            Route::post('/attribute/{product}', [ProductController::class, 'edit_attribute'])->name('attribute');
-            Route::post('/management/{product}', [ProductController::class, 'edit_management'])->name('management');
-            Route::post('/equivalent/{product}', [ProductController::class, 'edit_equivalent'])->name('equivalent');
-            Route::post('/related/{product}', [ProductController::class, 'edit_related'])->name('related');
-            Route::post('/bonus/{product}', [ProductController::class, 'edit_bonus'])->name('bonus');
-            Route::post('/composite/{product}', [ProductController::class, 'edit_composite'])->name('composite');
+            Route::get('/common/{id}', [ProductEditController::class, 'loadCommon'])->name('common');
+            Route::post('/common/{id}', [ProductEditController::class, 'saveCommon'])->name('common');
+            Route::get('/description/{id}', [ProductEditController::class, 'loadDescription'])->name('description');
+            Route::post('/description/{id}', [ProductEditController::class, 'saveDescription'])->name('description');
+            Route::get('/dimensions/{id}', [ProductEditController::class, 'loadDimensions'])->name('dimensions');
+            Route::post('/dimensions/{id}', [ProductEditController::class, 'saveDimensions'])->name('dimensions');
+            Route::get('/video/{id}', [ProductEditController::class, 'loadVideo'])->name('video');
+            Route::post('/video/{id}', [ProductEditController::class, 'saveVideo'])->name('video');
+            Route::get('/attribute/{id}', [ProductEditController::class, 'loadAttribute'])->name('attribute');
+            Route::post('/attribute/{id}', [ProductEditController::class, 'saveAttribute'])->name('attribute');
+            Route::get('/management/{id}', [ProductEditController::class, 'loadManagement'])->name('management');
+            Route::post('/management/{id}', [ProductEditController::class, 'saveManagement'])->name('management');
+            Route::get('/modification/{id}', [ProductEditController::class, 'loadModification'])->name('modification');
+            Route::get('/modification-attributes/{id}', [ProductEditController::class, 'loadModificationAttributes'])->name('modification-attributes');
+            Route::get('/equivalent/{id}', [ProductEditController::class, 'loadEquivalent'])->name('equivalent');
+            Route::post('/equivalent/{id}', [ProductEditController::class, 'saveEquivalent'])->name('equivalent');
+            Route::get('/related/{id}', [ProductEditController::class, 'loadRelated'])->name('related');
+            Route::post('/related/{id}', [ProductEditController::class, 'saveRelated'])->name('related');
+            Route::get('/bonus/{id}', [ProductEditController::class, 'loadBonus'])->name('bonus');
+            Route::post('/bonus/{id}', [ProductEditController::class, 'saveBonus'])->name('bonus');
+            Route::get('/composite/{id}', [ProductEditController::class, 'loadComposite'])->name('composite');
+            Route::post('/composite/{id}', [ProductEditController::class, 'saveComposite'])->name('composite');
         });
     });
-    Route::resource('product', ProductController::class)->except(['update']);
+    Route::resource('product', ProductController::class)->except(['update'])->parameters(['product' => 'id']);
 });

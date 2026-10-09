@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
+use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 class MeasuringController extends Controller
 {
@@ -45,5 +46,11 @@ class MeasuringController extends Controller
     {
         $this->service->destroy($measuring);
         return redirect()->back()->with('success', 'Ед.измерения удалена');
+    }
+
+    public function list()
+    {
+        $list = Measuring::orderBy('name')->getModels();
+        return response()->json($list, SymfonyResponse::HTTP_OK);
     }
 }

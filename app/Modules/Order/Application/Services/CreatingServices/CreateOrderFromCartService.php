@@ -53,7 +53,7 @@ readonly class CreateOrderFromCartService
     public function execute(ClientContext $clientContext, string|null $code, string|null $commentClient): OrderEntity
     {
 
-        $this->transactionManager->execute(function () use ($clientContext, $code, $commentClient, &$orderEntity) {
+        return $this->transactionManager->execute(function () use ($clientContext, $code, $commentClient) {
             //Создаем пустой заказ
             $orderEntity = new OrderEntity(
                 traderId: $this->traderIdUseCase->execute(),
@@ -127,8 +127,8 @@ readonly class CreateOrderFromCartService
 
             $log = new OrderLoggerCreateData(action: 'Заказ создан из корзины',);
             $this->loggerUseCase->execute($orderEntity->id, $log);
+            return $orderEntity;
         });
-        return $orderEntity;
     }
 
 

@@ -1,13 +1,18 @@
 <template>
-    <el-tab-pane>
+    <el-tab-pane :name="name">
         <template #label>
             <span class="custom-tabs-label">
                 <i class="fa-light fa-file-invoice"></i>
                 <span> Общие параметры</span>
             </span>
         </template>
+        <div v-if="loading || !loaded" class="py-6 text-center text-gray-400">
+            <i class="fa-light fa-spinner fa-spin"></i> Загрузка...
+        </div>
+
+        <div v-else>
         <el-checkbox v-model="autoSave" :checked="autoSave">Автосохранение</el-checkbox>
-        <el-checkbox v-if="product.modification"
+        <el-checkbox v-if="hasModification"
             v-model="form.modification"
             :checked="form.modification" class="checkbox-warning">
             Сохранять для всех товаров из Модификации
@@ -22,8 +27,8 @@
                         <div v-if="errors.name" class="text-red-700">{{ errors.name }}</div>
                     </el-form-item>
                     <el-form-item label="Название для печати">
-                        <el-input v-model="form.name_print" @change="onAutoSave" :disabled="isSaving" />
-                        <div v-if="errors.name_print" class="text-red-700">{{ errors.name_print }}</div>
+                        <el-input v-model="form.namePrint" @change="onAutoSave" :disabled="isSaving" />
+                        <div v-if="errors.namePrint" class="text-red-700">{{ errors.namePrint }}</div>
                     </el-form-item>
                     <el-form-item label="Ссылка">
                         <el-input v-model="form.slug" @change="onAutoSave" :disabled="isSaving" placeholder="Заполнится автоматически" clearable/>
@@ -43,32 +48,32 @@
             <el-col :span="8">
                 <el-form label-width="auto">
                     <el-form-item label="Главная категория">
-                        <el-select v-model="form.category_id" @change="onAutoSave" :disabled="isSaving" filterable>
+                        <el-select v-model="form.categoryId" @change="onAutoSave" :disabled="isSaving" filterable>
                             <el-option v-for="item in useCatalog.categories" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
-                        <div v-if="errors.category_id" class="text-red-700">{{ errors.category_id }}</div>
+                        <div v-if="errors.categoryId" class="text-red-700">{{ errors.categoryId }}</div>
                     </el-form-item>
                     <el-form-item label="Доп.категории">
-                        <el-select v-model="categoriesForm" @change="onCategoriesSave" :disabled="isSaving" filterable multiple clearable>
+                        <el-select v-model="form.categories" @change="onAutoSave" :disabled="isSaving" filterable multiple clearable>
                             <el-option v-for="item in useCatalog.categories" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="Комнаты">
-                        <el-select v-model="roomsForm" @change="onRoomsSave" :disabled="isSaving" filterable multiple clearable>
+                        <el-select v-model="form.rooms" @change="onAutoSave" :disabled="isSaving" filterable multiple clearable>
                             <el-option v-for="item in useCatalog.rooms" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="Бренд">
-                        <el-select v-model="form.brand_id" @change="onAutoSave" :disabled="isSaving" filterable>
-                            <el-option v-for="item in brands" :value="item.id" :label="item.name"/>
+                        <el-select v-model="form.brandId" @change="onAutoSave" :disabled="isSaving" filterable>
+                            <el-option v-for="item in useCatalog.brands" :value="item.id" :label="item.name"/>
                         </el-select>
-                        <div v-if="errors.brand_id" class="text-red-700">{{ errors.brand_id }}</div>
+                        <div v-if="errors.brandId" class="text-red-700">{{ errors.brandId }}</div>
                     </el-form-item>
                     <el-form-item label="Страна происхождения">
-                        <el-select v-model="form.country_id" @change="onAutoSave" :disabled="isSaving" filterable clearable>
-                            <el-option v-for="item in country" :key="item.id" :value="item.id" :label="item.name"/>
+                        <el-select v-model="form.countryId" @change="onAutoSave" :disabled="isSaving" filterable clearable>
+                            <el-option v-for="item in useGuide.countries" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
-                        <div v-if="errors.country_id" class="text-red-700">{{ errors.country_id }}</div>
+                        <div v-if="errors.countryId" class="text-red-700">{{ errors.countryId }}</div>
                     </el-form-item>
                     <!-- Повторить -->
 
@@ -77,22 +82,16 @@
             <!-- Колонка 3 -->
             <el-col :span="8">
                 <el-form label-width="auto">
-                    <el-form-item label="НДС">
-                        <el-select v-model="form.vat_id" @change="onAutoSave" :disabled="isSaving" filterable>
-                            <el-option v-for="item in vat" :key="item.id" :value="item.id" :label="item.name"/>
-                        </el-select>
-                        <div v-if="errors.vat_id" class="text-red-700">{{ errors.vat_id }}</div>
-                    </el-form-item>
                     <el-form-item label="Вид продукции ИС">
-                        <el-select v-model="form.marking_type_id" @change="onAutoSave" :disabled="isSaving" filterable clearable>
-                            <el-option v-for="item in markingType" :key="item.id" :value="item.id" :label="item.name"/>
+                        <el-select v-model="form.markingTypeId" @change="onAutoSave" :disabled="isSaving" filterable clearable>
+                            <el-option v-for="item in useGuide.markingType" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="Ед.измерения">
-                        <el-select v-model="form.measuring_id" @change="onAutoSave" :disabled="isSaving" >
-                            <el-option v-for="item in measuring" :key="item.id" :value="item.id" :label="item.name"/>
+                        <el-select v-model="form.measuringId" @change="onAutoSave" :disabled="isSaving" >
+                            <el-option v-for="item in useGuide.measuring" :key="item.id" :value="item.id" :label="item.name"/>
                         </el-select>
-                        <div v-if="errors.measuring_id" class="text-red-700">{{ errors.measuring_id }}</div>
+                        <div v-if="errors.measuringId" class="text-red-700">{{ errors.measuringId }}</div>
                     </el-form-item>
                     <el-form-item label="Дробление количества">
                         <el-checkbox v-model="form.fractional" @change="onAutoSave" :disabled="isSaving" :checked="form.fractional" />
@@ -102,50 +101,103 @@
 
         </el-row>
         <el-button v-if="!autoSave" type="primary" @click="onSave" class="mt-3">Сохранить</el-button>
+        </div>
     </el-tab-pane>
 </template>
 
 <script setup lang="ts">
-import {reactive, ref, defineProps } from "vue";
-import {router} from "@inertiajs/vue3";
+import {reactive, ref, computed, watch, defineProps } from "vue";
 import {useCatalogStore} from "@Res/catalogStore.ts";
 import api from "@Res/api";
 import {route} from "ziggy-js";
+import {useGuideStore} from "@Res/guideStore";
+import {useProductPanel} from "./useProductPanel";
 
 const useCatalog = useCatalogStore()
+const useGuide = useGuideStore()
 
 const props = defineProps({
-    product: Object,
-    errors: Object,
-    brands: Array,
-    country: Array,
-    vat: Array,
-    measuring: Array,
-    markingType: Array,
+    productId: {
+        type: Number,
+        required: true,
+    },
+    active: {
+        type: Boolean,
+        default: false,
+    },
+    name: {
+        type: String,
+        default: 'common',
+    },
 })
+
+const emit = defineEmits(['update:header'])
+
 const autoSave = ref(true)
 const isSaving = ref(false)
-const categoriesForm = ref([...props.product.categories.map(item => item.id)])
-const roomsForm = ref([...props.product.rooms.map(item => item.id)])
+const hasModification = ref(false)
 
 const form = reactive({
-    id: props.product.id,
-    name: props.product.name,
-    name_print: props.product.name_print,
-    slug: props.product.slug,
-    code: props.product.code,
-    comment: props.product.comment,
-    category_id: props.product.main_category_id,
-    //categories: [...props.product.categories.map(item => item.id)],
-    //rooms: [], //[...props.product?.rooms?.map(item => item.id)],
-    brand_id: props.product.brand_id,
-    country_id: props.product.country_id,
-    vat_id: props.product.vat_id,
-    marking_type_id: props.product.marking_type_id,
-    measuring_id: props.product.measuring_id,
-    fractional: props.product.fractional,
-    modification: props.product.modification,
+    id: props.productId,
+    name: '',
+    namePrint: '',
+    slug: '',
+    code: '',
+    comment: '',
+    categoryId: null,
+    categories: [],
+    rooms: [],
+    brandId: null,
+    countryId: null,
+    markingTypeId: null,
+    measuringId: null,
+    fractional: false,
+    modification: false,
 })
+
+// Ошибки валидации (приходят из ответа на сохранение).
+const saveErrors = reactive({})
+const errors = computed(() => ({ ...saveErrors }))
+
+// Загрузка данных панели с кэшем на 5 минут.
+const { load, loading, loaded, setCache } = useProductPanel('common', async () => {
+    return api.get(
+        route('admin.catalog.product.edit.common', { id: props.productId }),
+        null,
+        { showSuccess: false },
+    )
+})
+
+function applyData(data) {
+    form.id = data.id
+    form.name = data.name
+    form.namePrint = data.namePrint
+    form.slug = data.slug
+    form.code = data.code
+    form.comment = data.comment
+    form.categoryId = data.categoryId
+    form.categories = Array.isArray(data.categories) ? data.categories : []
+    form.rooms = Array.isArray(data.rooms) ? data.rooms : []
+    form.brandId = data.brandId
+    form.countryId = data.countryId
+    form.markingTypeId = data.markingTypeId
+    form.measuringId = data.measuringId
+    form.fractional = data.fractional
+    hasModification.value = data.hasModification
+
+    emit('update:header', { name: data.name, code: data.code })
+}
+
+// Автозагрузка при активации панели.
+// Если данные уже загружались — повторно не запрашиваем (кэш 5 минут),
+// а форму не перезатираем, чтобы не потерять несохранённые изменения.
+watch(() => props.active, async (active) => {
+    if (!active) return
+    const { data, fromCache } = await load()
+    if (!fromCache && data) {
+        applyData(data)
+    }
+}, { immediate: true })
 
 
 function onAutoSave() {
@@ -153,38 +205,25 @@ function onAutoSave() {
     onSave()
 }
 
-function onCategoriesSave(){
-    isSaving.value = true;
-    api.post(
-        route('admin.catalog.product.categories.sync', {id: props.product.id}),
-        {categories: categoriesForm.value}
-    ).finally(() => isSaving.value = false)
-}
-function onRoomsSave() {
-    isSaving.value = true;
-    api.post(
-        route('admin.catalog.product.rooms.sync', {id: props.product.id}),
-        {rooms: roomsForm.value}
-    ).finally(() => isSaving.value = false)
-}
 function onSave() {
     isSaving.value = true;
-    router.visit(route('admin.catalog.product.edit.common', {product: props.product.id}), {
-        method: "post",
-        data: form,
-        preserveState: true,
-        preserveScroll: true,
-        onSuccess: page => {
-            isSaving.value = false
-            form.slug = page.props.product.slug
-            form.name = page.props.product.name
-            form.name_print = page.props.product.name_print
+    Object.keys(saveErrors).forEach(key => delete saveErrors[key])
 
-        },
-        onError: page => {
-            isSaving.value = false
-
-        },
+    api.post(
+        route('admin.catalog.product.edit.common', { id: props.productId }),
+        { ...form },
+    ).then(data => {
+        applyData(data)
+        setCache(data)
+    }).catch(error => {
+        const errs = error?.response?.data?.errors
+        if (errs && typeof errs === 'object') {
+            for (const [key, value] of Object.entries(errs)) {
+                saveErrors[key] = Array.isArray(value) ? value[0] : value
+            }
+        }
+    }).finally(() => {
+        isSaving.value = false
     })
 }
 </script>

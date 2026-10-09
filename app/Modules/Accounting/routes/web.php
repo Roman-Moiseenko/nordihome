@@ -158,6 +158,7 @@ Route::group([
             Route::post('/detach/{distributor}', [DistributorController::class, 'detach'])->name('detach');
             Route::post('/default/{distributor}', [DistributorController::class, 'default'])->name('default');
             Route::post('/set-info/{distributor}', [DistributorController::class, 'set_info'])->name('set-info');
+            Route::get('/list/', [DistributorController::class, 'listDistributors'])->name('list');
         });
     //TRADER
     Route::group([

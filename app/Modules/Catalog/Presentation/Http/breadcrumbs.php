@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-use App\Modules\Catalog\Entity\Modification;
 use App\Modules\Catalog\Infrastructure\Models\Group;
+use App\Modules\Catalog\Infrastructure\Models\Modification;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
@@ -20,7 +20,8 @@ Breadcrumbs::for('admin.catalog.product.show', function (BreadcrumbTrail $trail,
     $trail->parent('admin.catalog.product.index');
     $trail->push($product->name, route('admin.catalog.product.show', $product));
 });
-Breadcrumbs::for('admin.catalog.product.edit', function (BreadcrumbTrail $trail, Product $product) {
+Breadcrumbs::for('admin.catalog.product.edit', function (BreadcrumbTrail $trail, int $id) {
+    $product = Product::find($id);
     $trail->parent('admin.catalog.product.show', $product);
     $trail->push('Редактировать', route('admin.catalog.product.edit', $product));
 });
@@ -169,13 +170,19 @@ Breadcrumbs::for('admin.catalog.modification.create', function (BreadcrumbTrail 
     $trail->parent('admin.catalog.modification.index');
     $trail->push('Создать новую', route('admin.catalog.modification.create'));
 });
-Breadcrumbs::for('admin.catalog.modification.show', function (BreadcrumbTrail $trail, Modification $modification) {
+Breadcrumbs::for('admin.catalog.modification.show', function (BreadcrumbTrail $trail, int|string $id) {
+    $repository = app(\App\Modules\Catalog\Domain\Interfaces\ModificationRepositoryInterface::class);
+    $modification = $repository->getById((int) $id);
+
     $trail->parent('admin.catalog.modification.index');
-    $trail->push($modification->name, route('admin.catalog.modification.show', $modification));
+    $trail->push($modification->name, route('admin.catalog.modification.show', $modification->id));
 });
-Breadcrumbs::for('admin.catalog.modification.edit', function (BreadcrumbTrail $trail, Modification $modification) {
-    $trail->parent('admin.catalog.modification.show', $modification);
-    $trail->push('Редактировать', route('admin.catalog.modification.edit', $modification));
+Breadcrumbs::for('admin.catalog.modification.edit', function (BreadcrumbTrail $trail, int|string $id) {
+    $repository = app(\App\Modules\Catalog\Domain\Interfaces\ModificationRepositoryInterface::class);
+    $modification = $repository->getById((int) $id);
+
+    $trail->parent('admin.catalog.modification.show', $modification->id);
+    $trail->push('Редактировать', route('admin.catalog.modification.edit', $modification->id));
 });
 
 

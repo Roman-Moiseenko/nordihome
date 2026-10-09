@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Domain\Interfaces;
 
+use App\Modules\Catalog\Application\DTOs\Product\FilterProductIndexData;
 use App\Modules\Catalog\Application\DTOs\Product\ProductCategoryData;
 use App\Modules\Catalog\Domain\Entities\ProductEntity;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -91,6 +92,27 @@ interface ProductRepositoryInterface
      */
     public function search(string $query, int $limit = 10): array;
 
+    /**
+     * Поиск товаров по строке, исключая переданные ID.
+     *
+     * @param int[] $excludeIds
+     * @return ProductEntity[]
+     */
+    public function searchExcluding(string $query, array $excludeIds, int $limit = 10): array;
+
+    /**
+     * Поиск товаров для добавления в модификацию.
+     *
+     * Товар должен иметь ВСЕ оси модификации ($attributeIds) и, если заданы
+     * фильтры, соответствовать выбранным вариантам ($variantFilters).
+     *
+     * @param int[] $attributeIds
+     * @param array<int, int> $variantFilters attribute_id => variant_id
+     * @param int[] $excludeIds
+     * @return ProductEntity[]
+     */
+    public function searchForModification(string $query, array $attributeIds, array $variantFilters, array $excludeIds, int $limit = 10): array;
+
     public function countProductsByBrandIds($brandIds): array;
 
     /**
@@ -98,4 +120,23 @@ interface ProductRepositoryInterface
      * @return array<int, int>
      */
     public function countProductsBySeriesIds(array $seriesIds): array;
+
+    public function exists(int $productId): bool;
+
+    public function delete(int $id): void;
+
+    public function restore(int $id): void;
+
+    public function forceDelete(int $id): void;
+
+    /**
+     * Отфильтрованный список товаров (Catalog/Product/Index).
+     *
+     * Репозиторий применяет только непустые поля фильтра и пишет в
+     * $filter->count число применённых фильтров.
+     *
+     * @return LengthAwarePaginator<ProductEntity>
+     */
+    public function filteredPaginated(FilterProductIndexData &$filter): LengthAwarePaginator;
+
 }

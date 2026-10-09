@@ -20,12 +20,12 @@
             >
                 <el-table-column prop="image" label="IMG" width="60">
                     <template #default="scope">
-                        <img :src="scope.row.image" style="width: 100%">
+                        <img v-if="scope.row.image" :src="scope.row.image" style="width: 100%">
                     </template>
                 </el-table-column>
                 <el-table-column prop="name" label="Название" width="380" show-overflow-tooltip/>
                 <el-table-column prop="quantity" label="Кол-во товаров" width="180" align="center"/>
-                <el-table-column prop="description" label="Атрибуты">
+                <el-table-column prop="attributes" label="Атрибуты">
                     <template #default="scope">
                         <el-tag type="primary" effect="dark" v-for="item in scope.row.name_attributes" class="ml-1">
                             {{ item }}
@@ -55,8 +55,13 @@
 
         <el-dialog v-model="dialogCreate" title="Новая модификация" width="500">
             <el-form label-width="auto">
-                <el-form-item label="Выберите базовый товар" label-position="top" class="mt-3">
-                    <ModificationSearchProduct :action="'create'" @update:product_id="handleGetProduct"/>
+                <el-form-item label="Выберите первичный товар" label-position="top" class="mt-3">
+                    <ModificationSearchProduct
+                        :action="'create'"
+                        @update:productId="onProductId"
+                        @update:name="onProductName"
+                        @update:attributes="onProductAttributes"
+                    />
                 </el-form-item>
                 <el-form-item label="Название модификации" label-position="top" class="mt-3">
                     <el-input id="name-modif" v-model="form.name" :placeholder="placeholder_name"/>
@@ -70,7 +75,7 @@
             <template #footer>
                 <div class="dialog-footer">
                     <el-button @click="dialogCreate = false">Отмена</el-button>
-                    <el-button type="primary" @click="saveModification">Сохранить</el-button>
+                    <el-button type="primary" @click="saveModification" :disabled="!canSave">Сохранить</el-button>
                 </div>
             </template>
         </el-dialog>
@@ -86,7 +91,7 @@ import Active from "@Comp/Elements/Active.vue";
 import Pagination from "@Comp/Pagination.vue";
 import TableFilter from "@Comp/TableFilter.vue";
 import {Head, router} from "@inertiajs/vue3";
-import {defineProps, inject, reactive, ref} from "vue";
+import {computed, defineProps, inject, onMounted, reactive, ref} from "vue";
 import ModificationSearchProduct from "@Comp/Modification/SearchProduct.vue"
 import {route} from "ziggy-js";
 import axios from "axios";
@@ -109,6 +114,29 @@ const filter = reactive({
     name: props.filters.name,
 })
 
+function loadImages() {
+    const ids = tableData.value
+        .map((row) => row.primary_product_id)
+        .filter(Boolean)
+
+    if (ids.length === 0) return
+
+    axios.get(route('admin.photo.get-by-ids'), {
+        params: {
+            imageableIds: ids,
+            modelType: 'catalog.product',
+            type: 'gallery',
+        }
+    }).then(response => {
+        tableData.value = tableData.value.map(row => ({
+            ...row,
+            image: response.data[row.primary_product_id] || null,
+        }))
+    })
+}
+
+onMounted(loadImages)
+
 interface ListItem {
     id: Number
     name: String,
@@ -117,13 +145,13 @@ const placeholder_name = ref(null)
 const placeholder_attr = ref(null)
 const attributes = ref<ListItem[]>([])
 const form = reactive({
-    product_id: null,
+    productId: null,
     name: null,
     attributes: [],
 })
 
 function onOpenDialog() {
-    form.product_id = null
+    form.productId = null
     form.name = null
     form.attributes = []
     attributes.value = []
@@ -132,30 +160,34 @@ function onOpenDialog() {
     dialogCreate.value = true
 }
 
-function handleGetProduct(val) {
-    form.product_id = val
-
-    const getAttributes = route('admin.catalog.product.attr-modification', {product: form.product_id});
-
-    axios.post(getAttributes).then(response => {
-        console.log(response.data)
-        if (response.data.error !== undefined) console.log(response.data.error)
-        attributes.value = response.data
-        placeholder_name.value = 'Введите название'
-        placeholder_attr.value = 'Выберите 1-2 атрибута'
-        document.getElementById('name-modif').focus()
-    });
+function onProductId(val) {
+    form.productId = val
 }
+
+function onProductName(name) {
+    form.name = name
+}
+
+function onProductAttributes(list) {
+    attributes.value = list
+    form.attributes = list.map(item => item.id)
+}
+
+const canSave = computed(() =>
+    form.productId !== null &&
+    form.attributes.length > 0 &&
+    form.attributes.length <= 3
+)
 
 function saveModification() {
     router.post(route('admin.catalog.modification.store', form))
 }
 
 function routeClick(row) {
-    router.get(route('admin.catalog.modification.show', {modification: row.id}))
+    router.get(route('admin.catalog.modification.show', {id: row.id}))
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.catalog.modification.destroy', {modification: row.id}));
+    $delete_entity.show(route('admin.catalog.modification.destroy', {id: row.id}));
 }
 </script>

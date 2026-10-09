@@ -1,7 +1,7 @@
 <template>
     <Head><title>{{ title }}</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl my-2">Редактирование товара {{ product.name }}</h1>
+        <h1 class="font-medium text-xl my-2">{{ header }}</h1>
         <div class="mt-2 p-3 bg-white rounded-md">
             <el-radio-group v-model="tabPosition" style="margin-bottom: 30px">
                 <el-radio-button value="top">top</el-radio-button>
@@ -10,54 +10,44 @@
                 <el-radio-button value="left">left</el-radio-button>
             </el-radio-group>
 
-            <el-tabs :tab-position="tabPosition">
+            <el-tabs :tab-position="tabPosition" v-model="activePanel">
 
-                <PanelCommon :product="product"
-                             :errors="errors"
-                             :brands="brands"
-                             :country="country"
-                             :vat="vat"
-                             :measuring="measuring"
-                             :markingType="markingType"
+                <PanelCommon :product-id="productId"
+                             :active="activePanel === 'common'"
+                             @update:header="onHeader"
                 />
-                <PanelDescription :product="product"
-                                  :errors="errors"
-                                  :tags="tags"
-                                  :series="series"
+                <PanelDescription :product-id="productId"
+                                  :active="activePanel === 'description'"
                 />
-                <PanelDimensions :product="product"
-                                 :errors="errors"
-                                 :dimensions="dimensions"
-                                 :complexities="complexities"
+                <PanelDimensions :product-id="productId"
+                                 :active="activePanel === 'dimensions'"
                 />
-                <PanelImage :product="product"
-                            :errors="errors"
+                <PanelImage :product-id="productId"
+                            :active="activePanel === 'image'"
                 />
-                <PanelVideo :product="product"
-                            :errors="errors"
+                <PanelVideo :product-id="productId"
+                            :active="activePanel === 'video'"
                 />
-                <PanelAttribute :product="product"
-                                :errors="errors"
+                <PanelAttribute :product-id="productId"
+                                :active="activePanel === 'attribute'"
                 />
-                <PanelManagement :product="product"
-                                 :errors="errors"
-                                 :frequencies="frequencies"
+                <PanelManagement :product-id="productId"
+                                 :active="activePanel === 'management'"
                 />
-                <PanelModification :product="product"
-                                   :errors="errors"
+                <PanelModification :product-id="productId"
+                                   :active="activePanel === 'modification'"
                 />
-                <PanelEquivalent :product="product"
-                                 :errors="errors"
-                                 :equivalents="equivalents"
+                <PanelEquivalent :product-id="productId"
+                                 :active="activePanel === 'equivalent'"
                 />
-                <PanelRelated :product="product"
-                              :errors="errors"
+                <PanelRelated :product-id="productId"
+                              :active="activePanel === 'related'"
                 />
-                <PanelBonus :product="product"
-                            :errors="errors"
+                <PanelBonus :product-id="productId"
+                            :active="activePanel === 'bonus'"
                 />
-                <PanelComposite :product="product"
-                                :errors="errors"
+                <PanelComposite :product-id="productId"
+                                :active="activePanel === 'composite'"
                 />
             </el-tabs>
         </div>
@@ -67,7 +57,7 @@
 <script setup lang="ts">
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {Head, router} from "@inertiajs/vue3";
-import {reactive, ref} from "vue";
+import {reactive, ref, watch} from "vue";
 import type {TabsInstance} from 'element-plus'
 //Панели
 import PanelCommon from './Panels/Common.vue'
@@ -85,26 +75,44 @@ import PanelComposite from './Panels/Composite.vue'
 
 
 const props = defineProps({
-    product: Object,
-    errors: Object,
-    brands: Array,
-    country: Array,
-    vat: Array,
-    tags: Array,
-    series: Array,
-    measuring: Array,
-    markingType: Array,
-    distributors: Array,
-    dimensions: Array,
-    frequencies: Array,
-    equivalents: Array,
-    complexities: Array,
+    productId: Number,
+
     title: {
         type: String,
         default: 'Редактирование товара',
     },
 })
 const tabPosition = ref<TabsInstance['tabPosition']>('left')
+
+// Заголовок страницы. Пока панель «Общие параметры» не загрузила данные,
+// показываем нейтральный заголовок; после загрузки — «Название (Артикул)».
+const header = ref('Редактирование товара')
+
+function onHeader({ name, code }) {
+    header.value = `${name} (${code})`
+}
+
+// Активная панель. По умолчанию — первая (Общие параметры).
+// Если страница открыта с ?panel=xxx, эта панель становится активной сразу.
+const activePanel = ref<string | number>('common')
+
+const urlParams = new URLSearchParams(window.location.search)
+const initialPanel = urlParams.get('panel')
+if (initialPanel) {
+    activePanel.value = initialPanel
+}
+
+// При переключении панели пишем get-параметр ?panel=xxx в URL
+// без перезагрузки страницы (сохраняем history.state Inertia).
+watch(activePanel, (value) => {
+    const url = new URL(window.location.href)
+    if (value && String(value) !== '') {
+        url.searchParams.set('panel', String(value))
+    } else {
+        url.searchParams.delete('panel')
+    }
+    window.history.replaceState(window.history.state, '', url.toString())
+})
 </script>
 
 <style scoped>

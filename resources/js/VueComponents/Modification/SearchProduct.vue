@@ -2,7 +2,7 @@
     <div class="flex">
         <el-select
             id="select"
-            v-model="form.product_id"
+            v-model="form.productId"
             filterable
             remote
             reserve-keyword
@@ -18,8 +18,7 @@
                 :key="item.id"
                 :value="item.id"
                 :label="item.name + ' ('+ item.code + ')'"
-            >
-            </el-option>
+            />
         </el-select>
         <el-button id="button" type="primary" @click="onAdd" class="ml-1" :disabled="disabledSearch">
             <i class="fa-light fa-box mr-2"></i>
@@ -29,11 +28,11 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, ref, defineProps } from "vue";
+import { computed, reactive, ref, defineProps } from "vue";
 import axios from "axios";
 import {route} from "ziggy-js";
 
-const search = route('admin.catalog.modification.search')
+const search = route('admin.catalog.modification.search-create')
 
 const props = defineProps({
     action: String,
@@ -44,35 +43,42 @@ interface ListItem {
     code: String,
 }
 const options = ref<ListItem[]>([])
+const attributes = ref<ListItem[]>([])
 
 const loading = ref(false)
 const disabledSearch = ref(false)
-const $emit = defineEmits(['update:product_id'])
+const $emit = defineEmits(['update:productId', 'update:name', 'update:attributes'])
 
 const remoteMethod = (query: string) => {
     if (query) {
         loading.value = true
-        axios.post(search, {search: query, action: props.action,}).then(response => {
-            //console.log(response.data)
+        axios.post(search, {search: query}).then(response => {
             if (response.data.error !== undefined) console.log(response.data.error)
-            options.value = response.data
+            options.value = response.data.products || []
+            attributes.value = response.data.attributes || []
             loading.value = false
         });
     } else {
         options.value = []
+        attributes.value = []
     }
 }
 const form = reactive({
-    product_id: null,
+    productId: null,
 })
+
+const selectedProduct = computed(() =>
+    options.value.find(item => item.id === form.productId)
+)
 
 function onSelect() {
     document.getElementById('button').focus()
 }
 
 function onAdd() {
-    if (form.product_id === null) return;
-    $emit('update:product_id', form.product_id)
+    if (form.productId === null) return;
+    $emit('update:productId', form.productId)
+    $emit('update:name', selectedProduct.value ? selectedProduct.value.name : '')
+    $emit('update:attributes', attributes.value)
 }
 </script>
-

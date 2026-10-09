@@ -11,24 +11,30 @@
 
 ### 1.1. Новая «Clean Architecture» (Domain / Application / Infrastructure)
 
-Используется для **CRUD атрибутов** и их привязки к категориям. Классические слои:
+Используется для **CRUD атрибутов** и их привязки к категориям, а также **целиком для модификаций**. Классические слои:
 
 - **Domain** — [`Domain/Entities/AttributeEntity.php`](app/Modules/Catalog/Domain/Entities/AttributeEntity.php:10), [`Domain/Entities/AttributeVariantEntity.php`](app/Modules/Catalog/Domain/Entities/AttributeVariantEntity.php:7), [`Domain/ValueObjects/AttributeType.php`](app/Modules/Catalog/Domain/ValueObjects/AttributeType.php:9), интерфейсы репозиториев в [`Domain/Interfaces/`](app/Modules/Catalog/Domain/Interfaces/AttributeRepositoryInterface.php:12).
 - **Application** — сценарии (`Actions/Attribute/*`, `Actions/AttributeCategory/*`), DTO на базе `Spatie\LaravelData` (`DTOs/Attribute/*`), сервисы (`Application/Services/*`).
 - **Infrastructure** — реализация репозиториев ([`Infrastructure/Persistence/AttributeRepository.php`](app/Modules/Catalog/Infrastructure/Persistence/AttributeRepository.php:21)) поверх Eloquent-моделей [`Infrastructure/Models/Attribute.php`](app/Modules/Catalog/Infrastructure/Models/Attribute.php:26).
 
+Для модификаций этот слой теперь покрывает **все операции** — создание, список, карточку, поиск, переименование, удаление, добавление/удаление товара, смену базового товара и чтение модификации по товару:
+
+- Domain-сущности [`ModificationEntity`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:12), [`ModificationProductEntity`](app/Modules/Catalog/Domain/Entities/ModificationProductEntity.php:12), Value Objects [`ModificationName`](app/Modules/Catalog/Domain/ValueObjects/ModificationName.php:18), [`ModificationAttributes`](app/Modules/Catalog/Domain/ValueObjects/ModificationAttributes.php:25), [`ModificationValues`](app/Modules/Catalog/Domain/ValueObjects/ModificationValues.php:7) и интерфейс [`ModificationRepositoryInterface`](app/Modules/Catalog/Domain/Interfaces/ModificationRepositoryInterface.php:11).
+- Application-сценарии [`Actions/Modification/*`](app/Modules/Catalog/Application/Actions/Modification) (11 классов) и сервис [`ModificationValuesResolver`](app/Modules/Catalog/Application/Services/ModificationValuesResolver.php:9).
+- Infrastructure-реализация [`ModificationRepository`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:24) поверх моделей `Modification`, `ModificationProduct`, `ModificationAttribute`, `ModificationProductValue`.
+
 ### 1.2. «Легаси»-слой (прямые Eloquent-модели + Repository + Service)
 
-Используется для **модификаций** и части старых эндпоинтов атрибутов. Здесь нет отдельных Domain-сущностей — Eloquent-модель является одновременно и «сущностью»:
+Для модификаций легаси-слой **больше не используется контроллером** — [`ModificationController`](app/Modules/Catalog/Presentation/Http/Controllers/Web/ModificationController.php:25) теперь опирается только на Query/UseCase. Остались как «хвосты» (могут быть удалены при следующей чистке):
 
-- [`Entity/Modification.php`](app/Modules/Catalog/Entity/Modification.php:23) — Eloquent-модель `modifications`.
-- [`Entity/ModificationProduct.php`](app/Modules/Catalog/Entity/ModificationProduct.php:14) — pivot-модель `modifications_products`.
-- [`Repository/ModificationRepository.php`](app/Modules/Catalog/Repository/ModificationRepository.php:15) — чтение/сериализация для списка и карточки.
-- [`Service/ModificationService.php`](app/Modules/Catalog/Service/ModificationService.php:11) — бизнес-логика (создание, добавление товара, смена базового товара).
-- [`Repository/AttributeRepository.php`](app/Modules/Catalog/Repository/AttributeRepository.php:13) — «старый» репозиторий атрибутов (списки, поиск).
-- Контроллеры: [`Controllers/AttributeController.php`](app/Modules/Catalog/Controllers/AttributeController.php), [`Controllers/ModificationController.php`](app/Modules/Catalog/Controllers/ModificationController.php).
+- [`Service/ModificationService.php`](app/Modules/Catalog/Service/ModificationService.php:11) — старая бизнес-логика (rename, delete, addProduct, delProduct, setBase); больше не вызывается.
+- [`Repository/ModificationRepository.php`](app/Modules/Catalog/Repository/ModificationRepository.php:15) — старая сериализация для карточки (`ModificationWithToArray`); больше не вызывается.
+- «Совместимые» аксессоры в новой модели [`Infrastructure/Models/Modification.php`](app/Modules/Catalog/Infrastructure/Models/Modification.php:68): `getProdAttributesAttribute()`, `getBaseProductAttribute()`, `getBaseProductIdAttribute()`, а также статический `register()`.
+- Связи товара [`Product::main_modification()`](app/Modules/Catalog/Infrastructure/Models/Product.php:830), [`modification_product()`](app/Modules/Catalog/Infrastructure/Models/Product.php:835), [`modification()`](app/Modules/Catalog/Infrastructure/Models/Product.php:840) — рассчитаны на старую схему `base_product_id`/`values_json`.
 
-> **Ключевой вывод для анализа:** атрибуты продублированы в двух мирах (новый CRUD через Clean Architecture + старый репозиторий/сервисы), а модификации существуют **только** в легаси-слое. При рефакторинге модификаций их придётся «достроить» до Clean Architecture по образцу атрибутов.
+Для атрибутов легаси-слой остаётся: [`Repository/AttributeRepository.php`](app/Modules/Catalog/Repository/AttributeRepository.php:13) («старый» репозиторий списков/поиска) сосуществует с новым CRUD.
+
+> **Ключевой вывод:** атрибуты продублированы в двух мирах (новый CRUD + старый репозиторий/сервисы). Модификации **полностью переведены** на Clean Architecture — и операции изменения, и чтение карточки.
 
 ---
 
@@ -120,7 +126,7 @@
 - **bool** — булево: `true`.
 - **date** — строка даты.
 
-Чтение значения реализовано в [`Product::Value()`](app/Modules/Catalog/Infrastructure/Models/Product.php:609) — оно декодирует `pivot->value` через `json_decode(..., true)`. Само значение доступно через `Attribute::Value()` ([`Attribute::Value()`](app/Modules/Catalog/Infrastructure/Models/Attribute.php:148)). Запись «живого» примера — в сервисе [`AttachAttributeProductService::attachVariantToProduct()`](app/Modules/Catalog/Application/Services/AttachAttributeProductService.php:138), который пишет `json_encode([variant_id])`.
+Чтение значения реализовано в [`Product::Value()`](app/Modules/Catalog/Infrastructure/Models/Product.php:609) — оно декодирует `pivot->value` через `json_decode(..., true)`. Для нового слоя чтение значения вынесено в [`AttributeProductRepository::valueOf()`](app/Modules/Catalog/Infrastructure/Persistence/AttributeProductRepository.php:11), который так же декодирует `value` через `json_decode(..., true)` и возвращает `null`, если связи нет. Запись «живого» примера — в сервисе [`AttachAttributeProductService::attachVariantToProduct()`](app/Modules/Catalog/Application/Services/AttachAttributeProductService.php:138), который пишет `json_encode([variant_id])`.
 
 ### 2.4. Кодовая архитектура атрибутов
 
@@ -154,7 +160,7 @@ Presentation
 
 **Поток нового CRUD атрибута** (Clean Architecture):
 
-1. Маршрут [`Route::resource('attribute', AttributeController::class)`](app/Modules/Catalog/routes/web.php:194).
+1. Маршрут [`Route::resource('attribute', AttributeController::class)`](app/Modules/Catalog/routes/web.php:197).
 2. Контроллер вызывает UseCase/Query, например [`IndexAttributeQuery::execute()`](app/Modules/Catalog/Application/Actions/Attribute/IndexAttributeQuery.php:35).
 3. UseCase обращается к [`AttributeRepositoryInterface`](app/Modules/Catalog/Domain/Interfaces/AttributeRepositoryInterface.php:12).
 4. Реализация [`Infrastructure/Persistence/AttributeRepository.php`](app/Modules/Catalog/Infrastructure/Persistence/AttributeRepository.php:21) читает/пишет Eloquent и маппит модель ↔ [`AttributeEntity`](app/Modules/Catalog/Domain/Entities/AttributeEntity.php:10) через `hydrate()`/`save()`.
@@ -166,6 +172,8 @@ Presentation
 
 Модификация — это **группа товаров-вариантов**, которые отличаются друг от друга только значениями атрибутов типа `variant`. Например, «Диван Милан» в разных цветах/материалах.
 
+Данные модификаций **нормализованы**: JSON-колонки (`attributes_json`, `values_json`) вынесены в отдельные таблицы, а роль базового товара хранится на связи `is_primary`, а не в `base_product_id`.
+
 ### 3.1. Модель данных (таблицы)
 
 #### `modifications` — модификация
@@ -173,67 +181,159 @@ Presentation
 | Поле              | Тип   | Примечание |
 |-------------------|-------|------------|
 | `id`              | bigint PK |         |
-| `name`            | string, unique | Название (регистрация добавляет случайный суффикс, если имя занято) |
-| `base_product_id` | FK → `products` | Базовый товар, было `restrict`, стало `cascade` в [`2024_06_05_185214_update_modifications_table.php`](app/Modules/Catalog/Database/Migrations/2024_06_05_185214_update_modifications_table.php:19) |
-| `attributes_json`  | json   | JSON-массив ID атрибутов-вариантов, задающих модификацию |
+| `name`            | string, unique | Название |
+| `created_at`, `updated_at` | timestamp | |
 
-Создание: [`2023_11_08_182617_create_modifications_table.php`](app/Modules/Catalog/Database/Migrations/2023_11_08_182617_create_modifications_table.php:14).
+Создание: [`2023_11_08_182617_create_modifications_table.php`](app/Modules/Catalog/Database/Migrations/2023_11_08_182617_create_modifications_table.php:14); колонки `base_product_id` и `attributes_json` удалены в [`2026_10_06_170300_restructure_modifications_table.php`](app/Modules/Catalog/Database/Migrations/2026_10_06_170300_restructure_modifications_table.php:11).
+
+#### `modification_attributes` — оси модификации (бывший `attributes_json`)
+
+| Поле             | Тип   | Примечание |
+|------------------|-------|------------|
+| `modification_id` | FK → `modifications` | `onDelete cascade` |
+| `attribute_id`    | FK → `attributes` | `onDelete restrict` |
+| `sort`            | unsignedSmallInteger, default 0 | порядок осей |
+
+Составной PK `(modification_id, attribute_id)`, индекс `(modification_id, sort)`.
+
+Создание: [`2026_10_06_170200_create_modification_attributes_table.php`](app/Modules/Catalog/Database/Migrations/2026_10_06_170200_create_modification_attributes_table.php:13).
 
 #### `modifications_products` — товары внутри модификации (pivot)
 
 | Поле             | Тип   | Примечание |
 |------------------|-------|------------|
-| `modification_id` | FK → `modifications` | было `restrict`, стало `cascade` в [`2024_06_05_185441_update_modifications_products_table.php`](app/Modules/Catalog/Database/Migrations/2024_06_05_185441_update_modifications_products_table.php:19) |
-| `product_id`      | FK → `products` | было `restrict`, стало `cascade` в [`2024_06_05_184118_update_modifications_products_table.php`](app/Modules/Catalog/Database/Migrations/2024_06_05_184118_update_modifications_products_table.php:19) |
-| `values_json`     | json  | Карта `{attribute_id: variant_id}` для конкретного товара |
+| `id`             | bigint PK | суррогатный ключ (нужен для значений ниже) |
+| `modification_id` | FK → `modifications` | `onDelete cascade` |
+| `product_id`      | FK → `products` | `onDelete cascade` |
+| `is_primary`      | bool, default false | базовый товар |
+| `created_at`, `updated_at` | timestamp | |
 
-Создание: [`2023_11_08_182634_create_modifications_products_table.php`](app/Modules/Catalog/Database/Migrations/2023_11_08_182634_create_modifications_products_table.php:14).
+Уникальность `(modification_id, product_id)`.
 
-### 3.2. Модель `Modification`
+Создание: [`2023_11_08_182634_create_modifications_products_table.php`](app/Modules/Catalog/Database/Migrations/2023_11_08_182634_create_modifications_products_table.php:14); реструктуризация (суррогатный `id`, `is_primary`, удаление `values_json`) — [`2026_10_06_170000_restructure_modifications_products_table.php`](app/Modules/Catalog/Database/Migrations/2026_10_06_170000_restructure_modifications_products_table.php:13) и [`2026_10_06_170100_create_modification_product_values_table.php`](app/Modules/Catalog/Database/Migrations/2026_10_06_170100_create_modification_product_values_table.php:13).
 
-[`Entity/Modification.php`](app/Modules/Catalog/Entity/Modification.php:23) — Eloquent-модель, но с «богатой» логикой:
+#### `modification_product_values` — значения товара в модификации (бывший `values_json`)
 
-- Свойство-кэш [`$prod_attributes`](app/Modules/Catalog/Entity/Modification.php:27) содержит массив моделей `Attribute`.
-- [`register()`](app/Modules/Catalog/Entity/Modification.php:34) — фабрика: проверяет, что **все** атрибуты имеют тип `variant` ([`AttributeType::TYPE_VARIANT`](app/Modules/Catalog/Domain/ValueObjects/AttributeType.php:14)), при неуникальном имени добавляет случайный суффикс.
-- Хук [`saving`](app/Modules/Catalog/Entity/Modification.php:78) сериализует `prod_attributes` → `attributes_json` (массив ID).
-- Хук [`retrieved`](app/Modules/Catalog/Entity/Modification.php:86) гидратирует `prod_attributes` обратно из `attributes_json`.
-- [`products()`](app/Modules/Catalog/Entity/Modification.php:60) — `belongsToMany(Product, 'modifications_products')` с `withPivot('values_json')`.
-- [`getVariations()`](app/Modules/Catalog/Entity/Modification.php:93) — строит декартово произведение вариантов для 1–3 атрибутов; при `> 3` бросает `DomainException`.
-- [`productByVariant()`](app/Modules/Catalog/Entity/Modification.php:66) — ищет товар по карте `{attribute_id => variant_id}`.
+| Поле             | Тип   | Примечание |
+|------------------|-------|------------|
+| `modification_product_id` | FK → `modifications_products` | `onDelete cascade` |
+| `attribute_id`    | FK → `attributes` | `onDelete restrict` |
+| `variant_id`      | FK → `attribute_variants` | `onDelete restrict` |
+
+Составной PK `(modification_product_id, attribute_id)`, индекс `(attribute_id, variant_id)` — для фильтра «все товары с цветом=белый».
+
+Создание: [`2026_10_06_170100_create_modification_product_values_table.php`](app/Modules/Catalog/Database/Migrations/2026_10_06_170100_create_modification_product_values_table.php:13).
+
+### 3.2. Domain-сущности
+
+- [`ModificationEntity`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:12) — aggregate root: `id` (nullable), `name`, `attributes` (массив ID осей), `products` (массив [`ModificationProductEntity`](app/Modules/Catalog/Domain/Entities/ModificationProductEntity.php:12), ключ — `productId`). Методы: [`create()`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:63), [`rename()`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:68), [`addProduct()`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:76), [`removeProduct()`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:102), [`setPrimary()`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:118), [`primaryProductId()`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:128), [`hasProductWithValues()`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:145), [`withId()`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:156). Роль базового товара — на связи `is_primary`, в агрегате нет `base_product_id`.
+- [`ModificationProductEntity`](app/Modules/Catalog/Domain/Entities/ModificationProductEntity.php:12) — связь «товар → значения»: `productId`, `values` (`attribute_id => variant_id`), `isPrimary`; методы `makePrimary()`, `demote()`.
+- [`ModificationName`](app/Modules/Catalog/Domain/ValueObjects/ModificationName.php:18) — название модификации: не пустое (после trim), не длиннее `MAX_LENGTH` (=255).
+- [`ModificationAttributes`](app/Modules/Catalog/Domain/ValueObjects/ModificationAttributes.php:25) — коллекция ID осей: 1..`MAX` (=3), без дубликатов, порядок сохраняется.
+- [`ModificationValues`](app/Modules/Catalog/Domain/ValueObjects/ModificationValues.php:7) — карта `attribute_id => variant_id`.
+- Исключения в [`Domain/Exceptions/`](app/Modules/Catalog/Domain/Exceptions): `ModificationException` (базовое), `EmptyModificationNameException`, `ModificationNameTooLongException`, `EmptyModificationAttributesException`, `TooManyModificationAttributesException`, `DuplicateModificationAttributesException`.
 
 ### 3.3. Кодовая архитектура модификаций
 
 ```
-Entity
- ├─ Modification.php        (Eloquent + логика)
- └─ ModificationProduct.php (pivot + register() + values[])
+Domain
+ ├─ Entities
+ │   ├─ ModificationEntity.php        (aggregate root)
+ │   └─ ModificationProductEntity.php (связь товара с модификацией)
+ ├─ ValueObjects
+ │   ├─ ModificationName.php
+ │   ├─ ModificationAttributes.php
+ │   └─ ModificationValues.php
+ ├─ Exceptions (ModificationException + 5 производных)
+ └─ Interfaces/ModificationRepositoryInterface.php
 
-Repository/ModificationRepository.php   (getIndex, ModificationToArray, ModificationWithToArray)
-Service/ModificationService.php         (create, rename, delete, addProduct, delProduct, setBase)
-Controllers/ModificationController.php  (REST + custom actions)
+Application
+ ├─ Actions/Modification
+ │   ├─ CreateModificationUseCase.php
+ │   ├─ IndexModificationQuery.php
+ │   ├─ ViewModificationQuery.php
+ │   ├─ SearchModificationCreateQuery.php
+ │   ├─ SearchModificationProductQuery.php
+ │   ├─ GetModificationByProductQuery.php
+ │   ├─ AddProductToModificationUseCase.php
+ │   ├─ RemoveProductFromModificationUseCase.php
+ │   ├─ SetPrimaryModificationProductUseCase.php
+ │   ├─ RenameModificationUseCase.php
+ │   └─ RemoveModificationUseCase.php
+ ├─ DTOs/Modification
+ │   ├─ ModificationCreateData.php
+ │   ├─ ModificationRenameData.php
+ │   ├─ ModificationIndexData.php
+ │   ├─ ModificationViewData.php
+ │   ├─ ModificationAttributeViewData.php
+ │   ├─ ModificationVariantViewData.php
+ │   ├─ ModificationProductViewData.php
+ │   ├─ ModificationCreateSearchData.php
+ │   └─ ModificationProductSearchData.php
+ └─ Services/ModificationValuesResolver.php
+
+Infrastructure
+ ├─ Models
+ │   ├─ Modification.php              (modifications)
+ │   ├─ ModificationProduct.php       (modifications_products)
+ │   ├─ ModificationAttribute.php     (modification_attributes)
+ │   └─ ModificationProductValue.php  (modification_product_values)
+ └─ Persistence
+     ├─ ModificationRepository.php    (getById/getViewData/findViewDataByProductId/findAll/save/delete/getUsedProductIds)
+     ├─ AttributeProductRepository.php (valueOf)
+     └─ ProductRepository.php          (searchForModification)
+
+Presentation
+ ├─ Presentation/Http/Controllers/Web/ModificationController.php
+ ├─ (фронтенд) resources/js/Pages/Catalog/Modification/{Index,Show}.vue, Block/Info.vue,
+ │   resources/js/VueComponents/Modification/SearchModificationProduct.vue
+ └─ (фронтенд товара) resources/js/Pages/Catalog/Product/Panels/Modification.vue
 ```
 
-**Основные операции** ([`ModificationService`](app/Modules/Catalog/Service/ModificationService.php:11)):
+**Репозиторий** [`ModificationRepository`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:24) сохраняет агрегат целиком одной командой [`save()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:132):
 
-| Метод | Назначение |
-|-------|------------|
-| [`create()`](app/Modules/Catalog/Service/ModificationService.php:20) | Создание модификации + привязка базового товара |
-| [`rename()`](app/Modules/Catalog/Service/ModificationService.php:35) | Переименование |
-| [`delete()`](app/Modules/Catalog/Service/ModificationService.php:41) | Отвязка товаров и удаление |
-| [`addProduct()`](app/Modules/Catalog/Service/ModificationService.php:47) | Добавить товар-вариант |
-| [`delProduct()`](app/Modules/Catalog/Service/ModificationService.php:69) | Удалить товар-вариант |
-| [`setBase()`](app/Modules/Catalog/Service/ModificationService.php:75) | Смена базового товара (перенос парсера, фото, эквивалента, групп) |
+1. создаёт/обновляет строку `modifications` (`name`);
+2. [`syncAttributes()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:208) — пересоздаёт оси в `modification_attributes` (с `sort`);
+3. [`syncProducts()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:226) — пересоздаёт связи в `modifications_products` (с `is_primary`);
+4. [`syncValues()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:261) — пересоздаёт значения в `modification_product_values`.
 
-**Формирование `values_json`** происходит в [`attachProduct()`](app/Modules/Catalog/Service/ModificationService.php:54): для каждого атрибута модификации берётся значение из товара через `Product::Value()`, и если это массив — берётся первый элемент `(int)$value[0]`, иначе значение как есть. Итог: `{attribute_id: variant_id}`.
+Чтение:
 
-### 3.4. Связи со стороны товара
+- [`hydrate()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:274) собирает агрегат обратно (для операций изменения).
+- [`getViewData()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:31) собирает DTO карточки `ModificationViewData` (оси с вариантами, товары с фото/артикулом/названием/значениями и `used_variant_ids`).
+- [`findViewDataByProductId()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:111) находит модификацию по ID товара (для карточки товара).
+- [`findAll()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:162) возвращает пагинатор `ModificationIndexData`.
+- [`delete()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:147) удаляет модификацию вместе со всеми связанными записями (`modification_product_values`, `modifications_products`, `modification_attributes`).
 
-В [`Product`](app/Modules/Catalog/Infrastructure/Models/Product.php:830) объявлены:
+### 3.4. Основные сценарии (Clean Architecture)
 
-- [`main_modification()`](app/Modules/Catalog/Infrastructure/Models/Product.php:830) — `hasOne(Modification, 'base_product_id')` (товар — базовый).
-- [`modification_product()`](app/Modules/Catalog/Infrastructure/Models/Product.php:835) — `hasOne(ModificationProduct, 'product_id')` (товар — участник).
-- [`modification()`](app/Modules/Catalog/Infrastructure/Models/Product.php:840) — `hasOneThrough` сквозь pivot.
-- [`AttributeIsModification()`](app/Modules/Catalog/Infrastructure/Models/Product.php:946) — проверяет, участвует ли атрибут в модификации товара.
+| Action | Право | Назначение |
+|--------|-------|------------|
+| [`CreateModificationUseCase`](app/Modules/Catalog/Application/Actions/Modification/CreateModificationUseCase.php:20) | `catalog.product.create` | Создание: проверка товара, резолв значений первого товара, `addProduct(primary: true)`, `save()` в транзакции |
+| [`IndexModificationQuery`](app/Modules/Catalog/Application/Actions/Modification/IndexModificationQuery.php:14) | `catalog.product.view` | Список с пагинацией (`findAll`) |
+| [`ViewModificationQuery`](app/Modules/Catalog/Application/Actions/Modification/ViewModificationQuery.php:12) | `catalog.product.view` | Карточка модификации (`getViewData`) |
+| [`SearchModificationCreateQuery`](app/Modules/Catalog/Application/Actions/Modification/SearchModificationCreateQuery.php:16) | — (AJAX) | `searchCreate`: поиск товаров **без уже занятых** + атрибуты-варианты найденных товаров |
+| [`SearchModificationProductQuery`](app/Modules/Catalog/Application/Actions/Modification/SearchModificationProductQuery.php:16) | — (AJAX) | Поиск товаров для добавления: только имеющие все оси, с фильтром по выбранным вариантам, исключая занятые |
+| [`GetModificationByProductQuery`](app/Modules/Catalog/Application/Actions/Modification/GetModificationByProductQuery.php:15) | — | Карточка модификации по ID одного из её товаров (для вкладки товара) |
+| [`AddProductToModificationUseCase`](app/Modules/Catalog/Application/Actions/Modification/AddProductToModificationUseCase.php:16) | `catalog.product.edit` | Добавить товар: резолв значений + защита от дублирования комбинаций (`hasProductWithValues`) |
+| [`RemoveProductFromModificationUseCase`](app/Modules/Catalog/Application/Actions/Modification/RemoveProductFromModificationUseCase.php:14) | `catalog.product.edit` | Убрать товар из модификации |
+| [`SetPrimaryModificationProductUseCase`](app/Modules/Catalog/Application/Actions/Modification/SetPrimaryModificationProductUseCase.php:14) | `catalog.product.edit` | Назначить базовый товар (`setPrimary`) |
+| [`RenameModificationUseCase`](app/Modules/Catalog/Application/Actions/Modification/RenameModificationUseCase.php:15) | `catalog.product.edit` | Переименование (DTO `ModificationRenameData`, `entity->rename()`) |
+| [`RemoveModificationUseCase`](app/Modules/Catalog/Application/Actions/Modification/RemoveModificationUseCase.php:14) | `catalog.product.delete` | Удаление модификации со всеми связанными записями |
+
+**Формирование значений товара** — в [`ModificationValuesResolver::forProduct()`](app/Modules/Catalog/Application/Services/ModificationValuesResolver.php:16): для каждой оси берётся значение из `attributes_products` через [`AttributeProductRepository::valueOf()`](app/Modules/Catalog/Infrastructure/Persistence/AttributeProductRepository.php:11) (декодированный JSON); для `variant` берётся первый ID.
+
+**Защита от дублирования** — [`ModificationEntity::hasProductWithValues()`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:145): перед добавлением проверяется, нет ли уже товара с точно таким же набором `attribute_id => variant_id` (работает для 1, 2 и 3 осей).
+
+**Поиск товаров для добавления** — [`ProductRepository::searchForModification()`](app/Modules/Catalog/Infrastructure/Persistence/ProductRepository.php:174): товар должен иметь **все** оси модификации (`whereExists` по `attributes_products`) и, если заданы фильтры, соответствовать выбранным вариантам (`whereJsonContains('value', variant_id)`); уже занятые товары исключаются.
+
+### 3.5. Модификации со стороны товара
+
+- [`GetModificationByProductQuery`](app/Modules/Catalog/Application/Actions/Modification/GetModificationByProductQuery.php:15) → [`ModificationRepository::findViewDataByProductId()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:111) возвращает `ModificationViewData` по ID товара (или `null`, если товар не в модификации). Данные выводятся на вкладке «Модификации» карточки товара — [`resources/js/Pages/Catalog/Product/Panels/Modification.vue`](resources/js/Pages/Catalog/Product/Panels/Modification.vue:1).
+- Устаревшие связи в модели [`Product`](app/Modules/Catalog/Infrastructure/Models/Product.php:830), рассчитанные на старую схему (`base_product_id`/`values_json`), остаются как легаси и подлежат замене:
+  - [`main_modification()`](app/Modules/Catalog/Infrastructure/Models/Product.php:830) — `hasOne(Modification, 'base_product_id')` → заменить на связь через pivot с `is_primary = true`.
+  - [`modification_product()`](app/Modules/Catalog/Infrastructure/Models/Product.php:835) — `hasOne(ModificationProduct, 'product_id')`.
+  - [`modification()`](app/Modules/Catalog/Infrastructure/Models/Product.php:840) — `hasOneThrough` сквозь pivot.
 
 ---
 
@@ -241,17 +341,21 @@ Controllers/ModificationController.php  (REST + custom actions)
 
 Из [`routes/web.php`](app/Modules/Catalog/routes/web.php:32):
 
-- `attribute` — REST CRUD ([`Route::resource('attribute', ...)`](app/Modules/Catalog/routes/web.php:194)).
+- `attribute` — REST CRUD ([`Route::resource('attribute', ...)`](app/Modules/Catalog/routes/web.php:197)).
 - `attribute-group` — REST CRUD ([`Route::resource('attribute-group', ...)`](app/Modules/Catalog/routes/web.php:47)).
-- `modification` — REST CRUD + кастомные ([`Route::resource('modification', ...)`](app/Modules/Catalog/routes/web.php:197)):
-  - `POST /set-base/{modification}` — смена базового.
-  - `POST /search` — поиск.
-  - `POST /rename/{modification}` — переименование.
-  - `POST /add-product/{modification}` — добавить товар.
-  - `DELETE /del-product/{modification}` — удалить товар.
+- `modification` — REST CRUD + кастомные. Resource использует параметр `id`: [`Route::resource('modification', ...)->parameters(['modification' => 'id'])`](app/Modules/Catalog/routes/web.php:200).
+  - `POST /set-primary/{id}` — назначить базовый товар ([`routes/web.php:185`](app/Modules/Catalog/routes/web.php:185)).
+  - `POST /search-create` — `searchCreate` для диалога создания ([`routes/web.php:187`](app/Modules/Catalog/routes/web.php:187)).
+  - `POST /search-product/{id}` — поиск товаров для добавления ([`routes/web.php:188`](app/Modules/Catalog/routes/web.php:188)).
+  - `POST /rename/{id}` — переименование ([`routes/web.php:189`](app/Modules/Catalog/routes/web.php:189)).
+  - `POST /add-product/{id}` — добавить товар ([`routes/web.php:190`](app/Modules/Catalog/routes/web.php:190)).
+  - `DELETE /del-product/{id}` — удалить товар ([`routes/web.php:191`](app/Modules/Catalog/routes/web.php:191)).
 - На уровне товара:
-  - `POST /product/attr-modification/{product}` ([`routes/web.php:210`](app/Modules/Catalog/routes/web.php:210)).
-  - `POST /product/attribute/{product}` — редактирование атрибутов товара ([`routes/web.php:237`](app/Modules/Catalog/routes/web.php:237)).
+  - `POST /product/search` — поиск товара → через [`SearchProductQuery`](app/Modules/Catalog/Application/Actions/Product/SearchProductQuery.php:14).
+  - `POST /product/attr-modification/{product}` ([`routes/web.php`](app/Modules/Catalog/routes/web.php:210)) — легаси.
+  - `POST /product/attribute/{product}` — редактирование атрибутов товара.
+
+Все методы [`ModificationController`](app/Modules/Catalog/Presentation/Http/Controllers/Web/ModificationController.php:25) принимают `int $id` (а не модель) и делегируют работу Query/UseCase.
 
 ---
 
@@ -295,63 +399,51 @@ Controllers/ModificationController.php  (REST + custom actions)
 { "attribute_id": 10, "category_id": 7 }
 ```
 
-### 5.6. Модификация (`modifications`)
+### 5.6. Модификация (`modifications`) и её оси (`modification_attributes`)
 
 ```json
-{ "id": 1, "name": "Диван Милан", "base_product_id": 500, "attributes_json": [10, 11] }
+{ "id": 1, "name": "Диван Милан" }
 ```
-
-Здесь `attributes_json` = `[10, 11]` означает, что варианты модификации различаются по атрибутам «Цвет» (id=10) и «Материал» (id=11).
-
-### 5.7. Товар внутри модификации (`modifications_products`)
 
 ```json
-{ "modification_id": 1, "product_id": 501, "values_json": { "10": 101, "11": 201 } }
-{ "modification_id": 1, "product_id": 502, "values_json": { "10": 102, "11": 202 } }
+{ "modification_id": 1, "attribute_id": 10, "sort": 0 }
+{ "modification_id": 1, "attribute_id": 11, "sort": 1 }
 ```
 
-То есть товар `501` = «Цвет: Белый (101) + Материал: Велюр (201)», товар `502` = «Черный + Кожа».
+То есть модификация «Диван Милан» задана осями «Цвет» (id=10) и «Материал» (id=11).
 
-### 5.8. Ответ карточки модификации (`ModificationWithToArray`)
+### 5.7. Товар внутри модификации (`modifications_products` + `modification_product_values`)
 
-Формируется в [`ModificationRepository::ModificationWithToArray()`](app/Modules/Catalog/Repository/ModificationRepository.php:51):
+```json
+{ "id": 901, "modification_id": 1, "product_id": 500, "is_primary": true }
+{ "id": 902, "modification_id": 1, "product_id": 501, "is_primary": false }
+{ "id": 903, "modification_id": 1, "product_id": 502, "is_primary": false }
+```
+
+```json
+{ "modification_product_id": 901, "attribute_id": 10, "variant_id": 101 }
+{ "modification_product_id": 901, "attribute_id": 11, "variant_id": 201 }
+{ "modification_product_id": 902, "attribute_id": 10, "variant_id": 102 }
+{ "modification_product_id": 902, "attribute_id": 11, "variant_id": 202 }
+```
+
+Товар `501` = «Цвет: Белый (101) + Материал: Велюр (201)», товар `502` = «Черный + Кожа». Базовый — товар `500` (`is_primary = true`).
+
+### 5.8. Ответ списка модификаций (`ModificationIndexData`)
+
+Формируется в [`IndexModificationQuery`](app/Modules/Catalog/Application/Actions/Modification/IndexModificationQuery.php:14) через [`ModificationRepository::findAll()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:162):
 
 ```json
 {
   "id": 1,
   "name": "Диван Милан",
-  "base_product_id": 500,
-  "attributes_json": [10, 11],
-  "quantity": 2,
-  "name_attributes": ["Цвет", "Материал"],
-  "image": "https://.../catalog/product/500/mini.jpg",
-  "base_product": { "id": 500, "name": "Диван Милан", "...": "..." },
-  "attributes": [
-    {
-      "id": 10,
-      "name": "Цвет",
-      "image": "https://.../catalog/attribute/10.jpg",
-      "variants": [
-        { "id": 101, "name": "Белый",  "image": "https://.../catalog/attribute-variant/101.jpg" },
-        { "id": 102, "name": "Черный", "image": "https://.../catalog/attribute-variant/102.jpg" }
-      ]
-    },
-    {
-      "id": 11,
-      "name": "Материал",
-      "image": "https://.../catalog/attribute/11.jpg",
-      "variants": [
-        { "id": 201, "name": "Велюр", "image": "https://.../catalog/attribute-variant/201.jpg" },
-        { "id": 202, "name": "Кожа",  "image": "https://.../catalog/attribute-variant/202.jpg" }
-      ]
-    }
-  ],
-  "products": [
-    { "id": 501, "name": "Диван Милан (белый/велюр)", "image": "https://.../mini.jpg", "variants": ["Белый", "Велюр"] },
-    { "id": 502, "name": "Диван Милан (черный/кожа)",  "image": "https://.../mini.jpg", "variants": ["Черный", "Кожа"] }
-  ]
+  "quantity": 3,
+  "primary_product_id": 500,
+  "name_attributes": ["Цвет", "Материал"]
 }
 ```
+
+Изображение базового товара на фронтенде подгружается отдельно по `primary_product_id` через `admin.photo.get-by-ids` в [`Index.vue`](resources/js/Pages/Catalog/Modification/Index.vue:118).
 
 ### 5.9. Ответ карточки атрибута (Clean Architecture, `AttributeViewData`)
 
@@ -378,6 +470,52 @@ Controllers/ModificationController.php  (REST + custom actions)
 }
 ```
 
+### 5.10. Ответ карточки модификации (`ModificationViewData`)
+
+Формируется в [`ModificationRepository::getViewData()`](app/Modules/Catalog/Infrastructure/Persistence/ModificationRepository.php:31) и отдаётся через [`ViewModificationQuery`](app/Modules/Catalog/Application/Actions/Modification/ViewModificationQuery.php:12):
+
+```json
+{
+  "id": 1,
+  "name": "Диван Милан",
+  "attributes": [
+    {
+      "id": 10,
+      "name": "Цвет",
+      "variants": [
+        { "id": 101, "name": "Белый" },
+        { "id": 102, "name": "Черный" }
+      ]
+    },
+    {
+      "id": 11,
+      "name": "Материал",
+      "variants": [
+        { "id": 201, "name": "Велюр" },
+        { "id": 202, "name": "Кожа" }
+      ]
+    }
+  ],
+  "products": [
+    {
+      "id": 901,
+      "product_id": 500,
+      "name": "Диван Милан белый велюр",
+      "code": "M-500",
+      "image": "/uploads/catalog/product/500/...",
+      "values": ["Белый", "Велюр"],
+      "is_primary": true
+    }
+  ],
+  "used_variant_ids": [101, 201]
+}
+```
+
+- `products[].id` — id связи `modifications_products` (для будущего удаления);
+- `products[].product_id` — id товара (ссылка на карточку);
+- `products[].values` — названия выбранных вариантов в порядке осей;
+- `used_variant_ids` — id вариантов, которые уже используются товарами модификации (на фронтенде такие варианты помечаются тёмным тегом).
+
 ---
 
 ## 6. Диаграмма связей
@@ -391,9 +529,12 @@ attribute_groups 1 ────< attributes 1 ────< attribute_variants
                             │ (pivot attributes_products)
                             └────────> products
 
-products 1 ────< modifications (base_product_id)
-modifications 1 ────< modifications_products >──── products
-                         (values_json: {attribute_id: variant_id})
+modifications 1 ────< modification_attributes >──── attributes
+       │
+       └──────< modifications_products >──────────── products
+                    │ (is_primary)
+                    └──────< modification_product_values >──── attribute_variants
+                                (attribute_id => variant_id)
 ```
 
 ---
@@ -401,8 +542,10 @@ modifications 1 ────< modifications_products >──── products
 ## 7. Что важно учесть при анализе и рефакторинге
 
 1. **Дублирование слоёв атрибутов.** Новый CRUD (Clean Architecture) и легаси-репозиторий ([`Repository/AttributeRepository.php`](app/Modules/Catalog/Repository/AttributeRepository.php:13)) работают с одной и той же таблицей `attributes`. Нужно следить, чтобы правки не расходились.
-2. **Модификации — только легаси.** В `Domain` и `Application` нет `ModificationEntity`/UseCase. Перенос на Clean Architecture — отдельная задача.
-3. **Хранение значений в JSON.** Значения атрибутов и состав модификаций хранятся в JSON-колонках (`value`, `attributes_json`, `values_json`). Это гибко, но исключает индексы/ограничения целостности на значениях.
+2. **Модификации полностью на Clean Architecture.** Контроллер [`ModificationController`](app/Modules/Catalog/Presentation/Http/Controllers/Web/ModificationController.php:25) больше не использует `ModificationService`/легаси-репозиторий; все операции — через Query/UseCase. Остатки легаси (`Service/ModificationService.php`, `Repository/ModificationRepository.php`, совместимые аксессоры в `Infrastructure/Models/Modification.php`) можно удалять при следующей чистке.
+3. **Хранение значений.** Значения атрибутов товара (`attributes_products.value`) по-прежнему в JSON. Состав модификаций **нормализован**: `modification_attributes` (оси) и `modification_product_values` (значения) вместо `attributes_json`/`values_json`.
 4. **Смена типа `attributes.type`.** Было `integer` (101–106), стало `string`. Исторические данные мигрированы [`2026_10_06_160000_update_attributes_table_type_to_string.php`](app/Modules/Catalog/Database/Migrations/2026_10_06_160000_update_attributes_table_type_to_string.php:20).
-5. **Ограничение модификаций.** Максимум 3 атрибута-варианта на одну модификацию (жёстко в [`getVariations()`](app/Modules/Catalog/Entity/Modification.php:137)).
-6. **Фото через `Photo`.** Изображения атрибутов/вариантов/товаров отдаются через `GetPhotoStatic` и модель `Photo` с `model_type` `catalog.attribute`, `catalog.attribute-variant`, `catalog.product` (см. [`AttributeRepository::deleteVariantPhotos()`](app/Modules/Catalog/Infrastructure/Persistence/AttributeRepository.php:224)).
+5. **Ограничение модификаций.** Максимум 3 оси (`ModificationAttributes::MAX`), валидация в [`ModificationCreateData`](app/Modules/Catalog/Application/DTOs/Modification/ModificationCreateData.php:27) и блокировка кнопки на фронтенде.
+6. **Базовый товар** — связь `modifications_products.is_primary = true`, а не колонка `base_product_id`. Миграция переносит `base_product_id` → `is_primary`.
+7. **Запрет дублирования комбинаций.** При добавлении товара [`AddProductToModificationUseCase`](app/Modules/Catalog/Application/Actions/Modification/AddProductToModificationUseCase.php:16) проверяет через [`ModificationEntity::hasProductWithValues()`](app/Modules/Catalog/Domain/Entities/ModificationEntity.php:145), что набор `attribute_id => variant_id` ещё не занят.
+8. **Фото через `Photo`.** Изображения атрибутов/вариантов/товаров отдаются через `GetPhotoStatic` и модель `Photo` с `model_type` `catalog.attribute`, `catalog.attribute-variant`, `catalog.product` (см. [`AttributeRepository::deleteVariantPhotos()`](app/Modules/Catalog/Infrastructure/Persistence/AttributeRepository.php:224)). В DTO списка изображение не зашивается (фронтенд подгружает его через `admin.photo.get-by-ids`), а в DTO карточки (`ModificationProductViewData.image`) — зашивается через `GetPhotoStatic::gallery('catalog.product', ...)`.

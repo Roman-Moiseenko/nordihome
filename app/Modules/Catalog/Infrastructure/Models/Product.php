@@ -15,8 +15,6 @@ use App\Modules\Base\Entity\Video;
 use App\Modules\Cabinet\Infrastructure\Models\Wish;
 use App\Modules\Cart\Infrastructure\Models\CartCookie;
 use App\Modules\Cart\Infrastructure\Models\CartStorage;
-use App\Modules\Catalog\Entity\Modification;
-use App\Modules\Catalog\Entity\ModificationProduct;
 use App\Modules\Catalog\Entity\ProductPriceBulk;
 use App\Modules\Catalog\Entity\ProductPriceCost;
 use App\Modules\Catalog\Entity\ProductPriceMin;
@@ -28,7 +26,6 @@ use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;
 use App\Modules\Guide\Entity\Measuring;
-use App\Modules\Guide\Entity\VAT;
 use App\Modules\Order\Entity\OrderReserve;
 use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\Parser\Infrastructure\Models\ParserProduct;
@@ -60,7 +57,6 @@ use JetBrains\PhpStorm\Pure;
  * @property string $comment Комментарий, для специалистов. Клиентам не видно
  *
  * @property int $main_category_id
- * @property int $frequency частота покупки
  * @property int $brand_id
  * @property int $series_id серия
  * @property float $current_rating рейтинг по отзывам
@@ -84,7 +80,6 @@ use JetBrains\PhpStorm\Pure;
  * @property bool $hide_price Не указывать в прайс листах
  * @property string $complexity Сложность упаковки
  *
- * @property int $vat_id НДС
  * @property int $country_id Страна
  * @property int $measuring_id Ед.измерения
  * @property int $marking_type_id Вид продукции
@@ -93,7 +88,6 @@ use JetBrains\PhpStorm\Pure;
  * @property Carbon $updated_at
  * @property Carbon $published_at
  *
- * @property VAT $VAT
  * @property Country $country
  * @property Measuring $measuring
  * @property MarkingType $markingType
@@ -142,18 +136,7 @@ class Product extends Model
 {
     use SoftDeletes;//, GalleryField;
     protected $touches = ['categories', 'category', 'rooms'];
-    const int FREQUENCY_MAJOR = 101;
-    const int FREQUENCY_AVERAGE = 102;
-    const int FREQUENCY_SMALL = 103;
-    const int FREQUENCY_PERIOD = 104;
-    const int FREQUENCY_NOT = 105;
-    const array FREQUENCIES = [
-        self::FREQUENCY_MAJOR => 'Крупная покупка (от 3 лет)',
-        self::FREQUENCY_AVERAGE => 'Средняя покупка (1-3 года)',
-        self::FREQUENCY_SMALL => 'Ходовой товар, с небольшим сроком пользования',
-        self::FREQUENCY_PERIOD => 'Расходный товар',
-        self::FREQUENCY_NOT => 'Нет',
-    ];
+
 
     protected $casts = [
         'created_at' => 'datetime',
@@ -170,7 +153,6 @@ class Product extends Model
         'dimensions' => '{}',
         'packages' => '[]',
         'description' => '',
-        'frequency' => self::FREQUENCY_NOT,
         'current_rating' => 0,
         'published' => false,
         'pre_order' => true,
@@ -191,7 +173,6 @@ class Product extends Model
         'short',
         'main_category_id',
         'brand_id',
-        'frequency',
         'current_rating',
         'published',
         'only_offline ',
@@ -870,10 +851,6 @@ class Product extends Model
     }
 
     //СПРАВОЧНИКИ GUIDE
-    public function VAT(): BelongsTo
-    {
-        return $this->belongsTo(VAT::class, 'vat_id', 'id')->withDefault(['name' => 'Без НДС', 'value' => null]);
-    }
 
     public function country(): BelongsTo
     {
