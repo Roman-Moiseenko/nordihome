@@ -24,7 +24,7 @@ class MailTestCommand extends Command
             $mailService->send(
                 $template,
                 [],
-                new Recipient(email: 'saint_johnny', clientId: null)
+                new Recipient(email: 'saint_johnny@mail.ru', clientId: null)
             );
         } catch (\Throwable $e) {
             \Log::warning($e->getMessage());
