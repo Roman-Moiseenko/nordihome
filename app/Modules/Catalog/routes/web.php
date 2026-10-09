@@ -234,27 +234,27 @@ Route::group([
             'as' => 'edit.'
         ], function () {
             Route::get('/common/{id}', [ProductEditController::class, 'loadCommon'])->name('common');
-            Route::post('/common/{id}', [ProductEditController::class, 'saveCommon'])->name('common');
+            Route::post('/common/{id}', [ProductEditController::class, 'saveCommon']);
             Route::get('/description/{id}', [ProductEditController::class, 'loadDescription'])->name('description');
-            Route::post('/description/{id}', [ProductEditController::class, 'saveDescription'])->name('description');
+            Route::post('/description/{id}', [ProductEditController::class, 'saveDescription']);
             Route::get('/dimensions/{id}', [ProductEditController::class, 'loadDimensions'])->name('dimensions');
-            Route::post('/dimensions/{id}', [ProductEditController::class, 'saveDimensions'])->name('dimensions');
+            Route::post('/dimensions/{id}', [ProductEditController::class, 'saveDimensions']);
             Route::get('/video/{id}', [ProductEditController::class, 'loadVideo'])->name('video');
-            Route::post('/video/{id}', [ProductEditController::class, 'saveVideo'])->name('video');
+            Route::post('/video/{id}', [ProductEditController::class, 'saveVideo']);
             Route::get('/attribute/{id}', [ProductEditController::class, 'loadAttribute'])->name('attribute');
-            Route::post('/attribute/{id}', [ProductEditController::class, 'saveAttribute'])->name('attribute');
+            Route::post('/attribute/{id}', [ProductEditController::class, 'saveAttribute']);
             Route::get('/management/{id}', [ProductEditController::class, 'loadManagement'])->name('management');
-            Route::post('/management/{id}', [ProductEditController::class, 'saveManagement'])->name('management');
+            Route::post('/management/{id}', [ProductEditController::class, 'saveManagement']);
             Route::get('/modification/{id}', [ProductEditController::class, 'loadModification'])->name('modification');
             Route::get('/modification-attributes/{id}', [ProductEditController::class, 'loadModificationAttributes'])->name('modification-attributes');
             Route::get('/equivalent/{id}', [ProductEditController::class, 'loadEquivalent'])->name('equivalent');
-            Route::post('/equivalent/{id}', [ProductEditController::class, 'saveEquivalent'])->name('equivalent');
+            Route::post('/equivalent/{id}', [ProductEditController::class, 'saveEquivalent']);
             Route::get('/related/{id}', [ProductEditController::class, 'loadRelated'])->name('related');
-            Route::post('/related/{id}', [ProductEditController::class, 'saveRelated'])->name('related');
+            Route::post('/related/{id}', [ProductEditController::class, 'saveRelated']);
             Route::get('/bonus/{id}', [ProductEditController::class, 'loadBonus'])->name('bonus');
-            Route::post('/bonus/{id}', [ProductEditController::class, 'saveBonus'])->name('bonus');
+            Route::post('/bonus/{id}', [ProductEditController::class, 'saveBonus']);
             Route::get('/composite/{id}', [ProductEditController::class, 'loadComposite'])->name('composite');
-            Route::post('/composite/{id}', [ProductEditController::class, 'saveComposite'])->name('composite');
+            Route::post('/composite/{id}', [ProductEditController::class, 'saveComposite']);
         });
     });
     Route::resource('product', ProductController::class)->except(['update'])->parameters(['product' => 'id']);

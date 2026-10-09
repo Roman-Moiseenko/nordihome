@@ -58,6 +58,8 @@ class SystemMailService implements MailServiceInterface
 
             public function envelope(): Envelope
             {
+                \Log::info(config('mail.from.address'));
+                \Log::info(config('mail.from.name'));
                 return new Envelope(
                     from: new Address(
                         config('mail.from.address'),

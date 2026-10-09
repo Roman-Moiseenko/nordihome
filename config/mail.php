@@ -124,7 +124,7 @@ return [
     ],
     'notification' => [
         'address' => env('MAIL_NOTIFICATION', ''),
-      //  'name' => env('MAIL_FROM_NAME', 'НОРДИ ХОУМ'),
+        //  'name' => env('MAIL_FROM_NAME', 'НОРДИ ХОУМ'),
     ],
     /*
     |--------------------------------------------------------------------------
