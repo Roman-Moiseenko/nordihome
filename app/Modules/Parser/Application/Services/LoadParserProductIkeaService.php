@@ -50,7 +50,7 @@ class LoadParserProductIkeaService
         private readonly SetDimensionsProductFromParserUseCase $dimensionsProductFromParserUseCase,
         private readonly SetSeriesToProductByNameService       $setSeriesToProductByNameService,
 
-        private readonly ParserProductRepositoryInterface $productRepository
+        private readonly ParserProductRepositoryInterface      $productRepository
     )
     {
         $this->userPermission = new UserPermission(
@@ -245,18 +245,18 @@ class LoadParserProductIkeaService
 
         $this->jobLoadImages($productEntity->id, $product['allProductImage']);
 
-       /* foreach ($product['allProductImage'] as $imageItem) {
-            $altImage = $this->translate->translate($imageItem['altText']);
-            $dtoPhoto = new JobPhotoLoadData(
-                imageableId: $productEntity->id,
-                modelType: 'parser.product',
-                type: 'gallery',
-                url: $imageItem['url'],
-                isProxy: $this->isProxy,
-                alt: $altImage,
-            );
-            LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission)->onQueue(QueueName::PHOTO);
-        }*/
+        /* foreach ($product['allProductImage'] as $imageItem) {
+             $altImage = $this->translate->translate($imageItem['altText']);
+             $dtoPhoto = new JobPhotoLoadData(
+                 imageableId: $productEntity->id,
+                 modelType: 'parser.product',
+                 type: 'gallery',
+                 url: $imageItem['url'],
+                 isProxy: $this->isProxy,
+                 alt: $altImage,
+             );
+             LoadPhotoByUrlJob::dispatch($dtoPhoto, $this->userPermission)->onQueue(QueueName::PHOTO);
+         }*/
 
         return $productEntity;
     }
@@ -324,10 +324,16 @@ class LoadParserProductIkeaService
 
     public function parsePhotos(int $productId, string $code): void
     {
-
         $productData = $this->ikeaProductApi->getProductByCode($code);
-        $items = $productData['gprDescription']['variants'][0]['allProductImage'];
-        // \Log::info('фото ' . json_encode($items));
+        $items = array_merge(
+            [
+                [
+                    'altText' => $productData['name'] . ' ' . $productData['typeName'],
+                    'type' => 'MAIN_PRODUCT_IMAGE',
+                    'url' => $productData['mainImageUrl'],
+                ]
+            ],
+            $productData['allProductImage']);
         $this->jobLoadImages($productId, $items);
     }
 

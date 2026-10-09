@@ -20,15 +20,17 @@ class IkeaCheckCommand extends Command
     {
 
         $code = '40178888';
-        $product = $api->getProductByCode($code);
+        //$code = '59434138';
+        $productData = $api->getProductByCode($code);
 
-        if (is_null($product)) {
+        if (is_null($productData)) {
             $this->warn('Нет связи');
             return;
         }
-       // dd($product['gprDescription']['variants'][0]['allProductImage']);
-        $this->info($product['pipUrl']);
-        $dataPage = $api->getProductPage($product['pipUrl']);
+
+       // dd($productData['gprDescription']['variants'][0]['allProductImage']);
+        $this->info($productData['pipUrl']);
+        $dataPage = $api->getProductPage($productData['pipUrl']);
         dd($dataPage);
     }
 }
