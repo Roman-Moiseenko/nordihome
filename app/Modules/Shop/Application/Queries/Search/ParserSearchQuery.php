@@ -17,7 +17,7 @@ class ParserSearchQuery
     public function execute(string $search, ClientContext $clientContext): FullSearchData
     {
 
-        $productItemsRaw = $this->searchQueryRepository->getProductIdsBySearch($search, FullSearchData::LIMIT_PRODUCTS);
+        $productItemsRaw = $this->searchQueryRepository->getProductBySearch($search, FullSearchData::LIMIT_PRODUCTS);
 
         $productItems = array_map(
             fn(array $item) => ItemSearchData::fromArray($item, false),
