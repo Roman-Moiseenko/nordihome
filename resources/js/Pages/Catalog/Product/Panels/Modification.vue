@@ -96,7 +96,7 @@ const props = defineProps({
 
 const data = ref(null)
 
-const {load, loading, loaded, setCache} = useProductPanel('modification', async () => {
+const {load, loading, loaded, setCache} = useProductPanel(() => `modification:${props.productId}`, async () => {
     return api.get(
         route('admin.catalog.product.edit.modification', {id: props.productId}),
         null,
@@ -104,10 +104,10 @@ const {load, loading, loaded, setCache} = useProductPanel('modification', async 
     )
 })
 
-watch(() => props.active, async (active) => {
+watch(() => [props.active, props.productId], async ([active]) => {
     if (!active) return
-    const {data: responseData, fromCache} = await load()
-    if (!fromCache) data.value = responseData ?? null
+    const {data: responseData} = await load()
+    data.value = responseData ?? null
 }, {immediate: true})
 
 // Создание модификации из текущего товара

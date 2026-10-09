@@ -23,8 +23,13 @@ export function useProductPanel(panel, loader) {
     const loading = ref(false)
     const loaded = ref(false)
 
+    // Ключ кэша. Можно передать строку или функцию () => string,
+    // чтобы различать кэш по товару (например () => `common:${productId}`).
+    const cacheKey = () => (typeof panel === 'function' ? panel() : panel)
+
     async function load(force = false) {
-        const cached = cache.get(panel)
+        const key = cacheKey()
+        const cached = cache.get(key)
         const isFresh = cached && (Date.now() - cached.at) < CACHE_TTL
 
         if (!force && isFresh) {
@@ -36,7 +41,7 @@ export function useProductPanel(panel, loader) {
         loading.value = true
         try {
             const result = await loader()
-            cache.set(panel, { data: result, at: Date.now() })
+            cache.set(key, { data: result, at: Date.now() })
             data.value = result
             loaded.value = true
             return { data: result, fromCache: false }
@@ -47,14 +52,15 @@ export function useProductPanel(panel, loader) {
 
     /** Обновить кэш и текущие данные (после сохранения). */
     function setCache(result) {
-        cache.set(panel, { data: result, at: Date.now() })
+        const key = cacheKey()
+        cache.set(key, { data: result, at: Date.now() })
         data.value = result
         loaded.value = true
     }
 
     /** Принудительно сбросить кэш панели. */
     function invalidate() {
-        cache.delete(panel)
+        cache.delete(cacheKey())
     }
 
     return { data, loading, loaded, load, setCache, invalidate }
