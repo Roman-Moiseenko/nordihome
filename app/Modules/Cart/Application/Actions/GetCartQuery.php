@@ -91,6 +91,7 @@ readonly class GetCartQuery
                 name: $productEntity->name,
                 image: $this->getUrlImage($item->productId),
                 url: $url,
+                weight: $productEntity->weight(),
                 ///DiscountInfo
                 discountId: is_null($productPrice) ? null : $productPrice->discountId,
                 discountPrice: is_null($productPrice?->discountId)

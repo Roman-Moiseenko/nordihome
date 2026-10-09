@@ -51,6 +51,10 @@
                 }
             }
         }
+        .package {
+            margin-top: 4px;
+            font-size: 0.8rem;
+        }
 
     }
     .control {
@@ -108,12 +112,16 @@
         .info {
             order: 3;
             width: 100%;
+            .package {
+                font-size: 0.7rem;
+            }
         }
         .control {
             order: 2;
             width: 50%;
             margin-left: auto;
         }
+
     }
 }
 //Order - блок

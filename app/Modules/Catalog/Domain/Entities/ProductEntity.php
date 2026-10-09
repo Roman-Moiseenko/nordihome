@@ -229,6 +229,12 @@ final class ProductEntity
         return $this->published;
     }
 
+    public function weightClient(): float
+    {
+        if (!is_null($this->dimensions) && $this->dimensions->weight() > 0 ) return $this->dimensions->weight();
+        return $this->weight();
+    }
+
     public function weight(): float
     {
         $weight = 0;

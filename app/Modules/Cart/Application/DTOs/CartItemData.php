@@ -19,6 +19,7 @@ class CartItemData extends Data
         public readonly string  $name,
         public readonly string  $image,
         public readonly string  $url,
+        public readonly float   $weight,
         //DiscountInfo
         public readonly ?int    $discountId,
         public readonly ?float  $discountPrice,

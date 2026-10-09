@@ -29,6 +29,7 @@
                         class="current-cost">{{ price($item['cost']) }}</span>
                 </div>
             </div>
+            <div class="package">Вес: {{ $item['weight'] > 0 ? ($item['weight'] . ' кг') : 'не указан' }}</div>
         </div>
         <div class="control">
             <div class="set-value">
