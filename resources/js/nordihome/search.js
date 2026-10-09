@@ -102,7 +102,9 @@ window.$ = jQuery;
 
     //HTML построители
     function _itemSuggestPresearch(item, type, position) {
+        console.log(item)
         let img = '<i class="fa-light fa-magnifying-glass"></i>';
+
         let price = item.price + ' ₽';
         let name = item.name;
         if (item.image !== null) {

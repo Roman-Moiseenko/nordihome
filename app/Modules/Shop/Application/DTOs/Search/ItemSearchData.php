@@ -11,11 +11,12 @@ class ItemSearchData
         public ?string $code = null,
         public ?string $image = null,
         public ?float $price = null,
+        public bool $isParser = false
     )
     {
     }
 
-    public static function fromArray(array $item): self
+    public static function fromArray(array $item, bool $isParser): self
     {
         return new self(
             id: $item['id'],
@@ -24,7 +25,7 @@ class ItemSearchData
             code: $item['code'] ?? null,
             image: $item['image'] ?? null,
             price: $item['price'] ?? null,
-
+            isParser: $isParser,
         );
     }
 }

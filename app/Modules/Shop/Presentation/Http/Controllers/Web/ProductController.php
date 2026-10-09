@@ -6,8 +6,8 @@ namespace App\Modules\Shop\Presentation\Http\Controllers\Web;
 use App\Modules\Analytics\Application\Services\TrackSearchService;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\Application\Queries\Product\ProductViewQuery;
-use App\Modules\Shop\Application\Queries\Search\FullSearchQuery;
-use App\Modules\Shop\Application\Queries\Search\ProductSearchQuery;
+use App\Modules\Shop\Application\Queries\Search\CatalogSearchQuery;
+use App\Modules\Shop\Application\Queries\Search\PageProductSearchQuery;
 use App\Modules\Shop\Repository\ViewRepository;
 use Illuminate\Http\Request;
 
@@ -15,10 +15,10 @@ class ProductController extends ShopAbstractController
 {
 
     public function __construct(
-        private readonly ProductViewQuery   $productViewQuery,
-        private readonly ProductSearchQuery $productSearchQuery,
-        private readonly FullSearchQuery    $fullSearchQuery,
-        private readonly TrackSearchService $trackSearchService,
+        private readonly ProductViewQuery       $productViewQuery,
+        private readonly PageProductSearchQuery $productSearchQuery,
+        private readonly CatalogSearchQuery     $fullSearchQuery,
+        private readonly TrackSearchService     $trackSearchService,
     )
     {
         $this->middleware(['role:admin|staff'])->only(['view_draft']);

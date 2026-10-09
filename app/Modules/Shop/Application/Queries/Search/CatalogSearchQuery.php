@@ -13,7 +13,7 @@ use App\Modules\Shop\Infrastructure\Persistence\Query\RoomSearchQueryRepository;
 /**
  * Для ajax поиск
  */
-readonly class FullSearchQuery
+readonly class CatalogSearchQuery
 {
     public function __construct(
         private ProductSearchQueryRepository $productSearchQueryRepository,
@@ -31,7 +31,7 @@ readonly class FullSearchQuery
         $productIds = array_slice($allProductIds, 0, FullSearchData::LIMIT_PRODUCTS);
         $productItemsRaw = $this->productIndexQueryRepository->loadProductSearchItems($productIds, $clientContext);
         $productItems = array_map(
-            fn(array $item) => ItemSearchData::fromArray($item),
+            fn(array $item) => ItemSearchData::fromArray($item, false),
             $productItemsRaw
         );
 
@@ -39,7 +39,7 @@ readonly class FullSearchQuery
         $categoryIds = array_slice($categoryIds, 0, FullSearchData::LIMIT_CATEGORIES);
         $categoryItemsRaw = $this->categorySearchQueryRepository->loadCategorySearchItems($categoryIds, $clientContext);
         $categoryItems = array_map(
-            fn(array $item) => ItemSearchData::fromArray($item),
+            fn(array $item) => ItemSearchData::fromArray($item, false),
             $categoryItemsRaw
         );
 
@@ -47,7 +47,7 @@ readonly class FullSearchQuery
         $roomIds = array_slice($roomIds, 0, FullSearchData::LIMIT_ROOMS);
         $roomItemsRaw = $this->roomSearchQueryRepository->loadRoomSearchItems($roomIds, $clientContext);
         $roomItems = array_map(
-            fn(array $item) => ItemSearchData::fromArray($item),
+            fn(array $item) => ItemSearchData::fromArray($item, false),
             $roomItemsRaw
         );
 

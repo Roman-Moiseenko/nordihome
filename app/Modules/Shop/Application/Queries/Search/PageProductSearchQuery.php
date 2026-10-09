@@ -18,7 +18,7 @@ use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepositor
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductSearchQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomPageQueryRepository;
 
-readonly class ProductSearchQuery
+readonly class PageProductSearchQuery
 {
     public function __construct(
         private CategoryPageQueryRepository  $categoryPageQueryRepository,
