@@ -30,7 +30,7 @@ class LoadProductPhotosIkeaJob implements ShouldQueue
         $entity = $repository->getById($this->productId);
         try {
             $service->parsePhotos($this->productId, $entity->code);
-          //  \Log::info('Задача отработана ' . $this->productId);
+            \Log::info('Задача отработана ' . $this->productId);
         } catch (\Throwable $exception) {
             $error = 'LoadProductPhotos ('. $entity->code . ') - ' .
                 $exception->getMessage() . ' ' .

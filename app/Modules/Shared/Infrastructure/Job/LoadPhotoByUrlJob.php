@@ -49,7 +49,6 @@ class LoadPhotoByUrlJob implements ShouldQueue
                 $saveDto = new PhotoSaveData(alt: $this->dto->alt,);
                 $savePhotoDataUseCase->execute($photo->id, $saveDto, $this->userPermission);
             }
-            \Log::info(json_encode([$photo->id]));
         } catch (\Throwable $e) {
             \Log::warning(json_encode([$e->getMessage(), $e->getFile(), $e->getLine()]));
         }

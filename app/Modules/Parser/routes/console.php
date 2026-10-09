@@ -11,3 +11,7 @@ Schedule::command('ikea:products-update')
 Schedule::command('ikea:products-store')
     ->days([ScheduleDays::WEDNESDAY, ScheduleDays::SATURDAY])
     ->at('02:00');
+//Все товары из всех разрешенных каталогов
+Schedule::command('ikea:products')
+    ->days([ScheduleDays::SUNDAY])
+    ->at('02:00');

@@ -37,8 +37,15 @@ class MailTemplateRegistry
             ),
             'user.password-reset' => new MailTemplate(
                 code: 'user.password-reset',
-                subject: 'Восстановление пароя',
+                subject: 'Восстановление пароля',
                 view: 'mail.user.password-reset',
+            ),
+
+
+            'test' => new MailTemplate(
+                code: 'test',
+                subject: 'Тест',
+                view: 'mail.test',
             ),
         ];
     }
