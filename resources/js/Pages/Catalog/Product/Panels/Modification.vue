@@ -27,7 +27,7 @@
                     <div class="mt-5 text-sm">
                         Изменить товары в модификации или удалить товар из списка можно в разделе
                         <Link type="primary"
-                           :href="route('admin.catalog.modification.show', data.id)">Модификации</Link>
+                           :href="route('admin.catalog.modification.show', {id: data.id})">Модификации</Link>
                     </div>
                 </div>
             </el-col>
