@@ -30,12 +30,14 @@ class LoadProductPhotosIkeaJob implements ShouldQueue
         $entity = $repository->getById($this->productId);
         try {
             $service->parsePhotos($this->productId, $entity->code);
+          //  \Log::info('Задача отработана ' . $this->productId);
         } catch (\Throwable $exception) {
             $error = 'LoadProductPhotos ('. $entity->code . ') - ' .
                 $exception->getMessage() . ' ' .
                 $exception->getFile() . ' ' .
                 $exception->getLine();
 
+            \Log::warning($error);
             $dto  = new ParserLogCreateData(
                 status: ParserStatus::error(),
                 error: $error,

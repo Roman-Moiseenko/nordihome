@@ -15,6 +15,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use PHPUnit\Event\Code\Throwable;
 
 class LoadPhotoByUrlJob implements ShouldQueue
 {
@@ -32,19 +33,25 @@ class LoadPhotoByUrlJob implements ShouldQueue
         UploadPhotoByUrlUseCase $uploadPhotoByUrlUseCase,
     ): void
     {
-        $uploadDto = new PhotoUploadByUrlData(
-            imageableId: $this->dto->imageableId,
-            modelType: $this->dto->modelType,
-            type: $this->dto->type,
-            url: $this->dto->url,
-            isProxy: $this->dto->isProxy,
-        );
+        try {
 
-        $photo = $uploadPhotoByUrlUseCase->execute($uploadDto, $this->userPermission);
+            $uploadDto = new PhotoUploadByUrlData(
+                imageableId: $this->dto->imageableId,
+                modelType: $this->dto->modelType,
+                type: $this->dto->type,
+                url: $this->dto->url,
+                isProxy: $this->dto->isProxy,
+            );
 
-        if ($photo !== null && $this->dto->alt !== null) {
-            $saveDto = new PhotoSaveData(alt: $this->dto->alt,);
-            $savePhotoDataUseCase->execute($photo->id, $saveDto, $this->userPermission);
+            $photo = $uploadPhotoByUrlUseCase->execute($uploadDto, $this->userPermission);
+
+            if ($photo !== null && $this->dto->alt !== null) {
+                $saveDto = new PhotoSaveData(alt: $this->dto->alt,);
+                $savePhotoDataUseCase->execute($photo->id, $saveDto, $this->userPermission);
+            }
+            \Log::info(json_encode([$photo->id]));
+        } catch (\Throwable $e) {
+            \Log::warning(json_encode([$e->getMessage(), $e->getFile(), $e->getLine()]));
         }
     }
 }

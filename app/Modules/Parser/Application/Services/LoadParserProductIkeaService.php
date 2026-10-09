@@ -327,7 +327,7 @@ class LoadParserProductIkeaService
 
         $productData = $this->ikeaProductApi->getProductByCode($code);
         $items = $productData['gprDescription']['variants'][0]['allProductImage'];
-
+        // \Log::info('фото ' . json_encode($items));
         $this->jobLoadImages($productId, $items);
     }
 
