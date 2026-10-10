@@ -52,7 +52,7 @@ readonly class PostPageQuery
         $meta = $this->seoAdapter->getSeo('content.post', $post);
         $meta->canonical = route('shop.post.view', $post->slug);
         $meta->ogSiteName = $web->web_name;
-        $meta->addImage(OgImage::fromData($post->image));
+        if (!empty($post->image)) $meta->addImage(OgImage::fromData($post->image));
         $meta->articleModifiedTime = $post->updatedAt;
         $meta->articlePublishedTime = $post->publishedAt;
 

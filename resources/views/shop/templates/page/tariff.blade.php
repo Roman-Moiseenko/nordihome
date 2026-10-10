@@ -9,7 +9,7 @@
 @section('content')
 
     <div class="container-xl my-3">
-        <h1>{{ $pageData->name }}</h1>
+        <h1>{{ $pageData->page->name }}</h1>
     </div>
     <div class="block-delivery-terms p-t_50 p-b_50 bg-black">
         <div class="container-xl">
@@ -521,8 +521,11 @@
         </div>
     </div>
     <div>
-            {!! $pageData->text !!}
+            {!! $pageData->page->text !!}
     </div>
+    <script type="application/ld+json" class="schemantra.com">
+        {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
 @endsection
 
 

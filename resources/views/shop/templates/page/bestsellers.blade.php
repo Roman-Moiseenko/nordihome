@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="container-xl">
-        <h1 class="my-4">{{ $pageData->name }}</h1>
+        <h1 class="my-4">{{ $pageData->page->name }}</h1>
         <div class="page-products-hit">
             <p>Здесь должен быть топ-10 товаров из ИКЕА, но мы с клиентами и командой НОРДИ ХОУМ не смогли определиться. Поэтому создали топ-11. На самом деле, хитов еще больше, но эти – наши фавориты! Они универсальны, имеют отличное качество и помогают создать стильный интерьер в любом доме.</p>
             <div class="product-hit-item">
@@ -170,7 +170,10 @@
         </div>
     </div>
     <div class="mt-4">
-        {!! $pageData->text !!}
+        {!! $pageData->page->text !!}
     </div>
 
+    <script type="application/ld+json" class="schemantra.com">
+        {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
 @endsection

@@ -9,8 +9,12 @@
 @section('main', 'home')
 
 @section('content')
-    {!! $pageData->text !!}
+    {!! $pageData->page->text !!}
     @include('shop.widgets.map')
+
+    <script type="application/ld+json" class="schemantra.com">
+        {!! json_encode($pageData->schema, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}
+    </script>
 @endsection
 
 @pushonce('styles')
