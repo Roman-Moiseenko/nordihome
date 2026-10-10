@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Repository;
 
+use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
@@ -79,5 +80,10 @@ class SlugRepository
     public function PostBySlug($slug)
     {
         return Post::where('slug', $slug)->where('published', true)->first();
+    }
+
+    public function BrandBySlug($slug)
+    {
+        return Brand::where('slug', $slug)->first();
     }
 }

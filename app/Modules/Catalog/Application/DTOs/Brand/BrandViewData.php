@@ -12,6 +12,7 @@ class BrandViewData extends Data
     public function __construct(
         public readonly int $id,
         public readonly string $name,
+        public readonly string $slug,
         public readonly ?string $url,
         public readonly ?string $description,
         public readonly ?int $currencyId,
@@ -27,6 +28,7 @@ class BrandViewData extends Data
         return new self(
             id: $brand->id,
             name: $brand->name,
+            slug: (string) $brand->slug,
             url: $brand->url ?: null,
             description: $brand->description ?: null,
             currencyId: $brand->currencyId,

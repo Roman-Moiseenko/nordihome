@@ -31,6 +31,7 @@ class Brand extends Model
     private array $sameAs = [];
     protected $fillable = [
         'name',
+        'slug',
         'description',
         'url',
     ];

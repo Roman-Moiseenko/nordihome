@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Domain\Entities;
 
+use App\Modules\Shared\Domain\ValueObjects\Slug;
+
 final class BrandEntity
 {
     public const int DEFAULT_ID = 1;
@@ -19,6 +21,11 @@ final class BrandEntity
     public string $name {
         get => $this->name;
         set => $this->name = $value;
+    }
+
+    public Slug $slug {
+        get => $this->slug;
+        set => $this->slug = $value;
     }
 
     public string $description = '' {
@@ -56,9 +63,11 @@ final class BrandEntity
         string $name,
         string $description = '',
         string $url = '',
+        ?Slug $slug = null,
     ) {
         $this->name = $name;
         $this->description = $description;
         $this->url = $url;
+        $this->slug = $slug ?? new Slug($name);
     }
 }

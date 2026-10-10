@@ -45,6 +45,14 @@ class CacheInvalidationRegistry
         self::PROMOTION_FILTERS_ID,
     ];
 
+    //Бренды
+    public const string BRAND_PRODUCTS_ID = 'brand_products_{id}';
+    public const string BRAND_FILTERS_ID = 'brand_filters_{id}';
+    private const array BRAND_KEYS = [
+        self::BRAND_PRODUCTS_ID,
+        self::BRAND_FILTERS_ID,
+    ];
+
 
     //Группы
     public const string GROUP_PRODUCTS_ID = 'group_products_{id}';
@@ -126,6 +134,15 @@ class CacheInvalidationRegistry
     {
         foreach (self::GROUP_PRODUCTS_KEYS as $key) {
             $resolvedKey = str_replace('{id}', $groupId, $key);
+            Cache::forget($resolvedKey);
+        }
+        $this->forgetFeeds();
+        $this->forgetSitemap();
+    }
+    public function forgetBrand(int $brandId): void
+    {
+        foreach (self::BRAND_KEYS as $key) {
+            $resolvedKey = str_replace('{id}', $brandId, $key);
             Cache::forget($resolvedKey);
         }
         $this->forgetFeeds();

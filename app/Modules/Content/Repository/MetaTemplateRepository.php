@@ -3,6 +3,7 @@
 namespace App\Modules\Content\Repository;
 
 use App\Modules\Base\Entity\Meta;
+use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
@@ -49,6 +50,12 @@ class MetaTemplateRepository
                 '{code}',
                 '{category}',
                 '{price}',
+            ];
+        }
+        if ($class == Brand::class) {
+            return [
+                '{name}',
+                '{description}',
             ];
         }
         if ($class == ParserProduct::class) {
@@ -129,6 +136,12 @@ class MetaTemplateRepository
                 '{code}' => $object->code,
                 '{category}' => $object->category->name,
                 '{price}' => price($object->price),
+            };
+        }
+        if ($object instanceof Brand) {
+            return match ($var) {
+                '{name}' => $object->name,
+                '{description}' => $object->description,
             };
         }
 

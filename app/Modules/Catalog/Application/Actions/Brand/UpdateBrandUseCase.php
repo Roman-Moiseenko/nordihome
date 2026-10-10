@@ -9,6 +9,7 @@ use App\Modules\Catalog\Domain\Entities\BrandEntity;
 use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
+use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 readonly class UpdateBrandUseCase
 {
@@ -31,6 +32,18 @@ readonly class UpdateBrandUseCase
         $brand->description = $dto->description ?? '';
         $brand->currencyId = $dto->currencyId;
         $brand->sameAs = $dto->sameAs ?? [];
+
+        if (empty(trim($dto->slug ?? ''))) {
+            $slug = new Slug($brand->name);
+        } else {
+            $slug = new Slug($dto->slug);
+        }
+
+        if ($this->brandRepository->existsSlug((string) $slug, $brand->id)) {
+            $slug = new Slug((string) $slug . '-' . uniqid());
+        }
+
+        $brand->slug = $slug;
 
         return $this->brandRepository->save($brand);
     }

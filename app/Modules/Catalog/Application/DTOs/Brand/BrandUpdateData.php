@@ -17,6 +17,8 @@ class BrandUpdateData extends Data
         #[Required, StringType, Max(255)]
         public readonly string $name,
         #[Nullable, StringType, Max(255)]
+        public readonly ?string $slug,
+        #[Nullable, StringType, Max(255)]
         public readonly ?string $url,
         #[Nullable, StringType]
         public readonly ?string $description,

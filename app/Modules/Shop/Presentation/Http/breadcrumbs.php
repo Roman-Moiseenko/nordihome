@@ -134,6 +134,13 @@ Breadcrumbs::for('shop.post.view', function (BreadcrumbTrail $trail, $slug) {
     $trail->push($post->name, route('shop.post.view', $slug));
 });
 
+Breadcrumbs::for('shop.brand.view', function (BreadcrumbTrail $trail, $slug) {
+
+    $brand = (new SlugRepository())->BrandBySlug($slug);
+    $trail->parent('shop.category.index');
+    $trail->push($brand->name, route('shop.brand.view', $slug));
+});
+
 Breadcrumbs::for('shop.parser.view', function (BreadcrumbTrail $trail) {
     $trail->parent('shop.home');
     $trail->push('Заказ товаров с каталога IKEA.PL', route('shop.parser.view'));

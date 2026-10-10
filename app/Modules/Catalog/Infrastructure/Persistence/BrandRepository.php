@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\DTOs\Brand\FilterBrandIndexData;
 use App\Modules\Catalog\Domain\Entities\BrandEntity;
 use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Models\Brand;
+use App\Modules\Shared\Domain\ValueObjects\Slug;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -41,6 +42,7 @@ class BrandRepository implements BrandRepositoryInterface
             : new Brand();
 
         $model->name = $brand->name;
+        $model->slug = (string) $brand->slug;
         $model->description = $brand->description;
         $model->url = $brand->url;
         $model->currency_id = $brand->currencyId;
@@ -119,12 +121,24 @@ class BrandRepository implements BrandRepositoryInterface
         return $model->id;
     }
 
+    public function existsSlug(string $slug, ?int $excludeId = null): bool
+    {
+        $query = Brand::where('slug', $slug);
+
+        if ($excludeId !== null) {
+            $query->where('id', '!=', $excludeId);
+        }
+
+        return $query->exists();
+    }
+
     private function hydrate(Brand $model): BrandEntity
     {
         $entity = new BrandEntity(
             name: $model->name,
             description: $model->description ?? '',
             url: $model->url ?? '',
+            slug: new Slug($model->slug ?: $model->name),
         );
 
         $entity->id = $model->id;

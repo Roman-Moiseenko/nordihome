@@ -10,6 +10,9 @@
                 <el-form-item label="Название бренда">
                     <el-input v-model="info.name"/>
                 </el-form-item>
+                <el-form-item label="Slug">
+                    <el-input v-model="info.slug" clearable placeholder="Оставьте пустым для автосоздания"/>
+                </el-form-item>
                 <el-form-item label="Ссылка на сайт">
                     <el-input v-model="info.url" clearable placeholder="https://"/>
                 </el-form-item>
@@ -51,6 +54,7 @@ const currencies = computed(() => accounting.currencies)
 // --- Исходные данные из пропсов (эталон для отмены) ---
 const initialInfo = {
     name: props.brand.name,
+    slug: props.brand.slug ?? '',
     url: props.brand.url ?? '',
     currencyId: props.brand.currencyId ?? null,
     description: props.brand.description ?? '',

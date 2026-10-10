@@ -2,6 +2,7 @@
 
 namespace App\Modules\Content\Database\Seeders;
 
+use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
@@ -34,6 +35,12 @@ class MetaSeeder extends Seeder
         $dto = new MetaTemplateCreateData(
             class: Category::class,
             entity: 'catalog.category',
+        );
+        $this->useCase->execute($dto);
+
+        $dto = new MetaTemplateCreateData(
+            class: Brand::class,
+            entity: 'catalog.brand',
         );
         $this->useCase->execute($dto);
 

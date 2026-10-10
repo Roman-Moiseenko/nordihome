@@ -9,6 +9,7 @@ use App\Modules\Catalog\Domain\Entities\BrandEntity;
 use App\Modules\Catalog\Domain\Interfaces\BrandRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
+use App\Modules\Shared\Domain\ValueObjects\Slug;
 
 readonly class CreateBrandUseCase
 {
@@ -24,7 +25,13 @@ readonly class CreateBrandUseCase
             throw new AccessDeniedException();
         }
 
-        $brand = new BrandEntity(name: trim($dto->name));
+        $slug = new Slug($dto->name);
+
+        if ($this->brandRepository->existsSlug((string) $slug)) {
+            $slug = new Slug((string) $slug . '-' . uniqid());
+        }
+
+        $brand = new BrandEntity(name: trim($dto->name), slug: $slug);
 
         return $this->brandRepository->save($brand);
     }

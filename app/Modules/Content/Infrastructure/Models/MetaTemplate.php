@@ -2,6 +2,7 @@
 
 namespace App\Modules\Content\Infrastructure\Models;
 
+use App\Modules\Catalog\Infrastructure\Models\Brand;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Group;
 use App\Modules\Catalog\Infrastructure\Models\Product;
@@ -22,6 +23,7 @@ class MetaTemplate extends Model
 {
     const array TEMPLATES = [
         Product::class => 'Товар',
+        Brand::class => 'Бренд',
         Category::class => 'Категория',
         ParserProduct::class => 'Товар Икеа',
         ParserCategory::class => 'Категория Икеа',
