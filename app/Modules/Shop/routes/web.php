@@ -2,6 +2,7 @@
 
 
 use App\Modules\Output\Presentation\Http\Controllers\Web\ECommerceController;
+use App\Modules\Shop\Presentation\Http\Controllers\Web\BrandController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\CatalogController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\CheckoutController;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\GroupController;
@@ -74,6 +75,7 @@ Route::group(
         Route::get('/novelty', [CatalogController::class, 'novelty'])->name('novelty');
 
         Route::get('/promotion/{slug}', [PromotionController::class, 'view'])->name('promotion.view');
+        Route::get('/brand/{slug}', [BrandController::class, 'view'])->name('brand.view');
         Route::get('/group/{slug}', [GroupController::class, 'view'])->name('group.view');
 
         //CHECKOUT

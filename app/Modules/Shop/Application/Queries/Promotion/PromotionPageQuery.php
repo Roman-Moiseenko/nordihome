@@ -79,6 +79,9 @@ readonly class PromotionPageQuery
             $productCardsRaw
         );
 
+        /**
+         * Пока не используется
+         */
         $secondInfo = new CategoryRoomSecondData(
             children: $categories,
             back: new UrlData(url: route('shop.category.index'), name: 'По категориям'),
