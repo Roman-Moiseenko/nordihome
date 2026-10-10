@@ -9,11 +9,19 @@
         </div>
         <div class="mt-2 p-5 bg-white rounded-md">
             <el-table
+                ref="tableRef"
                 :data="tableData"
                 header-cell-class-name="nordihome-header"
                 style="width: 100%; cursor: pointer;"
                 @row-click="routeClick"
             >
+                <el-table-column label="" width="40" align="center">
+                    <template #default>
+                        <div class="drag-handle px-1" title="Перетащить">
+                            <i class="fa-solid fa-grip-vertical"></i>
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="name" label="Страница" width="280" show-overflow-tooltip/>
                 <el-table-column prop="slug" label="Slug" width="" />
                 <el-table-column prop="template" label="Шаблон" width="120" show-overflow-tooltip/>
@@ -30,13 +38,6 @@
 
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        <el-button size="small" type="primary" dark @click.stop="onUp(scope.row)">
-                            <i class="fa-light fa-chevron-up"></i>
-                        </el-button>
-                        <el-button size="small" type="primary" dark @click.stop="onDown(scope.row)">
-                            <i class="fa-light fa-chevron-down"></i>
-                        </el-button>
-
                         <el-button size="small"
                                    :type="scope.row.published ? 'warning' : 'success'"
                                    @click.stop="onToggle(scope.row)"
@@ -97,12 +98,12 @@
 import ru from 'element-plus/dist/locale/ru.mjs'
 import {useStore} from "@Res/store.js"
 import Active from "@Comp/Elements/Active.vue";
+import Sortable from "sortablejs";
 
 import {Head, router} from "@inertiajs/vue3";
-import {defineProps, inject, reactive, ref} from "vue";
+import {defineProps, inject, onBeforeUnmount, onMounted, reactive, ref} from "vue";
 
 import {route} from "ziggy-js";
-import axios from "axios";
 import {useContentStore} from "@Res/contentStore";
 
 const props = defineProps({
@@ -118,6 +119,8 @@ const useContent = useContentStore()
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.pages])
+const tableRef = ref()
+let sortable: Sortable | null = null
 const form = reactive({
     name: null,
     slug: null,
@@ -138,35 +141,57 @@ function savePage() {
     })
 }
 function onToggle(row) {
-    router.visit(route('admin.content.page.toggle', {page: row.id}), {
+    router.visit(route('admin.content.page.toggle', {id: row.id}), {
         method: "post",
         preserveScroll: true,
         preserveState: false,
     })
 }
 function routeClick(row) {
-    router.get(route('admin.content.page.show', {page: row.id}))
-}
-function onUp(row) {
-    router.visit(route('admin.content.page.up', {page: row.id}), {
-        method: "post",
-        preserveScroll: true,
-        preserveState: false,
-        onSuccess: page => {
-        }
-    })
+    router.get(route('admin.content.page.show', {id: row.id}))
 }
 
-function onDown(row) {
-    router.visit(route('admin.content.page.down', {page: row.id}), {
-        method: "post",
-        preserveScroll: true,
-        preserveState: false,
-        onSuccess: page => {
-        }
-    })
-}
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.content.page.destroy', {page: row.id}));
+    $delete_entity.show(route('admin.content.page.destroy', {id: row.id}));
 }
+
+onMounted(() => {
+    const tbody = tableRef.value?.$el?.querySelector('tbody')
+    if (!tbody) return
+
+    sortable = Sortable.create(tbody, {
+        handle: '.drag-handle',
+        animation: 150,
+        onEnd(evt: Sortable.SortableEvent) {
+            const oldIndex = evt.oldIndex
+            const newIndex = evt.newIndex
+
+            if (oldIndex === undefined || newIndex === undefined || oldIndex === newIndex) {
+                return
+            }
+
+            const moved = tableData.value[oldIndex]
+            if (!moved || moved.id === undefined) {
+                return
+            }
+
+            router.visit(route('admin.content.page.move', {id: moved.id}), {
+                method: "post",
+                data: {position: newIndex},
+                preserveScroll: true,
+                preserveState: false,
+                onError: () => {
+                    router.reload({preserveScroll: true, preserveState: false})
+                },
+            })
+        },
+    })
+})
+
+onBeforeUnmount(() => {
+    if (sortable) {
+        sortable.destroy()
+        sortable = null
+    }
+})
 </script>

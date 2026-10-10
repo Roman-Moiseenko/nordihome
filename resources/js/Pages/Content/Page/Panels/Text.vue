@@ -15,7 +15,7 @@ const props = defineProps({
 const text = ref(props.page.text)
 
 function saveText() {
-    axios.post(route('admin.content.page.set-text', {page: props.page.id}), {text: text.value}).then(resolve => {
+    axios.post(route('admin.content.page.update-text', {id: props.page.id}), {text: text.value}).then(resolve => {
     }).catch(reason => {
         console.log(reason)
     })

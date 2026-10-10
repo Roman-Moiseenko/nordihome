@@ -21,4 +21,6 @@ interface PageRepositoryInterface
     public function delete(int $id): void;
 
     public function existsSlug(string $slug, ?int $excludeId = null): bool;
+
+    public function move(int $id, int $position): void;
 }

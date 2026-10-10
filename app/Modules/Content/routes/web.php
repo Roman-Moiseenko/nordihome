@@ -189,15 +189,16 @@ Route::group(
             'prefix' => 'page',
             'as' => 'page.'
         ], function () {
-            Route::post('/toggle/{page}', [PageController::class, 'toggle'])->name('toggle');
+            Route::post('/toggle/{id}', [PageController::class, 'toggle'])->name('toggle');
             Route::get('/list/', [PageController::class, 'parentList'])->name('list');
-            Route::post('/set-info/{page}', [PageController::class, 'set_info'])->name('set-info');
-            Route::post('/set-text/{page}', [PageController::class, 'set_text'])->name('set-text');
-            Route::post('/up/{page}', [PageController::class, 'up'])->name('up');
-            Route::post('/down/{page}', [PageController::class, 'down'])->name('down');
+            Route::post('/update/{id}', [PageController::class, 'update'])->name('update');
+            Route::post('/update-text/{id}', [PageController::class, 'updateText'])->name('update-text');
+            Route::post('/move/{id}', [PageController::class, 'move'])->name('move');
         });
 
-        Route::resource('page', PageController::class)->except(['create', 'edit', 'update']); //CRUD
+        Route::resource('page', PageController::class)
+            ->parameters(['page' => 'id'])
+            ->except(['create', 'edit', 'update']); //CRUD
 
         //Контакты
         Route::group([

@@ -48,7 +48,9 @@ class PageRepository implements PageRepositoryInterface
         $model->svg = $page->svg;
         $model->text = $page->text ?? '';
         $model->template = $page->template;
-        $model->sort = $page->sort ?? 0;
+        $model->sort = $page->id === null
+            ? Page::where('parent_id', $page->parentId)->max('sort') + 1
+            : ($page->sort ?? 0);
         $model->published = $page->isPublished();
         $model->parent_id = $page->parentId;
         $model->old_render = $page->oldRender;
@@ -79,6 +81,27 @@ class PageRepository implements PageRepositoryInterface
             $query->where('id', '!=', $excludeId);
         }
         return $query->exists();
+    }
+
+    public function move(int $id, int $position): void
+    {
+        /** @var Page $model */
+        $model = Page::findOrFail($id);
+
+        $siblings = Page::where('parent_id', $model->parent_id)
+            ->where('id', '!=', $model->id)
+            ->orderBy('sort')
+            ->orderBy('id')
+            ->get();
+
+        $position = max(0, min($position, $siblings->count()));
+
+        $orderedIds = $siblings->pluck('id')->all();
+        array_splice($orderedIds, $position, 0, [$model->id]);
+
+        foreach ($orderedIds as $index => $orderedId) {
+            Page::where('id', $orderedId)->update(['sort' => $index]);
+        }
     }
 
     private function hydrate(Page $model): PageEntity

@@ -1,18 +1,27 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Modules\Content\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
+use App\Modules\Content\Application\Actions\Page\CreatePageUseCase;
 use App\Modules\Content\Application\Actions\Page\IndexPageQuery;
 use App\Modules\Content\Application\Actions\Page\ListParentPageQuery;
+use App\Modules\Content\Application\Actions\Page\MovePageUseCase;
+use App\Modules\Content\Application\Actions\Page\RemovePageUseCase;
+use App\Modules\Content\Application\Actions\Page\TogglePageUseCase;
+use App\Modules\Content\Application\Actions\Page\UpdatePageTextUseCase;
+use App\Modules\Content\Application\Actions\Page\UpdatePageUseCase;
+use App\Modules\Content\Application\Actions\Page\ViewPageQuery;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
+use App\Modules\Content\Application\DTOs\Page\PageCreateData;
+use App\Modules\Content\Application\DTOs\Page\PageUpdateData;
+use App\Modules\Content\Application\DTOs\Page\PageViewData;
 use App\Modules\Content\Domain\ValueObjects\ContainerType;
-use App\Modules\Content\Infrastructure\Models\Page;
-use App\Modules\Content\Repository\PageRepository;
 use App\Modules\Content\Repository\TemplateRepository;
-use App\Modules\Content\Service\PageService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,23 +30,19 @@ use Inertia\Response;
 
 class PageController extends Controller
 {
-    private PageService $service;
-    private TemplateRepository $templates;
-    private PageRepository $repository;
-
     public function __construct(
-        PageService        $service,
-        TemplateRepository $templates,
-        PageRepository     $repository,
+        private readonly TemplateRepository $templates,
         private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
         private readonly ListParentPageQuery $listParentPageQuery,
         private readonly IndexPageQuery $indexPageQuery,
-    )
-    {
-        $this->service = $service;
-        $this->templates = $templates;
-        $this->repository = $repository;
-    }
+        private readonly CreatePageUseCase $createPageUseCase,
+        private readonly ViewPageQuery $viewPageQuery,
+        private readonly UpdatePageUseCase $updatePageUseCase,
+        private readonly UpdatePageTextUseCase $updatePageTextUseCase,
+        private readonly TogglePageUseCase $togglePageUseCase,
+        private readonly RemovePageUseCase $removePageUseCase,
+        private readonly MovePageUseCase $movePageUseCase,
+    ) {}
 
     public function index(Request $request): Response
     {
@@ -48,74 +53,73 @@ class PageController extends Controller
             'pages' => $pages,
             'templates' => $templates,
         ]);
-
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|min:3',
-        ]);
-        $page = $this->service->create($request);
-        return redirect()->route('admin.content.page.show', $page)->with('success', 'Страница сохранена');
+        $dto = PageCreateData::validateAndCreate($request->all());
+        $page = $this->createPageUseCase->execute($dto, $userPermission);
+
+        return redirect()->route('admin.content.page.show', $page->id)->with('success', 'Страница сохранена');
     }
 
-    public function show(Page $page): Response
+    public function show(int $id, UserPermission $userPermission): Response
     {
+        $page = $this->viewPageQuery->execute($id, $userPermission);
         $templates = $this->templates->getTemplates('page');
 
         $dto = new ContentBlockContainerData($page->id, ContainerType::PAGE);
         $blocks = $this->listContentBlockByContainerUseCase->execute($dto);
 
         return Inertia::render('Content/Page/Show', [
-            'page' => $this->repository->PageWithToArray($page),
+            'page' => Inertia::always(PageViewData::fromEntity($page)),
             'templates' => $templates,
             'tiny_api' => config('shop.tinymce'),
             'blocks' => $blocks,
         ]);
     }
 
-    public function set_info(Page $page, Request $request): RedirectResponse
+    public function update(int $id, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->setInfo($page, $request);
+        $dto = PageUpdateData::validateAndCreate($request->all());
+        $this->updatePageUseCase->execute($id, $dto, $userPermission);
+
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function set_text(Page $page, Request $request): JsonResponse
+    public function updateText(int $id, Request $request, UserPermission $userPermission): JsonResponse
     {
-        $this->service->setText($page, $request->string('text')->trim()->value());
+        $text = $request->string('text')->trim()->value();
+        $this->updatePageTextUseCase->execute($id, $text, $userPermission);
+
         return \response()->json(true);
     }
 
-    public function toggle(Page $page): RedirectResponse
+    public function toggle(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $message = $this->service->toggle($page);
+        $message = $this->togglePageUseCase->execute($id, $userPermission);
+
         return redirect()->back()->with('success', $message);
     }
 
-    public function up(Page $page)
+    public function move(int $id, Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->up($page);
+        $position = $request->integer('position', 0);
+        $this->movePageUseCase->execute($id, $position, $userPermission);
+
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function down(Page $page)
+    public function destroy(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->down($page);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
+        $this->removePageUseCase->execute($id, $userPermission);
 
-    public function destroy(Page $page): RedirectResponse
-    {
-        $this->service->destroy($page);
         return redirect()->back()->with('success', 'Страница удалена');
     }
-
 
     public function parentList()
     {
         $list = $this->listParentPageQuery->execute();
         return \response()->json($list);
     }
-
 }

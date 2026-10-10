@@ -14,7 +14,7 @@
                     <el-input v-model="info.slug" clearable/>
                 </el-form-item>
                 <el-form-item label="Родительская">
-                    <el-select v-model="info.parent_id" clearable filterable>
+                    <el-select v-model="info.parentId" clearable filterable>
                         <el-option v-for="item in useContent.pages" :key="item.id" :value="item.id" :label="item.name"/>
                     </el-select>
                 </el-form-item>
@@ -24,7 +24,7 @@
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Старый рендер">
-                    <el-switch v-model="info.old_render" />
+                    <el-switch v-model="info.oldRender" />
                 </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -32,10 +32,10 @@
                     <el-input v-model="info.svg" type="textarea" :rows="3"/>
                 </el-form-item>
                 <el-form-item label="Мета Заголовок">
-                    <el-input v-model="info.meta_title"/>
+                    <el-input v-model="info.metaTitle"/>
                 </el-form-item>
                 <el-form-item label="Мета Описание">
-                    <el-input v-model="info.meta_description" type="textarea" :rows="3"/>
+                    <el-input v-model="info.metaDescription" type="textarea" :rows="3"/>
                 </el-form-item>
             </el-col>
         </el-row>
@@ -64,12 +64,12 @@ const useContent = useContentStore()
 const initialInfo = {
     name: props.page.name,
     slug: props.page.slug ?? '',
-    parent_id: props.page.parent_id ?? null,
+    parentId: props.page.parentId ?? null,
     template: props.page.template,
     svg: props.page.svg ?? '',
-    meta_title: props.page.meta?.title ?? '',
-    meta_description: props.page.meta?.description ?? '',
-    old_render: props.page.old_render,
+    metaTitle: props.page.meta?.title ?? '',
+    metaDescription: props.page.meta?.description ?? '',
+    oldRender: props.page.oldRender,
 }
 
 const info = reactive({...initialInfo})
@@ -90,7 +90,7 @@ function onCancel() {
 
 function onSetInfo() {
     router.visit(
-        route('admin.content.page.set-info', {page: props.page.id}), {
+        route('admin.content.page.update', {id: props.page.id}), {
             method: "post",
             data: {...info},
             onSuccess: page => {

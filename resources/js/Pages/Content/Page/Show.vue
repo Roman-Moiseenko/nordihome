@@ -32,18 +32,13 @@
 </template>
 
 <script setup lang="ts">
-import Editor from '@tinymce/tinymce-vue'
-import {defineProps, onMounted, ref} from "vue";
-import {Head, router} from "@inertiajs/vue3";
+import {defineProps, ref} from "vue";
+import {Head} from "@inertiajs/vue3";
 import PageInfo from "./Block/Info.vue";
 import HelpBlock from "@Comp/HelpBlock.vue";
-import {useStore} from '@Res/store.js'
-import axios from "axios";
 import ru from 'element-plus/dist/locale/ru.mjs'
 import PanelText from "./Panels/Text.vue";
 import PanelBlocks from "./Panels/Blocks.vue";
-
-const store = useStore();
 
 const props = defineProps({
     page: Object,
@@ -55,13 +50,5 @@ const props = defineProps({
     templates: Array,
     tiny_api: String,
 })
-const text = ref(props.page.text)
 const showHelp = ref(false);
-
-function saveText() {
-    axios.post(route('admin.content.page.set-text', {page: props.page.id}), {text: text.value}).then(resolve => {
-    }).catch(reason => {
-        console.log(reason)
-    })
-}
 </script>

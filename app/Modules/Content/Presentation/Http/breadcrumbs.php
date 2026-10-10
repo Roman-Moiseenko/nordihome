@@ -108,9 +108,10 @@ Breadcrumbs::for('admin.content.page.create', function (BreadcrumbTrail $trail) 
     $trail->parent('admin.content.page.index');
     $trail->push('Добавить новую', route('admin.content.page.create'));
 });
-Breadcrumbs::for('admin.content.page.show', function (BreadcrumbTrail $trail, Page $page) {
+Breadcrumbs::for('admin.content.page.show', function (BreadcrumbTrail $trail, int $id) {
+    $page = Page::findOrFail($id);
     $trail->parent('admin.content.page.index');
-    $trail->push($page->name, route('admin.content.page.show', $page));
+    $trail->push($page->name, route('admin.content.page.show', $page->id));
 });
 Breadcrumbs::for('admin.content.page.edit', function (BreadcrumbTrail $trail, Page $page) {
     $trail->parent('admin.content.page.show', $page);
