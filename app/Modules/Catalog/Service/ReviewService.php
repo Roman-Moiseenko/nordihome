@@ -6,8 +6,8 @@ namespace App\Modules\Catalog\Service;
 
 use App\Events\CouponHasCreated;
 use App\Events\ReviewHasEdit;
-use App\Modules\Catalog\Entity\Review;
 use App\Modules\Catalog\Infrastructure\Models\Product;
+use App\Modules\Catalog\Infrastructure\Models\Review;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\DiscountReview;
 use App\Modules\Order\Infrastructure\Models\Order;
@@ -104,23 +104,6 @@ class ReviewService
         }
     }
 
-    public function published(Review $review)
-    {
-        $review->status = Review::STATUS_PUBLISHED;
-        $review->save();
-        $review->refresh();
-
-        //Пересчет рейтинга товара
-        $review->product->updateReview();
-        //TODO Сообщаем? клиенту
-    }
-
-    public function blocked(Review $review)
-    {
-        $review->status = Review::STATUS_BLOCKED;
-        $review->save();
-        //TODO Сообщаем? клиенту
-    }
 
 
 }

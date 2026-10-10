@@ -3,7 +3,7 @@
 namespace App\Modules\Cabinet\Application\Queries;
 
 use App\Modules\Cabinet\Application\DTOs\ReviewClientData;
-use App\Modules\Catalog\Entity\Review;
+use App\Modules\Catalog\Infrastructure\Models\Review;
 
 class GetReviewsClientQuery
 {

@@ -4,47 +4,44 @@ declare(strict_types=1);
 namespace App\Modules\Feedback\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Catalog\Entity\Review;
-use App\Modules\Catalog\Repository\ReviewRepository;
-use App\Modules\Catalog\Service\ReviewService;
+use App\Modules\Catalog\Infrastructure\Models\Review;
 use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
-    private ReviewService $service;
-    private ReviewRepository $repository;
 
-    public function __construct(ReviewService $service, ReviewRepository $repository)
+    public function __construct()
     {
-        $this->service = $service;
-        $this->repository = $repository;
     }
 
     public function index(Request $request)
     {
-        $filter = $request['filter'] ?? 'moderated';
+      /*  $filter = $request['filter'] ?? 'moderated';
         $count_moderated = $this->repository->countModerated();
         $query = $this->repository->getIndex($filter);
 
         $reviews = $this->pagination($query, $request, $pagination);
-        return view('admin.feedback.review.index', compact('reviews', 'filter', 'pagination', 'count_moderated'));
+        */
+        //TODO страница на Inertia
+       // return view('admin.feedback.review.index', compact('reviews', 'filter', 'pagination', 'count_moderated'));
     }
 
 
     public function show(Review $review)
     {
-        return view('admin.feedback.review.show', compact('review'));
+        //TODO страница на Inertia
+      //  return view('admin.feedback.review.show', compact('review'));
     }
 
     public function published(Review $review)
     {
-        $this->service->published($review);
+  //      $this->service->published($review);
         return redirect()->back();
     }
 
     public function blocked(Review $review)
     {
-        $this->service->blocked($review);
+     //   $this->service->blocked($review);
         return redirect()->back();
     }
 }

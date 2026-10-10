@@ -138,7 +138,7 @@ class ProductIndexQueryRepository
 
         $reviewsCount = DB::table('product_reviews')
             ->whereIn('product_reviews.product_id', $ids)
-            ->where('product_reviews.status', \App\Modules\Catalog\Entity\Review::STATUS_PUBLISHED)
+            ->where('product_reviews.status', \App\Modules\Catalog\Infrastructure\Models\Review::STATUS_PUBLISHED)
             ->selectRaw('product_id, COUNT(*) as total')
             ->groupBy('product_id')
             ->get()

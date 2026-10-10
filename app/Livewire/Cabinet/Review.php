@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Cabinet;
 
-use App\Modules\Catalog\Entity\Review as ProductReview;
+use App\Modules\Catalog\Infrastructure\Models\Review as ProductReview;
 use App\Modules\Catalog\Service\ReviewService;
 use Livewire\Component;
 use Livewire\WithFileUploads;

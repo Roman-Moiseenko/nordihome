@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
-use App\Modules\Cabinet\Application\Queries\GetReviewsClientQuery;
 use App\Modules\Cabinet\Application\Queries\PageReviewQuery;
-use App\Modules\Catalog\Entity\Review;
+use App\Modules\Catalog\Infrastructure\Models\Review;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
 use Illuminate\Http\Request;
 

@@ -19,6 +19,7 @@ class ModelTypeMapper
         'catalog.attribute-variant' => \App\Modules\Catalog\Infrastructure\Models\AttributeVariant::class,
         'catalog.attribute' => \App\Modules\Catalog\Infrastructure\Models\Attribute::class,
         'catalog.attribute-group' => \App\Modules\Catalog\Infrastructure\Models\AttributeGroup::class,
+        'catalog.review' => \App\Modules\Catalog\Infrastructure\Models\Review::class,
 
         'parser.category' => \App\Modules\Parser\Infrastructure\Models\ParserCategory::class,
         'parser.product' => \App\Modules\Parser\Infrastructure\Models\ParserProduct::class,

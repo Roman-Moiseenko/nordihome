@@ -21,7 +21,6 @@ use App\Modules\Catalog\Entity\ProductPriceMin;
 use App\Modules\Catalog\Entity\ProductPricePre;
 use App\Modules\Catalog\Entity\ProductPriceRetail;
 use App\Modules\Catalog\Entity\ProductPriceSpecial;
-use App\Modules\Catalog\Entity\Review;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;

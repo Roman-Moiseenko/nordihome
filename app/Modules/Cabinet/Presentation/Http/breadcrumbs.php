@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-use App\Modules\Catalog\Entity\Review;
+use App\Modules\Catalog\Infrastructure\Models\Review;
 use App\Modules\Order\Infrastructure\Models\Order;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;

@@ -126,7 +126,7 @@ class ProductViewQueryRepository
                 DB::raw("(
                     SELECT COUNT(*) FROM product_reviews
                     WHERE product_reviews.product_id = products.id
-                      AND product_reviews.status = '". \App\Modules\Catalog\Entity\Review::STATUS_PUBLISHED . "'
+                      AND product_reviews.status = '". \App\Modules\Catalog\Infrastructure\Models\Review::STATUS_PUBLISHED . "'
                 ) as count_reviews"),
 
                 // Promotion data

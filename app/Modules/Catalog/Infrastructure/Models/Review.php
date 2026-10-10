@@ -1,12 +1,11 @@
 <?php
 
 
-namespace App\Modules\Catalog\Entity;
+namespace App\Modules\Catalog\Infrastructure\Models;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Base\Traits\ImageField;
-use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Discount\Entity\DiscountReview;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -18,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $text
  * @property int $rating
  * @property string $status
+ * @property Carbon|null $published_at
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Video $video
@@ -47,10 +47,12 @@ class Review extends Model
         'client_id',
         'text',
         'rating',
-        'status'
+        'status',
+        'published_at',
     ];
 
     protected $casts = [
+        'published_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
