@@ -3,7 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Infrastructure\Models;
 
+use App\Modules\Base\Casts\MetaCast;
 use App\Modules\Content\Entity\Renders\RenderPage;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
@@ -11,15 +13,21 @@ use Illuminate\Support\Str;
  * @property int $id
  * @property int $parent_id
  * @property string $name
- * @property string $svg
  * @property string $slug
+ * @property string $svg
+ * @property string $text
  * @property string $template
  * @property int $sort
+ * @property bool $published
+ * @property array $meta
  * @property Page $parent
+ * @property bool $old_render
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon $published_at
  */
 class Page extends RenderPage
 {
-
 
     protected $fillable = [
         'parent_id',
@@ -27,9 +35,20 @@ class Page extends RenderPage
         'slug',
         'template',
         'sort',
+        'meta',
         'published',
-        'text'
+        'text',
+        'old_render'
     ];
+
+    protected $casts = [
+        'old_render' => 'bool',
+        'published_at' => 'datetime',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'meta' => MetaCast::class,
+    ];
+
 
     public static function register(string $name, string $slug,
                                     string $template, int $parent_id = null): self

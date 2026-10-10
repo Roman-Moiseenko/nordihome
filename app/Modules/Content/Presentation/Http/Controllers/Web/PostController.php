@@ -5,11 +5,11 @@ namespace App\Modules\Content\Presentation\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Modules\Content\Application\Actions\ContentBlock\ListContentBlockByContainerUseCase;
 use App\Modules\Content\Application\Actions\Post\CreatePostUseCase;
-use App\Modules\Content\Application\Actions\Post\IndexPostUseCase;
+use App\Modules\Content\Application\Actions\Post\IndexPostQuery;
 use App\Modules\Content\Application\Actions\Post\RemovePostUseCase;
 use App\Modules\Content\Application\Actions\Post\TogglePostUseCase;
 use App\Modules\Content\Application\Actions\Post\UpdatePostUseCase;
-use App\Modules\Content\Application\Actions\Post\ViewPostUseCase;
+use App\Modules\Content\Application\Actions\Post\ViewPostQuery;
 use App\Modules\Content\Application\DTOs\ContentBlock\ContentBlockContainerData;
 use App\Modules\Content\Application\DTOs\Post\PostCreateData;
 use App\Modules\Content\Application\DTOs\Post\PostUpdateData;
@@ -36,17 +36,17 @@ class PostController extends Controller
     private TemplateRepository $templates;
 
     public function __construct(
-        PostService        $service,
-        TemplateRepository $templates,
-        PostRepository     $repository,
+        PostService                                         $service,
+        TemplateRepository                                  $templates,
+        PostRepository                                      $repository,
         private readonly ListContentBlockByContainerUseCase $listContentBlockByContainerUseCase,
-        private readonly ViewPostUseCase $viewPostUseCase,
-        private readonly UpdatePostUseCase $updatePostUseCase,
-        private readonly IndexPostUseCase $postUseCase,
-        private readonly CreatePostUseCase $createPostUseCase,
-        private readonly RemovePostUseCase $removePostUseCase,
-        private readonly TogglePostUseCase $togglePostUseCase,
-        private readonly CopyPostService $copyPostService,
+        private readonly ViewPostQuery                      $viewPostUQuery,
+        private readonly UpdatePostUseCase                  $updatePostUseCase,
+        private readonly IndexPostQuery                     $postUseCase,
+        private readonly CreatePostUseCase                  $createPostUseCase,
+        private readonly RemovePostUseCase                  $removePostUseCase,
+        private readonly TogglePostUseCase                  $togglePostUseCase,
+        private readonly CopyPostService                    $copyPostService,
     )
     {
         $this->service = $service;
@@ -108,15 +108,14 @@ class PostController extends Controller
 
     public function post(int $id, UserPermission $userPermission): Response
     {
-        //$templates = $this->templates->getTemplates('post');
-        $post = $this->viewPostUseCase->execute($id, $userPermission);
+
+        $post = $this->viewPostUQuery->execute($id, $userPermission);
 
         $dto = new ContentBlockContainerData($post->id, ContainerType::POST);
         $blocks = $this->listContentBlockByContainerUseCase->execute($dto);
 
         return Inertia::render('Content/Post/Post', [
             'post' => Inertia::always(PostViewData::fromEntity($post)), //Заменить на useCase $this->repository->PostWithToArray($post)
-           // 'tiny_api' => config('shop.tinymce'), //Удалить
             'blocks' => $blocks,
         ]);
     }

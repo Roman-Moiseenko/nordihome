@@ -18,17 +18,17 @@ use Illuminate\Support\Str;
 readonly class PostPageQuery
 {
     public function __construct(
-        private PostViewQueryRepository       $postRepository,
-        private ContentBlockQueryRepository   $blockRepository,
-        private SeoAdapter                    $seoAdapter,
-        private SchemaBuilder                 $schemaBuilder,
-        private WidgetDataEnricherService     $widgetEnricher,
-        private GetWebSettingsUseCase $webSettingsUseCase,
+        private PostViewQueryRepository     $postRepository,
+        private ContentBlockQueryRepository $blockRepository,
+        private SeoAdapter                  $seoAdapter,
+        private SchemaBuilder               $schemaBuilder,
+        private WidgetDataEnricherService   $widgetEnricher,
+        private GetWebSettingsUseCase       $webSettingsUseCase,
     )
     {
     }
 
-    public function execute(string $slug):? PostViewPageData
+    public function execute(string $slug): ?PostViewPageData
     {
         $web = $this->webSettingsUseCase->execute();
         // 1. Получить PostData (один SQL-запрос с фото)
@@ -43,7 +43,7 @@ readonly class PostPageQuery
             foreach ($blocks as $index => $block) {
                 $block->widget = $this->widgetEnricher->enrich($block->widget);
             }
-//FixMe Удалить потом
+            //FixMe Удалить потом
         } catch (\Throwable $exception) {
             dd('Ошибка в блоке #' . $index + 1);
         }

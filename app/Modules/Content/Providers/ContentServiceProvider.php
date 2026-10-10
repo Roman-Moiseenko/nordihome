@@ -3,14 +3,13 @@
 namespace App\Modules\Content\Providers;
 
 use App\Modules\Content\Application\Services\WidgetRendererService;
-use App\Modules\Content\Console\Commands\SyncWidgetTemplatesFromFilesCommand;
-use App\Modules\Content\Console\Commands\SyncWidgetTemplatesToFilesCommand;
 use App\Modules\Content\Database\Seeders\ContentRoleSeeder;
 use App\Modules\Content\Database\Seeders\MetaSeeder;
 use App\Modules\Content\Domain\Interfaces\ContentBlockRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\LabelPostRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\LabelRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\MetaTemplateRepositoryInterface;
+use App\Modules\Content\Domain\Interfaces\PageRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
@@ -18,9 +17,12 @@ use App\Modules\Content\Infrastructure\Persistence\ContentBlockRepository;
 use App\Modules\Content\Infrastructure\Persistence\LabelPostRepository;
 use App\Modules\Content\Infrastructure\Persistence\LabelRepository;
 use App\Modules\Content\Infrastructure\Persistence\MetaTemplateRepository;
+use App\Modules\Content\Infrastructure\Persistence\PageRepository;
 use App\Modules\Content\Infrastructure\Persistence\PostRepository;
 use App\Modules\Content\Infrastructure\Persistence\WidgetInstanceRepository;
 use App\Modules\Content\Infrastructure\Persistence\WidgetRepository;
+use App\Modules\Content\Presentation\Console\Commands\SyncWidgetTemplatesFromFilesCommand;
+use App\Modules\Content\Presentation\Console\Commands\SyncWidgetTemplatesToFilesCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -131,6 +133,11 @@ class ContentServiceProvider extends ServiceProvider
         $this->app->bind(
             PostRepositoryInterface::class,
             PostRepository::class,
+        );
+
+        $this->app->bind(
+            PageRepositoryInterface::class,
+            PageRepository::class,
         );
 
         $this->app->bind(

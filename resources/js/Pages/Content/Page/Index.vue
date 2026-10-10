@@ -15,13 +15,19 @@
                 @row-click="routeClick"
             >
                 <el-table-column prop="name" label="Страница" width="280" show-overflow-tooltip/>
-                <el-table-column prop="title" label="Заголовок" width="" />
+                <el-table-column prop="slug" label="Slug" width="" />
                 <el-table-column prop="template" label="Шаблон" width="120" show-overflow-tooltip/>
                 <el-table-column prop="published" label="Опубликована" width="130" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.published" />
                     </template>
                 </el-table-column>
+                <el-table-column prop="oldRender" label="ContentBlock" width="130" align="center">
+                    <template #default="scope">
+                        <Active :active="!scope.row.oldRender" />
+                    </template>
+                </el-table-column>
+
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
                         <el-button size="small" type="primary" dark @click.stop="onUp(scope.row)">
@@ -62,10 +68,10 @@
                     <div v-if="errors.slug" class="text-red-700">{{ errors.slug }}</div>
                 </el-form-item>
                 <el-form-item label="Родительская страница" label-position="top" class="mt-3">
-                    <el-select v-model="form.parent_id" filterable clearable>
-                        <el-option v-for="item in parent_pages" :value="item.id" :label="item.name" />
+                    <el-select v-model="form.parentId" filterable clearable>
+                        <el-option v-for="item in useContent.pages" :value="item.id" :label="item.name" />
                     </el-select>
-                    <div v-if="errors.parent_id" class="text-red-700">{{ errors.parent_id }}</div>
+                    <div v-if="errors.parentId" class="text-red-700">{{ errors.parentId }}</div>
                 </el-form-item>
 
                 <el-form-item label="Шаблон" label-position="top" class="mt-3">
@@ -97,6 +103,7 @@ import {defineProps, inject, reactive, ref} from "vue";
 
 import {route} from "ziggy-js";
 import axios from "axios";
+import {useContentStore} from "@Res/contentStore";
 
 const props = defineProps({
     pages: Array,
@@ -106,9 +113,8 @@ const props = defineProps({
         default: 'Сайт. Страницы',
     },
     templates: Array,
-    parent_pages: Array,
 })
-
+const useContent = useContentStore()
 const dialogCreate = ref(false)
 const $delete_entity = inject("$delete_entity")
 const tableData = ref([...props.pages])
@@ -116,7 +122,7 @@ const form = reactive({
     name: null,
     slug: null,
     template: null,
-    parent_id: null,
+    parentId: null,
 })
 
 function savePage() {

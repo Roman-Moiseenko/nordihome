@@ -15,13 +15,16 @@
                 </el-form-item>
                 <el-form-item label="Родительская">
                     <el-select v-model="info.parent_id" clearable filterable>
-                        <el-option v-for="item in pages" :key="item.id" :value="item.id" :label="item.name"/>
+                        <el-option v-for="item in useContent.pages" :key="item.id" :value="item.id" :label="item.name"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item label="Шаблон">
                     <el-select v-model="info.template">
                         <el-option v-for="item in templates" :key="item.value" :value="item.value" :label="item.label"/>
                     </el-select>
+                </el-form-item>
+                <el-form-item label="Старый рендер">
+                    <el-switch v-model="info.old_render" />
                 </el-form-item>
             </el-col>
             <el-col :span="10">
@@ -49,12 +52,13 @@
 import {reactive, computed} from "vue";
 import {router} from "@inertiajs/vue3";
 import PhotoDTO from "@Comp/PhotoDTO.vue";
+import {useContentStore} from "@Res/contentStore.ts";
 
 const props = defineProps({
     page: Object,
     templates: Array,
-    pages: Array,
 })
+const useContent = useContentStore()
 
 // --- Исходные данные из пропсов (эталон для отмены) ---
 const initialInfo = {
@@ -65,6 +69,7 @@ const initialInfo = {
     svg: props.page.svg ?? '',
     meta_title: props.page.meta?.title ?? '',
     meta_description: props.page.meta?.description ?? '',
+    old_render: props.page.old_render,
 }
 
 const info = reactive({...initialInfo})

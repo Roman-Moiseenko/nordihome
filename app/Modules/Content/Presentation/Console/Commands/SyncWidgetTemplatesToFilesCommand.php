@@ -2,16 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Content\Console\Commands;
+namespace App\Modules\Content\Presentation\Console\Commands;
 
 use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Infrastructure\Services\WidgetFileService;
 use Illuminate\Console\Command;
 
-class SyncWidgetTemplatesFromFilesCommand extends Command
+class SyncWidgetTemplatesToFilesCommand extends Command
 {
-    protected $signature = 'content:widget-template-import';
-    protected $description = 'Скопировать содержимое файлов шаблонов виджетов в поле template (файл -> БД)';
+    protected $signature = 'content:widget-template-export';
+    protected $description = 'Записать содержимое поля template виджетов в файлы шаблонов (БД -> файл)';
 
     public function __construct(
         private readonly WidgetRepositoryInterface $widgetRepository,
@@ -22,8 +22,7 @@ class SyncWidgetTemplatesFromFilesCommand extends Command
 
     public function handle(): int
     {
-        $updated = 0;
-        $skipped = 0;
+        $written = 0;
 
         foreach ($this->widgetRepository->getAll() as $widget) {
             $category = (string) $widget->category;
@@ -33,18 +32,14 @@ class SyncWidgetTemplatesFromFilesCommand extends Command
             $content = $this->widgetFileService->getContent($category, $slug);
             $isEmpty = $content === '';
 
-            // Если файла нет или он пустой, а в БД уже есть данные — не перезаписываем поле.
+            // Если файла нет или он пустой, а в БД есть данные — создаём файл и записываем данные.
             if ((!$fileExists || $isEmpty) && $widget->template !== null && $widget->template !== '') {
-                $skipped++;
-                continue;
+                $this->widgetFileService->saveContent($category, $slug, $widget->template);
+                $written++;
             }
-
-            $widget->template = $isEmpty ? null : $content;
-            $this->widgetRepository->save($widget);
-            $updated++;
         }
 
-        $this->info("Обновлено виджетов: {$updated}. Пропущено: {$skipped}.");
+        $this->info("Создано/записано файлов: {$written}.");
 
         return self::SUCCESS;
     }

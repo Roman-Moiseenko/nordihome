@@ -12,7 +12,7 @@
             </el-tooltip>
         </div>
         <div class="mt-3 p-3 bg-white rounded-lg ">
-            <PageInfo :page="page" :templates="templates" :pages="parent_pages"/>
+            <PageInfo :page="page" :templates="templates"/>
 
             <HelpBlock v-if="showHelp">
                 <p><b>Название страницы</b> является обязательным полем.</p>
@@ -24,15 +24,10 @@
                 <p>Поля <b>Meta</b> используются в SEO. Для заполнения обязательны.</p>
             </HelpBlock>
         </div>
-
-        <div class="mt-3 p-3 bg-white rounded-lg ">
-            <!-- TinyMCE -->
-            <editor
-                :api-key="tiny_api" v-model="text"
-                :init="store.tiny"
-                @change="saveText"
-            />
-        </div>
+        <el-tabs>
+            <PanelText :page="page" :tiny_api="tiny_api" />
+            <PanelBlocks :blocks="blocks || []" :page-id="page.id"/>
+        </el-tabs>
     </el-config-provider>
 </template>
 
@@ -45,17 +40,19 @@ import HelpBlock from "@Comp/HelpBlock.vue";
 import {useStore} from '@Res/store.js'
 import axios from "axios";
 import ru from 'element-plus/dist/locale/ru.mjs'
+import PanelText from "./Panels/Text.vue";
+import PanelBlocks from "./Panels/Blocks.vue";
 
 const store = useStore();
 
 const props = defineProps({
     page: Object,
+    blocks: Array,
     title: {
         type: String,
         default: 'Карточка Страницы',
     },
     templates: Array,
-    parent_pages: Array,
     tiny_api: String,
 })
 const text = ref(props.page.text)

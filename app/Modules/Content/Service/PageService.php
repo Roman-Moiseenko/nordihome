@@ -41,6 +41,7 @@ class PageService
         $page->svg = $request->string('svg')->trim()->value();
         $page->parent_id = $request->input('parent_id');
         $page->template = $request->string('template')->value();
+        $page->old_render = $request->boolean('old_render');
         $page->meta->fromRequest($request);
         $page->save();
     }

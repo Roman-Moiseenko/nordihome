@@ -9,7 +9,7 @@ use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
-readonly class IndexPostUseCase
+readonly class IndexPostQuery
 {
     public function __construct(
         private PostRepositoryInterface $postRepository,

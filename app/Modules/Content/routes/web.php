@@ -190,6 +190,7 @@ Route::group(
             'as' => 'page.'
         ], function () {
             Route::post('/toggle/{page}', [PageController::class, 'toggle'])->name('toggle');
+            Route::get('/list/', [PageController::class, 'parentList'])->name('list');
             Route::post('/set-info/{page}', [PageController::class, 'set_info'])->name('set-info');
             Route::post('/set-text/{page}', [PageController::class, 'set_text'])->name('set-text');
             Route::post('/up/{page}', [PageController::class, 'up'])->name('up');
