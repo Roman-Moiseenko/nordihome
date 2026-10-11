@@ -22,7 +22,7 @@ class HomeAdminController extends Controller
         $updates = Version::updated();
         $version = Version::VERSION;
 
-        return Inertia::render('Admin/Home', [
+        return Inertia::render('Home', [
             'updates' => $updates,
             'version' => $version,
         ]);
