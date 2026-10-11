@@ -226,7 +226,7 @@ abstract class AccountingDocument extends Model
         $table->timestamp('incoming_at')->nullable();
         $table->timestamps();
         $table->text('comment');
-        $table->foreignId('staff_id')->constrained('admins')->onDelete('restrict');
+        $table->foreignId('staff_id')->constrained('staffs')->onDelete('restrict');
     }
 
     final public static function dropColumns(Blueprint $table): void

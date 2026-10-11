@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('parser_logs', function (Blueprint $table) {
             $table->id();
             $table->string('date');
-            $table->foreignId('staff_id')->nullable()->constrained('admins')->onDelete('set null');
+            $table->foreignId('staff_id')->nullable()->constrained('staffs')->onDelete('set null');
             $table->timestamp('read_at')->nullable();
             $table->boolean('read')->default(false);
         });

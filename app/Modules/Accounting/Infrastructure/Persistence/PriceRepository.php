@@ -65,7 +65,29 @@ class PriceRepository implements PriceRepositoryInterface
         return $prices;
     }
 
-    public function getLatestPricesByType(array $productIds, string $type): array
+    public function findPreviousPrices(int $productId): array
+    {
+        $sub = DB::table('product_prices')
+            ->select('type', 'amount')
+            ->selectRaw('ROW_NUMBER() OVER (PARTITION BY type ORDER BY set_at DESC, id DESC) as rn')
+            ->where('product_id', $productId);
+
+        $rows = DB::query()
+            ->fromSub($sub, 'prices')
+            ->where('rn', 2)
+            ->get();
+
+        $prices = [];
+        foreach ($rows as $row) {
+            $prices[$row->type] = (float) $row->amount;
+        }
+
+
+        return $prices;
+    }
+
+
+        public function getLatestPricesByType(array $productIds, string $type): array
     {
         if (empty($productIds)) {
             return [];

@@ -2,6 +2,9 @@
 
 namespace App\Modules\Accounting\Repository;
 
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetLatestPricesQuery;
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetPreviousPricesQuery;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\DistributorProduct;
 use App\Modules\Accounting\Entity\SupplyDocument;
@@ -10,6 +13,13 @@ use Illuminate\Http\Request;
 
 class DistributorRepository
 {
+    public function __construct(
+        private readonly GetLatestPricesQuery   $latestPricesQuery,
+        private readonly GetPreviousPricesQuery $previousPricesQuery,
+    )
+    {
+    }
+
     public function DistributorForAccounting(?Distributor $distributor): ?array
     {
         if (is_null($distributor)) return null;
@@ -104,6 +114,7 @@ class DistributorRepository
 
     public function ProductToArray(DistributorProduct $product): array
     {
+        $prices = $this->latestPricesQuery->execute($product->product_id);
         return [
             'id' => $product->product_id,
             'name' => $product->product->name,
@@ -111,7 +122,7 @@ class DistributorRepository
             'quantity' => $product->product->getQuantity(),
             'reserve' => $product->product->getQuantityReserve(),
             'balance' => $product->product->balance,
-            'price_retail' => $product->product->getPriceRetail(),
+            'price_retail' => $prices[PriceType::RETAIL],
             'cost' => $product->cost,
             'pre_cost' => $product->pre_cost,
         ];

@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Application\Queries\Search;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Search\FullSearchData;
 use App\Modules\Shop\Application\DTOs\Search\ItemSearchData;
+use App\Modules\Shop\Application\Services\RegionalPriceCalculator;
 use App\Modules\Shop\Infrastructure\Persistence\Query\CategorySearchQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductSearchQueryRepository;
@@ -20,6 +21,7 @@ readonly class CatalogSearchQuery
         private ProductIndexQueryRepository  $productIndexQueryRepository,
         private CategorySearchQueryRepository $categorySearchQueryRepository,
         private RoomSearchQueryRepository     $roomSearchQueryRepository,
+        private RegionalPriceCalculator     $regionalPriceCalculator,
     )
     {
     }
@@ -34,6 +36,11 @@ readonly class CatalogSearchQuery
             fn(array $item) => ItemSearchData::fromArray($item, false),
             $productItemsRaw
         );
+
+        //Применяем коэфициент
+        foreach ($productItems as &$productItem) {
+            $productItem->price = $this->regionalPriceCalculator->apply($productItem->price, $clientContext->region);
+        }
 
         $categoryIds = $this->categorySearchQueryRepository->getCategoryIdsBySearch($search);
         $categoryIds = array_slice($categoryIds, 0, FullSearchData::LIMIT_CATEGORIES);

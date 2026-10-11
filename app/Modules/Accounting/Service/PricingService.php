@@ -4,6 +4,11 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Service;
 
 use App\Events\PricingHasCompleted;
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetLatestPricesQuery;
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetPreviousPricesQuery;
+use App\Modules\Accounting\Application\Actions\ProductPrice\SetPriceUseCase;
+use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\PricingDocument;
@@ -16,7 +21,12 @@ use Illuminate\Support\Facades\DB;
 
 class PricingService extends AccountingService
 {
-
+    public function __construct(
+        private readonly GetLatestPricesQuery   $latestPricesQuery,
+        private readonly SetPriceUseCase $setPriceUseCase,
+    )
+    {
+    }
     public function create(int $arrival_id = null): PricingDocument
     {
         $staff = auth()->user()->profileable;
@@ -33,6 +43,8 @@ class PricingService extends AccountingService
         PricingDocument $pricing,
         int $product_id, float $price_retail = null, float $price_bulk = null): void
     {
+        $prices = $this->latestPricesQuery->execute($product_id);
+
         if ($pricing->isCompleted()) throw new \DomainException('Документ проведен, менять данные нельзя');
 
         /** @var Product $product */
@@ -40,13 +52,21 @@ class PricingService extends AccountingService
         if ($pricing->isProduct($product_id))
             throw new \DomainException('Товар ' . $product->name . ' уже добавлен в документ');
 
-        $pricingProduct = PricingProduct::new(product_id: $product->id);
+        $pricingProduct = PricingProduct::new(
+            product_id: $product->id,
+            price_cost: $prices[PriceType::COST] ?? 0,
+            price_retail: $prices[PriceType::RETAIL] ?? 0,
+            price_bulk: $prices[PriceType::BULK] ?? 0,
+            price_special: $prices[PriceType::SPECIAL] ?? 0,
+            price_min: $prices[PriceType::MINIMAL] ?? 0,
+            price_pre: $prices[PriceType::PREORDER] ?? 0,
+        );
         if (!is_null($price_retail) && $price_retail > 0) $pricingProduct->price_retail = $price_retail;
         if (!is_null($price_bulk) && $price_bulk > 0) {
             $pricingProduct->price_bulk = $price_bulk;
             $pricingProduct->price_special = $price_bulk;
         }
-        if ($product->getPriceCost() == 0) {
+        if (!empty($prices[PriceType::COST])) {
             $pricingProduct->price_cost = $this->calculateCost($product);
             if ($pricingProduct->price_cost == null) $pricingProduct->price_cost = 0;
         }
@@ -95,51 +115,65 @@ class PricingService extends AccountingService
             $pricing->refresh();
             foreach ($pricing->pricingProducts as $i => $pricingProduct) {
                 if ($pricingProduct->price_cost == 0 ||
-                    $pricingProduct->price_retail == 0 //||
-                //    $pricingProduct->price_bulk == 0 ||
-                //    $pricingProduct->price_special == 0 ||
-                //    $pricingProduct->price_min == 0 ||
-                //    $pricingProduct->price_pre == 0
+                    $pricingProduct->price_retail == 0
                 ) throw new \DomainException('Не все цены заполнены ' . $pricingProduct->product->code . ' (позиция ' . ($i + 1) . ')');
 
                 $product = $pricingProduct->product;
                 $founded = 'Установка цен № ' . $pricing->htmlNum() . ' от ' . $pricing->htmlDate();
-                //Сохранять, Если значения отличаются
-                if ($product->getPriceCost() != $pricingProduct->price_cost)
-                    $product->pricesCost()->create([
-                        'value' => $pricingProduct->price_cost,
-                        'founded' => $founded,
-                    ]);
-                if ($product->getPriceRetail() != $pricingProduct->price_retail)
-                    $product->pricesRetail()->create([
-                        'value' => $pricingProduct->price_retail,
-                        'founded' => $founded,
-                    ]);
-                if ($product->getPriceBulk() != $pricingProduct->price_bulk)
-                    $product->pricesBulk()->create([
-                        'value' => $pricingProduct->price_bulk,
-                        'founded' => $founded,
-                    ]);
-                if ($product->getPriceSpecial() != $pricingProduct->price_special)
-                    $product->pricesSpecial()->create([
-                        'value' => $pricingProduct->price_special,
-                        'founded' => $founded,
-                    ]);
-                if ($product->getPriceMin() != $pricingProduct->price_min)
-                    $product->pricesMin()->create([
-                        'value' => $pricingProduct->price_min,
-                        'founded' => $founded,
-                    ]);
-                if ($product->getPricePre() != $pricingProduct->price_pre)
-                    $product->pricesPre()->create([
-                        'value' => $pricingProduct->price_pre,
-                        'founded' => $founded,
-                    ]);
+                $dto = new SetProductPriceData(
+                    productId: $product->id,
+                    price: $pricingProduct->price_cost,
+                    priceType: PriceType::COST,
+                    founded: $founded,
+                );
+                $this->setPriceUseCase->execute($dto);
+
+                $dto = new SetProductPriceData(
+                    productId: $product->id,
+                    price: $pricingProduct->price_retail,
+                    priceType: PriceType::RETAIL,
+                    founded: $founded,
+                );
+                $this->setPriceUseCase->execute($dto);
+
+                $dto = new SetProductPriceData(
+                    productId: $product->id,
+                    price: $pricingProduct->price_bulk,
+                    priceType: PriceType::BULK,
+                    founded: $founded,
+                );
+                $this->setPriceUseCase->execute($dto);
+
+                $dto = new SetProductPriceData(
+                    productId: $product->id,
+                    price: $pricingProduct->price_special,
+                    priceType: PriceType::SPECIAL,
+                    founded: $founded,
+                );
+                $this->setPriceUseCase->execute($dto);
+
+                $dto = new SetProductPriceData(
+                    productId: $product->id,
+                    price: $pricingProduct->price_min,
+                    priceType: PriceType::MINIMAL,
+                    founded: $founded,
+                );
+                $this->setPriceUseCase->execute($dto);
+                $dto = new SetProductPriceData(
+                    productId: $product->id,
+                    price: $pricingProduct->price_pre,
+                    priceType: PriceType::PREORDER,
+                    founded: $founded,
+                );
+                $this->setPriceUseCase->execute($dto);
+
             }
 
             event(new PricingHasCompleted($pricing));
         });
     }
+
+
 
     public function copy(PricingDocument $pricing)
     {
@@ -157,6 +191,7 @@ class PricingService extends AccountingService
             ->getModels();
         if (!empty($new_pricings))
             throw new \DomainException('Существуют более поздние проведенные документы');
+/* FixMe откат цен
 
         DB::transaction(function () use ($pricing) {
             foreach ($pricing->products as $product) {
@@ -180,6 +215,7 @@ class PricingService extends AccountingService
             }
             $pricing->work();
         });
+        */
     }
 
     public function setInfo(PricingDocument $pricing, Request $request): void

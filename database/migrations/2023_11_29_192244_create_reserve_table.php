@@ -14,12 +14,12 @@ return new class extends Migration
     {
         Schema::create('reserve', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
+            $table->foreignId('client_id')->constrained('clients')->onDelete('restrict');
             $table->foreignId('product_id')->constrained('products')->onDelete('restrict');
             $table->integer('quantity');
             $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamp('reserve_at')->nullable();
-            $table->unique(['user_id', 'product_id']);
+            $table->unique(['client_id', 'product_id']);
         });
     }
 

@@ -391,26 +391,6 @@ class Order extends Model
         return $result;
     }
 
-    /**
-     * Скидка по товаром - акции, бонусы
-     */
-    public function getDiscountProducts(): float
-    {
-        return $this->getBaseAmount() - $this->getSellAmount();
-    }
-
-    public function getDiscountPromotions(): float
-    {
-        $result = 0;
-        foreach ($this->items as $item) {
-            if ($item->product->hasPromotion()) {
-                $result += ($item->base_cost - $item->sell_cost) * $item->quantity;
-
-            }
-        }
-        return $result;
-
-    }
 
     /**
      * Скидка на заказ - по сумме, срокам и др.
@@ -418,27 +398,8 @@ class Order extends Model
     public function getDiscountOrder(): float
     {
         return $this->discount_amount;
-
-        if (!is_null($this->discount_id)) {
-            /** @var Discount $discount */
-            $discount = Discount::find($this->discount_id);
-            return $this->getSellAmount() * $discount->discount / 100;
-        }
-        return 0;
     }
 
-    /**
-     * Скидка на заказ - по сумме, срокам и др.
-     */
-    public function getDiscountName(): string
-    {
-        if (!is_null($this->discount_id)) {
-            /** @var Discount $discount */
-            $discount = Discount::find($this->discount_id);
-            return $discount->name;
-        }
-        return '';
-    }
 
     /**
      * Сумма скидки по купону

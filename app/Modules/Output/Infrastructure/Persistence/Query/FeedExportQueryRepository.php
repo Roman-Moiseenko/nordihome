@@ -6,22 +6,33 @@ namespace App\Modules\Output\Infrastructure\Persistence\Query;
 
 use App\Modules\Accounting\Entity\Trader;
 use App\Modules\Catalog\Infrastructure\Models\Category;
-use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Output\Domain\Entities\FeedEntity;
-use App\Modules\Shared\Infrastructure\Models\Photo;
+use App\Modules\Shared\Application\Actions\GetGalleryThumbUseCase;
+use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
+use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Репозиторий чтения данных для выгрузки фида.
  *
  * Собирает товары из всех связанных с фидом сущностей (товары, теги,
- * категории, комнаты, группы, акции) с минимизацией N+1 (eager loading
- * галереи) и кеширует результат на сутки.
+ * категории, комнаты, группы, акции) с минимизацией N+1 и кеширует
+ * результат на сутки. Модель Product здесь не используется — карточки
+ * товаров загружаются через ProductIndexQueryRepository, а изображения
+ * галереи — через GetGalleryThumbUseCase.
  */
 class FeedExportQueryRepository
 {
+    private const string PHOTO_MODEL_TYPE = 'catalog.product';
+
+    public function __construct(
+        private readonly ProductIndexQueryRepository $productIndexQueryRepository,
+        private readonly GetGalleryThumbUseCase $galleryThumbUseCase,
+    ) {}
+
     public function getCachedExport(FeedEntity $feed): array
     {
         $version = (int) Cache::get(CacheInvalidationRegistry::FEED_VERSION, 0);
@@ -76,29 +87,57 @@ class FeedExportQueryRepository
         $groups = $in ? $feed->groupsIn : $feed->groupsOut;
         $promotions = $in ? $feed->promotionsIn : $feed->promotionsOut;
 
-        $query = Product::query()->whereRaw('1 = 0');
-
-        if ($products) {
-            $query->orWhereIn('id', $products);
-        }
-        if ($tags) {
-            $query->orWhereHas('tags', fn ($q) => $q->whereIn('id', $tags));
-        }
-        if ($categories) {
-            $query->orWhereHas('categories', fn ($q) => $q->whereIn('id', $categories));
-            $query->orWhereIn('main_category_id', $categories);
-        }
-        if ($rooms) {
-            $query->orWhereHas('rooms', fn ($q) => $q->whereIn('id', $rooms));
-        }
-        if ($groups) {
-            $query->orWhereHas('groups', fn ($q) => $q->whereIn('id', $groups));
-        }
-        if ($promotions) {
-            $query->orWhereHas('promotions', fn ($q) => $q->whereIn('id', $promotions));
+        if (!$products && !$tags && !$categories && !$rooms && !$groups && !$promotions) {
+            return [];
         }
 
-        return $query->pluck('id')->map(static fn ($id) => (int) $id)->all();
+        return DB::table('products')
+            ->select('products.id')
+            ->whereNull('products.deleted_at')
+            ->where(function ($query) use ($products, $tags, $categories, $rooms, $groups, $promotions) {
+                if ($products) {
+                    $query->whereIn('products.id', $products);
+                }
+                if ($tags) {
+                    $query->orWhereExists(fn ($q) => $q
+                        ->selectRaw('1')
+                        ->from('tags_products')
+                        ->whereColumn('tags_products.product_id', 'products.id')
+                        ->whereIn('tags_products.tag_id', $tags));
+                }
+                if ($categories) {
+                    $query->orWhereExists(fn ($q) => $q
+                        ->selectRaw('1')
+                        ->from('categories_products')
+                        ->whereColumn('categories_products.product_id', 'products.id')
+                        ->whereIn('categories_products.category_id', $categories));
+                    $query->orWhereIn('products.main_category_id', $categories);
+                }
+                if ($rooms) {
+                    $query->orWhereExists(fn ($q) => $q
+                        ->selectRaw('1')
+                        ->from('rooms_products')
+                        ->whereColumn('rooms_products.product_id', 'products.id')
+                        ->whereIn('rooms_products.room_id', $rooms));
+                }
+                if ($groups) {
+                    $query->orWhereExists(fn ($q) => $q
+                        ->selectRaw('1')
+                        ->from('groups_products')
+                        ->whereColumn('groups_products.product_id', 'products.id')
+                        ->whereIn('groups_products.group_id', $groups));
+                }
+                if ($promotions) {
+                    $query->orWhereExists(fn ($q) => $q
+                        ->selectRaw('1')
+                        ->from('promotions_products')
+                        ->whereColumn('promotions_products.product_id', 'products.id')
+                        ->whereIn('promotions_products.promotion_id', $promotions));
+                }
+            })
+            ->pluck('products.id')
+            ->map(static fn ($id) => (int) $id)
+            ->all();
     }
 
     /**
@@ -111,63 +150,58 @@ class FeedExportQueryRepository
             return [];
         }
 
-        return Product::query()
-            ->with(['gallery', 'promotions'])
+        // Для фида используем розничные цены, поэтому ClientContext пустой (retail по умолчанию).
+        $cards = $this->productIndexQueryRepository->loadProductCards($ids, new ClientContext());
+
+        // Поля, которых нет в карточке товара: описание и основная категория.
+        $meta = DB::table('products')
             ->whereIn('id', $ids)
+            ->whereNull('deleted_at')
+            ->select(['id', 'description', 'main_category_id'])
             ->get()
-            ->map(function (Product $product) use ($priceMin, $priceMax) {
-                $regular = (float) $product->getPrice();
-                $previous = (float) $product->getPrice(true);
-                $promoPrice = $this->promotionPrice($product);
+            ->keyBy('id');
 
-                // При действующей акции цена по акции выводится как основная,
-                // базовая цена уходит в oldprice.
-                $price = $promoPrice > 0 ? $promoPrice : $regular;
+        $result = [];
+        foreach ($cards as $card) {
+            $id = (int) $card['id'];
+            $isSale = (bool) ($card['is_sale'] ?? true);
+            $regular = $isSale ? (float) ($card['price'] ?? 0) : 0.0;
+            $previous = $isSale ? (float) ($card['price_previous'] ?? 0) : 0.0;
 
-                // Фильтр по цене, если задан.
-                if ($priceMin !== null && $price < $priceMin) {
-                    return null;
-                }
-                if ($priceMax !== null && $price > $priceMax) {
-                    return null;
-                }
+            $promotion = $card['promotion'] ?? null;
+            $promoPrice = ($promotion['has'] ?? false) ? (float) ($promotion['price'] ?? 0) : 0.0;
 
-                return [
-                    'id' => $product->id,
-                    'name' => $product->name,
-                    'description' => $product->description,
-                    'images' => $product->gallery
-                        ->map(fn (Photo $photo) => $photo->getUploadUrl())
-                        ->values()
-                        ->all(),
-                    'url' => route('shop.product.view', $product->slug),
-                    'price' => $price,
-                    'preprice' => $promoPrice > 0 ? $regular : $previous,
-                    'category' => $product->main_category_id,
-                    'store' => true,
-                    'pickup' => true,
-                    'delivery' => true,
-                    'code' => $product->code,
-                ];
-            })
-            ->filter()
-            ->values()
-            ->all();
-    }
+            // При действующей акции цена по акции выводится как основная,
+            // базовая цена уходит в oldprice.
+            $price = $promoPrice > 0 ? $promoPrice : $regular;
 
-    /**
-     * Цена по действующей акции (0 — акции нет или цена не задана).
-     */
-    private function promotionPrice(Product $product): float
-    {
-        $promotion = $product->promotion();
-        if ($promotion === null || $promotion->pivot === null) {
-            return 0.0;
+            // Фильтр по цене, если задан.
+            if ($priceMin !== null && $price < $priceMin) {
+                continue;
+            }
+            if ($priceMax !== null && $price > $priceMax) {
+                continue;
+            }
+
+            $row = $meta->get($id);
+
+            $result[] = [
+                'id' => $id,
+                'name' => $card['name'],
+                'description' => $row?->description ?? '',
+                'images' => $this->galleryThumbUseCase->execute($id, self::PHOTO_MODEL_TYPE),
+                'url' => route('shop.product.view', $card['slug']),
+                'price' => $price,
+                'preprice' => $promoPrice > 0 ? $regular : $previous,
+                'category' => $row?->main_category_id !== null ? (int) $row?->main_category_id : null,
+                'store' => true,
+                'pickup' => true,
+                'delivery' => true,
+                'code' => $card['code'],
+            ];
         }
 
-        $price = (float) $promotion->pivot->price;
-
-        return $price > 0 ? $price : 0.0;
+        return $result;
     }
 
     /**

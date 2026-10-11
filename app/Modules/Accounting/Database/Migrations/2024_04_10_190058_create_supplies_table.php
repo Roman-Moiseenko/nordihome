@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('supply_documents', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('staff_id')->constrained('admins')->onDelete('cascade');
+            $table->foreignId('staff_id')->constrained('staffs')->onDelete('cascade');
             $table->foreignId('distributor_id')->constrained('distributors')->onDelete('cascade');
             $table->integer('status');
             $table->string('comment')->default('');

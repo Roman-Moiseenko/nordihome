@@ -4,6 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Service;
 
 use App\Events\DepartureHasCompleted;
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetLatestPricesQuery;
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetPreviousPricesQuery;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\DepartureProduct;
 use App\Modules\Accounting\Entity\Trader;
@@ -17,7 +20,11 @@ class DepartureService extends AccountingService
 {
     private StorageService $storages;
 
-    public function __construct(StorageService $storages)
+    public function __construct(
+        StorageService $storages,
+                                private readonly GetLatestPricesQuery   $latestPricesQuery,
+                                private readonly GetPreviousPricesQuery $previousPricesQuery,
+    )
     {
         $this->storages = $storages;
     }
@@ -62,12 +69,13 @@ class DepartureService extends AccountingService
             $departureProduct->addQuantity($quantity);
             return null;
         }
+        $prices = $this->latestPricesQuery->execute($product_id);
 
         //Добавляем в документ
         $departure->products()->create([
             'product_id' => $product->id,
             'quantity' => $quantity,
-            'cost' => $product->getPriceCost()
+            'cost' => $prices[PriceType::COST],
         ]);
         $departure->refresh();
         return $departure;

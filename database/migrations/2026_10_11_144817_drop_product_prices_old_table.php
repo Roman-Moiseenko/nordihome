@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('admins', function (Blueprint $table) {
-            $table->dropColumn('photo');
-        });
+        Schema::dropIfExists('product_prices_bulk');
+        Schema::dropIfExists('product_prices_cost');
+        Schema::dropIfExists('product_prices_min');
+        Schema::dropIfExists('product_prices_pre');
+        Schema::dropIfExists('product_prices_retail');
+        Schema::dropIfExists('product_prices_special');
     }
 
     /**
@@ -21,8 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('admins', function (Blueprint $table) {
-            $table->string('photo')->default('');
-        });
+        //
     }
 };

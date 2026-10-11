@@ -3,6 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Service;
 
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetLatestPricesQuery;
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetPreviousPricesQuery;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Accounting\Entity\ArrivalProduct;
 use App\Modules\Accounting\Entity\BatchSale;
 use App\Modules\Accounting\Entity\SurplusProduct;
@@ -11,6 +14,12 @@ use App\Modules\Order\Entity\Order\OrderExpenseRefund;
 
 class BatchSaleService
 {
+    public function __construct(
+        private readonly GetLatestPricesQuery   $latestPricesQuery,
+        private readonly GetPreviousPricesQuery $previousPricesQuery,
+    )
+    {
+    }
     public function create(OrderExpense $expense): void
     {
 
@@ -49,7 +58,8 @@ class BatchSaleService
             /** @var ArrivalProduct|SurplusProduct $product */
             foreach ($products as $product) {
                 if ($arrival) {
-                    $cost = $item->orderItem->product->getPriceCost();
+                    $prices = $this->latestPricesQuery->execute($item->orderItem->product_id);
+                    $cost = $prices[PriceType::COST];
                 } else {
                     $cost = $product->cost;
                 }

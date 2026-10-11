@@ -3,24 +3,15 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Infrastructure\Models;
 
-use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Accounting\Entity\BalanceProduct;
-use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\StorageItem;
 use App\Modules\Accounting\Infrastructure\Models\ProductPrice;
-use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Casts\DimensionsCast;
 use App\Modules\Base\Entity\Dimensions;
 use App\Modules\Base\Entity\Video;
 use App\Modules\Cabinet\Infrastructure\Models\Wish;
 use App\Modules\Cart\Infrastructure\Models\CartCookie;
 use App\Modules\Cart\Infrastructure\Models\CartStorage;
-use App\Modules\Catalog\Entity\ProductPriceBulk;
-use App\Modules\Catalog\Entity\ProductPriceCost;
-use App\Modules\Catalog\Entity\ProductPriceMin;
-use App\Modules\Catalog\Entity\ProductPricePre;
-use App\Modules\Catalog\Entity\ProductPriceRetail;
-use App\Modules\Catalog\Entity\ProductPriceSpecial;
 use App\Modules\Discount\Infrastructure\Models\Promotion;
 use App\Modules\Guide\Entity\Country;
 use App\Modules\Guide\Entity\MarkingType;
@@ -39,7 +30,6 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
-use JetBrains\PhpStorm\Deprecated;
 use JetBrains\PhpStorm\Pure;
 
 /**
@@ -99,13 +89,6 @@ use JetBrains\PhpStorm\Pure;
  *
  * @property Video[] $videos
  *
-
- * @property ProductPriceCost[] $pricesCost
- * @property ProductPriceRetail[] $pricesRetail
- * @property ProductPriceBulk[] $pricesBulk
- * @property ProductPriceSpecial[] $pricesSpecial
- * @property ProductPriceMin[] $pricesMin
- * @property ProductPricePre[] $pricesPre
  * @property Promotion[] $promotions Все акции в которых есть товар
  * @property Equivalent $equivalent
  * @property EquivalentProduct $equivalent_product
@@ -251,85 +234,12 @@ class Product extends Model
         return $this->fractional == true;
     }
 
-    public function isNew(): bool
-    {
-        if ($this->published_at == null) return false;
-        if ($this->published_at->gte(now()->subMonths(2))) return true;
-        return false;
-    }
-
-    #[Deprecated]
-    public function isVisible(): bool
-    {
-        return true;
-    }
-
-    public function isSeries($id): bool
-    {
-        if ($this->series_id == null) return false;
-        return $this->series_id == $id;
-    }
-
-    public function isLocal(): bool
-    {
-        return $this->local == true;
-    }
-
-    public function isDelivery(): bool
-    {
-        return $this->delivery == true;
-    }
-
-    public function isCategories($category_id): bool
-    {
-        foreach ($this->categories as $category) {
-            if ($category->id == (int)$category_id) return true;
-        }
-        return false;
-    }
 
     public function isPublished(): bool
     {
         return $this->published == true;
     }
 
-    public function isTag($tag_id): bool
-    {
-        foreach ($this->tags as $tag) {
-            if ($tag->id == (int)$tag_id) return true;
-        }
-        return false;
-    }
-
-    public function isWish(int $user_id): bool
-    {
-        $wish = $this->wishes()->where('user_id', $user_id)->first();
-        return !empty($wish);
-    }
-
-    public function isBonus(int $product_id): bool
-    {
-        foreach ($this->bonus as $bonus) {
-            if ($bonus->id == $product_id) return true;
-        }
-        return false;
-    }
-
-    public function isComposite(int $product_id): bool
-    {
-        foreach ($this->composites as $composite) {
-            if ($composite->id == $product_id) return true;
-        }
-        return false;
-    }
-
-    public function isRelated(int $product_id): bool
-    {
-        foreach ($this->related as $related) {
-            if ($related->id == $product_id) return true;
-        }
-        return false;
-    }
 
     public function isBalance(): bool
     {
@@ -340,42 +250,6 @@ class Product extends Model
     {
         return $this->marking_type_id != null;
     }
-
-    //*** SET-....
-    //SET и GET
-    /**
-     * Снять с продажи (показываться на сайте будет, купить нельзя)
-     */
-    public function setNotSale(): void
-    {
-        $this->not_sale = true;
-        $this->save();
-    }
-
-    /**
-     * Вернуть в продажу
-     */
-    public function setForSale(): void
-    {
-        $this->not_sale = false;
-        $this->save();
-    }
-
-
-
-    public function setPublished(): void
-    {
-        $this->published = true;
-        $this->published_at = now();
-        $this->save();
-    }
-
-    public function setDraft(): void
-    {
-        $this->published = false;
-        $this->save();
-    }
-
 
     //*** GET-....
 
@@ -396,159 +270,6 @@ class Product extends Model
 
         return ceil($volume * 10000) / 10000;
     }
-
-
-    /**
-     * Если есть модификация возвращает ее название, иначе название товара
-     */
-    public function getName(): string
-    {
-        if (is_null($this->modification)) return $this->name;
-        return $this->modification->name;
-    }
-
-    //*** ЦЕНЫ
-
-    /**
-     * Текущая (Предыдущая $previous = true) цена для клиента (с учетом цен клиента, Розничная, или Оптовые)
-     * Показывать на сайте (Фронтенд)
-     */
-    public function getPrice(bool $previous = false, ?Client $client = null): float
-    {
-        $price = 0;
-        if (!$this->isSale()) return $price;
-        if (is_null($client)) {
-            $user = auth()->user();
-            if (!is_null($user) && $user->isClient()) $client = $user->profileable;
-        }
-
-        if (!is_null($client)) {
-            if ($client->isBulk() && $this->getPriceBulk($previous) != 0) $price = $this->getPriceBulk($previous); //Оптовый клиент
-            if ($client->isSpecial() && $this->getPriceSpecial($previous) != 0) $price = $this->getPriceSpecial($previous); //Спец Клиент
-        }
-        //Проверяем установленные цены
-        if ($price == 0) $price = $this->getPriceRetail($previous);
-        //Проверяем парсер
-        //dd(1);
-        if ($price == 0) $price = $this->getPriceParser($previous);
-        //Проверяем модификацию
-        if ($price == 0 && !is_null($this->modification) && ($this->id != $this->modification->base_product_id)) {
-            return $this->modification->base_product->getPrice($previous, $client);
-        }
-
-        return $price;
-    }
-
-    //ЦЕНЫ ДЛЯ АДМИНКИ
-    /**
-     * Последняя закупочная цена, через Поставщиков
-     */
-    public function getPriceCost(bool $previous = false): float
-    {
-        if ($this->pricesCost()->count() == 0) return 0;
-        if ($previous) {
-            /** @var ProductPriceCost $model */
-            $model = $this->pricesCost()->skip(1)->first();
-            if (empty($model)) return 0;
-        } else {
-            $model = $this->pricesCost()->skip(0)->first();
-        }
-        return $model->value;
-    }
-
-    public function getPriceRetail(bool $previous = false):? float
-    {
-        $query = $this->prices()
-            ->where('type', PriceType::RETAIL)
-            ->orderByDesc('set_at');
-
-        /** @var ProductPrice $model */
-        $model = $previous ? $query->skip(1)->first() : $query->first();
-
-        if (empty($model)) return null;
-        return $model->amount;
-        //TODO ТЕСТ
-    }
-
-    public function getPriceBulk(bool $previous = false):? float
-    {
-        $query = $this->prices()
-            ->where('type', PriceType::BULK)
-            ->orderByDesc('set_at');
-
-        $model = $previous ? $query->skip(1)->first() : $query->first();
-
-        // Если оптовая цена найдена — возвращаем её
-        if ($model !== null) return $model->amount;
-
-        return $this->getPriceRetail($previous);
-
-    }
-
-    public function getPriceSpecial(bool $previous = false): float
-    {
-        $query = $this->prices()
-            ->where('type', PriceType::SPECIAL)
-            ->orderByDesc('set_at');
-
-        $model = $previous ? $query->skip(1)->first() : $query->first();
-
-        // Если оптовая цена найдена — возвращаем её
-        if ($model !== null) return $model->amount;
-
-        return $this->getPriceRetail($previous);
-    }
-
-    public function getPriceMin(bool $previous = false): float
-    {
-        $query = $this->prices()
-            ->where('type', PriceType::MINIMAL)
-            ->orderByDesc('set_at');
-
-        $model = $previous ? $query->skip(1)->first() : $query->first();
-
-        // Если оптовая цена найдена — возвращаем её
-        if ($model !== null) return $model->amount;
-
-        return $this->getPriceRetail($previous);
-    }
-
-    public function getPriceParser(bool $previous = false): float
-    {
-        if (is_null($this->parser)) return 0;
-      //TODO берем базовую цену  $price = $previous ? $this->parser->price_base : $this->parser->price_sell;
-      //  Log::info(json_encode([$this->code, $this->parser->price_base, $this->brand->currency->fixed]));
-        $price = $this->parser->price_base;
-        return ceil($price * ($this->brand->currency->fixed));
-    }
-
-    /**
-     * Цена на предзаказ, если цена не определена, возвращаем из парсера или текущую
-     */
-    public function getPricePre(bool $previous = false): float
-    {
-        $query = $this->prices()
-            ->where('type', PriceType::PREORDER)
-            ->orderByDesc('set_at');
-
-        $model = $previous ? $query->skip(1)->first() : $query->first();
-
-        // Если оптовая цена найдена — возвращаем её
-        if ($model !== null) return $model->amount;
-
-        return $this->getPriceRetail($previous);
-    }
-
-    //*** КОЛ_ВО
-    public function getReserveCount(): float
-    {
-        $result = 0;
-        foreach ($this->storageItems as $storageItem) {
-            $result += $storageItem->getQuantityReserve();
-        }
-        return $result;
-    }
-
 
     /**
      * Кол-во доступное для продажи по всем точкам, за минусом резерва
@@ -631,25 +352,6 @@ class Product extends Model
 
 
     /**
-     * Хранилища, где данный товар есть в наличии
-     * @return Storage[]
-     */
-    public function getStorages(): array
-    {
-        return Storage::whereHas('items', function ($q) {
-            $q->where('product_id', $this->id);
-        })->getModels();
-    }
-
-    /**
-     * @return StorageItem[]
-     */
-    public function getStorageItems(): array
-    {
-        return StorageItem::where('product_id', $this->id)->getModels();
-    }
-
-    /**
      * Действующая акция или null
      * @return Promotion|null
      */
@@ -712,36 +414,6 @@ class Product extends Model
         return $this->hasMany(Review::class, 'product_id', 'id');
     }
 
-    //ЦЕНЫ ****************
-    public function pricesCost(): HasMany
-    {
-        return $this->hasMany(ProductPriceCost::class, 'product_id', 'id')->orderByDesc('id');
-    }
-
-    public function pricesRetail(): HasMany
-    {
-        return $this->hasMany(ProductPriceRetail::class, 'product_id', 'id')->orderByDesc('id');
-    }
-
-    public function pricesBulk(): HasMany
-    {
-        return $this->hasMany(ProductPriceBulk::class, 'product_id', 'id')->orderByDesc('id');
-    }
-
-    public function pricesSpecial(): HasMany
-    {
-        return $this->hasMany(ProductPriceSpecial::class, 'product_id', 'id')->orderByDesc('id');
-    }
-
-    public function pricesMin(): HasMany
-    {
-        return $this->hasMany(ProductPriceMin::class, 'product_id', 'id')->orderByDesc('id');
-    }
-
-    public function pricesPre(): HasMany
-    {
-        return $this->hasMany(ProductPricePre::class, 'product_id', 'id')->orderByDesc('id');
-    }
 
     //ХАРАКТЕРИСТИКИ ТОВАРА
 
@@ -867,15 +539,6 @@ class Product extends Model
     }
 
 
-    /**
-     * Имеется действующая акция
-     * @return bool
-     */
-    public function hasPromotion(): bool
-    {
-        return !is_null($this->promotion());
-    }
-
     public function countReviews(): string
     {
         //if ($this->reviews)
@@ -930,23 +593,6 @@ class Product extends Model
         return false;
     }
 
-    /**
-     * Массив данных для поиска ajax
-     */
-    public function toArrayForSearch(): array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'code' => $this->code,
-            'code_search' => $this->code_search,
-            //'image' => $this->getImage(),
-            'price' => $this->getPrice(),
-            'url' => route('admin.catalog.product.edit', $this),
-            'count' => $this->getQuantitySell(),
-            'stock' => $this->getQuantitySell() > 0,
-        ];
-    }
 
 
     /////////////////////

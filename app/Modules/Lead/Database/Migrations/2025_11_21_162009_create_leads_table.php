@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('leads', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->foreignId('staff_id')->nullable()->constrained('admins')->onDelete('set null');
+            $table->foreignId('staff_id')->nullable()->constrained('staffs')->onDelete('set null');
             $table->integer('leadable_id')->nullable();
             $table->string('leadable_type')->nullable();
             $table->json('data');

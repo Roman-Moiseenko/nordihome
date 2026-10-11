@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('phone')->default('');
             $table->integer('type')->nullable();
             $table->json('address');
-            $table->foreignId('staff_id')->nullable()->constrained('admins')->onDelete('set null');
+            $table->foreignId('staff_id')->nullable()->constrained('staffs')->onDelete('set null');
         });
     }
 

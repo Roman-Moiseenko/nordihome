@@ -34,6 +34,14 @@ interface PriceRepositoryInterface
     public function findCurrentPrices(int $productId): array;
 
     /**
+     * Получить предпоследнюю цену каждого типа для товара.
+     * Возвращает ассоциативный массив [type => amount, ...]
+     *
+     * @return array<string, float>
+     */
+    public function findPreviousPrices(int $productId): array;
+
+    /**
      * Получить последние по дате цены указанного типа для списка товаров.
      * Возвращает ассоциативный массив [product_id => price, ...]
      *

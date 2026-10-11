@@ -18,7 +18,7 @@ return new class extends Migration
             $table->renameColumn('manager_id', 'staff_id');
         });
         Schema::table('orders', function (Blueprint $table) {
-            $table->foreign('staff_id')->references('id')->on('admins')->onDelete('restrict');
+            $table->foreign('staff_id')->references('id')->on('staffs')->onDelete('restrict');
         });
     }
 

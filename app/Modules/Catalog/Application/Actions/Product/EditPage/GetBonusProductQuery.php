@@ -4,15 +4,25 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\Actions\Product\EditPage;
 
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetLatestPricesQuery;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Application\DTOs\Product\EditPage\ViewBonusProductData;
+use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Application\Actions\GetPhotoStatic;
 
 final readonly class GetBonusProductQuery
 {
+    public function __construct(
+        private GetLatestPricesQuery   $latestPricesQuery,
+        private ProductRepositoryInterface $productRepository, //FixMe переделать на DTO
+    )
+    {
+    }
     public function execute(int $id): ViewBonusProductData
     {
         $product = Product::with('modification')->findOrFail($id);
+
 
         $items = $product->bonus()
             ->get()
@@ -21,7 +31,7 @@ final readonly class GetBonusProductQuery
                 'code' => $bonus->code ?? '',
                 'name' => $bonus->name,
                 'image' => GetPhotoStatic::gallery('catalog.product', $bonus->id, 'mini'),
-                'price' => $bonus->getPriceRetail() ?? 0,
+                'price' => $this->latestPricesQuery->execute($bonus->id)[PriceType::RETAIL],
                 'discount' => (int) ($bonus->pivot->discount ?? 0),
             ])
             ->values()

@@ -21,9 +21,9 @@
                 <a href="{{ route('shop.product.view', $_product->slug) }}"
                    style="max-width: 100%; overflow: hidden;">
                     <img loading="lazy" src="{{  App\Modules\Shared\Application\Actions\GetPhotoStatic::gallery('catalog.product', $_product->id, 'catalog') }}"
-                         alt="{{ $_product->getName() }}" style="width: 100%;"/>
-                    <div class="name f-w_600 m-b_10 m-t_10">{{ $_product->getName() }}</div>
-                    <div class="price m-b_10">{{ price($_product->getPrice()) }}</div>
+                         alt="{{ $_product->name }}" style="width: 100%;"/>
+                    <div class="name f-w_600 m-b_10 m-t_10">{{ $_product->name }}</div>
+                    <div class="price m-b_10">{{ price($_product->price) }}</div>
                 </a>
                 <div>
                     <button class="to-cart btn btn-black e-add" data-product="{{$_product->id}}">

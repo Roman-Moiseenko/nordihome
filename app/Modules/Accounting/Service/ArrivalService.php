@@ -5,6 +5,8 @@ namespace App\Modules\Accounting\Service;
 
 use App\Events\ArrivalHasCompleted;
 use App\Events\MovementHasCreated;
+use App\Modules\Accounting\Application\Actions\ProductPrice\GetLatestPricesQuery;
+use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Accounting\Entity\ArrivalDocument;
 use App\Modules\Accounting\Entity\ArrivalExpenseDocument;
 use App\Modules\Accounting\Entity\ArrivalProduct;
@@ -39,6 +41,7 @@ class ArrivalService extends AccountingService
         RefundService       $refundService,
         ArrivalExpenseService $expenseService,
         PricingService        $pricingService,
+        private readonly GetLatestPricesQuery   $latestPricesQuery,
     )
     {
         $this->storages = $storages;
@@ -307,15 +310,23 @@ class ArrivalService extends AccountingService
             if (!$arrival->isCompleted()) throw new \DomainException('Документ не проведен. Создать документ цен нельзя');
 
             if (!is_null($arrival->pricing)) return $arrival->pricing;
+
+
+
             $coeff = 1;
             if (!is_null($arrival->expense)) $coeff += $arrival->expense->getAmount() / ($arrival->getAmount() * $arrival->exchange_fix);
             $pricing = $this->pricingService->create($arrival->id);
             foreach ($arrival->products as $product) {
+                $prices = $this->latestPricesQuery->execute($product->product_id);
                 $cost_ru = $product->cost_currency * $arrival->exchange_fix;
                 $item = PricingProduct::new(
                     product_id: $product->product_id,
                     price_cost: (int)ceil($cost_ru * $coeff),
-                    price_min:  (int)ceil($cost_ru),
+                    price_retail: $prices[PriceType::RETAIL] ?? 0,
+                    price_bulk: $prices[PriceType::BULK] ?? 0,
+                    price_special: $prices[PriceType::SPECIAL] ?? 0,
+                    price_min: (int)ceil($cost_ru),
+                    price_pre: $prices[PriceType::PREORDER] ?? 0,
                 );
                 $pricing->products()->save($item);
             }

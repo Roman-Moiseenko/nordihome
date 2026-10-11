@@ -1,0 +1,26 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Modules\Accounting\Application\Actions\ProductPrice;
+
+use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
+use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
+
+readonly class GetPreviousPricesQuery
+{
+    public function __construct(
+        private PriceRepositoryInterface $priceRepository,
+    )
+    {
+    }
+
+    /**
+     * @return array<string, float>
+     */
+    public function execute(int $productId): array
+    {
+        return $this->priceRepository->findPreviousPrices($productId);
+    }
+}

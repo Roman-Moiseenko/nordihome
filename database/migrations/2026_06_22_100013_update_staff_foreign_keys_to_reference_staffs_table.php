@@ -60,7 +60,7 @@ return new class extends Migration
             }
             Schema::table($table, function (Blueprint $t) use ($column, $onDelete) {
                 try { $t->dropForeign([$column]); } catch (\Exception $e) {}
-                $t->foreign($column)->references('id')->on('admins')->onDelete($onDelete);
+                $t->foreign($column)->references('id')->on('staffs')->onDelete($onDelete);
             });
         }
     }

@@ -77,7 +77,6 @@ use App\Modules\Order\Events\OrderHasPrepaid;
 use App\Modules\Order\Events\OrderHasRefund;
 use App\Modules\Order\Events\OrderHasSetManager;
 use App\Modules\Order\Events\OrderHasWork;
-use App\Modules\Order\Listeners\OrderPreChangeBaseCost;
 use App\Modules\Order\Listeners\UserMailExpenseCompleted;
 use App\Modules\Order\Listeners\UserWriteReview;
 use App\Modules\Order\Service\ExpenseService;
@@ -155,16 +154,6 @@ class EventServiceProvider extends ServiceProvider
             NotificationOrderCompleted::class,
             LeadCompleted::class,
         ],
-
-
-        //Изменился курс валюты
-        CurrencyHasUpdateFixed::class => [
-            OrderPreChangeBaseCost::class,
-
-        ],
-
-
-
 
         //TODO Остальные проработать
 

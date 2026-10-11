@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('order_responsible', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
-            $table->foreignId('staff_id')->constrained('admins')->onDelete('cascade');
+            $table->foreignId('staff_id')->constrained('staffs')->onDelete('cascade');
             $table->integer('staff_post');
             $table->timestamp('created_at');
             $table->timestamp('close_at')->nullable();

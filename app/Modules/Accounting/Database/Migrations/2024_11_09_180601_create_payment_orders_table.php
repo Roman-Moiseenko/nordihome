@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->string('number')->default('');
             $table->boolean('completed')->default(false);
             $table->float('amount', 10,2, true);
-            $table->foreignId('staff_id')->constrained('admins')->onDelete('restrict');
+            $table->foreignId('staff_id')->constrained('staffs')->onDelete('restrict');
             $table->text('comment');
             $table->timestamps();
             $table->boolean('manual')->default(false);

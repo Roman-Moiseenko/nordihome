@@ -21,7 +21,7 @@ return new class extends Migration
             $table->integer('reason')->nullable();
             $table->boolean('completed')->default(false);
 
-            $table->foreignId('staff_id')->constrained('admins')->onDelete('restrict');
+            $table->foreignId('staff_id')->constrained('staffs')->onDelete('restrict');
             $table->foreignId('expense_id')->constrained('order_expenses')->onDelete('cascade');
             $table->foreignId('order_payment_id')->nullable()->constrained('order_payments')->onDelete('set null');
             $table->timestamps();

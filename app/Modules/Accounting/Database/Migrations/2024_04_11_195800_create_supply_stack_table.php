@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('supply_stack', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('staff_id')->constrained('admins')->onDelete('cascade');
+            $table->foreignId('staff_id')->constrained('staffs')->onDelete('cascade');
             $table->foreignId('supply_id')->nullable()->constrained('supply_documents')->onDelete('set null');
             $table->foreignId('storage_id')->constrained('storages')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');

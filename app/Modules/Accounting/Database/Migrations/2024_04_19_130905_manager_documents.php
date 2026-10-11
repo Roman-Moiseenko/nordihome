@@ -12,19 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('arrival_documents', function (Blueprint $table) {
-            $table->foreignId('staff_id')->nullable()->constrained('admins')->onDelete('set null');
+            $table->foreignId('staff_id')->nullable()->constrained('staffs')->onDelete('set null');
         });
 
         Schema::table('pricing_documents', function (Blueprint $table) {
-            $table->foreignId('staff_id')->nullable()->constrained('admins')->onDelete('set null');
+            $table->foreignId('staff_id')->nullable()->constrained('staffs')->onDelete('set null');
         });
 
         Schema::table('departure_documents', function (Blueprint $table) {
-            $table->foreignId('staff_id')->nullable()->constrained('admins')->onDelete('set null');
+            $table->foreignId('staff_id')->nullable()->constrained('staffs')->onDelete('set null');
         });
 
         Schema::table('movement_documents', function (Blueprint $table) {
-            $table->foreignId('staff_id')->nullable()->constrained('admins')->onDelete('set null');
+            $table->foreignId('staff_id')->nullable()->constrained('staffs')->onDelete('set null');
         });
 
     }

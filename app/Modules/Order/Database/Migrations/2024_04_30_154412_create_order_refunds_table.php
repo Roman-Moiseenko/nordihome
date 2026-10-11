@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('order_refunds', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
-            $table->foreignId('staff_id')->constrained('admins')->onDelete('cascade');
+            $table->foreignId('staff_id')->constrained('staffs')->onDelete('cascade');
             $table->integer('status');
             $table->timestamps();
             $table->string('comment')->default('');
