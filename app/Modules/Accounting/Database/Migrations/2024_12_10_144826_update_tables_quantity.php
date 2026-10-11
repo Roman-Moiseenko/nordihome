@@ -69,9 +69,7 @@ return new class extends Migration
         Schema::table('cart_storage', function (Blueprint $table) {
             $table->decimal('quantity', 10, 3)->change();
         });
-        Schema::table('parser_storage', function (Blueprint $table) {
-            $table->decimal('quantity', 10, 3)->change();
-        });
+
         Schema::table('composites', function (Blueprint $table) {
             $table->decimal('quantity', 10, 3)->change();
         });
@@ -145,9 +143,7 @@ return new class extends Migration
         Schema::table('cart_storage', function (Blueprint $table) {
             $table->integer('quantity')->change();
         });
-        Schema::table('parser_storage', function (Blueprint $table) {
-            $table->integer('quantity')->change();
-        });
+
         Schema::table('composites', function (Blueprint $table) {
             $table->integer('quantity')->change();
         });

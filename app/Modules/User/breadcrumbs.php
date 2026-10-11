@@ -12,6 +12,8 @@ use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
 ////////////////////// ADMINS
 //USERS
+
+/*
 Breadcrumbs::for('admin.user.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.home');
     $trail->push('Клиенты', route('admin.user.index'));
@@ -40,3 +42,4 @@ Breadcrumbs::for('admin.user.subscription.show', function (BreadcrumbTrail $trai
     $trail->parent('admin.user.subscription.index');
     $trail->push($subscription->name, route('admin.user.subscription.show', $subscription));
 });
+*/

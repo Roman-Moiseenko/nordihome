@@ -40,7 +40,6 @@ use Laravel\Sanctum\HasApiTokens;
  * @property int $delivery
  * @property int $storage
  * @property int $organization_id
- * @property UserPayment $payment
  * @property Subscription[] $subscriptions
  * @property FullName $fullname
  * @property GeoAddress $address

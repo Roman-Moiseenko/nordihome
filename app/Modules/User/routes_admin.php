@@ -6,7 +6,7 @@ use App\Modules\User\Controllers\SubscriptionController;
 use App\Modules\User\Controllers\UserController;
 use App\Modules\User\Controllers\WishController;
 use Illuminate\Support\Facades\Route;
-
+/*
 Route::group([
     'middleware' => 'role:admin|staff',
     'prefix' => 'user',
@@ -45,3 +45,4 @@ Route::group([
 
 });
 
+*/

@@ -111,8 +111,8 @@
                 </Link>
             </div>
             <div class="mt-3">
-                <SearchAttachOrganization
-                    :route="route('admin.user.attach', {user: props.client.id})"/>
+
+                <!-- //MAINDO SearchAttachOrganization :route="route('admin.client.attach', {user: props.client.id})"/-->
             </div>
             <h2>Файлы физ.лица</h2>
             <el-upload
@@ -189,16 +189,18 @@ function createOrder() {
 
 function detachOrganization(id) {
     showEdit.value = false;
-    router.post(route('admin.user.detach', {user: props.client.id, organization: id}))
+    //MAINDO Переделать на клиента
+   // router.post(route('admin.client.detach', {id: props.client.id, organization: id}))
 }
 
 function defaultOrganization(id) {
     showEdit.value = false;
-    router.post(route('admin.user.default', {user: props.client.id, organization: id}))
+    //router.post(route('admin.client.default', {id: props.client.id, organization: id}))
 }
 
 function setInfo() {
-    router.visit(route('admin.user.set-info', {user: props.client.id}), {
+    /*
+    router.visit(route('admin.client.set-info', {id: props.client.id}), {
         method: "post",
         data: form,
         preserveScroll: true,
@@ -207,6 +209,7 @@ function setInfo() {
             editUser.value = false;
         }
     })
+    */
 }
 
 /*
