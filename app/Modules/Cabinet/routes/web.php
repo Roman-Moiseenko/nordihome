@@ -17,10 +17,9 @@ Route::group([
     function () {
         Route::get('/', [CabinetController::class, 'view'])->name('view');
         Route::get('/profile', [CabinetController::class, 'profile'])->name('profile');
-        Route::post('/fullname/{user}', [CabinetController::class, 'fullname'])->name('fullname');
-        Route::post('/phone/{user}', [CabinetController::class, 'phone'])->name('phone');
-        Route::post('/email/{user}', [CabinetController::class, 'email'])->name('email');
-        Route::post('/password/{user}', [CabinetController::class, 'password'])->name('password');
+
+        Route::post('/email/{id}', [CabinetController::class, 'email'])->name('email');
+        Route::post('/password/{id}', [CabinetController::class, 'password'])->name('password');
 
         Route::group([
             'as' => 'options.',

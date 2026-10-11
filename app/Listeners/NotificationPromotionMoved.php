@@ -3,15 +3,6 @@
 namespace App\Listeners;
 
 use App\Events\PromotionHasMoved;
-use App\Mail\PromotionFinished;
-use App\Mail\PromotionFinishing;
-use App\Mail\PromotionStarted;
-use App\Mail\PromotionStarting;
-use App\Modules\Discount\Infrastructure\Models\Promotion;
-use App\Modules\User\Repository\UserRepository;
-use App\Modules\User\Service\SubscriptionService;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
 
 class NotificationPromotionMoved
 {
@@ -20,13 +11,9 @@ class NotificationPromotionMoved
     /**
      * Create the event listener.
      */
-    public function __construct(SubscriptionService $subscriptionService, UserRepository $userRepository)
+    public function __construct()
     {
-        if ($subscriptionService->check_subscription(self::class)) {
-            $this->users = $userRepository->getUsersBySubscription(self::class);
-        } else {
-            $this->users = [];
-        }
+
     }
 
     /**

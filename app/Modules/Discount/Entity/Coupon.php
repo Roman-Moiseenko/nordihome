@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Discount\Entity;
 
-use App\Modules\User\Entity\User;
+use App\Modules\Auth\Infrastructure\Models\Client;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 //TODO Внести изменения в структуры
 /**
  * @property int $id
- * @property int $user_id
+ * @property int $client_id
  * @property int $bonus
  * @property int $status
  * @property string $code
@@ -23,7 +23,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $min_amount //Минимальная сумма заказа
  * @property int $who //кто выдал
  * @property int $rrr //Основание/условие выдачи
- * @property User $user
+ * @property Client $client
  */
 class Coupon extends Model
 {
@@ -86,9 +86,9 @@ class Coupon extends Model
         }
     }
 
-    public function user()
+    public function client()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 
     public function htmlStart(): string

@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Cabinet\Infrastructure\Models;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $product_id
  * @property Carbon $created_at
  * @property Product $product
- * @property User $user
+ * @property Client $client
  */
 class Wish extends Model
 {
@@ -40,8 +40,8 @@ class Wish extends Model
         return $this->belongsTo(Product::class, 'product_id', 'id');
     }
 
-    public function user()
+    public function client()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(Client::class, 'client_id', 'id');
     }
 }

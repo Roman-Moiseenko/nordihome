@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\User\Entity\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -18,16 +18,16 @@ class ProductArrival extends Mailable
      * @var Product[]
      */
     private array $products;
-    private User $user;
+    private Client $client;
 
     /**
      * @param Product[] $products
      */
-    public function __construct(array $products, User $user)
+    public function __construct(array $products, Client $client)
     {
         //
         $this->products = $products;
-        $this->user = $user;
+        $this->client = $client;
     }
 
     /**
@@ -63,6 +63,6 @@ class ProductArrival extends Mailable
     public function build()
     {
         return $this->subject('Поступление товара из избранного')
-            ->markdown('mail.subscription.product-arrival')->with([ 'user' => $this->user, 'products' => $this->products]);
+            ->markdown('mail.subscription.product-arrival')->with([ 'client' => $this->client, 'products' => $this->products]);
     }
 }

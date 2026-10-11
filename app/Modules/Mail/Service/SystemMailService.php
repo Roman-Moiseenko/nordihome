@@ -4,13 +4,10 @@ namespace App\Modules\Mail\Service;
 
 use App\Modules\Mail\Mailable\AbstractMailable;
 use App\Modules\Mail\Entity\SystemMail;
-use App\Modules\Mail\Mailable\VerifyMail;
 use App\Modules\Shared\Application\Interfaces\Mail\MailServiceInterface;
 use App\Modules\Shared\Domain\Entities\Mail\Recipient;
-use App\Modules\User\Entity\User;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Modules\Mail\Entity\MailTemplate;
 use Illuminate\Mail\Mailables\Content;

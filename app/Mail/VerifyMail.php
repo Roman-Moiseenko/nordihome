@@ -4,14 +4,11 @@ namespace App\Mail;
 
 
 use App\Modules\Auth\Infrastructure\Models\Client;
-use App\Modules\User\Entity\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Symfony\Component\Mime\Crypto\DkimSigner;
 
 class VerifyMail extends Mailable
 {

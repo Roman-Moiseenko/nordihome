@@ -2,12 +2,9 @@
 
 namespace App\Events;
 
-use App\Modules\User\Entity\User;
-use Illuminate\Broadcasting\Channel;
+use App\Modules\Auth\Infrastructure\Models\User;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 

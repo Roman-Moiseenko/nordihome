@@ -1,10 +1,6 @@
 <?php
 declare(strict_types=1);
 
-use App\Modules\User\Entity\Subscription;
-use App\Modules\User\Entity\User;
-use Diglactic\Breadcrumbs\Breadcrumbs;
-use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
 ////////////////////// CABINET & SHOP
 

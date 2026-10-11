@@ -9,14 +9,10 @@ use App\Modules\Mail\Mailable\ExpenseDelivery;
 use App\Modules\Mail\Mailable\OrderAwaitingMail;
 use App\Modules\Mail\Mailable\OrderNew;
 use App\Modules\Mail\Mailable\TestMail;
-use App\Modules\User\Entity\User;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Log\Logger;
 use Illuminate\Mail\Mailable;
-use Illuminate\Support\Facades\Log;
 
 /**
  * @property int $id

@@ -6,8 +6,6 @@ use App\Events\ArrivalHasCompleted;
 
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
-use App\Modules\User\Repository\UserRepository;
-use App\Modules\User\Service\SubscriptionService;
 
 class NotificationArrivalCompleted
 {
@@ -18,16 +16,9 @@ class NotificationArrivalCompleted
      * Create the event listener.
      */
     public function __construct(
-        SubscriptionService $subscriptionService,
-        UserRepository      $userRepository,
         ListStaffByPositionUseCase $positionUseCase)
     {
-        if ($subscriptionService->check_subscription(self::class)) {
-            $this->users = $userRepository->getUsersBySubscription(self::class);
-        } else {
-            $this->users = [];
-        }
-        $this->positionUseCase = $positionUseCase;
+
     }
 
     /**

@@ -5,23 +5,16 @@ namespace App\Listeners;
 use App\Events\PricingHasCompleted;
 use App\Modules\Auth\Application\Actions\Staff\ListStaffByPositionUseCase;
 use App\Modules\Auth\Domain\ValueObjects\StaffPosition;
-use App\Modules\User\Repository\UserRepository;
-use App\Modules\User\Service\SubscriptionService;
 
 class NotificationPricingCompleted
 {
     private array $users;
     private ListStaffByPositionUseCase $positionUseCase;
 
-    public function __construct(SubscriptionService $subscriptionService, UserRepository $userRepository,
+    public function __construct(
                                 ListStaffByPositionUseCase $positionUseCase)
     {
-        if ($subscriptionService->check_subscription(self::class)) {
-            $this->users = $userRepository->getUsersBySubscription(self::class);
-        } else {
-            $this->users = [];
-        }
-        $this->positionUseCase = $positionUseCase;
+
     }
 
     /**

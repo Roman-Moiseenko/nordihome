@@ -4,11 +4,9 @@ declare(strict_types=1);
 namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 
 use App\Modules\Cabinet\Application\Queries\PageWishQuery;
+use App\Modules\Cabinet\Service\WishService;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
-use App\Modules\User\Entity\User;
-use App\Modules\User\Repository\UserRepository;
-use App\Modules\User\Service\WishService;
 use Illuminate\Http\Request;
 use function response;
 use function view;
@@ -16,14 +14,12 @@ use function view;
 class WishController extends ShopAbstractController
 {
     private WishService $service;
-    private UserRepository $repository;
 
-    public function __construct(WishService $service, UserRepository $repository,
+    public function __construct(WishService $service,
     private readonly PageWishQuery $pageWishQuery,
     )
     {
         $this->service = $service;
-        $this->repository = $repository;
     }
 
     public function index(Request $request)

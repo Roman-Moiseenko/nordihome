@@ -2,13 +2,14 @@
 
 namespace App\Livewire\Popup;
 
-use App\Modules\User\Entity\User;
+
+use App\Modules\Auth\Infrastructure\Models\Client;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
 class BuyClick extends Component
 {
-    public User|null $user;
+    public Client|null $client;
     public int $product_id = 0;
     public string $email = '';
     public string $phone = '';
@@ -18,9 +19,9 @@ class BuyClick extends Component
 
     public array $errors = [];
 
-    public function mount(mixed $user): void
+    public function mount(Client|null $user): void
     {
-        $this->user = $user;
+        $this->client = $user;
         if (!is_null($user)) {
             $this->email = $user->email;
             $this->phone = $user->phone;

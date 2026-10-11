@@ -6,7 +6,6 @@ namespace App\Modules\Order\Repository;
 use App\Modules\Base\Traits\FiltersRepository;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Entity\Payment\PaymentHelper;
-use App\Modules\User\Entity\User;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -60,9 +59,9 @@ class PaymentRepository
             [
                 'date' => $payment->htmlDate(),
                 'order' => $payment->order,
-                'user_name' => is_null($payment->order) ? $payment->shopper->short_name : $payment->order->client->getPublicName(),
+                'user_name' => is_null($payment->order) ? $payment->shopper->short_name : $payment->order->client->fullName,
                 'comment' => $payment->comment,
-                'staff' => !is_null($payment->staff) ? $payment->staff->fullname->getFullName() : '-',
+                'staff' => !is_null($payment->staff) ? $payment->staff->fullName : '-',
                 'method_text' => $payment->methodText(),
             ]
         );

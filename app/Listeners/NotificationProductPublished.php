@@ -3,18 +3,13 @@
 namespace App\Listeners;
 
 use App\Events\ProductHasPublished;
-use App\Mail\ProductNew;
-use App\Modules\Catalog\Infrastructure\Models\Product;
-use App\Modules\User\Repository\UserRepository;
-use App\Modules\User\Service\SubscriptionService;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\Mail;
+
 
 class NotificationProductPublished
 {
     private array $users;
 
-    public function __construct(SubscriptionService $subscriptionService, UserRepository $userRepository)
+    public function __construct()
     {
    /*     if ($subscriptionService->check_subscription(self::class)) {
             $this->users = $userRepository->getUsersBySubscription(self::class);

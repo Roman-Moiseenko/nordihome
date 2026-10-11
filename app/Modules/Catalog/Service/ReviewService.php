@@ -6,13 +6,13 @@ namespace App\Modules\Catalog\Service;
 
 use App\Events\CouponHasCreated;
 use App\Events\ReviewHasEdit;
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Review;
 use App\Modules\Discount\Entity\Coupon;
 use App\Modules\Discount\Entity\DiscountReview;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\User\Entity\User;
 use Illuminate\Support\Facades\Auth;
 
 class ReviewService
@@ -28,11 +28,11 @@ class ReviewService
         $this->bonus_review = $coupon->bonus_review;;
     }
 
-    public function createEmpty(Product $product, User $user, Order $order): Review
+    public function createEmpty(Product $product, Client $client, Order $order): Review
     {
         //Создание пустого отзыва не активного
-        if (empty($review = Review::where('product_id', $product->id)->where('user_id', $user->id)->first())) {
-            $review = Review::empty($product->id, $user->id);
+        if (empty($review = Review::where('product_id', $product->id)->where('client_id', $client->id)->first())) {
+            $review = Review::empty($product->id, $client->id);
         }
 
         if ($this->bonus_review && is_null($review->discount)) {
@@ -44,12 +44,13 @@ class ReviewService
 
     public function create(array $request): Review
     {
-        $user = Auth::guard('web')->user();
-        if (is_null($user)) throw new \DomainException('Отзыв можно оставлять только зарегистрированным пользователям!');
-        $review = Review::register((int)$request['product_id'], $user->id, $request['text'],(int)$request['rating'] );
 
-        event(new ReviewHasEdit($review));
-        return $review;
+        abort(404);
+       // if (is_null($user)) throw new \DomainException('Отзыв можно оставлять только зарегистрированным пользователям!');
+   //     $review = Review::register((int)$request['product_id'], $user->id, $request['text'],(int)$request['rating'] );
+
+   //     event(new ReviewHasEdit($review));
+  //      return $review;
     }
 
     public function update(Review $review, string $text, int $rating): Review

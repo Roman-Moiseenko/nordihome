@@ -11,11 +11,9 @@
 // });
 use App\Modules\Auth\Presentation\Http\Controllers\Web\AuthController;
 use App\Modules\Auth\Presentation\Http\Controllers\Web\ClientController;
-use App\Modules\Auth\Presentation\Http\Controllers\Web\FreelanceController;
 use App\Modules\Auth\Presentation\Http\Controllers\Web\PasswordController;
 use App\Modules\Auth\Presentation\Http\Controllers\Web\RoleController;
 use App\Modules\Auth\Presentation\Http\Controllers\Web\StaffController;
-use App\Modules\User\Controllers\Auth\ForgotPasswordController;
 use Illuminate\Support\Facades\Route;
 
 // Аутентификация сотрудников (Inertia)

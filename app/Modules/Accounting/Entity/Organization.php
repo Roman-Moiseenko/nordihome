@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FileStorage;
@@ -11,7 +12,6 @@ use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Guide\Entity\VAT;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Infrastructure\Models\Order;
-use App\Modules\User\Entity\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -53,7 +53,7 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property OrganizationHolding $holding
  * @property Trader $trader
  * @property Distributor $distributor
- * @property User $shopper
+ * @property Client $shopper
  * @property FileStorage[] $files
  * @property FileStorage[] $contracts
  * @property FileStorage[] $documents
@@ -235,12 +235,11 @@ class Organization extends Model
     public function shopper(): HasOneThrough
     {
         return $this->hasOneThrough(
-            User::class,
+            Client::class,
             ShopperOrganization::class,
             'organization_id', 'id', 'id',
             'client_id');
 
-        //return $this->hasOne(User::class, 'organization_id', 'id');
     }
     //СПРАВОЧНИКИ GUIDE
     public function VAT(): BelongsTo

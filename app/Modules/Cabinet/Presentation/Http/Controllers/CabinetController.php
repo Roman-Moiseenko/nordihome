@@ -7,23 +7,17 @@ namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Cabinet\Application\Queries\PageCabinetQuery;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
-use App\Modules\User\Service\UserService;
+
 use Illuminate\Http\Request;
-use function response;
 use function view;
 
 class CabinetController extends ShopAbstractController
 {
 
-    private UserService $service;
-
     public function __construct(
-        UserService                       $service,
         private readonly PageCabinetQuery $pageCabinetQuery,
     )
     {
-        //parent::__construct();
-        $this->service = $service;
     }
 
     public function view(Request $request)
@@ -42,33 +36,20 @@ class CabinetController extends ShopAbstractController
         //
     }
 
-    //AJAX
-    //TODO Перенести в Livewire
-    public function fullname(Client $client, Request $request)
-    {
-        $result = $this->service->setFullname($client, $request);
-        $client->refresh();
-        return response()->json($result);
-    }
-
-    public function phone(Client $client, Request $request)
-    {
-        $result = $this->service->setPhone($client, $request);
-        $client->refresh();
-        return response()->json($result);
-    }
 
     public function email(Client $client, Request $request)
     {
-        $result = $this->service->setEmail($client, $request);
-        $client->refresh();
-        return response()->json($result);
+        //FixMe Сделать замену почты и верификации
+        //  $result = $this->service->setEmail($client, $request);
+        //   $client->refresh();
+        //  return response()->json($result);
     }
 
     public function password(Client $client, Request $request)
     {
-        $result = $this->service->setPassword($client, $request);
-        $client->refresh();
-        return response()->json($result);
+        //FixMe Сделать смены пароля
+        //    $result = $this->service->setPassword($client, $request);
+        //    $client->refresh();
+        //     return response()->json($result);
     }
 }

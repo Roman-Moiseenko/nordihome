@@ -2,8 +2,8 @@
 
 namespace App\Mail;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Setting\Entity\Settings;
-use App\Modules\User\Entity\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
@@ -15,20 +15,20 @@ class UserReview extends Mailable
     use Queueable, SerializesModels;
 
     private array $products;
-    private User $user;
+    private Client $client;
     private int $bonus_amount;
     private bool $bonus_review;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(User $user, array $products)
+    public function __construct(Client $client, array $products)
     {
         $settings = app()->make(Settings::class);
         $coupon = $settings->coupon;
 
         $this->products = $products;
-        $this->user = $user;
+        $this->client = $client;
 
         $this->bonus_amount = $coupon->bonus_amount;
         $this->bonus_review = $coupon->bonus_review;
@@ -68,6 +68,6 @@ class UserReview extends Mailable
     {
         return $this
             ->markdown('mail.user.review')
-            ->with([ 'user' => $this->user, 'products' => $this->products, 'bonus_amount' => $this->bonus_amount, 'bonus_review' => $this->bonus_review]);
+            ->with([ 'client' => $this->client, 'products' => $this->products, 'bonus_amount' => $this->bonus_amount, 'bonus_review' => $this->bonus_review]);
     }
 }

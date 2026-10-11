@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\User\Service;
+namespace App\Modules\Cabinet\Service;
 
 use App\Modules\Cabinet\Infrastructure\Models\Wish;
 

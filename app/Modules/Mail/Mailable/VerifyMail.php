@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Modules\Mail\Mailable;
 
-use App\Modules\User\Entity\User;
 use Illuminate\Mail\Mailables\Content;
 use JetBrains\PhpStorm\Pure;
 

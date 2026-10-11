@@ -2,22 +2,22 @@
 
 namespace App\Modules\Mail\Mailable;
 
+use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Discount\Entity\Coupon;
-use App\Modules\User\Entity\User;
 use Illuminate\Mail\Mailables\Content;
 use JetBrains\PhpStorm\Pure;
 
 class UserRegister extends SystemMailable
 {
 
-    private User $user;
+    private Client $client;
     private Coupon $coupon;
 
-    public function __construct(User $user, Coupon $coupon)
+    public function __construct(Client $client, Coupon $coupon)
     {
         parent::__construct();
         $this->subject = 'Регистрация на NORDI HOME';
-        $this->user = $user;
+        $this->client = $client;
         $this->coupon = $coupon;
     }
 
@@ -26,7 +26,7 @@ class UserRegister extends SystemMailable
         return new Content(
             markdown: 'mail.user.register',
             with: [
-                'user' => $this->user,
+                'client' => $this->client,
                 'coupon' => $this->coupon,
             ],
         );

@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Repository;
 
+use App\Modules\Auth\Domain\ValueObjects\WorkerPosition;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Traits\FiltersRepository;
 use App\Modules\Delivery\Service\CalendarService;
@@ -11,7 +12,6 @@ use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Order\Infrastructure\Models\OrderHistoryStatus;
-use App\Modules\User\Repository\UserRepository;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
 
@@ -19,12 +19,10 @@ class OrderRepository
 {
     use FiltersRepository;
 
-    private UserRepository $users;
     private CalendarService $calendar;
 
-    public function __construct(UserRepository $users, CalendarService $calendar)
+    public function __construct(CalendarService $calendar)
     {
-        $this->users = $users;
         $this->calendar = $calendar;
     }
 
@@ -271,7 +269,7 @@ class OrderRepository
             ],
             'workers' => $expense->workers()->get()->map(function (Staff $worker) {
                 return array_merge($worker->toArray(), [
-                    'work' => Staff::WORKS[$worker->pivot->work],
+                    'work' => WorkerPosition::WORKS[$worker->pivot->work],
                 ]);
             }),
             'refunds' => ($expense->refunds()->count() == 0) ? null : true,

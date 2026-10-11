@@ -3,9 +3,7 @@
 namespace App\Livewire\Cabinet\Wish;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
-use App\Modules\Cabinet\Application\Actions\Wish\RemoveWishUseCase;
 use App\Modules\Cabinet\Application\Queries\ListWishClientQuery;
-use App\Modules\User\Entity\User;
 use Illuminate\Support\Collection;
 use Livewire\Attributes\On;
 use Livewire\Component;
