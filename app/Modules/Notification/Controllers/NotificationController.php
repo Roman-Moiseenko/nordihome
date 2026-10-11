@@ -3,9 +3,7 @@
 namespace App\Modules\Notification\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Admin\Entity\Worker;
 use App\Modules\Auth\Infrastructure\Models\Staff;
-use App\Modules\Employee\Entity\Employee;
 use App\Modules\Notification\Helpers\NotificationHelper;
 use App\Modules\Notification\Requests\NotificationRequest;
 use App\Modules\Notification\Repository\NotificationRepository;
@@ -56,7 +54,7 @@ class NotificationController extends Controller
                 'name' => $staff->fullname->getFullName(),
             ];
         })->toArray();
-        $workers = Worker::where('active', true)->get()->map(function (Worker $worker) {
+        $workers = Staff::where('active', true)->get()->map(function (Staff $worker) {
             return [
                 'id' => $worker->id,
                 'telegram_id' => $worker->telegram_user_id,

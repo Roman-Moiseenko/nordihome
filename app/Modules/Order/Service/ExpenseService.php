@@ -5,8 +5,8 @@ namespace App\Modules\Order\Service;
 
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Service\BatchSaleService;
-use App\Modules\Admin\Entity\Worker;
 use App\Modules\Auth\Domain\Interfaces\StaffRepositoryInterface;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Notification\Helpers\NotificationHelper;
@@ -214,8 +214,8 @@ class ExpenseService
         */
         $expense->save();
 
-        /** @var Worker $worker */
-        $worker = Worker::find($worker_id);
+        /** @var Staff $worker */
+        $worker = Staff::find($worker_id);
 
         $worker->notify(new StaffMessage(
             event: NotificationHelper::EVENT_ASSEMBLY,
@@ -231,14 +231,14 @@ class ExpenseService
 
         $expense->status = OrderExpense::STATUS_ASSEMBLY;
         $expense->save();
-        /** @var Worker $worker */
-        $worker = Worker::find($worker_id);
+        /** @var Staff $worker */
+        $worker = Staff::find($worker_id);
         $worker->notify(new StaffMessage(
             event: NotificationHelper::EVENT_INFO,
             message: 'Отмена сборки по распоряжению ' . $expense->number,
         ));
 
-        OrderExpenseWorker::where('expense_id', $expense->id)->where('work', Worker::WORK_LOADER)->delete();
+        OrderExpenseWorker::where('expense_id', $expense->id)->where('work', Staff::WORK_LOADER)->delete();
     }
 
     public function delDriver(OrderExpense $expense): void
@@ -246,19 +246,19 @@ class ExpenseService
         $worker_id = $expense->getDriver()->id;
         $expense->status = OrderExpense::STATUS_ASSEMBLED;
         $expense->save();
-        /** @var Worker $worker */
-        $worker = Worker::find($worker_id);
+        /** @var Staff $worker */
+        $worker = Staff::find($worker_id);
         $worker->notify(new StaffMessage(
             event: NotificationHelper::EVENT_INFO,
             message: 'Отмена доставки по распоряжению ' . $expense->number,
         ));
-        OrderExpenseWorker::where('expense_id', $expense->id)->where('work', Worker::WORK_DRIVER)->delete();
+        OrderExpenseWorker::where('expense_id', $expense->id)->where('work', Staff::WORK_DRIVER)->delete();
 
     }
 
     public function delAssemble(OrderExpense $expense): void
     {
-        OrderExpenseWorker::where('expense_id', $expense->id)->where('work', Worker::WORK_ASSEMBLE)->delete();
+        OrderExpenseWorker::where('expense_id', $expense->id)->where('work', Staff::WORK_ASSEMBLE)->delete();
     }
 
     public function setDriver(OrderExpense $expense, int $worker_id): void

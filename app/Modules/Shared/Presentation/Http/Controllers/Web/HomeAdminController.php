@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Admin\Controllers;
+namespace App\Modules\Shared\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Base\Helpers\Version;
 use Inertia\Inertia;
 
 
-class HomeController extends Controller
+class HomeAdminController extends Controller
 {
 
     public function __construct()

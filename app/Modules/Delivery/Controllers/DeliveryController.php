@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Delivery\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Admin\Entity\Worker;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Delivery\Repository\DeliveryRepository;
 use App\Modules\Delivery\Service\CalendarService;
@@ -51,7 +51,7 @@ class DeliveryController extends Controller
         return Inertia::render('Delivery/All/Index', [
             'expenses' => $expenses,
             'filters' => $filters,
-            'works' => Worker::where('active', true)->get(),
+            'works' => Staff::query()->get(),//where('active', true)->get(), //FixMe добавить фильтр рабочих
         ]);
     }
 
@@ -63,7 +63,7 @@ class DeliveryController extends Controller
         $expenses = $this->repository->getLoader($request);
         return Inertia::render('Delivery/Loader/Index', [
             'expenses' => $expenses,
-            'works' => Worker::where('active', true)->getModels(),
+            'works' => Staff::query()->getModels(),
         ]);
     }
 
@@ -82,8 +82,8 @@ class DeliveryController extends Controller
             'region' => $region,
             'ozon' => $ozon,
             'cargo_companies' => CargoCompany::orderBy('name')->getModels(),
-            'drivers' => Worker::where('active', true)->where('driver', true)->get(),
-            'assembles' => Worker::where('active', true)->where('assemble', true)->get(),
+            'drivers' => Staff::query()->get(), //where('active', true)->where('driver', true)->get(),
+            'assembles' => Staff::query()->get(), //where('active', true)->where('assemble', true)->get(),
         ]);
     }
 

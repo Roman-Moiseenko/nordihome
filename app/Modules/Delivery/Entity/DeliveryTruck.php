@@ -3,9 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Delivery\Entity;
 
-use App\Modules\Admin\Entity\Worker;
 use Illuminate\Database\Eloquent\Model;
-use JetBrains\PhpStorm\Pure;
+
 
 /**
  * @property int $id

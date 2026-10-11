@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Delivery\Controllers;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Admin\Entity\Worker;
 use App\Modules\Delivery\Entity\DeliveryTruck;
 use App\Modules\Delivery\Repository\TruckRepository;
 use App\Modules\Delivery\Service\TruckService;

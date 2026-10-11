@@ -3,18 +3,14 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Repository;
 
-
-use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Admin\Entity\Worker;
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Traits\FiltersRepository;
 use App\Modules\Delivery\Service\CalendarService;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Entity\Order\OrderExpenseAddition;
 use App\Modules\Order\Entity\Order\OrderExpenseItem;
 use App\Modules\Order\Infrastructure\Models\Order;
-use App\Modules\Order\Infrastructure\Models\OrderAddition;
 use App\Modules\Order\Infrastructure\Models\OrderHistoryStatus;
-use App\Modules\Order\Infrastructure\Models\OrderItem;
 use App\Modules\User\Repository\UserRepository;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;
@@ -273,9 +269,9 @@ class OrderRepository
                 'name' => $expense->order->client->getPublicName(),
                 'phone' => $expense->order->client->phone,
             ],
-            'workers' => $expense->workers()->get()->map(function (Worker $worker) {
+            'workers' => $expense->workers()->get()->map(function (Staff $worker) {
                 return array_merge($worker->toArray(), [
-                    'work' => Worker::WORKS[$worker->pivot->work],
+                    'work' => Staff::WORKS[$worker->pivot->work],
                 ]);
             }),
             'refunds' => ($expense->refunds()->count() == 0) ? null : true,

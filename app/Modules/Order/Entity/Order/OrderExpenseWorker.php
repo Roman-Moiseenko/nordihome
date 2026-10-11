@@ -3,7 +3,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
-use App\Modules\Admin\Entity\Worker;
+
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $worker_id
  * @property int $work
  * @property OrderExpense $expense
- * @property Worker $worker
+ * @property Staff $worker
  */
 class OrderExpenseWorker extends Model
 {
@@ -26,6 +27,6 @@ class OrderExpenseWorker extends Model
 
     public function worker(): BelongsTo
     {
-        return $this->belongsTo(Worker::class, 'worker_id', 'id');
+        return $this->belongsTo(Staff::class, 'worker_id', 'id');
     }
 }

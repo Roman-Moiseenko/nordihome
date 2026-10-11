@@ -1,27 +1,39 @@
 <?php
 
+use App\Modules\Shared\Presentation\Http\Controllers\Web\HomeAdminController;
 use App\Modules\Shared\Presentation\Http\Controllers\Web\PhotoController;
+
 use Illuminate\Support\Facades\Route;
+
+
+
 
 Route::group([
     'middleware' => 'role:admin|staff',
-    'prefix' => 'admin/photo',
-    'as' => 'admin.photo.',
+    'prefix' => 'admin',
+    'as' => 'admin.',
 ], function () {
 
-    Route::get('/get-by-id/{id}', [PhotoController::class, 'getById'])->name('get-by-id');
+    Route::get('/', [HomeAdminController::class, 'index'])->name('home');
 
-    Route::get('/get-by-entity', [PhotoController::class, 'getByEntity'])->name('get-by-entity');
+    Route::group([
+        'prefix' => 'photo',
+        'as' => 'photo.',
+    ], function () {
+        Route::get('/get-by-id/{id}', [PhotoController::class, 'getById'])->name('get-by-id');
 
-    Route::get('/get-by-ids', [PhotoController::class, 'getByIds'])->name('get-by-ids');
+        Route::get('/get-by-entity', [PhotoController::class, 'getByEntity'])->name('get-by-entity');
 
-    Route::get('/thumb', [PhotoController::class, 'getThumb'])->name('thumb');
+        Route::get('/get-by-ids', [PhotoController::class, 'getByIds'])->name('get-by-ids');
 
-    Route::post('/save-data/{id}', [PhotoController::class, 'saveData'])->name('save-data');
+        Route::get('/thumb', [PhotoController::class, 'getThumb'])->name('thumb');
 
-    Route::post('/upload', [PhotoController::class, 'upload'])->name('upload');
+        Route::post('/save-data/{id}', [PhotoController::class, 'saveData'])->name('save-data');
 
-    Route::post('/sort/{id}', [PhotoController::class, 'sort'])->name('sort');
+        Route::post('/upload', [PhotoController::class, 'upload'])->name('upload');
 
-    Route::delete('/destroy/{id}', [PhotoController::class, 'destroy'])->name('destroy');
+        Route::post('/sort/{id}', [PhotoController::class, 'sort'])->name('sort');
+
+        Route::delete('/destroy/{id}', [PhotoController::class, 'destroy'])->name('destroy');
+    });
 });

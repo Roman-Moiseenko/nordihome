@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace App\Modules\Order\Entity\Order;
 
 use App\Modules\Accounting\Entity\Storage;
-use App\Modules\Admin\Entity\Worker;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Casts\GeoAddressCast;
@@ -15,7 +14,6 @@ use App\Modules\Delivery\Entity\CalendarExpense;
 use App\Modules\Delivery\Entity\CalendarPeriod;
 use App\Modules\Delivery\Entity\DeliveryCargo;
 use App\Modules\Guide\Domain\ValueObjects\AdditionType;
-use App\Modules\Guide\Infrastructure\Models\Addition;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Traits\HtmlInfoData;
 use Carbon\Carbon;
@@ -34,6 +32,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property int $order_id
  * @property int $storage_id
  * @property int $staff_id
+
  * @property int $worker_id
  * @property Carbon $created_at
  * @property Carbon $updated_at
@@ -52,7 +51,7 @@ use JetBrains\PhpStorm\ExpectedValues;
  * @property Storage $storage
  * @property Order $order
  * @property Staff $staff
- * @property Worker[] $workers
+ * @property Staff[] $workers
  * @property CalendarPeriod[] $calendarPeriods
  * @property CalendarPeriod $calendarPeriod
  * @property DeliveryCargo $delivery
@@ -280,7 +279,7 @@ class OrderExpense extends Model
         return (ceil($result * 10000)) / 10000;
     }
 
-    public function getWorker( #[ExpectedValues(valuesFromClass: Worker::class)]int $work):? Worker
+    public function getWorker( int $work):? Staff
     {
         foreach ($this->workers as $worker) {
             if ($worker->pivot->work == $work) return $worker;
@@ -291,9 +290,9 @@ class OrderExpense extends Model
     /**
      * Доставщик
      */
-    public function getDriver(): ?Worker
+    public function getDriver(): ?Staff
     {
-        return $this->getWorker(Worker::WORK_DRIVER);
+        return $this->getWorker();
     }
 
     /**
@@ -303,7 +302,7 @@ class OrderExpense extends Model
     {
         $result = [];
         foreach ($this->workers as $worker) {
-            if ($worker->pivot->work == Worker::WORK_ASSEMBLE) $result[] = $worker;
+            if ($worker->pivot->work == Staff::WORK_ASSEMBLE) $result[] = $worker;
         }
         return $result;
 
@@ -313,9 +312,9 @@ class OrderExpense extends Model
     /**
      * Упаковщик (грузчик)
      */
-    public function getLoader(): ?Worker
+    public function getLoader(): ?Staff
     {
-        return $this->getWorker(Worker::WORK_LOADER);
+        return $this->getWorker(Staff::WORK_LOADER);
     }
 
     //*** RELATIONS
@@ -327,7 +326,7 @@ class OrderExpense extends Model
     public function workers(): BelongsToMany
     {
         return $this->belongsToMany(
-            Worker::class, 'order_expenses_workers',
+            Staff::class, 'order_expenses_workers',
             'expense_id','worker_id')->withPivot(['work']);
     }
 

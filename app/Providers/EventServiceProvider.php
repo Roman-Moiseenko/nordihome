@@ -52,8 +52,6 @@ use App\Listeners\NotificationThrowable;
 use App\Listeners\NotificationUserCreated;
 use App\Listeners\WelcomeToShop;
 use App\Modules\Accounting\Events\CurrencyHasUpdateFixed;
-use App\Modules\Admin\Listeners\NewTaskStaff;
-use App\Modules\Admin\Listeners\NotificationStaff;
 use App\Modules\Delivery\Service\DeliveryService;
 use App\Modules\Lead\Listeners\LeadCanceled;
 use App\Modules\Lead\Listeners\LeadCompleted;
@@ -111,8 +109,7 @@ class EventServiceProvider extends ServiceProvider
         ExpenseHasCompleted::class => [
             UserMailExpenseCompleted::class,
             UserWriteReview::class,
-            NotificationStaff::class,
-            NewTaskStaff::class,
+
         ],
         ExpenseHasCanceled::class => [
             LeadReturnPaid::class,
