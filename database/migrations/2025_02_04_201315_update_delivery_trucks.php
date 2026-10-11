@@ -14,12 +14,8 @@ return new class extends Migration
         Schema::table('delivery_trucks', function (Blueprint $table) {
             $table->dropColumn('service');
             $table->dropColumn('cargo');
-            $table->dropForeign(['worker_id']);
         });
 
-        Schema::table('delivery_trucks', function (Blueprint $table) {
-            $table->dropColumn('worker_id');
-        });
     }
 
     /**
@@ -30,7 +26,6 @@ return new class extends Migration
         Schema::table('delivery_trucks', function (Blueprint $table) {
             $table->boolean('service')->default(true);
             $table->boolean('cargo')->default(true);
-            $table->foreignId('worker_id')->nullable()->constrained('workers')->onDelete('set null');
         });
     }
 };

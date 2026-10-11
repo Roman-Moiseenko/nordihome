@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('order_expenses', function (Blueprint $table) {
-            $table->foreignId('worker_id')->nullable()->constrained('workers')->onDelete('restrict');
+
             $table->string('track')->default('');
         });
     }
@@ -23,8 +23,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('order_expenses', function (Blueprint $table) {
-            $table->dropForeign(['worker_id']);
-            $table->dropColumn('worker_id');
             $table->dropColumn('track');
         });
     }

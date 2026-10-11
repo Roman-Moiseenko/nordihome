@@ -11,12 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('order_expenses', function (Blueprint $table) {
-            $table->dropForeign(['worker_id']);
-        });
-        Schema::table('order_expenses', function (Blueprint $table) {
-            $table->dropColumn('worker_id');
-        });
+
     }
 
     /**
@@ -25,7 +20,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('order_expenses', function (Blueprint $table) {
-            $table->foreignId('worker_id')->nullable()->constrained('workers')->onDelete('set null');
+
         });
     }
 };

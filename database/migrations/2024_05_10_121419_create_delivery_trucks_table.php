@@ -11,7 +11,6 @@ return new class extends Migration
         Schema::create('delivery_trucks', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('worker_id')->nullable()->constrained('workers')->onDelete('restrict');
             $table->float('weight')->default(0);
             $table->float('volume')->default(0);
             $table->boolean('cargo')->default(true);
