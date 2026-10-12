@@ -15,10 +15,10 @@ class AuthRoleSeeder extends Seeder
     public function run(): void
     {
         //Базовые роли, доступы не назначаются
-        $this->addRole(RoleName::ADMIN);
+      /*  $this->addRole(RoleName::ADMIN);
         $this->addRole(RoleName::CLIENT);
         $this->addRole(RoleName::STAFF);
-
+*/
         //Системные роли и доступы текущего модуля
 
         $this->addRole('employee', 'Персонал');
