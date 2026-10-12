@@ -49,7 +49,7 @@ const domain = import.meta.env.VITE_DOMAIN ?? 'nordihome.ru'
 
 function login() {
     const form_email = reactive({
-        email: form.email + "@" + domain.value,
+        email: form.email + "@" + domain,
         password: form.password,
         remember: form.remember,
     })
