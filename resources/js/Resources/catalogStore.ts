@@ -16,11 +16,12 @@ export const useCatalogStore = defineStore('catalog', () => {
     const tags = ref<any[]>([])
     const attrGroups = ref<any[]>([])
     const attrTypes = ref<any[]>([])
+    const sizeGridDimensions = ref<any[]>([])
 
     async function fetchData() {
         const [
             roomsRes, categoriesRes, brandsRes, groupsRes, promotionsRes, seriesRes, tagsRes,
-            attrGroupsRes, attrTypesRes
+            attrGroupsRes, attrTypesRes, sizeGridDimensionsRes
         ] = await Promise.all([
             axios.get(route('admin.catalog.room.tree')),
             axios.get(route('admin.catalog.category.tree')),
@@ -31,6 +32,7 @@ export const useCatalogStore = defineStore('catalog', () => {
             axios.get(route('admin.catalog.tag.list')),
             axios.get(route('admin.catalog.attribute-group.list')),
             axios.get(route('admin.catalog.attribute.types')),
+            axios.get(route('admin.catalog.size-grid.dimensions')),
         ])
         roomsTree.value = roomsRes.data
         categoriesTree.value = categoriesRes.data
@@ -41,6 +43,7 @@ export const useCatalogStore = defineStore('catalog', () => {
         tags.value = tagsRes.data
         attrGroups.value = attrGroupsRes.data
         attrTypes.value = attrTypesRes.data
+        sizeGridDimensions.value = sizeGridDimensionsRes.data
     }
 
     ;(async () => {
@@ -95,5 +98,6 @@ export const useCatalogStore = defineStore('catalog', () => {
         tags,
         attrGroups,
         attrTypes,
+        sizeGridDimensions,
     }
 })

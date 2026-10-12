@@ -17,6 +17,7 @@ use App\Modules\Catalog\Presentation\Http\Controllers\Web\ProductEditController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\RoomProductController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\SeriesController;
+use App\Modules\Catalog\Presentation\Http\Controllers\Web\SizeGridController;
 use App\Modules\Catalog\Presentation\Http\Controllers\Web\TagController;
 use Illuminate\Support\Facades\Route;
 
@@ -199,6 +200,17 @@ Route::group([
     Route::resource('group', GroupController::class)->except(['create', 'edit']); //CRUD
     Route::resource('modification', ModificationController::class)->parameters(['modification' => 'id']); //CRUD
     Route::resource('series', SeriesController::class)->except(['create', 'edit'])->parameters(['series' => 'id']); //CRUD
+
+    //Размерные сетки
+    Route::group([
+        'prefix' => 'size-grid',
+        'as' => 'size-grid.',
+    ], function () {
+        Route::get('/dimensions', [SizeGridController::class, 'dimensions'])->name('dimensions');
+    });
+    Route::resource('size-grid', SizeGridController::class)
+        ->except(['create', 'edit'])
+        ->parameters(['size_grid' => 'id']);
 
 
     //PRODUCT

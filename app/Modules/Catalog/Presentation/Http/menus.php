@@ -57,6 +57,11 @@ return [
                 'route_name' => 'admin.catalog.series.index',
                 'font_awesome' => 'fa-regular fa-booth-curtain',
             ],
+            'size_grid' => [
+                'title' => 'Размерные сетки',
+                'route_name' => 'admin.catalog.size-grid.index',
+                'font_awesome' => 'fa-light fa-ruler-combined',
+            ],
             'priority' => [
                 'title' => 'Приоритет',
                 'route_name' => 'admin.catalog.priority.index',

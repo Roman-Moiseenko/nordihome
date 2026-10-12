@@ -214,10 +214,17 @@ Breadcrumbs::for('admin.catalog.on-order.index', function (BreadcrumbTrail $trai
     $trail->parent('admin.catalog.product.index');
     $trail->push('Только под заказ', route('admin.catalog.on-order.index'));
 });
-//GROUP
-Breadcrumbs::for('admin.catalog.size.index', function (BreadcrumbTrail $trail) {
+//SIZE GRID
+Breadcrumbs::for('admin.catalog.size-grid.index', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.catalog.product.index');
-    $trail->push('Размеры', route('admin.catalog.size.index'));
+    $trail->push('Размерные сетки', route('admin.catalog.size-grid.index'));
+});
+
+Breadcrumbs::for('admin.catalog.size-grid.show', function (BreadcrumbTrail $trail, int|string $id) {
+    $repository = app(\App\Modules\Catalog\Domain\Interfaces\SizeGridRepositoryInterface::class);
+    $sizeGrid = $repository->getById((int) $id);
+    $trail->parent('admin.catalog.size-grid.index');
+    $trail->push($sizeGrid->name, route('admin.catalog.size-grid.show', $sizeGrid->id));
 });
 
 //ROOMS
