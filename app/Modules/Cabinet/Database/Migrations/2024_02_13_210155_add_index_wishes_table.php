@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('wishes', function (Blueprint $table) {
-            $table->unique(['product_id', 'user_id']);
+            $table->unique(['product_id', 'client_id']);
         });
     }
 
@@ -23,10 +23,10 @@ return new class extends Migration
     {
         Schema::table('wishes', function (Blueprint $table) {
             $table->dropForeign(['product_id']);
-            $table->dropForeign(['user_id']);
-            $table->dropUnique('wishes_product_id_user_id_unique');
+            $table->dropForeign(['client_id']);
+            $table->dropUnique('wishes_product_id_client_id_unique');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
 
         });
     }

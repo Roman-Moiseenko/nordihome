@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('wish', function (Blueprint $table) {
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->timestamp('created_at');
-            $table->index(['user_id', 'product_id']);
+            $table->index(['client_id', 'product_id']);
         });
     }
 

@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('coupons', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->nullable();
+            $table->bigInteger('client_id')->nullable();
             $table->integer('bonus');
             $table->integer('status');
             $table->string('code', 10)->unique();
             $table->timestamp('started_at');
             $table->timestamp('finished_at')->nullable();
-            //$table->foreignId('user_id')->constrained('users')
+
         });
     }
 

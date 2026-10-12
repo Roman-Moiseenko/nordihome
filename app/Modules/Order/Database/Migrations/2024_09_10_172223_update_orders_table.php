@@ -12,14 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
+            $table->dropForeign(['client_id']);
         });
         Schema::table('orders', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->nullable()->change();
+            $table->unsignedBigInteger('client_id')->nullable()->change();
 
         });
         Schema::table('orders', function (Blueprint $table) {
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('set null');
         });
     }
 
@@ -29,12 +29,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('orders', function (Blueprint $table) {
-            $table->dropForeign(['user_id']);
+            $table->dropForeign(['client_id']);
         });
         Schema::table('orders', function (Blueprint $table) {
 
-            $table->unsignedBigInteger('user_id')->change();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null');
+            $table->unsignedBigInteger('client_id')->change();
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('set null');
         });
     }
 };

@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');
+            $table->foreignId('client_id')->constrained('clients')->onDelete('restrict');
             $table->integer('type');
             $table->boolean('preorder');
             $table->boolean('paid')->default(false);

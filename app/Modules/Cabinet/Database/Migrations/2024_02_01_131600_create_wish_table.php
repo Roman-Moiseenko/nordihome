@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('wishes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('client_id')->constrained('clients')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->timestamp('created_at');
         });

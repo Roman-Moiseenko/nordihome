@@ -83,8 +83,6 @@ class OrderItem extends Model //implements CartItemInterface
         return self::make([
             'quantity' => $quantity,
             'product_id' => $productID,
-            //'base_cost' => $product->getLastPrice($user_id),
-            //'sell_cost' => $product->getLastPrice($user_id),
             'options' => [],
             'preorder' => $preorder,
             'packing' => false,

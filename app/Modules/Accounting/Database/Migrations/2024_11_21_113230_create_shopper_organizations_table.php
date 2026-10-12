@@ -9,7 +9,7 @@ return new class extends Migration {
     {
         Schema::create('shopper_organizations', function (Blueprint $table) {
             $table->boolean('default')->default(false);
-            $table->foreignId('user_id')->constrained('users')->onDelete('restrict');;
+            $table->foreignId('client_id')->constrained('clients')->onDelete('restrict');;
             $table->foreignId('organization_id')->constrained('organizations')->onDelete('restrict');
         });
     }

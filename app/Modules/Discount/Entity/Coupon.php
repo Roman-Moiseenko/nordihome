@@ -35,7 +35,7 @@ class Coupon extends Model
 
     public $timestamps = false;
     protected $fillable = [
-        'user_id',
+        'client_id',
         'bonus',
         'status',
         'code',
@@ -47,11 +47,11 @@ class Coupon extends Model
         'finished_at' => 'datetime',
     ];
 
-    public static function register(int $user_id, int $bonus, $started_at, $finished_at): self
+    public static function register(int $client_id, int $bonus, $started_at, $finished_at): self
     {
         /** @var Coupon $coupon */
         $coupon =  self::make([
-            'user_id' => $user_id,
+            'client_id' => $client_id,
             'bonus' => $bonus,
             'status' => self::NEW,
             'started_at' => $started_at,

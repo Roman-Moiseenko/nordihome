@@ -13,7 +13,7 @@ use App\Modules\Notification\Events\TelegramHasReceived;
 use App\Modules\Order\Entity\Order\OrderExpense;
 use App\Modules\Order\Events\ExpenseHasDelivery;
 use App\Modules\Order\Service\ExpenseService;
-use App\Modules\User\Entity\UserDelivery;
+
 use Illuminate\Http\Request;
 use JetBrains\PhpStorm\Deprecated;
 
@@ -29,10 +29,9 @@ class DeliveryService
         $this->expenseService = $expenseService;
     }
 
-    public function user(int $user_id): UserDelivery
+    public function user(int $user_id)
     {
-        if ($user = UserDelivery::where('user_id', $user_id)->first()) return $user;
-        return UserDelivery::register($user_id);
+
     }
 
     /**

@@ -52,10 +52,10 @@ class Reserve extends Model
         'reserve_at' => 'datetime',
     ];
 
-    public static function register(int $product_id, int $quantity, int $user_id, int $minutes, string $type): self
+    public static function register(int $product_id, int $quantity, int $client_id, int $minutes, string $type): self
     {
         return self::create([
-            'client_id' => $user_id,
+            'client_id' => $client_id,
             'product_id' => $product_id,
             'quantity' => $quantity,
             'created_at' => now(),
