@@ -67,22 +67,18 @@ class SizeGridRepository implements SizeGridRepositoryInterface
         $keptIds = [];
 
         foreach (array_values($values) as $index => $value) {
-            $valueModel = $value->id
-                ? $model->values()->find($value->id)
-                : null;
-
-            if (!$valueModel) {
-                $valueModel = new SizeGridValue();
-                $valueModel->size_grid_id = $model->id;
-            }
-
-            $valueModel->dimension_code = $value->dimensionCode;
-            $valueModel->value = $value->value;
-            $valueModel->label = $value->label;
-            $valueModel->sort_order = $value->sortOrder !== 0 ? $value->sortOrder : $index;
-            $valueModel->is_active = $value->isActive;
-
-            $valueModel->save();
+            $valueModel = SizeGridValue::updateOrCreate(
+                [
+                    'size_grid_id' => $model->id,
+                    'dimension_code' => $value->dimensionCode,
+                    'value' => $value->value,
+                ],
+                [
+                    'label' => $value->label,
+                    'sort_order' => $value->sortOrder !== 0 ? $value->sortOrder : $index,
+                    'is_active' => $value->isActive,
+                ],
+            );
 
             $keptIds[] = $valueModel->id;
         }

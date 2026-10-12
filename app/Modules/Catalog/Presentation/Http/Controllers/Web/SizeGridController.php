@@ -36,11 +36,11 @@ class SizeGridController extends Controller
     public function index(UserPermission $userPermission): Response
     {
         $sizeGrids = $this->indexSizeGridQuery->execute($userPermission);
-/*
+
         return Inertia::render('Catalog/SizeGrid/Index', [
             'sizeGrids' => $sizeGrids,
         ]);
-        */
+
     }
 
     public function store(Request $request, UserPermission $userPermission): RedirectResponse
@@ -56,11 +56,11 @@ class SizeGridController extends Controller
     public function show(int $id, UserPermission $userPermission): Response
     {
         $sizeGrid = $this->viewSizeGridQuery->execute($id, $userPermission);
-/*
+
         return Inertia::render('Catalog/SizeGrid/Show', [
             'sizeGrid' => SizeGridViewData::fromEntity($sizeGrid),
         ]);
-        */
+
     }
 
     public function update(int $id, Request $request, UserPermission $userPermission): RedirectResponse

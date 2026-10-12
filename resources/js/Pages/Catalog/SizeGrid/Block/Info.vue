@@ -209,15 +209,8 @@ function onSetInfo() {
                 dimensions: info.dimensions,
                 values: values,
             },
-            preserveState: true,
-            preserveScroll: true,
-            onSuccess: () => {
-                Object.assign(initialInfo, JSON.parse(JSON.stringify({
-                    name: info.name,
-                    dimensions: info.dimensions,
-                    values: info.values,
-                })))
-            }
+            preserveState: false,
+            preserveScroll: false,
         }
     );
 }
