@@ -27,6 +27,13 @@ class WidgetRepository implements WidgetRepositoryInterface
         return $this->hydrate($model);
     }
 
+    public function getBySlug(string $slug): ?WidgetEntity
+    {
+        $model = Widget::where('slug', $slug)->first();
+
+        return $model !== null ? $this->hydrate($model) : null;
+    }
+
     public function save(WidgetEntity $widget): WidgetEntity
     {
         $model = $widget->id !== null

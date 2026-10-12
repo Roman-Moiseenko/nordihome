@@ -13,6 +13,8 @@ interface WidgetRepositoryInterface
 
     public function getById(int $id): WidgetEntity;
 
+    public function getBySlug(string $slug): ?WidgetEntity;
+
     public function save(WidgetEntity $widget): WidgetEntity;
 
     public function delete(int $id): void;

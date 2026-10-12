@@ -23,6 +23,8 @@ use App\Modules\Content\Infrastructure\Persistence\WidgetInstanceRepository;
 use App\Modules\Content\Infrastructure\Persistence\WidgetRepository;
 use App\Modules\Content\Presentation\Console\Commands\SyncWidgetTemplatesFromFilesCommand;
 use App\Modules\Content\Presentation\Console\Commands\SyncWidgetTemplatesToFilesCommand;
+use App\Modules\Content\Presentation\Console\Commands\WidgetExportCommand;
+use App\Modules\Content\Presentation\Console\Commands\WidgetImportCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -167,6 +169,8 @@ class ContentServiceProvider extends ServiceProvider
         $this->commands([
             SyncWidgetTemplatesFromFilesCommand::class,
             SyncWidgetTemplatesToFilesCommand::class,
+            WidgetExportCommand::class,
+            WidgetImportCommand::class,
         ]);
     }
 
