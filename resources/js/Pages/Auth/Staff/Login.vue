@@ -16,7 +16,7 @@
                     <div class="mt-6 mx-auto w-24 border-b-2" />
 
                     <el-input v-model="form.email" class="mt-10" label="Login" type="text" autofocus autocapitalize="off" >
-                        <template #append>@nordihome.ru</template>
+                        <template #append>@{{ domain }}</template>
                     </el-input>
                     <el-input v-model="form.password" class="mt-6" label="Password" type="password" />
                     <el-checkbox v-model="form.remember" :checked="true">Запомнить меня</el-checkbox>
@@ -45,9 +45,11 @@ const form = reactive({
     password: '',
     remember: false,
 })
+const domain = import.meta.env.VITE_DOMAIN ?? 'nordihome.ru'
+
 function login() {
     const form_email = reactive({
-        email: form.email + "@nordihome.ru",
+        email: form.email + "@" + domain.value,
         password: form.password,
         remember: form.remember,
     })

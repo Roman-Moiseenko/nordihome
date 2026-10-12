@@ -14,7 +14,6 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->dropColumn('frequency_json');
-            $table->integer('frequency')->default(Product::FREQUENCY_NOT);
         });
     }
 
@@ -25,7 +24,6 @@ return new class extends Migration
     {
         Schema::table('products', function (Blueprint $table) {
             $table->json('frequency_json');
-            $table->dropColumn('frequency');
         });
     }
 };

@@ -19,9 +19,9 @@ return new class extends Migration
                 ->comment('Ссылка на analytics_visitors.id');
 
             // ============ ВРЕМЯ СЕССИИ ============
-            $table->timestamp('started_at')
+            $table->timestamp('started_at')->nullable()
                 ->comment('Дата и время начала сессии');
-            $table->timestamp('last_activity_at')
+            $table->timestamp('last_activity_at')->nullable()
                 ->comment('Последняя активность в сессии (обновляется при каждом просмотре/действии)');
             $table->timestamp('ended_at')->nullable()
                 ->comment('Дата и время завершения сессии (по exit-запросу или по таймауту)');

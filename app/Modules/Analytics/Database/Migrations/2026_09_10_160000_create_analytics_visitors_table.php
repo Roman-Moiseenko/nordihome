@@ -21,9 +21,9 @@ return new class extends Migration
                 ->comment('ID клиента из модуля Auth, появляется после логина');
 
             // ============ ВРЕМЕННЫЕ МЕТКИ ============
-            $table->timestamp('first_visit_at')
+            $table->timestamp('first_visit_at')->nullable()
                 ->comment('Дата и время самого первого захода');
-            $table->timestamp('last_visit_at')
+            $table->timestamp('last_visit_at')->nullable()
                 ->comment('Дата и время последнего захода');
             $table->unsignedInteger('visits_count')->default(1)
                 ->comment('Общее количество визитов (сессий)');
