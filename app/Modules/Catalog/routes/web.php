@@ -267,6 +267,8 @@ Route::group([
             Route::post('/bonus/{id}', [ProductEditController::class, 'saveBonus']);
             Route::get('/composite/{id}', [ProductEditController::class, 'loadComposite'])->name('composite');
             Route::post('/composite/{id}', [ProductEditController::class, 'saveComposite']);
+            Route::get('/size-grid/{id}', [ProductEditController::class, 'loadSizeGrid'])->name('size-grid');
+            Route::post('/size-grid/{id}', [ProductEditController::class, 'saveSizeGrid']);
         });
     });
     Route::resource('product', ProductController::class)->except(['update'])->parameters(['product' => 'id']);

@@ -15,6 +15,7 @@ use App\Modules\Catalog\Application\Actions\Product\EditPage\GetDescriptionProdu
 use App\Modules\Catalog\Application\Actions\Product\EditPage\GetDimensionsProductQuery;
 use App\Modules\Catalog\Application\Actions\Product\EditPage\GetEquivalentProductQuery;
 use App\Modules\Catalog\Application\Actions\Product\EditPage\GetManagementProductQuery;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\GetProductSizesQuery;
 use App\Modules\Catalog\Application\Actions\Product\EditPage\GetRelatedProductQuery;
 use App\Modules\Catalog\Application\Actions\Product\EditPage\GetVideoProductQuery;
 use App\Modules\Catalog\Application\Actions\Product\EditPage\SetAttributeProductUseCase;
@@ -25,6 +26,7 @@ use App\Modules\Catalog\Application\Actions\Product\EditPage\SetDescriptionProdu
 use App\Modules\Catalog\Application\Actions\Product\EditPage\SetDimensionsProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\EditPage\SetEquivalentProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\EditPage\SetManagementProductUseCase;
+use App\Modules\Catalog\Application\Actions\Product\EditPage\SetProductSizesUseCase;
 use App\Modules\Catalog\Application\Actions\Product\EditPage\SetRelatedProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\EditPage\SetVideoProductUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateAttributeProductData;
@@ -35,6 +37,7 @@ use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateDescriptionProdu
 use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateDimensionsProductData;
 use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateEquivalentProductData;
 use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateManagementProductData;
+use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateProductSizesData;
 use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateRelatedProductData;
 use App\Modules\Catalog\Application\DTOs\Product\EditPage\UpdateVideoProductData;
 use Illuminate\Http\Request;
@@ -65,6 +68,8 @@ class ProductEditController extends Controller
         private readonly SetBonusProductUseCase $setBonusProductUseCase,
         private readonly GetCompositeProductQuery $getCompositeProductQuery,
         private readonly SetCompositeProductUseCase $setCompositeProductUseCase,
+        private readonly GetProductSizesQuery $getProductSizesQuery,
+        private readonly SetProductSizesUseCase $setProductSizesUseCase,
     ) {
     }
 
@@ -197,5 +202,17 @@ class ProductEditController extends Controller
         $dto = UpdateCompositeProductData::validateAndCreate($request->all());
         $this->setCompositeProductUseCase->execute($id, $dto);
         return response()->json($this->getCompositeProductQuery->execute($id));
+    }
+
+    public function loadSizeGrid(int $id)
+    {
+        return response()->json($this->getProductSizesQuery->execute($id));
+    }
+
+    public function saveSizeGrid(Request $request, int $id)
+    {
+        $dto = UpdateProductSizesData::validateAndCreate($request->all());
+        $this->setProductSizesUseCase->execute($dto);
+        return response()->json($this->getProductSizesQuery->execute($id));
     }
 }

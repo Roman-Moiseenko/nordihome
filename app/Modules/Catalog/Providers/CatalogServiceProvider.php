@@ -15,6 +15,7 @@ use App\Modules\Catalog\Domain\Interfaces\GroupProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\GroupRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\ModificationRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
+use App\Modules\Catalog\Domain\Interfaces\ProductSizeRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\ReviewRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\RoomProductRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\RoomRepositoryInterface;
@@ -36,6 +37,7 @@ use App\Modules\Catalog\Infrastructure\Persistence\GroupProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\GroupRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\ModificationRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\ProductRepository;
+use App\Modules\Catalog\Infrastructure\Persistence\ProductSizeRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\ReviewRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomProductRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\RoomRepository;
@@ -220,6 +222,11 @@ class CatalogServiceProvider extends ServiceProvider
         $this->app->bind(
             SizeGridRepositoryInterface::class,
             SizeGridRepository::class
+        );
+
+        $this->app->bind(
+            ProductSizeRepositoryInterface::class,
+            ProductSizeRepository::class
         );
 
         $this->app->bind(

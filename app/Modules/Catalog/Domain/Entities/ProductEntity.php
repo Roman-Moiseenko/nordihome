@@ -55,6 +55,11 @@ final class ProductEntity
         get => $this->seriesId;
         set => $this->seriesId = $value;
     }
+
+    public ?int $sizeGridId = null {
+        get => $this->sizeGridId;
+        set => $this->sizeGridId = $value;
+    }
     public string $care = '' {
         get => $this->care;
         set => $this->care = $value;

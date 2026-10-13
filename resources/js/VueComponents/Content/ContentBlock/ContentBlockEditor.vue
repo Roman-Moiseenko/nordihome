@@ -25,8 +25,12 @@
             />
         </div>
 
-        <el-empty v-if="localBlocks.length === 0" description="Нет блоков" class="py-8" />
-
+        <el-empty v-if="localBlocks.length === 0" description="Нет блоков" class="py-8"/>
+        <div v-if="localBlocks.length !== 0" class="flex mt-4">
+            <el-button type="primary" class="ml-auto" size="small" :loading="loading" @click="createBlock">
+                + Добавить блок
+            </el-button>
+        </div>
         <!-- Диалог редактирования блока -->
         <el-dialog
             :model-value="showEditDialog"
@@ -36,7 +40,7 @@
         >
             <el-form label-position="top">
                 <el-form-item label="Название (caption)">
-                    <el-input v-model="editCaption" placeholder="Необязательно" />
+                    <el-input v-model="editCaption" placeholder="Необязательно"/>
                 </el-form-item>
                 <el-form-item label="Секция">
                     <el-select v-model="editSection" placeholder="Необязательно" clearable class="w-full">
@@ -67,11 +71,11 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, nextTick } from 'vue'
-import { ElMessageBox } from 'element-plus'
+import {ref, watch, onMounted, nextTick} from 'vue'
+import {ElMessageBox} from 'element-plus'
 import Sortable from 'sortablejs'
-import { useContentBlock } from '@Res/composables/useContentBlock'
-import { useContentStore } from '@Res/contentStore'
+import {useContentBlock} from '@Res/composables/useContentBlock'
+import {useContentStore} from '@Res/contentStore'
 import ContentBlockItem from './ContentBlockItem.vue'
 import WidgetSelectorDialog from './WidgetSelectorDialog.vue'
 
@@ -95,7 +99,17 @@ const props = defineProps<{
 }>()
 
 console.log(props)
-const { loading, createBlock: apiCreateBlock, updateBlock: apiUpdateBlock, deleteBlock: apiDeleteBlock, sortBlock: apiSortBlock, toggleBlock: apiToggleBlock, copyBlock: apiCopyBlock, createWidgetInstance, deleteWidgetInstance } = useContentBlock()
+const {
+    loading,
+    createBlock: apiCreateBlock,
+    updateBlock: apiUpdateBlock,
+    deleteBlock: apiDeleteBlock,
+    sortBlock: apiSortBlock,
+    toggleBlock: apiToggleBlock,
+    copyBlock: apiCopyBlock,
+    createWidgetInstance,
+    deleteWidgetInstance
+} = useContentBlock()
 const contentStore = useContentStore()
 
 const localBlocks = ref<ContentBlockData[]>([])
@@ -219,7 +233,7 @@ watch(() => props.blocks, (val) => {
     collapsedIds.value = new Set(val.map(b => b.id))
 
     nextTick(initSortable)
-}, { immediate: true })
+}, {immediate: true})
 
 onMounted(initSortable)
 
@@ -242,7 +256,7 @@ function initSortable() {
                 const id = Number(children[i].getAttribute('data-id'))
                 const block = localBlocks.value.find(b => b.id === id)
                 if (block) {
-                    newOrder.push({ ...block, sort: i + 1 })
+                    newOrder.push({...block, sort: i + 1})
                 }
             }
             localBlocks.value = newOrder
@@ -309,7 +323,7 @@ async function copyBlock(id: number) {
     localBlocks.value.splice(index + 1, 0, copied)
 
     // Пересчитываем sort для актуальности (бэкенд уже сдвинул последующие блоки)
-    localBlocks.value = localBlocks.value.map((b, i) => ({ ...b, sort: i + 1 }))
+    localBlocks.value = localBlocks.value.map((b, i) => ({...b, sort: i + 1}))
 
     // Копия свёрнута по умолчанию
     collapsedIds.value.add(copied.id)

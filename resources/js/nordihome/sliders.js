@@ -43,7 +43,7 @@ window.$ = jQuery;
             let items  = sliderWidget.data('items');
             let autoplay  = sliderWidget.data('autoplay');
             let dots  = sliderWidget.data('dots');
-            let nav  = sliderWidget.data('nav');
+            let nav  = sliderWidget.data('button');
             let touchDrag  = sliderWidget.data('touch-drag');
             let mouseDrag  = sliderWidget.data('mouse-drag');
 

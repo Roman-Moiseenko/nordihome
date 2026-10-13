@@ -49,6 +49,9 @@
                 <PanelComposite :product-id="productId"
                                 :active="activePanel === 'composite'"
                 />
+                <PanelSizeGrid :product-id="productId"
+                               :active="activePanel === 'size-grid'"
+                />
             </el-tabs>
         </div>
     </el-config-provider>
@@ -72,6 +75,7 @@ import PanelEquivalent from './Panels/Equivalent.vue'
 import PanelRelated from './Panels/Related.vue'
 import PanelBonus from './Panels/Bonus.vue'
 import PanelComposite from './Panels/Composite.vue'
+import PanelSizeGrid from './Panels/SizeGrid.vue'
 
 
 const props = defineProps({

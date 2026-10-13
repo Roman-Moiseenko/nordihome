@@ -32,6 +32,7 @@ class ProductRepository implements ProductRepositoryInterface
         $model->main_category_id = $product->mainCategoryId;
         $model->brand_id = $product->brandId;
         $model->series_id = $product->seriesId;
+        $model->size_grid_id = $product->sizeGridId;
         $model->description = $product->description;
         $model->care = $product->care;
         $model->short = $product->short;
@@ -221,6 +222,7 @@ class ProductRepository implements ProductRepositoryInterface
         $entity->namePrint = $model->name_print ?? $model->name;
         $entity->oldSlug = $model->old_slug ?? '';
         $entity->seriesId = $model->series_id;
+        $entity->sizeGridId = $model->size_grid_id;
         $entity->description = $model->description ?? '';
         $entity->care = $model->care ?? '';
         $entity->short = $model->short ?? '';

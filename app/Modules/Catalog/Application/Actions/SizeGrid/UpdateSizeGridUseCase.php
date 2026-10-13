@@ -7,6 +7,7 @@ namespace App\Modules\Catalog\Application\Actions\SizeGrid;
 use App\Modules\Catalog\Application\DTOs\SizeGrid\SizeGridUpdateData;
 use App\Modules\Catalog\Domain\Entities\SizeGridEntity;
 use App\Modules\Catalog\Domain\Entities\SizeGridValueEntity;
+use App\Modules\Catalog\Domain\Interfaces\ProductSizeRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\SizeGridRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\SizeGridDimension;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -16,6 +17,7 @@ readonly class UpdateSizeGridUseCase
 {
     public function __construct(
         private SizeGridRepositoryInterface $sizeGridRepository,
+        private ProductSizeRepositoryInterface $productSizeRepository,
     ) {
     }
 
@@ -31,7 +33,15 @@ readonly class UpdateSizeGridUseCase
         $grid->dimensions = $this->buildDimensions($dto->dimensions);
         $grid->values = $this->buildValues($dto->values);
 
-        return $this->sizeGridRepository->save($grid);
+        $saved = $this->sizeGridRepository->save($grid);
+
+        // Перестраиваем размерный ряд всех товаров, у которых настроена эта сетка.
+        // Удалённые варианты автоматически обнуляют связанные записи stock.
+        foreach ($this->productSizeRepository->getProductIdsBySizeGridId($saved->id) as $productId) {
+            $this->productSizeRepository->rebuildForProduct($productId, $saved, []);
+        }
+
+        return $saved;
     }
 
     /**

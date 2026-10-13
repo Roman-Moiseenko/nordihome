@@ -163,6 +163,7 @@ class Product extends Model
         'local',
         'code_search',
         'series_id',
+        'size_grid_id',
         'not_sale',
         'priority',
         'packages',
@@ -477,6 +478,16 @@ class Product extends Model
     public function series(): BelongsTo
     {
         return $this->belongsTo(Series::class, 'series_id', 'id');
+    }
+
+    public function sizeGrid(): BelongsTo
+    {
+        return $this->belongsTo(SizeGrid::class, 'size_grid_id', 'id');
+    }
+
+    public function productSizes(): HasMany
+    {
+        return $this->hasMany(ProductSize::class, 'product_id', 'id');
     }
 
     public function main_modification(): HasOne

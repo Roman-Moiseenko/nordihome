@@ -102,4 +102,58 @@ final class SizeGridEntity
 
         return false;
     }
+
+    /**
+     * Все возможные варианты размеров — декартово произведение активных значений
+     * по осям сетки (в порядке следования измерений).
+     *
+     * @return array<int, array<string, string>> Каждый вариант: ['size' => '30', 'width' => 'D']
+     */
+    public function getCombinations(): array
+    {
+        $codes = array_map(fn(SizeGridDimension $d) => $d->code, $this->dimensions);
+
+        if ($codes === []) {
+            return [];
+        }
+
+        $axes = [];
+        foreach ($codes as $code) {
+            $values = array_values(array_filter(
+                $this->getValuesByDimension($code),
+                fn(SizeGridValueEntity $v) => $v->isActive,
+            ));
+
+            usort(
+                $values,
+                fn(SizeGridValueEntity $a, SizeGridValueEntity $b) =>
+                    [$a->sortOrder, $a->id ?? 0] <=> [$b->sortOrder, $b->id ?? 0],
+            );
+
+            if ($values === []) {
+                return [];
+            }
+
+            $axes[$code] = array_map(
+                fn(SizeGridValueEntity $v) => $v->value,
+                $values,
+            );
+        }
+
+        $combinations = [[]];
+
+        foreach ($codes as $code) {
+            $next = [];
+
+            foreach ($combinations as $combo) {
+                foreach ($axes[$code] as $value) {
+                    $next[] = [...$combo, $code => $value];
+                }
+            }
+
+            $combinations = $next;
+        }
+
+        return $combinations;
+    }
 }
