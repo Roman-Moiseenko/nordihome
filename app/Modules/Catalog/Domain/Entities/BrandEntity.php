@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Domain\Entities;
 
+use App\Modules\Parser\Application\Interfaces\ParserServiceInterface;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
+use InvalidArgumentException;
 
 final class BrandEntity
 {
@@ -69,5 +71,18 @@ final class BrandEntity
         $this->description = $description;
         $this->url = $url;
         $this->slug = $slug ?? new Slug($name);
+    }
+
+    public function parser(): ParserServiceInterface
+    {
+        $parser = app()->make($this->parserClass);
+
+        if (! $parser instanceof ParserServiceInterface) {
+            throw new InvalidArgumentException(
+                sprintf('Класс %s должен реализовывать %s', $this->parserClass, ParserServiceInterface::class)
+            );
+        }
+
+        return $parser;
     }
 }
