@@ -32,20 +32,18 @@ window.$ = jQuery;
     };
 
     if (document.querySelectorAll('.widget-slider-common') !== null) {
-
-        let optionsSliderWidget = optionsSliderBase;
         let slidersWidget= $('.widget-slider-common');
         slidersWidget.each(function (element) {
             let sliderWidget = $(this);
-            let mouseScroll = sliderWidget.data('mouse-scroll');
-
-            let autoSpeed  = sliderWidget.data('auto-speed');
-            let items  = sliderWidget.data('items');
-            let autoplay  = sliderWidget.data('autoplay');
-            let dots  = sliderWidget.data('dots');
-            let nav  = sliderWidget.data('button');
-            let touchDrag  = sliderWidget.data('touch-drag');
-            let mouseDrag  = sliderWidget.data('mouse-drag');
+            let optionsSliderWidget = $.extend(true, {}, optionsSliderBase);
+            let mouseScroll = sliderWidget.data('mouse-scroll')
+            let autoSpeed  = sliderWidget.data('auto-speed')
+            let items  = sliderWidget.data('items')
+            let autoplay  = sliderWidget.data('autoplay')
+            let dots  = sliderWidget.data('dots')
+            let nav  = sliderWidget.data('nav')
+            let touchDrag  = sliderWidget.data('touch-drag')
+            let mouseDrag  = sliderWidget.data('mouse-drag')
 
             optionsSliderWidget.autoplayTimeout = autoSpeed;
             optionsSliderWidget.items = items;
@@ -54,6 +52,7 @@ window.$ = jQuery;
             optionsSliderWidget.nav = nav;
             optionsSliderWidget.touchDrag = touchDrag;
             optionsSliderWidget.mouseDrag = mouseDrag;
+            if (!nav) optionsSliderWidget.responsive = {}
 
             sliderWidget.owlCarousel(optionsSliderWidget);
             if (mouseScroll === 1) {
