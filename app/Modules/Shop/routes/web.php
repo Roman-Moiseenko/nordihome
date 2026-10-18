@@ -20,12 +20,14 @@ Route::group(
         'as' => 'shop.',
     ],
     function () {
-        Route::get('/test', function (){
+        Route::get('/test', function () {
             return phpinfo();
         });
 
         Route::get('/', [PageController::class, 'home'])->name('home');
-        Route::post('/', function () {return abort(404);});
+        Route::post('/', function () {
+            return abort(404);
+        });
         Route::post('/csrf-token', function () {
             return csrf_token();
         });
@@ -86,13 +88,6 @@ Route::group(
 
             //В один клик без авторизации
             Route::post('/create-click', [CheckoutController::class, 'create_click'])->name('create-click');
-
-            Route::middleware(['auth', 'role:client'])->group(function () {
-                Route::post('/create', [CheckoutController::class, 'create'])->name('create');
-                Route::put('/create', [CheckoutController::class, 'store']);
-                //Route::post('/checkorder', [CheckoutController::class, 'checkorder'])->name('checkorder');
-                Route::post('/coupon', [CheckoutController::class, 'coupon'])->name('coupon');
-            });
             Route::get('/create-click', function () {
                 abort(404);
             });

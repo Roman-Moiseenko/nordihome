@@ -48,6 +48,9 @@ Route::group([
             Route::get('/{order}', [OrderController::class, 'view'])->name('view');
             Route::get('/{order}/copy', [OrderController::class, 'copy'])->name('copy');
             Route::get('/new/{id}', [OrderController::class, 'new_order'])->name('new_order');
+            Route::post('/create', [OrderController::class, 'create'])->name('create');
+            Route::put('/create', [OrderController::class, 'store']);
+            Route::post('/coupon', [OrderController::class, 'coupon'])->name('coupon');
         });
         Route::group([
             'as' => 'review.',

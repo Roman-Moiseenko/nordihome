@@ -15,7 +15,6 @@ import './_feedback.js';
 /* Собственные */
 import './nordihome/regions.js';
 import './nordihome/menu-catalog.js';
-//import './nordihome/product.js';
 import './nordihome/frontend';
 import './nordihome/maps';
 import './nordihome/parser';
@@ -28,4 +27,7 @@ import  './nordihome/search.js'
 import './nordihome/cookie.js'
 import './nordihome/fancybox.js'
 import './nordihome/region.js'
+import './nordihome/cabinet.js'
+import './nordihome/order.js'
 
+//import './nordihome/product.js';

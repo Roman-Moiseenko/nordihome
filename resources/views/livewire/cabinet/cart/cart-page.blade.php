@@ -27,7 +27,7 @@
         <div class="right-action-block">
             <div class="sticky-block">
                 <div>
-                    <form id="to-order" method="POST" action="{{ route('shop.order.create') }}">
+                    <form id="to-order" method="POST" action="{{ route('cabinet.order.create') }}">
                         @csrf
                         <input type="hidden" name="preorder" value="false">
                         <button id="button-to-order" class="btn-cart w-100 py-3"

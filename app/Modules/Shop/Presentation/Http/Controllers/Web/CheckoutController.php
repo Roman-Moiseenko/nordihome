@@ -16,32 +16,17 @@ use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 /**
- * Контроллер по созданию заказа из клиентской части, для просмотра используется контроллер из User
+ * Контроллер по созданию заказа в 1 клик, без авторизации.
+ * Остальные методы из кабинета
  */
 class CheckoutController extends ShopAbstractController
 {
     use RecordsAnalyticsAction;
 
     public function __construct(
-        //private readonly GetCartQuery               $getCartUseCase,
-        private readonly CreateOrderFromCartService $createOrderFromCartService,
         private readonly CreateOrderOneClickService $createOrderOneClickService,
-        private readonly PageCreateQuery $pageCreateQuery,
     )
     {
-    }
-
-
-    public function create(Request $request): View
-    {
-        $client = $this->getClient($request);
-        //$cartInfo = $this->getCartUseCase->execute($client);
-
-        $this->recordAnalyticsAction(ActionType::CHECKOUT_START, EntityType::ORDER);
-
-        $data = $this->pageCreateQuery->execute($client);
-
-        return view('shop.order.create', ['pageData' => $data]);
     }
 
     public function create_click(Request $request)
@@ -58,30 +43,4 @@ class CheckoutController extends ShopAbstractController
         }
     }
 
-    public function create_copy(int $id)
-    {
-        //TODO получаем id заказа, и создаем дубль, (доставка, адрес, клиент - все есть в заказе)
-    }
-
-    public function store(Request $request)
-    {
-        //FIXME через DTO
-        $client = $this->getClient($request);
-        $order = $this->createOrderFromCartService->execute(
-            $client,
-            $request->input('coupon'),
-            $request->input('commentClient'));
-
-        $this->recordAnalyticsAction(ActionType::ORDER_PLACED, EntityType::ORDER, $order->id);
-
-        return redirect()->route('cabinet.order.new_order', ['id' => $order->id, 'from' => 'store'])->with('success', 'Ваш заказ успешно создан!');
-    }
-
-
-    public function coupon(Request $request)
-    {
-   //     $result = 0;
-      //  if ($request->has('code')) $result = $this->service->coupon($request->get('code'));
-     //   return \response()->json($result);
-    }
 }

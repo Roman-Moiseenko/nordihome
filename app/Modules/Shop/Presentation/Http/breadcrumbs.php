@@ -202,11 +202,8 @@ Breadcrumbs::for('shop.cart.view', function (BreadcrumbTrail $trail) {
     $trail->parent('shop.home');
     $trail->push('Корзина', route('shop.cart.view'));
 });
-Breadcrumbs::for('shop.order.create', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('cabinet.order.create', function (BreadcrumbTrail $trail) {
     $trail->parent('shop.cart.view');
-    $trail->push('Оформить заказ', route('shop.order.create'));
+    $trail->push('Оформить заказ', route('cabinet.order.create'));
 });
-Breadcrumbs::for('shop.order.create-parser', function (BreadcrumbTrail $trail) {
-    $trail->parent('shop.parser.view');
-    $trail->push('Оформить заказ', route('shop.order.create-parser'));
-});
+

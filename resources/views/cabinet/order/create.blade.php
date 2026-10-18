@@ -17,14 +17,14 @@
     <div class="screen-action">
         <div class="left-list-block">
             <!-- @ include('shop.order.widget.payment') -->
-            @include('shop.order.widget.client')
+            @include('cabinet.order.widget.client')
 
             <div class="box-card">
                 <div>Список товаров в корзине</div>
                 <div class="row">
                     @foreach($cartInfo->items as $item)
                         @if($item->check)
-                            @include('shop.order.widget.item', ['item' => $item])
+                            @include('cabinet.order.widget.item', ['item' => $item])
                         @endif
                     @endforeach
                 </div>
@@ -64,7 +64,7 @@
                 </div>
                 <div class="mt-3">
                     <div class="fs-5"></div>
-                    <form id="form-order-create" method="POST" action="{{ route('shop.order.create') }}">
+                    <form id="form-order-create" method="POST" action="{{ route('cabinet.order.create') }}">
                         @method('PUT')
                         @csrf
                         <textarea class="form-control p-2" name="commentClient"
