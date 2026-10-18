@@ -2,11 +2,10 @@
 
 namespace App\Modules\Cabinet\Application\Actions;
 
-use App\Modules\Cabinet\Application\DTOs\OrderClientData;
-use App\Modules\Cabinet\Application\DTOs\OrderInfoData;
-use App\Modules\Cabinet\Application\DTOs\OrderInfoItemData;
+use App\Modules\Cabinet\Application\DTOs\Order\OrderClientData;
+use App\Modules\Cabinet\Application\DTOs\Order\OrderInfoData;
+use App\Modules\Cabinet\Application\DTOs\Order\OrderInfoItemData;
 use App\Modules\Guide\Domain\ValueObjects\AdditionType;
-use App\Modules\Guide\Infrastructure\Models\Addition;
 use App\Modules\Order\Application\Actions\GetAdditionDataUseCase;
 use App\Modules\Order\Application\Actions\GetProductItemDataUseCase;
 use App\Modules\Order\Domain\Entities\OrderItemEntity;

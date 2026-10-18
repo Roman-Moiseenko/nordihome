@@ -7,11 +7,13 @@ namespace App\Modules\Cabinet\Presentation\Http\Controllers;
 use App\Modules\Analytics\Domain\ValueObjects\ActionType;
 use App\Modules\Analytics\Domain\ValueObjects\EntityType;
 use App\Modules\Analytics\Presentation\Support\RecordsAnalyticsAction;
+use App\Modules\Cabinet\Application\DTOs\Order\OrderCreateData;
 use App\Modules\Cabinet\Application\Queries\PageCreateQuery;
 use App\Modules\Cabinet\Application\Queries\PageOrderClientQuery;
 use App\Modules\Cabinet\Application\Queries\PageOrdersClientQuery;
 use App\Modules\Cabinet\Application\Queries\PageNewOrderQuery;
 use App\Modules\Order\Application\Services\CreatingServices\CreateOrderFromCartService;
+use App\Modules\Order\Domain\Exceptions\ClientOrderDataIncompleteException;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Shop\Presentation\Http\Controllers\Web\ShopAbstractController;
 use Illuminate\Http\Request;
@@ -63,17 +65,20 @@ class OrderController extends ShopAbstractController
 
     public function store(Request $request)
     {
-        //FIXME через DTO
         $client = $this->getClient($request);
-        $order = $this->createOrderFromCartService->execute(
-            $client,
-            $request->input('coupon'),
-            $request->input('commentClient'));
+        $dto = OrderCreateData::validateAndCreate($request->all());
 
+        try {
+            $order = $this->createOrderFromCartService->execute($dto, $client);
+        } catch (ClientOrderDataIncompleteException $e) {
+            return redirect()->route('cabinet.order.create')
+                ->with('danger', 'Заполните данные профиля: ' . implode(', ', $e->missingFields) . '.');
+        }
         $this->recordAnalyticsAction(ActionType::ORDER_PLACED, EntityType::ORDER, $order->id);
 
         return redirect()->route('cabinet.order.new_order', ['id' => $order->id, 'from' => 'store'])->with('success', 'Ваш заказ успешно создан!');
     }
+
     public function new_order(int $id, Request $request)
     {
         if ($request->string('from')->value() != 'store') abort(404);

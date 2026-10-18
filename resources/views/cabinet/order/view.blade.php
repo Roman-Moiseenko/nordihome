@@ -1,12 +1,13 @@
 @php
-    use App\Modules\Cabinet\Application\DTOs\OrderClientPageData;
+    use App\Modules\Cabinet\Application\DTOs\Order\OrderClientPageData;
     /** @var OrderClientPageData[] $pageData */
 $order = $pageData->order;
 @endphp
 @extends('cabinet.layout')
 @section('body')
-@parent
- order @endsection
+    @parent
+    order
+@endsection
 
 @section('title', $pageData->meta->title)
 @section('description', $pageData->meta->description)

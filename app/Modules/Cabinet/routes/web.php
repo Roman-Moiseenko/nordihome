@@ -45,6 +45,7 @@ Route::group([
             'prefix' => 'order'
         ], function () {
             Route::get('/', [OrderController::class, 'index'])->name('index');
+            Route::get('/create', [OrderController::class, 'create'])->name('create');
             Route::get('/{order}', [OrderController::class, 'view'])->name('view');
             Route::get('/{order}/copy', [OrderController::class, 'copy'])->name('copy');
             Route::get('/new/{id}', [OrderController::class, 'new_order'])->name('new_order');

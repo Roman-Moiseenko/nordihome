@@ -2,7 +2,7 @@
 
 namespace App\Modules\Cabinet\Application\DTOs\Pages;
 
-use App\Modules\Cabinet\Application\DTOs\OrderClientData;
+use App\Modules\Cabinet\Application\DTOs\Order\OrderClientData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use Spatie\LaravelData\Data;
 

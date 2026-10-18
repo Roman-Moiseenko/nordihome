@@ -3,7 +3,7 @@
 namespace App\Modules\Cabinet\Application\Queries;
 
 use App\Modules\Cabinet\Application\Actions\GetOrderClientQuery;
-use App\Modules\Cabinet\Application\DTOs\OrderClientPageData;
+use App\Modules\Cabinet\Application\DTOs\Order\OrderClientPageData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 
 readonly class PageOrderClientQuery

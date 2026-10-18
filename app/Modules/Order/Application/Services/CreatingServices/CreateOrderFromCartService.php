@@ -5,6 +5,7 @@ namespace App\Modules\Order\Application\Services\CreatingServices;
 use App\Modules\Accounting\Application\Actions\Trader\GetDefaultTraderIdUseCase;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Auth\Application\Queries\GetInfoWebClientQuery;
+use App\Modules\Cabinet\Application\DTOs\Order\OrderCreateData;
 use App\Modules\Cart\Application\Actions\GetCartQuery;
 use App\Modules\Cart\Application\Actions\RemoveCartItemUseCase;
 use App\Modules\Discount\Entity\Coupon;
@@ -14,6 +15,7 @@ use App\Modules\Order\Application\Actions\AdditionGuide\GetPolandAdditionUseCase
 use App\Modules\Order\Application\Actions\OrderLogger\CreateOrderLoggerUseCase;
 use App\Modules\Order\Application\DTOs\OrderItem\OrderItemData;
 use App\Modules\Order\Application\DTOs\OrderLogger\OrderLoggerCreateData;
+use App\Modules\Order\Application\Services\ClientOrderRequirementsChecker;
 use App\Modules\Order\Application\Services\OrderCalculateService;
 use App\Modules\Order\Domain\Entities\OrderEntity;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
@@ -45,15 +47,18 @@ readonly class CreateOrderFromCartService
         private GetDeliveryAdditionUseCase  $deliveryAdditionUseCase,
         private GetDefaultTraderIdUseCase   $traderIdUseCase,
         private CreateOrderLoggerUseCase    $loggerUseCase,
+        private ClientOrderRequirementsChecker $requirementsChecker,
     )
     {
 
     }
 
-    public function execute(ClientContext $clientContext, string|null $code, string|null $commentClient): OrderEntity
+    public function execute(OrderCreateData $dto, ClientContext $clientContext): OrderEntity
     {
+        // Проверка данных клиента — до транзакции и любых изменений
+        $this->requirementsChecker->check($clientContext->id);
 
-        return $this->transactionManager->execute(function () use ($clientContext, $code, $commentClient) {
+        return $this->transactionManager->execute(function () use ($clientContext, $dto) {
             //Создаем пустой заказ
             $orderEntity = new OrderEntity(
                 traderId: $this->traderIdUseCase->execute(),
@@ -100,12 +105,12 @@ readonly class CreateOrderFromCartService
             }
 
             //Применяем купон
-            if (!is_null($code) && !is_null($coupon = $this->getCoupon($code, $clientContext->id))) {
+            if (!is_null($dto->coupon) && !is_null($coupon = $this->getCoupon($dto->coupon, $clientContext->id))) {
                 $orderEntity->couponId = $coupon->id;
             }
 
             //Данные из Клиента в Заказ
-            $orderEntity->commentClient = $commentClient;
+            $orderEntity->commentClient = $dto->commentClient;
             $orderEntity->isPickup = $clientInfo->isPickup;
             if (!$clientInfo->isPickup) $orderEntity->address = $clientInfo->address;
             //Устанавливаем статусы

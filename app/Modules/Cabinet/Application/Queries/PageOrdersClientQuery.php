@@ -4,7 +4,7 @@ namespace App\Modules\Cabinet\Application\Queries;
 
 use App\Modules\Auth\Domain\Interfaces\ClientRepositoryInterface;
 use App\Modules\Cabinet\Application\Actions\GetOrderClientQuery;
-use App\Modules\Cabinet\Application\DTOs\OrdersClientPageData;
+use App\Modules\Cabinet\Application\DTOs\Order\OrdersClientPageData;
 use App\Modules\Order\Domain\Interfaces\OrderRepositoryInterface;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;

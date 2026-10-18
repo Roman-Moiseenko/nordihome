@@ -1,6 +1,5 @@
 @php
-    use App\Modules\Cabinet\Application\DTOs\OrderClientData;
-    use App\Modules\Cabinet\Application\DTOs\OrdersClientPageData;
+    use App\Modules\Cabinet\Application\DTOs\Order\OrderClientData;use App\Modules\Cabinet\Application\DTOs\Order\OrdersClientPageData;
     /** @var OrderClientData[] $orders */
     /** @var OrdersClientPageData[] $pageData */
 @endphp

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\Cabinet\Application\DTOs;
+namespace App\Modules\Cabinet\Application\DTOs\Order;
 
 class OrderInfoItemData
 {
