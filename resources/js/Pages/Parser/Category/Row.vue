@@ -67,7 +67,7 @@ const $emit = defineEmits(['delete:category'])
 const visible_create = ref(false)
 const form = reactive({
     name: null,
-    parent_id: props.category.id,
+    parentId: props.category.id,
 })
 const checkChildren = ref(false)
 const isChildren = ref(props.category.children.length > 0)

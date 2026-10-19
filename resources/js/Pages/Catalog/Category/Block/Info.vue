@@ -65,7 +65,7 @@ const initialInfo = {
     metaTitle: props.category?.meta?.title ?? '',
     metaDescription: props.category?.meta?.description ?? '',
     slug: props.category?.slug ?? '',
-    parentId: props.category?.parent_id ?? null,
+    parentId: props.category?.parentId ?? null,
     svgIcon: props.category?.svgIcon ?? '',
 }
 

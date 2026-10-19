@@ -47,7 +47,7 @@ const $delete_entity = inject("$delete_entity")
 const useCatalog = useCatalogStore()
 const form = reactive({
     name: null,
-    parent_id: null,
+    parentId: null,
 })
 function createButton() {
     router.visit(route('admin.catalog.category.store'), {

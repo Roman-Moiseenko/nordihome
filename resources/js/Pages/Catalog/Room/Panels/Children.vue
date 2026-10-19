@@ -34,7 +34,7 @@ const visible_create = ref(false)
 
 const form = reactive({
     name: null,
-    parent_id: props.room.id,
+    parentId: props.room.id,
 })
 function createButton() {
     router.post(route('admin.catalog.room.store', form))
