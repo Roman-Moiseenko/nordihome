@@ -23,7 +23,6 @@ class LoadPhotoByUrlJob implements ShouldQueue
 
     public function __construct(
         private readonly JobPhotoLoadData $dto,
-        private readonly UserPermission   $userPermission,
     )
     {
     }
@@ -43,11 +42,11 @@ class LoadPhotoByUrlJob implements ShouldQueue
                 isProxy: $this->dto->isProxy,
             );
 
-            $photo = $uploadPhotoByUrlUseCase->execute($uploadDto, $this->userPermission);
+            $photo = $uploadPhotoByUrlUseCase->execute($uploadDto);
 
             if ($photo !== null && $this->dto->alt !== null) {
                 $saveDto = new PhotoSaveData(alt: $this->dto->alt,);
-                $savePhotoDataUseCase->execute($photo->id, $saveDto, $this->userPermission);
+                $savePhotoDataUseCase->execute($photo->id, $saveDto);
             }
         } catch (\Throwable $e) {
             \Log::warning(json_encode([$e->getMessage(), $e->getFile(), $e->getLine()]));

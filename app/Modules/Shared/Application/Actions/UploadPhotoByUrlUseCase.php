@@ -21,7 +21,7 @@ readonly class UploadPhotoByUrlUseCase
     {
     }
 
-    public function execute(PhotoUploadByUrlData $dto, UserPermission $userPermission): ?PhotoEntity
+    public function execute(PhotoUploadByUrlData $dto): ?PhotoEntity
     {
         $uploadedFile = $this->downloadFile($dto->url, $dto->isProxy);
 
@@ -36,7 +36,7 @@ readonly class UploadPhotoByUrlUseCase
             file: $uploadedFile,
         );
 
-        return $this->uploadPhotoUseCase->execute($uploadDto, $userPermission);
+        return $this->uploadPhotoUseCase->execute($uploadDto);
     }
 
     private function downloadFile(string $url, bool $isProxy): ?UploadedFile
