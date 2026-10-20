@@ -114,11 +114,22 @@ class AttributeProductRepository implements AttributeProductRepositoryInterface
 
     public function attachVariant(int $productId, int $attributeId, int $variantId): void
     {
+        $attribute = Attribute::find($attributeId);
+        $isMultiple = $attribute !== null && (bool) $attribute->multiple;
+
         $model = AttributeProduct::where('attribute_id', $attributeId)
             ->where('product_id', $productId)
             ->first();
 
         if ($model !== null) {
+            if (!$isMultiple) {
+                // Одиночный выбор: значение — скалярный id варианта.
+                $model->value = json_encode($variantId);
+                $model->save();
+
+                return;
+            }
+
             $current = json_decode($model->value, true) ?? [];
 
             if (!is_array($current)) {
@@ -139,7 +150,7 @@ class AttributeProductRepository implements AttributeProductRepositoryInterface
         $pivot = new AttributeProduct();
         $pivot->attribute_id = $attributeId;
         $pivot->product_id = $productId;
-        $pivot->value = json_encode([$variantId]);
+        $pivot->value = json_encode($isMultiple ? [$variantId] : $variantId);
         $pivot->save();
     }
 
