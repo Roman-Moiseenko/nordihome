@@ -57,7 +57,15 @@ class PhotoService
 
         //if (!is_dir($uploadDir)) mkdir($uploadDir, 0777, true);
 
-        $fileName = $file->getClientOriginalName();
+        $extension = strtolower(pathinfo($file->getClientOriginalName(), PATHINFO_EXTENSION));
+        if (empty($extension)) {
+            $extension = strtolower((string)$file->guessExtension());
+        }
+        if (empty($extension)) {
+            $extension = 'webp';
+        }
+
+        $fileName = (string)Str::uuid() . '.' . $extension;
         // Кладем файл в хранилище
         $this->storage->putFromLocalFile(
             $path . $fileName,
