@@ -68,17 +68,22 @@ final class AttributeEntity
     public function addVariant(string $name): AttributeVariantEntity
     {
         $variant = new AttributeVariantEntity($name);
-        $this->variants[] = $variant;
+
+        $variants = $this->variants;
+        $variants[] = $variant;
+        $this->variants = $variants;
 
         return $variant;
     }
 
     public function removeVariant(int $id): void
     {
-        foreach ($this->variants as $key => $variant) {
+        $variants = $this->variants;
+
+        foreach ($variants as $key => $variant) {
             if ($variant->id === $id) {
-                unset($this->variants[$key]);
-                $this->variants = array_values($this->variants);
+                unset($variants[$key]);
+                $this->variants = array_values($variants);
 
                 return;
             }
@@ -100,6 +105,17 @@ final class AttributeEntity
         }
 
         throw new DomainException('Не найден вариант id = ' . $id . ' атрибута ' . $this->name);
+    }
+
+    public function findVariantByName(string $name): ?AttributeVariantEntity
+    {
+        foreach ($this->variants as $variant) {
+            if ($variant->name === $name) {
+                return $variant;
+            }
+        }
+
+        return null;
     }
 
     public function isVariant(): bool

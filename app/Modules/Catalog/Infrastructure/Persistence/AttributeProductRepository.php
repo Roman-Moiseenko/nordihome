@@ -112,6 +112,37 @@ class AttributeProductRepository implements AttributeProductRepositoryInterface
         }
     }
 
+    public function attachVariant(int $productId, int $attributeId, int $variantId): void
+    {
+        $model = AttributeProduct::where('attribute_id', $attributeId)
+            ->where('product_id', $productId)
+            ->first();
+
+        if ($model !== null) {
+            $current = json_decode($model->value, true) ?? [];
+
+            if (!is_array($current)) {
+                $current = [$current];
+            }
+
+            if (in_array($variantId, $current, true)) {
+                return;
+            }
+
+            $current[] = $variantId;
+            $model->value = json_encode(array_values($current));
+            $model->save();
+
+            return;
+        }
+
+        $pivot = new AttributeProduct();
+        $pivot->attribute_id = $attributeId;
+        $pivot->product_id = $productId;
+        $pivot->value = json_encode([$variantId]);
+        $pivot->save();
+    }
+
     private function resolveValue(Attribute $attribute, mixed $value): mixed
     {
         if ($value === null) {

@@ -30,6 +30,11 @@ interface AttributeRepositoryInterface
     public function getById(int $id): AttributeEntity;
 
     /**
+     * Атрибут по названию вместе с вариантами.
+     */
+    public function findByName(string $name): ?AttributeEntity;
+
+    /**
      * Список атрибутов с пагинацией и фильтрацией.
      *
      * @return LengthAwarePaginator<AttributeEntity>

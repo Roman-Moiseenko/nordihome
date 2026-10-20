@@ -30,4 +30,9 @@ interface AttributeProductRepositoryInterface
      * @param array<int, array{id: int, value?: mixed}> $attributes
      */
     public function syncProductAttributes(int $productId, array $attributes): void;
+
+    /**
+     * Добавляет вариант к значению атрибута товара (дополняет существующие варианты).
+     */
+    public function attachVariant(int $productId, int $attributeId, int $variantId): void;
 }

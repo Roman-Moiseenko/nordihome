@@ -44,6 +44,13 @@ class AttributeRepository implements AttributeRepositoryInterface
         return $this->hydrate(Attribute::with('variants')->findOrFail($id));
     }
 
+    public function findByName(string $name): ?AttributeEntity
+    {
+        $model = Attribute::where('name', $name)->with('variants')->first();
+
+        return $model !== null ? $this->hydrate($model) : null;
+    }
+
     public function getModificationAttributesForProducts(array $productIds): array
     {
         if (empty($productIds)) {
