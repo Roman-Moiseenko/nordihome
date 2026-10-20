@@ -30,10 +30,10 @@ class ModificationRepository implements ModificationRepositoryInterface
 
     public function getViewData(int $id): ModificationViewData
     {
-        $model = Modification::with(['attributes.variants', 'products'])
+        $model = Modification::with(['prod_attributes.variants', 'products'])
             ->findOrFail($id);
 
-        $attributes = $model->attributes
+        $attributes = $model->prod_attributes
             ->map(fn(Attribute $attribute) => new ModificationAttributeViewData(
                 id: $attribute->id,
                 name: $attribute->name,
@@ -164,7 +164,7 @@ class ModificationRepository implements ModificationRepositoryInterface
         $paginator = Modification::query()
             ->orderByDesc('id')
             ->withCount('products')
-            ->with('attributes:id,name')
+            ->with('prod_attributes:id,name')
             ->paginate($perPage, ['*'], 'page', $page)
             ->withQueryString();
 
@@ -196,7 +196,7 @@ class ModificationRepository implements ModificationRepositoryInterface
             name: $model->name,
             quantity: (int) $model->products_count,
             primaryProductId: $primaryMap[$model->id] ?? null,
-            nameAttributes: $model->attributes->pluck('name')->all(),
+            nameAttributes: $model->prod_attributes->pluck('name')->all(),
         );
     }
 

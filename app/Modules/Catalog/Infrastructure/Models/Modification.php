@@ -22,7 +22,7 @@ class Modification extends Model
     /**
      * Атрибуты-варианты, задающие модификацию (pivot modification_attributes).
      */
-    public function attributes(): BelongsToMany
+    public function prod_attributes(): BelongsToMany
     {
         return $this->belongsToMany(
             Attribute::class,
