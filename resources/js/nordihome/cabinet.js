@@ -215,7 +215,7 @@ window.$ = jQuery;
 */
         // === Переключение способа получения: показывать/скрывать адрес ===
         $('#input-is-pickup').on('change', function () {
-            let isPickup = $(this).val() === 1;
+            let isPickup = $(this).val() === '1';
             if (isPickup) {
                 $('#delivery-address').hide();
             } else {
