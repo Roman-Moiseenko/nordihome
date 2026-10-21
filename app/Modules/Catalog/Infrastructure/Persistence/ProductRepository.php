@@ -10,6 +10,7 @@ use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Domain\ValueObjects\Code;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\CategoryProduct;
+use App\Modules\Catalog\Infrastructure\Models\ModificationProduct;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Parser\Domain\ValueObjects\Package;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
@@ -130,15 +131,52 @@ class ProductRepository implements ProductRepositoryInterface
             ->through(fn(Product $model) => $this->hydrate($model));
     }
 
-    public function findByIds(array $ids): array
+    public function findByIds(array $ids, bool $withTrashed = false): array
     {
         if (empty($ids)) return [];
 
-        return Product::whereIn('id', $ids)
+        $query = Product::whereIn('id', $ids);
+
+        if ($withTrashed) {
+            $query->onlyTrashed();
+        }
+
+        return $query
             ->orderByRaw('FIELD(id, ' . implode(',', $ids) . ')') // сохраняем порядок
             ->get()
             ->map(fn($model) => $this->hydrate($model))
             ->all();
+    }
+
+    public function findModificationSecondaryProductIds(array $primaryProductIds): array
+    {
+        if (empty($primaryProductIds)) return [];
+
+        $primaryRows = ModificationProduct::query()
+            ->whereIn('product_id', $primaryProductIds)
+            ->where('is_primary', true)
+            ->get(['modification_id', 'product_id']);
+
+        if ($primaryRows->isEmpty()) return [];
+
+        $modificationIds = $primaryRows->pluck('modification_id')->unique()->all();
+
+        $secondaryRows = ModificationProduct::query()
+            ->whereIn('modification_id', $modificationIds)
+            ->where('is_primary', false)
+            ->get(['modification_id', 'product_id']);
+
+        $secondaryByModification = [];
+        foreach ($secondaryRows as $row) {
+            $secondaryByModification[$row->modification_id][] = (int) $row->product_id;
+        }
+
+        $result = [];
+        foreach ($primaryRows as $row) {
+            $result[(int) $row->product_id] = $secondaryByModification[$row->modification_id] ?? [];
+        }
+
+        return $result;
     }
 
     public function search(string $query, int $limit = 10): array
@@ -322,6 +360,17 @@ class ProductRepository implements ProductRepositoryInterface
         $filter->count = 0;
 
         $this->fillIndexCounts($filter);
+
+        // При группировке модификаций в списке остаются только первичные товары.
+        // Вторичные товары модификации (is_primary=false) вкладываются в первичный
+        // на уровне IndexProductQuery через поле $modifications.
+        if ($filter->groupModification) {
+            $query->whereNotIn('products.id', function ($sub) {
+                $sub->select('modifications_products.product_id')
+                    ->from('modifications_products')
+                    ->where('modifications_products.is_primary', false);
+            });
+        }
 
         if (!is_null($filter->name) && trim($filter->name) !== '') {
             $name = trim($filter->name);

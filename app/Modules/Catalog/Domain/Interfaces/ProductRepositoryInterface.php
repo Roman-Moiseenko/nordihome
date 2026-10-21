@@ -79,9 +79,19 @@ interface ProductRepositoryInterface
      * Найти товары по ID
      *
      * @param array $ids
+     * @param bool $withTrashed Включать удалённые товары (onlyTrashed)
      * @return ProductEntity[]
      */
-    public function findByIds(array $ids): array;
+    public function findByIds(array $ids, bool $withTrashed = false): array;
+
+    /**
+     * Для каждого первичного товара модификации (is_primary=true) вернуть
+     * ID вторичных товаров (is_primary=false) той же модификации.
+     *
+     * @param int[] $primaryProductIds ID товаров страницы
+     * @return array<int, int[]> primary product_id => secondary product_id[]
+     */
+    public function findModificationSecondaryProductIds(array $primaryProductIds): array;
 
     /**
      * Поиск товаров по строке (код, артикул, название).

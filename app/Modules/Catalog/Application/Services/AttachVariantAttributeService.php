@@ -24,7 +24,7 @@ final readonly class AttachVariantAttributeService
         private AttributeProductRepositoryInterface $attributeProductRepository,
     ) {
     }
-
+//MAINDO Переделать по поиск с категориями
     /**
      * @param int              $productId     ID товара
      * @param array<int, mixed> $values        Список необработанных названий вариантов

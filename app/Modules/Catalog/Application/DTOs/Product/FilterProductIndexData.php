@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Application\DTOs\Product;
 
+use Spatie\LaravelData\Attributes\WithoutValidation;
 use Spatie\LaravelData\Data;
 
 /**
  * Фильтр и данные страницы списка товаров (Catalog/Product/Index).
  *
- * Поля фильтра: name, room, show.
+ * Поля фильтра: name, room, show, groupModification.
  * $count — число применённых фильтров (мутабельное, пишет репозиторий).
  * $all, $active, $draft, $notSale, $delete — счётчики товаров по состояниям
  * (мутабельные, заполняются репозиторием одним агрегирующим запросом).
@@ -20,6 +21,8 @@ class FilterProductIndexData extends Data
         public readonly ?string $name = null,
         public readonly ?int    $room = null,
         public readonly ?string $show = null,
+        #[WithoutValidation]
+        public readonly bool    $groupModification = true,
         public readonly int     $perPage = 20,
         public ?int             $count = 0,
         public ?int             $all = 0,

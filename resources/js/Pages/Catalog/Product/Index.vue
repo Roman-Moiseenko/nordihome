@@ -18,6 +18,11 @@
                 <Link type="primary" :href="route('admin.catalog.product.index', {show: 'delete'})">Удаленные</Link>
                 ({{ filters.delete }})
             </div>
+            <div class="ml-3 my-auto">
+                <el-checkbox v-model="groupModification">
+                    Группировать модификации
+                </el-checkbox>
+            </div>
             <TableFilter :filter="filter" class="ml-auto" :count="filters.count">
                 <el-input v-model="filter.name" placeholder="Товар"/>
                 <el-select v-model="filter.room" placeholder="Выберите категорию" class="mt-1">
@@ -40,15 +45,94 @@
                 style="width: 100%; cursor: pointer;"
                 v-loading="store.getLoading"
                 row-key="id"
+                :row-class-name="rowClassName"
                 @selection-change="selectedTable"
             >
                 <el-table-column type="selection" width="55"/>
+                <el-table-column type="expand" width="20" v-if="filter.groupModification">
+                    <template #default="scope">
+                        <div v-if="scope.row.modifications && scope.row.modifications.length" class="p-4">
+                            <el-table
+                                :data="scope.row.modifications"
+                                header-cell-class-name="nordihome-header"
+                                style="width: 100%"
+                                row-key="id"
+                            >
+                                <el-table-column prop="image" label="IMG" width="60">
+                                    <template #default="inner">
+                                        <img v-if="inner.row.image" :src="inner.row.image" style="width: 100%">
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="code" label="Артикул" width="120"/>
+                                <el-table-column prop="name" label="Название" show-overflow-tooltip>
+                                    <template #default="inner">
+                                        <div>
+                                            {{ inner.row.name }}
+                                            <el-tag v-if="!inner.row.published" type="info" class="ml-2">Черновик</el-tag>
+                                            <el-tag v-if="inner.row.notSale" type="warning" class="ml-1">Снят с продажи</el-tag>
+                                        </div>
+                                        <div>
+                                            <div class="show-on-hover items-center">
+                                                <template v-if="inner.row.trashed">
+                                                    <el-link type="success" :underline="false" @click="onRestore(inner.row)">
+                                                        Восстановить
+                                                    </el-link>
+                                                    &nbsp;|&nbsp;
+                                                    <el-link type="danger" :underline="false" @click="onFullDelete(inner.row)">
+                                                        Удалить окончательно
+                                                    </el-link>
+                                                </template>
+                                                <template v-else>
+                                                    <el-link type="primary" :underline="false" @click="onEdit(inner.row)">
+                                                        Изменить
+                                                    </el-link>
+                                                    &nbsp;|&nbsp;
+                                                    <el-link type="primary" :underline="false" @click="onAnalitics(inner.row)">
+                                                        Статистика
+                                                    </el-link>
+                                                    &nbsp;|&nbsp;
+                                                    <el-link type="info" :underline="false"
+                                                             :href="inner.row.published
+                                                             ? route('shop.product.view', {slug: inner.row.slug})
+                                                             : route('shop.product.view-draft', {product: inner.row.id})"
+                                                             target="_blank">
+                                                        Просмотр
+                                                    </el-link>
+                                                    &nbsp;|&nbsp;
+                                                    <el-link type="warning" :underline="false" @click="onSaleToggle(inner.row)">
+                                                        {{ inner.row.notSale ? 'Вернуть в продажу' : 'Снять с продажи' }}
+                                                    </el-link>
+                                                    &nbsp;|&nbsp;
+                                                    <el-link type="success" :underline="false" @click="onPublishedToggle(inner.row)">
+                                                        {{ inner.row.published ? 'В черновик' : 'Опубликовать' }}
+                                                    </el-link>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="categoryName" label="Категория" width="250" align="center"
+                                                 show-overflow-tooltip/>
+                                <el-table-column prop="published" label="Опубликован" width="120" align="center">
+                                    <template #default="inner">
+                                        <Active :active="inner.row.published"/>
+                                    </template>
+                                </el-table-column>
+                                <el-table-column prop="notSale" label="В продаже" width="100" align="center">
+                                    <template #default="inner">
+                                        <Active :active="!inner.row.notSale"/>
+                                    </template>
+                                </el-table-column>
+                            </el-table>
+                        </div>
+                    </template>
+                </el-table-column>
                 <el-table-column prop="image" label="IMG" width="60">
                     <template #default="scope">
                         <img v-if="scope.row.image" :src="scope.row.image" style="width: 100%">
                     </template>
                 </el-table-column>
-                <el-table-column prop="code" label="Артикул" width="120"/>
+                <el-table-column prop="code" label="Артикул" width="140"/>
                 <el-table-column prop="name" label="Название" show-overflow-tooltip>
                     <template #default="scope">
                         <div>
@@ -131,8 +215,8 @@ import {useStore} from "@Res/store.js"
 import Active from "@Comp/Elements/Active.vue";
 import Pagination from "@Comp/Pagination.vue";
 import TableFilter from "@Comp/TableFilter.vue";
-import {Head, Link, router} from "@inertiajs/vue3";
-import {defineProps, inject, onMounted, reactive, ref} from "vue";
+import {Head, Link, router, usePage} from "@inertiajs/vue3";
+import {computed, defineProps, inject, onMounted, reactive, ref} from "vue";
 import {route} from "ziggy-js";
 import axios from "axios";
 import SelectActions from "./SelectActions.vue";
@@ -157,10 +241,29 @@ const filter = reactive({
     name: props.filters.name,
     room: props.filters.room,
     show: props.filters.show,
+    // Хранится как 1/0, чтобы корректно сериализоваться в query-string
+    // (булев false превращается в null и теряется).
+    groupModification: props.filters.groupModification ? 1 : 0,
+})
+
+const groupModification = computed({
+    get: () => Boolean(filter.groupModification),
+    set: (value: boolean) => {
+        filter.groupModification = value ? 1 : 0
+        router.get(usePage().url, filter)
+    },
 })
 
 function loadImages() {
-    const ids = tableData.value.map((p: any) => p.id)
+    const ids: number[] = []
+    for (const product of tableData.value) {
+        ids.push(product.id)
+        if (product.modifications && product.modifications.length) {
+            for (const modification of product.modifications) {
+                ids.push(modification.id)
+            }
+        }
+    }
     if (ids.length === 0) return
 
     axios.get(route('admin.photo.get-by-ids'), {
@@ -173,8 +276,16 @@ function loadImages() {
         tableData.value = tableData.value.map((product: any) => ({
             ...product,
             image: photoResponse.data[product.id] || null,
+            modifications: (product.modifications || []).map((modification: any) => ({
+                ...modification,
+                image: photoResponse.data[modification.id] || null,
+            })),
         }))
     })
+}
+
+function rowClassName({row}: any) {
+    return (row.modifications && row.modifications.length) ? '' : 'no-expand'
 }
 
 onMounted(() => {
@@ -211,6 +322,7 @@ function onFullDelete(row) {
 }
 
 function onEdit(row: { id: any; }) {
+    console.log(row);
     router.visit(route('admin.catalog.product.edit', {id: row.id}), {
         method: "get",
         preserveState: true,
@@ -285,5 +397,10 @@ function onAction(val) {
     .show-on-hover {
         display: block;
     }
+}
+
+// Скрываем иконку раскрытия для строк без вложенных модификаций.
+.el-table .no-expand .el-table__expand-icon {
+    visibility: hidden;
 }
 </style>

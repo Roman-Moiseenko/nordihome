@@ -16,6 +16,10 @@ use App\Modules\Catalog\Domain\Entities\ProductEntity;
  */
 readonly class ProductIndexData
 {
+    /**
+     * @param ProductIndexData[] $modifications Вторичные товары модификации
+     *                                         (заполняются при groupModification=true).
+     */
     public function __construct(
         public int     $id,
         public string  $code,
@@ -26,10 +30,18 @@ readonly class ProductIndexData
         public bool    $trashed,
         public string  $categoryName,
         public ?string $image = null,
+        public array   $modifications = [],
     ) {}
 
-    public static function fromEntity(ProductEntity $product, string $categoryName, bool $trashed): self
-    {
+    /**
+     * @param ProductIndexData[] $modifications
+     */
+    public static function fromEntity(
+        ProductEntity $product,
+        string $categoryName,
+        bool $trashed,
+        array $modifications = [],
+    ): self {
         return new self(
             id: $product->id ?? 0,
             code: (string) $product->code,
@@ -39,6 +51,7 @@ readonly class ProductIndexData
             notSale: $product->notSale,
             trashed: $trashed,
             categoryName: $categoryName,
+            modifications: $modifications,
         );
     }
 }

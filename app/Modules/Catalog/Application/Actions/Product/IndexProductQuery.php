@@ -36,27 +36,82 @@ readonly class IndexProductQuery
 
         $paginator = $this->productRepository->filteredPaginated($filter);
 
-        // Имена родительских категорий для всех товаров страницы (одним запросом).
-        $categoryIds = $paginator->getCollection()
-            ->map(fn(ProductEntity $product) => $product->mainCategoryId)
-            ->filter(fn(?int $id) => $id !== null && $id > 0)
-            ->unique()
-            ->values()
-            ->toArray();
-
-        $categoryNames = $this->categoryRepository->getParentNamesByIds($categoryIds);
-
         // При show=delete репозиторий применяет onlyTrashed(), т.е. все
         // товары страницы — удалённые.
         $trashed = $filter->show === 'delete';
 
+        $entities = $paginator->getCollection();
+
+        // При groupModification=true вторичные товары модификации исключены
+        // из списка на уровне репозитория. Здесь подгружаем их и вкладываем
+        // в первичный товар в поле $modifications.
+        $secondaryMap = [];
+        $secondaryById = [];
+
+        if ($filter->groupModification) {
+            $primaryIds = $entities
+                ->map(fn(ProductEntity $product) => $product->id)
+                ->filter(fn(?int $id) => $id !== null && $id > 0)
+                ->values()
+                ->toArray();
+
+            $secondaryMap = $this->productRepository->findModificationSecondaryProductIds($primaryIds);
+
+            $secondaryIds = [];
+            foreach ($secondaryMap as $ids) {
+                $secondaryIds = array_merge($secondaryIds, $ids);
+            }
+            $secondaryIds = array_values(array_unique($secondaryIds));
+
+            if (!empty($secondaryIds)) {
+                $secondaryEntities = $this->productRepository->findByIds($secondaryIds, $trashed);
+                foreach ($secondaryEntities as $secondaryEntity) {
+                    $secondaryById[$secondaryEntity->id] = $secondaryEntity;
+                }
+            }
+        }
+
+        // Имена родительских категорий для товаров страницы и вложенных
+        // товаров модификаций (одним запросом).
+        $categoryIds = $entities
+            ->map(fn(ProductEntity $product) => $product->mainCategoryId)
+            ->filter(fn(?int $id) => $id !== null && $id > 0);
+
+        foreach ($secondaryById as $secondaryEntity) {
+            if ($secondaryEntity->mainCategoryId > 0) {
+                $categoryIds->push($secondaryEntity->mainCategoryId);
+            }
+        }
+
+        $categoryNames = $this->categoryRepository->getParentNamesByIds(
+            $categoryIds->unique()->values()->toArray()
+        );
+
         $paginator->setCollection(
-            $paginator->getCollection()->map(
-                fn(ProductEntity $product) => ProductIndexData::fromEntity(
-                    $product,
-                    $categoryNames[$product->mainCategoryId] ?? '',
-                    $trashed,
-                )
+            $entities->map(
+                function (ProductEntity $product) use ($categoryNames, $trashed, $secondaryMap, $secondaryById) {
+                    $modifications = [];
+
+                    foreach ($secondaryMap[$product->id] ?? [] as $secondaryId) {
+                        if (!isset($secondaryById[$secondaryId])) {
+                            continue;
+                        }
+
+                        $secondary = $secondaryById[$secondaryId];
+                        $modifications[] = ProductIndexData::fromEntity(
+                            $secondary,
+                            $categoryNames[$secondary->mainCategoryId] ?? '',
+                            $trashed,
+                        );
+                    }
+
+                    return ProductIndexData::fromEntity(
+                        $product,
+                        $categoryNames[$product->mainCategoryId] ?? '',
+                        $trashed,
+                        $modifications,
+                    );
+                }
             )
         );
 
