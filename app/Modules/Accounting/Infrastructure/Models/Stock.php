@@ -2,10 +2,8 @@
 
 namespace App\Modules\Accounting\Infrastructure\Models;
 
-use App\Modules\Catalog\Infrastructure\Models\ProductSize;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
@@ -31,9 +29,4 @@ class Stock extends Model
         'reserve',
         'updated_at'
     ];
-
-    public function productSize(): BelongsTo
-    {
-        return $this->belongsTo(ProductSize::class, 'products_sizes_id', 'id');
-    }
 }

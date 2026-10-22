@@ -66,16 +66,22 @@ class SizeGridRepository implements SizeGridRepositoryInterface
 
         $keptIds = [];
 
-        foreach (array_values($values) as $index => $value) {
+        $sortCounters = [];
+
+        foreach (array_values($values) as $value) {
+            $dimensionCode = $value->dimensionCode;
+            $sortOrder = $sortCounters[$dimensionCode] ?? 0;
+            $sortCounters[$dimensionCode] = $sortOrder + 1;
+
             $valueModel = SizeGridValue::updateOrCreate(
                 [
                     'size_grid_id' => $model->id,
-                    'dimension_code' => $value->dimensionCode,
+                    'dimension_code' => $dimensionCode,
                     'value' => $value->value,
                 ],
                 [
                     'label' => $value->label,
-                    'sort_order' => $value->sortOrder !== 0 ? $value->sortOrder : $index,
+                    'sort_order' => $sortOrder,
                     'is_active' => $value->isActive,
                 ],
             );

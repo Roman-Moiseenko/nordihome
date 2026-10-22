@@ -50,7 +50,7 @@ class ProductSizeRepository implements ProductSizeRepositoryInterface
 
             $isActive = array_key_exists($key, $desiredActive)
                 ? (bool) $desiredActive[$key]
-                : (bool) ($existingByKey[$key]?->is_active ?? true);
+                : (bool) ($existingByKey[$key]?->is_active ?? false);
 
             $model->product_id = $productId;
             $model->values = $values;
