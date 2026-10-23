@@ -117,41 +117,69 @@ class AttributeProductRepository implements AttributeProductRepositoryInterface
         $attribute = Attribute::find($attributeId);
         $isMultiple = $attribute !== null && (bool) $attribute->multiple;
 
-        $model = AttributeProduct::where('attribute_id', $attributeId)
-            ->where('product_id', $productId)
-            ->first();
+        // Таблица attributes_products — pivot без первичного ключа id,
+        // поэтому обновление/вставка выполняются через query builder,
+        // а не через Model::save() (иначе генерируется UPDATE ... WHERE id IS NULL).
+        $query = AttributeProduct::query()
+            ->where('attribute_id', $attributeId)
+            ->where('product_id', $productId);
+
+        $model = (clone $query)->first();
 
         if ($model !== null) {
-            if (!$isMultiple) {
-                // Одиночный выбор: значение — скалярный id варианта.
-                $model->value = json_encode($variantId);
-                $model->save();
-
+            $value = $this->mergedVariantValue($model->value, $variantId, $isMultiple);
+            if ($value === null) {
                 return;
             }
 
-            $current = json_decode($model->value, true) ?? [];
-
-            if (!is_array($current)) {
-                $current = [$current];
-            }
-
-            if (in_array($variantId, $current, true)) {
-                return;
-            }
-
-            $current[] = $variantId;
-            $model->value = json_encode(array_values($current));
-            $model->save();
+            $query->update(['value' => json_encode($value)]);
 
             return;
         }
 
-        $pivot = new AttributeProduct();
-        $pivot->attribute_id = $attributeId;
-        $pivot->product_id = $productId;
-        $pivot->value = json_encode($isMultiple ? [$variantId] : $variantId);
-        $pivot->save();
+        $value = $isMultiple ? [$variantId] : $variantId;
+
+        $query->insert([
+            'attribute_id' => $attributeId,
+            'product_id' => $productId,
+            'value' => json_encode($value),
+        ]);
+    }
+
+    /**
+     * Вычисляет новое значение value для существующей привязки товара и атрибута.
+     *
+     * Возвращает null, если обновление не требуется (вариант уже привязан).
+     *
+     * @return int|array<int, int>|null
+     */
+    private function mergedVariantValue(?string $rawValue, int $variantId, bool $isMultiple): int|array|null
+    {
+        if (!$isMultiple) {
+            $current = json_decode($rawValue ?? '', true);
+
+            if ((int) $current === $variantId) {
+                return null;
+            }
+
+            return $variantId;
+        }
+
+        $current = json_decode($rawValue ?? '', true) ?? [];
+
+        if (!is_array($current)) {
+            $current = [$current];
+        }
+
+        $current = array_map('intval', $current);
+
+        if (in_array($variantId, $current, true)) {
+            return null;
+        }
+
+        $current[] = $variantId;
+
+        return array_values($current);
     }
 
     private function resolveValue(Attribute $attribute, mixed $value): mixed

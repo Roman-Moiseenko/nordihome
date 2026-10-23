@@ -12,6 +12,8 @@ final class AttributeName
     public const string COLOR = 'Цвет';
     public const string MATERIAL = 'Материал';
 
+    public const string WHOM = 'Для кого';
+
     private function __construct(
         private readonly string $value,
     ) {
@@ -26,7 +28,10 @@ final class AttributeName
     {
         return new self(self::MATERIAL);
     }
-
+    public static function whom(): self
+    {
+        return new self(self::WHOM);
+    }
     public function value(): string
     {
         return $this->value;
