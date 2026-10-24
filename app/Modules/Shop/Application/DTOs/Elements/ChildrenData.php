@@ -10,6 +10,7 @@ final readonly class ChildrenData
         public int    $id,
         public string $name,
         public string $slug,
+        public string $url,
     )
     {
     }

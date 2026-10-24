@@ -19,7 +19,7 @@
                 </div>
                 @foreach($mainInfo->children as $child)
                     <div class="m-l_10 f-z_16">
-                        <a href="{{ route('shop.' . $mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
+                        <a href="{{ $child->url }}">{{ $child->name }}</a>
                     </div>
                 @endforeach
             </div>
@@ -30,7 +30,7 @@
                 <a href="{{ $secondInfo->back->url}}" class="heading">{{ $secondInfo->back->name }}</a>
                 @foreach($secondInfo->children as $child)
                     <div class="f-z_16 m-l_10">
-                        <a href="{{ route('shop.' . $secondInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
+                        <a href="{{ $child->url }}">{{ $child->name }}</a>
                     </div>
                 @endforeach
             </div>

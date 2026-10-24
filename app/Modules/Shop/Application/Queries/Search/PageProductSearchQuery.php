@@ -47,12 +47,12 @@ readonly class PageProductSearchQuery
         if ($allProductIds) {
             $roomsRaw = $this->categoryPageQueryRepository->getRoomsByProductIds($allProductIds, $params);
             $rooms = array_map(
-                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug),
+                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug, url: route('shop.room.view', $r->slug),),
                 $roomsRaw,
             );
             $categoriesRaw = $this->roomPageQueryRepository->getCategoriesByProductIds($allProductIds, $params);
             $categories = array_map(
-                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug),
+                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug, url: route('shop.category.view', $r->slug),),
                 $categoriesRaw,
             );
         }

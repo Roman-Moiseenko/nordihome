@@ -65,7 +65,12 @@ readonly class CategoryPageQuery
         if ($allProductIds) {
             $roomsRaw = $this->repository->getRoomsByProductIds($allProductIds, $params);
             $rooms = array_map(
-                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug),
+                fn(\stdClass $r) => new ChildrenData(
+                    id: (int)$r->id,
+                    name: $r->name,
+                    slug: $r->slug,
+                    url: route('shop.room.view', $r->slug),
+                ),
                 $roomsRaw,
             );
         }
@@ -208,7 +213,12 @@ readonly class CategoryPageQuery
         if ($productIds) {
             $roomsRaw = $this->repository->getRoomsByProductIds($productIds, $params);
             $rooms = array_map(
-                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug),
+                fn(\stdClass $r) => new ChildrenData(
+                    id: (int)$r->id,
+                    name: $r->name,
+                    slug: $r->slug,
+                    url: route('shop.room.view', $r->slug),
+                ),
                 $roomsRaw,
             );
         }

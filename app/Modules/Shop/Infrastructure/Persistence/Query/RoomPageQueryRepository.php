@@ -47,7 +47,7 @@ class RoomPageQueryRepository
         if (!$row) return null;
 
         $childrenRows = DB::table('rooms')->where('parent_id', $row->id)->get(['id', 'name', 'slug']);
-        $children = $childrenRows->map(fn($c) => new ChildrenData($c->id, $c->name, $c->slug))->all();
+        $children = $childrenRows->map(fn($c) => new ChildrenData($c->id, $c->name, $c->slug, url: route('shop.room.view', $c->slug),))->all();
 
         $meta = json_decode($row->meta ?? '{}', true);
 
@@ -57,7 +57,7 @@ class RoomPageQueryRepository
             slug: $row->slug,
             children: $children,
             entity: 'room',
-            parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug) : null,
+            parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug, url: route('shop.room.view', $row->slug),) : null,
             totalProducts: 0,
             title: $meta['title'] ?? $row->name,
             description: $meta['description'] ?? '',

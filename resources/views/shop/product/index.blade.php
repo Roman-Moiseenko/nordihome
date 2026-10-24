@@ -43,7 +43,7 @@ $total = $pageData->paginator->total;
     <!-- Показать на мобиле -->
     <div Class="catalog-subcategories-mob">
         @foreach($pageData->mainInfo->children as $child)
-                <a href="{{ route('shop.' . $pageData->mainInfo->entity. '.view', $child->slug) }}">{{ $child->name }}</a>
+                <a href="{{ $child->url }}">{{ $child->name }}</a>
         @endforeach
     </div>
     <form action="" method="GET">

@@ -56,7 +56,7 @@ class CategoryPageQueryRepository
         $childrenRows = DB::table('categories')
             ->where('parent_id', $row->id)
             ->get(['id', 'name', 'slug']);
-        $children = $childrenRows->map(fn($c) => new ChildrenData($c->id, $c->name, $c->slug))->all();
+        $children = $childrenRows->map(fn($c) => new ChildrenData($c->id, $c->name, $c->slug, url: route('shop.category.view', $c->slug),))->all();
 
         $meta = json_decode($row->meta, true);
         return new CategoryRoomMainData(
@@ -65,7 +65,7 @@ class CategoryPageQueryRepository
             slug: $row->slug,
             children: $children,
             entity: 'category',
-            parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug) : null,
+            parent: $row->parent_id ? new ChildrenData($row->parent_id, $row->parent_name, $row->parent_slug, url: route('shop.category.view', $row->slug),) : null,
             totalProducts: 0,
             title: $meta['title'] ?? '',
             description: $meta['description'] ?? '',

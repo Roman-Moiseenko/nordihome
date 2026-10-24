@@ -19,6 +19,7 @@ class YandexTranslate
             "sourceLanguageCode" => $source_language,
             "targetLanguageCode" => $target_language,
             "texts" => [$text],
+            "format" => "HTML",
             "folderId" => $folder_id,
         ];
         $data_json = json_encode($post_data);

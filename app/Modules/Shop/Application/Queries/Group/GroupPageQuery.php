@@ -62,7 +62,7 @@ readonly class GroupPageQuery
         if ($allProductIds) {
             $categoriesRaw = $this->roomRepository->getCategoriesByProductIds($allProductIds, $params);
             $categories = array_map(
-                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug),
+                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug, url: route('shop.category.view', $r->slug),),
                 $categoriesRaw,
             );
         }
@@ -140,7 +140,7 @@ readonly class GroupPageQuery
         );
 
 
-        return null;
+        //return null;
     }
 
 
