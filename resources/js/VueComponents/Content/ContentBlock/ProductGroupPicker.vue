@@ -155,15 +155,15 @@ function sourceFor(type: string): EntityItem[] {
         (list || []).map((item) => ({ id: item.id, name: item.name, published: item.published }))
 
     switch (type) {
-        case 'room':
+        case 'catalog.room':
             return normalize(catalogStore.rooms)
-        case 'category':
+        case 'catalog.category':
             return normalize(catalogStore.categories)
-        case 'group':
+        case 'catalog.group':
             return normalize(catalogStore.groups)
-        case 'promotion':
+        case 'discount.promotion':
             return normalize(catalogStore.promotions)
-        case 'series':
+        case 'catalog.series':
             return normalize(catalogStore.series)
         default:
             return []
@@ -191,7 +191,7 @@ function selectEntity(item: EntityItem) {
 }
 
 function openDialog() {
-  //  loadTypes()
+    //  loadTypes()
     if (!catalogStore.loaded) {
         catalogStore.reload()
     }

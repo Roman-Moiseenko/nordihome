@@ -5,18 +5,17 @@ namespace App\Modules\Shop\Application\Queries\Room;
 use App\Modules\Setting\Application\Actions\GetWebSettingsUseCase;
 use App\Modules\Shop\Application\DTOs\ClientContext;
 use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
-use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Elements\UrlData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
+use App\Modules\Shop\Application\Services\ProductFiltersResolver;
 use App\Modules\Shop\Application\Services\RegionalPriceCalculator;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
-use App\Modules\Shop\Infrastructure\Persistence\Query\AttributeQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ContentBlockQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ProductIndexQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\RoomPageQueryRepository;
@@ -29,7 +28,7 @@ readonly class RoomPageQuery
         private PaginatorBuilder            $paginatorBuilder,
         private SeoAdapter                  $seoAdapter,
         private ProductIndexQueryRepository $productIndexQueryRepository,
-        private AttributeQueryRepository    $attributeQueryRepository,
+        private ProductFiltersResolver      $filtersResolver,
         private SchemaBuilder               $schemaBuilder,
         private ContentBlockQueryRepository   $blockRepository,
         private GetWebSettingsUseCase $webSettingsUseCase,
@@ -155,25 +154,12 @@ readonly class RoomPageQuery
     {
         $key_cache = str_replace('{id}', (string)$roomId, CacheInvalidationRegistry::ROOM_FILTERS_ID);
 
-        return cache_remember(
+        $aggregates = cache_remember(
             $key_cache,
             now()->addDay(),
-            function () use ($productIds, $categoryIds) {
-                $aggr = $this->attributeQueryRepository->getFilterAggregates($categoryIds, $productIds);
-
-                $tags = array_map(
-                    fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),
-                    $aggr->tags ?? []
-                );
-
-                return new FilterProductsData(
-                    minPrice: $aggr->min_price ?? 0,
-                    maxPrice: $aggr->max_price ?? 0,
-                    attributes: $aggr->attributes ?? [],
-                    brands: $aggr->brands ?? [],
-                    tags: $tags,
-                );
-            }
+            fn() => $this->filtersResolver->resolveAggregates($categoryIds, $productIds),
         );
+
+        return $this->filtersResolver->buildFilterProductsData($aggregates, []);
     }
 }

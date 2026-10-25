@@ -16,6 +16,7 @@ use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
+use App\Modules\Shop\Application\Services\ProductFiltersResolver;
 use App\Modules\Shop\Application\Services\RegionalPriceCalculator;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\PaginatorBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
@@ -33,7 +34,7 @@ readonly class CategoryPageQuery
         private PaginatorBuilder            $paginatorBuilder,
         private SeoAdapter                  $seoAdapter,
         private ProductIndexQueryRepository $productIndexQueryRepository,
-        private AttributeQueryRepository    $attributeQueryRepository,
+        private ProductFiltersResolver      $filtersResolver,
         private SchemaBuilder               $schemaBuilder,
         private ContentBlockQueryRepository $blockRepository,
         private GetWebSettingsUseCase       $webSettingsUseCase,
@@ -246,29 +247,16 @@ readonly class CategoryPageQuery
         );
     }
 
-    private function getCachedFilters(int $categoryId, array $allProductIds): FilterProductsData
+    private function getCachedFilters(int $promotionId, array $categoryIds, array $productIds): FilterProductsData
     {
-        $key_cache = str_replace('{id}', (string)$categoryId, CacheInvalidationRegistry::CATEGORY_FILTERS_ID);
+        $key_cache = str_replace('{id}', (string)$promotionId, CacheInvalidationRegistry::GROUP_FILTERS_ID);
 
-        return cache_remember(
+        $aggregates = cache_remember(
             $key_cache,
             now()->addDay(),
-            function () use ($categoryId, $allProductIds) {
-                $aggr = $this->attributeQueryRepository->getFilterAggregates([$categoryId], $allProductIds);
-
-                $tags = array_map(
-                    fn(\stdClass $item) => new IdNameData(id: (int)$item->id, name: $item->name),
-                    $aggr->tags ?? []
-                );
-
-                return new FilterProductsData(
-                    minPrice: $aggr->min_price ?? 0,
-                    maxPrice: $aggr->max_price ?? 0,
-                    attributes: $aggr->attributes ?? [],
-                    brands: $aggr->brands ?? [],
-                    tags: $tags,
-                );
-            }
+            fn() => $this->filtersResolver->resolveAggregates($categoryIds, $productIds),
         );
+
+        return $this->filtersResolver->buildFilterProductsData($aggregates, []);
     }
 }
