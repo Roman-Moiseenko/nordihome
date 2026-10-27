@@ -8,6 +8,7 @@ use App\Modules\Catalog\Application\Actions\Category\ToggleCategoryUseCase;
 use App\Modules\Catalog\Application\Actions\Wp\CreateCategoryWpUseCase;
 use App\Modules\Catalog\Application\DTOs\Wp\CategoryRoomWpData;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
+use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Shared\Application\Actions\UploadPhotoByUrlUseCase;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoUploadByUrlData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -21,6 +22,7 @@ class LoadCategoryWpService
         private readonly CreateCategoryWpUseCase     $categoryWpUseCase,
         private readonly UploadPhotoByUrlUseCase $uploadPhotoByUrlUseCase,
         private readonly ToggleCategoryUseCase $toggleCategoryUseCase,
+        private readonly CategoryRepositoryInterface $categoryRepository
     )
     {
     }
@@ -48,13 +50,15 @@ class LoadCategoryWpService
     {
         $dto = CategoryRoomWpData::fromWpArray($categoryData, $parentId);
 
+        if (!is_null($category = $this->categoryRepository->findByWpId($dto->wpId))) return $category;
+
         $category = $this->categoryWpUseCase->execute($dto, $this->userPermission);
 
-        if (!is_null($category)) {
+      //  if (!is_null($category)) {
             if (!$category->isPublished())
                 $this->toggleCategoryUseCase->execute($category->id, $this->userPermission);
 
-            if ($categoryData['img'] != false) {
+            if ($categoryData['img']) {
                 $dtoPhoto = new PhotoUploadByUrlData(
                     $category->id,
                     'catalog.category',
@@ -65,7 +69,7 @@ class LoadCategoryWpService
                 $this->uploadPhotoByUrlUseCase->execute($dtoPhoto, $this->userPermission);
             }
             $this->count++;
-        }
+       // }
         return $category;
     }
 

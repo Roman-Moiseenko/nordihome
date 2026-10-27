@@ -9,10 +9,10 @@ use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
 
-class CreateCategoryWpUseCase
+readonly class CreateCategoryWpUseCase
 {
     public function __construct(
-        private readonly CategoryRepositoryInterface $categoryRepository,
+        private CategoryRepositoryInterface $categoryRepository,
     )
     {
     }
