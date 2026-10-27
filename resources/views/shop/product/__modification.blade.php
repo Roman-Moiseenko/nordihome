@@ -1,19 +1,34 @@
+@php
+    /** @var \App\Modules\Shop\Application\DTOs\Entities\ProductModificationData[] $modification */
+@endphp
 @if(!empty($modification))
-<div class="modification">
-    @foreach($modification as $attribute)
-        @if(isset($attribute['products']))
-            @foreach($attribute['products'] as $value => $_product_mod)
-                @if($product['is_sale'])
-                    <span class="size {{ $product['id'] === $_product_mod[0]['id'] ? 'active' : '' }}"
-                          data-id="{{ $_product_mod[0]['id'] }}"
-                          title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</span>
-                @else
-                    <a class="size"
-                       href="{{ route('shop.product.view', $_product_mod[0]['id']) }}"
-                       title="{{ $_product_mod[0]['name'] }}"> {{ $value }}</a>
-                @endif
-            @endforeach
-        @endif
-    @endforeach
-</div>
+    <div class="modification">
+        @foreach($modification as $modificationProduct)
+            @if($current_id === $modificationProduct->id)
+                <span class="size active"
+                      data-id="{{ $modificationProduct->id }}"
+                      title="{{ $modificationProduct->name }}">
+                @if(!empty($modificationProduct->variantImage))
+                        <img src="{{ $modificationProduct->variantImage }}"
+                             alt="{{ $modificationProduct->variantName }}"
+                             title="{{ $modificationProduct->variantName }}">
+                    @else
+                        {{ $modificationProduct->variantName ?: $modificationProduct->name }}
+                    @endif
+            </span>
+            @else
+                <a class="size"
+                   href="{{ route('shop.product.view', $modificationProduct->slug) }}"
+                   title="{{ $modificationProduct->name }}">
+                    @if(!empty($modificationProduct->variantImage))
+                        <img src="{{ $modificationProduct->variantImage }}"
+                             alt="{{ $modificationProduct->variantName }}"
+                             title="{{ $modificationProduct->variantName }}">
+                    @else
+                        {{ $modificationProduct->variantName ?: $modificationProduct->name }}
+                    @endif
+                </a>
+            @endif
+        @endforeach
+    </div>
 @endif

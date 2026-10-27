@@ -157,7 +157,10 @@
                     </div>
                     <h3 class="m-t_20 m-b_10 f-w_700 f-z_18">Цвета:</h3>
                     <div>Натуральный</div-->
-                    @include('shop.product.__modification', ['modification' => $pageData->modification, 'current_id' => $product->id])
+                    @include('shop.product.__modification', [
+                        'modification' => $pageData->modification,
+                        'current_id' => $product->id,
+                    ])
                     @include('shop.product.__related', ['related' => $pageData->related])
 
                     <div class="view-specifications">

@@ -48,7 +48,7 @@ class ParserProductSearchQueryRepository
             $result[] = [
                 'id' => (int)$row->id,
                 'name' => trim($row->name . (!empty($row->short) ? ' - ' . $row->short : '')),
-                'url' => route('shop.ikea.product', $row->slug),
+                'url' => route('shop.ikea.product', $row->code),
                 'code' => codeIkea((string)$row->code),
                 'image' => $this->imageThumbUseCase->execute($row, 'catalog'),
                 'price' => (float)$row->price_sell,

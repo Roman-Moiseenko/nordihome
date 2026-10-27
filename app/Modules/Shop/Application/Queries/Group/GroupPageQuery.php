@@ -143,9 +143,9 @@ readonly class GroupPageQuery
     }
 
 
-    private function getCachedFilters(int $promotionId, array $categoryIds, array $productIds): FilterProductsData
+    private function getCachedFilters(int $groupId, array $categoryIds, array $productIds): FilterProductsData
     {
-        $key_cache = str_replace('{id}', (string)$promotionId, CacheInvalidationRegistry::GROUP_FILTERS_ID);
+        $key_cache = str_replace('{id}', (string)$groupId, CacheInvalidationRegistry::GROUP_FILTERS_ID);
 
         $aggregates = cache_remember(
             $key_cache,

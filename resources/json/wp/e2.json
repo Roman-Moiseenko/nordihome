@@ -1,0 +1,447 @@
+{
+    "$dataProduct": {
+        "currencyCode": "EUR",
+        "description": "Plankinzet, wit",
+        "isComingSoon": false,
+        "isCustomMade": false,
+        "isFood": false,
+        "isServerOnlySoldInStore": false,
+        "isMattress": false,
+        "isLowerPriceInStore": false,
+        "isServerOnlineSellable": true,
+        "itemMeasureReferenceText": "32x13x16 cm",
+        "itemNo": "80136622",
+        "mediaList": [
+            {
+                "type": "image",
+                "content": {
+                    "alt": "Een witte VARIERA plankinzet met een ruitpatroon, gemaakt van staal met epoxycoating.",
+                    "height": 2000,
+                    "id": "81979_PE207258",
+                    "imageFileName": "81979_PE207258_S5.JPG",
+                    "pristineImage": {
+                        "aspectRatio": {
+                            "x": 4,
+                            "y": 3
+                        },
+                        "height": 3128,
+                        "url": "https://www.ikea.com/nl/nl/images/p/621073878f61ca6f/variera-plankinzet-wit/PE207258.jpg",
+                        "width": 4256
+                    },
+                    "type": "MAIN_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/nl/nl/images/products/variera-plankinzet-wit__81979_pe207258_s5.jpg",
+                    "width": 2000,
+                    "ratio": "4:3"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "alt": "Witte plank met gestapelde borden, glazen en mokken voor extra opbergruimte.",
+                    "height": 2000,
+                    "id": "0867261_PE600476",
+                    "imageFileName": "0867261_PE600476_S5.JPG",
+                    "pristineImage": {
+                        "aspectRatio": {
+                            "x": 1,
+                            "y": 1
+                        },
+                        "height": 4000,
+                        "url": "https://www.ikea.com/nl/nl/images/p/757d6e1773276c47/variera-plankinzet-wit/PE600476.jpg",
+                        "width": 4000
+                    },
+                    "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/nl/nl/images/products/variera-plankinzet-wit__0867261_pe600476_s5.jpg",
+                    "width": 2000,
+                    "ratio": "1:1"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "alt": "Keukenkastrek inzet organiseert glazen en kommen, waardoor de opslagruimte wordt gemaximaliseerd.",
+                    "height": 2000,
+                    "id": "0867369_PE600474",
+                    "imageFileName": "0867369_PE600474_S5.JPG",
+                    "type": "FUNCTIONAL_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/nl/nl/images/products/variera-plankinzet-wit__0867369_pe600474_s5.jpg",
+                    "width": 2000,
+                    "ratio": "square"
+                }
+            },
+            {
+                "type": "image",
+                "content": {
+                    "alt": "VARIERA Plankinzet, wit, 32x13x16 cm",
+                    "height": 2000,
+                    "id": "1465528_PH200754",
+                    "imageFileName": "1465528_PH200754_S5.JPG",
+                    "informationDots": [
+                        {
+                            "boundingBox": {
+                                "height": 8,
+                                "left": 24,
+                                "top": 70,
+                                "width": 11
+                            },
+                            "coordinates": {
+                                "x": 30,
+                                "y": 75
+                            },
+                            "itemKey": {
+                                "itemNo": "00497222",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 15,
+                                "left": 16,
+                                "top": 25,
+                                "width": 43
+                            },
+                            "coordinates": {
+                                "x": 56,
+                                "y": 30
+                            },
+                            "itemKey": {
+                                "itemNo": "00534432",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 3,
+                                "left": 17,
+                                "top": 35,
+                                "width": 21
+                            },
+                            "coordinates": {
+                                "x": 29,
+                                "y": 35
+                            },
+                            "itemKey": {
+                                "itemNo": "10381909",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 6,
+                                "left": 32,
+                                "top": 46,
+                                "width": 19
+                            },
+                            "coordinates": {
+                                "x": 41,
+                                "y": 49
+                            },
+                            "itemKey": {
+                                "itemNo": "10497801",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 27,
+                                "left": 53,
+                                "top": 40,
+                                "width": 14
+                            },
+                            "coordinates": {
+                                "x": 59,
+                                "y": 53
+                            },
+                            "itemKey": {
+                                "itemNo": "30213552",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 6,
+                                "left": 45,
+                                "top": 88,
+                                "width": 17
+                            },
+                            "coordinates": {
+                                "x": 55,
+                                "y": 91
+                            },
+                            "itemKey": {
+                                "itemNo": "40359148",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 16,
+                                "left": 15,
+                                "top": 51,
+                                "width": 39
+                            },
+                            "coordinates": {
+                                "x": 51,
+                                "y": 55
+                            },
+                            "itemKey": {
+                                "itemNo": "60136623",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 12,
+                                "left": 66,
+                                "top": 55,
+                                "width": 16
+                            },
+                            "coordinates": {
+                                "x": 74,
+                                "y": 61
+                            },
+                            "itemKey": {
+                                "itemNo": "70213545",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 23,
+                                "left": 65,
+                                "top": 29,
+                                "width": 18
+                            },
+                            "coordinates": {
+                                "x": 72,
+                                "y": 45
+                            },
+                            "itemKey": {
+                                "itemNo": "70213550",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 8,
+                                "left": 47,
+                                "top": 72,
+                                "width": 36
+                            },
+                            "coordinates": {
+                                "x": 64,
+                                "y": 76
+                            },
+                            "itemKey": {
+                                "itemNo": "80444946",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 16,
+                                "left": 38,
+                                "top": 9,
+                                "width": 13
+                            },
+                            "coordinates": {
+                                "x": 43,
+                                "y": 15
+                            },
+                            "itemKey": {
+                                "itemNo": "80511525",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 16,
+                                "left": 17,
+                                "top": 69,
+                                "width": 25
+                            },
+                            "coordinates": {
+                                "x": 40,
+                                "y": 75
+                            },
+                            "itemKey": {
+                                "itemNo": "80534433",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 25,
+                                "left": 26,
+                                "top": 0,
+                                "width": 13
+                            },
+                            "coordinates": {
+                                "x": 30,
+                                "y": 9
+                            },
+                            "itemKey": {
+                                "itemNo": "90066708",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        },
+                        {
+                            "boundingBox": {
+                                "height": 12,
+                                "left": 19,
+                                "top": 53,
+                                "width": 11
+                            },
+                            "coordinates": {
+                                "x": 26,
+                                "y": 56
+                            },
+                            "itemKey": {
+                                "itemNo": "90524179",
+                                "itemType": "ART"
+                            },
+                            "type": "ITEM"
+                        }
+                    ],
+                    "pristineImage": {
+                        "aspectRatio": {
+                            "x": 3,
+                            "y": 4
+                        },
+                        "height": 5000,
+                        "url": "https://www.ikea.com/nl/nl/images/p/181818be1785dcd1/variera-plankinzet-wit/PH200754.jpg",
+                        "width": 3750
+                    },
+                    "type": "IMPORTED_PRODUCT_IMAGE",
+                    "url": "https://www.ikea.com/nl/nl/images/products/variera-plankinzet-wit__1465528_ph200754_s5.jpg",
+                    "width": 2000,
+                    "ratio": "3:4"
+                }
+            }
+        ],
+        "name": "VARIERA",
+        "prefixedProductId": "80136622",
+        "price": 3.9900000000000002131628207280300557613372802734375,
+        "showAsNonSellableProduct": false,
+        "type": "ART",
+        "visibleItemNo": "801.366.22",
+        "ratingProps": {
+            "rating": 4.4000000000000003552713678800500929355621337890625,
+            "label": "(156)",
+            "ariaLabel": "Review: 4.4 van 5 sterren. Totaal beoordelingen: 156"
+        },
+        "reviewCount": 156,
+        "secondaryRatings": [
+            {
+                "id": "appearance",
+                "label": "Design",
+                "value": 4.5
+            },
+            {
+                "id": "ease_of_assembly",
+                "label": "Gemak van montage/installatie",
+                "value": 4.5
+            },
+            {
+                "id": "product_quality",
+                "label": "Kwaliteit",
+                "value": 4.4000000000000003552713678800500929355621337890625
+            },
+            {
+                "id": "value_for_money",
+                "label": "Prijs vs kwaliteit",
+                "value": 4.4000000000000003552713678800500929355621337890625
+            },
+            {
+                "id": "works_as_expected",
+                "label": "Werkt zoals verwacht",
+                "value": 4.5
+            }
+        ],
+        "commercialLabel": "top-seller",
+        "suitableForBusiness": {
+            "icon": "briefcase",
+            "label": "Geschikt voor zakelijk gebruik"
+        },
+        "packaging": {
+            "numberOfPackages": 1,
+            "packages": [
+                {
+                    "name": "VARIERA",
+                    "typeName": "Plankinzet",
+                    "itemNo": "80136622",
+                    "articleNumber": {
+                        "label": "Artikelnummer",
+                        "value": "801.366.22"
+                    },
+                    "measurementGroups": [
+                        {
+                            "heading": null,
+                            "measurements": [
+                                {
+                                    "label": "Breedte",
+                                    "type": "width",
+                                    "text": "13 cm",
+                                    "value": 13
+                                },
+                                {
+                                    "label": "Hoogte",
+                                    "type": "height",
+                                    "text": "2 cm",
+                                    "value": 2
+                                },
+                                {
+                                    "label": "Lengte",
+                                    "type": "length",
+                                    "text": "32 cm",
+                                    "value": 32
+                                },
+                                {
+                                    "label": "Gewicht",
+                                    "type": "weight",
+                                    "text": "0.47 kg",
+                                    "value": 0.4699999999999999733546474089962430298328399658203125
+                                }
+                            ]
+                        }
+                    ],
+                    "quantity": {
+                        "label": "Pakketten",
+                        "value": 1
+                    },
+                    "multiPackDisclaimerText": null
+                }
+            ],
+            "maxMeasurements": {
+                "weightText": "0.47 kg",
+                "widthText": "13 cm",
+                "lengthText": "32 cm",
+                "heightText": "2 cm",
+                "diameterText": ""
+            }
+        },
+        "catalogLink": {
+            "linkText": "Meer uit de VARIERA serie",
+            "name": "VARIERA serie",
+            "url": "https://www.ikea.com/nl/nl/cat/variera-serie-24984/"
+        },
+        "returnPolicy": {
+            "numberOfDays": 365,
+            "returnPolicyUrl": "https://www.ikea.com/nl/nl/customer-service/returns-claims/"
+        },
+        "rating": 4.4000000000000003552713678800500929355621337890625
+    }
+}

@@ -247,14 +247,14 @@ readonly class CategoryPageQuery
         );
     }
 
-    private function getCachedFilters(int $promotionId, array $categoryIds, array $productIds): FilterProductsData
+    private function getCachedFilters(int $categoryId, array $allProductIds): FilterProductsData
     {
-        $key_cache = str_replace('{id}', (string)$promotionId, CacheInvalidationRegistry::GROUP_FILTERS_ID);
+        $key_cache = str_replace('{id}', (string)$categoryId, CacheInvalidationRegistry::CATEGORY_FILTERS_ID);
 
         $aggregates = cache_remember(
             $key_cache,
             now()->addDay(),
-            fn() => $this->filtersResolver->resolveAggregates($categoryIds, $productIds),
+            fn() => $this->filtersResolver->resolveAggregates([$categoryId], $allProductIds),
         );
 
         return $this->filtersResolver->buildFilterProductsData($aggregates, []);

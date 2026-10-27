@@ -103,11 +103,11 @@ class ClearCommand extends Command
 
         $products = Product::getModels();
         $this->info('Товаров - ' . count($products));
-        foreach ($products as $product) {
+        /*foreach ($products as $product) {
             foreach ($product->gallery as $photo) {
                 $photo->delete();
             }
-        }
+        }*/
         Product::where('id', '>', 0)->forceDelete();
         $this->info('Очистка Завершена');
         Photo::where('imageable_type', Product::class)->delete();
