@@ -36,8 +36,16 @@ class PhotoService
      */
     private function patternGeneratePath(string $modelType, int $imageableId): string
     {
+        return $this->patternGenerateBasePath($modelType) . $imageableId . '/';
+    }
+
+    /**
+     * Генерация базового пути сущности: /{module}/{model}/
+     */
+    private function patternGenerateBasePath(string $modelType): string
+    {
         [$module, $model] = explode('.', $modelType);
-        return '/' . $module . '/' . $model . '/' . $imageableId . '/';
+        return '/' . $module . '/' . $model . '/';
     }
 
     /**
@@ -261,6 +269,18 @@ class PhotoService
         if (is_file($uploadPath)) {
             unlink($uploadPath);
         }*/
+    }
+
+    /**
+     * Удаляет все файлы сущности (оригиналы и thumbs) по model_type.
+     * Пути строятся здесь: /uploads/{module}/{model} и /cache/{module}/{model}.
+     */
+    public function deleteEntityDirectory(string $modelType): void
+    {
+        $basePath = $this->patternGenerateBasePath($modelType);
+
+        $this->storage->deleteDirectory(self::URL_UPLOAD . $basePath);
+        $this->storage->deleteDirectory(self::URL_THUMB . $basePath);
     }
 
     /**

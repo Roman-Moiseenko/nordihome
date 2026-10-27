@@ -10,6 +10,7 @@ use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Catalog\Infrastructure\Models\Room;
 use App\Modules\Order\Infrastructure\Models\Order;
 use App\Modules\Shared\Infrastructure\Models\Photo;
+use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Console\Command;
 use Illuminate\Console\ConfirmableTrait;
 
@@ -27,6 +28,12 @@ class ClearCommand extends Command
      * @var string
      */
     protected $description = 'Очистка данных {--catalog= : 1 / "Да" } {--product= : 1 / "Да" } {--room= : 1 / "Да" }';
+
+    public function __construct(
+        private readonly PhotoService $photoService,
+    ) {
+        parent::__construct();
+    }
 
     /**
      * Execute the console command.
@@ -104,5 +111,8 @@ class ClearCommand extends Command
         Product::where('id', '>', 0)->forceDelete();
         $this->info('Очистка Завершена');
         Photo::where('imageable_type', Product::class)->delete();
+
+        // Физически удаляем папки uploads и cache для товаров (пути определяются в PhotoService)
+        $this->photoService->deleteEntityDirectory('catalog.product');
     }
 }
