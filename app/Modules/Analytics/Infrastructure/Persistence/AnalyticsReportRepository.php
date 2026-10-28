@@ -527,7 +527,7 @@ class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
 
     private function topActionEntities(DateTimeImmutable $from, DateTimeImmutable $to, string $actionType, string $entityType, int $limit): array
     {
-        return Action::query()
+        $rows = Action::query()
             ->whereBetween('occurred_at', [$from, $to])
             ->where('is_bot', false)
             ->where('action_type', $actionType)
@@ -541,10 +541,35 @@ class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
             ->get()
             ->map(fn($row) => [
                 'entity_id' => (int) $row->entity_id,
+                'name' => '',
                 'total' => (int) $row->total,
                 'unique_visitors' => (int) $row->unique_visitors,
             ])
             ->all();
+
+        $names = $this->actionEntityNames($entityType, array_column($rows, 'entity_id'));
+
+        foreach ($rows as $index => $row) {
+            $rows[$index]['name'] = $names[$row['entity_id']] ?? ('#' . $row['entity_id']);
+        }
+
+        return $rows;
+    }
+
+    /**
+     * @param int[] $ids
+     * @return array<int, string>
+     */
+    private function actionEntityNames(string $entityType, array $ids): array
+    {
+        if (empty($ids)) {
+            return [];
+        }
+
+        return match ($entityType) {
+            'product' => Product::withTrashed()->whereIn('id', $ids)->pluck('name', 'id')->all(),
+            default => [],
+        };
     }
 
     // =====================================================================

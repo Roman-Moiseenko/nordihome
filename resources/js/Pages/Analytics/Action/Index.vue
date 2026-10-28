@@ -22,7 +22,7 @@
             <div class="p-5 bg-white rounded-md shadow-sm">
                 <div class="text-sm text-slate-500 mb-3">Добавления в корзину (товары)</div>
                 <el-table :data="report.cart_adds" header-cell-class-name="nordihome-header" style="width: 100%">
-                    <el-table-column prop="entity_id" label="ID" width="90" align="center" />
+                    <el-table-column prop="name" label="Товар" show-overflow-tooltip />
                     <el-table-column prop="total" label="Добавлений" width="120" align="center" />
                     <el-table-column prop="unique_visitors" label="Посетители" width="120" align="center" />
                 </el-table>
@@ -30,7 +30,7 @@
             <div class="p-5 bg-white rounded-md shadow-sm">
                 <div class="text-sm text-slate-500 mb-3">Удаления из корзины (товары)</div>
                 <el-table :data="report.cart_removes" header-cell-class-name="nordihome-header" style="width: 100%">
-                    <el-table-column prop="entity_id" label="ID" width="90" align="center" />
+                    <el-table-column prop="name" label="Товар" show-overflow-tooltip />
                     <el-table-column prop="total" label="Удалений" width="120" align="center" />
                     <el-table-column prop="unique_visitors" label="Посетители" width="120" align="center" />
                 </el-table>
@@ -41,7 +41,7 @@
             <div class="p-5 bg-white rounded-md shadow-sm">
                 <div class="text-sm text-slate-500 mb-3">Избранное (товары)</div>
                 <el-table :data="report.wishlist_adds" header-cell-class-name="nordihome-header" style="width: 100%">
-                    <el-table-column prop="entity_id" label="ID" width="90" align="center" />
+                    <el-table-column prop="name" label="Товар" show-overflow-tooltip />
                     <el-table-column prop="total" label="Добавлений" width="120" align="center" />
                     <el-table-column prop="unique_visitors" label="Посетители" width="120" align="center" />
                 </el-table>
