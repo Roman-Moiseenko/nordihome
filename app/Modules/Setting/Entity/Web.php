@@ -11,6 +11,7 @@ class Web extends AbstractSetting
 
     public string $metrika = '';
     public string $google = '';
+    public string $talkme = '';
 
     public bool $is_cache = false;
     public string $breadcrumbs_home = '<i class="fa-light fa-house"></i>';

@@ -21,6 +21,9 @@
                     <el-form-item label="Гугл Аналитика" label-position="top">
                         <el-input v-model="form.google"/>
                     </el-form-item>
+                    <el-form-item label="Talk Me" label-position="top">
+                        <el-input v-model="form.talkme"/>
+                    </el-form-item>
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="Кеширование страниц" label-position="left">
@@ -97,6 +100,7 @@ const form = reactive({
     logo_alt: props.web.logo_alt,
     metrika: props.web.metrika,
     google: props.web.google,
+    talkme: props.web.talkme,
     web_name: props.web.web_name,
 
     categories_title: props.web.categories_title,
