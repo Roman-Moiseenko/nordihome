@@ -1,3 +1,6 @@
+@php
+    /** @var App\Modules\Setting\Entity\Web $web */
+@endphp
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>

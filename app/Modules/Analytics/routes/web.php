@@ -1,5 +1,6 @@
 <?php
 
+use App\Modules\Analytics\Presentation\Http\Controllers\Web\AnalyticsController;
 use App\Modules\Analytics\Presentation\Http\Controllers\Web\AnalyticsEventController;
 use Illuminate\Support\Facades\Route;
 
@@ -17,6 +18,12 @@ Route::group([
     'middleware' => 'role:admin|staff',
     'prefix' => 'admin/analytics',
     'as' => 'admin.analytics.',
-],function () {
-    //Маршруты тут
+], function () {
+    Route::get('/dashboard', [AnalyticsController::class, 'dashboard'])->name('dashboard');
+    Route::get('/searches', [AnalyticsController::class, 'searches'])->name('searches');
+    Route::get('/pages', [AnalyticsController::class, 'pages'])->name('pages');
+    Route::get('/actions', [AnalyticsController::class, 'actions'])->name('actions');
+    Route::get('/sources', [AnalyticsController::class, 'sources'])->name('sources');
+    Route::get('/audience', [AnalyticsController::class, 'audience'])->name('audience');
+    Route::get('/funnel', [AnalyticsController::class, 'funnel'])->name('funnel');
 });

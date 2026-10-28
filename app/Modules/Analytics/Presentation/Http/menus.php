@@ -7,17 +7,14 @@ declare(strict_types=1);
 | Admin menu items for Analytics module
 |--------------------------------------------------------------------------
 |
-| Register menu items following the format below.
-| Replace 'Analytics' with the plural form (e.g., 'users', 'pages').
-|
-| Each item requires:
-|   - sort:        int (sorting order in sidebar)
-|   - icon:        string (Lucide icon name, e.g. 'users', 'settings')
-|   - title:       string (display text in sidebar)
-|   - route_name:  string (named route, e.g. 'admin.analytics.index')
-|   - can:         string (permission gate, e.g. 'staff', 'pages')
-|   - vue:         bool (uses Vue/Inertia frontend)
-|   - font_awesome: string (Font Awesome class, e.g. 'fa-light fa-users')
+| Каждый пункт:
+|   - sort:        int (порядок в сайдбаре)
+|   - icon:        string (Lucide icon name)
+|   - title:       string (текст в сайдбаре)
+|   - route_name:  string (named route)
+|   - can:         string (permission gate)
+|   - vue:         bool (Vue/Inertia frontend)
+|   - font_awesome: string (Font Awesome class)
 |
 */
 
@@ -25,27 +22,60 @@ return [
     'analytics' => [
         'sort' => 110,
         'icon' => 'scroll-text',
-        'title' => 'Логгеры',
+        'title' => 'Аналитика',
         'can' => 'admin-panel',
-        'font_awesome' => 'fa-light fa-scroll',
-        'route_name' => 'admin.home'
-        /*    'sub_menu' => [
-                'shop' => [
-                    'icon' => 'users',
-                    'title' => 'Сотрудников',
-                    'route_name' => 'admin.analytics.activity.index',
-                    'vue' => true,
-                    'font_awesome' => 'fa-light fa-users',
-                ],
-                'admin-panel' => [
-                    'icon' => 'timer-reset',
-                    'title' => 'По расписанию',
-                    'route_name' => 'admin.analytics.cron.index',
-                    'vue' => true,
-                    'font_awesome' => 'fa-light fa-timer',
-                ],
-
+        'font_awesome' => 'fa-light fa-chart-line',
+        'route_name' => 'admin.analytics.dashboard',
+        'sub_menu' => [
+            'dashboard' => [
+                'icon' => 'gauge',
+                'title' => 'Обзор',
+                'route_name' => 'admin.analytics.dashboard',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-gauge-high',
             ],
-            */
+            'searches' => [
+                'icon' => 'search',
+                'title' => 'Поиск',
+                'route_name' => 'admin.analytics.searches',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-magnifying-glass',
+            ],
+            'pages' => [
+                'icon' => 'files',
+                'title' => 'Страницы',
+                'route_name' => 'admin.analytics.pages',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-file-lines',
+            ],
+            'actions' => [
+                'icon' => 'pointer',
+                'title' => 'Действия',
+                'route_name' => 'admin.analytics.actions',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-hand-pointer',
+            ],
+            'sources' => [
+                'icon' => 'route',
+                'title' => 'Источники',
+                'route_name' => 'admin.analytics.sources',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-route',
+            ],
+            'audience' => [
+                'icon' => 'users',
+                'title' => 'Аудитория',
+                'route_name' => 'admin.analytics.audience',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-users',
+            ],
+            'funnel' => [
+                'icon' => 'filter',
+                'title' => 'Воронка',
+                'route_name' => 'admin.analytics.funnel',
+                'vue' => true,
+                'font_awesome' => 'fa-light fa-filter',
+            ],
+        ],
     ],
 ];

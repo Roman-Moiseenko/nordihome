@@ -41,7 +41,10 @@ class WarmShopCacheJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $queue = QueueName::PHOTO;
+    public function __construct()
+    {
+        $this->queue = QueueName::PHOTO;
+    }
 
     public function handle(
         GetCategoryTreeQuery  $categoryTreeQuery,

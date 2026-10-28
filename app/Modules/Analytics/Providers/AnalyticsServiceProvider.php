@@ -124,6 +124,10 @@ class AnalyticsServiceProvider extends ServiceProvider
             \App\Modules\Analytics\Domain\Interfaces\ExitRepositoryInterface::class,
             \App\Modules\Analytics\Infrastructure\Persistence\ExitRepository::class
         );
+        $this->app->bind(
+            \App\Modules\Analytics\Domain\Interfaces\AnalyticsReportRepositoryInterface::class,
+            \App\Modules\Analytics\Infrastructure\Persistence\AnalyticsReportRepository::class
+        );
 
         $this->app->scoped(
             \App\Modules\Analytics\Domain\Interfaces\VisitorContextInterface::class,
