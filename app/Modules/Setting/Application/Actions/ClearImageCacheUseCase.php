@@ -4,29 +4,22 @@ declare(strict_types=1);
 
 namespace App\Modules\Setting\Application\Actions;
 
+use App\Modules\Setting\Application\Actions\Concerns\RunsArtisanCommand;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\File;
 
 class ClearImageCacheUseCase
 {
+    use RunsArtisanCommand;
     /**
-     * Удаляет все кешированные изображения из public/caches.
+     * Очищает кэш изображений и запускает пересоздание миниатюр
+     * через команду photo:cache-regenerate.
      *
      * @return string сообщение для пользователя
      */
     public function execute(): string
     {
-        $path = public_path('caches');
+        return $this->runArtisan('photo:cache-regenerate');
 
-        if (!File::isDirectory($path)) {
-            return 'Кешированные изображения уже отсутствуют';
-        }
-
-        $count = count(File::allFiles($path)) + count(File::directories($path));
-
-        File::cleanDirectory($path);
-
-        return $count > 0
-            ? 'Удалено кешированных изображений: ' . $count
-            : 'Кешированных изображений не найдено';
     }
 }

@@ -24,7 +24,7 @@ interface PhotoStorageInterface
     /** Удалить файлы по glob-маске внутри директории: deleteMatching('/cache/a/b/1', 'small_*.jpg') */
     public function deleteMatching(string $directoryRelativePath, string $globPattern): void;
 
-    /** Рекурсивно удалить директорию (для S3 — все файлы по префиксу) */
+    /** Удалить директорию целиком вместе с содержимым (например, /cache). */
     public function deleteDirectory(string $directoryRelativePath): void;
 
     /** Публичный URL файла */

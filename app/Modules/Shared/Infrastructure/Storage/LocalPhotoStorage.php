@@ -3,7 +3,6 @@
 namespace App\Modules\Shared\Infrastructure\Storage;
 
 use App\Modules\Shared\Application\Interfaces\PhotoStorageInterface;
-use Illuminate\Support\Facades\File;
 
 readonly class LocalPhotoStorage implements PhotoStorageInterface
 {
@@ -61,9 +60,25 @@ readonly class LocalPhotoStorage implements PhotoStorageInterface
     public function deleteDirectory(string $directoryRelativePath): void
     {
         $dir = $this->absolute($directoryRelativePath);
-        if (is_dir($dir)) {
-            File::deleteDirectory($dir);
+        if (!is_dir($dir)) {
+            return;
         }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS),
+            \RecursiveIteratorIterator::CHILD_FIRST
+        );
+
+        foreach ($iterator as $file) {
+            /** @var \SplFileInfo $file */
+            if ($file->isDir()) {
+                @rmdir($file->getPathname());
+            } else {
+                @unlink($file->getPathname());
+            }
+        }
+
+        @rmdir($dir);
     }
 
     public function url(string $relativePath): string

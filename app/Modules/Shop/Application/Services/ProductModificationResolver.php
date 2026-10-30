@@ -22,14 +22,28 @@ readonly class ProductModificationResolver
     }
 
     /**
+     * Сворачивает список товаров до базовых (is_primary = true) и возвращает
+     * карту ID вариантов по базовому товару. Карточки вариантов загружаются
+     * отдельно в ProductListingResolver одним запросом для всех ID.
+     *
      * @param int[] $matchedIds  отфильтрованные и отсортированные ID товаров
      * @param int[] $listingIds  все ID товаров списка (до фильтрации)
-     * @return array{displayIds: int[], variantsByPrimary: array<int, ProductModificationData[]>}
+     * @return array{
+     *     displayIds: int[],
+     *     variantIdsByPrimary: array<int, int[]>,
+     *     variantNamesByProduct: array<int, string>,
+     *     variantImagesByProduct: array<int, ?string>
+     * }
      */
     public function resolve(array $matchedIds, array $listingIds, ClientContext $clientContext): array
     {
         if (empty($matchedIds)) {
-            return ['displayIds' => [], 'variantsByPrimary' => []];
+            return [
+                'displayIds' => [],
+                'variantIdsByPrimary' => [],
+                'variantNamesByProduct' => [],
+                'variantImagesByProduct' => [],
+            ];
         }
 
         $groups = $this->repository->resolveGroups($listingIds);
@@ -48,24 +62,11 @@ readonly class ProductModificationResolver
             $displayIds[] = $primaryId;
         }
 
-        $variantsByPrimary = [];
-        foreach ($displayIds as $primaryId) {
-            $variantIds = $groups['variantIdsByPrimary'][$primaryId] ?? [];
-            if (empty($variantIds)) {
-                continue;
-            }
-
-            $variantsByPrimary[$primaryId] = $this->productCardResolver->resolveModificationCards(
-                $variantIds,
-                $clientContext,
-                $groups['variantNamesByProduct'],
-                $groups['variantImagesByProduct'],
-            );
-        }
-
         return [
             'displayIds' => $displayIds,
-            'variantsByPrimary' => $variantsByPrimary,
+            'variantIdsByPrimary' => $groups['variantIdsByPrimary'],
+            'variantNamesByProduct' => $groups['variantNamesByProduct'],
+            'variantImagesByProduct' => $groups['variantImagesByProduct'],
         ];
     }
 

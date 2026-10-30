@@ -107,7 +107,7 @@ class PhotoService
         $thumbName = $this->nameFileThumb($photoId, $fileName, $thumb);
        // $file = self::URL_THUMB . $path . $this->nameFileThumb($photoId, $fileName, $thumb);
 
-        $this->createThumbs($photoId, $modelType, $imageableId, $fileName, $thumb);
+      //  $this->createThumbs($photoId, $modelType, $imageableId, $fileName, $thumb);
         return $this->storage->url(self::URL_THUMB . $path . $thumbName);
       //  return $file;
     }
@@ -115,7 +115,7 @@ class PhotoService
     /**
      * Создаёт все thumbs для файла (по настройкам из Settings)
      */
-    private function createThumbs(int $photoId, string $modelType, int $imageableId, string $fileName, string $thumb): void
+    public function createThumbs(int $photoId, string $modelType, int $imageableId, string $fileName, string $thumb): void
     {
         $generatePath = $this->patternGeneratePath($modelType, $imageableId);
         $uploadRelative = self::URL_UPLOAD . $generatePath . $fileName;

@@ -15,6 +15,7 @@ use App\Modules\Shared\Infrastructure\Services\LaravelTransactionManager;
 use App\Modules\Shared\Infrastructure\Storage\LocalPhotoStorage;
 use App\Modules\Shared\Infrastructure\Storage\S3PhotoStorage;
 use App\Modules\Shared\Presentation\Console\Commands\MigratePhotosToS3Command;
+use App\Modules\Shared\Presentation\Console\Commands\RegeneratePhotoCacheCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
@@ -156,6 +157,7 @@ class SharedServiceProvider extends ServiceProvider
     {
         $this->commands([
             MigratePhotosToS3Command::class,
+            RegeneratePhotoCacheCommand::class,
         ]);
     }
 

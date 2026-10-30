@@ -9,6 +9,8 @@ use App\Modules\Shared\Domain\Entities\PhotoEntity;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Interfaces\PhotoRepositoryInterface;
 use App\Modules\Shared\Domain\ValueObjects\PhotoType;
+use App\Modules\Shared\Domain\ValueObjects\QueueName;
+use App\Modules\Shared\Infrastructure\Job\CreatePhotoThumbsJob;
 use App\Modules\Shared\Infrastructure\Mappers\ModelTypeMapper;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Http\UploadedFile;
@@ -53,6 +55,10 @@ readonly class UploadPhotoUseCase
             }
         }
 
-        return $this->photoRepository->save($photo);
+        $saved = $this->photoRepository->save($photo);
+
+        CreatePhotoThumbsJob::dispatch($saved->id)->onQueue(QueueName::PHOTO);
+
+        return $saved;
     }
 }
