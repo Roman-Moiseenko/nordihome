@@ -118,11 +118,6 @@ class PhotoService
     public function createThumbs(int $photoId, string $modelType, int $imageableId, string $fileName, string $thumb): void
     {
         $generatePath = $this->patternGeneratePath($modelType, $imageableId);
-        $uploadRelative = self::URL_UPLOAD . $generatePath . $fileName;
-        //$uploadPath = $this->catalogUpload . $generatePath . $fileName;
-
-       // if (!is_file($uploadPath)) return;
-        if (!$this->storage->exists($uploadRelative)) return;//Нет загруженного файла
 
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
         if (!in_array(mb_strtolower($ext), ['jpg', 'jpeg', 'png', 'webp'], true)) return; //Расширение невверное
@@ -136,20 +131,14 @@ class PhotoService
         if (!isset($params)) return; //Нет параметров для thumb файла
 
         $thumbRelative = self::URL_THUMB . $generatePath . $this->nameFileThumb($photoId, $fileName, $params['name']);
-        if ($this->storage->exists($thumbRelative)) return;
+        if ($this->storage->exists($thumbRelative)) return; //Файл существует
+
+        $uploadRelative = self::URL_UPLOAD . $generatePath . $fileName;
+        if (!$this->storage->exists($uploadRelative)) return;//Нет загруженного файла
+
         $localSource = $this->storage->localCopy($uploadRelative);
         if (!$localSource) return;
 
-/*
-        $thumbFile = $this->catalogThumb
-            . $generatePath
-            . $this->nameFileThumb($photoId, $fileName, $params['name']);
-        if (is_file($thumbFile)) return; // Файл уже есть
-
-        $thumbDir = $this->catalogThumb . $generatePath; //Создать директорию если нет
-        if (!is_dir($this->catalogThumb . $generatePath)) mkdir($thumbDir, 0777, true);
-
-*/
         $manager = new ImageManager();
         try {
             $img = $manager->make($localSource);
@@ -213,15 +202,6 @@ class PhotoService
             @unlink($tmpThumb);
             $this->cleanupTemp($localSource);
         }
-
-/*
-        $thumbDir = pathinfo($thumbFile, PATHINFO_DIRNAME);
-        if (!is_dir($thumbDir)) {
-            mkdir($thumbDir, 0777, true);
-        }
-        $img->save($thumbFile);
-        */
-        //}
     }
     private function cleanupTemp(string $path): void
     {
@@ -237,15 +217,9 @@ class PhotoService
     {
         $ext = pathinfo($fileName, PATHINFO_EXTENSION);
         if (!$ext) return;
-      //  $path = $this->catalogThumb . $this->patternGeneratePath($modelType, $imageableId);
-     //   if (!is_dir($path)) return;
         $thumbDir = self::URL_THUMB . $this->patternGeneratePath($modelType, $imageableId);
         foreach ($this->thumbs as $params) {
             $this->storage->deleteMatching($thumbDir, $params['name'] . '_*.' . $ext);
-          //  $thumbFile = $path . $params['name'] . '_*.' . $ext;
-          /*  foreach (glob($thumbFile) as $file) {
-                if (is_file($file)) unlink($file);
-            }*/
         }
     }
 
@@ -263,12 +237,6 @@ class PhotoService
         $this->storage->delete(
             self::URL_UPLOAD . $this->patternGeneratePath($modelType, $imageableId) . $fileName
         );
-
-        /*
-        $uploadPath = $this->catalogUpload . $this->patternGeneratePath($modelType, $imageableId) . $fileName;
-        if (is_file($uploadPath)) {
-            unlink($uploadPath);
-        }*/
     }
 
     /**
@@ -290,4 +258,21 @@ class PhotoService
     {
         return $thumb . '_' . $photoId . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
     }
+
+    /**
+     * Удаляет все thumb-файлы для одного фото по его id.
+     */
+    public function deleteThumbs(int $photoId, string $modelType, int $imageableId, string $fileName): void
+    {
+        $ext = pathinfo($fileName, PATHINFO_EXTENSION);
+        if (!$ext) return;
+
+        $thumbDir = self::URL_THUMB . $this->patternGeneratePath($modelType, $imageableId);
+        foreach ($this->thumbs as $params) {
+            $this->storage->delete(
+                $thumbDir . $this->nameFileThumb($photoId, $fileName, $params['name'])
+            );
+        }
+    }
+
 }

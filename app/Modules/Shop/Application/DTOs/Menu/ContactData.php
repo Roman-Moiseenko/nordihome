@@ -13,7 +13,6 @@ class ContactData extends Data
         public readonly string $icon,
         public readonly string $color,
         public readonly string $url,
-        public readonly int $type,
         public readonly string $slug,
         public readonly ?string $svg,
         public readonly ?string $channel,

@@ -7,8 +7,11 @@
             <el-button type="danger" :loading="loading.clearAll" @click="onClearAll">
                 Очистить весь кеш
             </el-button>
-            <el-button type="warning" :loading="loading.clearImage" @click="onClearImage">
-                Удалить кешированные изображения
+            <el-button type="warning" :loading="loading.createThumbs" @click="onCreateThumbs">
+                Пересоздать все кешированные изображения
+            </el-button>
+            <el-button type="warning" :loading="loading.reCreateThumbs" @click="onReCreateThumbs">
+                Создать недостающие кешированные изображения
             </el-button>
             <el-button type="primary" :loading="loading.recache" @click="onRecache">
                 Пересоздать кеш
@@ -32,7 +35,8 @@ const props = defineProps({
 
 const loading = reactive({
     clearAll: false,
-    clearImage: false,
+    createThumbs: false,
+    reCreateThumbs: false,
     recache: false,
 })
 
@@ -58,14 +62,22 @@ async function onClearAll() {
         loading.clearAll = false
     }
 }
-
-async function onClearImage() {
-    if (!await confirmRun('Вы действительно хотите удалить все кешированные изображения?')) return
-    loading.clearImage = true
+async function onReCreateThumbs() {
+    if (!await confirmRun('Вы действительно хотите удалить пересоздать все кешированные изображения?')) return
+    loading.reCreateThumbs = true
     try {
-        await api.post(route('admin.setting.cache.clear-image'), {})
+        await api.post(route('admin.setting.cache.recreate-thumbs'), {})
     } finally {
-        loading.clearImage = false
+        loading.reCreateThumbs = false
+    }
+}
+async function onCreateThumbs() {
+    if (!await confirmRun('Вы действительно хотите создать недостающие все кешированные изображения?')) return
+    loading.createThumbs = true
+    try {
+        await api.post(route('admin.setting.cache.create-thumbs'), {})
+    } finally {
+        loading.createThumbs = false
     }
 }
 

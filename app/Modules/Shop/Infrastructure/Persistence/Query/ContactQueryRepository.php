@@ -20,7 +20,6 @@ class ContactQueryRepository
             icon: $row->icon,
             color: $row->color,
             url: $row->url,
-            type: (int)$row->type,
             slug: $row->slug ?? '',
             svg: $row->svg,
             channel: $row->channel,
