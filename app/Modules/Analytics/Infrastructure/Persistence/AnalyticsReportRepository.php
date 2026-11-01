@@ -337,14 +337,14 @@ class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
         return Session::query()
             ->whereBetween('started_at', [$from, $to])
             ->where('is_bot', false)
-            ->select('source')
+            ->selectRaw("COALESCE(NULLIF(source, ''), 'direct') as source")
             ->selectRaw('COUNT(*) as sessions, COUNT(DISTINCT visitor_id) as visitors')
-            ->groupBy('source')
+            ->groupByRaw("COALESCE(NULLIF(source, ''), 'direct')")
             ->orderByDesc('sessions')
             ->limit(10)
             ->get()
             ->map(fn($row) => [
-                'name' => $row->source ?: 'direct',
+                'name' => $row->source,
                 'sessions' => (int) $row->sessions,
                 'visitors' => (int) $row->visitors,
             ])
