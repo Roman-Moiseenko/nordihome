@@ -76,13 +76,15 @@ read-only контракт с одним методом на раздел: `dash
 
 Особенности:
 - Все запросы исключают ботов (`where('is_bot', false)`).
-- Агрегаты источников берутся из [`SourceDaily`](app/Modules/Analytics/Infrastructure/Models/SourceDaily.php:1).
+- Источники и UTM-кампании считаются напрямую из append-only таблиц
+  (`analytics_sessions`, `analytics_actions`); агрегат `analytics_sources_daily`
+  в визуализации не задействован.
 - Названия товаров/категорий/статей подставляются в [`topEntityPages()`](app/Modules/Analytics/Infrastructure/Persistence/AnalyticsReportRepository.php:418)
   через [`entityNames()`](app/Modules/Analytics/Infrastructure/Persistence/AnalyticsReportRepository.php:448):
-  - товар → [`Product::withTrashed()`](app/Modules/Catalog/Infrastructure/Models/Product.php:117);
-  - категория → [`Category`](app/Modules/Catalog/Infrastructure/Models/Category.php:32);
-  - пост/статья → [`Post`](app/Modules/Content/Infrastructure/Models/Post.php:26).
-  Если сущность не найдена, подставляется `#id`.
+    - товар → [`Product::withTrashed()`](app/Modules/Catalog/Infrastructure/Models/Product.php:117);
+    - категория → [`Category`](app/Modules/Catalog/Infrastructure/Models/Category.php:32);
+    - пост/статья → [`Post`](app/Modules/Content/Infrastructure/Models/Post.php:26).
+      Если сущность не найдена, подставляется `#id`.
 
 ### 3.4 Query-классы
 

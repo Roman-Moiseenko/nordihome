@@ -10,7 +10,6 @@ use App\Modules\Analytics\Infrastructure\Models\PageView;
 use App\Modules\Analytics\Infrastructure\Models\Path;
 use App\Modules\Analytics\Infrastructure\Models\Search;
 use App\Modules\Analytics\Infrastructure\Models\Session;
-use App\Modules\Analytics\Infrastructure\Models\SourceDaily;
 use App\Modules\Analytics\Infrastructure\Models\Visitor;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Catalog\Infrastructure\Models\Product;
@@ -21,8 +20,8 @@ use Illuminate\Support\Facades\DB;
 /**
  * AnalyticsReportRepository — read-only реализация отчётов аналитики.
  *
- * Считает метрики напрямую из append-only таблиц analytics_* и агрегатов
- * (analytics_sources_daily). Результат — ассоциативные массивы для Inertia.
+ * Считает метрики напрямую из append-only таблиц analytics_*.
+ * Результат — ассоциативные массивы для Inertia.
  */
 class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
 {
@@ -124,27 +123,34 @@ class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
 
     public function sources(DateTimeImmutable $from, DateTimeImmutable $to): array
     {
-        $rows = SourceDaily::query()
-            ->whereBetween('date', [$from->format('Y-m-d'), $to->format('Y-m-d')])
-            ->select('source')
-            ->selectRaw('SUM(sessions_count) as sessions')
-            ->selectRaw('SUM(unique_visitors_count) as unique_visitors')
-            ->selectRaw('SUM(new_visitors_count) as new_visitors')
-            ->selectRaw('SUM(bounce_count) as bounces')
-            ->selectRaw('AVG(avg_duration) as avg_duration')
-            ->groupBy('source')
+        $rows = Session::query()
+            ->whereBetween('started_at', [$from, $to])
+            ->where('is_bot', false)
+            ->selectRaw("COALESCE(NULLIF(source, ''), 'direct') as source")
+            ->selectRaw('COUNT(*) as sessions')
+            ->selectRaw('COUNT(DISTINCT visitor_id) as unique_visitors')
+            ->selectRaw('SUM(CASE WHEN is_bounce = 1 THEN 1 ELSE 0 END) as bounces')
+            ->selectRaw('AVG(duration) as avg_duration')
+            ->groupByRaw("COALESCE(NULLIF(source, ''), 'direct')")
             ->orderByDesc('sessions')
             ->get()
             ->map(fn($row) => [
                 'source' => $row->source,
                 'sessions' => (int) $row->sessions,
                 'unique_visitors' => (int) $row->unique_visitors,
-                'new_visitors' => (int) $row->new_visitors,
+                'new_visitors' => 0,
                 'bounces' => (int) $row->bounces,
                 'avg_duration' => $row->avg_duration !== null ? (int) round((float) $row->avg_duration) : null,
                 'conversion' => 0.0,
             ])
-            ->keyBy('source');
+            ->keyBy('source')
+            ->all();
+
+        foreach ($this->newVisitorsBySource($from, $to) as $source => $count) {
+            if (isset($rows[$source])) {
+                $rows[$source]['new_visitors'] = (int) $count;
+            }
+        }
 
         foreach ($this->sourcesConversion($from, $to) as $conversion) {
             $source = $conversion['source'];
@@ -152,16 +158,14 @@ class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
                 continue;
             }
 
-            $sessions = (int) $rows[$source]['sessions'];
-            $orders = (int) $conversion['orders'];
-
+            $sessions = $rows[$source]['sessions'];
             $rows[$source]['conversion'] = $sessions > 0
-                ? round($orders / $sessions * 100, 1)
+                ? round($conversion['orders'] / $sessions * 100, 1)
                 : 0.0;
         }
 
         return [
-            'sources' => array_values($rows->all()),
+            'sources' => array_values($rows),
             'utm_campaigns' => $this->utmCampaigns($from, $to, 20),
         ];
     }
@@ -613,12 +617,13 @@ class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
 
     private function utmCampaigns(DateTimeImmutable $from, DateTimeImmutable $to, int $limit): array
     {
-        return SourceDaily::query()
-            ->whereBetween('date', [$from->format('Y-m-d'), $to->format('Y-m-d')])
+        return Session::query()
+            ->whereBetween('started_at', [$from, $to])
+            ->where('is_bot', false)
             ->whereNotNull('utm_campaign')
             ->where('utm_campaign', '!=', '')
             ->select('utm_campaign', 'utm_source')
-            ->selectRaw('SUM(sessions_count) as sessions, SUM(unique_visitors_count) as visitors')
+            ->selectRaw('COUNT(*) as sessions, COUNT(DISTINCT visitor_id) as visitors')
             ->groupBy('utm_campaign', 'utm_source')
             ->orderByDesc('sessions')
             ->limit($limit)
@@ -629,6 +634,21 @@ class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
                 'sessions' => (int) $row->sessions,
                 'visitors' => (int) $row->visitors,
             ])
+            ->all();
+    }
+
+    /**
+     * @return array<string, int>
+     */
+    private function newVisitorsBySource(DateTimeImmutable $from, DateTimeImmutable $to): array
+    {
+        return Visitor::query()
+            ->whereBetween('first_visit_at', [$from, $to])
+            ->where('is_bot', false)
+            ->selectRaw("COALESCE(NULLIF(source, ''), 'direct') as source")
+            ->selectRaw('COUNT(*) as total')
+            ->groupByRaw("COALESCE(NULLIF(source, ''), 'direct')")
+            ->pluck('total', 'source')
             ->all();
     }
 
