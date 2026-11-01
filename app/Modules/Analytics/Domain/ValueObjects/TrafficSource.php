@@ -12,7 +12,9 @@ use InvalidArgumentException;
  * Классификация производится по referrer и utm-параметрам:
  * - direct     — referrer пустой;
  * - google, yandex, bing, mail.ru, duckduckgo — поисковики/порталы по домену;
- * - vk, telegram, facebook, instagram — соцсети по домену;
+ * - yandex_ads — реклама Яндекса (yabs.yandex.ru, yandex.ru/clck);
+ * - yandex_ritm — Яндекс Ритм (ritm.yandex.ru);
+ * - vk, telegram, ok, facebook, instagram — соцсети по домену;
  * - utm        — задан utm_source, но referrer не распознан;
  * - internal   — referrer с того же домена;
  * - other      — всё остальное.
@@ -22,11 +24,14 @@ final class TrafficSource
     public const string DIRECT = 'direct';
     public const string GOOGLE = 'google';
     public const string YANDEX = 'yandex';
+    public const string YANDEX_ADS = 'yandex_ads';
+    public const string YANDEX_RITM = 'yandex_ritm';
     public const string BING = 'bing';
     public const string MAIL_RU = 'mail.ru';
     public const string DUCKDUCKGO = 'duckduckgo';
     public const string VK = 'vk';
     public const string TELEGRAM = 'telegram';
+    public const string OK = 'ok';
     public const string FACEBOOK = 'facebook';
     public const string INSTAGRAM = 'instagram';
     public const string UTM = 'utm';
@@ -40,12 +45,15 @@ final class TrafficSource
      */
     private const array DOMAIN_MARKERS = [
         self::GOOGLE => ['google.'],
+        self::YANDEX_ADS => ['yabs.yandex.', 'yandex.ru/clck'],
+        self::YANDEX_RITM => ['ritm.yandex.'],
         self::YANDEX => ['yandex.'],
         self::BING => ['bing.'],
         self::MAIL_RU => ['mail.ru'],
         self::DUCKDUCKGO => ['duckduckgo.'],
         self::VK => ['vk.com'],
         self::TELEGRAM => ['t.me', 'telegram.'],
+        self::OK => ['ok.ru'],
         self::FACEBOOK => ['facebook.'],
         self::INSTAGRAM => ['instagram.'],
     ];
@@ -126,12 +134,15 @@ final class TrafficSource
         return [
             self::DIRECT,
             self::GOOGLE,
+            self::YANDEX_ADS,
+            self::YANDEX_RITM,
             self::YANDEX,
             self::BING,
             self::MAIL_RU,
             self::DUCKDUCKGO,
             self::VK,
             self::TELEGRAM,
+            self::OK,
             self::FACEBOOK,
             self::INSTAGRAM,
             self::UTM,

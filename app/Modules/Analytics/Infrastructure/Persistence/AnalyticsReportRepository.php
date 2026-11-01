@@ -474,9 +474,40 @@ class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
         return $query->pluck('name', 'id')->all();
     }
 
+    /**
+     * Дополняет строки отчётов по страницам названием сущности.
+     *
+     * @param array<int, array{page_type: string, entity_id: ?int}> $rows
+     * @return array<int, array<string, mixed>>
+     */
+    private function resolvePageNames(array $rows): array
+    {
+        $idsByType = [];
+
+        foreach ($rows as $row) {
+            if ($row['entity_id'] !== null) {
+                $idsByType[$row['page_type']][] = $row['entity_id'];
+            }
+        }
+
+        $namesByType = [];
+        foreach ($idsByType as $pageType => $ids) {
+            $namesByType[$pageType] = $this->entityNames($pageType, array_values(array_unique($ids)));
+        }
+
+        foreach ($rows as $index => $row) {
+            $entityId = $row['entity_id'];
+            $rows[$index]['name'] = $entityId !== null
+                ? ($namesByType[$row['page_type']][$entityId] ?? ('#' . $entityId))
+                : null;
+        }
+
+        return $rows;
+    }
+
     private function highBouncePages(DateTimeImmutable $from, DateTimeImmutable $to, int $limit): array
     {
-        return PageView::query()
+        $rows = PageView::query()
             ->whereBetween('viewed_at', [$from, $to])
             ->where('is_bot', false)
             ->where('is_bounce', true)
@@ -492,6 +523,8 @@ class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
                 'bounces' => (int) $row->bounces,
             ])
             ->all();
+
+        return $this->resolvePageNames($rows);
     }
 
     private function entryExitPages(DateTimeImmutable $from, DateTimeImmutable $to, bool $entry, int $limit): array
@@ -506,7 +539,7 @@ class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
             $query->where('is_exit', true);
         }
 
-        return $query
+        $rows = $query
             ->select('page_type', 'entity_id')
             ->selectRaw('COUNT(*) as total')
             ->groupBy('page_type', 'entity_id')
@@ -519,6 +552,8 @@ class AnalyticsReportRepository implements AnalyticsReportRepositoryInterface
                 'total' => (int) $row->total,
             ])
             ->all();
+
+        return $this->resolvePageNames($rows);
     }
 
     // =====================================================================

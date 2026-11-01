@@ -258,7 +258,7 @@ Cookie устанавливается в `IdentifyVisitorMiddleware`, когда
 | VO | Описание |
 |----|----------|
 | `VisitorUuid` | UUID посетителя. Валидация формата, `generate()`, `equals()`, `__toString()` |
-| `TrafficSource` | Источник трафика. `fromReferrer($referrer, $utm)` классифицирует: `direct`, `google`, `yandex`, `bing`, `mail.ru`, `duckduckgo`, `vk`, `telegram`, `facebook`, `instagram`, `utm`, `internal`, `other` |
+| `TrafficSource` | Источник трафика. `fromReferrer($referrer, $utm)` классифицирует: `direct`, `google`, `yandex`, `yandex_ads`, `yandex_ritm`, `bing`, `mail.ru`, `duckduckgo`, `vk`, `telegram`, `ok`, `facebook`, `instagram`, `utm`, `internal`, `other` |
 | `UtmData` | UTM-метки. `fromQuery($query)` читает `utm_*`; `toArray()` отдаёт ключи `utm_source` и т.д. |
 | `DeviceData` | Результат парсинга User-Agent: `deviceType`, `os`, `browser` |
 | `ActionType` | Тип действия (закрытый список): `form_submit`, `cart_add`, `cart_remove`, `cart_clear`, `cart_quantity_change`, `checkout_start`, `order_placed`, `one_click_buy`, `register_attempt`, `register`, `login`, `wishlist_add/remove/clear`, `contact_click`, `banner_click`, `search_result_click`. Есть хелперы-группировки `isCart()`, `isWishlist()`, `isAuth()`, `isCheckout()`, `isConversion()` |
@@ -271,10 +271,13 @@ Cookie устанавливается в `IdentifyVisitorMiddleware`, когда
 |----------|---------|
 | `direct` | Referer пустой |
 | `google` | `google.` в referrer |
+| `yandex_ads` | `yabs.yandex.` или `yandex.ru/clck` в referrer (реклама Яндекса) |
+| `yandex_ritm` | `ritm.yandex.` в referrer (Яндекс Ритм) |
 | `yandex` | `yandex.` в referrer |
 | `bing` / `mail.ru` / `duckduckgo` | Аналогично по домену |
 | `vk` | `vk.com` |
 | `telegram` | `t.me` или `telegram.` |
+| `ok` | `ok.ru` (Одноклассники) |
 | `facebook` / `instagram` | Соответствующие домены |
 | `utm` | Задан `utm_source`, но referrer не распознан |
 | `internal` | Referer с того же домена (`app.url`) |

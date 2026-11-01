@@ -40,6 +40,7 @@ class ProductController extends ShopAbstractController
     public function searchIndex(Request $request)
     {
         $search = $request->string('search')->trim()->value();
+        if (empty($search)) return false;
         $client = $this->getClient($request);
         $data = $this->productSearchQuery->execute($search, $request->all(), $client);
 

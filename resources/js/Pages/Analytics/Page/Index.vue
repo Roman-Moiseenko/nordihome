@@ -58,7 +58,7 @@
                 <div class="text-sm text-slate-500 mb-3">Страницы с отказами</div>
                 <el-table :data="report.high_bounce" header-cell-class-name="nordihome-header" style="width: 100%">
                     <el-table-column prop="page_type" label="Тип" width="110" />
-                    <el-table-column prop="entity_id" label="ID" width="80" align="center" />
+                    <el-table-column prop="name" label="Название" :formatter="nameFormatter" show-overflow-tooltip />
                     <el-table-column prop="bounces" label="Отказов" width="100" align="center" />
                 </el-table>
             </div>
@@ -66,7 +66,7 @@
                 <div class="text-sm text-slate-500 mb-3">Точки входа</div>
                 <el-table :data="report.entry_pages" header-cell-class-name="nordihome-header" style="width: 100%">
                     <el-table-column prop="page_type" label="Тип" width="110" />
-                    <el-table-column prop="entity_id" label="ID" width="80" align="center" />
+                    <el-table-column prop="name" label="Название" :formatter="nameFormatter" show-overflow-tooltip />
                     <el-table-column prop="total" label="Входов" width="100" align="center" />
                 </el-table>
             </div>
@@ -74,7 +74,7 @@
                 <div class="text-sm text-slate-500 mb-3">Точки выхода</div>
                 <el-table :data="report.exit_pages" header-cell-class-name="nordihome-header" style="width: 100%">
                     <el-table-column prop="page_type" label="Тип" width="110" />
-                    <el-table-column prop="entity_id" label="ID" width="80" align="center" />
+                    <el-table-column prop="name" label="Название" :formatter="nameFormatter" show-overflow-tooltip />
                     <el-table-column prop="total" label="Выходов" width="100" align="center" />
                 </el-table>
             </div>
@@ -92,4 +92,6 @@ defineProps({
     filters: {type: Object, required: true},
     title: {type: String, default: 'Просмотры страниц'},
 })
+
+const nameFormatter = (row: {name?: string | null}) => row.name ?? '—'
 </script>

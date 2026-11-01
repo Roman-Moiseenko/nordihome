@@ -34,7 +34,7 @@
             <div class="p-5 bg-white rounded-md shadow-sm">
                 <div class="text-sm text-slate-500 mb-3">Источники (таблица)</div>
                 <el-table :data="report.sources" header-cell-class-name="nordihome-header" style="width: 100%">
-                    <el-table-column prop="name" label="Источник" />
+                    <el-table-column prop="name" label="Источник" :formatter="sourceNameFormatter" />
                     <el-table-column prop="sessions" label="Сессии" width="100" align="center" />
                     <el-table-column prop="visitors" label="Посетители" width="120" align="center" />
                 </el-table>
@@ -49,6 +49,7 @@ import {Head} from '@inertiajs/vue3'
 import ru from 'element-plus/dist/locale/ru.mjs'
 import Chart from '@Comp/Analytics/Chart.vue'
 import DateRange from '@Page/Analytics/Blocks/DateRange.vue'
+import {sourceLabel} from '@Res/analytics'
 
 const props = defineProps({
     report: {type: Object, required: true},
@@ -92,7 +93,9 @@ const deviceDatasets = computed(() => [{
     backgroundColor: ['#134e4a', '#d97706', '#64748b', '#94a3b8'],
 }])
 
-const sourceLabels = computed(() => (props.report.sources ?? []).map(i => i.name))
+const sourceLabels = computed(() => (props.report.sources ?? []).map(i => sourceLabel(i.name)))
+
+const sourceNameFormatter = (row: {name?: string | null}) => sourceLabel(row.name)
 const sourceDatasets = computed(() => [{
     data: (props.report.sources ?? []).map(i => i.sessions),
     backgroundColor: ['#134e4a', '#d97706', '#0f766e', '#c2410c', '#64748b', '#94a3b8', '#475569', '#b45309'],
