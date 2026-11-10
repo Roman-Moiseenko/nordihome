@@ -151,6 +151,19 @@ export const func = {
         let days =  month + '-' + day;
         return _date_.getHours() + ':' + _date_.getMinutes() + ' ' + day + ' ' + monthName;
     },
+    /**
+     * Обрезает середину строки, оставляя начало и конец (для длинных путей/названий).
+     * @param val исходная строка
+     * @param maxLength максимальная длина результата
+     * @returns {string|*}
+     */
+    truncateMiddle: (val, maxLength = 41) => {
+        if (val === undefined || val === null) return '';
+        const str = String(val);
+        if (str.length <= maxLength) return str;
+        const keep = Math.floor((maxLength - 1) / 2);
+        return str.slice(0, keep) + '…' + str.slice(str.length - keep);
+    },
 
     displayedInfo: (model = null, image = null, icon = null) => {
         if (model === null) return {

@@ -3,50 +3,32 @@
 namespace App\Modules\Marketplace\Application\Actions\Avito;
 
 use App\Modules\Marketplace\Application\Services\Avito\AvitoCategoryApiService;
-use App\Modules\Marketplace\Infrastructure\Models\AvitoCategory;
+use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
-use Illuminate\Support\Facades\DB;
 
 readonly class SyncAvitoCategoriesUseCase
 {
+    /**
+     * Авито обрезает слишком глубокие ветки и возвращает этот плейсхолдер.
+     */
+    private const string SKIP_MARKER = 'Over 9 levels deep, aborting normalization';
+
     public function __construct(
         private AvitoCategoryApiService $apiService,
+        private AvitoCategoryRepositoryInterface $categoryRepository,
     ) {}
-
 
     public function execute(UserPermission $permission): void
     {
-        if (!$permission->can('marketplace.avito.edit')) throw new AccessDeniedException();
+        if (!$permission->can('marketplace.avito.edit')) {
+            throw new AccessDeniedException();
+        }
 
         $tree = $this->apiService->fetchCategoryTree();
         $flat = $this->flatten($tree);
 
-        $incomingSlugs = array_column($flat, 'slug');
-
-        DB::transaction(function () use ($flat, $incomingSlugs) {
-            // 1. Удаляем категории, которых больше нет на Авито.
-            //    Товары получат null через FK nullOnDelete.
-            AvitoCategory::whereNotIn('slug', $incomingSlugs)->delete();
-
-            // 2. Upsert по slug. Существующие — обновляем name/parent, id не меняется,
-            //    товары сохраняют связь.
-            $idBySlug = AvitoCategory::pluck('id', 'slug')->all();
-
-            foreach ($flat as $node) {
-                $parentId = $node['parent_slug'] !== null
-                    ? ($idBySlug[$node['parent_slug']] ?? null)
-                    : null;
-
-                AvitoCategory::updateOrCreate(
-                    ['slug' => $node['slug']],
-                    ['name' => $node['name'], 'parent_id' => $parentId],
-                );
-            }
-
-            // 3. Пересобрать NestedSet после массовых изменений parent_id.
-            AvitoCategory::fixTree();
-        });
+        $this->categoryRepository->sync($flat);
     }
 
     /**
@@ -55,16 +37,30 @@ readonly class SyncAvitoCategoriesUseCase
     private function flatten(array $nodes, ?string $parentSlug = null): array
     {
         $result = [];
+
         foreach ($nodes as $node) {
+            $name = $node['name'] ?? '';
+            $slug = $node['slug'] ?? '';
+
+            // Плейсхолдеры слишком глубоких веток не добавляем.
+            if ($name === self::SKIP_MARKER || $slug === self::SKIP_MARKER) {
+                continue;
+            }
+
             $result[] = [
-                'slug'        => $node['slug'],
-                'name'        => $node['name'],
+                'slug' => $slug,
+                'name' => $name,
                 'parent_slug' => $parentSlug,
             ];
-            if (!empty($node['children'])) {
-                $result = array_merge($result, $this->flatten($node['children'], $node['slug']));
+
+            // Вложенные категории приходят в ключе "nested"; для обрезанных
+            // веток это строка-плейсхолдер, а не массив.
+            $nested = $node['nested'] ?? [];
+            if (is_array($nested) && !empty($nested)) {
+                $result = array_merge($result, $this->flatten($nested, $slug));
             }
         }
+
         return $result;
     }
 }

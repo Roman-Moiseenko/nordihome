@@ -11,19 +11,19 @@ class AvitoCategoryApiService
     ) {}
 
     /**
-     * Возвращает плоский массив узлов дерева категорий.
+     * Возвращает массив корневых узлов дерева категорий (ключ "categories" ответа Авито).
      *
-     * @return array<int, array{slug: string, name: string, parent_slug: ?string, children: array}>
+     * @return array<int, array{name: string, slug: string, nested: array|string}>
      */
     public function fetchCategoryTree(): array
     {
         $response = Http::withToken($this->authService->getToken())
-            ->get('https://api.avito.ru/autoload/v1/user/docs/tree');
+            ->get('https://api.avito.ru/autoload/v1/user-docs/tree');
 
         if ($response->failed()) {
             throw new \RuntimeException('Avito categories fetch failed: ' . $response->body());
         }
 
-        return $response->json();
+        return $response->json('categories') ?? [];
     }
 }

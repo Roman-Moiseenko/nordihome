@@ -5,6 +5,12 @@ namespace App\Modules\Marketplace\Providers;
 use App\Modules\Marketplace\Application\Services\Avito\AvitoAuthService;
 use App\Modules\Marketplace\Application\Services\Avito\AvitoCategoryApiService;
 use App\Modules\Marketplace\Database\Seeders\MarketplaceRoleSeeder;
+use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryFieldRepositoryInterface;
+use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryRepositoryInterface;
+use App\Modules\Marketplace\Domain\Interfaces\AvitoProductRepositoryInterface;
+use App\Modules\Marketplace\Infrastructure\Persistence\AvitoCategoryFieldRepository;
+use App\Modules\Marketplace\Infrastructure\Persistence\AvitoCategoryRepository;
+use App\Modules\Marketplace\Infrastructure\Persistence\AvitoProductRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -94,6 +100,21 @@ class MarketplaceServiceProvider extends ServiceProvider
         });
 
         $this->app->singleton(AvitoCategoryApiService::class);
+
+        $this->app->bind(
+            AvitoCategoryRepositoryInterface::class,
+            AvitoCategoryRepository::class
+        );
+
+        $this->app->bind(
+            AvitoCategoryFieldRepositoryInterface::class,
+            AvitoCategoryFieldRepository::class
+        );
+
+        $this->app->bind(
+            AvitoProductRepositoryInterface::class,
+            AvitoProductRepository::class
+        );
     }
 
     // =====================================================================

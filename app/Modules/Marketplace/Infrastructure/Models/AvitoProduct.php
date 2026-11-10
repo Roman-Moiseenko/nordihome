@@ -2,24 +2,52 @@
 
 namespace App\Modules\Marketplace\Infrastructure\Models;
 
+use App\Modules\Catalog\Infrastructure\Models\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
- * @property string $ad_id
- * @property string $avito_id
- * @property int $product_id
- * @property int $category_id
+ * @property string|null $avito_id
+ * @property int|null $product_id
+ * @property int|null $avito_category_id
  * @property string $name
- * @property string $description
+ * @property string|null $description
  * @property int $price
  * @property int $price_package
- * @property string $tn_ved
- * @property string $okpd2
+ * @property string|null $tn_ved
+ * @property string|null $okpd2
  * @property bool $delivery
  * @property bool $active
  */
 class AvitoProduct extends Model
 {
+    protected $fillable = [
+        'avito_id',
+        'product_id',
+        'avito_category_id',
+        'name',
+        'description',
+        'price',
+        'price_package',
+        'tn_ved',
+        'okpd2',
+        'delivery',
+        'active',
+    ];
 
+    protected $casts = [
+        'delivery' => 'boolean',
+        'active' => 'boolean',
+    ];
+
+    public function category(): BelongsTo
+    {
+        return $this->belongsTo(AvitoCategory::class, 'avito_category_id');
+    }
+
+    public function product(): BelongsTo
+    {
+        return $this->belongsTo(Product::class, 'product_id');
+    }
 }

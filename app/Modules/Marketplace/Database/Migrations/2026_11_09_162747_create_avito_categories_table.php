@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->string('slug', 64)->unique();
             $table->string('name', 255);
-            NestedSet::columns($table, 'parent_slug');
+            NestedSet::columns($table);
             $table->timestamps();
 
         });

@@ -3,50 +3,39 @@
 namespace App\Modules\Marketplace\Application\Actions\Avito;
 
 use App\Modules\Marketplace\Application\Services\Avito\AvitoCategoryFieldApiService;
-use App\Modules\Marketplace\Infrastructure\Models\AvitoCategory;
+use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryFieldRepositoryInterface;
+use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryRepositoryInterface;
+use App\Modules\Shared\Domain\Entities\UserPermission;
+use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
-class SyncAvitoCategoryFieldsUseCase
+readonly class SyncAvitoCategoryFieldsUseCase
 {
     public function __construct(
-        private readonly AvitoCategoryFieldApiService $apiService,
+        private AvitoCategoryFieldApiService $apiService,
+        private AvitoCategoryRepositoryInterface $categoryRepository,
+        private AvitoCategoryFieldRepositoryInterface $fieldRepository,
     ) {}
 
-
     /**
-     * Синхронизирует поля для всех листовых категорий.
+     * Синхронизирует параметры для всех листовых категорий.
      */
-    public function execute(): void
+    public function execute(UserPermission $permission): void
     {
-        // Берем только листья, чтобы не тратить лимиты API на родительские узлы
-        $leafCategories = AvitoCategory::whereDoesntHave('children')->get();
+        if (!$permission->can('marketplace.avito.edit')) {
+            throw new AccessDeniedException();
+        }
+
+        // Только листья, чтобы не тратить лимиты API на родительские узлы.
+        $leafCategories = $this->categoryRepository->getLeaves();
 
         foreach ($leafCategories as $category) {
             try {
                 $fields = $this->apiService->fetchFields($category->slug);
-                $this->saveFields($category, $fields);
+                $this->fieldRepository->syncForCategory($category->id, $fields);
             } catch (\Throwable $e) {
                 report($e);
                 continue;
             }
         }
-    }
-
-    private function saveFields(AvitoCategory $category, array $fields): void
-    {
-        DB::transaction(function () use ($category, $fields) {
-            // Удаляем старые поля, чтобы избежать дублей при повторной синхронизации
-            $category->fields()->delete();
-
-            foreach ($fields as $fieldData) {
-                $category->fields()->create([
-                    'tag'            => $fieldData['tag'],
-                    'name'           => $fieldData['name'],
-                    'type'           => $fieldData['type'],
-                    'is_required'    => $fieldData['is_required'] ?? false,
-                    'allowed_values' => $fieldData['allowed_values'] ?? null,
-                    'depends_on'     => $fieldData['depends_on'] ?? null,
-                ]);
-            }
-        });
     }
 }
