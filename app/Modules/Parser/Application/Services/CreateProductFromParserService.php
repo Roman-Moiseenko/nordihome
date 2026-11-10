@@ -9,7 +9,7 @@ use App\Modules\Accounting\Application\DTOs\PriceOutbox\PriceOutboxCreateData;
 use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Base\Entity\Dimensions;
-use App\Modules\Catalog\Application\Actions\Category\FindOrCreateTempCategory;
+use App\Modules\Catalog\Application\Actions\Category\FindOrCreateTempIkeaCategory;
 use App\Modules\Catalog\Application\Actions\Product\FastCreateProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\UpdateProductUseCase;
 use App\Modules\Catalog\Application\DTOs\Product\ProductFastCreateData;
@@ -37,7 +37,7 @@ readonly class CreateProductFromParserService
         private ParserProductRepositoryInterface      $parserProductRepository,
         private BrandRepositoryInterface              $brandRepository,
         private FastCreateProductUseCase              $fastCreateProductUseCase,
-        private FindOrCreateTempCategory              $findOrCreateTempCategory,
+        private FindOrCreateTempIkeaCategory          $findOrCreateTempIkeaCategory,
         private UpdateProductUseCase                  $updateProductUseCase,
         private AttachAttributeProductService         $attachAttributeProductService,
         private SetPriceUseCase                       $setProductPriceUseCase,
@@ -45,8 +45,8 @@ readonly class CreateProductFromParserService
         private SetDimensionsProductFromParserUseCase $dimensionsProductFromParserUseCase,
         private PhotoRepositoryInterface              $photoRepository,
         private SettingRepository                     $settingRepository,
-        private CalculateRetailPriceUseCase $calculateRetailPriceUseCase,
-        private CreatePriceOutboxUseCase $createPriceOutboxUseCase,
+        private CalculateRetailPriceUseCase           $calculateRetailPriceUseCase,
+        private CreatePriceOutboxUseCase              $createPriceOutboxUseCase,
     )
     {
 
@@ -58,7 +58,7 @@ readonly class CreateProductFromParserService
 
         $parserEntity = $this->parserProductRepository->getById($id);
 
-        $category = $this->findOrCreateTempCategory->execute(); //Найти временную Категорию
+        $category = $this->findOrCreateTempIkeaCategory->execute(); //Найти временную Категорию
         $brandId = $this->brandRepository->getIkeaId(); //Бренд ИКЕА
         $dto = new ProductFastCreateData(
             name: $parserEntity->short . ' ' . $parserEntity->name . ' ИКЕА',

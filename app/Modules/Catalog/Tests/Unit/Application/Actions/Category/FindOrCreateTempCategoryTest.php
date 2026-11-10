@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Tests\Unit\Application\Actions\Category;
 
-use App\Modules\Catalog\Application\Actions\Category\FindOrCreateTempCategory;
+use App\Modules\Catalog\Application\Actions\Category\FindOrCreateTempIkeaCategory;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
 use App\Modules\Shared\Domain\ValueObjects\Slug;
@@ -15,13 +15,13 @@ use PHPUnit\Framework\TestCase;
 class FindOrCreateTempCategoryTest extends TestCase
 {
     private CategoryRepositoryInterface $categoryRepository;
-    private FindOrCreateTempCategory $useCase;
+    private FindOrCreateTempIkeaCategory $useCase;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->categoryRepository = Mockery::mock(CategoryRepositoryInterface::class);
-        $this->useCase = new FindOrCreateTempCategory($this->categoryRepository);
+        $this->useCase = new FindOrCreateTempIkeaCategory($this->categoryRepository);
     }
 
     protected function tearDown(): void

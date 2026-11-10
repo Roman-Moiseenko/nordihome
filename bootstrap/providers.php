@@ -12,6 +12,7 @@ return [
     App\Modules\Feedback\Providers\FeedbackServiceProvider::class,
     App\Modules\Guide\Providers\GuideServiceProvider::class,
     App\Modules\Lead\Providers\LeadServiceProvider::class,
+    App\Modules\Marketplace\Providers\MarketplaceServiceProvider::class,
     App\Modules\Notification\Providers\NotificationServiceProvider::class,
     App\Modules\Order\Providers\OrderServiceProvider::class,
     App\Modules\Output\Providers\OutputServiceProvider::class,

@@ -33,4 +33,8 @@ return [
     'telegram-bot-api' => [
         'token' => env('TELEGRAM_BOT_TOKEN', 'YOUR BOT TOKEN HERE')
     ],
+    'avito' => [
+        'client_id'     => env('AVITO_CLIENT_ID'),
+        'client_secret' => env('AVITO_CLIENT_SECRET'),
+    ],
 ];

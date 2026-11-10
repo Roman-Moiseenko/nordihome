@@ -6,6 +6,7 @@ use App\Modules\Accounting\Application\Actions\ProductPrice\SetPriceUseCase;
 use App\Modules\Accounting\Application\DTOs\ProductPrice\SetProductPriceData;
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Catalog\Application\Actions\Brand\FindOrCreateBrandUseCase;
+use App\Modules\Catalog\Application\Actions\Category\FindOrCreateTempCategory;
 use App\Modules\Catalog\Application\Actions\CategoryProduct\AttachCategoriesToProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\FastCreateProductUseCase;
 use App\Modules\Catalog\Application\Actions\Product\UpdateProductUseCase;
@@ -45,6 +46,7 @@ readonly class LoadProductWpService
         private DimensionsFromAttributeService   $dimensionsFromAttributeService,
         private FindAndAttachToParserUseCase     $findAndAttachToParserUseCase,
         private SetSeriesToProductByNameService  $seriesToProductByNameService,
+        private FindOrCreateTempCategory         $findOrCreateTempCategoryUseCase,
     )
     {
     }
@@ -64,24 +66,48 @@ readonly class LoadProductWpService
                 'storage.photo.edit',
             ]
         );
-
-        //Проверяем по артикулу $product['sku'] в базе поле code на совпадение,
-        if (!is_null($this->productRepository->findByCode($product['sku']))) return false;
-
-        //Создаем массив категорий и комнат
         $categories = [];
         $rooms = [];
 
-        foreach ($product['categories'] as $categoryData) {
-            if (!is_null($category = $this->categoryByWpIdUseCase->execute($categoryData['id']))) {
-                $categories[] = $category->id;
+        //Проверяем по артикулу $product['sku'] в базе поле code на совпадение,
+        if (!is_null($productEntity = $this->productRepository->findByCode($product['sku']))) {
+            $tempCategory = $this->findOrCreateTempCategoryUseCase->execute();
+            if ($productEntity->mainCategoryId !== $tempCategory->id) return false; //Товар естьв базе и распределен
+
+            //Создаем массив категорий и комнат
+
+            foreach ($product['categories'] as $categoryData) {
+                //Категория
+                if (!is_null($category = $this->categoryByWpIdUseCase->execute($categoryData['id']))) $categories[] = $category->id;
+                //Комната
+                if (!is_null($room = $this->roomByWpIdUseCase->execute($categoryData['id']))) $rooms[] = $room->id;
             }
-            if (!is_null($room = $this->roomByWpIdUseCase->execute($categoryData['id']))) {
-                $rooms[] = $room->id;
-            }
+            if (empty($categories)) return false; //Категория не назначилась еще, выходим
+            $productEntity->mainCategoryId = $categories[0]; //Меняем главную категорию
+            $this->productRepository->save($productEntity);
+            unset($categories[0]); //Удаляем первую категорию, т.к. она теперь Main
+
+            // Присоединяем остальные категории и все комнаты к товару
+            $this->attachCategoriesToProductUseCase->execute($productEntity->id, $categories, $userPermission);
+            $this->attachRoomsToProductUseCase->execute($productEntity->id, $rooms, $userPermission);
+            return true;
         }
 
-        if (empty($categories)) return false;
+
+        //Создаем массив категорий и комнат
+
+        foreach ($product['categories'] as $categoryData) {
+            //Категория
+            if (!is_null($category = $this->categoryByWpIdUseCase->execute($categoryData['id']))) $categories[] = $category->id;
+            //Комната
+            if (!is_null($room = $this->roomByWpIdUseCase->execute($categoryData['id']))) $rooms[] = $room->id;
+        }
+
+        if (empty($categories)) {  //Назначаем категорию Нераспредленные
+            $tempCategory = $this->findOrCreateTempCategoryUseCase->execute();
+            $categories[0] = $tempCategory->id;
+            //return false;
+        }
 
         //Из атрибутов вытаскиваем бренд, и ищем его, если нет, то создаем и возвращаем Entity
         $brandName = (isset($product['attributes']["pa_brend"][0]))

@@ -17,11 +17,11 @@ readonly class FindOrCreateTempCategory
 
     public function execute(): CategoryEntity
     {
-        $category = $this->categoryRepository->getBySlug(CategoryEntity::TEMP_IKEA);
+        $category = $this->categoryRepository->getBySlug(CategoryEntity::TEMP_CATEGORY);
         if (is_null($category)) {
             $category = new CategoryEntity(
-                name: '!!! ТОВАРЫ ИКЕА ПАРСЕР !!!',
-                slug: new Slug(CategoryEntity::TEMP_IKEA),
+                name: '!!! ТОВАРЫ НЕРАСПРЕДЕЛЕННЫЕ !!!',
+                slug: new Slug(CategoryEntity::TEMP_CATEGORY),
                 parentId: null,
             );
             $category->published = false;
