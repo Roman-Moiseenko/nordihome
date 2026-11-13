@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * @property int $id
- * @property string|null $avito_id
+ * @property string|null $ad_id
+ * @property string $ad_number
  * @property int|null $product_id
  * @property int|null $avito_category_id
  * @property string $name
@@ -23,7 +24,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class AvitoProduct extends Model
 {
     protected $fillable = [
-        'avito_id',
+        'ad_id',
+        'ad_number',
         'product_id',
         'avito_category_id',
         'name',

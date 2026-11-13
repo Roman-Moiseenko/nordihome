@@ -9,9 +9,14 @@ final class AvitoProductEntity
         set => $this->id = $value;
     }
 
-    public ?string $avitoId = null {
-        get => $this->avitoId;
-        set => $this->avitoId = $value;
+    public ?string $adId = null {
+        get => $this->adId;
+        set => $this->adId = $value;
+    }
+
+    public ?string $adNumber = null {
+        get => $this->adNumber;
+        set => $this->adNumber = $value;
     }
 
     public ?int $productId = null {

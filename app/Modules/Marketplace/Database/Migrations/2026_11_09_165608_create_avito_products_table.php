@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('avito_products', function (Blueprint $table) {
             $table->id();
+            //id объявления
+            $table->string('ad_id')->nullable()->index();
             // Номер объявления на Авито
-            $table->string('avito_id')->nullable()->index();
+            $table->string('ad_number')->nullable()->index();
             // Связь с товаром каталога
             $table->unsignedBigInteger('product_id')->nullable();
             // Категория Авито

@@ -24,7 +24,7 @@ final class AvitoCategoryFieldEntity
         set => $this->name = $value;
     }
 
-    public string $type {
+    public ?string $type = null {
         get => $this->type;
         set => $this->type = $value;
     }
