@@ -19,8 +19,8 @@ return new class extends Migration
             $table->string('tag', 100);
             // Человекочитаемое название поля для админки
             $table->string('name', 255);
-            // Тип поля: input, select, checkbox
-            $table->string('type', 50);
+            // Тип поля: string, integer, float, array (nullable — тип уточняется вручную)
+            $table->string('type', 50)->nullable();
             // Обязательно ли поле для заполнения
             $table->boolean('is_required')->default(false);
             // Массив допустимых значений (для select)

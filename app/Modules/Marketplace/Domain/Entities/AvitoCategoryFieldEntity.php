@@ -48,7 +48,7 @@ final class AvitoCategoryFieldEntity
         int $avitoCategoryId,
         string $tag,
         string $name,
-        string $type,
+        ?string $type = null,
         bool $isRequired = false,
         ?array $allowedValues = null,
         ?array $dependsOn = null,

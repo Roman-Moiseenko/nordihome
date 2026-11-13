@@ -54,13 +54,14 @@ readonly class IndexAvitoProductQuery
         return $paginator->through(function (AvitoProductEntity $entity) use ($codes, $paths) {
             return new AvitoProductIndexData(
                 id: $entity->id,
-                avitoId: $entity->avitoId,
+                adNumber: $entity->adNumber,
                 name: $entity->name,
                 code: $entity->productId !== null ? ($codes[$entity->productId] ?? null) : null,
                 categoryPath: $entity->avitoCategoryId !== null
                     ? ($paths[$entity->avitoCategoryId] ?? '')
                     : '',
                 delivery: $entity->delivery,
+                inStock: $entity->inStock,
                 active: $entity->active,
                 tnVed: $entity->tnVed,
             );

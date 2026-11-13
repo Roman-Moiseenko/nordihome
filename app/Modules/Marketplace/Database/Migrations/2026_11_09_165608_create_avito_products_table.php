@@ -29,6 +29,8 @@ return new class extends Migration
             $table->string('okpd2')->nullable();
             // Автодоставка
             $table->boolean('delivery')->default(false);
+            // Доступность
+            $table->boolean('in_stock')->default(false);
             // Активность объявления
             $table->boolean('active')->default(false);
             $table->timestamps();

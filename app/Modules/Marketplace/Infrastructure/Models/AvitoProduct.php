@@ -35,11 +35,13 @@ class AvitoProduct extends Model
         'tn_ved',
         'okpd2',
         'delivery',
+        'in_stock',
         'active',
     ];
 
     protected $casts = [
         'delivery' => 'boolean',
+        'in_stock' => 'boolean',
         'active' => 'boolean',
     ];
 

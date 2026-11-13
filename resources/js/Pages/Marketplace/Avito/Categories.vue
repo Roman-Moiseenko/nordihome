@@ -4,34 +4,85 @@
         <h1 class="font-medium text-xl">Категории Авито</h1>
 
         <div class="flex my-3">
-            <el-button type="primary" :loading="syncingCategories" @click="syncCategories">
-                Синхронизировать категории
-            </el-button>
-            <el-button type="primary" class="ml-3" :loading="syncingFields" @click="syncFields">
-                Синхронизировать параметры
+            <el-upload
+                :auto-upload="false"
+                :limit="1"
+                accept=".xlsx"
+                :on-change="onFileChange"
+                :on-remove="() => (file = null)"
+                :show-file-list="false"
+            >
+                <el-button>Выбрать файл</el-button>
+            </el-upload>
+            <el-button
+                type="primary"
+                class="ml-3"
+                :disabled="!file"
+                :loading="uploading"
+                @click="upload"
+            >
+                Загрузить структуру из шаблона
             </el-button>
         </div>
 
-        <div class="p-5 bg-white rounded-md">
-            <el-tree
-                :data="categories"
-                node-key="id"
-                :props="{ label: 'name', children: 'children' }"
-                default-expand-all
-                :expand-on-click-node="false"
-            >
-                <template #default="{ data }">
-                    <span class="flex items-center">
-                        <span>{{ data.name }}</span>
-                        <span
-                            v-if="!data.children || data.children.length === 0"
-                            class="ml-1 text-gray-400"
-                        >
-                            ({{ data.fieldCount }})
-                        </span>
-                    </span>
+        <div class="flex gap-4">
+            <div class="p-5 bg-white rounded-md" style="flex: 1; max-width: 460px;">
+                <el-tree
+                    :data="categories"
+                    node-key="id"
+                    :props="{ label: 'name', children: 'children' }"
+                    :expand-on-click-node="false"
+                    @node-click="onNodeClick"
+                />
+            </div>
+
+            <div class="p-5 bg-white rounded-md" style="flex: 1;" v-loading="loading">
+                <template v-if="!categoryId">
+                    <div class="text-gray-400">Выберите конечную категорию из списка</div>
                 </template>
-            </el-tree>
+                <template v-else>
+                    <div class="font-medium mb-3">Параметры категории</div>
+                    <el-table :data="categoryFields" header-cell-class-name="nordihome-header">
+                        <el-table-column label="Название" min-width="200">
+                            <template #default="scope">
+                                {{ scope.row.name }}
+                                <el-tag v-if="scope.row.is_required" type="danger" size="small" class="ml-1">
+                                    Обязательный
+                                </el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="Тип" width="160" align="center">
+                            <template #default="scope">
+                                <el-select
+                                    v-if="scope.row.type === null"
+                                    size="small"
+                                    placeholder="Указать тип"
+                                    @change="(type) => onSaveType(scope.row, type)"
+                                >
+                                    <el-option label="Строка" value="string"/>
+                                    <el-option label="Массив строк" value="array"/>
+                                </el-select>
+                                <el-tag v-else size="small">{{ typeLabel(scope.row.type) }}</el-tag>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="Варианты" min-width="200">
+                            <template #default="scope">
+                                <template v-if="scope.row.allowed_values && scope.row.allowed_values.length">
+                                    <el-tag
+                                        v-for="value in scope.row.allowed_values"
+                                        :key="value"
+                                        size="small"
+                                        class="mr-1"
+                                    >
+                                        {{ value }}
+                                    </el-tag>
+                                </template>
+                                <span v-else class="text-gray-400">—</span>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </div>
         </div>
     </el-config-provider>
 </template>
@@ -41,6 +92,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import { Head, router } from "@inertiajs/vue3";
 import { ref } from "vue";
 import { route } from "ziggy-js";
+import { useAvitoCategoryFields } from "@Res/composables/useAvitoCategoryFields";
 
 defineProps({
     categories: {
@@ -49,30 +101,56 @@ defineProps({
     },
 })
 
-const syncingCategories = ref(false)
-const syncingFields = ref(false)
+const {
+    fields: categoryFields,
+    loading,
+    categoryId,
+    load,
+    saveType,
+} = useAvitoCategoryFields()
 
-function syncCategories() {
-    syncingCategories.value = true
-    router.visit(route('admin.marketplace.avito.sync-categories'), {
-        method: 'post',
+const file = ref<File | null>(null)
+const uploading = ref(false)
+
+function onFileChange(uploadFile: any) {
+    file.value = uploadFile.raw ?? null
+}
+
+function upload() {
+    if (!file.value) return
+
+    uploading.value = true
+    const form = new FormData()
+    form.append('file', file.value)
+
+    router.post(route('admin.marketplace.avito.import'), form, {
+        forceFormData: true,
         preserveScroll: true,
         preserveState: false,
         onFinish: () => {
-            syncingCategories.value = false
+            uploading.value = false
         },
     })
 }
 
-function syncFields() {
-    syncingFields.value = true
-    router.visit(route('admin.marketplace.avito.sync-fields'), {
-        method: 'post',
-        preserveScroll: true,
-        preserveState: false,
-        onFinish: () => {
-            syncingFields.value = false
-        },
-    })
+function onNodeClick(data: any) {
+    if (data.children && data.children.length) {
+        return
+    }
+    load(data.id)
+}
+
+function onSaveType(row: any, type: string) {
+    saveType(row.id, type)
+}
+
+function typeLabel(type: string) {
+    const labels: Record<string, string> = {
+        string: 'Строка',
+        integer: 'Число',
+        float: 'Дробное число',
+        array: 'Массив строк',
+    }
+    return labels[type] ?? type
 }
 </script>

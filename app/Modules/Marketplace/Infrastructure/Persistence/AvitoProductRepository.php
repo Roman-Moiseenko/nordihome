@@ -23,7 +23,8 @@ class AvitoProductRepository implements AvitoProductRepositoryInterface
             ? AvitoProduct::findOrFail($product->id)
             : new AvitoProduct();
 
-        $model->avito_id = $product->avitoId;
+        $model->ad_id = $product->adId;
+        $model->ad_number = $product->adNumber;
         $model->product_id = $product->productId;
         $model->avito_category_id = $product->avitoCategoryId;
         $model->name = $product->name;
@@ -33,6 +34,7 @@ class AvitoProductRepository implements AvitoProductRepositoryInterface
         $model->tn_ved = $product->tnVed;
         $model->okpd2 = $product->okpd2;
         $model->delivery = $product->delivery;
+        $model->in_stock = $product->inStock;
         $model->active = $product->active;
 
         $model->save();
@@ -104,13 +106,15 @@ class AvitoProductRepository implements AvitoProductRepositoryInterface
         );
 
         $entity->id = $model->id;
-        $entity->avitoId = $model->avito_id;
+        $entity->adId = $model->ad_id;
+        $entity->adNumber = $model->ad_number;
         $entity->description = $model->description;
         $entity->price = $model->price ?? 0;
         $entity->pricePackage = $model->price_package ?? 0;
         $entity->tnVed = $model->tn_ved;
         $entity->okpd2 = $model->okpd2;
         $entity->delivery = (bool) $model->delivery;
+        $entity->inStock = (bool) $model->in_stock;
         $entity->active = (bool) $model->active;
 
         return $entity;

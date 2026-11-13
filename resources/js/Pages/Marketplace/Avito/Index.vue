@@ -52,7 +52,7 @@
                 row-key="id"
                 @row-click="routeClick"
             >
-                <el-table-column prop="avitoId" label="Номер объявления" width="150"/>
+                <el-table-column prop="adNumber" label="Номер объявления" width="150"/>
                 <el-table-column prop="name" label="Название" show-overflow-tooltip/>
                 <el-table-column prop="code" label="Артикул" width="140"/>
                 <el-table-column label="Категория" width="280" show-overflow-tooltip>
@@ -63,6 +63,11 @@
                 <el-table-column label="Автодоставка" width="120" align="center">
                     <template #default="scope">
                         <Active :active="scope.row.delivery"/>
+                    </template>
+                </el-table-column>
+                <el-table-column label="Доступность" width="120" align="center">
+                    <template #default="scope">
+                        <Active :active="scope.row.inStock"/>
                     </template>
                 </el-table-column>
                 <el-table-column label="Активен" width="100" align="center">

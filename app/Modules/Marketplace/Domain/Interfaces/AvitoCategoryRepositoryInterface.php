@@ -39,4 +39,17 @@ interface AvitoCategoryRepositoryInterface
      * @return array<int, string> map id => полный путь
      */
     public function getPathNamesByIds(array $ids): array;
+
+    /**
+     * Найти или создать цепочку категорий по именам пути (от корня к листу).
+     * Возвращает листовую категорию.
+     *
+     * @param string[] $names
+     */
+    public function findOrCreateByNames(array $names): AvitoCategoryEntity;
+
+    /**
+     * Пересобрать NestedSet после массового создания/переноса узлов.
+     */
+    public function fixTree(): void;
 }

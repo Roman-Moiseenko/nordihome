@@ -16,10 +16,15 @@ Route::group([
 
         Route::get('/categories', [AvitoController::class, 'categories'])->name('categories');
         Route::get('/settings', [AvitoController::class, 'settings'])->name('settings');
+        Route::post('/settings', [AvitoController::class, 'updateSettings'])->name('settings.update');
         Route::get('/operations', [AvitoController::class, 'operations'])->name('operations');
 
         Route::post('/sync-categories', [AvitoController::class, 'syncCategories'])->name('sync-categories');
         Route::post('/sync-fields', [AvitoController::class, 'syncFields'])->name('sync-fields');
+
+        Route::post('/import', [AvitoController::class, 'uploadStructure'])->name('import');
+        Route::get('/category/{id}/fields', [AvitoController::class, 'categoryFields'])->name('category.fields');
+        Route::post('/category/{id}/fields/{fieldId}/type', [AvitoController::class, 'updateFieldType'])->name('category.field.type');
 
         Route::get('/product/{id}', [AvitoController::class, 'productShow'])->name('product.show');
         Route::post('/product', [AvitoController::class, 'store'])->name('product.store');

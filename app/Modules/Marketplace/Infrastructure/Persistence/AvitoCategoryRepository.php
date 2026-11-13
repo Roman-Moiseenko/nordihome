@@ -6,6 +6,7 @@ use App\Modules\Marketplace\Domain\Entities\AvitoCategoryEntity;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryRepositoryInterface;
 use App\Modules\Marketplace\Infrastructure\Models\AvitoCategory;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AvitoCategoryRepository implements AvitoCategoryRepositoryInterface
 {
@@ -115,6 +116,55 @@ class AvitoCategoryRepository implements AvitoCategoryRepositoryInterface
         }
 
         return $result;
+    }
+
+    public function findOrCreateByNames(array $names): AvitoCategoryEntity
+    {
+        $parentId = null;
+        $entity = null;
+
+        foreach ($names as $name) {
+            $name = trim((string) $name);
+            if ($name === '') {
+                continue;
+            }
+
+            $model = AvitoCategory::where('parent_id', $parentId)
+                ->where('name', $name)
+                ->first();
+
+            if ($model === null) {
+                $model = new AvitoCategory();
+                $model->name = $name;
+                $model->slug = $this->uniqueSlug(Str::slug($name));
+                $model->parent_id = $parentId;
+                $model->save();
+            }
+
+            $parentId = $model->id;
+            $entity = $this->hydrate($model);
+        }
+
+        return $entity;
+    }
+
+    public function fixTree(): void
+    {
+        AvitoCategory::fixTree();
+    }
+
+    private function uniqueSlug(string $slug): string
+    {
+        $base = $slug === '' ? 'category' : $slug;
+        $candidate = $base;
+        $i = 1;
+
+        while (AvitoCategory::where('slug', $candidate)->exists()) {
+            $candidate = $base . '-' . $i;
+            $i++;
+        }
+
+        return $candidate;
     }
 
     private function hydrate(AvitoCategory $model): AvitoCategoryEntity

@@ -4,12 +4,15 @@ namespace App\Modules\Marketplace\Providers;
 
 use App\Modules\Marketplace\Application\Services\Avito\AvitoAuthService;
 use App\Modules\Marketplace\Application\Services\Avito\AvitoCategoryApiService;
+use App\Modules\Marketplace\Database\Seeders\AvitoParameterSeeder;
 use App\Modules\Marketplace\Database\Seeders\MarketplaceRoleSeeder;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryFieldRepositoryInterface;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryRepositoryInterface;
+use App\Modules\Marketplace\Domain\Interfaces\AvitoParameterRepositoryInterface;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoProductRepositoryInterface;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoCategoryFieldRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoCategoryRepository;
+use App\Modules\Marketplace\Infrastructure\Persistence\AvitoParameterRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoProductRepository;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
@@ -114,6 +117,11 @@ class MarketplaceServiceProvider extends ServiceProvider
         $this->app->bind(
             AvitoProductRepositoryInterface::class,
             AvitoProductRepository::class
+        );
+
+        $this->app->bind(
+            AvitoParameterRepositoryInterface::class,
+            AvitoParameterRepository::class
         );
     }
 
@@ -413,6 +421,7 @@ class MarketplaceServiceProvider extends ServiceProvider
         $this->app->afterResolving('seed.handler', function ($handler) {
             $handler->register([
                 MarketplaceRoleSeeder::class,
+                AvitoParameterSeeder::class,
             ]);
         });
     }

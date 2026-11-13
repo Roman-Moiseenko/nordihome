@@ -64,6 +64,11 @@ final class AvitoProductEntity
         set => $this->delivery = $value;
     }
 
+    public bool $inStock = false {
+        get => $this->inStock;
+        set => $this->inStock = $value;
+    }
+
     public bool $active = false {
         get => $this->active;
         set => $this->active = $value;
