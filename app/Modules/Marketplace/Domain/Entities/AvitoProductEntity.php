@@ -59,6 +59,11 @@ final class AvitoProductEntity
         set => $this->okpd2 = $value;
     }
 
+    public ?string $country = null {
+        get => $this->country;
+        set => $this->country = $value;
+    }
+
     public bool $delivery = false {
         get => $this->delivery;
         set => $this->delivery = $value;

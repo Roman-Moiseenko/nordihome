@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int $price_package
  * @property string|null $tn_ved
  * @property string|null $okpd2
+ * @property string|null $country
  * @property bool $delivery
  * @property bool $active
  */
@@ -34,6 +35,7 @@ class AvitoProduct extends Model
         'price_package',
         'tn_ved',
         'okpd2',
+        'country',
         'delivery',
         'in_stock',
         'active',

@@ -27,6 +27,8 @@ return new class extends Migration
             $table->unsignedInteger('price_package')->default(0);
             $table->string('tn_ved')->nullable();
             $table->string('okpd2')->nullable();
+            // Страна происхождения
+            $table->string('country')->nullable();
             // Автодоставка
             $table->boolean('delivery')->default(false);
             // Доступность

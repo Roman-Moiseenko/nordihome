@@ -3,7 +3,7 @@
     <el-config-provider :locale="ru">
         <h1 class="font-medium text-xl">Настройки Авито</h1>
 
-        <div class="mt-3 p-5 bg-white rounded-md" style="max-width: 720px;">
+        <div class="mt-3 p-5 bg-white rounded-md" >
             <el-form label-width="220px" @submit.prevent>
                 <el-form-item v-for="(parameter, index) in parameters" :key="parameter.id" :label="parameter.name">
                     <el-select
@@ -20,11 +20,9 @@
                             :label="variant"
                         />
                     </el-select>
-                    <el-input
+                    <RichTextEditor
                         v-else-if="parameter.isHtml"
                         v-model="form.parameters[index].value"
-                        type="textarea"
-                        :rows="5"
                         placeholder="HTML"
                     />
                     <el-input v-else v-model="form.parameters[index].value"/>
@@ -41,6 +39,7 @@ import ru from 'element-plus/dist/locale/ru.mjs'
 import { Head, router } from "@inertiajs/vue3";
 import { reactive } from "vue";
 import { route } from "ziggy-js";
+import RichTextEditor from "../../../VueComponents/Content/ContentBlock/RichTextEditor.vue";
 
 const props = defineProps({
     parameters: {

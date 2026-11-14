@@ -33,6 +33,7 @@ class AvitoProductRepository implements AvitoProductRepositoryInterface
         $model->price_package = $product->pricePackage;
         $model->tn_ved = $product->tnVed;
         $model->okpd2 = $product->okpd2;
+        $model->country = $product->country;
         $model->delivery = $product->delivery;
         $model->in_stock = $product->inStock;
         $model->active = $product->active;
@@ -113,6 +114,7 @@ class AvitoProductRepository implements AvitoProductRepositoryInterface
         $entity->pricePackage = $model->price_package ?? 0;
         $entity->tnVed = $model->tn_ved;
         $entity->okpd2 = $model->okpd2;
+        $entity->country = $model->country;
         $entity->delivery = (bool) $model->delivery;
         $entity->inStock = (bool) $model->in_stock;
         $entity->active = (bool) $model->active;

@@ -20,7 +20,7 @@ class AvitoStructureImportService
 
     public function import(string $filePath): void
     {
-        $spreadsheet = IOFactory::load($filePath);
+        $spreadsheet = $this->loadSpreadsheet($filePath);
         $names = $spreadsheet->getSheetNames();
 
         // Шаблон Авито: "Инструкция", "Объявления", "Справочники".
@@ -42,6 +42,26 @@ class AvitoStructureImportService
         }
 
         $this->categoryRepository->fixTree();
+    }
+
+    private function loadSpreadsheet(string $filePath): Spreadsheet
+    {
+        try {
+            return IOFactory::load($filePath);
+        } catch (\ErrorException $e) {
+            // PhpSpreadsheet 3.x: абсолютный диапазон валидации на весь столбец
+            // (например '$D$5:$D$1048576') падает в Coordinate::columnIndexFromString().
+            // Такие валидации нужны только для извлечения вариантов в выгрузках
+            // «АвитоЗагрузки», поэтому откатываемся на чтение только данных.
+            if (!str_contains($e->getMessage(), 'Undefined array key')) {
+                throw $e;
+            }
+
+            $reader = IOFactory::createReaderForFile($filePath);
+            $reader->setReadDataOnly(true);
+
+            return $reader->load($filePath);
+        }
     }
 
     private function processListingSheet(

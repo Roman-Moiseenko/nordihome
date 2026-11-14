@@ -35,6 +35,7 @@
 | `productId` | `product_id` | связь с товаром каталога |
 | `avitoCategoryId` | `avito_category_id` | категория Авито |
 | `name`, `description`, `price`, `pricePackage`, `tnVed`, `okpd2` | соответствующие | |
+| `country` | `country` | страна происхождения |
 | `delivery` | `delivery` | автодоставка |
 | `inStock` | `in_stock` | доступность (boolean) |
 | `active` | `active` | активность/архив |
