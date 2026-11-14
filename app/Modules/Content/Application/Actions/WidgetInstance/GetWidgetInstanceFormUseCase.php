@@ -5,6 +5,7 @@ namespace App\Modules\Content\Application\Actions\WidgetInstance;
 use App\Modules\Content\Application\DTOs\WidgetInstance\WidgetFormFieldData;
 use App\Modules\Content\Application\DTOs\WidgetInstance\WidgetInstanceFormData;
 use App\Modules\Content\Application\Services\ProductSearchService;
+use App\Modules\Content\Application\Services\WidgetImageResolverService;
 use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 
@@ -14,6 +15,7 @@ final readonly class GetWidgetInstanceFormUseCase
         private WidgetInstanceRepositoryInterface $instanceRepository,
         private WidgetRepositoryInterface $widgetRepository,
         private ProductSearchService $productSearchService,
+        private WidgetImageResolverService $imageResolver,
     ) {}
 
     public function execute(int $instanceId): WidgetInstanceFormData
@@ -30,9 +32,11 @@ final readonly class GetWidgetInstanceFormUseCase
             throw new \InvalidArgumentException('Тип виджета не найден');
         }
 
-        // Извлекаем схему и текущие параметры
+        // Извлекаем схему и текущие параметры.
+        // src изображений резолвится на лету через текущий драйвер хранилища,
+        // поэтому смена local/s3 или домена S3 не ломает уже сохранённые виджеты.
         $schema = $widget->schema->toArray();
-        $params = $instance->params;
+        $params = $this->imageResolver->resolve($instance->params, $schema);
 
         $properties = $schema['properties'] ?? [];
         $required = $schema['required'] ?? [];

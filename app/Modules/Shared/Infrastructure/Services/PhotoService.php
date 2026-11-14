@@ -6,6 +6,7 @@ namespace App\Modules\Shared\Infrastructure\Services;
 
 use App\Modules\Setting\Entity\Settings;
 use App\Modules\Shared\Application\Interfaces\PhotoStorageInterface;
+use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
 use Intervention\Image\ImageManager;
@@ -95,6 +96,22 @@ class PhotoService
             self::URL_UPLOAD . $this->patternGeneratePath($modelType, $imageableId) . $fileName
         );
        // return self::URL_UPLOAD . $this->patternGeneratePath($modelType, $imageableId) . $fileName;
+    }
+
+    /**
+     * Возвращает URL оригинального файла по id записи Photo.
+     * URL формируется через текущий драйвер хранилища (local/s3),
+     * поэтому не зависит от сохранённого ранее конечного URL.
+     */
+    public function getUploadUrlById(int $photoId): string
+    {
+        $photo = Photo::find($photoId);
+
+        if ($photo === null || empty($photo->file)) {
+            return '';
+        }
+
+        return $this->getUploadUrl($photo->model_type, $photo->imageable_id, $photo->file);
     }
 
     /**
