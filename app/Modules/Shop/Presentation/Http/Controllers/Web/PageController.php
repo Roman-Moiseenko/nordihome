@@ -23,8 +23,9 @@ class PageController extends ShopAbstractController
         return view('shop.home');
     }
 
-    public function view($slug): View
+    public function view($slug)
     {
+        if ($slug == 'home') return redirect()->route('shop.home');
         $pageData = $this->pageViewQuery->execute($slug);
         if (is_null($pageData)) abort(404, 'Страница не найдена');
 
