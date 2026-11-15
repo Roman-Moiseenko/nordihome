@@ -8,10 +8,14 @@ use App\Modules\Marketplace\Database\Seeders\AvitoParameterSeeder;
 use App\Modules\Marketplace\Database\Seeders\MarketplaceRoleSeeder;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryFieldRepositoryInterface;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryRepositoryInterface;
+use App\Modules\Marketplace\Domain\Interfaces\AvitoCommonImageRepositoryInterface;
+use App\Modules\Marketplace\Domain\Interfaces\AvitoParameterRegistryRepositoryInterface;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoParameterRepositoryInterface;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoProductRepositoryInterface;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoCategoryFieldRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoCategoryRepository;
+use App\Modules\Marketplace\Infrastructure\Persistence\AvitoCommonImageRepository;
+use App\Modules\Marketplace\Infrastructure\Persistence\AvitoParameterRegistryRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoParameterRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoProductRepository;
 use Illuminate\Support\Facades\Blade;
@@ -122,6 +126,16 @@ class MarketplaceServiceProvider extends ServiceProvider
         $this->app->bind(
             AvitoParameterRepositoryInterface::class,
             AvitoParameterRepository::class
+        );
+
+        $this->app->bind(
+            AvitoParameterRegistryRepositoryInterface::class,
+            AvitoParameterRegistryRepository::class
+        );
+
+        $this->app->bind(
+            AvitoCommonImageRepositoryInterface::class,
+            AvitoCommonImageRepository::class
         );
     }
 

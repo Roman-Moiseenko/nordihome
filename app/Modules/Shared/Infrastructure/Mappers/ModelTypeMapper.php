@@ -32,6 +32,9 @@ class ModelTypeMapper
         'content.gallery' => \App\Modules\Content\Infrastructure\Models\Gallery::class, //MAINDO Перенести и в Базе данных, также добавиль model_type
         'discount.promotion' => \App\Modules\Discount\Infrastructure\Models\Promotion::class,
 
+        'marketplace.avito-product' => \App\Modules\Marketplace\Infrastructure\Models\AvitoProduct::class,
+        'marketplace.avito-common-image' => \App\Modules\Marketplace\Infrastructure\Models\AvitoCommonImage::class,
+
     ];
 
     public static function toFqcn(string $modelType): string

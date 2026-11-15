@@ -1,6 +1,7 @@
 <?php
 
 return [
+    /*
     'delivery' => [
         'sort' => 30,
         'icon' => 'plane',
@@ -68,10 +69,11 @@ return [
                 'action' => true,
             ],
             */
-        ],
+      /*  ],
 
     ],
     'delivery_divider' => [
         'sort' => 31,
     ],
+    */
 ];

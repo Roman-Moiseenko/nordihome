@@ -1,7 +1,7 @@
 <template>
-    <Head><title>Настройки Авито</title></Head>
+    <Head><title>Общие параметры Авито</title></Head>
     <el-config-provider :locale="ru">
-        <h1 class="font-medium text-xl">Настройки Авито</h1>
+        <h1 class="font-medium text-xl">Общие параметры Авито</h1>
 
         <div class="mt-3 p-5 bg-white rounded-md" >
             <el-form label-width="220px" @submit.prevent>

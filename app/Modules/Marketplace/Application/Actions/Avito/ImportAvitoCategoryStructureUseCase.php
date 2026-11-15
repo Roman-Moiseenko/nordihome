@@ -2,14 +2,14 @@
 
 namespace App\Modules\Marketplace\Application\Actions\Avito;
 
-use App\Modules\Marketplace\Application\Services\Avito\AvitoStructureImportService;
+use App\Modules\Marketplace\Application\Services\Avito\AvitoCategoryStructureImportService;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 
-readonly class ImportAvitoStructureUseCase
+readonly class ImportAvitoCategoryStructureUseCase
 {
     public function __construct(
-        private AvitoStructureImportService $importService,
+        private AvitoCategoryStructureImportService $importService,
     ) {}
 
     public function execute(string $filePath, UserPermission $permission): void

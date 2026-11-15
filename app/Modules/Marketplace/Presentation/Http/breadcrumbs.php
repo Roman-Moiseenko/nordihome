@@ -17,12 +17,22 @@ Breadcrumbs::for('admin.marketplace.avito.categories', function (BreadcrumbTrail
 
 Breadcrumbs::for('admin.marketplace.avito.settings', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.marketplace.avito.index');
-    $trail->push('Настройки', route('admin.marketplace.avito.settings'));
+    $trail->push('Общие параметры', route('admin.marketplace.avito.settings'));
+});
+
+Breadcrumbs::for('admin.marketplace.avito.common-images', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.marketplace.avito.index');
+    $trail->push('Общие изображения', route('admin.marketplace.avito.common-images'));
 });
 
 Breadcrumbs::for('admin.marketplace.avito.operations', function (BreadcrumbTrail $trail) {
     $trail->parent('admin.marketplace.avito.index');
     $trail->push('Операции', route('admin.marketplace.avito.operations'));
+});
+
+Breadcrumbs::for('admin.marketplace.avito.registry', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.marketplace.avito.index');
+    $trail->push('Реестр параметров', route('admin.marketplace.avito.registry'));
 });
 
 Breadcrumbs::for('admin.marketplace.avito.product.show', function (BreadcrumbTrail $trail, int|string $id) {

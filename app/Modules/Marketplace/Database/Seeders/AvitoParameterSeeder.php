@@ -11,23 +11,28 @@ class AvitoParameterSeeder extends Seeder
     public function run(): void
     {
         $parameters = [
-            ['name' => 'Способ размещения', 'variants' => ['Package', 'BBL', 'PackageBBL']],
-            ['name' => 'Способ связи', 'variants' => ['По телефону и в сообщениях', 'По телефону', 'В сообщениях']],
-            ['name' => 'Адрес', 'variants' => []],
-            ['name' => 'Номер телефона', 'variants' => []],
-            ['name' => 'Почта', 'variants' => []],
-            ['name' => 'Вид продажи', 'variants' => ['Товар куплен на продажу', 'Товар произведён мной']],
-            ['name' => 'Состояние', 'variants' => ['Новое', 'Б/у']],
-            ['name' => 'Включая НДС', 'variants' => ['Без НДС', '0', '5', '7', '10', '22']],
-            ['name' => 'description_before', 'variants' => [], 'is_html' => true],
-            ['name' => 'description_after', 'variants' => [], 'is_html' => true],
+         /*   ['name' => 'Способ размещения', 'name_en' => 'ListingFee', 'variants' => ['Package', 'BBL', 'PackageBBL']],
+            ['name' => 'Способ связи', 'name_en' => 'ContactMethod', 'variants' => ['По телефону и в сообщениях', 'По телефону', 'В сообщениях']],
+            ['name' => 'Адрес', 'name_en' => 'Address', 'variants' => []],
+            ['name' => 'Номер телефона', 'name_en' => 'ContactPhone', 'variants' => []],
+            ['name' => 'Почта', 'name_en' => null, 'variants' => []],
+            ['name' => 'Вид продажи', 'name_en' => 'AdType', 'variants' => ['Товар куплен на продажу', 'Товар произведён мной']],
+            ['name' => 'Состояние', 'name_en' => 'Condition', 'variants' => ['Новое', 'Б/у']],
+            ['name' => 'Включая НДС', 'name_en' => 'NDS', 'variants' => ['Без НДС', '0', '5', '7', '10', '22']],*/
+            ['name' => 'description_before', 'name_en' => null, 'variants' => [], 'is_html' => true],
+            ['name' => 'description_after', 'name_en' => null, 'variants' => [], 'is_html' => true],
         ];
 
         foreach ($parameters as $data) {
+            $slug = $data['name_en'] !== null
+                ? Str::slug($data['name_en'])
+                : Str::slug($data['name']);
+
             AvitoParameter::firstOrCreate(
-                ['slug' => Str::slug($data['name'])],
+                ['slug' => $slug],
                 [
                     'name' => $data['name'],
+                    'name_en' => $data['name_en'],
                     'variants' => $data['variants'],
                     'is_html' => $data['is_html'] ?? false,
                 ]

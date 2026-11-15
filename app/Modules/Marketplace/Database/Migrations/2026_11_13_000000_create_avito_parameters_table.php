@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('avito_parameters', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            // Английское название поля (ключ сопоставления с реестром параметров).
+            $table->string('name_en')->nullable()->unique();
             $table->string('slug')->unique();
             $table->text('value')->nullable();
             $table->json('variants')->nullable();

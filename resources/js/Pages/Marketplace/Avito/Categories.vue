@@ -12,7 +12,7 @@
                 :on-remove="() => (file = null)"
                 :show-file-list="false"
             >
-                <el-button>Выбрать файл</el-button>
+                <el-button>Выбрать английский шаблон</el-button>
             </el-upload>
             <el-button
                 type="primary"
@@ -23,6 +23,9 @@
             >
                 Загрузить структуру из шаблона
             </el-button>
+            <div class="text-gray-500 text-sm my-auto">
+                Шаблон с английскими названиями, сверяется с реестром параметров.
+            </div>
         </div>
 
         <div class="flex gap-4">

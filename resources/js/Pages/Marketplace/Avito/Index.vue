@@ -8,7 +8,13 @@
                 Категории
             </el-button>
             <el-button class="ml-2" @click="router.get(route('admin.marketplace.avito.settings'))">
-                Настройки
+                Общие параметры
+            </el-button>
+            <el-button class="ml-2" @click="router.get(route('admin.marketplace.avito.common-images'))">
+                Общие изображения
+            </el-button>
+            <el-button class="ml-2" @click="router.get(route('admin.marketplace.avito.registry'))">
+                Реестр параметров
             </el-button>
             <el-button class="ml-2" @click="router.get(route('admin.marketplace.avito.operations'))">
                 Операции

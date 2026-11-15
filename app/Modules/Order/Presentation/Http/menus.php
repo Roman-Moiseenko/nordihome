@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 return [
     'orders' => [
-        'sort' => 20,
+        'sort' => 5,
         'icon' => 'coins',
         'title' => 'Продажи',
         'can' => ['order','payment', 'refund'],

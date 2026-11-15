@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int $id
  * @property string $name
+ * @property string|null $name_en
  * @property string $slug
  * @property string|null $value
  * @property array|null $variants
@@ -16,6 +17,7 @@ class AvitoParameter extends Model
 {
     protected $fillable = [
         'name',
+        'name_en',
         'slug',
         'value',
         'variants',

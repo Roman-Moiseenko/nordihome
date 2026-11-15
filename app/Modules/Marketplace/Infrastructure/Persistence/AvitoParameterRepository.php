@@ -13,7 +13,7 @@ class AvitoParameterRepository implements AvitoParameterRepositoryInterface
      */
     public function getAll(): array
     {
-        return AvitoParameter::orderBy('name')
+        return AvitoParameter::orderBy('id')
             ->get()
             ->map(fn(AvitoParameter $model) => $this->hydrate($model))
             ->all();
@@ -31,6 +31,13 @@ class AvitoParameterRepository implements AvitoParameterRepositoryInterface
         return $model === null ? null : $this->hydrate($model);
     }
 
+    public function getByNameEn(string $nameEn): ?AvitoParameterEntity
+    {
+        $model = AvitoParameter::where('name_en', $nameEn)->first();
+
+        return $model === null ? null : $this->hydrate($model);
+    }
+
     public function save(AvitoParameterEntity $parameter): AvitoParameterEntity
     {
         $model = $parameter->id
@@ -38,6 +45,7 @@ class AvitoParameterRepository implements AvitoParameterRepositoryInterface
             : new AvitoParameter();
 
         $model->name = $parameter->name;
+        $model->name_en = $parameter->nameEn;
         $model->slug = $parameter->slug;
         $model->value = $parameter->value;
         $model->variants = $parameter->variants;
@@ -56,6 +64,7 @@ class AvitoParameterRepository implements AvitoParameterRepositoryInterface
             value: $model->value,
             variants: is_array($model->variants) ? $model->variants : [],
             isHtml: (bool) $model->is_html,
+            nameEn: $model->name_en,
         );
 
         $entity->id = $model->id;

@@ -19,6 +19,16 @@ Route::group([
         Route::post('/settings', [AvitoController::class, 'updateSettings'])->name('settings.update');
         Route::get('/operations', [AvitoController::class, 'operations'])->name('operations');
 
+        Route::get('/registry', [AvitoController::class, 'registry'])->name('registry');
+        Route::post('/registry/import', [AvitoController::class, 'importRegistry'])->name('registry.import');
+        Route::post('/registry/{id}', [AvitoController::class, 'updateRegistryEntry'])->name('registry.update');
+
+        Route::get('/common-images', [AvitoController::class, 'commonImages'])->name('common-images');
+        Route::post('/common-images', [AvitoController::class, 'storeCommonImage'])->name('common-images.store');
+        Route::post('/common-images/sort', [AvitoController::class, 'sortCommonImages'])->name('common-images.sort');
+        Route::post('/common-images/{id}', [AvitoController::class, 'updateCommonImage'])->name('common-images.update');
+        Route::delete('/common-images/{id}', [AvitoController::class, 'deleteCommonImage'])->name('common-images.destroy');
+
         Route::post('/sync-categories', [AvitoController::class, 'syncCategories'])->name('sync-categories');
         Route::post('/sync-fields', [AvitoController::class, 'syncFields'])->name('sync-fields');
 

@@ -3,24 +3,40 @@
 namespace App\Modules\Marketplace\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Marketplace\Application\Actions\Avito\ImportAvitoCategoryStructureUseCase;
 use App\Modules\Marketplace\Application\Actions\Avito\SetAvitoCategoryFieldTypeUseCase;
 use App\Modules\Marketplace\Application\Actions\Avito\SetAvitoCategoryFieldVariantsUseCase;
 use App\Modules\Marketplace\Application\Actions\Avito\SyncAvitoCategoriesUseCase;
 use App\Modules\Marketplace\Application\Actions\Avito\SyncAvitoCategoryFieldsUseCase;
 use App\Modules\Marketplace\Application\Actions\Avito\TreeAvitoCategoryQuery;
+use App\Modules\Marketplace\Application\Actions\AvitoCommonImage\CreateAvitoCommonImageUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoCommonImage\DeleteAvitoCommonImageUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoCommonImage\ListAvitoCommonImageQuery;
+use App\Modules\Marketplace\Application\Actions\AvitoCommonImage\SortAvitoCommonImageUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoCommonImage\UpdateAvitoCommonImageUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoParameter\ListAvitoParameterQuery;
+use App\Modules\Marketplace\Application\Actions\AvitoParameter\UpdateAvitoParameterUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoParameterRegistry\ImportAvitoParameterRegistryUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoParameterRegistry\ListAvitoParameterRegistryQuery;
+use App\Modules\Marketplace\Application\Actions\AvitoParameterRegistry\UpdateAvitoParameterRegistryUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\CreateAvitoProductUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\IndexAvitoProductQuery;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\SetAvitoProductActiveUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\ToggleAvitoProductDeliveryUseCase;
-use App\Modules\Marketplace\Application\Actions\AvitoParameter\ListAvitoParameterQuery;
-use App\Modules\Marketplace\Application\Actions\AvitoParameter\UpdateAvitoParameterUseCase;
 use App\Modules\Marketplace\Application\DTOs\AvitoParameter\AvitoParameterUpdateData;
 use App\Modules\Marketplace\Application\DTOs\AvitoParameter\AvitoParameterViewData;
+use App\Modules\Marketplace\Application\DTOs\AvitoParameterRegistry\AvitoParameterRegistryUpdateData;
+use App\Modules\Marketplace\Application\DTOs\AvitoParameterRegistry\AvitoParameterRegistryViewData;
 use App\Modules\Marketplace\Application\DTOs\AvitoProduct\AvitoProductCreateData;
 use App\Modules\Marketplace\Application\DTOs\AvitoProduct\FilterAvitoProductIndexData;
+use App\Modules\Marketplace\Application\DTOs\AvitoCommonImage\AvitoCommonImageCreateData;
+use App\Modules\Marketplace\Application\DTOs\AvitoCommonImage\AvitoCommonImageSortData;
+use App\Modules\Marketplace\Application\DTOs\AvitoCommonImage\AvitoCommonImageUpdateData;
+use App\Modules\Marketplace\Application\DTOs\AvitoCommonImage\AvitoCommonImageViewData;
+use App\Modules\Marketplace\Application\Mappers\AvitoProductFields;
+use App\Modules\Marketplace\Domain\Exceptions\AvitoFieldNotInRegistryException;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryFieldRepositoryInterface;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoProductRepositoryInterface;
-use App\Modules\Marketplace\Infrastructure\Jobs\ImportAvitoStructureJob;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -44,6 +60,15 @@ class AvitoController extends Controller
         private readonly SetAvitoCategoryFieldVariantsUseCase $setAvitoCategoryFieldVariantsUseCase,
         private readonly ListAvitoParameterQuery $listAvitoParameterQuery,
         private readonly UpdateAvitoParameterUseCase $updateAvitoParameterUseCase,
+        private readonly ImportAvitoCategoryStructureUseCase $importAvitoCategoryStructureUseCase,
+        private readonly ListAvitoParameterRegistryQuery $listAvitoParameterRegistryQuery,
+        private readonly UpdateAvitoParameterRegistryUseCase $updateAvitoParameterRegistryUseCase,
+        private readonly ImportAvitoParameterRegistryUseCase $importAvitoParameterRegistryUseCase,
+        private readonly ListAvitoCommonImageQuery $listAvitoCommonImageQuery,
+        private readonly CreateAvitoCommonImageUseCase $createAvitoCommonImageUseCase,
+        private readonly UpdateAvitoCommonImageUseCase $updateAvitoCommonImageUseCase,
+        private readonly SortAvitoCommonImageUseCase $sortAvitoCommonImageUseCase,
+        private readonly DeleteAvitoCommonImageUseCase $deleteAvitoCommonImageUseCase,
     ) {}
 
     public function index(Request $request, UserPermission $userPermission): Response
@@ -73,9 +98,52 @@ class AvitoController extends Controller
     {
         $parameters = $this->listAvitoParameterQuery->execute($userPermission);
 
-        return Inertia::render('Marketplace/Avito/Settings', [
+        return Inertia::render('Marketplace/Avito/CommonParameters', [
             'parameters' => AvitoParameterViewData::collect($parameters),
         ]);
+    }
+
+    public function commonImages(UserPermission $userPermission): Response
+    {
+        $images = $this->listAvitoCommonImageQuery->execute($userPermission);
+
+        return Inertia::render('Marketplace/Avito/CommonImages', [
+            'images' => AvitoCommonImageViewData::collect($images),
+        ]);
+    }
+
+    public function storeCommonImage(Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $dto = AvitoCommonImageCreateData::validateAndCreate($request->all());
+        $this->createAvitoCommonImageUseCase->execute($dto, $userPermission);
+
+        return redirect()->back()->with('success', 'Изображение добавлено');
+    }
+
+    public function updateCommonImage(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $dto = AvitoCommonImageUpdateData::validateAndCreate([
+            ...$request->all(),
+            'id' => $id,
+        ]);
+        $this->updateAvitoCommonImageUseCase->execute($dto, $userPermission);
+
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function sortCommonImages(Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $dto = AvitoCommonImageSortData::validateAndCreate($request->all());
+        $this->sortAvitoCommonImageUseCase->execute($dto, $userPermission);
+
+        return redirect()->back()->with('success', 'Порядок сохранён');
+    }
+
+    public function deleteCommonImage(int $id, UserPermission $userPermission): RedirectResponse
+    {
+        $this->deleteAvitoCommonImageUseCase->execute($id, $userPermission);
+
+        return redirect()->back()->with('success', 'Изображение удалено');
     }
 
     public function updateSettings(Request $request, UserPermission $userPermission): RedirectResponse
@@ -91,6 +159,72 @@ class AvitoController extends Controller
     public function operations(): Response
     {
         return Inertia::render('Marketplace/Avito/Operations');
+    }
+
+    public function registry(UserPermission $userPermission): Response
+    {
+        $entries = $this->listAvitoParameterRegistryQuery->execute($userPermission);
+
+        return Inertia::render('Marketplace/Avito/Registry', [
+            'registry' => AvitoParameterRegistryViewData::collect($entries),
+            'productFields' => AvitoProductFields::options(),
+            'kinds' => [
+                ['value' => 'product', 'label' => 'Поле товара (AvitoProduct)'],
+                ['value' => 'common', 'label' => 'Общий параметр (AvitoParameter)'],
+                ['value' => 'skip', 'label' => 'Не используется'],
+                ['value' => 'category', 'label' => 'Параметр категории'],
+            ],
+        ]);
+    }
+
+    /**
+     * Загрузка русского и английского шаблонов в реестр параметров.
+     */
+    public function importRegistry(Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        if (!$userPermission->can('marketplace.avito.edit')) {
+            abort(403);
+        }
+
+        $request->validate([
+            'file_ru' => ['required', 'file', 'mimes:xlsx'],
+            'file_en' => ['required', 'file', 'mimes:xlsx'],
+        ]);
+
+        $ruPath = $request->file('file_ru')->store('avito');
+        $enPath = $request->file('file_en')->store('avito');
+
+        try {
+            $created = $this->importAvitoParameterRegistryUseCase->execute(
+                storage_path('app/' . $ruPath),
+                storage_path('app/' . $enPath),
+                $userPermission,
+            );
+        } finally {
+            @unlink(storage_path('app/' . $ruPath));
+            @unlink(storage_path('app/' . $enPath));
+        }
+
+        return redirect()->back()->with('success', "Добавлено записей в реестр: {$created}");
+    }
+
+    /**
+     * Сохранение вида (kind) и имени поля сущности для записи реестра.
+     */
+    public function updateRegistryEntry(int $id, Request $request, UserPermission $userPermission): JsonResponse
+    {
+        $dto = AvitoParameterRegistryUpdateData::validateAndCreate([
+            ...$request->all(),
+            'id' => $id,
+        ]);
+
+        $entity = $this->updateAvitoParameterRegistryUseCase->execute($dto, $userPermission);
+
+        return response()->json([
+            'id' => $entity->id,
+            'kind' => $entity->kind,
+            'field' => $entity->field,
+        ]);
     }
 
     public function productShow(int $id, UserPermission $userPermission): Response
@@ -148,7 +282,8 @@ class AvitoController extends Controller
     }
 
     /**
-     * Загрузка структуры категорий и параметров из xlsx-шаблона.
+     * Загрузка структуры категории из английского xlsx-шаблона.
+     * Каждый столбец сверяется с реестром параметров.
      */
     public function uploadStructure(Request $request, UserPermission $userPermission): RedirectResponse
     {
@@ -161,10 +296,17 @@ class AvitoController extends Controller
         ]);
 
         $path = $request->file('file')->store('avito');
+        $fullPath = storage_path('app/' . $path);
 
-        ImportAvitoStructureJob::dispatch(storage_path('app/' . $path));
+        try {
+            $this->importAvitoCategoryStructureUseCase->execute($fullPath, $userPermission);
+        } catch (AvitoFieldNotInRegistryException $e) {
+            return redirect()->back()->with('error', $e->getMessage());
+        } finally {
+            @unlink($fullPath);
+        }
 
-        return redirect()->back()->with('success', 'Загрузка структуры запущена');
+        return redirect()->back()->with('success', 'Структура категории загружена');
     }
 
     /**

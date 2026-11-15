@@ -19,6 +19,11 @@ final class AvitoParameterEntity
         set => $this->slug = $value;
     }
 
+    public ?string $nameEn = null {
+        get => $this->nameEn;
+        set => $this->nameEn = $value;
+    }
+
     public ?string $value = null {
         get => $this->value;
         set => $this->value = $value;
@@ -41,9 +46,11 @@ final class AvitoParameterEntity
         ?string $value = null,
         array $variants = [],
         bool $isHtml = false,
+        ?string $nameEn = null,
     ) {
         $this->name = $name;
         $this->slug = $slug;
+        $this->nameEn = $nameEn;
         $this->value = $value;
         $this->variants = $variants;
         // Если есть варианты — это селект, а не html-редактор.
