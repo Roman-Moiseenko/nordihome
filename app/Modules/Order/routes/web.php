@@ -2,7 +2,6 @@
 
 use App\Modules\Order\Controllers\ExpenseController;
 use App\Modules\Order\Controllers\PaymentController;
-use App\Modules\Order\Controllers\ProductController;
 use App\Modules\Order\Controllers\RefundController;
 use App\Modules\Order\Controllers\ReserveController;
 use App\Modules\Order\Presentation\Http\Controllers\Web\OrderController;
@@ -106,7 +105,7 @@ Route::group(
                 'as' => 'product.',
             ],
             function () {
-                Route::get('/', [ProductController::class, 'index'])->name('index');
+              //  Route::get('/', [ProductController::class, 'index'])->name('index');
                 // Route::post('/show/{product}', [ProductController::class, 'show'])->name('show');
             }
         );

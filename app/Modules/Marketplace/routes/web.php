@@ -25,6 +25,7 @@ Route::group([
         Route::post('/import', [AvitoController::class, 'uploadStructure'])->name('import');
         Route::get('/category/{id}/fields', [AvitoController::class, 'categoryFields'])->name('category.fields');
         Route::post('/category/{id}/fields/{fieldId}/type', [AvitoController::class, 'updateFieldType'])->name('category.field.type');
+        Route::post('/category/{id}/fields/{fieldId}/variants', [AvitoController::class, 'updateFieldVariants'])->name('category.field.variants');
 
         Route::get('/product/{id}', [AvitoController::class, 'productShow'])->name('product.show');
         Route::post('/product', [AvitoController::class, 'store'])->name('product.store');

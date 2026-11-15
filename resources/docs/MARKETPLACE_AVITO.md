@@ -147,6 +147,7 @@
 | `import` | POST `/import` | `uploadStructure` (xlsx) |
 | `category.fields` | GET `/category/{id}/fields` | `categoryFields` |
 | `category.field.type` | POST `/category/{id}/fields/{fieldId}/type` | `updateFieldType` |
+| `category.field.variants` | POST `/category/{id}/fields/{fieldId}/variants` | `updateFieldVariants` |
 | `product.show` | GET `/product/{id}` | `productShow` (заглушка) |
 | `product.store` | POST `/product` | `store` (из `SearchAddProduct`) |
 | `product.delivery` | POST `/product/{id}/delivery` | `toggleDelivery` |

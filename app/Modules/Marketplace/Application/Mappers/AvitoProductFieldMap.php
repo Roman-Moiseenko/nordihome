@@ -38,7 +38,6 @@ final class AvitoProductFieldMap
      * @var string[]
      */
     private const SKIP = [
-
         'Вид продажи',
         'Состояние',
         'Начало размещения',
@@ -86,7 +85,12 @@ final class AvitoProductFieldMap
         'Ссылка на видео (VK или Rutube)',
         'Тип минимального заказа',
         'Субсидирование доставки',
-
+        'AvitoDateEnd',
+        'AvitoStatus',
+        'WholesaleTypePredict2Param',
+        'Почта',
+        'Вид продажи', //Вид объявления
+        'Название компании',
     ];
 
     /**

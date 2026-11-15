@@ -11,11 +11,11 @@ use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class AvitoStructureImportService
+readonly class AvitoStructureImportService
 {
     public function __construct(
-        private readonly AvitoCategoryRepositoryInterface $categoryRepository,
-        private readonly AvitoCategoryFieldRepositoryInterface $fieldRepository,
+        private AvitoCategoryRepositoryInterface      $categoryRepository,
+        private AvitoCategoryFieldRepositoryInterface $fieldRepository,
     ) {}
 
     public function import(string $filePath): void

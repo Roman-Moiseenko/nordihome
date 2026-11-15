@@ -4,6 +4,7 @@ namespace App\Modules\Marketplace\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Modules\Marketplace\Application\Actions\Avito\SetAvitoCategoryFieldTypeUseCase;
+use App\Modules\Marketplace\Application\Actions\Avito\SetAvitoCategoryFieldVariantsUseCase;
 use App\Modules\Marketplace\Application\Actions\Avito\SyncAvitoCategoriesUseCase;
 use App\Modules\Marketplace\Application\Actions\Avito\SyncAvitoCategoryFieldsUseCase;
 use App\Modules\Marketplace\Application\Actions\Avito\TreeAvitoCategoryQuery;
@@ -40,6 +41,7 @@ class AvitoController extends Controller
         private readonly ToggleAvitoProductDeliveryUseCase $toggleAvitoProductDeliveryUseCase,
         private readonly SetAvitoProductActiveUseCase $setAvitoProductActiveUseCase,
         private readonly SetAvitoCategoryFieldTypeUseCase $setAvitoCategoryFieldTypeUseCase,
+        private readonly SetAvitoCategoryFieldVariantsUseCase $setAvitoCategoryFieldVariantsUseCase,
         private readonly ListAvitoParameterQuery $listAvitoParameterQuery,
         private readonly UpdateAvitoParameterUseCase $updateAvitoParameterUseCase,
     ) {}
@@ -180,16 +182,37 @@ class AvitoController extends Controller
     /**
      * Ручное уточнение типа параметра (string | array).
      */
-    public function updateFieldType(int $id, Request $request, UserPermission $userPermission): JsonResponse
+    public function updateFieldType(int $id, int $fieldId, Request $request, UserPermission $userPermission): JsonResponse
     {
         $type = $request->input('type');
         $type = in_array($type, ['string', 'array'], true) ? $type : null;
 
-        $field = $this->setAvitoCategoryFieldTypeUseCase->execute($id, $type, $userPermission);
+        $field = $this->setAvitoCategoryFieldTypeUseCase->execute($fieldId, $type, $userPermission);
 
         return response()->json([
             'id' => $field->id,
             'type' => $field->type,
+        ]);
+    }
+
+    /**
+     * Сохранение вариантов параметра (для полей типа string | array).
+     */
+    public function updateFieldVariants(int $id, int $fieldId, Request $request, UserPermission $userPermission): JsonResponse
+    {
+        $variants = $request->input('variants', []);
+
+        $variants = is_array($variants)
+            ? array_values(array_unique(array_map('strval', $variants)))
+            : [];
+
+        $variants = array_values(array_filter($variants, fn (string $value) => trim($value) !== ''));
+
+        $field = $this->setAvitoCategoryFieldVariantsUseCase->execute($fieldId, $variants, $userPermission);
+
+        return response()->json([
+            'id' => $field->id,
+            'allowed_values' => $field->allowedValues ?? [],
         ]);
     }
 }

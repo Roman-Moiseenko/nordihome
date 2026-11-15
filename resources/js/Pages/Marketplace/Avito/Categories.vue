@@ -65,9 +65,22 @@
                                 <el-tag v-else size="small">{{ typeLabel(scope.row.type) }}</el-tag>
                             </template>
                         </el-table-column>
-                        <el-table-column label="Варианты" min-width="200">
+                        <el-table-column label="Варианты" min-width="260">
                             <template #default="scope">
-                                <template v-if="scope.row.allowed_values && scope.row.allowed_values.length">
+                                <el-select
+                                    v-if="canEditVariants(scope.row)"
+                                    v-model="scope.row.allowed_values"
+                                    multiple
+                                    filterable
+                                    allow-create
+                                    default-first-option
+                                    :reserve-keyword="false"
+                                    size="small"
+                                    placeholder="Добавить вариант"
+                                    style="width: 100%;"
+                                    @change="(values) => onSaveVariants(scope.row, values)"
+                                />
+                                <template v-else-if="scope.row.allowed_values && scope.row.allowed_values.length">
                                     <el-tag
                                         v-for="value in scope.row.allowed_values"
                                         :key="value"
@@ -107,6 +120,7 @@ const {
     categoryId,
     load,
     saveType,
+    saveVariants,
 } = useAvitoCategoryFields()
 
 const file = ref<File | null>(null)
@@ -142,6 +156,14 @@ function onNodeClick(data: any) {
 
 function onSaveType(row: any, type: string) {
     saveType(row.id, type)
+}
+
+function canEditVariants(row: any) {
+    return (row.type === 'string' || row.type === 'array') && row.is_html !== true
+}
+
+function onSaveVariants(row: any, values: string[]) {
+    saveVariants(row.id, values)
 }
 
 function typeLabel(type: string) {

@@ -44,5 +44,20 @@ export function useAvitoCategoryFields() {
         }
     }
 
-    return { fields, loading, categoryId, load, saveType };
+    async function saveVariants(fieldId: number, variants: string[]) {
+        const { data } = await axios.post(
+            route("admin.marketplace.avito.category.field.variants", {
+                id: categoryId.value,
+                fieldId,
+            }),
+            { variants }
+        );
+
+        const field = fields.value.find((f) => f.id === fieldId);
+        if (field) {
+            field.allowed_values = data.allowed_values;
+        }
+    }
+
+    return { fields, loading, categoryId, load, saveType, saveVariants };
 }
