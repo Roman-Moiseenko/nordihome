@@ -20,13 +20,13 @@ use App\Modules\Marketplace\Application\Actions\AvitoParameterRegistry\ImportAvi
 use App\Modules\Marketplace\Application\Actions\AvitoParameterRegistry\ListAvitoParameterRegistryQuery;
 use App\Modules\Marketplace\Application\Actions\AvitoParameterRegistry\UpdateAvitoParameterRegistryUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\AttachProductToAvitoProductUseCase;
-use App\Modules\Marketplace\Application\Actions\AvitoProduct\CopyProductPhotosToAvitoProductUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\CreateAvitoProductUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\DetachProductFromAvitoProductUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\IndexAvitoProductQuery;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\ListAvitoProductValuesQuery;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\SetAvitoProductActiveUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\SetAvitoProductCategoryUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoProduct\StoreAvitoProductImageUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\ToggleAvitoProductDeliveryUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\UpdateAvitoProductDescriptionUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\UpdateAvitoProductUseCase;
@@ -52,6 +52,7 @@ use App\Modules\Marketplace\Application\Mappers\AvitoProductFields;
 use App\Modules\Marketplace\Domain\Exceptions\AvitoFieldNotInRegistryException;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryFieldRepositoryInterface;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoProductRepositoryInterface;
+use App\Modules\Shared\Application\DTOs\Photo\PhotoViewData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -77,7 +78,7 @@ class AvitoController extends Controller
         private readonly SetAvitoProductCategoryUseCase $setAvitoProductCategoryUseCase,
         private readonly AttachProductToAvitoProductUseCase $attachProductToAvitoProductUseCase,
         private readonly DetachProductFromAvitoProductUseCase $detachProductFromAvitoProductUseCase,
-        private readonly CopyProductPhotosToAvitoProductUseCase $copyProductPhotosToAvitoProductUseCase,
+        private readonly StoreAvitoProductImageUseCase $storeAvitoProductImageUseCase,
         private readonly ToggleAvitoProductDeliveryUseCase $toggleAvitoProductDeliveryUseCase,
         private readonly SetAvitoProductActiveUseCase $setAvitoProductActiveUseCase,
         private readonly SetAvitoCategoryFieldTypeUseCase $setAvitoCategoryFieldTypeUseCase,
@@ -328,14 +329,53 @@ class AvitoController extends Controller
         return redirect()->back()->with('success', 'Связь с товаром удалена');
     }
 
+    public function uploadImage(int $id, Request $request, UserPermission $userPermission): JsonResponse
+    {
+        $request->validate([
+            'file' => ['required', 'image'],
+        ]);
+
+        $photo = $this->storeAvitoProductImageUseCase->upload($id, $request->file('file'), $userPermission);
+
+        return response()->json(PhotoViewData::fromEntity($photo));
+    }
+
     public function copyPhoto(int $id, Request $request, UserPermission $userPermission): RedirectResponse
     {
         $photoIds = $request->input('photoIds', $request->input('photoId', []));
         $photoIds = is_array($photoIds) ? $photoIds : [$photoIds];
 
-        $this->copyProductPhotosToAvitoProductUseCase->execute($id, $photoIds, $userPermission);
+        foreach (array_values(array_unique(array_map('intval', $photoIds))) as $photoId) {
+            if ($photoId <= 0) {
+                continue;
+            }
+
+            $this->storeAvitoProductImageUseCase->copy($id, $photoId, $userPermission);
+        }
 
         return redirect()->back()->with('success', 'Изображение скопировано');
+    }
+
+    public function copyCommonImage(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $photoId = (int) $request->input('photoId', 0);
+
+        $photo = $this->storeAvitoProductImageUseCase->copy($id, $photoId, $userPermission);
+
+        if ($photo === null) {
+            return redirect()->back()->with('error', 'Изображение не найдено');
+        }
+
+        return redirect()->back()->with('success', 'Изображение скопировано');
+    }
+
+    public function commonImageList(UserPermission $userPermission): JsonResponse
+    {
+        $images = $this->listAvitoCommonImageQuery->execute($userPermission);
+
+        $active = array_values(array_filter($images, static fn ($image) => $image->active));
+
+        return response()->json(AvitoCommonImageViewData::collect($active));
     }
 
     public function toggleDelivery(int $id, UserPermission $userPermission): RedirectResponse

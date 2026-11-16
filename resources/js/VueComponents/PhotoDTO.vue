@@ -86,6 +86,7 @@ const props = defineProps({
     modelType: { type: String, required: true },
     type: { type: String, default: 'image' },
     mini: { type: Boolean, default: false },
+    uploadRoute: { type: String, default: '' },
 })
 const csrf = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || ''
 
@@ -104,7 +105,7 @@ const form = reactive({
 })
 console.log(props.modelType)
 const uploadAction = computed(() => {
-    return route('admin.photo.upload')
+    return props.uploadRoute || route('admin.photo.upload')
 })
 
 async function loadImages() {
@@ -147,11 +148,15 @@ function onFileChange(uploadFile: UploadFile) {
 
     const formData = new FormData()
     formData.append('file', uploadFile.raw)
-    formData.append('imageableId', String(props.entityId))
-    formData.append('modelType', props.modelType)
-    formData.append('type', props.type)
 
-    axios.post(route('admin.photo.upload'), formData, {
+    // Для кастомного маршрута (например, avito product image) передаём только файл
+    if (!props.uploadRoute) {
+        formData.append('imageableId', String(props.entityId))
+        formData.append('modelType', props.modelType)
+        formData.append('type', props.type)
+    }
+
+    axios.post(uploadAction.value, formData, {
         headers: {
             'X-CSRF-TOKEN': csrf,
             'Content-Type': 'multipart/form-data',

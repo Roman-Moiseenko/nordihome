@@ -6,10 +6,9 @@ use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Marketplace\Application\DTOs\AvitoProduct\AvitoProductCreateData;
+use App\Modules\Marketplace\Application\Services\Avito\AvitoProductImageService;
 use App\Modules\Marketplace\Domain\Entities\AvitoProductEntity;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoProductRepositoryInterface;
-use App\Modules\Shared\Application\Actions\CopyPhotoByIdUseCase;
-use App\Modules\Shared\Application\DTOs\JobPhotoCopyData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 use App\Modules\Shared\Domain\Interfaces\PhotoRepositoryInterface;
@@ -22,7 +21,7 @@ readonly class CreateAvitoProductUseCase
         private ProductRepositoryInterface $productRepository,
         private PriceRepositoryInterface $priceRepository,
         private PhotoRepositoryInterface $photoRepository,
-        private CopyPhotoByIdUseCase $copyPhotoByIdUseCase,
+        private AvitoProductImageService $imageService,
     ) {}
 
     public function execute(AvitoProductCreateData $dto, UserPermission $permission): AvitoProductEntity
@@ -107,16 +106,9 @@ readonly class CreateAvitoProductUseCase
                 continue;
             }
 
-            // Для avito-product нарезка thumbs не создаётся.
-            $this->copyPhotoByIdUseCase->execute(
-                new JobPhotoCopyData(
-                    imageableId: $avitoProduct->id,
-                    modelType: 'marketplace.avito-product',
-                    type: 'gallery',
-                    copyId: $photo->id,
-                ),
-                withThumbs: false,
-            );
+            // Изображение обрабатывается (обрезка 1280×960 + водяной знак),
+            // нарезка thumbs для avito-product не создаётся.
+            $this->imageService->copy($avitoProduct->id, $avitoProduct->adId ?? '', $photo->id);
         }
     }
 }

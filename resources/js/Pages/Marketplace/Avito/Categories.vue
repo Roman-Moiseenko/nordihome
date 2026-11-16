@@ -35,6 +35,7 @@
                     node-key="id"
                     :props="{ label: 'name', children: 'children' }"
                     :expand-on-click-node="true"
+                    default-expand-all
                     @node-click="onNodeClick"
                 />
             </div>

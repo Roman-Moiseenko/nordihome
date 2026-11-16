@@ -24,6 +24,7 @@ Route::group([
         Route::post('/registry/{id}', [AvitoController::class, 'updateRegistryEntry'])->name('registry.update');
 
         Route::get('/common-images', [AvitoController::class, 'commonImages'])->name('common-images');
+        Route::get('/common-images/list', [AvitoController::class, 'commonImageList'])->name('common-images.list');
         Route::post('/common-images', [AvitoController::class, 'storeCommonImage'])->name('common-images.store');
         Route::post('/common-images/sort', [AvitoController::class, 'sortCommonImages'])->name('common-images.sort');
         Route::post('/common-images/{id}', [AvitoController::class, 'updateCommonImage'])->name('common-images.update');
@@ -46,6 +47,8 @@ Route::group([
         Route::post('/product/{id}/attach-product', [AvitoController::class, 'attachProduct'])->name('product.attach-product');
         Route::post('/product/{id}/detach-product', [AvitoController::class, 'detachProduct'])->name('product.detach-product');
         Route::post('/product/{id}/copy-photo', [AvitoController::class, 'copyPhoto'])->name('product.copy-photo');
+        Route::post('/product/{id}/image', [AvitoController::class, 'uploadImage'])->name('product.image');
+        Route::post('/product/{id}/copy-common-image', [AvitoController::class, 'copyCommonImage'])->name('product.copy-common-image');
         Route::post('/product/{id}/delivery', [AvitoController::class, 'toggleDelivery'])->name('product.delivery');
         Route::post('/product/{id}/active', [AvitoController::class, 'setActive'])->name('product.active');
     });
