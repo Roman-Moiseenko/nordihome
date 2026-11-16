@@ -21,6 +21,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string|null $country
  * @property bool $delivery
  * @property bool $active
+ * @property bool $sale
  */
 class AvitoProduct extends Model
 {
