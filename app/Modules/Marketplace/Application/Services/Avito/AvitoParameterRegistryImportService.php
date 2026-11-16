@@ -104,14 +104,14 @@ readonly class AvitoParameterRegistryImportService
         $value = trim($value);
 
         return match (true) {
-            $value === 'Подробнее о параметре' => null,
+            $value === 'Подробнее о параметре' => 'string',
             $value === 'Текст' => 'string',
             $value === 'Число' => 'integer',
             $value === 'Дробное число' => 'float',
             $value === 'Одно или несколько значений из выпадающего списка в ячейке' => 'array',
             $value === 'Одно значение из выпадающего списка в ячейке' => 'string',
             str_starts_with($value, 'Одно значение из листа') => 'string',
-            default => null,
+            default => 'string',
         };
     }
 }

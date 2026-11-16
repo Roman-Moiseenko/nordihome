@@ -21,20 +21,22 @@ interface AvitoCategoryFieldRepositoryInterface
     /**
      * Заменяет набор параметров категории данными из Авито.
      *
-     * @param array<int, array{tag: string, name: string, type: ?string, is_required: bool, allowed_values: ?array, depends_on: ?array}> $fields
+     * @param array<int, array{name_en: string, name: string, type: ?string, is_required: bool, allowed_values: ?array, depends_on: ?array}> $fields
      */
     public function syncForCategory(int $avitoCategoryId, array $fields): void;
 
     /**
-     * Добавляет/обновляет параметры категории, дополняя варианты без дублей
-     * (импорт структуры из xlsx).
+     * Синхронизирует параметры категории с данными из xlsx-шаблона:
+     * удаляет параметры, которых больше нет в файле (в т.ч. те, что в реестре
+     * перестали относиться к категории), добавляет новые и обновляет существующие.
+     * Варианты (allowed_values) только дополняются — существующие не удаляются.
      *
-     * @param array<int, array{tag: string, name: string, type: ?string, is_required: bool, allowed_values: ?array, depends_on: ?array}> $fields
+     * @param array<int, array{name_en: string, name: string, type: ?string, is_required: bool, allowed_values: ?array, depends_on: ?array}> $fields
      */
     public function upsertForCategory(int $avitoCategoryId, array $fields): void;
 
     /**
-     * @return array<int, array{id: int, tag: string, name: string, type: ?string, is_required: bool, allowed_values: ?array}>
+     * @return array<int, array{id: int, name_en: string, name: string, type: ?string, is_required: bool, allowed_values: ?array}>
      */
     public function getByCategoryId(int $avitoCategoryId): array;
 }

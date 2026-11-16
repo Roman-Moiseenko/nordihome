@@ -34,7 +34,7 @@
                     :data="categories"
                     node-key="id"
                     :props="{ label: 'name', children: 'children' }"
-                    :expand-on-click-node="false"
+                    :expand-on-click-node="true"
                     @node-click="onNodeClick"
                 />
             </div>

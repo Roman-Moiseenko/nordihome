@@ -4,7 +4,7 @@ import { route } from "ziggy-js";
 
 interface AvitoCategoryField {
     id: number;
-    tag: string;
+    name_en: string;
     name: string;
     type: string | null;
     is_required: boolean;

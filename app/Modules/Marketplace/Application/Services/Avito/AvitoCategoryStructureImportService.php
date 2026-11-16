@@ -97,18 +97,16 @@ readonly class AvitoCategoryStructureImportService
 
             // kind = category или не задан — параметр категории.
             $fields[] = [
-                'tag' => Str::slug($registry->nameEn),
+                'name_en' => $registry->nameEn,
                 'name' => $registry->nameRu ?? $registry->nameEn,
-                'type' => $registry->type,
+                'type' => $this->parseType($rawType),
                 'is_required' => $registry->isRequired,
                 'allowed_values' => empty($variants) ? null : $variants,
                 'depends_on' => null,
             ];
         }
 
-        if (!empty($fields)) {
-            $this->fieldRepository->upsertForCategory($category->id, $fields);
-        }
+        $this->fieldRepository->upsertForCategory($category->id, $fields);
 
         $this->categoryRepository->fixTree();
     }
@@ -169,5 +167,21 @@ readonly class AvitoCategoryStructureImportService
         }
 
         return array_values(array_unique(array_filter($values)));
+    }
+
+    private function parseType(string $value): ?string
+    {
+        $value = trim($value);
+
+        return match (true) {
+            $value === 'Подробнее о параметре' => 'string',
+            $value === 'Текст' => 'string',
+            $value === 'Число' => 'integer',
+            $value === 'Дробное число' => 'float',
+            $value === 'Одно или несколько значений из выпадающего списка в ячейке' => 'array',
+            $value === 'Одно значение из выпадающего списка в ячейке' => 'string',
+            str_starts_with($value, 'Одно значение из листа') => 'string',
+            default => 'string',
+        };
     }
 }

@@ -14,9 +14,9 @@ final class AvitoCategoryFieldEntity
         set => $this->avitoCategoryId = $value;
     }
 
-    public string $tag {
-        get => $this->tag;
-        set => $this->tag = $value;
+    public string $nameEn {
+        get => $this->nameEn;
+        set => $this->nameEn = $value;
     }
 
     public string $name {
@@ -46,7 +46,7 @@ final class AvitoCategoryFieldEntity
 
     public function __construct(
         int $avitoCategoryId,
-        string $tag,
+        string $nameEn,
         string $name,
         ?string $type = null,
         bool $isRequired = false,
@@ -54,7 +54,7 @@ final class AvitoCategoryFieldEntity
         ?array $dependsOn = null,
     ) {
         $this->avitoCategoryId = $avitoCategoryId;
-        $this->tag = $tag;
+        $this->nameEn = $nameEn;
         $this->name = $name;
         $this->type = $type;
         $this->isRequired = $isRequired;

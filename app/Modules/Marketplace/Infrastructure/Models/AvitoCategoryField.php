@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * @property int $id
  * @property int $avito_category_id
- * @property string $tag
+ * @property string $name_en
  * @property string $name
  * @property string $type
  * @property bool $is_required
@@ -20,7 +20,7 @@ class AvitoCategoryField extends Model
 {
     protected $fillable = [
         'avito_category_id',
-        'tag',
+        'name_en',
         'name',
         'type',
         'is_required',

@@ -21,7 +21,7 @@ class AvitoCategoryFieldRepository implements AvitoCategoryFieldRepositoryInterf
             : new AvitoCategoryField();
 
         $model->avito_category_id = $field->avitoCategoryId;
-        $model->tag = $field->tag;
+        $model->name_en = $field->nameEn;
         $model->name = $field->name;
         $model->type = $field->type;
         $model->is_required = $field->isRequired;
@@ -37,7 +37,7 @@ class AvitoCategoryFieldRepository implements AvitoCategoryFieldRepositoryInterf
     {
         $entity = new AvitoCategoryFieldEntity(
             avitoCategoryId: $model->avito_category_id,
-            tag: $model->tag,
+            nameEn: $model->name_en,
             name: $model->name,
             type: $model->type,
             isRequired: (bool) $model->is_required,
@@ -72,7 +72,7 @@ class AvitoCategoryFieldRepository implements AvitoCategoryFieldRepositoryInterf
             foreach ($fields as $fieldData) {
                 $field = new AvitoCategoryField();
                 $field->avito_category_id = $avitoCategoryId;
-                $field->tag = $fieldData['tag'];
+                $field->name_en = $fieldData['name_en'];
                 $field->name = $fieldData['name'];
                 $field->type = $fieldData['type'] ?? null;
                 $field->is_required = $fieldData['is_required'] ?? false;
@@ -86,15 +86,29 @@ class AvitoCategoryFieldRepository implements AvitoCategoryFieldRepositoryInterf
     public function upsertForCategory(int $avitoCategoryId, array $fields): void
     {
         DB::transaction(function () use ($avitoCategoryId, $fields) {
+            $incomingNames = array_values(array_filter(array_map(
+                fn(array $fieldData) => $fieldData['name_en'] ?? null,
+                $fields,
+            )));
+
+            // Удаляем параметры, которых больше нет в файле: они либо убраны из
+            // шаблона, либо в реестре перестали относиться к категории (kind != category).
+            AvitoCategoryField::where('avito_category_id', $avitoCategoryId)
+                ->when(
+                    !empty($incomingNames),
+                    fn($query) => $query->whereNotIn('name_en', $incomingNames),
+                )
+                ->delete();
+
             foreach ($fields as $fieldData) {
                 $field = AvitoCategoryField::where('avito_category_id', $avitoCategoryId)
-                    ->where('tag', $fieldData['tag'])
+                    ->where('name_en', $fieldData['name_en'])
                     ->first();
 
                 if ($field === null) {
                     $field = new AvitoCategoryField();
                     $field->avito_category_id = $avitoCategoryId;
-                    $field->tag = $fieldData['tag'];
+                    $field->name_en = $fieldData['name_en'];
                     $field->name = $fieldData['name'];
                     $field->type = $fieldData['type'] ?? null;
                     $field->is_required = $fieldData['is_required'] ?? false;
@@ -126,7 +140,7 @@ class AvitoCategoryFieldRepository implements AvitoCategoryFieldRepositoryInterf
             ->get()
             ->map(fn(AvitoCategoryField $model) => [
                 'id' => $model->id,
-                'tag' => $model->tag,
+                'name_en' => $model->name_en,
                 'name' => $model->name,
                 'type' => $model->type,
                 'is_required' => (bool) $model->is_required,
