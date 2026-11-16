@@ -79,6 +79,10 @@ final class AvitoProductEntity
         set => $this->active = $value;
     }
 
+    public bool $sale = false {
+        get => $this->sale;
+        set => $this->sale = $value;
+    }
     public function __construct(
         string $name,
         ?int $productId = null,

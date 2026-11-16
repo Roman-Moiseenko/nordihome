@@ -35,6 +35,8 @@ return new class extends Migration
             $table->boolean('in_stock')->default(false);
             // Активность объявления
             $table->boolean('active')->default(false);
+            // Распродажа (меняем описание в начале)
+            $table->boolean('sale')->default(false);
             $table->timestamps();
 
             $table->foreign('product_id')

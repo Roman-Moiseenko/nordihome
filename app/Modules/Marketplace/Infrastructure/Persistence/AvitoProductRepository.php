@@ -37,7 +37,7 @@ class AvitoProductRepository implements AvitoProductRepositoryInterface
         $model->delivery = $product->delivery;
         $model->in_stock = $product->inStock;
         $model->active = $product->active;
-
+        $model->sale = $product->sale;
         $model->save();
 
         return $this->hydrate($model);
@@ -118,6 +118,7 @@ class AvitoProductRepository implements AvitoProductRepositoryInterface
         $entity->delivery = (bool) $model->delivery;
         $entity->inStock = (bool) $model->in_stock;
         $entity->active = (bool) $model->active;
+        $entity->sale = (bool) $model->sale;
 
         return $entity;
     }

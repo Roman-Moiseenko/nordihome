@@ -22,6 +22,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool $delivery
  * @property bool $active
  * @property bool $sale
+ * @property bool $in_stock
  */
 class AvitoProduct extends Model
 {
@@ -40,12 +41,14 @@ class AvitoProduct extends Model
         'delivery',
         'in_stock',
         'active',
+        'sale',
     ];
 
     protected $casts = [
         'delivery' => 'boolean',
         'in_stock' => 'boolean',
         'active' => 'boolean',
+        'sale' => 'boolean',
     ];
 
     public function category(): BelongsTo
