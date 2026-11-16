@@ -24,7 +24,7 @@ readonly class UploadPhotoUseCase
     {
     }
 
-    public function execute(PhotoUploadData $dto): PhotoEntity
+    public function execute(PhotoUploadData $dto, bool $withThumbs = true): PhotoEntity
     {
         $fqcn = ModelTypeMapper::toFqcn($dto->modelType);
 
@@ -57,7 +57,9 @@ readonly class UploadPhotoUseCase
 
         $saved = $this->photoRepository->save($photo);
 
-        CreatePhotoThumbsJob::dispatch($saved->id)->onQueue(QueueName::PHOTO);
+        if ($withThumbs) {
+            CreatePhotoThumbsJob::dispatch($saved->id)->onQueue(QueueName::PHOTO);
+        }
 
         return $saved;
     }

@@ -2,7 +2,7 @@
 
 namespace App\Modules\Marketplace\Application\Actions\Avito;
 
-use App\Modules\Marketplace\Application\Services\Avito\AvitoCategoryFieldApiService;
+use App\Modules\Marketplace\Application\Services\Avito\AvitoAPIService;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryFieldRepositoryInterface;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
@@ -11,7 +11,7 @@ use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
 readonly class SyncAvitoCategoryFieldsUseCase
 {
     public function __construct(
-        private AvitoCategoryFieldApiService $apiService,
+        private AvitoAPIService $apiService,
         private AvitoCategoryRepositoryInterface $categoryRepository,
         private AvitoCategoryFieldRepositoryInterface $fieldRepository,
     ) {}

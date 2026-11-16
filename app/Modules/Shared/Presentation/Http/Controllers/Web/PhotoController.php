@@ -70,7 +70,7 @@ class PhotoController
     {
         $dto = PhotoUploadData::validateAndCreate($request->all());
         $dto->file  = $request->file('file');
-        $photo = $this->uploadPhotoUseCase->execute($dto, $userPermission);
+        $photo = $this->uploadPhotoUseCase->execute($dto);
         return response()->json(
             PhotoViewData::fromEntity($photo),
             Response::HTTP_OK

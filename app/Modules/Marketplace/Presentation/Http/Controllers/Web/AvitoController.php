@@ -19,15 +19,30 @@ use App\Modules\Marketplace\Application\Actions\AvitoParameter\UpdateAvitoParame
 use App\Modules\Marketplace\Application\Actions\AvitoParameterRegistry\ImportAvitoParameterRegistryUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoParameterRegistry\ListAvitoParameterRegistryQuery;
 use App\Modules\Marketplace\Application\Actions\AvitoParameterRegistry\UpdateAvitoParameterRegistryUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoProduct\AttachProductToAvitoProductUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoProduct\CopyProductPhotosToAvitoProductUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\CreateAvitoProductUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoProduct\DetachProductFromAvitoProductUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\IndexAvitoProductQuery;
+use App\Modules\Marketplace\Application\Actions\AvitoProduct\ListAvitoProductValuesQuery;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\SetAvitoProductActiveUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoProduct\SetAvitoProductCategoryUseCase;
 use App\Modules\Marketplace\Application\Actions\AvitoProduct\ToggleAvitoProductDeliveryUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoProduct\UpdateAvitoProductDescriptionUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoProduct\UpdateAvitoProductUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoProduct\UpdateAvitoProductValuesUseCase;
+use App\Modules\Marketplace\Application\Actions\AvitoProduct\ViewAvitoProductQuery;
 use App\Modules\Marketplace\Application\DTOs\AvitoParameter\AvitoParameterUpdateData;
 use App\Modules\Marketplace\Application\DTOs\AvitoParameter\AvitoParameterViewData;
 use App\Modules\Marketplace\Application\DTOs\AvitoParameterRegistry\AvitoParameterRegistryUpdateData;
 use App\Modules\Marketplace\Application\DTOs\AvitoParameterRegistry\AvitoParameterRegistryViewData;
+use App\Modules\Marketplace\Application\DTOs\AvitoProduct\AvitoProductAttachData;
+use App\Modules\Marketplace\Application\DTOs\AvitoProduct\AvitoProductCategoryData;
 use App\Modules\Marketplace\Application\DTOs\AvitoProduct\AvitoProductCreateData;
+use App\Modules\Marketplace\Application\DTOs\AvitoProduct\AvitoProductDescriptionData;
+use App\Modules\Marketplace\Application\DTOs\AvitoProduct\AvitoProductUpdateData;
+use App\Modules\Marketplace\Application\DTOs\AvitoProduct\AvitoProductValueViewData;
+use App\Modules\Marketplace\Application\DTOs\AvitoProduct\AvitoProductValuesUpdateData;
 use App\Modules\Marketplace\Application\DTOs\AvitoProduct\FilterAvitoProductIndexData;
 use App\Modules\Marketplace\Application\DTOs\AvitoCommonImage\AvitoCommonImageCreateData;
 use App\Modules\Marketplace\Application\DTOs\AvitoCommonImage\AvitoCommonImageSortData;
@@ -54,6 +69,15 @@ class AvitoController extends Controller
         private readonly AvitoProductRepositoryInterface $avitoProductRepository,
         private readonly AvitoCategoryFieldRepositoryInterface $avitoCategoryFieldRepository,
         private readonly CreateAvitoProductUseCase $createAvitoProductUseCase,
+        private readonly ViewAvitoProductQuery $viewAvitoProductQuery,
+        private readonly ListAvitoProductValuesQuery $listAvitoProductValuesQuery,
+        private readonly UpdateAvitoProductUseCase $updateAvitoProductUseCase,
+        private readonly UpdateAvitoProductValuesUseCase $updateAvitoProductValuesUseCase,
+        private readonly UpdateAvitoProductDescriptionUseCase $updateAvitoProductDescriptionUseCase,
+        private readonly SetAvitoProductCategoryUseCase $setAvitoProductCategoryUseCase,
+        private readonly AttachProductToAvitoProductUseCase $attachProductToAvitoProductUseCase,
+        private readonly DetachProductFromAvitoProductUseCase $detachProductFromAvitoProductUseCase,
+        private readonly CopyProductPhotosToAvitoProductUseCase $copyProductPhotosToAvitoProductUseCase,
         private readonly ToggleAvitoProductDeliveryUseCase $toggleAvitoProductDeliveryUseCase,
         private readonly SetAvitoProductActiveUseCase $setAvitoProductActiveUseCase,
         private readonly SetAvitoCategoryFieldTypeUseCase $setAvitoCategoryFieldTypeUseCase,
@@ -229,12 +253,14 @@ class AvitoController extends Controller
 
     public function productShow(int $id, UserPermission $userPermission): Response
     {
-        if (!$userPermission->can('marketplace.avito.view')) {
-            abort(403);
-        }
+        $product = $this->viewAvitoProductQuery->execute($id, $userPermission);
+        $values = $this->listAvitoProductValuesQuery->execute($id, $userPermission);
+        $categories = $this->treeAvitoCategoryQuery->execute($userPermission);
 
         return Inertia::render('Marketplace/Avito/Show', [
-            'id' => $id,
+            'product' => $product,
+            'values' => AvitoProductValueViewData::collect($values),
+            'categories' => $categories,
         ]);
     }
 
@@ -244,12 +270,72 @@ class AvitoController extends Controller
         if (!isset($data['productId']) && isset($data['product_id'])) {
             $data['productId'] = $data['product_id'];
         }
+        if (!isset($data['productId'])) {
+            $data['productId'] = null;
+        }
 
         $dto = AvitoProductCreateData::validateAndCreate($data);
         $product = $this->createAvitoProductUseCase->execute($dto, $userPermission);
 
         return redirect()->route('admin.marketplace.avito.product.show', $product->id)
             ->with('success', 'Товар добавлен в Авито');
+    }
+
+    public function update(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $dto = AvitoProductUpdateData::validateAndCreate($request->all());
+        $this->updateAvitoProductUseCase->execute($id, $dto, $userPermission);
+
+        return redirect()->back()->with('success', 'Сохранено');
+    }
+
+    public function updateValues(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $dto = AvitoProductValuesUpdateData::validateAndCreate($request->all());
+        $this->updateAvitoProductValuesUseCase->execute($id, $dto, $userPermission);
+
+        return redirect()->back()->with('success', 'Параметры сохранены');
+    }
+
+    public function updateDescription(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $dto = AvitoProductDescriptionData::validateAndCreate($request->all());
+        $this->updateAvitoProductDescriptionUseCase->execute($id, $dto, $userPermission);
+
+        return redirect()->back()->with('success', 'Описание сохранено');
+    }
+
+    public function setCategory(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $dto = AvitoProductCategoryData::validateAndCreate($request->all());
+        $this->setAvitoProductCategoryUseCase->execute($id, $dto, $userPermission);
+
+        return redirect()->back()->with('success', 'Категория сохранена');
+    }
+
+    public function attachProduct(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $dto = AvitoProductAttachData::validateAndCreate($request->all());
+        $this->attachProductToAvitoProductUseCase->execute($id, $dto, $userPermission);
+
+        return redirect()->back()->with('success', 'Товар связан');
+    }
+
+    public function detachProduct(int $id, UserPermission $userPermission): RedirectResponse
+    {
+        $this->detachProductFromAvitoProductUseCase->execute($id, $userPermission);
+
+        return redirect()->back()->with('success', 'Связь с товаром удалена');
+    }
+
+    public function copyPhoto(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $photoIds = $request->input('photoIds', $request->input('photoId', []));
+        $photoIds = is_array($photoIds) ? $photoIds : [$photoIds];
+
+        $this->copyProductPhotosToAvitoProductUseCase->execute($id, $photoIds, $userPermission);
+
+        return redirect()->back()->with('success', 'Изображение скопировано');
     }
 
     public function toggleDelivery(int $id, UserPermission $userPermission): RedirectResponse

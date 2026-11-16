@@ -36,5 +36,6 @@ return [
     'avito' => [
         'client_id'     => env('AVITO_CLIENT_ID'),
         'client_secret' => env('AVITO_CLIENT_SECRET'),
+        'user_id'       => env('AVITO_USER_ID'),
     ],
 ];

@@ -2,8 +2,7 @@
 
 namespace App\Modules\Marketplace\Providers;
 
-use App\Modules\Marketplace\Application\Services\Avito\AvitoAuthService;
-use App\Modules\Marketplace\Application\Services\Avito\AvitoCategoryApiService;
+use App\Modules\Marketplace\Application\Services\Avito\AvitoAPIService;
 use App\Modules\Marketplace\Database\Seeders\AvitoParameterSeeder;
 use App\Modules\Marketplace\Database\Seeders\MarketplaceRoleSeeder;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryFieldRepositoryInterface;
@@ -12,12 +11,15 @@ use App\Modules\Marketplace\Domain\Interfaces\AvitoCommonImageRepositoryInterfac
 use App\Modules\Marketplace\Domain\Interfaces\AvitoParameterRegistryRepositoryInterface;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoParameterRepositoryInterface;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoProductRepositoryInterface;
+use App\Modules\Marketplace\Domain\Interfaces\AvitoProductValueRepositoryInterface;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoCategoryFieldRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoCategoryRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoCommonImageRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoParameterRegistryRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoParameterRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoProductRepository;
+use App\Modules\Marketplace\Infrastructure\Persistence\AvitoProductValueRepository;
+use App\Modules\Marketplace\Presentation\Console\Commands\UpdateAvitoIdsCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
@@ -99,14 +101,13 @@ class MarketplaceServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->singleton(AvitoAuthService::class, function ($app) {
-            return new AvitoAuthService(
+        $this->app->singleton(AvitoAPIService::class, function ($app) {
+            return new AvitoAPIService(
                 config('services.avito.client_id'),
                 config('services.avito.client_secret'),
+                (string) config('services.avito.user_id', ''),
             );
         });
-
-        $this->app->singleton(AvitoCategoryApiService::class);
 
         $this->app->bind(
             AvitoCategoryRepositoryInterface::class,
@@ -137,6 +138,11 @@ class MarketplaceServiceProvider extends ServiceProvider
             AvitoCommonImageRepositoryInterface::class,
             AvitoCommonImageRepository::class
         );
+
+        $this->app->bind(
+            AvitoProductValueRepositoryInterface::class,
+            AvitoProductValueRepository::class
+        );
     }
 
     // =====================================================================
@@ -151,7 +157,7 @@ class MarketplaceServiceProvider extends ServiceProvider
     protected function registerCommands()
     {
         $this->commands([
-            // Add command classes here
+            UpdateAvitoIdsCommand::class,
         ]);
     }
 

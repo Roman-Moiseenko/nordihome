@@ -26,12 +26,15 @@
                 :route="route('admin.marketplace.avito.product.store')"
                 caption="Добавить в Авито"
             />
+            <el-button class="ml-2" @click="createEmpty">
+                Создать пустое объявление
+            </el-button>
             <div class="ml-3 my-auto">
-                <Link :href="route('admin.marketplace.avito.index', { show: 'active' })">
+                <Link type="primary" :href="route('admin.marketplace.avito.index', { show: 'active' })">
                     Опубликованные
                 </Link>
                 ({{ filters.active }}) |
-                <Link :href="route('admin.marketplace.avito.index', { show: 'archive' })">
+                <Link type="primary" :href="route('admin.marketplace.avito.index', { show: 'archive' })">
                     В архиве
                 </Link>
                 ({{ filters.archive }})
@@ -142,6 +145,10 @@ const filter = reactive({
 
 function routeClick(row) {
     router.get(route('admin.marketplace.avito.product.show', {id: row.id}))
+}
+
+function createEmpty() {
+    router.post(route('admin.marketplace.avito.product.store'))
 }
 
 function toggleDelivery(row) {

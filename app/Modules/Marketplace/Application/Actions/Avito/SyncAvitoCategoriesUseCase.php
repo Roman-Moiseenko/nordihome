@@ -2,7 +2,7 @@
 
 namespace App\Modules\Marketplace\Application\Actions\Avito;
 
-use App\Modules\Marketplace\Application\Services\Avito\AvitoCategoryApiService;
+use App\Modules\Marketplace\Application\Services\Avito\AvitoAPIService;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCategoryRepositoryInterface;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\Exceptions\AccessDeniedException;
@@ -15,7 +15,7 @@ readonly class SyncAvitoCategoriesUseCase
     private const string SKIP_MARKER = 'Over 9 levels deep, aborting normalization';
 
     public function __construct(
-        private AvitoCategoryApiService $apiService,
+        private AvitoAPIService $apiService,
         private AvitoCategoryRepositoryInterface $categoryRepository,
     ) {}
 

@@ -83,7 +83,7 @@ class BannerWidgetController extends Controller
             type: 'image',
         );
         $dto->file  = $request->file('file');
-        $this->uploadPhotoUseCase->execute($dto, $userPermission);
+        $this->uploadPhotoUseCase->execute($dto);
         return redirect()->back()->with('success', 'Элемент добавлен');
     }
 

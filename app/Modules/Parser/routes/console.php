@@ -6,12 +6,15 @@ use Illuminate\Console\Scheduling\Schedule as ScheduleDays;
 //Цену и доступность
 Schedule::command('ikea:products-update')
     ->days([ScheduleDays::MONDAY, ScheduleDays::FRIDAY])
-    ->at('02:00');
+    ->at('02:00')
+    ->environments('production');
 //Кол-во на складах и доступность
 Schedule::command('ikea:products-store')
     ->days([ScheduleDays::WEDNESDAY, ScheduleDays::SATURDAY])
-    ->at('02:00');
+    ->at('02:00')
+    ->environments('production');
 //Все товары из всех разрешенных каталогов
 Schedule::command('ikea:products')
     ->days([ScheduleDays::SUNDAY])
-    ->at('02:00');
+    ->at('02:00')
+    ->environments('production');

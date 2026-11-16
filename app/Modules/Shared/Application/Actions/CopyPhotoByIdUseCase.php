@@ -20,7 +20,7 @@ class CopyPhotoByIdUseCase
     {
     }
 
-    public function execute(JobPhotoCopyData $dto, UserPermission $userPermission)
+    public function execute(JobPhotoCopyData $dto, bool $withThumbs = true)
     {
         $uploadedFile = $this->downloadFile($dto->copyId);
 
@@ -35,7 +35,7 @@ class CopyPhotoByIdUseCase
             file: $uploadedFile,
         );
 
-        return $this->uploadPhotoUseCase->execute($uploadDto, $userPermission);
+        return $this->uploadPhotoUseCase->execute($uploadDto, $withThumbs);
     }
 
     private function downloadFile(int $copyId): ?UploadedFile

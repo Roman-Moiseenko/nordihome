@@ -39,6 +39,13 @@ Route::group([
 
         Route::get('/product/{id}', [AvitoController::class, 'productShow'])->name('product.show');
         Route::post('/product', [AvitoController::class, 'store'])->name('product.store');
+        Route::post('/product/{id}', [AvitoController::class, 'update'])->name('product.update');
+        Route::post('/product/{id}/values', [AvitoController::class, 'updateValues'])->name('product.values');
+        Route::post('/product/{id}/description', [AvitoController::class, 'updateDescription'])->name('product.description');
+        Route::post('/product/{id}/category', [AvitoController::class, 'setCategory'])->name('product.category');
+        Route::post('/product/{id}/attach-product', [AvitoController::class, 'attachProduct'])->name('product.attach-product');
+        Route::post('/product/{id}/detach-product', [AvitoController::class, 'detachProduct'])->name('product.detach-product');
+        Route::post('/product/{id}/copy-photo', [AvitoController::class, 'copyPhoto'])->name('product.copy-photo');
         Route::post('/product/{id}/delivery', [AvitoController::class, 'toggleDelivery'])->name('product.delivery');
         Route::post('/product/{id}/active', [AvitoController::class, 'setActive'])->name('product.active');
     });
