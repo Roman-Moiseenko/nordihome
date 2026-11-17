@@ -7,6 +7,7 @@ use App\Modules\Parser\Application\Services\LoadParserProductIkeaService;
 use App\Modules\Parser\Domain\Interfaces\ParserProductRepositoryInterface;
 use App\Modules\Parser\Infrastructure\Jobs\LoadProductPhotosIkeaJob;
 use App\Modules\Shared\Application\Actions\GetGalleryThumbUseCase;
+use App\Modules\Shared\Domain\ValueObjects\QueueName;
 use Illuminate\Console\Command;
 
 /**
@@ -29,14 +30,20 @@ class IkeaProductPhotoCommand extends Command
         $ids = $repositoryParserProduct->getAllId();
 
         $index = 0;
+        $progressBar = $this->output->createProgressBar(count($ids));
+        $progressBar->start();
+
         foreach ($ids as $id) {
             $array = $getGalleryThumbUseCase->execute($id, 'parser.product');
             if (empty($array)) {
-                $this->info('id = ' . $id);
                 $index++;
-                LoadProductPhotosIkeaJob::dispatch($id);
+                LoadProductPhotosIkeaJob::dispatch($id)->onQueue(QueueName::PHOTO);
             }
+            $progressBar->advance();
         }
+
+        $progressBar->finish();
+        $this->newLine();
         $this->info('Всего товаров без изображений = ' . $index);
 
     }
