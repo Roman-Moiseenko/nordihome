@@ -84,7 +84,7 @@ class PhotoController
     public function getByEntity(Request $request, UserPermission $userPermission): JsonResponse
     {
         $dto = PhotoByEntityData::validateAndCreate($request->all());
-        $result = $this->getPhotoByEntityUseCase->execute($dto, $userPermission);
+        $result = $this->getPhotoByEntityUseCase->execute($dto);
 
         if ($result === null) {
             return response()->json(null, Response::HTTP_OK);

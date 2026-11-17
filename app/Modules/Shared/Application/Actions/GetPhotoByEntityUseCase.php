@@ -23,7 +23,7 @@ readonly class GetPhotoByEntityUseCase
      * Для одиночных типов (icon/image) возвращает одно фото,
      * для gallery — массив фото.
      */
-    public function execute(PhotoByEntityData $dto, UserPermission $userPermission): PhotoEntity|array|null
+    public function execute(PhotoByEntityData $dto): PhotoEntity|array|null
     {
         // Без проверки прав доступа
 
@@ -31,7 +31,7 @@ readonly class GetPhotoByEntityUseCase
 
         if ($type->isSingle()) {
             return $this->photoRepository->findByEntity(
-                (int) $dto->imageableId,
+                $dto->imageableId,
                 $dto->modelType,
                 $type,
             );

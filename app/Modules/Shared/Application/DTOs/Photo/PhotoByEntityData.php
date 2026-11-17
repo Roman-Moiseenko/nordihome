@@ -12,7 +12,7 @@ class PhotoByEntityData extends Data
 {
     public function __construct(
         #[Required, Numeric]
-        public readonly string $imageableId,
+        public readonly int $imageableId,
         #[Required, StringType, Max(255)]
         public readonly string $modelType,
         #[Required, StringType, Max(255)]

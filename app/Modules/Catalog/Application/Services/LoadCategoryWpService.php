@@ -9,7 +9,9 @@ use App\Modules\Catalog\Application\Actions\Wp\CreateCategoryWpUseCase;
 use App\Modules\Catalog\Application\DTOs\Wp\CategoryRoomWpData;
 use App\Modules\Catalog\Domain\Entities\CategoryEntity;
 use App\Modules\Catalog\Domain\Interfaces\CategoryRepositoryInterface;
+use App\Modules\Shared\Application\Actions\GetPhotoByEntityUseCase;
 use App\Modules\Shared\Application\Actions\UploadPhotoByUrlUseCase;
+use App\Modules\Shared\Application\DTOs\Photo\PhotoByEntityData;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoUploadByUrlData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 
@@ -22,7 +24,8 @@ class LoadCategoryWpService
         private readonly CreateCategoryWpUseCase     $categoryWpUseCase,
         private readonly UploadPhotoByUrlUseCase $uploadPhotoByUrlUseCase,
         private readonly ToggleCategoryUseCase $toggleCategoryUseCase,
-        private readonly CategoryRepositoryInterface $categoryRepository
+        private readonly CategoryRepositoryInterface $categoryRepository,
+        private readonly GetPhotoByEntityUseCase $getPhotoByEntityUseCase,
     )
     {
     }
@@ -50,26 +53,26 @@ class LoadCategoryWpService
     {
         $dto = CategoryRoomWpData::fromWpArray($categoryData, $parentId);
 
-        if (!is_null($category = $this->categoryRepository->findByWpId($dto->wpId))) return $category;
+        if (!is_null($category = $this->categoryRepository->findByWpId($dto->wpId))) {
+            //Проверим есть ли изображение
+            $dto = new PhotoByEntityData($category->id, 'catalog.category', 'image');
+            $photo = $this->getPhotoByEntityUseCase->execute($dto);
+            if (is_null($photo) && $categoryData['img'])
+                $this->loadImage($category->id, $categoryData['img']);
+
+            return $category;
+        }
 
         $category = $this->categoryWpUseCase->execute($dto, $this->userPermission);
 
-      //  if (!is_null($category)) {
+
             if (!$category->isPublished())
                 $this->toggleCategoryUseCase->execute($category->id, $this->userPermission);
 
-            if ($categoryData['img']) {
-                $dtoPhoto = new PhotoUploadByUrlData(
-                    $category->id,
-                    'catalog.category',
-                    'image',
-                    $categoryData['img'],
-                    false,
-                );
-                $this->uploadPhotoByUrlUseCase->execute($dtoPhoto, $this->userPermission);
-            }
+            if ($categoryData['img']) $this->loadImage($category->id, $categoryData['img']);
+
             $this->count++;
-       // }
+
         return $category;
     }
 
@@ -87,6 +90,17 @@ class LoadCategoryWpService
     }
 
 
+    private function loadImage(int $categoryId, string $url): void
+    {
+        $dtoPhoto = new PhotoUploadByUrlData(
+            $categoryId,
+            'catalog.category',
+            'image',
+            $url,
+            false,
+        );
+        $this->uploadPhotoByUrlUseCase->execute($dtoPhoto);
+    }
 
 
 }
