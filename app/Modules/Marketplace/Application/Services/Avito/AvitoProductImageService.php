@@ -68,12 +68,23 @@ class AvitoProductImageService
             return null;
         }
 
-        $sourcePath = $source->getUploadFile();
-        if ($sourcePath === '' || !is_file($sourcePath)) {
+        // Получаем локальную копию исходника через драйвер хранилища (local/s3).
+        $sourcePath = $this->photoService->localCopy(
+            $source->model_type,
+            $source->imageable_id,
+            $source->file,
+        );
+
+        if ($sourcePath === null || !is_file($sourcePath)) {
             return null;
         }
 
-        $fileName = $this->storeFile($avitoProductId, $adId, $sourcePath, $source->file);
+        try {
+            $fileName = $this->storeFile($avitoProductId, $adId, $sourcePath, $source->file);
+        } finally {
+            // Для S3 localCopy возвращает временный файл — удаляем его.
+            $this->photoService->cleanupTemp($sourcePath);
+        }
 
         return $this->persist($avitoProductId, $fileName);
     }

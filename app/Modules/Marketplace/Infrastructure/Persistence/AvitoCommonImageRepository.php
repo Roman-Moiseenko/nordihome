@@ -6,10 +6,15 @@ use App\Modules\Marketplace\Domain\Entities\AvitoCommonImageEntity;
 use App\Modules\Marketplace\Domain\Interfaces\AvitoCommonImageRepositoryInterface;
 use App\Modules\Marketplace\Infrastructure\Models\AvitoCommonImage;
 use App\Modules\Shared\Domain\ValueObjects\Image;
+use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Support\Facades\DB;
 
 class AvitoCommonImageRepository implements AvitoCommonImageRepositoryInterface
 {
+    public function __construct(
+        private readonly PhotoService $photoService,
+    ) {}
+
     /**
      * @return AvitoCommonImageEntity[]
      */
@@ -45,7 +50,26 @@ class AvitoCommonImageRepository implements AvitoCommonImageRepositoryInterface
 
     public function delete(int $id): void
     {
-        AvitoCommonImage::findOrFail($id)->delete();
+        $model = AvitoCommonImage::with('image')->findOrFail($id);
+        $photo = $model->image;
+
+        // Удаляем файлы (оригинал и нарезки) через драйвер хранилища (local/s3).
+        if ($photo !== null && !empty($photo->file)) {
+            $this->photoService->deleteFile(
+                $photo->model_type,
+                $photo->imageable_id,
+                $photo->file,
+            );
+        }
+
+        // Сначала удаляем родителя, затем запись Photo: после удаления родителя
+        // imageable = null и boot-событие Photo не будет повторно удалять файлы
+        // устаревшим локальным способом.
+        $model->delete();
+
+        if ($photo !== null && $photo->id !== null) {
+            $photo->delete();
+        }
     }
 
     public function reorder(array $ids): void
@@ -70,9 +94,19 @@ class AvitoCommonImageRepository implements AvitoCommonImageRepositoryInterface
         $entity->active = (bool) $model->active;
         $entity->sort = (int) $model->sort;
 
-        $url = $model->image->getUploadUrl();
-        if ($url !== '') {
-            $entity->image = new Image($model->image->id ?? null, $url);
+        $photo = $model->image;
+        if ($photo !== null && !empty($photo->file)) {
+            // URL формируется через текущий драйвер хранилища (local/s3),
+            // поэтому корректно работает и для PHOTO_STORAGE_DRIVER=s3.
+            $url = $this->photoService->getUploadUrl(
+                $photo->model_type,
+                $photo->imageable_id,
+                $photo->file,
+            );
+
+            if ($url !== '') {
+                $entity->image = new Image($photo->id, $url);
+            }
         }
 
         return $entity;

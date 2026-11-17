@@ -115,6 +115,22 @@ class PhotoService
     }
 
     /**
+     * Возвращает локальный путь к оригинальному файлу через текущий драйвер
+     * хранилища (local/s3). Для S3 это временный файл — его нужно удалить
+     * после обработки (см. cleanupTemp).
+     */
+    public function localCopy(string $modelType, int $imageableId, string $fileName): ?string
+    {
+        if (empty($fileName)) {
+            return null;
+        }
+
+        return $this->storage->localCopy(
+            self::URL_UPLOAD . $this->patternGeneratePath($modelType, $imageableId) . $fileName
+        );
+    }
+
+    /**
      * Возвращает URL thumb (копии).
      * Если createThumbsOnRequest включён — создаёт thumbs на лету.
      */
@@ -220,7 +236,7 @@ class PhotoService
             $this->cleanupTemp($localSource);
         }
     }
-    private function cleanupTemp(string $path): void
+    public function cleanupTemp(string $path): void
     {
         // Only delete if it's in temp dir (i.e. was a copy from S3)
         if (str_starts_with($path, sys_get_temp_dir())) {
