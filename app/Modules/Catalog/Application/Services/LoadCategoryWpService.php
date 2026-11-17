@@ -20,12 +20,13 @@ class LoadCategoryWpService
 {
     private UserPermission $userPermission;
     private int $count = 0;
+
     public function __construct(
         private readonly CreateCategoryWpUseCase     $categoryWpUseCase,
-        private readonly UploadPhotoByUrlUseCase $uploadPhotoByUrlUseCase,
-        private readonly ToggleCategoryUseCase $toggleCategoryUseCase,
+        private readonly UploadPhotoByUrlUseCase     $uploadPhotoByUrlUseCase,
+        private readonly ToggleCategoryUseCase       $toggleCategoryUseCase,
         private readonly CategoryRepositoryInterface $categoryRepository,
-        private readonly GetPhotoByEntityUseCase $getPhotoByEntityUseCase,
+        private readonly GetPhotoByEntityUseCase     $getPhotoByEntityUseCase,
     )
     {
     }
@@ -49,14 +50,16 @@ class LoadCategoryWpService
         return $this->count;
     }
 
-    private function createCategory(array $categoryData, ?int $parentId):? CategoryEntity
+    private function createCategory(array $categoryData, ?int $parentId): ?CategoryEntity
     {
         $dto = CategoryRoomWpData::fromWpArray($categoryData, $parentId);
 
         if (!is_null($category = $this->categoryRepository->findByWpId($dto->wpId))) {
+
             //Проверим есть ли изображение
             $dto = new PhotoByEntityData($category->id, 'catalog.category', 'image');
             $photo = $this->getPhotoByEntityUseCase->execute($dto);
+
             if (is_null($photo) && $categoryData['img'])
                 $this->loadImage($category->id, $categoryData['img']);
 
@@ -66,12 +69,12 @@ class LoadCategoryWpService
         $category = $this->categoryWpUseCase->execute($dto, $this->userPermission);
 
 
-            if (!$category->isPublished())
-                $this->toggleCategoryUseCase->execute($category->id, $this->userPermission);
+        if (!$category->isPublished())
+            $this->toggleCategoryUseCase->execute($category->id, $this->userPermission);
 
-            if ($categoryData['img']) $this->loadImage($category->id, $categoryData['img']);
+        if ($categoryData['img']) $this->loadImage($category->id, $categoryData['img']);
 
-            $this->count++;
+        $this->count++;
 
         return $category;
     }
@@ -85,7 +88,7 @@ class LoadCategoryWpService
 
         foreach ($children as $childData) {
             $category = $this->createCategory($childData, $parentId);
-            if ($category !== null)$this->loadChildren($childData['children'] ?? [], $category->id);
+            if ($category !== null) $this->loadChildren($childData['children'] ?? [], $category->id);
         }
     }
 

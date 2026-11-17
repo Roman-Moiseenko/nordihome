@@ -20,7 +20,9 @@ use App\Modules\Catalog\Application\DTOs\Product\ProductUpdateData;
 use App\Modules\Catalog\Domain\Entities\BrandEntity;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Parser\Application\Actions\Product\FindAndAttachToParserUseCase;
+use App\Modules\Shared\Application\Actions\GetPhotoByEntityUseCase;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
+use App\Modules\Shared\Application\DTOs\Photo\PhotoByEntityData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Domain\ValueObjects\QueueName;
 use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
@@ -47,6 +49,7 @@ readonly class LoadProductWpService
         private FindAndAttachToParserUseCase     $findAndAttachToParserUseCase,
         private SetSeriesToProductByNameService  $seriesToProductByNameService,
         private FindOrCreateTempCategory         $findOrCreateTempCategoryUseCase,
+        private GetPhotoByEntityUseCase          $getPhotoByEntityUseCase,
     )
     {
     }
@@ -71,26 +74,32 @@ readonly class LoadProductWpService
 
         //Проверяем по артикулу $product['sku'] в базе поле code на совпадение,
         if (!is_null($productEntity = $this->productRepository->findByCode($product['sku']))) {
-            $tempCategory = $this->findOrCreateTempCategoryUseCase->execute();
-            if ($productEntity->mainCategoryId !== $tempCategory->id) return false; //Товар естьв базе и распределен
-
-            //Создаем массив категорий и комнат
-
-            foreach ($product['categories'] as $categoryData) {
-                //Категория
-                if (!is_null($category = $this->categoryByWpIdUseCase->execute($categoryData['id']))) $categories[] = $category->id;
-                //Комната
-                if (!is_null($room = $this->roomByWpIdUseCase->execute($categoryData['id']))) $rooms[] = $room->id;
+            //  $tempCategory = $this->findOrCreateTempCategoryUseCase->execute();
+            //   if ($productEntity->mainCategoryId !== $tempCategory->id) {
+            //Проверяем есть ли изображения
+            $dto = new PhotoByEntityData($productEntity->id, 'catalog.product', 'image');
+            $photo = $this->getPhotoByEntityUseCase->execute($dto);
+            if (empty($photo)) {
+                $this->loadImages($productEntity->id, $product['images'], $userPermission);
             }
-            if (empty($categories)) return false; //Категория не назначилась еще, выходим
-            $productEntity->mainCategoryId = $categories[0]; //Меняем главную категорию
-            $this->productRepository->save($productEntity);
-            unset($categories[0]); //Удаляем первую категорию, т.к. она теперь Main
 
-            // Присоединяем остальные категории и все комнаты к товару
-            $this->attachCategoriesToProductUseCase->execute($productEntity->id, $categories, $userPermission);
-            $this->attachRoomsToProductUseCase->execute($productEntity->id, $rooms, $userPermission);
-            return true;
+            return true; //Товар есть в базе
+            // }
+
+            //Повтор создания категорий, для нераспределенных
+            /*
+                        foreach ($product['categories'] as $categoryData) {
+                            if (!is_null($category = $this->categoryByWpIdUseCase->execute($categoryData['id']))) $categories[] = $category->id;
+                            if (!is_null($room = $this->roomByWpIdUseCase->execute($categoryData['id']))) $rooms[] = $room->id;
+                        }
+                        if (empty($categories)) return false; //Категория не назначилась еще, выходим
+                        $productEntity->mainCategoryId = $categories[0]; //Меняем главную категорию
+                        $this->productRepository->save($productEntity);
+                        unset($categories[0]); //Удаляем первую категорию, т.к. она теперь Main
+                        $this->attachCategoriesToProductUseCase->execute($productEntity->id, $categories, $userPermission);
+                        $this->attachRoomsToProductUseCase->execute($productEntity->id, $rooms, $userPermission);
+                        return true;
+                        */
         }
 
 
@@ -104,9 +113,9 @@ readonly class LoadProductWpService
         }
 
         if (empty($categories)) {  //Назначаем категорию Нераспредленные
-            $tempCategory = $this->findOrCreateTempCategoryUseCase->execute();
-            $categories[0] = $tempCategory->id;
-            //return false;
+            //$tempCategory = $this->findOrCreateTempCategoryUseCase->execute();
+            //$categories[0] = $tempCategory->id;
+            return false; //Товар не распределен по категории
         }
 
         //Из атрибутов вытаскиваем бренд, и ищем его, если нет, то создаем и возвращаем Entity
@@ -173,17 +182,7 @@ readonly class LoadProductWpService
         );
 
         // Привязываем изображения к товару
-        foreach ($product['images'] as $imageData) {
-            $dtoImage = new JobPhotoLoadData(
-                imageableId: $productEntity->id,
-                modelType: 'catalog.product',
-                type: 'gallery',
-                url: $imageData['url'],
-                isProxy: false,
-                alt: $imageData['alt'],
-            );
-            LoadPhotoByUrlJob::dispatch($dtoImage, $userPermission)->onQueue(QueueName::PHOTO);
-        }
+        $this->loadImages($productEntity->id, $product['images'], $userPermission);
 
         //Установить цену из $product["price"], только розницу и минимальную (половина)
         //Рыночная цена
@@ -206,6 +205,21 @@ readonly class LoadProductWpService
             $this->seriesToProductByNameService->execute($productEntity->id, $parser->name);
         }
         return true;
+    }
+
+    private function loadImages(int $productId, array $images, UserPermission $userPermission): void
+    {
+        foreach ($images as $imageData) {
+            $dtoImage = new JobPhotoLoadData(
+                imageableId: $productId,
+                modelType: 'catalog.product',
+                type: 'gallery',
+                url: $imageData['url'],
+                isProxy: false,
+                alt: $imageData['alt'],
+            );
+            LoadPhotoByUrlJob::dispatch($dtoImage, $userPermission)->onQueue(QueueName::PHOTO);
+        }
     }
 
 
