@@ -25,7 +25,7 @@ readonly class IkeaProductQuery
     {
     }
 
-    public function execute(string $slug): IkeaProductPageData
+    public function execute(string $slug): ?IkeaProductPageData
     {
         $web = $this->webSettingsUseCase->execute();
 
@@ -36,6 +36,8 @@ readonly class IkeaProductQuery
         );
 
         $productRaw = $this->repository->getProductByCode($slug);
+
+        if (!$productRaw) return null;
 
         $product = IkeaProductData::fromArray($productRaw);
         $product->price = $this->setRatioPriceUseCase->execute($product->price, 'ikea');

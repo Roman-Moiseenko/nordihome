@@ -41,6 +41,8 @@ class IkeaController extends ShopAbstractController
 
         $data = $this->ikeaProductQuery->execute($code);
 
+        if (is_null($data)) abort(404, 'Товар не найден');
+
         return view('shop.ikea.product', [
             'pageData' => $data,
             'request' => $request->all(),

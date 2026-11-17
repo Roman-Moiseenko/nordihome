@@ -99,9 +99,11 @@ readonly class PromotionPageQuery
             ]
         );
 
-        $filters = $this->getCachedFilters($mainInfo->id,
+        $filters = $this->getCachedFilters(
+            $mainInfo->id,
             array_map(fn(ChildrenData $cat) => $cat->id, $categories),
             $allProductIds,
+            $params,
         );
         $filtersWithOrder = new FilterProductsData(
             minPrice: $filters->minPrice,
