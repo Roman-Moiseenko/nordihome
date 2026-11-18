@@ -222,7 +222,7 @@ function save() {
     }
 }
 
-function onAddItem(val) {
+function onAddItem() {
     router.visit(route('admin.content.widget.catalog.add-item', {widget: props.widget.id}), {
         method: "post",
         data: form,
