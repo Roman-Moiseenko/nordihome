@@ -48,6 +48,7 @@ use App\Modules\Catalog\Infrastructure\Persistence\TagRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\VideoRepository;
 use App\Modules\Catalog\Presentation\Console\Commands\ClearCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\LoadCommand;
+use App\Modules\Catalog\Presentation\Console\Commands\RemoveProductsWithoutImagesCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\ResetPublishedCommand;
 use App\Modules\Catalog\Presentation\Console\Commands\SetSeriesCommand;
 use Illuminate\Support\Facades\Blade;
@@ -255,6 +256,7 @@ class CatalogServiceProvider extends ServiceProvider
         $this->commands([
             ClearCommand::class,
             LoadCommand::class,
+            RemoveProductsWithoutImagesCommand::class,
             ResetPublishedCommand::class,
             SetSeriesCommand::class,
         ]);
