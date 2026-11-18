@@ -49,6 +49,8 @@ class SettingCacheController extends Controller
 
     public function recreateThumbs(): JsonResponse
     {
+        return response()->json(['message' => 'recreateThumbs']);
+
         $message = $this->reCreateThumbsUseCase->execute();
         return response()->json(['message' => $message]);
     }
