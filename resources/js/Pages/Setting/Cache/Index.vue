@@ -7,10 +7,10 @@
             <el-button type="danger" :loading="loading.clearAll" @click="onClearAll">
                 Очистить весь кеш
             </el-button>
-            <el-button type="warning" :loading="loading.createThumbs" @click="onCreateThumbs">
+            <el-button type="warning" :loading="loading.createThumbs" @click="onReCreateThumbs">
                 Пересоздать все кешированные изображения
             </el-button>
-            <el-button type="warning" :loading="loading.reCreateThumbs" @click="onReCreateThumbs">
+            <el-button type="warning" :loading="loading.reCreateThumbs" @click="onCreateThumbs">
                 Создать недостающие кешированные изображения
             </el-button>
             <el-button type="primary" :loading="loading.recache" @click="onRecache">
