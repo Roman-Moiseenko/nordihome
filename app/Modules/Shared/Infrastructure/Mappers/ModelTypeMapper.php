@@ -16,6 +16,10 @@ class ModelTypeMapper
     public const array NO_THUMBS = [
         'marketplace.avito-product',
         'marketplace.avito-common-image',
+        'content.post-category',
+        'content.post',
+        'content.page',
+        'content.gallery',
     ];
 
     private const array MAP = [

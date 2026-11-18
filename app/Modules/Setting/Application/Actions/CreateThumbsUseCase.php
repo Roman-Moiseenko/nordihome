@@ -27,6 +27,7 @@ class CreateThumbsUseCase
             ->whereIn('model_type', $modelTypes)
             ->pluck('id');
 
+        \Log::warning('Кол-во изображений ' . $ids->count());
         foreach ($ids as $id) {
             CreatePhotoThumbsJob::dispatch((int) $id)->onQueue(QueueName::PHOTO);
         }

@@ -41,6 +41,7 @@ class SettingCacheController extends Controller
 
     public function createThumbs(): JsonResponse
     {
+        \Log::warning('createThumbs');
         $message = $this->createThumbsUseCase->execute();
         return response()->json(['message' => $message]);
     }
