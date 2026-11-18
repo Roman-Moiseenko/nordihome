@@ -19,7 +19,9 @@ class AvitoProductUpdateData extends Data
         #[Required, StringType, Max(255)]
         public readonly string $name,
         #[Nullable, IntegerType]
-        public readonly ?int $price,
+        public readonly ?int $basePrice,
+        #[Nullable, IntegerType]
+        public readonly ?int $sellPrice,
         #[Nullable, IntegerType]
         public readonly ?int $pricePackage,
         #[Nullable, StringType, Max(255)]

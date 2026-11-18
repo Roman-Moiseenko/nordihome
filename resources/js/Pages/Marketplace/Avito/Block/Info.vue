@@ -1,13 +1,6 @@
 <template>
     <div>
-        <div class="flex items-center">
-            <div class="ml-auto flex items-center gap-2">
-                <template v-if="hasChanges">
-                    <el-button type="primary" @click="$emit('save')">Сохранить</el-button>
-                    <el-button @click="$emit('cancel')">Отмена</el-button>
-                </template>
-            </div>
-        </div>
+
 
         <el-row :gutter="24" class="mt-3">
             <!-- Колонка 1 -->
@@ -18,19 +11,27 @@
                     </el-form-item>
                     <div class="flex">
                         <el-form-item label="Цена базовая">
-                            <el-input-number v-model="info.price" :min="0" :controls="false" style="width: 100%;">
+                            <el-input-number v-model="info.basePrice" :min="0" :controls="false" style="width: 100%;">
                                 <template #suffix>₽</template>
                             </el-input-number>
                         </el-form-item>
                         <el-form-item label="Упаковка" class="ml-3">
-                            <el-input-number v-model="info.pricePackage" :min="0" :controls="false"
+                            <el-input-number v-model="pricePackageModel" :min="0" :controls="false"
                                              style="width: 100%;">
                                 <template #suffix>₽</template>
                             </el-input-number>
                         </el-form-item>
                     </div>
                     <el-form-item label="Цена объявления">
-
+                        <el-input-number
+                            v-model="info.sellPrice"
+                            :min="0"
+                            :controls="false"
+                            :placeholder="String(sellPricePlaceholder)"
+                            style="width: 100%;"
+                        >
+                            <template #suffix>₽</template>
+                        </el-input-number>
                     </el-form-item>
                     <el-form-item label="Страна происхождения">
                         <el-input v-model="info.country"/>
@@ -90,7 +91,14 @@
                 </el-form>
             </el-col>
         </el-row>
-
+        <div class="flex items-center">
+            <div class="flex items-center gap-2">
+                <template v-if="hasChanges">
+                    <el-button type="primary" @click="$emit('save')">Сохранить</el-button>
+                    <el-button @click="$emit('cancel')">Отмена</el-button>
+                </template>
+            </div>
+        </div>
         <!-- Диалог выбора категории (дерево, как на странице Категории Авито) -->
         <el-dialog v-model="categoryDialog" title="Выбор категории" width="640px">
             <el-tree
@@ -121,7 +129,7 @@
 </template>
 
 <script setup lang="ts">
-import {ref} from "vue";
+import {computed, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import SearchAddProduct from "@Comp/Search/AddProduct.vue";
@@ -143,6 +151,22 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['save', 'cancel', 'category-changed', 'product-changed'])
+
+// Расчётная цена объявления для плейсхолдера: берём нужную из двух цен,
+// пришедших с бэкенда (с доставкой / без доставки) в зависимости от переключателя.
+const sellPricePlaceholder = computed<number>(() => {
+    return props.info.delivery
+        ? (props.product.calculatedSellPriceWithDelivery ?? 0)
+        : (props.product.calculatedSellPriceWithoutDelivery ?? 0)
+})
+
+// Упаковка: 0 в БД означает «не установлено» — в поле показываем пусто.
+const pricePackageModel = computed<number | null>({
+    get: () => (props.info.pricePackage === 0 ? null : props.info.pricePackage),
+    set: (value) => {
+        props.info.pricePackage = value ?? 0
+    },
+})
 
 const categoryDialog = ref(false)
 const selectedCategoryId = ref<number | null>(null)

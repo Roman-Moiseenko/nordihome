@@ -56,7 +56,8 @@ const props = defineProps({
 
 const initialInfo = {
     name: props.product.name ?? '',
-    price: props.product.price ?? 0,
+    basePrice: props.product.basePrice ?? 0,
+    sellPrice: props.product.sellPrice ?? null,
     pricePackage: props.product.pricePackage ?? 0,
     tnVed: props.product.tnVed ?? '',
     okpd2: props.product.okpd2 ?? '',
@@ -69,7 +70,7 @@ const initialInfo = {
 
 const info = reactive({ ...initialInfo })
 
-const infoFields = ['name', 'price', 'pricePackage', 'tnVed', 'okpd2', 'country', 'delivery', 'inStock', 'active', 'sale']
+const infoFields = ['name', 'basePrice', 'sellPrice', 'pricePackage', 'tnVed', 'okpd2', 'country', 'delivery', 'inStock', 'active', 'sale']
 
 // Значения параметров категории сохраняются отдельно (см. PanelParameters).
 const hasChanges = computed(() =>
@@ -79,7 +80,7 @@ const hasChanges = computed(() =>
 )
 
 function onSave() {
-    router.put(route('admin.marketplace.avito.product.update', { id: props.product.id }), {
+    router.post(route('admin.marketplace.avito.product.update', { id: props.product.id }), {
         ...info,
     }, {
         preserveScroll: true,

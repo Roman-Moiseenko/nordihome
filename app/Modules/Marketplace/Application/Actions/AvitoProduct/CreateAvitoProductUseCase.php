@@ -58,7 +58,7 @@ readonly class CreateAvitoProductUseCase
         );
 
         $retail = (float) ($this->priceRepository->findCurrentPrices($product->id)[PriceType::RETAIL] ?? 0);
-        $avitoProduct->price = (int) round($retail);
+        $avitoProduct->basePrice = (int) round($retail);
 
         $this->applyDefaults($avitoProduct);
 

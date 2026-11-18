@@ -14,7 +14,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $avito_category_id
  * @property string $name
  * @property string|null $description
- * @property int $price
+ * @property int $base_price
+ * @property int|null $sell_price
  * @property int $price_package
  * @property string|null $tn_ved
  * @property string|null $okpd2
@@ -33,7 +34,8 @@ class AvitoProduct extends Model
         'avito_category_id',
         'name',
         'description',
-        'price',
+        'base_price',
+        'sell_price',
         'price_package',
         'tn_ved',
         'okpd2',

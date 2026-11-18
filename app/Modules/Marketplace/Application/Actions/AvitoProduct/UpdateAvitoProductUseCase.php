@@ -23,7 +23,8 @@ readonly class UpdateAvitoProductUseCase
         $product = $this->avitoProductRepository->getById($id);
 
         $product->name = $dto->name;
-        $product->price = $dto->price ?? 0;
+        $product->basePrice = $dto->basePrice ?? 0;
+        $product->sellPrice = $dto->sellPrice;
         $product->pricePackage = $dto->pricePackage ?? 0;
         $product->tnVed = $dto->tnVed;
         $product->okpd2 = $dto->okpd2;

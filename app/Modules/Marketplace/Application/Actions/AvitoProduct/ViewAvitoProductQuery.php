@@ -15,6 +15,7 @@ readonly class ViewAvitoProductQuery
         private AvitoProductRepositoryInterface $avitoProductRepository,
         private AvitoCategoryRepositoryInterface $avitoCategoryRepository,
         private ProductRepositoryInterface $productRepository,
+        private CalculateAvitoSellPriceUseCase $calculateAvitoSellPriceUseCase,
     ) {}
 
     public function execute(int $id, UserPermission $permission): AvitoProductViewData
@@ -41,6 +42,12 @@ readonly class ViewAvitoProductQuery
             $categoryPath = $paths[$entity->avitoCategoryId] ?? '';
         }
 
-        return AvitoProductViewData::fromEntity($entity, $productCode, $categoryPath);
+        return AvitoProductViewData::fromEntity(
+            $entity,
+            $productCode,
+            $categoryPath,
+            $this->calculateAvitoSellPriceUseCase->withDelivery($entity),
+            $this->calculateAvitoSellPriceUseCase->withoutDelivery($entity),
+        );
     }
 }
