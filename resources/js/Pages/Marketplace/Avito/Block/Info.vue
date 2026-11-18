@@ -16,11 +16,21 @@
                     <el-form-item label="Название">
                         <el-input v-model="info.name"/>
                     </el-form-item>
-                    <el-form-item label="Цена">
-                        <el-input-number v-model="info.price" :min="0" :controls="false" style="width: 100%;"/>
-                    </el-form-item>
-                    <el-form-item label="Цена за упаковку">
-                        <el-input-number v-model="info.pricePackage" :min="0" :controls="false" style="width: 100%;"/>
+                    <div class="flex">
+                        <el-form-item label="Цена базовая">
+                            <el-input-number v-model="info.price" :min="0" :controls="false" style="width: 100%;">
+                                <template #suffix>₽</template>
+                            </el-input-number>
+                        </el-form-item>
+                        <el-form-item label="Упаковка" class="ml-3">
+                            <el-input-number v-model="info.pricePackage" :min="0" :controls="false"
+                                             style="width: 100%;">
+                                <template #suffix>₽</template>
+                            </el-input-number>
+                        </el-form-item>
+                    </div>
+                    <el-form-item label="Цена объявления">
+
                     </el-form-item>
                     <el-form-item label="Страна происхождения">
                         <el-input v-model="info.country"/>
@@ -111,9 +121,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-import { router } from "@inertiajs/vue3";
-import { route } from "ziggy-js";
+import {ref} from "vue";
+import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
 import SearchAddProduct from "@Comp/Search/AddProduct.vue";
 
 const props = defineProps({
@@ -154,7 +164,7 @@ function onCategoryNodeClick(data: any) {
 function selectCategory() {
     if (!selectedCategoryId.value) return
 
-    router.post(route('admin.marketplace.avito.product.category', { id: props.product.id }), {
+    router.post(route('admin.marketplace.avito.product.category', {id: props.product.id}), {
         avitoCategoryId: selectedCategoryId.value,
     }, {
         preserveScroll: true,
@@ -166,7 +176,7 @@ function selectCategory() {
 const detachDialog = ref(false)
 
 function detachProduct() {
-    router.post(route('admin.marketplace.avito.product.detach-product', { id: props.product.id }), {}, {
+    router.post(route('admin.marketplace.avito.product.detach-product', {id: props.product.id}), {}, {
         preserveScroll: true,
         preserveState: false,
         onSuccess: () => emit('product-changed'),

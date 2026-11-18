@@ -23,6 +23,7 @@ class AvitoParameterSeeder extends Seeder
             ['name' => 'Описание до хар-к', 'name_en' => 'description_after', 'variants' => [], 'is_html' => true],
             ['name' => 'Описание для распродажи', 'name_en' => 'description_sale', 'variants' => [], 'is_html' => false],
             ['name' => 'Коэф. упаковки', 'name_en' => 'ratio_package', 'variants' => [], 'is_html' => false],
+            ['name' => 'Авито %', 'name_en' => 'ratio_avito', 'variants' => [], 'is_html' => false],
         ];
 
         foreach ($parameters as $data) {
