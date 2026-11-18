@@ -23,6 +23,8 @@ class RegeneratePhotoCacheCommand extends Command
         'catalog.category',
         'catalog.room',
         'catalog.brand',
+        'parser.product',
+        'parser.category',
     ];
 
     public function __construct(

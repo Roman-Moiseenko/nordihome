@@ -9,6 +9,15 @@ namespace App\Modules\Shared\Infrastructure\Mappers;
  */
 class ModelTypeMapper
 {
+    /**
+     * model_type, для которых миниатюры (thumbs) не создаются.
+     * Используется, чтобы пропускать их при массовом создании/пересоздании кэша.
+     */
+    public const array NO_THUMBS = [
+        'marketplace.avito-product',
+        'marketplace.avito-common-image',
+    ];
+
     private const array MAP = [
         'catalog.room' => \App\Modules\Catalog\Infrastructure\Models\Room::class,
         'catalog.category' => \App\Modules\Catalog\Infrastructure\Models\Category::class,
@@ -41,5 +50,11 @@ class ModelTypeMapper
     {
         return self::MAP[$modelType]
             ?? throw new \InvalidArgumentException("Неизвестный model_type: {$modelType}");
+    }
+
+    /** @return list<string> */
+    public static function allTypes(): array
+    {
+        return array_keys(self::MAP);
     }
 }
