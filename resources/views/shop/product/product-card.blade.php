@@ -3,7 +3,7 @@
     /** @var ProductCardData $product */
 @endphp
 
-<div>
+
     <div class="product-card e-impressions" data-product="{{ $product->id }}">
         <div class="product-card-image">
             <a class="e-click" data-product="{{ $product->id }}"
@@ -85,4 +85,4 @@
         </div>
 
     </div>
-</div>
+

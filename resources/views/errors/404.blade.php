@@ -8,7 +8,7 @@
 
 @section('content')
 
-    <div class="container-xl mt-5">
+    <div class="container-xl mb-5">
         <h1>Страница не найдена. Ошибка 404</h1>
         <div class="row align-items-center">
             <div class="col-lg-6 t-a_center">
@@ -20,7 +20,7 @@
                 <div><section id="block-13" class="widget widget_block"></section></div>
                 <div class="d-flex justify-content-between">
                     <div><a href="/" class="btn btn-white-b t-t_uppercase m-t_20">На главную</a></div>
-                    <div><a href="/shop/" class="btn btn-orange m-t_20">Смотреть каталог</a></div>
+                    <div><a href="/catalog/" class="btn btn-orange m-t_20">Смотреть каталог</a></div>
                 </div>
             </div>
         </div>

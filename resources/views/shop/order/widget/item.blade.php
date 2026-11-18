@@ -1,6 +1,6 @@
 <div class="col-lg-2 col-md-4 col-6 p-3">
     <div class="order-item-block">
-        <img src="{{ $item->image }}" title="{{ $item->name }}">
+        <img src="{{ $item->image }}" title="{{ $item->name }}" class="b-radius_12">
         @if($item->quantity > 1)
             <span class="order-item-container"><span class="fs-8 order-item-quantity">{{ $item->quantity}}шт.</span></span>
         @endif
