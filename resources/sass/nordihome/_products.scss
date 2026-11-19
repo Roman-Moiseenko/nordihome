@@ -188,6 +188,12 @@
 .product-card {
     overflow: hidden;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    & > div:last-child {
+        margin-top: auto;
+    }
 }
 .product-card-review {
     margin-top: 10px;

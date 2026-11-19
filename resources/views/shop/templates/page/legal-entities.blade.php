@@ -20,7 +20,7 @@
             <div class="row">
                 <div class="col-md-12 col-lg-5 col-xl-6 bg-f2f2f2 b-radius-left_16 m-b_10">
                     <div class="p-block_15">
-                        <h4>Товары и мебель из Европы<br>для оптовых и розничных закупок <span class="t-color_orange">с 22% НДС</span></h4>
+                        <h4>Товары и мебель из Европы<br>для оптовых и розничных закупок <span class="t-color_orange"></span></h4>
                         <p>Приглашаем к сотрудничеству: заведения общественного питания, гостиницы, хостелы и отели, малый и средний бизнес, государственные и муниципальные организации.</p>
                         <div class="btn btn-orange_1 m-t_20" style="cursor:pointer;" data-bs-toggle="modal" data-bs-target="#ur-licam-modal">Стать клиентом</div>
                     </div>
@@ -139,10 +139,30 @@
                     </div>
                     <div class="col-md-6 col-lg-4 m-b_30">
                         <div class="bg-f2f2f2 p-block_20 b-radius_16 height_stretch">
-                            <div class="t-a_center"><img src="/images/pages/legal-entities/ur-licam09.png" alt="Индивидуальная ценовая политика"></div>
+                            <div class="t-a_center p-b_20"><svg width="90" height="90" viewBox="0 0 84 84" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="42" cy="42" r="42" fill="#D9D9D9"></circle>
+                                    <rect x="36.231" y="32.6924" width="10.3846" height="10.3846" rx="1.15385" stroke="#20201E" stroke-width="2.30769"></rect>
+                                    <rect x="13.7308" y="6.73077" width="55.3846" height="70.3846" rx="5.19231" stroke="#20201E" stroke-width="3.46154"></rect>
+                                    <rect x="13.7307" y="6.73073" width="55.3846" height="71.5385" rx="6.34615" stroke="#36383A" stroke-width="1.15385"></rect>
+                                    <rect x="18.9229" y="11.9229" width="45" height="17.3077" rx="3.46154" fill="#D7B56D" stroke="#20201E" stroke-width="2.30769"></rect>
+                                    <rect x="21.231" y="61.5386" width="10.3846" height="10.3846" rx="1.15385" stroke="#20201E" stroke-width="2.30769"></rect>
+                                    <rect x="21.231" y="46.5386" width="10.3846" height="10.3846" rx="1.15385" fill="#D7B56D" stroke="#20201E" stroke-width="2.30769"></rect>
+                                    <rect x="21.231" y="32.6924" width="10.3846" height="10.3846" rx="1.15385" fill="#D7B56D" stroke="#20201E" stroke-width="2.30769"></rect>
+                                    <rect x="36.231" y="61.5386" width="10.3846" height="10.3846" rx="1.15385" fill="#D7B56D" stroke="#20201E" stroke-width="2.30769"></rect>
+                                    <rect x="36.231" y="46.5386" width="10.3846" height="10.3846" rx="1.15385" stroke="#20201E" stroke-width="2.30769"></rect>
+                                    <rect x="51.231" y="32.6924" width="10.3846" height="10.3846" rx="1.15385" fill="#D7B56D" stroke="#20201E" stroke-width="2.30769"></rect>
+                                    <path d="M23.5386 23.4612C23.5386 23.4612 23.5386 18.2695 23.5386 16.5381H59.3078" stroke="#F8DDA3" stroke-width="3.46154" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M23.5386 37.3077C23.5386 37.3077 23.5386 35.5771 23.5386 35H25.8463" stroke="#F8DDA3" stroke-width="1.11663" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M23.5386 51.1539C23.5386 51.1539 23.5386 49.4233 23.5386 48.8462H25.8463" stroke="#F8DDA3" stroke-width="1.11663" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M53.5386 37.3077C53.5386 37.3077 53.5386 35.5771 53.5386 35H55.8463" stroke="#F8DDA3" stroke-width="1.11663" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M38.5386 66.1539C38.5386 66.1539 38.5386 64.4233 38.5386 63.8462H40.8463" stroke="#F8DDA3" stroke-width="1.11663" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <circle cx="66.2305" cy="62.6925" r="15.5769" fill="#D7B56D" stroke="#20201E" stroke-width="3.46154"></circle>
+                                    <path d="M66.2307 51.1538C61.9598 51.1538 58.2309 53.4742 56.2358 56.923" stroke="#F8DDA3" stroke-width="2.30769" stroke-linecap="round"></path>
+                                    <path d="M67.3969 65.0897H64.9669V66.5869H70.7351V68.5015H64.9669V71.6924H62.0214V68.5015H60.1805V66.5869H62.0214V65.0897H60.1805V63.1015H62.0214V54.8297H67.7405C71.5451 54.8297 73.3369 57.0633 73.3369 60.0578C73.3369 63.6906 70.7842 65.0897 67.3969 65.0897ZM64.9669 57.4806V62.8069H67.3233C69.3851 62.8069 70.2687 61.5797 70.2687 60.2542C70.2687 58.5851 69.3114 57.4806 67.3233 57.4806H64.9669Z" fill="black"></path>
+                                </svg>
+                            </div>
                             <div class="t-a_center m-b_20"><b>Индивидуальная ценовая политика</b></div>
                             <ul class="f-z_16">
-                                <li>Все счета-фактуры с 22% НДС, который можно взять в зачет при использовании или перепродаже товара.</li>
                                 <li>Гибкий курс и система скидок для постоянных клиентов.</li>
                                 <li>Возможность разделить оплату на несколько частей: выкуп, доставка, растаможка на территории РФ.</li>
                                 <li>Оплата по факту выполнения каждой услуги для максимального удобства.</li>

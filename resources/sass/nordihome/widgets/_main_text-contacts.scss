@@ -22,6 +22,14 @@
         flex-wrap: wrap;
         justify-content: center;
         align-items: center;
+        svg {
+            width:40px;
+        }
+        .svg-max {
+            svg {
+                width:129px;
+            }
+        }
         .link {
             margin-right:30px;
             &:last-child {
@@ -43,13 +51,20 @@
         }
     }
 }
-@media (max-width: 576px) {
+
+@media (max-width: 1200px) {
     .contacts-items {
         .item {
             justify-content: space-around;
             padding: 19px 0;
         }
     }
+    .contacts-items .item-social .link {
+        margin-right: 15px;
+    }
+}
+@media (max-width: 576px) {
+
 }
 .contacts-items .item:last-child {
 

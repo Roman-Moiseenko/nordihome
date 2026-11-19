@@ -84,7 +84,6 @@
 .address-delivery--change {
     cursor: pointer;
     font-size: 0.9rem;
-    color: var(--bs-blue);
 }
 
 .coupon-info {
@@ -99,4 +98,192 @@
 #slider-delivery-company .radio-img img {
     max-width: 120px;
 }
+.order-page-create {
+    .new-order-info {
+        padding: 10px 30px;
+        justify-content: space-around;
+        > div {
+            &:not(:last-child) {
+                border-right:1px solid $black;
+                padding-right:40px;
+            }
+            &:nth-child(2), &:nth-child(3) {
+                padding-left:40px;
+            }
+        }
+    }
+    .new-order-time {
+        padding:20px 30px;
+        table {
+            width:100%;
+            tr {
+                td {
+                    width:33%;
+                    padding: 10px 15px;
+                    &:first-child {
+                        border-right:1px solid $e5e5e5;
+                    }
+                }
+                &:nth-child(2) {
+                    border-bottom:1px solid $e5e5e5;
+                }
+            }
+        }
+    }
+}
+.order-table-items {
+    border:1px solid $e5e5e5;
+    border-radius: $border-radius_16;
+    padding:25px;
+    .order-table-product {
+        display:flex;
+        width: 100%;
+        justify-content: space-between;
+        padding:10px 0;
+        &:first-of-type {
+            border-top:1px solid $e5e5e5;
+        }
+        &:last-of-type {
+            border-bottom:1px solid $e5e5e5;
+        }
+        .image {
+            width:120px;
+        }
+        .info {
+            width:70%;
+            padding:0 10px;
+        }
+        .count {
+            width:15%;
+            text-align: center;
+        }
+        .price {
+            width:15%;
+            text-align: right;
+        }
+    }
+    .order-table-full {
+        border-bottom:1px solid $e5e5e5;
+        border-top:1px solid $e5e5e5;
+        padding: 20px 0;
+        margin: 20px 0;
+        .order-table-full-item {
+            display:flex;
+            width: 100%;
+            justify-content: space-between;
+        }
+    }
+    .order-table-total {
+        text-align: right;
+    }
 
+}
+.stay-informed {
+    padding:20px;
+    position: relative;
+    margin-top: 60px;
+    .container-xl {
+
+        &:before {
+            background: url(http://127.0.0.1:8000/images/new-order/page-new-order03.png) no-repeat left top / 100%;
+            content: "";
+            position: absolute;
+            top: -41px;
+            right: 16%;
+            bottom: 0;
+            z-index: 98;
+            width: 740px;
+        }
+    }
+    .text {
+
+    }
+    .stay-informed-social {
+        a {
+            margin-right: 10px;
+        }
+    }
+}
+
+@media (max-width: 1400px) {
+    .stay-informed {
+        .container-xl {
+            &:before {
+                right: 0;
+                width: 740px;
+            }
+        }
+    }
+}
+@media (max-width: 1200px) {
+    .stay-informed {
+        .container-xl {
+            &:before {
+                width: 590px;
+                top: 29px;
+            }
+        }
+    }
+}
+@media (max-width: 990px) {
+    .stay-informed {
+        .container-xl {
+            &:before {
+                display:none;
+            }
+        }
+    }
+}
+@media (max-width: 768px) {
+    .order-table-items {
+        .order-table-product {
+            flex-wrap: wrap;
+            border-bottom:1px solid $e5e5e5;
+            &:first-of-type {
+                display:none;
+            }
+            >div {
+                padding-bottom:10px;
+            }
+        }
+    }
+}
+@media (max-width: 576px) {
+    .order-page-create {
+        .new-order-info {
+            flex-direction: column;
+            align-items: center;
+            > div {
+                &:not(:last-child) {
+                    border-right:0px solid $black;
+                    border-bottom:1px solid $black;
+                    padding-right:0px;
+                }
+                &:nth-child(2), &:nth-child(3) {
+                    padding-left:0px;
+                }
+            }
+        }
+    }
+}
+@media (max-width: 500px) {
+    .order-page-create {
+        .new-order-time table tr td {
+            width: auto;
+            padding: 7px 7px;
+            font-size: 14px;
+        }
+    }
+    .order-table-items {
+        padding:10px;
+        .order-table-product {
+            .info {
+                width:100%;
+                margin-bottom:10px;
+            }
+            .count, .price {
+                width:50%;
+            }
+        }
+    }
+}
