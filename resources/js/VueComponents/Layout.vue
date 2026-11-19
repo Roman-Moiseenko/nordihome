@@ -52,7 +52,7 @@
                             <template #dropdown>
                                 <div class="mt-2 py-2 text-sm bg-white rounded shadow-xl">
                                     <Link class="block px-6 py-2 hover:text-white hover:bg-indigo-500"
-                                          :href="`/admin/staff/${usePage().props.auth.user.id}`">My Profile
+                                          :href="`/admin/staff/${usePage().props.auth.user.id}`">Мой профиль
                                     </Link>
                                     <el-link class="block px-6 py-2 w-full text-left hover:text-white hover:bg-indigo-500"
                                           href="/admin/logout" method="delete" as="button">Logout
@@ -83,7 +83,7 @@
 
 <script lang="ts" setup>
 import {ArrowDown} from "@element-plus/icons-vue";
-import { usePage } from '@inertiajs/vue3'
+import { router, usePage } from '@inertiajs/vue3'
 import {Link} from '@inertiajs/vue3'
 import Logo from '@Comp/Logo.vue'
 import Dropdown from '@Comp/Dropdown.vue'
@@ -93,7 +93,17 @@ import BreadCrumbs from '@Comp/BreadCrumbs.vue';
 import {defineProps} from "vue";
 const app_name = import.meta.env.VITE_APP_NAME
 
+let isBackNavigation = false
+
+router.on('finish', () => {
+    if (isBackNavigation) {
+        isBackNavigation = false
+        router.reload({ preserveScroll: true })
+    }
+})
+
 function goBack() {
+    isBackNavigation = true
     window.history.back()
 }
 function goForward() {
