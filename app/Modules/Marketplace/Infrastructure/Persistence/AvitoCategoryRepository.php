@@ -118,6 +118,32 @@ class AvitoCategoryRepository implements AvitoCategoryRepositoryInterface
         return $result;
     }
 
+    public function findByNames(array $names): ?AvitoCategoryEntity
+    {
+        $parentId = null;
+        $entity = null;
+
+        foreach ($names as $name) {
+            $name = trim((string) $name);
+            if ($name === '') {
+                continue;
+            }
+
+            $model = AvitoCategory::where('parent_id', $parentId)
+                ->where('name', $name)
+                ->first();
+
+            if ($model === null) {
+                return null;
+            }
+
+            $parentId = $model->id;
+            $entity = $this->hydrate($model);
+        }
+
+        return $entity;
+    }
+
     public function findOrCreateByNames(array $names): AvitoCategoryEntity
     {
         $parentId = null;

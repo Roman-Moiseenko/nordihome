@@ -41,6 +41,14 @@ interface AvitoCategoryRepositoryInterface
     public function getPathNamesByIds(array $ids): array;
 
     /**
+     * Найти цепочку категорий по именам пути (от корня к листу) без создания.
+     * Возвращает null, если цепочка не найдена.
+     *
+     * @param string[] $names
+     */
+    public function findByNames(array $names): ?AvitoCategoryEntity;
+
+    /**
      * Найти или создать цепочку категорий по именам пути (от корня к листу).
      * Возвращает листовую категорию.
      *

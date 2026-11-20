@@ -29,6 +29,7 @@ class AvitoProductRepository implements AvitoProductRepositoryInterface
         $model->avito_category_id = $product->avitoCategoryId;
         $model->name = $product->name;
         $model->description = $product->description;
+        $model->avito_images = $product->avitoImages;
         $model->base_price = $product->basePrice;
         $model->sell_price = $product->sellPrice;
         $model->price_package = $product->pricePackage;
@@ -111,6 +112,7 @@ class AvitoProductRepository implements AvitoProductRepositoryInterface
         $entity->adId = $model->ad_id;
         $entity->adNumber = $model->ad_number;
         $entity->description = $model->description;
+        $entity->avitoImages = $model->avito_images;
         $entity->basePrice = $model->base_price ?? 0;
         $entity->sellPrice = $model->sell_price;
         $entity->pricePackage = $model->price_package ?? 0;

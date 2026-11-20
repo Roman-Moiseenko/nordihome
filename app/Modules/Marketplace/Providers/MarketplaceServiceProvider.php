@@ -19,6 +19,8 @@ use App\Modules\Marketplace\Infrastructure\Persistence\AvitoParameterRegistryRep
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoParameterRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoProductRepository;
 use App\Modules\Marketplace\Infrastructure\Persistence\AvitoProductValueRepository;
+use App\Modules\Marketplace\Presentation\Console\Commands\AvitoClearProductsCommand;
+use App\Modules\Marketplace\Presentation\Console\Commands\AvitoImportProductsCommand;
 use App\Modules\Marketplace\Presentation\Console\Commands\UpdateAvitoIdsCommand;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
@@ -158,6 +160,8 @@ class MarketplaceServiceProvider extends ServiceProvider
     {
         $this->commands([
             UpdateAvitoIdsCommand::class,
+            AvitoImportProductsCommand::class,
+            AvitoClearProductsCommand::class,
         ]);
     }
 

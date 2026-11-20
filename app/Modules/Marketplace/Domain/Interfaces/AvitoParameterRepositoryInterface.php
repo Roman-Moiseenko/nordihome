@@ -13,6 +13,8 @@ interface AvitoParameterRepositoryInterface
 
     public function getBySlug(string $slug): ?AvitoParameterEntity;
 
+    public function getByName(string $name): ?AvitoParameterEntity;
+
     public function getByNameEn(string $nameEn): ?AvitoParameterEntity;
 
     public function save(AvitoParameterEntity $parameter): AvitoParameterEntity;

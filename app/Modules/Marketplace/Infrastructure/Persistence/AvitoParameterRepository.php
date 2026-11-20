@@ -31,6 +31,13 @@ class AvitoParameterRepository implements AvitoParameterRepositoryInterface
         return $model === null ? null : $this->hydrate($model);
     }
 
+    public function getByName(string $name): ?AvitoParameterEntity
+    {
+        $model = AvitoParameter::where('name', $name)->first();
+
+        return $model === null ? null : $this->hydrate($model);
+    }
+
     public function getByNameEn(string $nameEn): ?AvitoParameterEntity
     {
         $model = AvitoParameter::where('name_en', $nameEn)->first();

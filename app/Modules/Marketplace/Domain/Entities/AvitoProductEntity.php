@@ -39,6 +39,11 @@ final class AvitoProductEntity
         set => $this->description = $value;
     }
 
+    public ?string $avitoImages = null {
+        get => $this->avitoImages;
+        set => $this->avitoImages = $value;
+    }
+
     public int $basePrice = 0 {
         get => $this->basePrice;
         set => $this->basePrice = $value;

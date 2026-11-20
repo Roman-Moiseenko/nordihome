@@ -91,6 +91,7 @@ readonly class CreateAvitoProductUseCase
         $product->active = false;
         $product->sale = false;
         $product->inStock = true;
+        $product->country = 'Россия';
     }
 
     private function copyProductPhotos(AvitoProductEntity $avitoProduct, int $productId): void
