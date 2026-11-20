@@ -28,11 +28,11 @@ class CopyPhotoByIdJob implements ShouldQueue
         CopyPhotoByIdUseCase $copyPhotoByIdUseCase
     ): void
     {
-        $photo = $copyPhotoByIdUseCase->execute($this->dto, $this->userPermission);
+        $photo = $copyPhotoByIdUseCase->execute($this->dto);
 
         if ($photo !== null && $this->dto->alt !== null) {
             $saveDto = new PhotoSaveData(alt: $this->dto->alt,);
-            $savePhotoDataUseCase->execute($photo->id, $saveDto, $this->userPermission);
+            $savePhotoDataUseCase->execute($photo->id, $saveDto);
         }
 
     }

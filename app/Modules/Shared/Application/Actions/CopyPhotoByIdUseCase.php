@@ -6,9 +6,9 @@ namespace App\Modules\Shared\Application\Actions;
 
 use App\Modules\Shared\Application\DTOs\JobPhotoCopyData;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoUploadData;
-use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Infrastructure\Job\RemoveTempPhotoJob;
 use App\Modules\Shared\Infrastructure\Models\Photo;
+use App\Modules\Shared\Infrastructure\Services\PhotoService;
 use Illuminate\Http\UploadedFile;
 use function now;
 
@@ -16,6 +16,7 @@ class CopyPhotoByIdUseCase
 {
     public function __construct(
         private UploadPhotoUseCase $uploadPhotoUseCase,
+        private PhotoService $photoService,
     )
     {
     }
@@ -47,31 +48,32 @@ class CopyPhotoByIdUseCase
             return null;
         }
 
-        $sourcePath = $photo->getUploadFile();
-
-        if (empty($sourcePath) || !is_file($sourcePath)) {
-            \Log::error('Исходный файл не найден: ' . $sourcePath . ' для фото ID ' . $copyId);
+        if (empty($photo->file)) {
+            \Log::error('У фото ID ' . $copyId . ' не заполнено имя файла');
             return null;
         }
 
-        $storage = public_path() . '/temp/';
-        $uploadFileName = $photo->file;
-        $ext = pathinfo($uploadFileName, PATHINFO_EXTENSION);
-        if (empty($ext)) {
-            $ext = 'webp';
-        }
-        $fullFilename = $storage . uniqid() . '.' . $ext;
+        // Получаем локальную копию через текущий драйвер хранилища (local/s3).
+        // Для local это абсолютный путь к исходнику, для s3 — временный файл.
+        $sourcePath = $this->photoService->localCopy(
+            $photo->model_type,
+            $photo->imageable_id,
+            $photo->file,
+        );
 
-        if (!copy($sourcePath, $fullFilename)) {
-            \Log::error('Не удалось скопировать файл из ' . $sourcePath . ' в ' . $fullFilename);
+        if ($sourcePath === null) {
+            \Log::error('Исходный файл не найден: ' . $photo->file . ' для фото ID ' . $copyId);
             return null;
         }
 
-        RemoveTempPhotoJob::dispatch($fullFilename)->delay(now()->addMinutes(2));
+        // Для S3 localCopy возвращает временный файл — запланируем его удаление.
+        if (str_starts_with($sourcePath, sys_get_temp_dir())) {
+            RemoveTempPhotoJob::dispatch($sourcePath)->delay(now()->addMinutes(2));
+        }
 
         return new UploadedFile(
-            $fullFilename,
-            $uploadFileName,
+            $sourcePath,
+            $photo->file,
             null,
             null,
             true,
