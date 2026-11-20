@@ -95,7 +95,9 @@ final readonly class WidgetImageResolverService
     private function processImage(array $image, bool $sanitize): array
     {
         if ($sanitize) {
-            unset($image['url'], $image['src']);
+            // src вычисляется на лету и не хранится.
+            // url — самостоятельное текстовое поле (ссылка), его сохраняем как есть.
+            unset($image['src']);
             return $image;
         }
 
@@ -106,9 +108,6 @@ final readonly class WidgetImageResolverService
         } elseif (!array_key_exists('src', $image)) {
             $image['src'] = null;
         }
-
-        // Шаблоны ориентируются на src, лишний url не храним и не отдаём
-        unset($image['url']);
 
         return $image;
     }

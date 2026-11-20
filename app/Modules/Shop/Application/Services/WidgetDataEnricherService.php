@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Shop\Application\Services;
 
+use App\Modules\Content\Application\Services\WidgetImageResolverService;
 use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
 use App\Modules\Content\Domain\ValueObjects\ProductGroupType;
@@ -24,6 +25,7 @@ final readonly class WidgetDataEnricherService
         private WidgetInstanceRepositoryInterface $instanceRepository,
         private WidgetRepositoryInterface $widgetRepository,
         private ProductIndexQueryRepository $productIndexQueryRepository,
+        private WidgetImageResolverService $imageResolver,
     ) {}
 
     /**
@@ -39,7 +41,10 @@ final readonly class WidgetDataEnricherService
         $schema = $widgetEntity->schema->toArray();
         $properties = $schema['properties'] ?? [];
 
-        $params = $widget->params;
+        // Резолвим src изображений через текущий драйвер хранилища (local/s3).
+        // В params изображения хранятся как {id, alt, title, description},
+        // а src/url вычисляются на лету, чтобы смена хранилища не ломала виджеты.
+        $params = $this->imageResolver->resolve($widget->params, $schema);
 
         foreach ($properties as $propName => $prop) {
             $format = $prop['format'] ?? null;
@@ -61,7 +66,10 @@ final readonly class WidgetDataEnricherService
                     id: $childInstance->id,
                     category: $childWidget->category->getValue(),
                     slug: $childWidget->slug,
-                    params: $childInstance->params,
+                    params: $this->imageResolver->resolve(
+                        $childInstance->params,
+                        $childWidget->schema->toArray(),
+                    ),
                 );
 
                 continue;
