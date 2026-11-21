@@ -2,7 +2,7 @@
 
 namespace App\Modules\Shop\Infrastructure\Observers;
 
-use App\Modules\Content\Entity\Contact;
+use App\Modules\Content\Infrastructure\Models\Contact;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 
 class ContactCacheObserver

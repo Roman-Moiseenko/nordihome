@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Service;
 
-use App\Modules\Content\Entity\Contact;
+use App\Modules\Content\Infrastructure\Models\Contact;
 use Illuminate\Http\Request;
 
 class ContactService

@@ -3,7 +3,6 @@
 use App\Modules\Content\Controllers\BannerWidgetController;
 use App\Modules\Content\Controllers\CacheController;
 use App\Modules\Content\Controllers\CatalogWidgetController;
-use App\Modules\Content\Controllers\ContactController;
 use App\Modules\Content\Controllers\FormWidgetController;
 use App\Modules\Content\Controllers\MenuController;
 use App\Modules\Content\Controllers\MetaTemplateController;
@@ -12,6 +11,7 @@ use App\Modules\Content\Controllers\PostWidgetController;
 use App\Modules\Content\Controllers\ProductWidgetController;
 use App\Modules\Content\Controllers\PromotionWidgetController;
 use App\Modules\Content\Controllers\TextWidgetController;
+use App\Modules\Content\Presentation\Http\Controllers\Web\ContactController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\ContentBlockController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\GalleryController;
 use App\Modules\Content\Presentation\Http\Controllers\Web\LabelController;
