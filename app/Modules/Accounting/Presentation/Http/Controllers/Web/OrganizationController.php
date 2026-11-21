@@ -4,12 +4,24 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Accounting\Entity\OrganizationHolding;
-use App\Modules\Accounting\Infrastructure\Models\Organization;
-use App\Modules\Accounting\Infrastructure\Models\OrganizationContact;
-use App\Modules\Accounting\Repository\OrganizationRepository;
-use App\Modules\Accounting\Service\OrganizationService;
-use App\Modules\Guide\Entity\VAT;
+use App\Modules\Accounting\Application\Actions\Organization\CreateForeignOrganizationUseCase;
+use App\Modules\Accounting\Application\Actions\Organization\DeleteOrganizationContactUseCase;
+use App\Modules\Accounting\Application\Actions\Organization\FindOrganizationByInnUseCase;
+use App\Modules\Accounting\Application\Actions\Organization\IndexOrganizationQuery;
+use App\Modules\Accounting\Application\Actions\Organization\ListVatQuery;
+use App\Modules\Accounting\Application\Actions\Organization\RefreshOrganizationUseCase;
+use App\Modules\Accounting\Application\Actions\Organization\RemoveOrganizationUseCase;
+use App\Modules\Accounting\Application\Actions\Organization\SearchOrganizationQuery;
+use App\Modules\Accounting\Application\Actions\Organization\SyncOrganizationContactUseCase;
+use App\Modules\Accounting\Application\Actions\Organization\UpdateOrganizationUseCase;
+use App\Modules\Accounting\Application\Actions\Organization\ListOrganizationsQuery;
+use App\Modules\Accounting\Application\Actions\Organization\UploadOrganizationFileUseCase;
+use App\Modules\Accounting\Application\Actions\Organization\ViewOrganizationQuery;
+use App\Modules\Accounting\Application\DTOs\Organization\FilterOrganizationIndexData;
+use App\Modules\Accounting\Application\DTOs\Organization\OrganizationContactData;
+use App\Modules\Accounting\Application\DTOs\Organization\OrganizationCreateData;
+use App\Modules\Accounting\Application\DTOs\Organization\OrganizationUpdateData;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -18,129 +30,133 @@ use Inertia\Response;
 
 class OrganizationController extends Controller
 {
-    private OrganizationService $service;
-    private OrganizationRepository $repository;
-
-    public function __construct(OrganizationService $service, OrganizationRepository $repository)
-    {
-        $this->service = $service;
-        $this->repository = $repository;
+    public function __construct(
+        private readonly IndexOrganizationQuery $indexOrganizationQuery,
+        private readonly ViewOrganizationQuery $viewOrganizationQuery,
+        private readonly FindOrganizationByInnUseCase $findOrganizationByInnUseCase,
+        private readonly CreateForeignOrganizationUseCase $createForeignOrganizationUseCase,
+        private readonly UpdateOrganizationUseCase $updateOrganizationUseCase,
+        private readonly RefreshOrganizationUseCase $refreshOrganizationUseCase,
+        private readonly RemoveOrganizationUseCase $removeOrganizationUseCase,
+        private readonly SyncOrganizationContactUseCase $syncOrganizationContactUseCase,
+        private readonly DeleteOrganizationContactUseCase $deleteOrganizationContactUseCase,
+        private readonly UploadOrganizationFileUseCase $uploadOrganizationFileUseCase,
+        private readonly SearchOrganizationQuery $searchOrganizationQuery,
+        private readonly ListVatQuery $listVatQuery,
+        private readonly ListOrganizationsQuery $listOrganizationsQuery,
+    ) {
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request, UserPermission $permission): Response
     {
-        $organizations = $this->repository->getIndex($request, $filters);//$this->pagination($query, $request, $pagination);
-        $holdings = OrganizationHolding::orderBy('name')->getModels();
+        $filters = FilterOrganizationIndexData::validateAndCreate($request->all());
+        $organizations = $this->indexOrganizationQuery->execute($filters, $permission);
+
         return Inertia::render('Accounting/Organization/Index', [
             'organizations' => $organizations,
             'filters' => $filters,
-            'holdings' => $holdings,
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $permission): RedirectResponse
     {
-        $request->validate([
-            'inn' => 'required|min:10|max:12',
-        ]);
-        try {
-            $organization = $this->service->create_find(
-                $request->string('inn')->trim()->value(),
-                $request->string('bik')->trim()->value(),
-                $request->string('account')->trim()->value(),
-            );
-            return redirect()->route('admin.accounting.organization.show', $organization)->with('success', 'Организация добавлена');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $dto = OrganizationCreateData::validateAndCreate($request->all());
+        $organization = $this->findOrganizationByInnUseCase->execute($dto, $permission);
+
+        return redirect()->route('admin.accounting.organization.show', $organization->id)
+            ->with('success', 'Организация добавлена');
     }
 
-    public function show(Organization $organization): Response
+    public function show(int $id, UserPermission $permission): Response
     {
-        $holdings = OrganizationHolding::orderBy('name')->getModels();
+        $organization = $this->viewOrganizationQuery->execute($id, $permission);
+
         return Inertia::render('Accounting/Organization/Show', [
-            'organization' => $this->repository->OrganizationWithToArray($organization),
-            'holdings' => $holdings,
-            'vat' => VAT::orderBy('value')->getModels(),
+            'organization' => $organization,
+            'vat' => $this->listVatQuery->execute(),
         ]);
     }
 
-    public function update(Organization $organization): RedirectResponse
+    public function update(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        try {
-            $this->service->update_find($organization);
-            return redirect()->route('admin.accounting.organization.show', $organization)->with('success', 'Данные обновлены');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $dto = OrganizationUpdateData::validateAndCreate($request->all());
+        $organization = $this->updateOrganizationUseCase->execute($id, $dto, $permission);
+
+        return redirect()->route('admin.accounting.organization.show', $organization->id)
+            ->with('success', 'Сохранено');
     }
 
-
-    public function del_contact(OrganizationContact $contact)
+    public function destroy(int $id, UserPermission $permission): RedirectResponse
     {
-        try {
-            $contact->delete();
-            return redirect()->back()->with('success', 'Удалено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $this->removeOrganizationUseCase->execute($id, $permission);
+
+        return redirect()->route('admin.accounting.organization.index')
+            ->with('success', 'Контрагент удалён');
     }
 
-    public function set_contact(Organization $organization, Request $request)
+    public function refresh(int $id, UserPermission $permission): RedirectResponse
     {
-        try {
-            $this->service->setContact($organization, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $organization = $this->refreshOrganizationUseCase->execute($id, $permission);
+
+        return redirect()->route('admin.accounting.organization.show', $organization->id)
+            ->with('success', 'Данные обновлены');
     }
 
-    public function set_info(Request $request, Organization $organization): RedirectResponse
+    public function contacts(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        try {
-            $this->service->setInfo($organization, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $dto = OrganizationContactData::validateAndCreate($request->all());
+        $this->syncOrganizationContactUseCase->execute($id, $dto, $permission);
+
+        return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function search_add(Request $request): JsonResponse
+    public function contactDestroy(int $id, int $contactId, UserPermission $permission): RedirectResponse
     {
-        $result = $this->repository->search($request->string('search')->trim()->value());
-        return response()->json($result);
+        $this->deleteOrganizationContactUseCase->execute($contactId, $permission);
+
+        return redirect()->back()->with('success', 'Удалено');
     }
 
-    public function find(Request $request): JsonResponse
+    public function upload(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
+        $this->uploadOrganizationFileUseCase->execute(
+            $id,
+            $request->file('file'),
+            $request->string('type')->value(),
+            $request->string('title')->value() ?? '',
+            $permission,
+        );
+
+        return redirect()->back()->with('success', 'Файл загружен');
+    }
+
+    public function find(Request $request, UserPermission $permission): JsonResponse
+    {
+        $dto = OrganizationCreateData::validateAndCreate($request->all());
+
         try {
-            if ($request->boolean('foreign')) {
-                $organization = $this->service->create_foreign($request);
-            } else {
-                $organization = $this->service->create_find(
-                    $request->string('inn')->trim()->value(),
-                    $request->string('bik')->trim()->value(),
-                    $request->string('account')->trim()->value(),
-                );
-            }
+            $organization = $dto->foreign
+                ? $this->createForeignOrganizationUseCase->execute($dto, $permission)
+                : $this->findOrganizationByInnUseCase->execute($dto, $permission);
+
             return response()->json($organization->id);
         } catch (\DomainException $e) {
             return response()->json(['error' => $e->getMessage()]);
-        } catch (\Throwable $e) {
-            return response()->json(['error' => $e->getMessage()]);
         }
     }
 
-    public function upload(Organization $organization, Request $request): RedirectResponse
+    public function search(Request $request, UserPermission $permission): JsonResponse
     {
-        try {
-            $this->service->upload($organization, $request);
-            return redirect()->back()->with('success', 'Файл загружен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $result = $this->searchOrganizationQuery->execute(
+            $request->string('search')->trim()->value(),
+            $permission
+        );
+
+        return response()->json($result);
     }
 
-
+    public function list(): JsonResponse
+    {
+        return response()->json($this->listOrganizationsQuery->execute());
+    }
 }

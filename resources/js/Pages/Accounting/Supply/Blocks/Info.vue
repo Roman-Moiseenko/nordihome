@@ -41,11 +41,13 @@ import {func} from '@Res/func.js'
 import {computed, reactive, ref} from "vue";
 import {router} from "@inertiajs/vue3";
 import AccountingDocument from "@Comp/Accounting/Document.vue";
+import {useAccountingStore} from "@Res/accountingStore";
 
 const props = defineProps({
     supply: Object,
-    customers: Array,
 })
+const accountingStore = useAccountingStore()
+const customers = computed(() => accountingStore.organizations)
 const iSavingInfo = ref(false)
 const info = reactive({
     document: {

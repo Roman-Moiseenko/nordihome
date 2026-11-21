@@ -31,8 +31,6 @@
                     <el-button @click="createButton" type="primary">Создать</el-button>
                 </div>
             </el-popover>
-
-
         </div>
 
         <div class="mt-2 p-5 bg-white rounded-md">
@@ -46,19 +44,12 @@
 
                 <el-table-column label="Организация">
                     <template #default="scope">
-                        <span v-if="scope.row.organization">{{ scope.row.organization.short_name }}</span>
+                        <span v-if="scope.row.organization">{{ scope.row.organization }}</span>
                     </template>
                 </el-table-column>
 
                 <el-table-column label="Действия" align="right">
                     <template #default="scope">
-                        <!--el-button v-if="!scope.row.completed"
-                            size="small"
-                            type="danger"
-                            @click.stop="handleDeleteEntity(scope.row)"
-                        >
-                            Delete
-                        </el-button-->
                     </template>
                 </el-table-column>
             </el-table>
@@ -66,22 +57,20 @@
     </el-config-provider>
 </template>
 <script lang="ts" setup>
-import {reactive, ref, defineProps} from "vue";
+import {reactive, ref} from "vue";
 import {Head, router} from '@inertiajs/vue3'
-import {func} from '@Res/func.js'
 import ru from 'element-plus/dist/locale/ru.mjs'
 
 
 const props = defineProps({
-    traders: Object,
+    traders: Array,
     title: {
         type: String,
         default: 'Список продавцов',
     },
 })
 const visible_create = ref(false)
-const tableData = ref([...props.traders])
-console.log(props.traders)
+const tableData = ref([...(props.traders ?? [])])
 const create = reactive({
     name: null,
     inn: null,
@@ -94,6 +83,6 @@ function createButton() {
 }
 
 function routeClick(row) {
-    router.get(route('admin.accounting.trader.show', {trader: row.id}))
+    router.get(route('admin.accounting.trader.show', {id: row.id}))
 }
 </script>

@@ -14,7 +14,7 @@
                 </el-form-item>
                 <el-form-item label="Плательщик">
                     <el-select v-model="info.payer_id" @change="setInfo" :disabled="iSavingInfo || notEdit" style="width: 260px">
-                        <el-option v-for="item in payers" :key="item.organization_id" :value="item.organization_id" :label="item.short_name" :readonly="notEdit">{{ item.full_name }}</el-option>
+                        <el-option v-for="item in payers" :key="item.id" :value="item.id" :label="item.short_name" :readonly="notEdit">{{ item.full_name }}</el-option>
                     </el-select>
                     <span class="ml-2 mr-1">Счет</span>
                     <span class="text-blue-900">{{ payment.bank_payment.account_payer }}</span>
@@ -42,11 +42,13 @@ import {func} from '@Res/func.js'
 import {computed, reactive, ref} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 import AccountingDocument from "@Comp/Accounting/Document.vue";
+import {useAccountingStore} from "@Res/accountingStore";
 
 const props = defineProps({
     payment: Object,
-    payers: Array,
 })
+const accountingStore = useAccountingStore()
+const payers = computed(() => accountingStore.organizations)
 const iSavingInfo = ref(false)
 const info = reactive({
     document: {

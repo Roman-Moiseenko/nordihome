@@ -6,7 +6,7 @@
         <el-tag v-if="payment.trashed" type="danger">Удален</el-tag>
     </h1>
     <div class="mt-3 p-3 bg-white rounded-lg ">
-        <PaymentInfo :payment="payment" :payers="payers"/>
+        <PaymentInfo :payment="payment"/>
     </div>
     <el-affix target=".affix-container" :offset="64">
         <div class="bg-white rounded-lg my-2 p-1 shadow flex">
@@ -54,7 +54,6 @@ const props = defineProps({
         type: String,
         default: 'Платежное поручение',
     },
-    payers: Array,
     printed: Object,
 })
 //provide('$filters', props.filters) //Фильтр товаров в списке документа

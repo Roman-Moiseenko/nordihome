@@ -2,16 +2,20 @@
 
 namespace App\Modules\Accounting\Providers;
 
+use App\Modules\Accounting\Domain\Interfaces\OrganizationRepositoryInterface;
 use App\Modules\Accounting\Domain\Interfaces\PriceOutboxRepositoryInterface;
 use App\Modules\Accounting\Domain\Interfaces\PricingRuleCategoryRepositoryInterface;
 use App\Modules\Accounting\Domain\Interfaces\PricingRuleRepositoryInterface;
 use App\Modules\Accounting\Domain\Interfaces\StockRepositoryInterface;
+use App\Modules\Accounting\Domain\Interfaces\TraderRepositoryInterface;
 use App\Modules\Accounting\Infrastructure\Interfaces\PriceRepositoryInterface;
+use App\Modules\Accounting\Infrastructure\Persistence\OrganizationRepository;
 use App\Modules\Accounting\Infrastructure\Persistence\PriceOutboxRepository;
 use App\Modules\Accounting\Infrastructure\Persistence\PriceRepository;
 use App\Modules\Accounting\Infrastructure\Persistence\PricingRuleCategoryRepository;
 use App\Modules\Accounting\Infrastructure\Persistence\PricingRuleRepository;
 use App\Modules\Accounting\Infrastructure\Persistence\StockRepository;
+use App\Modules\Accounting\Infrastructure\Persistence\TraderRepository;
 use App\Modules\Accounting\Database\Seeders\AccountingRoleSeeder;
 use App\Modules\Catalog\Domain\Interfaces\ProductRepositoryInterface;
 use App\Modules\Catalog\Infrastructure\Persistence\ProductRepository;
@@ -96,6 +100,16 @@ class AccountingServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(
+            OrganizationRepositoryInterface::class,
+            OrganizationRepository::class
+        );
+
+        $this->app->bind(
+            TraderRepositoryInterface::class,
+            TraderRepository::class
+        );
+
         $this->app->bind(
             StockRepositoryInterface::class,
             StockRepository::class

@@ -9,7 +9,6 @@ use App\Modules\Accounting\Entity\DepartureProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Report\DepartureReport;
 use App\Modules\Accounting\Repository\DepartureRepository;
-use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Service\DepartureService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,20 +19,17 @@ class DepartureController extends Controller
 {
     private DepartureService $service;
     private DepartureRepository $repository;
-    private OrganizationRepository $organizations;
     private DepartureReport $report;
 
 
     public function __construct(
-        DepartureService       $service,
-        DepartureRepository    $repository,
-        OrganizationRepository $organizations,
-        DepartureReport        $report,
+        DepartureService    $service,
+        DepartureRepository $repository,
+        DepartureReport     $report,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
-        $this->organizations = $organizations;
         $this->report = $report;
     }
 
@@ -65,7 +61,6 @@ class DepartureController extends Controller
             'departure' => $this->repository->DepartureWithToArray($departure, $request, $filters),
             'storages' => $storages,
             'filters' => $filters,
-            'customers' => $this->organizations->getTraders(),
             'printed' => $this->report->index(),
         ]);
     }

@@ -3,113 +3,94 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Presentation\Http\Controllers\Web;
 
-
 use App\Http\Controllers\Controller;
+use App\Modules\Accounting\Application\Actions\Trader\AttachOrganizationToTraderUseCase;
+use App\Modules\Accounting\Application\Actions\Trader\CreateTraderUseCase;
+use App\Modules\Accounting\Application\Actions\Trader\DetachOrganizationFromTraderUseCase;
+use App\Modules\Accounting\Application\Actions\Trader\IndexTraderQuery;
 use App\Modules\Accounting\Application\Actions\Trader\ListTradersUseCase;
-use App\Modules\Accounting\Infrastructure\Models\Trader;
-use App\Modules\Accounting\Repository\TraderRepository;
-use App\Modules\Accounting\Service\TraderService;
+use App\Modules\Accounting\Application\Actions\Trader\UpdateTraderUseCase;
+use App\Modules\Accounting\Application\Actions\Trader\ViewTraderQuery;
+use App\Modules\Accounting\Application\DTOs\Trader\TraderCreateData;
+use App\Modules\Accounting\Application\DTOs\Trader\TraderOrganizationSetData;
+use App\Modules\Accounting\Application\DTOs\Trader\TraderUpdateData;
+use App\Modules\Shared\Domain\Entities\UserPermission;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
-
 class TraderController extends Controller
 {
-    private TraderService $service;
-    private TraderRepository $repository;
-
     public function __construct(
-        TraderService                       $service,
-        TraderRepository                    $repository,
+        private readonly IndexTraderQuery $indexTraderQuery,
+        private readonly ViewTraderQuery $viewTraderQuery,
+        private readonly CreateTraderUseCase $createTraderUseCase,
+        private readonly UpdateTraderUseCase $updateTraderUseCase,
+        private readonly AttachOrganizationToTraderUseCase $attachOrganizationToTraderUseCase,
+        private readonly DetachOrganizationFromTraderUseCase $detachOrganizationFromTraderUseCase,
         private readonly ListTradersUseCase $listTradersUseCase,
-    )
-    {
-        $this->service = $service;
-        $this->repository = $repository;
+    ) {
     }
 
-    public function index(Request $request): Response
+    public function index(Request $request, UserPermission $permission): Response
     {
-        $traders = Trader::orderBy('name')->with('organization')->get();
+        $traders = $this->indexTraderQuery->execute($permission);
+
         return Inertia::render('Accounting/Trader/Index', [
             'traders' => $traders,
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $permission): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string',
-            'inn' => 'required|string|min:10|max:12',
-        ]);
-        try {
-            $trader = $this->service->create($request);
-            return redirect()->route('admin.accounting.trader.show', $trader)->with('success', 'Продавец добавлен');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $dto = TraderCreateData::validateAndCreate($request->all());
+        $trader = $this->createTraderUseCase->execute($dto, $permission);
+
+        return redirect()->route('admin.accounting.trader.show', $trader->id)
+            ->with('success', 'Продавец добавлен');
     }
 
-    public function show(Trader $trader, Request $request): Response
+    public function show(int $id, UserPermission $permission): Response
     {
-        // $organizations = Organization::orderBy('short_name')->active()->getModels();
         return Inertia::render('Accounting/Trader/Show', [
-            'trader' => $this->repository->TraderWithToArray($trader),
-            // 'organizations' => $organizations,
+            'trader' => $this->viewTraderQuery->execute($id, $permission),
         ]);
     }
 
-    public function destroy(Trader $trader): RedirectResponse
+    public function update(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        $this->service->destroy($trader);
-        return redirect()->back();
+        $dto = TraderUpdateData::validateAndCreate($request->all());
+        $trader = $this->updateTraderUseCase->execute($id, $dto, $permission);
+
+        return redirect()->route('admin.accounting.trader.show', $trader->id)
+            ->with('success', 'Сохранено');
     }
 
-    public function attach(Request $request, Trader $trader): RedirectResponse
+    public function destroy(int $id, UserPermission $permission): RedirectResponse
     {
-        try {
-            $this->service->attach($trader, $request->integer('organization'));
-            return redirect()->back()->with('success', 'Организация добавлена к продавцу');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        throw new \DomainException('Удалять продавца программно нельзя!');
     }
 
-    public function detach(Request $request, Trader $trader): RedirectResponse
+    public function attach(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        try {
-            $this->service->detach($trader, $request->integer('organization'));
-            return redirect()->back()->with('success', 'Организация отсоединена от продавца');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $dto = TraderOrganizationSetData::validateAndCreate($request->all());
+        $this->attachOrganizationToTraderUseCase->execute($id, $dto, $permission);
+
+        return redirect()->back()->with('success', 'Организация добавлена к продавцу');
     }
 
-    public function default(Request $request, Trader $trader): RedirectResponse
+    public function detach(int $id, Request $request, UserPermission $permission): RedirectResponse
     {
-        try {
-            $this->service->default($trader, $request->integer('organization'));
-            return redirect()->back()->with('success', 'Организация выбрана по умолчанию');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
+        $dto = TraderOrganizationSetData::validateAndCreate($request->all());
+        $this->detachOrganizationFromTraderUseCase->execute($id, $dto, $permission);
+
+        return redirect()->back()->with('success', 'Организация отсоединена от продавца');
     }
 
-    public function set_info(Request $request, Trader $trader): RedirectResponse
+    public function list(): JsonResponse
     {
-        try {
-            $this->service->setInfo($trader, $request);
-            return redirect()->back()->with('success', 'Сохранено');
-        } catch (\DomainException $e) {
-            return redirect()->back()->with('error', $e->getMessage());
-        }
-    }
-
-    public function listTraders(): \Illuminate\Http\JsonResponse
-    {
-        $list = $this->listTradersUseCase->execute();
-        return \response()->json($list);
+        return response()->json($this->listTradersUseCase->execute());
     }
 }

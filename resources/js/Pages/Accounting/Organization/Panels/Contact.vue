@@ -13,13 +13,13 @@
                         <EditField :field="organization.post" @update:field="savePost"/>
                     </el-descriptions-item>
                     <el-descriptions-item label="ФИО">
-                        <EditField :field="organization.chief" @update:field="saveChief" :isFIO="true"/>
+                        <EditField :field="organization.chief" @update:field="saveChief"/>
                     </el-descriptions-item>
                     <el-descriptions-item label="email">
                         <EditField :field="organization.email" @update:field="saveEmail"/>
                     </el-descriptions-item>
                     <el-descriptions-item label="Телефон">
-                        <EditField :field="func.phone(organization.phone)" @update:field="savePhone" :formatter="val => func.MaskPhone(val)"/>
+                        <EditField :field="organization.phone" @update:field="savePhone" :formatter="val => func.MaskPhone(val)"/>
                     </el-descriptions-item>
                 </el-descriptions>
             </div>
@@ -31,7 +31,7 @@
                         {{ contact.post }}
 
                         <i class="fa-light fa-user-tie-hair text-sky-700 ml-2"></i>
-                        {{ func.fullName(contact.fullname) }}
+                        {{ contact.fullname }}
                         <i class="fa-light fa-circle-envelope text-sky-700 ml-2"></i>
                         {{ contact.email }}
                         <i class="fa-light fa-circle-phone text-sky-700 ml-2"></i> {{ func.phone(contact.phone) }}
@@ -54,11 +54,7 @@
                 <el-input v-model="contactForm.post" placeholder="Должность"/>
             </el-form-item>
             <el-form-item>
-                <div class="flex">
-                    <el-input v-model="contactForm.fullname.surname" placeholder="Фамилия"/>
-                    <el-input v-model="contactForm.fullname.firstname" placeholder="Имя"/>
-                    <el-input v-model="contactForm.fullname.secondname" placeholder="Отчество"/>
-                </div>
+                <el-input v-model="contactForm.fullname" placeholder="ФИО"/>
             </el-form-item>
             <el-form-item>
                 <el-input v-model="contactForm.email" placeholder="Email"/>
@@ -83,7 +79,7 @@ import EditField from "@Comp/Elements/EditField.vue";
 import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
-    organization: Array,
+    organization: Object,
 })
 const dialogContact = ref(false)
 
@@ -93,26 +89,22 @@ const initalContact  = () => {
         post: null,
         phone: null,
         email: null,
-        fullname: {
-            surname: null,
-            firstname: null,
-            secondname: null,
-        },
+        fullname: null,
     }
 }
 const contactForm = reactive(initalContact())
 
 function savePost(val) {
-    router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {post: val})
+    router.put(route('admin.accounting.organization.update', {id: props.organization.id}), {post: val}, {preserveScroll: true})
 }
 function saveEmail(val) {
-    router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {email: val})
+    router.put(route('admin.accounting.organization.update', {id: props.organization.id}), {email: val}, {preserveScroll: true})
 }
 function savePhone(val) {
-    router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {phone: val})
+    router.put(route('admin.accounting.organization.update', {id: props.organization.id}), {phone: val}, {preserveScroll: true})
 }
 function saveChief(val) {
-    router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {chief: val})
+    router.put(route('admin.accounting.organization.update', {id: props.organization.id}), {chief: val}, {preserveScroll: true})
 }
 
 function newContact() {
@@ -124,13 +116,13 @@ function editContact(val) {
     dialogContact.value = true
 }
 function delContact(val) {
-    router.delete(route('admin.accounting.organization.del-contact', {contact: val.id}));
+    router.delete(route('admin.accounting.organization.contact.destroy', {id: props.organization.id, contactId: val.id}));
 
 }
 function saveContact() {
     if (contactForm.email === null && contactForm.phone === null) return;
     dialogContact.value = false
-    router.post(route('admin.accounting.organization.set-contact', {organization: props.organization.id}), contactForm);
+    router.post(route('admin.accounting.organization.contacts', {id: props.organization.id}), contactForm, {preserveScroll: true});
     Object.assign(contactForm, initalContact())
 }
 </script>

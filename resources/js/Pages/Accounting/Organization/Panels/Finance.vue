@@ -11,7 +11,7 @@
                 <el-descriptions :column="1" border>
                     <el-descriptions-item label="НДС">
                         <div v-show="!showEdit">
-                            <span v-if="organization.vat_id"> {{ organization.vat_caption }} </span>
+                            <span v-if="organization.vatId"> {{ organization.vatCaption }} </span>
                             <el-button class="ml-2" type="warning" size="small" @click="showEdit = true">
                                 <i class="fa-light fa-pen-to-square"></i>
                             </el-button>
@@ -51,34 +51,26 @@
 
         </div>
     </el-tab-pane>
-
-
-
 </template>
 
 <script setup>
-import {ref, reactive} from "vue";
-import {func} from '@Res/func.js'
+import {ref} from "vue";
 import {router} from "@inertiajs/vue3";
 
 const props = defineProps({
-    organization: Array,
+    organization: Object,
     vat: Array,
 })
 const showEdit = ref(false)
-const vat_id = ref(props.organization.vat_id)
+const vat_id = ref(props.organization.vatId)
 const vat_all = ref(true)
 
 function saveVat() {
     if (vat_id.value === undefined) vat_id.value = null
     showEdit.value = false
-    router.post(route('admin.accounting.organization.set-info',
-        {organization: props.organization.id}),
-        {
-            vat_id: vat_id.value,
-            vat_all: vat_all.value
-        })
+    router.put(route('admin.accounting.organization.update', {id: props.organization.id}), {
+        vatId: vat_id.value,
+        vatAll: vat_all.value
+    }, {preserveScroll: true})
 }
-
-
 </script>

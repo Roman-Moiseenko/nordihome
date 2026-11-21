@@ -9,7 +9,6 @@ use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Accounting\Entity\SurplusProduct;
 use App\Modules\Accounting\Report\SurplusReport;
-use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Repository\SurplusRepository;
 use App\Modules\Accounting\Service\SurplusService;
 use Illuminate\Http\RedirectResponse;
@@ -22,19 +21,16 @@ class SurplusController extends Controller
     private SurplusService $service;
     private SurplusRepository $repository;
     private SurplusReport $report;
-    private OrganizationRepository $organizations;
 
     public function __construct(
-        SurplusService         $service,
-        SurplusRepository      $repository,
-        SurplusReport          $report,
-        OrganizationRepository $organizations,
+        SurplusService    $service,
+        SurplusRepository $repository,
+        SurplusReport     $report,
     )
     {
         $this->service = $service;
         $this->repository = $repository;
         $this->report = $report;
-        $this->organizations = $organizations;
     }
 
     public function index(Request $request): Response
@@ -70,7 +66,6 @@ class SurplusController extends Controller
             'storages' => $storages,
             'filters' => $filters,
             'printed' => $this->report->index(),
-            'customers' => $this->organizations->getTraders(),
         ]);
     }
 

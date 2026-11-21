@@ -1,11 +1,12 @@
 <template>
     <el-row :gutter="10">
         <el-col :span="8">
+            <PhotoDTO model-type="accounting.trader" :entity-id="trader.id" type="image" />
+
             <el-descriptions :column="1" border class="mb-5">
                 <el-descriptions-item label="Продавец">
                     <div v-show="!editTrader">
                         {{ trader.name }}
-
                     </div>
                     <div v-show="editTrader">
                         <el-input v-model="info.name"/>
@@ -14,7 +15,6 @@
                 <el-descriptions-item label="Описание">
                     <div v-show="!editTrader">
                         {{ trader.description }}
-
                     </div>
                     <div v-show="editTrader">
                         <el-input v-model="info.description" type="textarea" rows="3"/>
@@ -25,7 +25,7 @@
                         <Active :active="trader.default"/>
                     </div>
                     <div v-show="editTrader">
-                        <el-checkbox v-model="info.default" label="По-умолчанию" :checked="trader.default"/>
+                        <el-checkbox v-model="info.default" :disabled="trader.default">По-умолчанию</el-checkbox>
                     </div>
                 </el-descriptions-item>
             </el-descriptions>
@@ -36,7 +36,7 @@
                 </el-button>
             </div>
             <div v-show="editTrader">
-                <el-button type="success" size="small" @click="setInfo">
+                <el-button type="success" size="small" @click="updateTrader">
                     <i class="fa-light fa-floppy-disk mr-2"></i> Сохранить
                 </el-button>
                 <el-button type="info" size="small" @click="editTrader = false" style="margin-left: 4px">
@@ -44,17 +44,11 @@
                 </el-button>
             </div>
         </el-col>
-        <el-col :span="8">
-            <div v-for="contact in trader.contacts" class="text-sm">
-                <i class="fa-light fa-user-tie-hair text-sky-700 ml-2"></i> {{ func.fullName(contact.fullname) }}
-                <i class="fa-light fa-circle-envelope text-sky-700 ml-2"></i> {{ contact.email }}
-                <i class="fa-light fa-circle-phone text-sky-700 ml-2"></i> {{ func.phone(contact.phone) }}
-            </div>
-        </el-col>
-        <el-col :span="8">
-            <h2 class="font-medium">Организация</h2>
-            <div v-for="item in trader.organizations">
-                <template v-if="item.pivot.default">
+
+        <el-col :span="16">
+            <h2 class="font-medium">Организации</h2>
+            <div v-for="item in trader.organizations" :key="item.id" class="flex items-center my-1">
+                <template v-if="item.default">
                     <el-tag type="success">{{ item.short_name }}</el-tag>
                 </template>
                 <template v-else>
@@ -70,56 +64,62 @@
                     </el-button>
                 </template>
                 <Link type="primary" class="ml-3"
-                      :href="route('admin.accounting.organization.show', {organization: item.id})">
+                      :href="route('admin.accounting.organization.show', {id: item.id})">
                     <i class="fa-light fa-right"></i>
                 </Link>
             </div>
             <div class="mt-3">
                 <SearchAttachOrganization
-                    :route="route('admin.accounting.trader.attach', {trader: props.trader.id})" />
+                    :route="route('admin.accounting.trader.attach', {id: trader.id})" />
             </div>
         </el-col>
     </el-row>
 </template>
 
 <script setup>
-import {func} from '@Res/func.js'
-import {ref, reactive} from "vue";
+import {reactive, ref} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 import Active from "@Comp/Elements/Active.vue";
+import PhotoDTO from "@Comp/PhotoDTO.vue";
 import SearchAttachOrganization from "@Comp/Search/AttachOrganization.vue";
 
 const props = defineProps({
     trader: Object,
 })
-console.log(props.vat)
-const showEdit = ref(false)
+
 const editTrader = ref(false)
-
-function detachOrganization(id) {
-    showEdit.value = false;
-    router.post(route('admin.accounting.trader.detach', {trader: props.trader.id, organization: id}))
-}
-
-function defaultOrganization(id) {
-    showEdit.value = false;
-    router.post(route('admin.accounting.trader.default', {trader: props.trader.id, organization: id}))
-}
 
 const info = reactive({
     name: props.trader.name,
-    default: props.trader.default,
+    default: !!props.trader.default,
     description: props.trader.description,
 })
 
-function setInfo() {
-    //iSavingInfo.value = true
-    router.visit(route('admin.accounting.trader.set-info', {trader: props.trader.id}), {
-        method: "post",
+function detachOrganization(id) {
+    router.visit(route('admin.accounting.trader.detach', {id: props.trader.id}), {
+        method: 'post',
+        data: {organization: id},
+        preserveScroll: true,
+        preserveState: true,
+    })
+}
+
+function defaultOrganization(id) {
+    router.visit(route('admin.accounting.trader.update', {id: props.trader.id}), {
+        method: 'put',
+        data: {organization: id},
+        preserveScroll: true,
+        preserveState: true,
+    })
+}
+
+function updateTrader() {
+    router.visit(route('admin.accounting.trader.update', {id: props.trader.id}), {
+        method: 'put',
         data: info,
         preserveScroll: true,
         preserveState: true,
-        onSuccess: page => {
+        onSuccess: () => {
             editTrader.value = false;
         }
     })

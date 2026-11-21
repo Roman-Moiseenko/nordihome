@@ -5,14 +5,9 @@ namespace App\Modules\Accounting\Infrastructure\Models;
 
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\DistributorOrganization;
-use App\Modules\Accounting\Entity\OrganizationHolding;
 use App\Modules\Accounting\Entity\PaymentDocument;
 use App\Modules\Auth\Infrastructure\Models\Client;
-use App\Modules\Base\Casts\FullNameCast;
-use App\Modules\Base\Casts\GeoAddressCast;
 use App\Modules\Base\Entity\FileStorage;
-use App\Modules\Base\Entity\FullName;
-use App\Modules\Base\Entity\GeoAddress;
 use App\Modules\Guide\Entity\VAT;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Infrastructure\Models\Order;
@@ -26,8 +21,9 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
 /**
  * @property int $id
  *
- * @property GeoAddress $legal_address
- * @property GeoAddress $actual_address
+ * @property string $legal_address
+ * @property array $actual_address
+ * @property array $geo
  *
  * @property string $full_name
  * @property string $short_name
@@ -48,13 +44,10 @@ use Illuminate\Database\Eloquent\Relations\MorphMany;
  * @property string $phone
  * @property OrganizationContact[] $contacts
  * @property string $post //Должность
- * @property FullName $chief
+ * @property array $chief
  * @property bool $active
- * @property int $holding_id
- * @property bool $default ///Удалить
  * @property Carbon $created_at
  * @property Carbon $updated_at
- * @property OrganizationHolding $holding
  * @property Trader $trader
  * @property Distributor $distributor
  * @property Client $shopper
@@ -78,29 +71,18 @@ class Organization extends Model
     ];
 
     protected $attributes = [
-        'legal_address' => '{}',
-        'actual_address' => '{}',
-        'chief' => '{}',
+        'legal_address' => '',
+        'actual_address' => '[]',
+        'geo' => '[]',
+        'chief' => '',
     ];
 
     protected $casts = [
-        'legal_address' => GeoAddressCast::class,
-        'actual_address' => GeoAddressCast::class,
-        'chief' => FullNameCast::class,
+        'actual_address' => 'array',
+        'geo' => 'array',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
-
-    public static function register(string $full_name, string $short_name, string $inn): self
-    {
-        return self::create([
-            'full_name' => $full_name,
-            'short_name' => $short_name,
-            'inn' => $inn,
-            'active' => true,
-            'foreign' => false,
-        ]);
-    }
 
     public function contacts(): HasMany
     {
@@ -114,12 +96,6 @@ class Organization extends Model
         }
 
         return false;
-    }
-
-    public function isHolding(): bool
-    {
-        if (is_null($this->holding)) return false;
-        return true;
     }
 
     public function isForeign(): bool
@@ -190,11 +166,6 @@ class Organization extends Model
         return $this->morphMany(FileStorage::class, 'fileable')->where('type', '<>', 'contract')->orderByDesc('created_at');
     }
 
-    public function holding(): BelongsTo
-    {
-        return $this->belongsTo(OrganizationHolding::class, 'holding_id', 'id');
-    }
-
     public function paymentsShopper(): HasOneThrough
     {
         //TODO Протестировать
@@ -222,8 +193,6 @@ class Organization extends Model
             TraderOrganization::class,
             'organization_id', 'id', 'id',
             'trader_id');
-
-        //return $this->hasOne(Trader::class, 'organization_id', 'id');
     }
 
     public function distributor(): HasOneThrough
@@ -233,7 +202,6 @@ class Organization extends Model
             DistributorOrganization::class,
             'organization_id', 'id', 'id',
             'distributor_id');
-        //return $this->hasOne(Distributor::class, 'organization_id', 'id');
     }
 
     public function shopper(): HasOneThrough

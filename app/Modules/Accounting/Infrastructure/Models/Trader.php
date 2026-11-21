@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace App\Modules\Accounting\Infrastructure\Models;
 
 use App\Modules\Base\Traits\ActiveFieldModel;
+use App\Modules\Base\Traits\ImageField;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOneThrough;
@@ -19,22 +20,12 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  */
 class Trader extends Model
 {
-    use ActiveFieldModel;
+    use ActiveFieldModel, ImageField;
 
     protected $fillable = [
         'name',
         'active'
     ];
-
-    public static function register(string $name): self
-    {
-        return self::create(['name' => $name]);
-    }
-
-    public static function default(): ?self
-    {
-        return self::where('default', true)->first();
-    }
 
     public function organization(): HasOneThrough
     {
@@ -42,9 +33,7 @@ class Trader extends Model
             'trader_id', 'id',
             'id', 'organization_id')
             ->where('trader_organizations.default', true);
-        //return $this->belongsTo(Organization::class, 'organization_id', 'id');
     }
-
 
     public function organizations(): BelongsToMany
     {

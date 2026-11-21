@@ -20,6 +20,7 @@ class ModelTypeMapper
         'content.post',
         'content.page',
         'content.gallery',
+        'accounting.trader',
     ];
 
     private const array MAP = [
@@ -48,6 +49,7 @@ class ModelTypeMapper
         'marketplace.avito-product' => \App\Modules\Marketplace\Infrastructure\Models\AvitoProduct::class,
         'marketplace.avito-common-image' => \App\Modules\Marketplace\Infrastructure\Models\AvitoCommonImage::class,
 
+        'accounting.trader' => \App\Modules\Accounting\Infrastructure\Models\Trader::class,
     ];
 
     public static function toFqcn(string $modelType): string

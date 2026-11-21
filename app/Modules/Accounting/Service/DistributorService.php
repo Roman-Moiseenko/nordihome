@@ -12,12 +12,10 @@ use Illuminate\Support\Facades\DB;
 class DistributorService
 {
 
-    private OrganizationService $service;
     private SupplyService $supplyService;
 
-    public function __construct(OrganizationService $service, SupplyService $supplyService)
+    public function __construct(SupplyService $supplyService)
     {
-        $this->service = $service;
         $this->supplyService = $supplyService;
     }
 

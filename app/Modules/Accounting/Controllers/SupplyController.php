@@ -9,7 +9,6 @@ use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
 use App\Modules\Accounting\Report\SupplyReport;
-use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Accounting\Repository\SupplyRepository;
 use App\Modules\Accounting\Service\SupplyService;
@@ -27,21 +26,18 @@ class SupplyController extends Controller
     private StackRepository $stacks;
     private SupplyRepository $repository;
     private SupplyReport $report;
-    private OrganizationRepository $organizations;
 
     public function __construct(
-        SupplyService          $service,
-        StackRepository        $stacks,
-        SupplyRepository       $repository,
-        SupplyReport           $report,
-        OrganizationRepository $organizations,
+        SupplyService    $service,
+        StackRepository  $stacks,
+        SupplyRepository $repository,
+        SupplyReport     $report,
     )
     {
         $this->service = $service;
         $this->stacks = $stacks;
         $this->repository = $repository;
         $this->report = $report;
-        $this->organizations = $organizations;
     }
 
     public function index(Request $request): Response
@@ -90,7 +86,6 @@ class SupplyController extends Controller
             'supply' => $this->repository->SupplyWithToArray($supply, $request, $filters),
             'filters' => $filters,
             'printed' => $this->report->index(),
-            'customers' => $this->organizations->getTraders(),
         ]);
     }
 

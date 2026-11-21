@@ -14,17 +14,17 @@
                     </el-descriptions-item>
                     <el-descriptions-item label="Название банка">
                         <template v-if="organization.foreign">
-                            <EditField :field="organization.bank_name" @update:field="setBank" />
+                            <EditField :field="organization.bankName" @update:field="setBank" />
                         </template>
                         <template v-else>
-                        {{ organization.bank_name }}
+                        {{ organization.bankName }}
                         </template>
                     </el-descriptions-item>
                     <el-descriptions-item label="Корр./счет">
-                        {{ organization.corr_account }}
+                        {{ organization.corrAccount }}
                     </el-descriptions-item>
                     <el-descriptions-item label="Расчетный счет">
-                        <EditField :field="organization.pay_account" @update:field="saveAccount" />
+                        <EditField :field="organization.payAccount" @update:field="saveAccount" />
                     </el-descriptions-item>
                 </el-descriptions>
             </div>
@@ -33,23 +33,20 @@
 </template>
 
 <script setup>
-import {ref} from "vue";
-import {func} from '@Res/func.js'
 import {router} from '@inertiajs/vue3'
 import EditField from "@Comp/Elements/EditField.vue";
 
 const props = defineProps({
-    organization: Array,
+    organization: Object,
 })
 
-
 function saveAccount(val) {
-    router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {pay_account: val})
+    router.put(route('admin.accounting.organization.update', {id: props.organization.id}), {payAccount: val}, {preserveScroll: true})
 }
 function setBik(val) {
-    router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {bik: val})
+    router.put(route('admin.accounting.organization.update', {id: props.organization.id}), {bik: val}, {preserveScroll: true})
 }
 function setBank(val) {
-    router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {bank: val})
+    router.put(route('admin.accounting.organization.update', {id: props.organization.id}), {bank: val}, {preserveScroll: true})
 }
 </script>

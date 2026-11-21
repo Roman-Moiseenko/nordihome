@@ -66,7 +66,7 @@ import {UploadUserFile, UploadInstance} from "element-plus";
 import axios from "axios";
 
 const props = defineProps({
-    organization: Array,
+    organization: Object,
 })
 
 const contractList = ref<UploadUserFile[]>([]);
@@ -88,7 +88,7 @@ for (let key in props.organization.documents) {
 }
 
 function upload(file, type) {
-    router.visit(route('admin.accounting.organization.upload', {organization: props.organization.id}), {
+    router.visit(route('admin.accounting.organization.upload', {id: props.organization.id}), {
         method: "post",
         data: {
             file: file,

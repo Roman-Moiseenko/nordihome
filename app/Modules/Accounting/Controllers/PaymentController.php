@@ -8,7 +8,6 @@ use App\Modules\Accounting\Entity\PaymentDecryption;
 use App\Modules\Accounting\Entity\PaymentDocument;
 
 use App\Modules\Accounting\Repository\PaymentDocumentRepository;
-use App\Modules\Accounting\Repository\TraderRepository;
 use App\Modules\Accounting\Service\PaymentDocumentService;
 
 use DB;
@@ -23,7 +22,6 @@ class PaymentController extends Controller
     public function __construct(
         private readonly PaymentDocumentService    $service,
         private readonly PaymentDocumentRepository $repository,
-        private readonly TraderRepository          $traders,
     )
     {}
 
@@ -31,21 +29,17 @@ class PaymentController extends Controller
     {
         $payments = $this->repository->getIndex($request, $filters);
         $distributors = Distributor::orderBy('name')->getModels();
-        $traders = $this->traders->getTraders();
         return Inertia::render('Accounting/Payment/Index', [
             'payments' => $payments,
             'filters' => $filters,
-            'traders' => $traders,
             'distributors' => $distributors,
         ]);
     }
 
     public function show(PaymentDocument $payment): Response
     {
-        $traders = $this->traders->getTraders();
         return Inertia::render('Accounting/Payment/Show', [
             'payment' => $this->repository->PaymentWithToArray($payment),
-            'payers' => $traders,
         ]);
     }
 

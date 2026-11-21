@@ -2,13 +2,17 @@
 
 namespace App\Modules\Accounting\Application\Actions\Trader;
 
-use App\Modules\Accounting\Infrastructure\Models\Trader;
+use App\Modules\Accounting\Domain\Interfaces\TraderRepositoryInterface;
 
-class GetDefaultTraderIdUseCase
+readonly class GetDefaultTraderIdUseCase
 {
+    public function __construct(
+        private TraderRepositoryInterface $traderRepository,
+    ) {
+    }
 
     public function execute(): int
     {
-        return Trader::default()->organization->id;
+        return (int) $this->traderRepository->getDefaultTraderId();
     }
 }

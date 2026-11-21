@@ -56,12 +56,14 @@ import {computed, reactive, ref} from "vue";
 import {router, Link} from "@inertiajs/vue3";
 import {UploadUserFile, UploadInstance} from "element-plus";
 import AccountingDocument from "@Comp/Accounting/Document.vue";
+import {useAccountingStore} from "@Res/accountingStore";
 
 const props = defineProps({
     departure: Object,
     storages: Array,
-    customers: Array,
 })
+const accountingStore = useAccountingStore()
+const customers = computed(() => accountingStore.organizations)
 const iSavingInfo = ref(false)
 
 const info = reactive({

@@ -6,27 +6,20 @@
                 <span> Адрес</span>
             </span>
         </template>
-        <div class="grid lg:grid-cols-6 grid-cols-1 divide-x">
-            <div class="p-4 col-span-3">
-                <h2>Юридический адрес</h2>
-                <el-descriptions :column="2" border>
-                    <el-descriptions-item label="Индекс">
-                        {{ organization.legal_address.post }}
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Регион">
-                        {{ organization.legal_address.region }}
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Адрес">
-                        {{ organization.legal_address.address }}
-                    </el-descriptions-item>
-                </el-descriptions>
+        <div class="grid lg:grid-cols-2 grid-cols-1 gap-4 p-4">
+            <div>
+                <h2 class="font-medium">Юридический адрес</h2>
+                <div class="mt-2">{{ organization.legalAddress }}</div>
             </div>
-            <div class="p-4 col-span-3">
-                <h2>Фактический адрес
-                    <span v-show="!showEdit">
-                        <el-button type="warning" size="small" @click="showEdit = true"><i class="fa-light fa-pen-to-square"></i></el-button>
+            <div>
+                <div class="flex items-center">
+                    <h2 class="font-medium">Фактический адрес</h2>
+                    <span v-show="!showEdit" class="ml-2">
+                        <el-button type="warning" size="small" @click="startEdit">
+                            <i class="fa-light fa-pen-to-square"></i>
+                        </el-button>
                     </span>
-                    <span v-show="showEdit">
+                    <span v-show="showEdit" class="ml-2">
                         <el-button type="success" size="small" @click="saveAddress">
                             <i class="fa-light fa-floppy-disk"></i>
                         </el-button>
@@ -34,33 +27,35 @@
                             <i class="fa-light fa-xmark"></i>
                         </el-button>
                     </span>
-                </h2>
-                <el-descriptions :column="2" border>
-                    <el-descriptions-item label="Индекс">
-                        <span v-show="!showEdit">
-                            {{ organization.actual_address.post }}
-                        </span>
-                        <span v-show="showEdit">
-                            <el-input v-model="address.post" class="mr-2"/>
-                        </span>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Регион">
-                        <span v-show="!showEdit">
-                        {{ organization.actual_address.region }}
-                        </span>
-                        <span v-show="showEdit">
-                            <el-input v-model="address.region" class="mr-2"/>
-                        </span>
-                    </el-descriptions-item>
-                    <el-descriptions-item label="Адрес">
-                        <span v-show="!showEdit">
-                        {{ organization.actual_address.address }}
-                        </span>
-                        <span v-show="showEdit">
-                            <el-input v-model="address.address" class="mr-2"/>
-                        </span>
-                    </el-descriptions-item>
-                </el-descriptions>
+                </div>
+
+                <div v-show="!showEdit" class="mt-2">
+                    {{ organization.actualAddressFull }}
+                </div>
+
+                <el-form v-show="showEdit" label-width="120px" class="mt-2">
+                    <el-form-item label="Индекс">
+                        <el-input v-model="address.postalCode"/>
+                    </el-form-item>
+                    <el-form-item label="Регион">
+                        <el-input v-model="address.region"/>
+                    </el-form-item>
+                    <el-form-item label="Город">
+                        <el-input v-model="address.city"/>
+                    </el-form-item>
+                    <el-form-item label="Улица">
+                        <el-input v-model="address.street"/>
+                    </el-form-item>
+                    <el-form-item label="Дом">
+                        <el-input v-model="address.house"/>
+                    </el-form-item>
+                    <el-form-item label="Строение">
+                        <el-input v-model="address.building"/>
+                    </el-form-item>
+                    <el-form-item label="Помещение">
+                        <el-input v-model="address.flat"/>
+                    </el-form-item>
+                </el-form>
             </div>
         </div>
     </el-tab-pane>
@@ -68,21 +63,29 @@
 
 <script setup>
 import {ref, reactive} from "vue";
-import {func} from '@Res/func.js'
 import {router} from "@inertiajs/vue3";
 
 const showEdit = ref(false)
 const props = defineProps({
-    organization: Array,
+    organization: Object,
 })
 
 const address = reactive({
-    post: props.organization.actual_address.post,
-    region: props.organization.actual_address.region,
-    address: props.organization.actual_address.address,
+    postalCode: props.organization.actualAddress.postalCode ?? '',
+    region: props.organization.actualAddress.region ?? '',
+    city: props.organization.actualAddress.city ?? '',
+    street: props.organization.actualAddress.street ?? '',
+    house: props.organization.actualAddress.house ?? '',
+    building: props.organization.actualAddress.building ?? '',
+    flat: props.organization.actualAddress.flat ?? '',
 })
+
+function startEdit() {
+    showEdit.value = true
+}
+
 function saveAddress() {
     showEdit.value = false
-    router.post(route('admin.accounting.organization.set-info', {organization: props.organization.id}), {address: address})
+    router.put(route('admin.accounting.organization.update', {id: props.organization.id}), {address: address}, {preserveScroll: true})
 }
 </script>

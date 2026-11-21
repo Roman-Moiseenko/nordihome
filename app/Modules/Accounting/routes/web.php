@@ -166,11 +166,9 @@ Route::group([
         'as' => 'trader.',
     ],
         function () {
-            Route::post('/attach/{trader}', [TraderController::class, 'attach'])->name('attach');
-            Route::post('/detach/{trader}', [TraderController::class, 'detach'])->name('detach');
-            Route::post('/default/{trader}', [TraderController::class, 'default'])->name('default');
-            Route::post('/set-info/{trader}', [TraderController::class, 'set_info'])->name('set-info');
-            Route::get('/list/', [TraderController::class, 'listTraders'])->name('list');
+            Route::post('/{id}/attach', [TraderController::class, 'attach'])->name('attach');
+            Route::post('/{id}/detach', [TraderController::class, 'detach'])->name('detach');
+            Route::get('/list', [TraderController::class, 'list'])->name('list');
         });
     //CURRENCY
     Route::group([
@@ -233,13 +231,13 @@ Route::group([
         'as' => 'organization.',
     ],
         function () {
-            Route::delete('/del-contact/{contact}', [OrganizationController::class, 'del_contact'])->name('del-contact');
-            Route::post('/set-contact/{organization}', [OrganizationController::class, 'set_contact'])->name('set-contact');
-            Route::post('/update/{organization}', [OrganizationController::class, 'update'])->name('update');
-            Route::post('/set-info/{organization}', [OrganizationController::class, 'set_info'])->name('set-info');
-            Route::post('/search-add', [OrganizationController::class, 'search_add'])->name('search-add');
+            Route::get('/list', [OrganizationController::class, 'list'])->name('list');
+            Route::post('/{id}/contacts', [OrganizationController::class, 'contacts'])->name('contacts');
+            Route::delete('/{id}/contacts/{contactId}', [OrganizationController::class, 'contactDestroy'])->name('contact.destroy');
+            Route::post('/{id}/refresh', [OrganizationController::class, 'refresh'])->name('refresh');
+            Route::post('/{id}/upload', [OrganizationController::class, 'upload'])->name('upload');
+            Route::post('/search-add', [OrganizationController::class, 'search'])->name('search-add');
             Route::post('/find', [OrganizationController::class, 'find'])->name('find');
-            Route::post('/upload/{organization}', [OrganizationController::class, 'upload'])->name('upload');
         });
     //PAYMENT
     Route::group([
@@ -310,8 +308,12 @@ Route::group([
     Route::resource('departure', DepartureController::class)->except(['create', 'edit', 'update']); //CRUD
     Route::resource('supply', SupplyController::class)->except(['edit', 'update']); //CRUD
     Route::resource('pricing', PricingController::class)->except(['create', 'edit', 'update']); //CRUD
-    Route::resource('organization', OrganizationController::class)->except(['create', 'edit', 'update']); //CRUD
-    Route::resource('trader', TraderController::class)->except(['create', 'edit', 'update']); //CRUD
+    Route::resource('organization', OrganizationController::class)
+        ->except(['create', 'edit'])
+        ->parameters(['organization' => 'id']); //CRUD
+    Route::resource('trader', TraderController::class)
+        ->except(['create', 'edit'])
+        ->parameters(['trader' => 'id']); //CRUD
     Route::resource('payment', PaymentController::class)->except(['create', 'store']); //CRUD
 
     //STOCK (остатки товаров)

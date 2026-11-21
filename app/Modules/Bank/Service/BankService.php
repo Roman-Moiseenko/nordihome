@@ -2,10 +2,12 @@
 
 namespace App\Modules\Bank\Service;
 
+use App\Modules\Accounting\Application\Actions\Organization\FindOrganizationByInnUseCase;
+use App\Modules\Accounting\Application\DTOs\Organization\OrganizationCreateData;
 use App\Modules\Accounting\Entity\Currency;
 use App\Modules\Accounting\Infrastructure\Models\Organization;
-use App\Modules\Accounting\Service\OrganizationService;
 use App\Modules\Accounting\Service\PaymentDocumentService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Base\Entity\BankPayment;
 use App\Modules\Order\Entity\Order\OrderPayment;
 use App\Modules\Order\Infrastructure\Models\Order;
@@ -24,7 +26,7 @@ class BankService
 
     private PaymentDocumentService $paymentDocumentService;
     private mixed $date_bank;
-    private OrganizationService $organizationService;
+    private FindOrganizationByInnUseCase $findOrganizationByInnUseCase;
     private Organization $payer;
     private array $valute = [];
     private OrderPaymentService $orderPaymentService;
@@ -33,7 +35,7 @@ class BankService
     public function __construct(
         PaymentDocumentService $paymentDocumentService,
         Settings $settings,
-        OrganizationService $organizationService,
+        FindOrganizationByInnUseCase $findOrganizationByInnUseCase,
         OrderPaymentService $orderPaymentService,
         //TODO Добавить сервис платежей от клиентов
     )
@@ -41,7 +43,7 @@ class BankService
         $this->paymentDocumentService = $paymentDocumentService;
 
         $this->date_bank = Carbon::parse($settings->common->date_bank);
-        $this->organizationService = $organizationService;
+        $this->findOrganizationByInnUseCase = $findOrganizationByInnUseCase;
         $this->orderPaymentService = $orderPaymentService;
         $this->settings = $settings;
     }
@@ -126,7 +128,14 @@ class BankService
         $payer = Organization::where('inn', $payment['ПлательщикИНН'])->first();
 
         if (is_null($recipient)) { //Если нет получателя, то создаем
-            $recipient = $this->organizationService->create_find($payment['ПолучательИНН'], $payment['ПолучательБИК'], $payment['ПолучательСчет']);
+            $recipient = $this->findOrganizationByInnUseCase->execute(
+                new OrganizationCreateData(
+                    inn: $payment['ПолучательИНН'],
+                    bik: $payment['ПолучательБИК'],
+                    account: $payment['ПолучательСчет'],
+                ),
+                new UserPermission(null, [], ['accounting.organization.create'])
+            );
         }
 
         $paymentDocument = $this->paymentDocumentService->create(
