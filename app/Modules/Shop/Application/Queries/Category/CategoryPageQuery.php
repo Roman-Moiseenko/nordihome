@@ -142,7 +142,7 @@ readonly class CategoryPageQuery
 
         //$meta->articleModifiedTime = $mainInfo->
 
-        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'category', $faq);
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'category', $faq, $meta);
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,
@@ -234,7 +234,7 @@ readonly class CategoryPageQuery
         $meta->canonical = route('shop.novelty');
 
         //FIXME
-        $schema = $this->schemaBuilder->createSchema();
+        $schema = $this->schemaBuilder->createSchema($meta);
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,

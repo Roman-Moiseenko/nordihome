@@ -42,13 +42,13 @@ readonly class IkeaProductQuery
         $product = IkeaProductData::fromArray($productRaw);
         $product->price = $this->setRatioPriceUseCase->execute($product->price, 'ikea');
 
-        $schema = $this->schemaBuilder->buildForIkeaProduct($product);
         $meta = new SeoData(
             title: $product->name . ' ' . $product->code,
             description: $product->short,
             canonical: route('shop.ikea.product', $slug),
             ogSiteName: $web->web_name,
         );
+        $schema = $this->schemaBuilder->buildForIkeaProduct($product, $meta);
         //$meta->ogImages[] = OgImage::fromData()
 
         return new IkeaProductPageData(

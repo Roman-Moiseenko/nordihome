@@ -132,7 +132,7 @@ readonly class PromotionPageQuery
         if (!is_null($mainInfo->image)) $meta->addImage(OgImage::fromData($mainInfo->image));
 
 
-        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'promotion', $faq);
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'promotion', $faq, $meta);
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: null,

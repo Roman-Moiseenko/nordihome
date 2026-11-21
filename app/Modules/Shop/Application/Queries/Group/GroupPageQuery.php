@@ -126,7 +126,7 @@ readonly class GroupPageQuery
         if (!is_null($mainInfo->image)) $meta->addImage(OgImage::fromData($mainInfo->image));
 
 
-        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'group', $faq);
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'group', $faq, $meta);
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: null,

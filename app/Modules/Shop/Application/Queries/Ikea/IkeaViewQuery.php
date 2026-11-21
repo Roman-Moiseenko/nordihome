@@ -75,7 +75,6 @@ readonly class IkeaViewQuery
             ]
         );
 
-        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $category->slug, 'ikea', []);
         $meta = new SeoData(
             title: $category->name,
             description: $category->name . ' ' . $web->ikea_desc,
@@ -84,6 +83,8 @@ readonly class IkeaViewQuery
         );
 
         if (!is_null($category->image)) $meta->addImage(OgImage::fromData($category->image));
+
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $category->slug, 'ikea', [], $meta);
 
         return new IkeaViewPageData(
             category: $category,

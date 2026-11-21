@@ -137,7 +137,7 @@ readonly class RoomPageQuery
         $meta->canonical = route('shop.room.view', $slug);
         if (!is_null($mainInfo->image)) $meta->addImage(OgImage::fromData($mainInfo->image));
 
-        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'room', $faq);
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'room', $faq, $meta);
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,

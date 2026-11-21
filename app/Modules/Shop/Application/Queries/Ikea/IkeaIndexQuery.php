@@ -30,14 +30,14 @@ readonly class IkeaIndexQuery
             fn() => $this->treeRepo->getFullTree(),
         );
 
-        $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'ikea');
-
         $meta =new SeoData(
             title: $web->ikea_title,
             description: $web->ikea_desc,
             canonical: route('shop.ikea.index'),
             ogSiteName: $web->web_name,
         );
+
+        $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'ikea', $meta);
         return new IkeaIndexPageData(
             meta: $meta,
             schema: $schema,

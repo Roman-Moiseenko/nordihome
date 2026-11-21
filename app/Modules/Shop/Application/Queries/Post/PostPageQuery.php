@@ -79,7 +79,7 @@ readonly class PostPageQuery
         }
 
         // 5. Schema
-        $schema = $this->schemaBuilder->buildForPost($post, $faq);
+        $schema = $this->schemaBuilder->buildForPost($post, $faq, $meta);
 
         return new PostViewPageData(
             post: $post,

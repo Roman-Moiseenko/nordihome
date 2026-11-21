@@ -91,6 +91,14 @@ class TraderRepository implements TraderRepositoryInterface
         return $trader->organization()->value('organizations.id');
     }
 
+    public function getDefault(): ?TraderEntity
+    {
+        /** @var Trader|null $trader */
+        $trader = Trader::with(['organizations', 'image'])->where('default', true)->first();
+
+        return $trader ? $this->hydrate($trader) : null;
+    }
+
     private function hydrate(Trader $model): TraderEntity
     {
         $entity = new TraderEntity($model->name);
@@ -103,6 +111,8 @@ class TraderRepository implements TraderRepositoryInterface
             $entity->logo = new Image(
                 id: $model->image->id,
                 url: $model->image->getUploadUrl(),
+                width: (int) $model->image->width,
+                height: (int) $model->image->height,
             );
         }
 

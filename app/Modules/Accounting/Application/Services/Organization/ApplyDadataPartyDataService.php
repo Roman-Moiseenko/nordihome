@@ -19,21 +19,25 @@ class ApplyDadataPartyDataService
      */
     public function apply(OrganizationEntity $entity, array $data): void
     {
+        $entity->shortName = $data['name']['short_with_opf'];
+        $entity->fullName = $data['name']['full_with_opf'];
         $entity->kpp = (string) ($data['kpp'] ?? '');
         $entity->ogrn = (string) ($data['ogrn'] ?? '');
 
         $address = $data['address']['data'] ?? [];
         $entity->legalAddress = (string) ($address['source'] ?? '');
-        $entity->actualAddress = new Address(
-            country: $address['country'] ?? null,
-            city: $address['city'] ?? null,
-            street: $address['street_with_type'] ?? null,
-            region: $address['region_with_type'] ?? null,
-            postalCode: $address['postal_code'] ?? null,
-            house: $address['house'] ?? null,
-            building: $address['block'] ?? null,
-            flat: $address['flat'] ?? null,
-        );
+        if ($entity->actualAddress->getFullAddress() == '') {
+            $entity->actualAddress = new Address(
+                country: $address['country'] ?? null,
+                city: $address['city'] ?? null,
+                street: $address['street_with_type'] ?? null,
+                region: $address['region_with_type'] ?? null,
+                postalCode: $address['postal_code'] ?? null,
+                house: $address['house'] ?? null,
+                building: $address['block'] ?? null,
+                flat: $address['flat'] ?? null,
+            );
+        }
         $entity->geo = new Geo(
             latitude: (string) ($address['geo_lat'] ?? ''),
             longitude: (string) ($address['geo_lon'] ?? ''),

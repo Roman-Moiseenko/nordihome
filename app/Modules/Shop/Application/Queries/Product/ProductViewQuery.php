@@ -53,7 +53,7 @@ readonly class ProductViewQuery
         $meta->productRetailerId = $product->code;
         $meta->productPrice = $product->price;
 
-        $schema = $this->schemaBuilder->buildForProduct($product);
+        $schema = $this->schemaBuilder->buildForProduct($product, $meta);
         $equivalentIds = $this->equivalentRepository->getProductIds($product->id);
 
         $equivalents = $this->indexQueryRepository->loadProductCards($equivalentIds, $clientContext);

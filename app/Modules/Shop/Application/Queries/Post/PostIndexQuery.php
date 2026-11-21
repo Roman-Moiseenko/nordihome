@@ -38,8 +38,13 @@ readonly class PostIndexQuery
 
         $postsPaginator = $this->repository->getPosts($category->id, $page, $perPage, $params);
 
+        $meta = new SeoData($category->title, $category->description);
+        if ($page > 1) $meta->title .= ' - Страница ' . $page;
+        $meta->canonical = route('shop.posts.view', $slug);
+        $meta->ogSiteName = $web->web_name;
+
         $schema = $this->schemaBuilder->buildForPosts(
-            $category, $postsPaginator->items()
+            $category, $postsPaginator->items(), $meta
         );
 
         $labels = $this->repository->getLabels($category->id);
@@ -58,10 +63,6 @@ readonly class PostIndexQuery
                 'query' => array_diff_key(request()->query(), ['page' => null]),
             ]
         );
-        $meta = new SeoData($category->title, $category->description);
-        if ($page > 1) $meta->title .= ' - Страница ' . $page;
-        $meta->canonical = route('shop.posts.view', $slug);
-        $meta->ogSiteName = $web->web_name;
 
         return new PostIndexPageData(
             category: $category,

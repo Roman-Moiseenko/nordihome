@@ -48,7 +48,7 @@ readonly class CategoryIndexQuery
             ogSiteName: $web->web_name,
         );
 
-        $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'category');
+        $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'category', $meta);
         return new CatalogIndexPageData(
             meta: $meta,
             categories: $categories,

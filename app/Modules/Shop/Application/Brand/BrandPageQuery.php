@@ -59,7 +59,12 @@ readonly class BrandPageQuery
         if ($allProductIds) {
             $categoriesRaw = $this->roomRepository->getCategoriesByProductIds($allProductIds, $params);
             $categories = array_map(
-                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug),
+                fn(\stdClass $r) => new ChildrenData(
+                    id: (int)$r->id,
+                    name: $r->name,
+                    slug: $r->slug,
+                    url: route('shop.category.view', ['slug' => $r->slug, 'brands[]' => $mainInfo->id]),
+                ),
                 $categoriesRaw,
             );
         }
@@ -69,7 +74,9 @@ readonly class BrandPageQuery
         if ($allProductIds) {
             $roomsRaw = $this->repository->getRoomsByProductIds($allProductIds, $params);
             $rooms = array_map(
-                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug),
+                fn(\stdClass $r) => new ChildrenData(id: (int)$r->id, name: $r->name, slug: $r->slug,
+                    url: route('shop.room.view', ['slug' => $r->slug, 'brands[]' => $mainInfo->id])
+                ),
                 $roomsRaw,
             );
         }
@@ -148,7 +155,7 @@ readonly class BrandPageQuery
         $meta->canonical = route('shop.brand.view', $slug);
         if (!is_null($mainInfo->image)) $meta->addImage(OgImage::fromData($mainInfo->image));
 
-        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'brand', $faq);
+        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $mainInfo->slug, 'brand', $faq, $meta);
         return new ProductIndexPageData(
             mainInfo: $mainInfo,
             secondInfo: $secondInfo,

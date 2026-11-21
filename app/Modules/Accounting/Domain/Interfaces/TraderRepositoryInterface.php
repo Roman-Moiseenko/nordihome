@@ -26,4 +26,6 @@ interface TraderRepositoryInterface
     public function setDefaultOrganization(int $traderId, int $organizationId): void;
 
     public function getDefaultTraderId(): ?int;
+
+    public function getDefault(): ?TraderEntity;
 }

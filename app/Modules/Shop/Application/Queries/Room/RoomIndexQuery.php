@@ -45,7 +45,7 @@ readonly class RoomIndexQuery
             canonical: route('shop.room.index'),
             ogSiteName: $web->web_name,
         );
-        $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'room');
+        $schema = $this->schemaBuilder->buildForCategoryIndex($categories, 'room', $meta);
         return new CatalogIndexPageData(
             meta: $meta,
             categories: $categories,
