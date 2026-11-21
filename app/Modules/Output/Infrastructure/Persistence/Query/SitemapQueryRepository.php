@@ -62,7 +62,10 @@ class SitemapQueryRepository
                 'changefreq' => 'weekly',
             ];
         }, Product::where('published', true)->where(function ($query) {
-            $query->doesntHave('modification')->orHas('main_modification');
+            // Исключаем товары-варианты модификаций: в карту сайта попадают
+            // только товары вне модификаций и базовые товары (is_primary = true).
+            $query->doesntHave('modification_product')
+                ->orWhereHas('modification_product', fn ($q) => $q->where('is_primary', true));
         })->getModels());
     }
 

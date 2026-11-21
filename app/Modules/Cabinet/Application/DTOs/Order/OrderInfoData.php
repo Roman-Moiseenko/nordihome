@@ -13,6 +13,7 @@ class OrderInfoData
         public string $statusName,
         public float $delivery,
         public string $address,
+        public int $quantity,
         public ?string $coupon = null,
     )
     {

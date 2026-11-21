@@ -25,7 +25,7 @@
                     </div>
                     <div>
                         <div class="f-z_14">Сумма заказа</div>
-                        <div class="f-z_23 f-w_600">29 290 ₽</div>
+                        <div class="f-z_23 f-w_600">{{ price($pageData->order->info->totalAmount) }}</div>
                     </div>
                 </div>
                 <div class="new-order-time bg-light-orange b-radius_12">
@@ -54,17 +54,31 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-5 d-none d-lg-block"><img src="/images/new-order/page-new-order01-min.jpg" alt="Ващ заказ в Норди хоум принят"></div>
+            <div class="col-lg-5 d-none d-lg-block"><img src="/images/new-order/page-new-order01-min.jpg" alt="Ваш заказ в Норди хоум принят"></div>
         </div>
         <div class="order-table-items">
-            <h3>Состав заказа (2 товара) ДОДЕЛАТЬ ТАБЛИЧКУ</h3>
+            <h3>Состав заказа ({{ $pageData->order->info->quantity }} товара(ов) )</h3>
             <div class="order-table-product f-z_16">
                 <div class="image"></div>
                 <div class="info">Наименование</div>
                 <div class="count">Количество</div>
                 <div class="price">Цена</div>
             </div>
-            <div class="order-table-product">
+
+            @foreach($pageData->order->items as $item)
+                <div class="order-table-product">
+                    <div class="image"><img src="{{ $item->productImage }}" alt="{{ $item->productName }}" class="b-radius_8"></div>
+                    <div class="info">
+                        <div class="m-b_5"><a href="{{ route('shop.product.view', $item->productSlug) }}">{{ $item->productName }}</a></div>
+                        <div class="f-z_16">Артикул: {{ $item->productCode }}</div>
+                    </div>
+                    <div class="count">{{ $item->quantity }} шт</div>
+                    <div class="f-w_600 price">{{ price($item->quantity * $item->sellCost) }}</div>
+                </div>
+            @endforeach
+
+
+            <!-- div class="order-table-product">
                 <div class="image"><img src="/images/no-image.jpg" alt="Название товара" class="b-radius_8"></div>
                 <div class="info">
                     <div class="m-b_5"><a href="/">Модульная кухня, темно-серая, 180x61 см КНОКСХУЛЬТ (KNOXHULT) ИКЕА</a></div>
@@ -81,19 +95,19 @@
                 </div>
                 <div class="count">1 шт</div>
                 <div class="f-w_600 price">29 290 ₽</div>
-            </div>
+            </div -->
             <div class="order-table-full">
                 <div class="order-table-full-item m-b_20">
                     <div>Итого:</div>
-                    <div><b>58 580 ₽</b></div>
+                    <div><b>{{ price($pageData->order->info->totalAmount) }}</b></div>
                 </div>
                 <div class="order-table-full-item">
                     <div>Доставка:</div>
-                    <div><b>-</b></div>
+                    <div><b>Стоимость доставки будет расчитана менеджером после обработки заказа</b></div>
                 </div>
             </div>
             <div class="order-table-total">
-                <div class="f-z_23 f-w_600">Итого: 58 580 ₽</div>
+                <div class="f-z_23 f-w_600">Итого: {{ price($pageData->order->info->totalAmount) }}</div>
             </div>
         </div>
         <div class="m-t_30 m-b_30 t-a_center">

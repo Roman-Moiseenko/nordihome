@@ -5,7 +5,7 @@
 @endphp
 @if($meta->title)<title>{{ $meta->title }}</title>@endif{{-- ==================== Базовые ==================== --}}
 
-@if($meta->description)<meta name="description" content="{{ $meta->description }}">@endif
+@if($meta->description)<meta name="description" content="{{ strip_tags($meta->description) }}">@endif
 
 @if($meta->canonical)<link rel="canonical" href="{{ $meta->canonical }}">@endif
 {{-- ==================== OpenGraph ==================== --}}
@@ -18,13 +18,13 @@
 <meta property="og:title" content="{{ $meta->ogTitle ?? $meta->title }}">
 @endif
 @if($meta->ogDescription ?? $meta->description)
-<meta property="og:description" content="{{ $meta->ogDescription ?? $meta->description }}">
+<meta property="og:description" content="{{ strip_tags($meta->ogDescription ?? $meta->description) }}">
 @endif
 @if($meta->ogUrl ?? $meta->canonical)
 <meta property="og:url" content="{{ $meta->ogUrl ?? $meta->canonical }}">
 @endif
 @foreach($meta->ogImages as $image){{-- ==================== OpenGraph Images ==================== --}}
-<meta property="og:image" content="{{ $domain . $image->url }}">
+<meta property="og:image" content="{{ $image->url }}">
 @if($image->width)
 <meta property="og:image:width" content="{{ $image->width }}">
 @endif

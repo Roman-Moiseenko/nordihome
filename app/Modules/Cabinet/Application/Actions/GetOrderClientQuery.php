@@ -34,7 +34,7 @@ readonly class GetOrderClientQuery
         $baseAmount = 0;
         $amountAddition = 0;
         $delivery = 0;
-
+        $quantity = 0;
 
         /** @var OrderItemEntity $item */
         foreach ($orderEntity->items as $item) {
@@ -64,6 +64,7 @@ readonly class GetOrderClientQuery
                 discountId: $item->discountId
 
             );
+            $quantity += $item->quantity;
             $amount += $item->sellCost * $item->quantity;
             $baseAmount += $item->baseCost * $item->quantity;
         }
@@ -88,6 +89,7 @@ readonly class GetOrderClientQuery
             statusName: $orderEntity->status->value->getName(),
             delivery: $delivery,
             address: $orderEntity->isPickup ? 'Самовывоз' : $orderEntity->address->getFullAddress(),
+            quantity: $quantity,
         );
         return new OrderClientData(
             id: $orderEntity->id,
