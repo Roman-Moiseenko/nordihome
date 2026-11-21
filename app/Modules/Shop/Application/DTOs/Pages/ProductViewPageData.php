@@ -4,6 +4,7 @@ namespace App\Modules\Shop\Application\DTOs\Pages;
 
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
+use App\Modules\Shop\Application\DTOs\Entities\ProductModificationData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Domain\Schema\SchemaData;
 
@@ -26,6 +27,7 @@ class ProductViewPageData
         public ?array $reviews = null,
         /** @var ProductCardData[] $related */
         public ?array $related = null, //Связанные (акссесуары)
+        /** @var ProductModificationData[] $modification */
         public ?array $modification = null,
 
         //TODO Рекомендации и Еще чтото

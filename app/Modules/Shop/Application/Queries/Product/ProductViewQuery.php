@@ -74,7 +74,7 @@ readonly class ProductViewQuery
             schema: $schema,
             attributes: $attributes,
             equivalents: $equivalentCards,
-            modification: [],
+            modification: $modification,
         );
     }
 }
