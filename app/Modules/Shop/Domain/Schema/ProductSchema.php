@@ -4,11 +4,14 @@ namespace App\Modules\Shop\Domain\Schema;
 
 class ProductSchema implements SchemaElement
 {
+    /**
+     * @param string[] $image
+     */
     public function __construct(
         private string $name,
         private string $description,
-        private string $image,
-        private string $sku,
+        private array $image = [],
+        private string $sku = '',
         private ?OfferSchema $offer = null,
         private string $url = '',
     ) {}

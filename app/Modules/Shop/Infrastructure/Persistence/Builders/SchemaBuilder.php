@@ -44,7 +44,7 @@ class SchemaBuilder
         $graph[] = new ProductSchema(
             name: $product->name,
             description: $product->description ?? '',
-            image: !empty($product->images) ? url($product->images[0]->src) : '',
+            image: array_map(fn($image) => url($image->src), $product->images),
             sku: $product->code,
             offer: new OfferSchema($product->price),
             url: route('shop.product.view', $product->slug)
@@ -63,7 +63,7 @@ class SchemaBuilder
         $graph[] = new ProductSchema(
             name: $product->name,
             description: $product->description,
-            image: !empty($product->images) ? url($product->images[0]->src) : '',
+            image: array_map(fn($image) => url($image->src), $product->images),
             sku: $product->code,
             offer: new OfferSchema($product->price),
             url: route('shop.ikea.product', $product->code)
