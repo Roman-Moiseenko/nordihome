@@ -5,6 +5,7 @@ namespace App\Modules\Content\Providers;
 use App\Modules\Content\Application\Services\WidgetRendererService;
 use App\Modules\Content\Database\Seeders\ContentRoleSeeder;
 use App\Modules\Content\Database\Seeders\MetaSeeder;
+use App\Modules\Content\Domain\Interfaces\ContactRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\ContentBlockRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\LabelPostRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\LabelRepositoryInterface;
@@ -13,6 +14,7 @@ use App\Modules\Content\Domain\Interfaces\PageRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\PostRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\WidgetInstanceRepositoryInterface;
 use App\Modules\Content\Domain\Interfaces\WidgetRepositoryInterface;
+use App\Modules\Content\Infrastructure\Persistence\ContactRepository;
 use App\Modules\Content\Infrastructure\Persistence\ContentBlockRepository;
 use App\Modules\Content\Infrastructure\Persistence\LabelPostRepository;
 use App\Modules\Content\Infrastructure\Persistence\LabelRepository;
@@ -115,6 +117,11 @@ class ContentServiceProvider extends ServiceProvider
         $this->app->bind(
             MetaTemplateRepositoryInterface::class,
             MetaTemplateRepository::class,
+        );
+
+        $this->app->bind(
+            ContactRepositoryInterface::class,
+            ContactRepository::class,
         );
 
         $this->app->bind(

@@ -159,14 +159,16 @@ function onOpenDialog() {
 
 function saveContact() {
     let _route = '';
+    let _method = 'post';
     if (form.id === null) {
-        _route = route('admin.content.contact.store' )
+        _route = route('admin.content.contact.store')
     } else {
-        _route = route('admin.content.contact.set-info', {contact: form.id})
+        _route = route('admin.content.contact.update', {id: form.id})
+        _method = 'put'
     }
 
     router.visit(_route , {
-        method: "post",
+        method: _method,
         data: form,
         preserveScroll: true,
         preserveState: true,
@@ -214,19 +216,17 @@ function onDown(row) {
 }
 
 const contactRouter = (id: Number, action: String) => {
-    router.visit(route('admin.content.contact.' + action, {contact: id}) , {
+    router.visit(route('admin.content.contact.' + action, {id: id}) , {
         method: "post",
         preserveScroll: true,
         preserveState: true,
         onSuccess: page => {
-          //  console.log(page.props.contacts)
             tableData.value = [...page.props.contacts]
-           // props.contacts = [...page.props.contacts]
         }
     })
 }
 
 function handleDeleteEntity(row) {
-    $delete_entity.show(route('admin.content.contact.destroy', {contact: row.id}));
+    $delete_entity.show(route('admin.content.contact.destroy', {id: row.id}));
 }
 </script>

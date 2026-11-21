@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Modules\Content\Infrastructure\Models;
@@ -20,6 +21,7 @@ use Illuminate\Database\Eloquent\Model;
 class Contact extends Model
 {
     public $timestamps = false;
+
     protected $fillable = [
         'name',
         'icon',
@@ -32,35 +34,7 @@ class Contact extends Model
         'channel',
     ];
 
-    public static function register(string $name, string $icon, string $color, string $url,
-                                     string $slug, ?string $svg = null, ?string $channel = null): self
-    {
-        $sort = self::count();
-        return self::create([
-            'name' => $name,
-            'icon' => $icon,
-            'color' => empty($color) ? '#000000' : $color,
-            'url' => $url,
-            'sort' => $sort + 1,
-            'published' => false,
-            'slug' => $slug,
-            'svg' => $svg,
-            'channel' => $channel,
-        ]);
-    }
-
-    public function isDraft(): bool
-    {
-        return $this->published == false;
-    }
-
-    public function published(): void
-    {
-        $this->update(['published' => true]);
-    }
-
-    public function draft(): void
-    {
-        $this->update(['published' => false]);
-    }
+    protected $casts = [
+        'published' => 'boolean',
+    ];
 }

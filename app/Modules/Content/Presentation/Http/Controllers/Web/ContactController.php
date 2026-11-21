@@ -1,87 +1,90 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Modules\Content\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Modules\Content\Application\Actions\Contact\CreateContactUseCase;
+use App\Modules\Content\Application\Actions\Contact\IndexContactQuery;
+use App\Modules\Content\Application\Actions\Contact\MoveContactUseCase;
+use App\Modules\Content\Application\Actions\Contact\RemoveContactUseCase;
+use App\Modules\Content\Application\Actions\Contact\ToggleContactUseCase;
+use App\Modules\Content\Application\Actions\Contact\UpdateContactUseCase;
+use App\Modules\Content\Application\DTOs\Contact\ContactCreateData;
+use App\Modules\Content\Application\DTOs\Contact\ContactUpdateData;
 use App\Modules\Content\Domain\ValueObjects\ContactChannel;
-use App\Modules\Content\Infrastructure\Models\Contact;
-use App\Modules\Content\Service\ContactService;
+use App\Modules\Shared\Domain\Entities\UserPermission;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Inertia\Response;
 
 class ContactController extends Controller
 {
-    private ContactService $service;
-
-    public function __construct(ContactService $service)
-    {
-        $this->service = $service;
+    public function __construct(
+        private readonly IndexContactQuery $indexContactQuery,
+        private readonly CreateContactUseCase $createContactUseCase,
+        private readonly UpdateContactUseCase $updateContactUseCase,
+        private readonly ToggleContactUseCase $toggleContactUseCase,
+        private readonly MoveContactUseCase $moveContactUseCase,
+        private readonly RemoveContactUseCase $removeContactUseCase,
+    ) {
     }
 
-    public function index(Request $request): \Inertia\Response
+    public function index(Request $request, UserPermission $userPermission): Response
     {
-        $contacts = Contact::orderBy('sort')->get();
         return Inertia::render('Content/Contact/Index', [
-            'contacts' => $contacts,
+            'contacts' => $this->indexContactQuery->execute($userPermission),
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request, UserPermission $userPermission): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|min:3',
-            'url' => 'required|string|min:6',
-        ]);
-        $this->service->create($request);
+        $dto = ContactCreateData::validateAndCreate($request->all());
+        $this->createContactUseCase->execute($dto, $userPermission);
+
+        return redirect()->back()->with('success', 'Контакт добавлен');
+    }
+
+    public function update(int $id, Request $request, UserPermission $userPermission): RedirectResponse
+    {
+        $dto = ContactUpdateData::validateAndCreate($request->all());
+        $this->updateContactUseCase->execute($id, $dto, $userPermission);
+
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-
-
-    public function set_info(Request $request, Contact $contact): RedirectResponse
+    public function toggle(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $request->validate([
-            'name' => 'required|string|min:3',
-            'url' => 'required|string|min:6',
-        ]);
-        $this->service->setInfo($request, $contact);
-        return redirect()->back()->with('success', 'Сохранено');
-    }
+        $message = $this->toggleContactUseCase->execute($id, $userPermission);
 
-
-    public function toggle(Contact $contact): RedirectResponse
-    {
-        if ($contact->isDraft()) {
-            $message = 'Контакт опубликован на сайте';
-            $contact->published();
-        } else {
-            $message = 'Контакт убран с сайта';
-            $contact->draft();
-        }
         return redirect()->back()->with('success', $message);
     }
 
-    public function up(Contact $contact): RedirectResponse
+    public function up(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->up($contact);
+        $this->moveContactUseCase->execute($id, 'up', $userPermission);
+
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function down(Contact $contact): RedirectResponse
+    public function down(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->down($contact);
+        $this->moveContactUseCase->execute($id, 'down', $userPermission);
+
         return redirect()->back()->with('success', 'Сохранено');
     }
 
-    public function destroy(Contact $contact): RedirectResponse
+    public function destroy(int $id, UserPermission $userPermission): RedirectResponse
     {
-        $this->service->destroy($contact);
-        return redirect()->back()->with('success', 'Контакт удален');
+        $this->removeContactUseCase->execute($id, $userPermission);
+
+        return redirect()->back()->with('success', 'Контакт удалён');
     }
 
-    public function listContacts(): \Illuminate\Http\JsonResponse
+    public function listContacts(): JsonResponse
     {
         return response()->json(ContactChannel::CONTACTS);
     }

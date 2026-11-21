@@ -18,14 +18,17 @@ class ContentRoleSeeder extends Seeder
         $post = $this->fillArrayPermissions('content', 'post', $this->listPermissions(true, true));
         $seo = $this->fillArrayPermissions('content', 'seo', $this->listPermissions(false, false));
         $widget = $this->fillArrayPermissions('content', 'widget', $this->listPermissions(false, false));
+        $contact = $this->fillArrayPermissions('content', 'contact', $this->listPermissions(false, false));
         $this->createPermission($page);
         $this->createPermission($seo);
         $this->createPermission($widget);
         $this->createPermission($post);
+        $this->createPermission($contact);
         $this->setPermissions('content', $page);
         $this->setPermissions('content', $seo);
         $this->setPermissions('content', $widget);
         $this->setPermissions('content', $post);
+        $this->setPermissions('content', $contact);
 
         $this->adminSet();
     }
