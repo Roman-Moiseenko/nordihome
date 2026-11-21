@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Modules\Accounting\Entity;
+namespace App\Modules\Accounting\Infrastructure\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @property int $trader_id

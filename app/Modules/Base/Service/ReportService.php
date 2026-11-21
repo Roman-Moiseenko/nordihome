@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Base\Service;
 
-use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Accounting\Infrastructure\Models\Organization;
 use Illuminate\Support\Facades\Config;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;

@@ -3,16 +3,13 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Controllers;
 
-use App\Events\ThrowableHasAppeared;
 use App\Http\Controllers\Controller;
-use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Repository\StorageRepository;
 use App\Modules\Accounting\Service\StorageService;
 use App\UseCase\PaginationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Config;
 use Inertia\Inertia;
 use Inertia\Response;
 

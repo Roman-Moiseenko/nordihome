@@ -2,14 +2,11 @@
 
 namespace App\Modules\Accounting\Service;
 
-use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\PaymentDecryption;
 use App\Modules\Accounting\Entity\PaymentDocument;
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Infrastructure\Models\Organization;
 use DB;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use JetBrains\PhpStorm\Deprecated;
 
 class PaymentDocumentService extends AccountingService
 {

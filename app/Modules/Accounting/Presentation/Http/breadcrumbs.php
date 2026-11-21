@@ -9,14 +9,14 @@ use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\Distributor;
 use App\Modules\Accounting\Entity\InventoryDocument;
 use App\Modules\Accounting\Entity\MovementDocument;
-use App\Modules\Accounting\Entity\Organization;
 use App\Modules\Accounting\Entity\PaymentDocument;
 use App\Modules\Accounting\Entity\PricingDocument;
 use App\Modules\Accounting\Entity\RefundDocument;
-use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Entity\SurplusDocument;
+use App\Modules\Accounting\Infrastructure\Models\Organization;
+use App\Modules\Accounting\Infrastructure\Models\Trader;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 

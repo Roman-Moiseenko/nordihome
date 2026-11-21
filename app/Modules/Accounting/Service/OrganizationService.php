@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Service;
 
-use App\Modules\Accounting\Entity\Organization;
-use App\Modules\Accounting\Entity\OrganizationContact;
 use App\Modules\Accounting\Entity\OrganizationHolding;
+use App\Modules\Accounting\Infrastructure\Models\Organization;
+use App\Modules\Accounting\Infrastructure\Models\OrganizationContact;
 use App\Modules\Base\Entity\FileStorage;
 use App\Modules\Base\Entity\FullName;
 use App\Modules\Base\Entity\GeoAddress;

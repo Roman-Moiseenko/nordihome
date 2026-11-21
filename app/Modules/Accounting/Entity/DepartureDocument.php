@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Accounting\Infrastructure\Models\Organization;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Shared\Infrastructure\Models\Photo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

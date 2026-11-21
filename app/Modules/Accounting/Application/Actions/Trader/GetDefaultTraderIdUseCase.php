@@ -2,7 +2,7 @@
 
 namespace App\Modules\Accounting\Application\Actions\Trader;
 
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Infrastructure\Models\Trader;
 
 class GetDefaultTraderIdUseCase
 {

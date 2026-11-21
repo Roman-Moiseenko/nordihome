@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Accounting\Controllers;
+namespace App\Modules\Accounting\Presentation\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
-use App\Modules\Accounting\Entity\Organization;
-use App\Modules\Accounting\Entity\OrganizationContact;
 use App\Modules\Accounting\Entity\OrganizationHolding;
+use App\Modules\Accounting\Infrastructure\Models\Organization;
+use App\Modules\Accounting\Infrastructure\Models\OrganizationContact;
 use App\Modules\Accounting\Repository\OrganizationRepository;
 use App\Modules\Accounting\Service\OrganizationService;
 use App\Modules\Guide\Entity\VAT;
@@ -15,7 +15,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class OrganizationController extends Controller
 {

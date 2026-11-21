@@ -3,6 +3,7 @@
 namespace App\Modules\Accounting\Entity;
 
 
+use App\Modules\Accounting\Infrastructure\Models\Organization;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 

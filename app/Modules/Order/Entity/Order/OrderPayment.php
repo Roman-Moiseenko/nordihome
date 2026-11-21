@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Order\Entity\Order;
 
-use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Accounting\Infrastructure\Models\Organization;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Base\Casts\BankPaymentCast;
 use App\Modules\Base\Entity\BankPayment;

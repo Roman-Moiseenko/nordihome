@@ -3,7 +3,7 @@
 namespace App\Modules\Accounting\Application\Actions\Trader;
 
 use App\Modules\Accounting\Application\DTOs\OrganizationListData;
-use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Accounting\Infrastructure\Models\Organization;
 
 class ListTradersUseCase
 {

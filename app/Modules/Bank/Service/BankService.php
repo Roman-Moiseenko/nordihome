@@ -3,7 +3,7 @@
 namespace App\Modules\Bank\Service;
 
 use App\Modules\Accounting\Entity\Currency;
-use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Accounting\Infrastructure\Models\Organization;
 use App\Modules\Accounting\Service\OrganizationService;
 use App\Modules\Accounting\Service\PaymentDocumentService;
 use App\Modules\Base\Entity\BankPayment;

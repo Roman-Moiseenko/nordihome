@@ -7,7 +7,7 @@ use App\Modules\Accounting\Entity\InventoryDocument;
 use App\Modules\Accounting\Entity\InventoryProduct;
 use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SurplusProduct;
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Infrastructure\Models\Trader;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use DB;

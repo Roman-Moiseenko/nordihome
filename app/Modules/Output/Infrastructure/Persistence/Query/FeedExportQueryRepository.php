@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Output\Infrastructure\Persistence\Query;
 
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Infrastructure\Models\Trader;
 use App\Modules\Catalog\Infrastructure\Models\Category;
 use App\Modules\Output\Domain\Entities\FeedEntity;
 use App\Modules\Shared\Application\Actions\GetGalleryThumbUseCase;

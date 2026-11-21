@@ -13,7 +13,7 @@ use App\Modules\Accounting\Entity\Storage;
 use App\Modules\Accounting\Entity\SupplyDocument;
 use App\Modules\Accounting\Entity\SupplyProduct;
 use App\Modules\Accounting\Entity\SupplyStack;
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Infrastructure\Models\Trader;
 use App\Modules\Accounting\Repository\StackRepository;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Order\Infrastructure\Models\OrderItem;

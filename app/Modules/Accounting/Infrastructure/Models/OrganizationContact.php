@@ -1,11 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Accounting\Entity;
+namespace App\Modules\Accounting\Infrastructure\Models;
 
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Entity\FullName;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 

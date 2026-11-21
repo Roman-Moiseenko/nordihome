@@ -8,7 +8,7 @@ use App\Modules\Accounting\Application\Actions\ProductPrice\GetPreviousPricesQue
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Accounting\Entity\SurplusDocument;
 use App\Modules\Accounting\Entity\SurplusProduct;
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Infrastructure\Models\Trader;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use DB;
 use Illuminate\Http\Request;

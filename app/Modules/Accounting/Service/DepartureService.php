@@ -9,7 +9,7 @@ use App\Modules\Accounting\Application\Actions\ProductPrice\GetPreviousPricesQue
 use App\Modules\Accounting\Domain\ValueObjects\PriceType;
 use App\Modules\Accounting\Entity\DepartureDocument;
 use App\Modules\Accounting\Entity\DepartureProduct;
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Infrastructure\Models\Trader;
 use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Catalog\Infrastructure\Models\Product;
 use App\Modules\Shared\Infrastructure\Models\Photo;

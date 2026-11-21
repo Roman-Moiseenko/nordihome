@@ -2,7 +2,7 @@
     /** @var App\Modules\Setting\Entity\Web $web */
 @endphp
 <!doctype html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="ru-RU">
 <head>
 
     <!--base href="https://39y.ru" /-->

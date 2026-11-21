@@ -1,8 +1,12 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Accounting\Entity;
+namespace App\Modules\Accounting\Infrastructure\Models;
 
+use App\Modules\Accounting\Entity\Distributor;
+use App\Modules\Accounting\Entity\DistributorOrganization;
+use App\Modules\Accounting\Entity\OrganizationHolding;
+use App\Modules\Accounting\Entity\PaymentDocument;
 use App\Modules\Auth\Infrastructure\Models\Client;
 use App\Modules\Base\Casts\FullNameCast;
 use App\Modules\Base\Casts\GeoAddressCast;

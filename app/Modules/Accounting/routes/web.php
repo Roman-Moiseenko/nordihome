@@ -6,16 +6,16 @@ use App\Modules\Accounting\Controllers\DepartureController;
 use App\Modules\Accounting\Controllers\DistributorController;
 use App\Modules\Accounting\Controllers\InventoryController;
 use App\Modules\Accounting\Controllers\MovementController;
-use App\Modules\Accounting\Controllers\OrganizationController;
 use App\Modules\Accounting\Controllers\PaymentController;
 use App\Modules\Accounting\Controllers\PricingController;
 use App\Modules\Accounting\Controllers\RefundController;
 use App\Modules\Accounting\Controllers\StorageController;
 use App\Modules\Accounting\Controllers\SupplyController;
 use App\Modules\Accounting\Controllers\SurplusController;
-use App\Modules\Accounting\Controllers\TraderController;
+use App\Modules\Accounting\Presentation\Http\Controllers\Web\OrganizationController;
 use App\Modules\Accounting\Presentation\Http\Controllers\Web\PricingRuleController;
 use App\Modules\Accounting\Presentation\Http\Controllers\Web\StockController;
+use App\Modules\Accounting\Presentation\Http\Controllers\Web\TraderController;
 use Illuminate\Support\Facades\Route;
 
 

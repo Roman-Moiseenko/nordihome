@@ -2,7 +2,7 @@
 
 namespace App\Modules\Accounting\Repository;
 
-use App\Modules\Accounting\Entity\Organization;
+use App\Modules\Accounting\Infrastructure\Models\Organization;
 use App\Modules\Base\Entity\FileStorage;
 use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Http\Request;

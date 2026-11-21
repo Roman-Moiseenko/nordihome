@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Accounting\Service;
 
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Infrastructure\Models\Trader;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 

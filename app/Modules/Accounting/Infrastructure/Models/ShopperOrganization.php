@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Modules\Accounting\Entity;
+namespace App\Modules\Accounting\Infrastructure\Models;
 
 use App\Modules\Auth\Infrastructure\Models\Client;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
 /**
  * @property int $user_id
  * @property int $organization_id

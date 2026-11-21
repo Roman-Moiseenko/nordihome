@@ -1,16 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Modules\Accounting\Controllers;
+namespace App\Modules\Accounting\Presentation\Http\Controllers\Web;
 
 
 use App\Http\Controllers\Controller;
 use App\Modules\Accounting\Application\Actions\Trader\ListTradersUseCase;
-use App\Modules\Accounting\Entity\Organization;
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Infrastructure\Models\Trader;
 use App\Modules\Accounting\Repository\TraderRepository;
 use App\Modules\Accounting\Service\TraderService;
-use App\Modules\Guide\Entity\VAT;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;

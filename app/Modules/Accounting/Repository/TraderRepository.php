@@ -2,8 +2,8 @@
 
 namespace App\Modules\Accounting\Repository;
 
-use App\Modules\Accounting\Entity\Organization;
-use App\Modules\Accounting\Entity\Trader;
+use App\Modules\Accounting\Infrastructure\Models\Organization;
+use App\Modules\Accounting\Infrastructure\Models\Trader;
 use Illuminate\Contracts\Support\Arrayable;
 
 class TraderRepository

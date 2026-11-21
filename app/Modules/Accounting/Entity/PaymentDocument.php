@@ -2,6 +2,7 @@
 
 namespace App\Modules\Accounting\Entity;
 
+use App\Modules\Accounting\Infrastructure\Models\Organization;
 use App\Modules\Base\Casts\BankPaymentCast;
 use App\Modules\Base\Entity\BankPayment;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
