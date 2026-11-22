@@ -84,7 +84,7 @@ readonly class IkeaViewQuery
 
         if (!is_null($category->image)) $meta->addImage(OgImage::fromData($category->image));
 
-        $schema = $this->schemaBuilder->buildForProductIndex($productCards, $category->slug, 'ikea', [], $meta);
+        //$schema = $this->schemaBuilder->buildForProductIndex($productCards, $category->slug, 'ikea', [], $meta);
 
         return new IkeaViewPageData(
             category: $category,
@@ -92,8 +92,6 @@ readonly class IkeaViewQuery
             products: $productCards,
             paginator: $paginator,
             meta: $meta,
-            schema: $schema,
-
         );
     }
 

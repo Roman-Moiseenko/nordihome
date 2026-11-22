@@ -10,6 +10,7 @@ readonly class OrderClientData
         //Дата заказа , номер присвоенный, статус, коментарий
         /** @var OrderInfoItemData[] $items */
         public array $items, //Позиции (товарные данные, кол-во, цена за единицу)
+        /** @var OrderInfoAdditionData[] $additions */
         public array $additions, //Доп.услуги
     )
     {

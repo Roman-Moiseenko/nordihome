@@ -14,6 +14,8 @@ class OrderInfoData
         public float $delivery,
         public string $address,
         public int $quantity,
+        public float $additionAmount,
+        public float $amount,
         public ?string $coupon = null,
     )
     {

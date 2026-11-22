@@ -18,7 +18,7 @@ class IkeaViewPageData
         public array $products,
         public PaginatorData        $paginator,
         public SeoData    $meta,
-        public SchemaData $schema,
+        //public SchemaData $schema,
     )
     {
 

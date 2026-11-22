@@ -76,35 +76,22 @@
                     <div class="f-w_600 price">{{ price($item->quantity * $item->sellCost) }}</div>
                 </div>
             @endforeach
-
-
-            <!-- div class="order-table-product">
-                <div class="image"><img src="/images/no-image.jpg" alt="Название товара" class="b-radius_8"></div>
-                <div class="info">
-                    <div class="m-b_5"><a href="/">Модульная кухня, темно-серая, 180x61 см КНОКСХУЛЬТ (KNOXHULT) ИКЕА</a></div>
-                    <div class="f-z_16">Артикул: 296.149.37</div>
-                </div>
-                <div class="count">1 шт</div>
-                <div class="f-w_600 price">29 290 ₽</div>
-            </div>
-            <div class="order-table-product">
-                <div class="image"><img src="/images/no-image.jpg" alt="Название товара" class="b-radius_8"></div>
-                <div class="info">
-                    <div class="m-b_5"><a href="/">Модульная кухня, темно-серая, 180x61 см КНОКСХУЛЬТ (KNOXHULT) ИКЕА</a></div>
-                    <div class="f-z_16">Артикул: 296.149.37</div>
-                </div>
-                <div class="count">1 шт</div>
-                <div class="f-w_600 price">29 290 ₽</div>
-            </div -->
             <div class="order-table-full">
                 <div class="order-table-full-item m-b_20">
                     <div>Итого:</div>
-                    <div><b>{{ price($pageData->order->info->totalAmount) }}</b></div>
+                    <div><b>{{ price($pageData->order->info->amount) }}</b></div>
                 </div>
-                <div class="order-table-full-item">
-                    <div>Доставка:</div>
-                    <div><b>Стоимость доставки будет расчитана менеджером после обработки заказа</b></div>
-                </div>
+                @foreach($pageData->order->additions as $addition)
+                    <div class="order-table-full-item">
+                        <div>{{ $addition->name }}:</div>
+                        <div><b>{{ ($addition->amount == 0) ? 'будет расчитана менеджером после обработки заказа' : price($addition->amount) }}</b></div>
+                    </div>
+                @endforeach
+
+                <!--div class="order-table-full-item">
+                    <div>Доставка по России:</div>
+                    <div><b>- будет расчитана менеджером после обработки заказа</b></div>
+                </div-->
             </div>
             <div class="order-table-total">
                 <div class="f-z_23 f-w_600">Итого: {{ price($pageData->order->info->totalAmount) }}</div>

@@ -3,6 +3,7 @@
 namespace App\Modules\Cabinet\Application\Actions;
 
 use App\Modules\Cabinet\Application\DTOs\Order\OrderClientData;
+use App\Modules\Cabinet\Application\DTOs\Order\OrderInfoAdditionData;
 use App\Modules\Cabinet\Application\DTOs\Order\OrderInfoData;
 use App\Modules\Cabinet\Application\DTOs\Order\OrderInfoItemData;
 use App\Modules\Guide\Domain\ValueObjects\AdditionType;
@@ -75,7 +76,7 @@ readonly class GetOrderClientQuery
                 $delivery += $addition->amount;
                 //if (!is_null($additionGuide->calculate)) $delivery += $additionGuide->calculate;
             }
-            $additions[] = [];
+            $additions[] = new OrderInfoAdditionData($additionGuide->name, $addition->quantity, $addition->amount);
             $amountAddition += $addition->amount;
             //if (!is_null($additionGuide->calculate)) $amountAddition += $additionGuide->calculate;
         }
@@ -90,6 +91,8 @@ readonly class GetOrderClientQuery
             delivery: $delivery,
             address: $orderEntity->isPickup ? 'Самовывоз' : $orderEntity->address->getFullAddress(),
             quantity: $quantity,
+            additionAmount: $amountAddition,
+            amount: $amount,
         );
         return new OrderClientData(
             id: $orderEntity->id,
