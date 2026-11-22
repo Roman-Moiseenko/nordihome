@@ -118,7 +118,6 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="f-z_14 m-b_20">Уточняйте наличие товара на данный момент</div>
                     </div>
                     <div class="product-card-to-cart">
                         @if($product->is_sale)
