@@ -11,6 +11,7 @@ use App\Modules\Shop\Application\DTOs\Entities\PageData;
 use App\Modules\Shop\Application\DTOs\Entities\PostCardData;
 use App\Modules\Shop\Application\DTOs\Entities\PostCategoryData;
 use App\Modules\Shop\Application\DTOs\Entities\PostData;
+use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\CatalogIndexPageData;
@@ -115,6 +116,14 @@ class SchemaBuilder
         return new SchemaData($graph);
     }
 
+    /**
+     * @param ProductCardData[] $products
+     * @param string $slug
+     * @param string $entity
+     * @param array $faq
+     * @param SeoData $seo
+     * @return SchemaData
+     */
     public function buildForProductIndex(array $products, string $slug, string $entity, array $faq, SeoData $seo): SchemaData
     {
         $graph = [];
@@ -122,11 +131,21 @@ class SchemaBuilder
         $this->appendOrganization($graph);
         $breadcrumbs = $this->breadcrumbProvider->generate('shop.' . $entity . '.view', [$slug]);
         $graph[] = new BreadcrumbSchema($breadcrumbs);
+
         // Категория с товарами – список товаров
         $items = array_map(
             fn($product) => [
+                'type' => 'Product',
                 'name' => $product->name,
+                'mainEntityOfPage' => route('shop.product.view', $product->slug),
                 'url' => route('shop.product.view', $product->slug),
+                'image' => $product->image->full,
+                "Offers" => [
+                    "@type" => "Offer",
+                        "price" => number_format($product->price, 2, ',', ''),
+                        "priceCurrency" => "RUB",
+                        "availability" => $product->only_on_order ? 'https://schema.org/PreOrder' : "https://schema.org/InStock"
+                    ],
             ],
             $products
         );

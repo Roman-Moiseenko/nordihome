@@ -16,7 +16,7 @@ class FAQSchema implements SchemaElement
                 'name'           => $item['question'],
                 'acceptedAnswer' => [
                     '@type' => 'Answer',
-                    'text'  => $item['answer'],
+                    'text'  => trim(strip_tags($item['answer'])),
                 ],
             ];
         }

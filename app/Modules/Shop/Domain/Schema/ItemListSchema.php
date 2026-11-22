@@ -12,7 +12,7 @@ class ItemListSchema implements SchemaElement
         $listItems = [];
         foreach ($this->items as $index => $item) {
             $listItems[] = [
-                '@type'    => 'ListItem',
+                '@type'    => $item['type'] ?? 'ListItem',
                 'position' => $index + 1,
                 'url'      => $item['url'],
                 'name'     => $item['name'],

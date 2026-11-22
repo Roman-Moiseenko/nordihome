@@ -54,7 +54,7 @@ const loadData = () => {
             id: item.id,
             name: item.name,
             title: item.template_title,
-            description: item.description_title,
+            description: item.template_description,
             variables: [...item.variables]
         });
     })
