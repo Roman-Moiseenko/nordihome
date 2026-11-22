@@ -42,6 +42,9 @@ class ProductData
         public bool                 $only_on_order,
         public int                  $quantity = 1,
 
+        public ?string              $publishedAt = null,
+        public ?string              $updatedAt = null,
+
 
     )
     {

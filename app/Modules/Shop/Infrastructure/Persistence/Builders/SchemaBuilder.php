@@ -4,6 +4,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Builders;
 
 use App\Modules\Accounting\Application\Actions\Organization\GetSellerOrganizationQuery;
 use App\Modules\Accounting\Application\DTOs\Organization\OrganizationSchemaData;
+use App\Modules\Catalog\Domain\ValueObjects\AttributeName;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomData;
 use App\Modules\Shop\Application\DTOs\Entities\IkeaProductData;
 use App\Modules\Shop\Application\DTOs\Entities\PageData;
@@ -20,6 +21,7 @@ use App\Modules\Shop\Domain\Schema\FAQSchema;
 use App\Modules\Shop\Domain\Schema\ItemListSchema;
 use App\Modules\Shop\Domain\Schema\OfferSchema;
 use App\Modules\Shop\Domain\Schema\OrganizationSchema;
+use App\Modules\Shop\Domain\Schema\ProductOfferSchema;
 use App\Modules\Shop\Domain\Schema\ProductSchema;
 use App\Modules\Shop\Domain\Schema\SchemaData;
 use App\Modules\Shop\Domain\Schema\WebPageSchema;
@@ -27,6 +29,7 @@ use App\Modules\Shop\Domain\Schema\WebPageSchema;
 class SchemaBuilder
 {
     private ?OrganizationSchema $organization = null;
+    private ?OrganizationSchemaData $organizationData = null;
     private bool $organizationResolved = false;
 
     public function __construct(
@@ -34,20 +37,36 @@ class SchemaBuilder
         private readonly GetSellerOrganizationQuery $sellerOrganizationQuery,
     ) {}
 
-    public function buildForProduct(ProductData $product, SeoData $seo): SchemaData
+    /**
+     * @param array<string, array<int, array{name: string, value: mixed}>> $attributes
+     * @param array<int, array{name: string, slug: string, image: string}> $categories
+     */
+    public function buildForProduct(ProductData $product, SeoData $seo, array $attributes = [], array $categories = []): SchemaData
     {
         $graph = [];
-        $graph[] = $this->webPage($seo);
+        $graph[] = $this->webPage($seo, $product->publishedAt, $product->updatedAt);
         $this->appendOrganization($graph);
         $breadcrumbs = $this->breadcrumbProvider->generate('shop.product.view', [$product->slug]);
         $graph[] = new BreadcrumbSchema($breadcrumbs);
         $graph[] = new ProductSchema(
             name: $product->name,
-            description: $product->description ?? '',
+            description: trim(strip_tags($product->description ?? '')),
             image: array_map(fn($image) => url($image->src), $product->images),
             sku: $product->code,
-            offer: new OfferSchema($product->price),
-            url: route('shop.product.view', $product->slug)
+            offer: new ProductOfferSchema(
+                price: $product->price,
+                availability: $product->only_on_order ? 'PreOrder' : 'InStock',
+                seller: $this->buildSeller(),
+            ),
+            url: route('shop.product.view', $product->slug),
+            mpn: $product->code,
+            id: $this->productSchemaId($product),
+            category: $this->buildCategories($categories),
+            color: $this->resolveColor($attributes),
+            width: $product->dimensions->width > 0 ? $product->dimensions->width : null,
+            height: $product->dimensions->height > 0 ? $product->dimensions->height : null,
+            depth: $product->dimensions->depth > 0 ? $product->dimensions->depth : null,
+            brand: $this->buildBrand($product),
         );
 
         return new SchemaData($graph);
@@ -62,7 +81,7 @@ class SchemaBuilder
         $graph[] = new BreadcrumbSchema($breadcrumbs);
         $graph[] = new ProductSchema(
             name: $product->name,
-            description: $product->description,
+            description: trim(strip_tags($product->description ?? '')),
             image: array_map(fn($image) => url($image->src), $product->images),
             sku: $product->code,
             offer: new OfferSchema($product->price),
@@ -174,13 +193,31 @@ class SchemaBuilder
         return new SchemaData($graph);
     }
 
-    private function webPage(SeoData $seo): WebPageSchema
+    private function webPage(SeoData $seo, ?string $datePublished = null, ?string $dateModified = null): WebPageSchema
     {
         return new WebPageSchema(
             name: $seo->title,
             description: trim(strip_tags($seo->description)),
             url: url()->current(),
+            datePublished: $datePublished,
+            dateModified: $dateModified,
+            potentialAction: $this->searchAction(),
         );
+    }
+
+    /**
+     * @return array{@type: string, target: array{@type: string, urlTemplate: string}, 'query-input': string}
+     */
+    private function searchAction(): array
+    {
+        return [
+            '@type'       => 'SearchAction',
+            'target'      => [
+                '@type'      => 'EntryPoint',
+                'urlTemplate' => route('shop.product.search-index') . '?q={search_term_string}',
+            ],
+            'query-input' => 'required name=search_term_string',
+        ];
     }
 
     /**
@@ -201,6 +238,7 @@ class SchemaBuilder
 
             $data = $this->sellerOrganizationQuery->execute();
             if ($data !== null) {
+                $this->organizationData = $data;
                 $this->organization = $this->buildOrganization($data);
             }
         }
@@ -212,7 +250,7 @@ class SchemaBuilder
     {
         return new OrganizationSchema(
             name: $data->name,
-            url: config('app.url'),
+            url: $data->url !== '' ? $data->url : config('app.url'),
             logoUrl: $data->logoUrl,
             logoWidth: $data->logoWidth,
             logoHeight: $data->logoHeight,
@@ -241,5 +279,98 @@ class SchemaBuilder
             'addressLocality' => $address->city,
             'streetAddress' => $streetAddress,
         ];
+    }
+
+    private function productSchemaId(ProductData $product): string
+    {
+        $code = preg_replace('/[\s\-.]/', '', $product->code);
+
+        return route('shop.product.view', $product->slug) . '#' . $code;
+    }
+
+    /**
+     * @param array<int, array{name: string, slug: string, image: string}> $categories
+     * @return array<int, array{@type: string, name: string, url: string, image?: string}>
+     */
+    private function buildCategories(array $categories): array
+    {
+        $result = [];
+
+        foreach ($categories as $category) {
+            $item = [
+                '@type' => 'CategoryCode',
+                'name'  => $category['name'],
+                'url'   => route('shop.category.view', $category['slug']),
+            ];
+
+            if (!empty($category['image'])) {
+                $item['image'] = $category['image'];
+            }
+
+            $result[] = $item;
+        }
+
+        return $result;
+    }
+
+    /**
+     * @return array{@type: string, name: string, logo?: string}
+     */
+    private function buildBrand(ProductData $product): array
+    {
+        $brand = [
+            '@type' => 'Brand',
+            'name'  => $product->brandName,
+        ];
+
+        if ($product->brandLogo !== '') {
+            $brand['logo'] = $product->brandLogo;
+        }
+
+        return $brand;
+    }
+
+    /**
+     * @return array{@type: string, name: string, url: string, brand?: array{@type: string, name: string}}
+     */
+    private function buildSeller(): array
+    {
+        $data = $this->organizationData;
+        if ($data === null) {
+            return [];
+        }
+
+        $seller = [
+            '@type' => 'Organization',
+            'name'  => $data->name,
+            'url'   => $data->url !== '' ? $data->url : config('app.url'),
+        ];
+
+        if ($data->traderName !== '') {
+            $seller['brand'] = [
+                '@type' => 'Brand',
+                'name'  => $data->traderName,
+            ];
+        }
+
+        return $seller;
+    }
+
+    /**
+     * @param array<string, array<int, array{name: string, value: mixed}>> $attributes
+     */
+    private function resolveColor(array $attributes): string
+    {
+        foreach ($attributes as $group) {
+            foreach ($group as $attribute) {
+                if (($attribute['name'] ?? '') === AttributeName::COLOR) {
+                    $value = $attribute['value'] ?? '';
+
+                    return is_array($value) ? implode(', ', $value) : (string) $value;
+                }
+            }
+        }
+
+        return '';
     }
 }

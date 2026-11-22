@@ -27,6 +27,8 @@ class ProductPrice extends Model
 
     public $timestamps = false;
 
+    public $touches = ['product'];
+
     protected $fillable = [
         'product_id',
         'type',

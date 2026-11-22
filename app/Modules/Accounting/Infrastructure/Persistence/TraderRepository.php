@@ -28,6 +28,7 @@ class TraderRepository implements TraderRepositoryInterface
 
         $model->name = $trader->name;
         $model->description = $trader->description;
+        $model->url = $trader->url;
         $model->default = $trader->isDefault();
         $model->active = $trader->active;
 
@@ -104,6 +105,7 @@ class TraderRepository implements TraderRepositoryInterface
         $entity = new TraderEntity($model->name);
         $entity->id = $model->id;
         $entity->description = (string) $model->description;
+        $entity->url = (string) $model->url;
         $entity->default = (bool) $model->default;
         $entity->active = (bool) $model->active;
 

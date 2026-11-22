@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasOneThrough;
  * @property int $id
  * @property string $name
  * @property string $description
+ * @property string $url
  * @property bool $default
  * @property bool $active
  * @property Organization $organization
@@ -24,6 +25,7 @@ class Trader extends Model
 
     protected $fillable = [
         'name',
+        'url',
         'active'
     ];
 

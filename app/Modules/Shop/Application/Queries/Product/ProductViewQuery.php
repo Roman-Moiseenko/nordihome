@@ -42,6 +42,7 @@ readonly class ProductViewQuery
         );
 
         $attributes = $this->repository->getAttributes($product);
+        $categories = $this->repository->getCategories($product->id);
 
         $meta = $this->seoAdapter->getSeo('catalog.product', $product);
         $meta->canonical = route('shop.product.view', $product->slug);
@@ -53,7 +54,7 @@ readonly class ProductViewQuery
         $meta->productRetailerId = $product->code;
         $meta->productPrice = $product->price;
 
-        $schema = $this->schemaBuilder->buildForProduct($product, $meta);
+        $schema = $this->schemaBuilder->buildForProduct($product, $meta, $attributes, $categories);
         $equivalentIds = $this->equivalentRepository->getProductIds($product->id);
 
         $equivalents = $this->indexQueryRepository->loadProductCards($equivalentIds, $clientContext);

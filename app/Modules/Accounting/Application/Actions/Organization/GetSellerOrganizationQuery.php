@@ -11,6 +11,7 @@ use App\Modules\Accounting\Domain\Interfaces\TraderRepositoryInterface;
 use App\Modules\Content\Domain\Entities\ContactEntity;
 use App\Modules\Content\Domain\Interfaces\ContactRepositoryInterface;
 use App\Modules\Content\Domain\ValueObjects\ContactChannel;
+use App\Modules\Shared\Infrastructure\Services\PhotoService;
 
 readonly class GetSellerOrganizationQuery
 {
@@ -18,6 +19,7 @@ readonly class GetSellerOrganizationQuery
         private TraderRepositoryInterface $traderRepository,
         private OrganizationRepositoryInterface $organizationRepository,
         private ContactRepositoryInterface $contactRepository,
+        private PhotoService $photoService,
     ) {
     }
 
@@ -40,13 +42,24 @@ readonly class GetSellerOrganizationQuery
         return new OrganizationSchemaData(
             name: $organization->shortName,
             address: $organization->actualAddress,
-            logoUrl: $trader->logo?->getUrl() ?? '',
+            url: $trader->url,
+            logoUrl: $this->resolveLogoUrl($trader),
             logoWidth: $trader->logo?->getWidth() ?? 0,
             logoHeight: $trader->logo?->getHeight() ?? 0,
             logoCaption: $trader->name,
             sameAs: $sameAs,
             phones: $phones,
+            traderName: $trader->name,
         );
+    }
+
+    private function resolveLogoUrl(TraderEntity $trader): string
+    {
+        if ($trader->logo === null || $trader->logo->getId() === null) {
+            return '';
+        }
+
+        return $this->photoService->getUploadUrlById((int) $trader->logo->getId());
     }
 
     private function resolveDefaultOrganizationId(TraderEntity $trader): ?int
@@ -79,7 +92,7 @@ readonly class GetSellerOrganizationQuery
             }
 
             $url = trim($contact->url);
-            if ($url !== '') {
+            if ($url !== '' && $this->isHttpUrl($url)) {
                 $sameAs[] = $url;
             }
         }
@@ -104,5 +117,16 @@ readonly class GetSellerOrganizationQuery
         if ($phone !== '') {
             $phones[] = $phone;
         }
+    }
+
+    private function isHttpUrl(string $url): bool
+    {
+        if (!filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+
+        $scheme = strtolower((string) parse_url($url, PHP_URL_SCHEME));
+
+        return in_array($scheme, ['http', 'https'], true);
     }
 }

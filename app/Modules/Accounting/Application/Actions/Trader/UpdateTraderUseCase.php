@@ -27,6 +27,7 @@ readonly class UpdateTraderUseCase
 
         if ($dto->name !== null) $trader->name = $dto->name;
         if ($dto->description !== null) $trader->description = $dto->description;
+        if ($dto->url !== null) $trader->url = $dto->url;
 
         if ($dto->default !== null) {
             if ($dto->default) {

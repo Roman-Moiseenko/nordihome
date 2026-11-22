@@ -18,6 +18,8 @@ class TraderUpdateData extends Data
         public readonly ?string $name = null,
         #[Nullable, StringType]
         public readonly ?string $description = null,
+        #[Nullable, StringType]
+        public readonly ?string $url = null,
         #[Nullable, BooleanType]
         public readonly ?bool $default = null,
         #[Nullable, Numeric]

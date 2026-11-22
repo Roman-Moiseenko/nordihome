@@ -2,21 +2,43 @@
 
 namespace App\Modules\Shop\Domain\Schema;
 
-class WebPageSchema implements SchemaElement
+readonly class WebPageSchema implements SchemaElement
 {
+    /**
+     * @param array{@type: string, target?: array{@type: string, urlTemplate: string}, 'query-input'?: string} $potentialAction
+     */
     public function __construct(
         private string $name,
         private string $description,
         private string $url,
+        private string $inLanguage = 'ru-RU',
+        private ?string $datePublished = null,
+        private ?string $dateModified = null,
+        private array $potentialAction = [],
     ) {}
 
     public function toArray(): array
     {
-        return [
-            '@type'        => 'WebPage',
-            'name'         => $this->name,
-            'description'  => $this->description,
-            'url'          => $this->url,
+        $data = [
+            '@type'       => 'WebPage',
+            'name'        => $this->name,
+            'description' => $this->description,
+            'url'         => $this->url,
+            'inLanguage'  => $this->inLanguage,
         ];
+
+        if ($this->datePublished !== null) {
+            $data['datePublished'] = $this->datePublished;
+        }
+
+        if ($this->dateModified !== null) {
+            $data['dateModified'] = $this->dateModified;
+        }
+
+        if (!empty($this->potentialAction)) {
+            $data['potentialAction'] = $this->potentialAction;
+        }
+
+        return $data;
     }
 }

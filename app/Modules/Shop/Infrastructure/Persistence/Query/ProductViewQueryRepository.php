@@ -91,6 +91,7 @@ class ProductViewQueryRepository
                 'products.not_sale',
                 'products.price_reduced',
                 'products.published_at',
+                'products.updated_at',
                 'products.local',
                 'products.delivery',
                 'products.dimensions',
@@ -255,6 +256,8 @@ class ProductViewQueryRepository
             short: $row->short,
             care: $row->care,
             only_on_order: (bool)$row->only_on_order,
+            publishedAt: $row->published_at ? \Carbon\Carbon::parse($row->published_at)->format('Y-m-d') : null,
+            updatedAt: $row->updated_at ? \Carbon\Carbon::parse($row->updated_at)->format('Y-m-d') : null,
         );
     }
 
@@ -369,6 +372,64 @@ class ProductViewQueryRepository
             $result[$groupName][] = [
                 'name' => $attr['name'],
                 'value' => $value,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * Возвращает категории товара: основную (main_category_id) и привязанные через pivot.
+     *
+     * @return array<int, array{name: string, slug: string, image: string}>
+     */
+    public function getCategories(int $productId): array
+    {
+        $mainCategoryId = DB::table('products')->where('id', $productId)->value('main_category_id');
+        $pivotIds = DB::table('categories_products')->where('product_id', $productId)->pluck('category_id')->toArray();
+
+        $ids = array_values(array_unique(array_merge(
+            $mainCategoryId !== null ? [(int) $mainCategoryId] : [],
+            array_map('intval', $pivotIds),
+        )));
+
+        if (empty($ids)) {
+            return [];
+        }
+
+        $rows = DB::table('categories')
+            ->whereIn('categories.id', $ids)
+            ->leftJoin('photos', function ($join) {
+                $join->on('categories.id', '=', 'photos.imageable_id')
+                    ->where('photos.model_type', '=', 'catalog.category')
+                    ->where('photos.type', '=', 'image');
+            })
+            ->select(
+                'categories.id',
+                'categories.name',
+                'categories.slug',
+                'photos.id as photo_id',
+                'photos.file as photo_file',
+            )
+            ->get();
+
+        $result = [];
+        foreach ($rows as $row) {
+            $image = '';
+            if (!empty($row->photo_id) && !empty($row->photo_file)) {
+                $photoRow = new \stdClass();
+                $photoRow->id = (int) $row->id;
+                $photoRow->photo_id = (int) $row->photo_id;
+                $photoRow->photo_file = $row->photo_file;
+                $photoRow->model_type = 'catalog.category';
+
+                $image = $this->imageThumbUseCase->execute($photoRow, null);
+            }
+
+            $result[] = [
+                'name' => $row->name,
+                'slug' => $row->slug,
+                'image' => $image,
             ];
         }
 

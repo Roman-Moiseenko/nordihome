@@ -20,6 +20,15 @@
                         <el-input v-model="info.description" type="textarea" rows="3"/>
                     </div>
                 </el-descriptions-item>
+                <el-descriptions-item label="Сайт">
+                    <div v-show="!editTrader">
+                        <a v-if="trader.url" :href="trader.url" target="_blank" rel="noopener">{{ trader.url }}</a>
+                        <span v-else>—</span>
+                    </div>
+                    <div v-show="editTrader">
+                        <el-input v-model="info.url" placeholder="https://example.com"/>
+                    </div>
+                </el-descriptions-item>
                 <el-descriptions-item label="По умолчанию">
                     <div v-show="!editTrader">
                         <Active :active="trader.default"/>
@@ -93,6 +102,7 @@ const info = reactive({
     name: props.trader.name,
     default: !!props.trader.default,
     description: props.trader.description,
+    url: props.trader.url ?? '',
 })
 
 function detachOrganization(id) {

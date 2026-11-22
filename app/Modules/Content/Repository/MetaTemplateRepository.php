@@ -286,10 +286,17 @@ class MetaTemplateRepository
     {
         $propertyName = trim($var, '{}');
 
-        // 1. Публичное свойство
+        // 1. Публичное свойство с точным именем
         if (property_exists($dto, $propertyName)) {
             return $this->valueToString($dto->{$propertyName});
         }
+
+        // 2. Свойство с суффиксом Name (например {category} => categoryName, {brand} => brandName)
+        $propertyNameWithSuffix = $propertyName . 'Name';
+        if (property_exists($dto, $propertyNameWithSuffix)) {
+            return $this->valueToString($dto->{$propertyNameWithSuffix});
+        }
+
         return '';
     }
 

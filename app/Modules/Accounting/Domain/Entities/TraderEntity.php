@@ -23,6 +23,11 @@ final class TraderEntity
         set => $this->description = $value;
     }
 
+    public string $url = '' {
+        get => $this->url;
+        set => $this->url = $value;
+    }
+
     public bool $default = false {
         get => $this->default;
         set => $this->default = $value;

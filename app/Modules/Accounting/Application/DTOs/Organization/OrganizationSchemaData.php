@@ -15,12 +15,14 @@ final readonly class OrganizationSchemaData
     public function __construct(
         public string $name,
         public Address $address,
+        public string $url = '',
         public string $logoUrl = '',
         public int $logoWidth = 0,
         public int $logoHeight = 0,
         public string $logoCaption = '',
         public array $sameAs = [],
         public array $phones = [],
+        public string $traderName = '',
     ) {
     }
 }

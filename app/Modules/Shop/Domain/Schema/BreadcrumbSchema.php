@@ -18,7 +18,7 @@ class BreadcrumbSchema implements SchemaElement
             $listItems[] = [
                 '@type'    => 'ListItem',
                 'position' => $index + 1,
-                'name'     => $item['name'],
+                'name'     => $index === 0 ? 'Главная' : $item['name'],
                 'item'     => $item['url'],
             ];
         }
