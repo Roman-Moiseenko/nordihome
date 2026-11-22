@@ -14,8 +14,6 @@ use App\Modules\Shop\Application\DTOs\Entities\PostData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
-use App\Modules\Shop\Application\DTOs\Pages\CatalogIndexPageData;
-use App\Modules\Shop\Application\DTOs\Pages\PostViewPageData;
 use App\Modules\Shop\Application\Interfaces\BreadcrumbProviderInterface;
 use App\Modules\Shop\Domain\Schema\BreadcrumbSchema;
 use App\Modules\Shop\Domain\Schema\FAQSchema;
@@ -139,7 +137,7 @@ class SchemaBuilder
                 'name' => $product->name,
                 'mainEntityOfPage' => route('shop.product.view', $product->slug),
                 'url' => route('shop.product.view', $product->slug),
-                'image' => $product->image->full,
+                'image' => $product->image->src,
                 "Offers" => [
                     "@type" => "Offer",
                         "price" => number_format($product->price, 2, ',', ''),
