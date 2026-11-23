@@ -7,6 +7,7 @@ namespace App\Modules\Setting\Controllers;
 use App\Http\Controllers\Controller;
 use App\Modules\Setting\Application\Actions\ClearAllCacheUseCase;
 use App\Modules\Setting\Application\Actions\CreateThumbsUseCase;
+use App\Modules\Setting\Application\Actions\MigrateUseCase;
 use App\Modules\Setting\Application\Actions\RecacheUseCase;
 use App\Modules\Setting\Application\Actions\ReCreateThumbsUseCase;
 use Illuminate\Http\JsonResponse;
@@ -21,6 +22,7 @@ class SettingCacheController extends Controller
         private readonly RecacheUseCase        $recacheUseCase,
         private readonly CreateThumbsUseCase   $createThumbsUseCase,
         private readonly ReCreateThumbsUseCase $reCreateThumbsUseCase,
+        private readonly MigrateUseCase        $migrateUseCase,
     )
     {
     }
@@ -55,6 +57,12 @@ class SettingCacheController extends Controller
     public function recache(): JsonResponse
     {
         $message = $this->recacheUseCase->execute();
+        return response()->json(['message' => $message]);
+    }
+
+    public function migrate(): JsonResponse
+    {
+        $message = $this->migrateUseCase->execute();
         return response()->json(['message' => $message]);
     }
 }

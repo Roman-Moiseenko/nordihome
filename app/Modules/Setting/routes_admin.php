@@ -25,6 +25,7 @@ Route::group([
     Route::get('/', [SettingCacheController::class, 'index'])->name('index');
 
     Route::post('/clear-all', [SettingCacheController::class, 'clearAll'])->name('clear-all');
+    Route::post('/migrate', [SettingCacheController::class, 'migrate'])->name('migrate');
     Route::post('/clearImage', [SettingCacheController::class, 'clearImage'])->name('clear-image');
     Route::post('/recreate-thumbs', [SettingCacheController::class, 'recreateThumbs'])->name('recreate-thumbs');
     Route::post('/create-thumbs', [SettingCacheController::class, 'createThumbs'])->name('create-thumbs');
