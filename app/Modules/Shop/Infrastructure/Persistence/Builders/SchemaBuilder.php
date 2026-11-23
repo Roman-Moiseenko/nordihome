@@ -15,6 +15,7 @@ use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\Interfaces\BreadcrumbProviderInterface;
+use App\Modules\Shop\Domain\Schema\ArticleSchema;
 use App\Modules\Shop\Domain\Schema\BreadcrumbSchema;
 use App\Modules\Shop\Domain\Schema\FAQSchema;
 use App\Modules\Shop\Domain\Schema\ItemListSchema;
@@ -171,6 +172,15 @@ class SchemaBuilder
         $this->appendOrganization($graph);
         $breadcrumbs = $this->breadcrumbProvider->generate('shop.post.view', [$data->slug]);
         $graph[] = new BreadcrumbSchema($breadcrumbs);
+        $graph[] = new ArticleSchema(
+            headline: $data->title,
+            description: $data->fragment,
+            image: $this->articleImage($data),
+            datePublished: $data->publishedAt !== '' ? $data->publishedAt : null,
+            dateModified: $data->updatedAt !== '' ? $data->updatedAt : null,
+            author: $this->buildAuthor($data),
+            publisher: $this->buildPublisher(),
+        );
         if (!empty($faq)) $graph[] = new FAQSchema($faq);
 
         return new SchemaData($graph);
@@ -371,6 +381,66 @@ class SchemaBuilder
         }
 
         return $seller;
+    }
+
+    /**
+     * @return string[]
+     */
+    private function articleImage(PostData $data): array
+    {
+        $src = $data->image->src;
+
+        if ($src === '' || $src === '/images/no-image.jpg') {
+            return [];
+        }
+
+        return [$src];
+    }
+
+    /**
+     * @return array{@type: string, name: string, url?: string}
+     */
+    private function buildAuthor(PostData $data): array
+    {
+        if ($data->authorName === '') {
+            return [];
+        }
+
+        $author = [
+            '@type' => 'Person',
+            'name'  => $data->authorName,
+        ];
+
+        if ($data->authorUrl !== '') {
+            $author['url'] = $data->authorUrl;
+        }
+
+        return $author;
+    }
+
+    /**
+     * @return array{@type: string, name: string, logo?: array{@type: string, url: string}}
+     */
+    private function buildPublisher(): array
+    {
+        $data = $this->organizationData;
+        if ($data === null) {
+            return [];
+        }
+
+        $publisher = [
+            '@type' => 'Organization',
+            'name'  => $data->name,
+        ];
+
+        if ($data->logoUrl !== '') {
+            $publisher['logo'] = [
+                '@type' => 'ImageObject',
+                'url'   => $data->logoUrl,
+            ];
+        }
+
+        return $publisher;
     }
 
     /**

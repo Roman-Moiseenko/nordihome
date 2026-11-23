@@ -16,6 +16,8 @@ class PostData
         public ImageInfoData $image,
         public string $publishedAt,
         public string $updatedAt,
+        public string $authorName = '',
+        public string $authorUrl = '',
     )
     {
     }

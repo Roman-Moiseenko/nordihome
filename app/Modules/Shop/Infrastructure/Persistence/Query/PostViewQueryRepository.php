@@ -28,6 +28,7 @@ class PostViewQueryRepository
                     ->where('photos.model_type', '=', self::PHOTO_MODEL_TYPE)
                     ->where('photos.type', '=', 'image');
             })
+            ->leftJoin('staffs', 'posts.staff_id', '=', 'staffs.id')
             ->select(
                 'posts.id',
                 'posts.name',
@@ -46,6 +47,10 @@ class PostViewQueryRepository
                 'photos.width as photo_width',
                 'photos.height as photo_height',
                 'photos.model_type as model_type',
+                'staffs.last_name as staff_last_name',
+                'staffs.first_name as staff_first_name',
+                'staffs.middle_name as staff_middle_name',
+                'staffs.url_profile as staff_url_profile',
             )
             ->first();
 
@@ -63,7 +68,18 @@ class PostViewQueryRepository
             image: $this->imageInfoHelper->build($row),
             publishedAt: $this->toIso8601($row->published_at ?? null),
             updatedAt: $this->toIso8601($row->updated_at ?? null),
+            authorName: $this->authorName($row),
+            authorUrl: $row->staff_url_profile ?? '',
         );
+    }
+
+    private function authorName(\stdClass $row): string
+    {
+        return trim(implode(' ', array_filter([
+            $row->staff_last_name ?? null,
+            $row->staff_first_name ?? null,
+            $row->staff_middle_name ?? null,
+        ])));
     }
 
     private function toIso8601(?string $value): string
