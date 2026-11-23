@@ -6,6 +6,7 @@ namespace App\Modules\Shop\Application\Services;
 
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
+use App\Modules\Shop\Application\DTOs\PageElements\MinMaxData;
 use App\Modules\Shop\Infrastructure\Persistence\Query\AttributeQueryRepository;
 
 /**
@@ -42,8 +43,22 @@ readonly class ProductFiltersResolver
         );
 
         return new FilterProductsData(
-            minPrice: $aggregates->min_price ?? 0,
-            maxPrice: $aggregates->max_price ?? 0,
+            price: new MinMaxData(
+                min: (float)($aggregates->min_price ?? 0),
+                max: (float)($aggregates->max_price ?? 0),
+            ),
+            width: new MinMaxData(
+                min: (float)($aggregates->min_width ?? 0),
+                max: (float)($aggregates->max_width ?? 0),
+            ),
+            height: new MinMaxData(
+                min: (float)($aggregates->min_height ?? 0),
+                max: (float)($aggregates->max_height ?? 0),
+            ),
+            depth: new MinMaxData(
+                min: (float)($aggregates->min_depth ?? 0),
+                max: (float)($aggregates->max_depth ?? 0),
+            ),
             attributes: $aggregates->attributes ?? [],
             brands: $aggregates->brands ?? [],
             tags: $tags,

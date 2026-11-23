@@ -16,6 +16,9 @@
             <el-button type="primary" :loading="loading.recache" @click="onRecache">
                 Пересоздать кеш
             </el-button>
+            <el-button type="danger" :loading="loading.migrate" @click="onMigrate">
+                Миграция
+            </el-button>
         </div>
     </div>
 </template>
@@ -38,6 +41,7 @@ const loading = reactive({
     createThumbs: false,
     reCreateThumbs: false,
     recache: false,
+    migrate: false,
 })
 
 async function confirmRun(message: string): Promise<boolean> {
@@ -90,4 +94,14 @@ async function onRecache() {
         loading.recache = false
     }
 }
+async function onMigrate() {
+    if (!await confirmRun('Вы действительно хотите запустить миграцию?')) return
+    loading.migrate = true
+    try {
+        await api.post(route('admin.setting.cache.migrate'), {})
+    } finally {
+        loading.migrate = false
+    }
+}
+
 </script>

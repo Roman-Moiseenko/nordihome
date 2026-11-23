@@ -184,6 +184,12 @@ class AttributeQueryRepository
             return (object)[
                 'min_price' => 0,
                 'max_price' => 0,
+                'min_width' => 0,
+                'max_width' => 0,
+                'min_height' => 0,
+                'max_height' => 0,
+                'min_depth' => 0,
+                'max_depth' => 0,
                 'brands' => [],
                 'tags' => [],
             ];
@@ -193,6 +199,13 @@ class AttributeQueryRepository
             ->whereIn('product_id', $productIds)
             ->where('type', PriceType::RETAIL)
             ->selectRaw('MIN(amount) as min_price, MAX(amount) as max_price')
+            ->first();
+
+        $dimensionsData = DB::table('products')
+            ->whereIn('id', $productIds)
+            ->selectRaw('MIN(width) as min_width, MAX(width) as max_width,
+                         MIN(height) as min_height, MAX(height) as max_height,
+                         MIN(depth) as min_depth, MAX(depth) as max_depth')
             ->first();
 
         $brands = DB::table('products')
@@ -243,6 +256,12 @@ class AttributeQueryRepository
         return (object)[
             'min_price' => (float)($priceData->min_price ?? 0),
             'max_price' => (float)($priceData->max_price ?? 0),
+            'min_width' => (float)($dimensionsData->min_width ?? 0),
+            'max_width' => (float)($dimensionsData->max_width ?? 0),
+            'min_height' => (float)($dimensionsData->min_height ?? 0),
+            'max_height' => (float)($dimensionsData->max_height ?? 0),
+            'min_depth' => (float)($dimensionsData->min_depth ?? 0),
+            'max_depth' => (float)($dimensionsData->max_depth ?? 0),
             'brands' => $brandDtos,
             'tags' => $tags,
         ];
@@ -339,6 +358,18 @@ class AttributeQueryRepository
                     if ($min > 0) $q->where('amount', '>=', $min);
                     if ($max > 0) $q->where('amount', '<=', $max);
                 });
+            }
+        }
+
+        foreach (['width', 'height', 'depth'] as $dimension) {
+            if (empty($filters[$dimension])) continue;
+            $min = (float)($filters[$dimension][0] ?? 0);
+            $max = (float)($filters[$dimension][1] ?? 0);
+            if ($min > 0) {
+                $query->where($dimension, '>=', $min);
+            }
+            if ($max > 0) {
+                $query->where($dimension, '<=', $max);
             }
         }
 

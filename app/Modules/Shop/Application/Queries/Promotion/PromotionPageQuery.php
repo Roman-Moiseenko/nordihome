@@ -106,8 +106,10 @@ readonly class PromotionPageQuery
             $params,
         );
         $filtersWithOrder = new FilterProductsData(
-            minPrice: $filters->minPrice,
-            maxPrice: $filters->maxPrice,
+            price: $filters->price,
+            width: $filters->width,
+            height: $filters->height,
+            depth: $filters->depth,
             attributes: $filters->attributes,
             brands: $filters->brands,
             tags: $filters->tags,

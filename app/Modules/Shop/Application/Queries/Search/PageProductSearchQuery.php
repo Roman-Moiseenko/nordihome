@@ -8,6 +8,7 @@ use App\Modules\Shop\Application\DTOs\Elements\ChildrenData;
 use App\Modules\Shop\Application\DTOs\Elements\IdNameData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
+use App\Modules\Shop\Application\DTOs\PageElements\MinMaxData;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Search\ProductSearchPageData;
 use App\Modules\Shop\Application\Services\RegionalPriceCalculator;
@@ -84,8 +85,10 @@ readonly class PageProductSearchQuery
             $allProductIds,
         );
         $filtersWithOrder = new FilterProductsData(
-            minPrice: $filters->minPrice,
-            maxPrice: $filters->maxPrice,
+            price: $filters->price,
+            width: $filters->width,
+            height: $filters->height,
+            depth: $filters->depth,
             attributes: $filters->attributes,
             brands: $filters->brands,
             tags: $filters->tags,
@@ -116,8 +119,22 @@ readonly class PageProductSearchQuery
         );
 
         return new FilterProductsData(
-            minPrice: $aggr->min_price ?? 0,
-            maxPrice: $aggr->max_price ?? 0,
+            price: new MinMaxData(
+                min: (float)($aggr->min_price ?? 0),
+                max: (float)($aggr->max_price ?? 0),
+            ),
+            width: new MinMaxData(
+                min: (float)($aggr->min_width ?? 0),
+                max: (float)($aggr->max_width ?? 0),
+            ),
+            height: new MinMaxData(
+                min: (float)($aggr->min_height ?? 0),
+                max: (float)($aggr->max_height ?? 0),
+            ),
+            depth: new MinMaxData(
+                min: (float)($aggr->min_depth ?? 0),
+                max: (float)($aggr->max_depth ?? 0),
+            ),
             attributes: $aggr->attributes ?? [],
             brands: $aggr->brands ?? [],
             tags: $tags,

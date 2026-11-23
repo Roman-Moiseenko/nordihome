@@ -35,7 +35,7 @@
                 @endforeach
             </div>
         @endif
-        <x-widget.numeric name="price" min-value="{{ $filters->minPrice }}" max-value="{{ $filters->maxPrice }}"
+        <x-widget.numeric name="price" min-value="{{ $filters->price->min }}" max-value="{{ $filters->price->max }}"
                           current-min="{{ isset($request['price']) ? $request['price'][0] : '' }}"
                           current-max="{{ isset($request['price']) ? $request['price'][1] : '' }}"
                           class="mt-3">
@@ -79,6 +79,28 @@
 
             </div>
         @endforeach
+    </div>
+    <div class="dimensions-filter">
+        <x-widget.numeric name="width" min-value="{{ $filters->width->min }}" max-value="{{ $filters->width->max }}"
+                          current-min="{{ isset($request['width']) ? $request['width'][0] : '' }}"
+                          current-max="{{ isset($request['width']) ? $request['width'][1] : '' }}"
+                          class="mt-3">
+            Ширина
+        </x-widget.numeric>
+
+        <x-widget.numeric name="height" min-value="{{ $filters->height->min }}" max-value="{{ $filters->height->max }}"
+                          current-min="{{ isset($request['height']) ? $request['height'][0] : '' }}"
+                          current-max="{{ isset($request['height']) ? $request['height'][1] : '' }}"
+                          class="mt-3">
+            Высота
+        </x-widget.numeric>
+
+        <x-widget.numeric name="depth" min-value="{{ $filters->depth->min }}" max-value="{{ $filters->depth->max }}"
+                          current-min="{{ isset($request['depth']) ? $request['depth'][0] : '' }}"
+                          current-max="{{ isset($request['depth']) ? $request['depth'][1] : '' }}"
+                          class="mt-3">
+            Глубина
+        </x-widget.numeric>
     </div>
     <div class="buttons-filter">
         <button class="btn btn-black w-auto">Применить</button>

@@ -13,6 +13,7 @@ use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomMainData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomSecondData;
 use App\Modules\Shop\Application\DTOs\Entities\ProductCardData;
 use App\Modules\Shop\Application\DTOs\PageElements\FilterProductsData;
+use App\Modules\Shop\Application\DTOs\PageElements\MinMaxData;
 use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\PageElements\SeoData;
 use App\Modules\Shop\Application\DTOs\Pages\ProductIndexPageData;
@@ -114,8 +115,10 @@ readonly class CategoryPageQuery
 
         $filters = $this->getCachedFilters($mainInfo->id, $allProductIds);
         $filtersWithOrder = new FilterProductsData(
-            minPrice: $filters->minPrice,
-            maxPrice: $filters->maxPrice,
+            price: $filters->price,
+            width: $filters->width,
+            height: $filters->height,
+            depth: $filters->depth,
             attributes: $filters->attributes,
             brands: $filters->brands,
             tags: $filters->tags,
@@ -187,8 +190,10 @@ readonly class CategoryPageQuery
         );
 
         $filtersWithOrder = new FilterProductsData(
-            minPrice: 0,
-            maxPrice: 0,
+            price: new MinMaxData(min: 0, max: 0),
+            width: new MinMaxData(min: 0, max: 0),
+            height: new MinMaxData(min: 0, max: 0),
+            depth: new MinMaxData(min: 0, max: 0),
             attributes: [],
             brands: [],
             tags: [],

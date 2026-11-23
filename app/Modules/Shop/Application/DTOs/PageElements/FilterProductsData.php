@@ -9,8 +9,10 @@ use App\Modules\Shop\Application\DTOs\Entities\AttributeFilterData;
 readonly class FilterProductsData
 {
     /**
-     * @param float $minPrice
-     * @param float $maxPrice
+     * @param MinMaxData $price
+     * @param MinMaxData $width
+     * @param MinMaxData $height
+     * @param MinMaxData $depth
      * @param AttributeFilterData[] $attributes
      * @param IdNameImageData[] $brands
      * @param IdNameData[] $tags
@@ -18,13 +20,15 @@ readonly class FilterProductsData
      * @param int|null $tagId
      */
     public function __construct(
-        public float  $minPrice,
-        public float  $maxPrice,
-        public array  $attributes,
-        public array  $brands,
-        public array  $tags,
-        public string $sortOrder = '',
-        public ?int   $tagId = null,
+        public MinMaxData $price,
+        public MinMaxData $width,
+        public MinMaxData $height,
+        public MinMaxData $depth,
+        public array       $attributes,
+        public array       $brands,
+        public array       $tags,
+        public string      $sortOrder = '',
+        public ?int        $tagId = null,
     )
     {
     }
