@@ -14,7 +14,7 @@
                     <el-date-picker v-model="info.publishedAt" type="datetime"/>
                 </el-form-item>
                 <el-form-item label="Автор" style="width: 220px">
-                    <el-select v-model="info.staffId" >
+                    <el-select v-model="info.staffId" clearable>
                         <el-option v-for="staff in authStore.staffs.authors"
                                    :value="staff.id" :key="staff.id" :label="staff.fullName"/>
                     </el-select>
