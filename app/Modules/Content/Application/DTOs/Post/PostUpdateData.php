@@ -36,5 +36,7 @@ class PostUpdateData extends Data
         public readonly ?bool $oldRender,
         #[Nullable]
         public readonly ?array $labels,
+        #[Nullable, Numeric]
+        public readonly ?int $staffId,
     ) {}
 }

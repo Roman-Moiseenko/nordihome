@@ -75,6 +75,11 @@ final class PostEntity
         set => $this->categoryId = $value;
     }
 
+    public ?int $staffId = null {
+        get => $this->staffId;
+        set => $this->staffId = $value;
+    }
+
     public bool $oldRender = false {
         get => $this->oldRender;
         set => $this->oldRender = $value;

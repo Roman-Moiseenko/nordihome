@@ -10,9 +10,11 @@ use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\PageViewPageData;
 use App\Modules\Shop\Application\Services\WidgetDataEnricherService;
 use App\Modules\Shop\Domain\Schema\SchemaData;
+use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ContentBlockQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\PageViewQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\SeoAdapter;
+use Illuminate\Support\Facades\Cache;
 use JetBrains\PhpStorm\Deprecated;
 
 readonly class PageViewQuery
@@ -37,11 +39,22 @@ readonly class PageViewQuery
         $text = '';
         $blocks = [];
 
+        $key_cache = str_replace('{slug}', $slug, CacheInvalidationRegistry::PAGE_BY_SLUG);
+
         if ($page->oldRender) {//Генерация текста
-            $text = $this->renderTags($page->text);
-            $text = $this->renderRoots($text);
-            $text = Template::renderClasses($text);
-            $page->text = $text;
+            $page->text = Cache::remember(
+                $key_cache,
+                now()->addMonth(),
+                function () use ($page) {
+                    $text = $this->renderTags($page->text);
+                    $text = $this->renderRoots($text);
+                    return Template::renderClasses($text);
+
+                });
+            //$text = $this->renderTags($page->text);
+            //$text = $this->renderRoots($text);
+            //$text = Template::renderClasses($text);
+            //$page->text = $text;
 
             $template = Template::blade('page') . $page->template;
         } else {

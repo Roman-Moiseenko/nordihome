@@ -71,6 +71,12 @@ class StaffEntity
         set => $this->notes = $value;
     }
 
+    public ?string $urlProfile = null {
+        get => $this->urlProfile;
+        set => $this->urlProfile = $value;
+    }
+
+
     public function __construct(FullName $fullName, StaffPositions $positions)
     {
         $this->fullName = $fullName;

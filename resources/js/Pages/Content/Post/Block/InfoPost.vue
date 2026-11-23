@@ -9,10 +9,17 @@
                     <el-input v-model="info.slug" clearable placeholder="Slug"/>
                 </el-form-item>
 
-                <el-form-item label="Опубликованно">
+                <el-row>
+                <el-form-item label="Дата" >
                     <el-date-picker v-model="info.publishedAt" type="datetime"/>
                 </el-form-item>
-
+                <el-form-item label="Автор" style="width: 220px">
+                    <el-select v-model="info.staffId" >
+                        <el-option v-for="staff in authStore.staffs.authors"
+                                   :value="staff.id" :key="staff.id" :label="staff.fullName"/>
+                    </el-select>
+                </el-form-item>
+                </el-row>
                 <el-form-item label="Метки">
                     <el-select
                         v-model="info.labels"
@@ -74,20 +81,19 @@ import {ref, defineProps, reactive, computed, onMounted} from "vue";
 import {router} from "@inertiajs/vue3";
 import {func} from '@Res/func.js'
 import {useContentStore} from "@Res/contentStore";
-import HelpBlock from "@Comp/HelpBlock.vue";
 import PhotoDTO from "@Comp/PhotoDTO.vue";
 import {route} from "ziggy-js";
+import {useAuthStore} from "@Res/authStore";
 
 const editInfo = ref(false)
 const contentStore = useContentStore()
+const authStore = useAuthStore()
 const labelOptions = computed(() => contentStore.labels ?? [])
-
+console.log(authStore.staffs)
 const props = defineProps({
     post: Object,
-    //templates: Array<ISelectItem>,
 })
 
-console.log(props.post.labels)
 // --- Исходные данные из пропсов (эталон для отмены) ---
 const initialInfo = {
     name: props.post.name,
@@ -98,8 +104,8 @@ const initialInfo = {
     publishedAt: props.post.publishedAt,
     metaTitle: props.post.meta.title,
     metaDescription: props.post.meta.description,
-    oldRender: props.post.oldRender,
     labels: [...props.post.labels.map(item => item.id)],
+    staffId: props.post.staffId,
 }
 
 const info = reactive({...initialInfo})

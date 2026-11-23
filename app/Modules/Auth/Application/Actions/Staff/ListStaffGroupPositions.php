@@ -26,8 +26,10 @@ final readonly class ListStaffGroupPositions
 
         $managerValues = StaffPosition::managers();
         $workerValues = StaffPosition::workers();
+        $authorValues  = [StaffPosition::AUTHOR];
         $managers = [];
         $workers = [];
+        $authors = [];
 
         foreach ($allStaff as $staff) {
             $staffDto = StaffGroupData::fromEntity($staff);
@@ -48,10 +50,16 @@ final readonly class ListStaffGroupPositions
             if (!empty(array_intersect($staffPositionValues, $workerValues))) {
                 $workers[] = $staffDto;
             }
+
+            // Если хотя бы одна из должностей сотрудника входит в authors
+            if (!empty(array_intersect($staffPositionValues, $authorValues))) {
+                $authors[] = $staffDto;
+            }
         }
 
         $groups['managers'] = $managers;
         $groups['workers'] = $workers;
+        $groups['authors'] = $authors;
 
         return $groups;
     }

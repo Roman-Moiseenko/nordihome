@@ -45,6 +45,7 @@ class PostRepository implements PostRepositoryInterface
         $model->published = $post->isPublished();
         $model->category_id = $post->categoryId;
         $model->old_render = $post->oldRender;
+        $model->staff_id = $post->staffId;
         $model->meta = $post->meta ? [
             'title' => $post->meta->getTitle(),
             'description' => $post->meta->getDescription(),
@@ -94,6 +95,7 @@ class PostRepository implements PostRepositoryInterface
         $entity->published = $model->published;
         $entity->oldRender = $model->old_render;
         $entity->text = $model->text;
+        $entity->staffId = $model->staff_id;
         $entity->labels = $model->labels
             ->map(fn (Label $label) => $this->hydrateLabel($label))
             ->all();

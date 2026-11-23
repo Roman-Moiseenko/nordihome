@@ -36,6 +36,7 @@ class StaffRepository implements StaffRepositoryInterface
         $model->telegram_chat_id = $staff->telegramChatId;
         $model->max_chat_id = $staff->maxChatId;
         $model->notes = $staff->notes;
+        $model->url_profile = $staff->urlProfile;
 
         $model->save();
         return $this->hydrate($model);
@@ -114,6 +115,7 @@ class StaffRepository implements StaffRepositoryInterface
         if ($model->telegram_chat_id) $staff->telegramChatId = $model->telegram_chat_id;
         if ($model->max_chat_id) $staff->maxChatId = $model->max_chat_id;
         if ($model->notes) $staff->notes = $model->notes;
+        if ($model->url_profile) $staff->urlProfile = $model->url_profile;
 
         $staff->user = $this->hydrateUser($model->user);
 

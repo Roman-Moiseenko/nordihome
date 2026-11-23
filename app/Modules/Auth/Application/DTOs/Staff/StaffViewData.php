@@ -31,6 +31,7 @@ class StaffViewData extends Data
         public readonly ?string       $notes = null,
         public readonly bool          $terminated = false,
         public readonly ?UserViewData $user = null,
+        public readonly ?string       $urlProfile = null,
     )
     {
     }
@@ -54,6 +55,7 @@ class StaffViewData extends Data
             $staff->notes,
             !$staff->isActive,
             $staff->user ? UserViewData::fromEntity($staff->user) : null,
+            $staff->urlProfile,
         );
     }
 }

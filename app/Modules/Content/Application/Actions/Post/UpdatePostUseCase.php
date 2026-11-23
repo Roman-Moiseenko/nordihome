@@ -57,9 +57,9 @@ readonly class UpdatePostUseCase
 
         if ($dto->oldRender !== null) $post->oldRender = $dto->oldRender;
 
-        if ($dto->labels !== null) {
-            $post->labels = $this->resolveLabels($dto->labels);
-        }
+        if ($dto->labels !== null) $post->labels = $this->resolveLabels($dto->labels);
+
+        if ($dto->staffId !== null) $post->staffId = $dto->staffId;
 
         // Meta
         if ($dto->metaTitle !== null || $dto->metaDescription !== null) {

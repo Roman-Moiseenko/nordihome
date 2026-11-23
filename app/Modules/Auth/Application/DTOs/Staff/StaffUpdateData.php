@@ -44,6 +44,8 @@ class StaffUpdateData extends Data
         public readonly ?string $notes = null,
         #[BooleanType]
         public readonly bool $terminated = false,
+        #[Nullable, StringType]
+        public readonly ?string $urlProfile = null,
     ) {}
 
     public static function fromEntity(StaffEntity $staff): static
@@ -62,7 +64,8 @@ class StaffUpdateData extends Data
             $staff->telegramChatId,
             $staff->maxChatId,
             $staff->notes,
-            !$staff->isActive
+            !$staff->isActive,
+            $staff->urlProfile,
         );
     }
 

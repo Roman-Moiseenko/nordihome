@@ -46,6 +46,7 @@ readonly class UpdateStaffUseCase
         $staff->telegramChatId = $dto->telegramChatId;
         $staff->maxChatId = $dto->maxChatId;
         $staff->notes = $dto->notes;
+        $staff->urlProfile = $dto->urlProfile;
         if ($dto->terminated) {
             $staff->terminate(new DateTimeImmutable());
         } else {

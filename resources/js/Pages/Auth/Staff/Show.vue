@@ -56,6 +56,9 @@
                         <el-form-item label="Max Chat ID" prop="maxChatId">
                             <el-input v-model="form.maxChatId" placeholder="987654321"/>
                         </el-form-item>
+                        <el-form-item label="Ссылка на профиль" prop="urlProfile">
+                            <el-input v-model="form.urlProfile" placeholder="https://vk.ru/myProfile"/>
+                        </el-form-item>
                     </el-col>
                     <el-col :span="8">
                         <el-divider content-position="center">Дополнительно</el-divider>
@@ -221,6 +224,7 @@ const initialForm = {
     maxChatId: props.staff?.maxChatId ?? '',
     notes: props.staff?.notes ?? '',
     terminated: props.staff?.terminated ?? false,
+    urlProfile: props.staff?.urlProfile ?? '',
 }
 
 const hasUser = computed(() => props.staff?.user !== null && props.staff?.user !== undefined)

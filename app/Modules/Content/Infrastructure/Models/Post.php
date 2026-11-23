@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Content\Infrastructure\Models;
 
+use App\Modules\Auth\Infrastructure\Models\Staff;
 use App\Modules\Content\Entity\Renders\RenderPage;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -22,6 +23,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * @property bool $old_render
  * @property string $text
  * @property Label[] $labels
+ * @property int $staff_id
+ * @property Staff $author
  */
 class Post extends RenderPage
 {
@@ -42,6 +45,7 @@ class Post extends RenderPage
         'category_id',
         'old_render',
         'text',
+        'staff_id',
     ];
 
     protected $casts = [
@@ -60,5 +64,10 @@ class Post extends RenderPage
     public function labels(): BelongsToMany
     {
         return $this->belongsToMany(Label::class, 'labels_posts', 'post_id', 'label_id');
+    }
+
+    public function author()
+    {
+        return $this->hasOne(Staff::class, 'id', 'staff_id');
     }
 }

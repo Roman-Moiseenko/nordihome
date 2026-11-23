@@ -16,6 +16,8 @@ final class StaffPosition
     public const string LOGIST = 'logist';                       // Логист
     public const string LOADER = 'loader';                       // Грузчик
 
+    public const string AUTHOR = 'author';
+
     private const array MANAGERS = [
         self::CUSTOMER_MANAGER,
         self::PURCHASE_MANAGER,
@@ -35,6 +37,7 @@ final class StaffPosition
         self::ASSEMBLER,
         self::LOGIST,
         self::LOADER,
+        self::AUTHOR,
     ];
 
     private const array POSITIONS = [
@@ -46,6 +49,7 @@ final class StaffPosition
         self::ASSEMBLER => "Сборщик",
         self::LOGIST => "Логист",
         self::LOADER => "Грузчик",
+        self::AUTHOR => "Автор",
     ];
 
     private string $value;

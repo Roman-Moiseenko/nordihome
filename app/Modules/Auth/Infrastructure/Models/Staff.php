@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
  * @property DateTime $hire_date
  * @property DateTime $termination_date
  * @property DateTime $birth_date
+ * @property string $url_profile ссылка на внешний профиль
  * @property ?User $user
  */
 class Staff extends Model
@@ -37,6 +38,7 @@ class Staff extends Model
         'work_phone', 'personal_phone', 'work_email', 'hire_date',
         'termination_date', 'is_active', 'birth_date',
         'telegram_chat_id', 'max_chat_id', 'notes',
+        'url_profile',
     ];
 
     protected $casts = [

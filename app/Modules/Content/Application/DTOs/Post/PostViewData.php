@@ -26,7 +26,7 @@ class PostViewData extends Data
         public readonly ?string $text,
         /** @var ListNameData[] */
         public readonly array $labels = [],
-        public readonly bool $oldRender = false,
+        public readonly ?int $staffId = null,
     ) {}
 
     public static function fromEntity(PostEntity $post): self
@@ -51,7 +51,7 @@ class PostViewData extends Data
                 static fn (LabelEntity $label) => new ListNameData((int) $label->id, $label->name),
                 $post->labels,
             ),
-            oldRender: $post->oldRender,
+            staffId: $post->staffId,
         );
     }
 }
