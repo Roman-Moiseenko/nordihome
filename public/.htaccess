@@ -93,6 +93,8 @@
     RewriteRule ^product-category/furnitura-i-elementy-mebeli/furnitura/?$ /catalog/petli/ [R=301,L]
     RewriteRule ^product-category/furnitura-i-elementy-mebeli/elementy-mebeli/?$ /catalog/fasady/ [R=301,L]
 
+    RewriteRule ^poleznye-stati/(?:.+/)?([^/]+)/?$ /post/$1/ [R=301,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
