@@ -71,9 +71,11 @@ window.$ = jQuery;
 
     if (document.querySelectorAll('.widget-slider-products') !== null) {
 
-        let optionsSliderWidget = optionsSliderBase;
+
         let slidersWidget= $('.widget-slider-products');
         slidersWidget.each(function (element) {
+            let optionsSliderWidget = $.extend(true, {}, optionsSliderBase);
+
             let sliderWidget = $(this);
             let items  = sliderWidget.data('items');
             let dots  = sliderWidget.data('dots');
@@ -81,7 +83,8 @@ window.$ = jQuery;
             optionsSliderWidget.items = items;
             optionsSliderWidget.dots = dots;
             optionsSliderWidget.nav = nav;
-
+            if (!nav) optionsSliderWidget.responsive = {}
+            //console.log(optionsSliderWidget)
             sliderWidget.owlCarousel(optionsSliderWidget);
         });
     }
