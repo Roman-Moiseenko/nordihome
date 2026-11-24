@@ -5,6 +5,7 @@ namespace App\Modules\Shop\Infrastructure\Persistence\Builders;
 use App\Modules\Accounting\Application\Actions\Organization\GetSellerOrganizationQuery;
 use App\Modules\Accounting\Application\DTOs\Organization\OrganizationSchemaData;
 use App\Modules\Catalog\Domain\ValueObjects\AttributeName;
+use App\Modules\Shop\Application\DTOs\Elements\ImageInfoData;
 use App\Modules\Shop\Application\DTOs\Entities\CategoryRoomData;
 use App\Modules\Shop\Application\DTOs\Entities\IkeaProductData;
 use App\Modules\Shop\Application\DTOs\Entities\PageData;
@@ -157,7 +158,12 @@ class SchemaBuilder
     public function buildForPage(PageData $data, SeoData $seo): SchemaData
     {
         $graph = [];
-        $graph[] = $this->webPage($seo);
+        $graph[] = $this->webPage(
+            $seo,
+            $data->publishedAt !== '' ? $data->publishedAt : null,
+            $data->updatedAt !== '' ? $data->updatedAt : null,
+            $this->primaryImageOfPage($data->image, $data->name),
+        );
         $this->appendOrganization($graph);
         $breadcrumbs = $this->breadcrumbProvider->generate('shop.page.view', [$data->slug]);
         $graph[] = new BreadcrumbSchema($breadcrumbs);
@@ -168,7 +174,12 @@ class SchemaBuilder
     public function buildForPost(PostData $data, array $faq, SeoData $seo): SchemaData
     {
         $graph = [];
-        $graph[] = $this->webPage($seo);
+        $graph[] = $this->webPage(
+            $seo,
+            $data->publishedAt !== '' ? $data->publishedAt : null,
+            $data->updatedAt !== '' ? $data->updatedAt : null,
+            $this->primaryImageOfPage($data->image, $data->title),
+        );
         $this->appendOrganization($graph);
         $breadcrumbs = $this->breadcrumbProvider->generate('shop.post.view', [$data->slug]);
         $graph[] = new BreadcrumbSchema($breadcrumbs);
@@ -220,7 +231,10 @@ class SchemaBuilder
         return new SchemaData($graph);
     }
 
-    private function webPage(SeoData $seo, ?string $datePublished = null, ?string $dateModified = null): WebPageSchema
+    /**
+     * @param array{@type: string, url: string, width: int, height: int, caption: string}|null $primaryImageOfPage
+     */
+    private function webPage(SeoData $seo, ?string $datePublished = null, ?string $dateModified = null, ?array $primaryImageOfPage = null): WebPageSchema
     {
         return new WebPageSchema(
             name: $seo->title,
@@ -229,6 +243,7 @@ class SchemaBuilder
             datePublished: $datePublished,
             dateModified: $dateModified,
             potentialAction: $this->searchAction(),
+            primaryImageOfPage: $primaryImageOfPage,
         );
     }
 
@@ -395,6 +410,26 @@ class SchemaBuilder
         }
 
         return [$src];
+    }
+
+    /**
+     * @return array{@type: string, url: string, width: int, height: int, caption: string}|null
+     */
+    private function primaryImageOfPage(ImageInfoData $image, string $caption): ?array
+    {
+        $src = $image->src;
+
+        if ($src === '' || $src === '/images/no-image.jpg') {
+            return null;
+        }
+
+        return [
+            '@type'   => 'ImageObject',
+            'url'     => $src,
+            'width'   => 1200,
+            'height'  => 630,
+            'caption' => $caption,
+        ];
     }
 
     /**

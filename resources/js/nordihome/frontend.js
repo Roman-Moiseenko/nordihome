@@ -593,11 +593,24 @@ window.$ = jQuery;
 
     /** СПИСОК ТОВАРОВ **/
     if (main.hasClass('products-page')) {
-        const urlParams = new URLSearchParams(window.location.search);
-        $('.tag-filter-products').on('click', function (e) {
+
+        //-products
+        $('.tag-filter').on('click', function (e) {
             e.preventDefault();
-            urlParams.set('tag_id', $(this).data('tag-id'));
-            window.location.search = urlParams;
+
+            const tagId = String($(this).data('tag-id'));
+            const urlParams = new URLSearchParams(window.location.search);
+            let tags = urlParams.getAll('tags[]');
+            if (tags.includes(tagId)) {
+                tags = tags.filter(t => t !== tagId);
+            } else {
+                tags.push(tagId);
+            }
+            urlParams.delete('tags[]');
+            tags.forEach(t => urlParams.append('tags[]', t));
+
+          //  urlParams.set('tag_id', $(this).data('tag-id'));
+            window.location.search = urlParams.toString();
         });
 
         let filterOpen = $('.filter-open');
@@ -611,6 +624,7 @@ window.$ = jQuery;
 
         let orderList = $('.order li');
         orderList.on('click', function () {
+            const urlParams = new URLSearchParams(window.location.search);
             urlParams.set('order', $(this).data('order'));
             window.location.search = urlParams;
         });

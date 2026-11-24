@@ -376,8 +376,11 @@ class AttributeQueryRepository
         if (!empty($filters['brands'])) {
             $query->whereIn('brand_id', $filters['brands']);
         }
-        if (!empty($filters['tag_id'])) {
-            $query->whereHas('tags', fn($q) => $q->where('id', $filters['tag_id']));
+        if (!empty($filters['tags'])) {
+            foreach ($filters['tags'] as $tagId) {
+                $query->whereHas('tags', fn($q) => $q->where('tags.id', $tagId));
+            }
+          //  $query->whereHas('tags', fn($q) => $q->whereIn('id', $filters['tags']));
         }
 
         $attrIds = [];

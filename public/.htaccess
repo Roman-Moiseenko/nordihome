@@ -5,6 +5,94 @@
 
     RewriteEngine On
 
+    # Новинки
+    RewriteRule ^product-category/novinki/?$ /catalog/novinki/ [R=301,L]
+    # Ликвидация (распродажа)
+    RewriteRule ^product-category/likvidacziya-do-50/?$ /catalog/likvidacziya-do-50/ [R=301,L]
+    # Новый год
+    RewriteRule ^product-category/novyj-god/?$ /catalog/novyy-god/ [R=301,L]
+    RewriteRule ^product-category/novyj-god/novogodnyaya-kollekcziya-ikea/?$ /catalog/novogodnie-ukrasheniya/ [R=301,L]
+    RewriteRule ^product-category/novyj-god/podarki-na-ng/?$ /catalog/novogodnie-ukrasheniya/ [R=301,L]
+    # Всё для учёбы и работы
+    RewriteRule ^product-category/vsyo-dlya-uchyoby-i-raboty/?$ /catalog/ofisnye-aksessuary/ [R=301,L]
+    # Последний шанс купить
+    RewriteRule ^product-category/poslednij-shans-kupit/?$ /catalog/poslednij-shans-kupit/ [R=301,L]
+    # Организация пространства (корневая)
+    RewriteRule ^product-category/organizacziya-prostranstva-vidy-mebeli/?$ /catalog/stellazhi-i-polki/ [R=301,L]
+    # Комоды
+    RewriteRule ^product-category/komody/?$ /catalog/komody/ [R=301,L]
+    # Столы и столики
+    RewriteRule ^product-category/stoly-i-stoliki/?$ /catalog/obedennye-stoly/ [R=301,L]
+    RewriteRule ^product-category/stoly-i-stoliki/obedennye-stoly/?$ /catalog/obedennye-stoly/ [R=301,L]
+    RewriteRule ^product-category/stoly-i-stoliki/rabochie-stoly/?$ /catalog/kompyuternye-stoly/ [R=301,L]
+    RewriteRule ^product-category/stoly-i-stoliki/tualetnye-stoliki/?$ /catalog/tualetnye-stoliki/ [R=301,L]
+    RewriteRule ^product-category/stoly-i-stoliki/stoliki/?$ /catalog/zhurnalnye-stoliki/ [R=301,L]
+    RewriteRule ^product-category/stoly-i-stoliki/stoly-dlya-noutbuka/?$ /catalog/podstavki-i-stoliki-dlya-noutbuka/ [R=301,L]
+    # Стулья, табуретки, лесенки
+    RewriteRule ^product-category/stulya-taburetki-i-lesenki/?$ /catalog/kuhonnye-stulya/ [R=301,L]
+    RewriteRule ^product-category/stulya-taburetki-i-lesenki/obedennye-stulya/?$ /catalog/kuhonnye-stulya/ [R=301,L]
+    RewriteRule ^product-category/stulya-taburetki-i-lesenki/rabochie-stulya/?$ /catalog/rabochie-stulya/ [R=301,L]
+    RewriteRule ^product-category/stulya-taburetki-i-lesenki/taburetki/?$ /catalog/taburety/ [R=301,L]
+    RewriteRule ^product-category/stulya-taburetki-i-lesenki/stulya-skladnye/?$ /catalog/skladnye-stulya/ [R=301,L]
+    RewriteRule ^product-category/stulya-taburetki-i-lesenki/stulya-iz-rotanga/?$ /catalog/sadovye-stulya/ [R=301,L]
+    RewriteRule ^product-category/stulya-taburetki-i-lesenki/lesenki/?$ /catalog/lesenki/ [R=301,L]
+    RewriteRule ^product-category/stulya-taburetki-i-lesenki/podushki-na-stulya/?$ /catalog/podushki-na-stulya/ [R=301,L]
+    # Рабочие кресла
+    RewriteRule ^product-category/rabochie-kresla/?$ /catalog/kompyuternye-i-ofisnye-kresla/ [R=301,L]
+    # Посуда и кухонные принадлежности
+    RewriteRule ^product-category/posuda-i-kuhonnye-prinadlezhnosti-vidy-mebeli/?$ /catalog/tarelki/ [R=301,L]
+    RewriteRule ^product-category/posuda-i-kuhonnye-prinadlezhnosti-vidy-mebeli/posuda-stolovaya/?$ /catalog/tarelki/ [R=301,L]
+    RewriteRule ^product-category/posuda-i-kuhonnye-prinadlezhnosti-vidy-mebeli/kuhonnyj-inventar/?$ /catalog/kuhonnye-pribory/ [R=301,L]
+    # Световое оборудование
+    RewriteRule ^product-category/svetovoe-oborudovanie-vidy-mebeli/?$ /catalog/nastolnye-lampy/ [R=301,L]
+    RewriteRule ^product-category/svetovoe-oborudovanie-vidy-mebeli/bra/?$ /catalog/bra/ [R=301,L]
+    RewriteRule ^product-category/svetovoe-oborudovanie-vidy-mebeli/torshery/?$ /catalog/torshery/ [R=301,L]
+    RewriteRule ^product-category/svetovoe-oborudovanie-vidy-mebeli/nastolnye-lampy/?$ /catalog/nastolnye-lampy/ [R=301,L]
+    RewriteRule ^product-category/svetovoe-oborudovanie-vidy-mebeli/podvesnye-svetilniki/?$ /catalog/podvesnye-svetilniki/ [R=301,L]
+    RewriteRule ^product-category/svetovoe-oborudovanie-vidy-mebeli/potolochnye-svetilniki/?$ /catalog/potolochnye-svetilniki/ [R=301,L]
+    RewriteRule ^product-category/svetovoe-oborudovanie-vidy-mebeli/nochniki/?$ /catalog/nochniki/ [R=301,L]
+    RewriteRule ^product-category/svetovoe-oborudovanie-vidy-mebeli/lampochki-i-aksessuary/?$ /catalog/aksessuary-i-lampochki/ [R=301,L]
+    # Диваны
+    RewriteRule ^product-category/divany/?$ /catalog/divany/ [R=301,L]
+    # Кресла
+    RewriteRule ^product-category/kresla/?$ /catalog/kresla-i-podstavki-dlya-nog/ [R=301,L]
+    # Кровати
+    RewriteRule ^product-category/krovati/?$ /catalog/krovati/ [R=301,L]
+    # Матрасы
+    RewriteRule ^product-category/matrasy/?$ /catalog/matrasy/ [R=301,L]
+    # Постельные принадлежности
+    RewriteRule ^product-category/postelnye-prinadlezhnosti/?$ /catalog/postelnoe-belyo/ [R=301,L]
+    # Тумбы
+    RewriteRule ^product-category/tumby/?$ /catalog/tumby/ [R=301,L]
+    # Шкафы
+    RewriteRule ^product-category/shkafy-vidy-mebeli/?$ /catalog/shkafy/ [R=301,L]
+    # Стеллажи
+    RewriteRule ^product-category/stellazhi-vidy-mebeli/?$ /catalog/stellazhi-i-polki/ [R=301,L]
+    # Вешалки и обувницы
+    RewriteRule ^product-category/veshalki-i-obuvniczy/?$ /catalog/veshalki-i-obuvnicy/ [R=301,L]
+    # Полки
+    RewriteRule ^product-category/polki/?$ /catalog/stellazhi-i-polki/ [R=301,L]
+    # Зеркала
+    RewriteRule ^product-category/zerkala-vidy-mebeli/?$ /catalog/zerkala/ [R=301,L]
+    # Мебель для детей
+    RewriteRule ^product-category/mebel-dlya-detej-vidy-mebeli/?$ /catalog/detskie-krovati-i-matrasy/ [R=301,L]
+    # Декор
+    RewriteRule ^product-category/dekor-vidy-mebeli/?$ /catalog/dekorativnye-vazy-i-chashi/ [R=301,L]
+    # Для сада и лоджии
+    RewriteRule ^product-category/dlya-sada-i-lodzhii/?$ /catalog/sadovye-stoly-i-stoliki/ [R=301,L]
+    # Ковры
+    RewriteRule ^product-category/kovry/?$ /catalog/kovry/ [R=301,L]
+    # Товары для животных
+    RewriteRule ^product-category/tovary-dlya-zhivotnyh/?$ /catalog/tovary-dlya-zhivotnyh/ [R=301,L]
+    # Хозтовары и инструменты
+    RewriteRule ^product-category/hoztovary-i-instrumenty/?$ /catalog/sadovye-aksessuary/ [R=301,L]
+    # Готовые модульные кухни IKEA
+    RewriteRule ^product-category/gotovye-modulnye-kuhni-ikea/?$ /catalog/gotovye-modulnye-kuhni-ikea/ [R=301,L]
+    # Фурнитура и элементы мебели
+    RewriteRule ^product-category/furnitura-i-elementy-mebeli/?$ /catalog/petli/ [R=301,L]
+    RewriteRule ^product-category/furnitura-i-elementy-mebeli/furnitura/?$ /catalog/petli/ [R=301,L]
+    RewriteRule ^product-category/furnitura-i-elementy-mebeli/elementy-mebeli/?$ /catalog/fasady/ [R=301,L]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]

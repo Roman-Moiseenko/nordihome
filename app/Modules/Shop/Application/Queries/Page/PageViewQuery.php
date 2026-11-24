@@ -10,6 +10,7 @@ use App\Modules\Shop\Application\DTOs\PageElements\OgImage;
 use App\Modules\Shop\Application\DTOs\Pages\PageViewPageData;
 use App\Modules\Shop\Application\Services\WidgetDataEnricherService;
 use App\Modules\Shop\Domain\Schema\SchemaData;
+use App\Modules\Shop\Infrastructure\Persistence\Builders\SchemaBuilder;
 use App\Modules\Shop\Infrastructure\Persistence\CacheInvalidationRegistry;
 use App\Modules\Shop\Infrastructure\Persistence\Query\ContentBlockQueryRepository;
 use App\Modules\Shop\Infrastructure\Persistence\Query\PageViewQueryRepository;
@@ -25,6 +26,7 @@ readonly class PageViewQuery
         private GetWebSettingsUseCase       $webSettingsUseCase,
         private ContentBlockQueryRepository $blockRepository,
         private WidgetDataEnricherService   $widgetEnricher,
+        private SchemaBuilder               $schemaBuilder,
     )
     {
     }
@@ -80,6 +82,7 @@ readonly class PageViewQuery
         if (!empty($page->image)) $meta->addImage(OgImage::fromData($page->image));
         $meta->articleModifiedTime = $page->updatedAt;
         $meta->articlePublishedTime = $page->publishedAt;
+        $schema = $this->schemaBuilder->buildForPage($page, $meta);
 
         //TODO Schema для страниц
         return new PageViewPageData(
@@ -89,7 +92,7 @@ readonly class PageViewQuery
             text: $text,
             template: $template,
             blocks: $blocks,
-            schema: new SchemaData(),
+            schema: $schema,
         );
     }
 

@@ -13,10 +13,11 @@ $total = $pageData->paginator->total;
 @section('content')
     <div class="title-page">
         <div class="products-page-title">
-                <h1>{{ $pageData->mainInfo->name }}</h1>
+            <h1>{{ $pageData->mainInfo->name }}</h1>
         </div>
         <div class="d-flex align-items-center justify-content-end">
-            <div class="t-color_dark-gray m-r_5 f-z_14"><span>Найдено: {{ count_product($pageData->mainInfo->totalProducts) }} </span></div>
+            <div class="t-color_dark-gray m-r_5 f-z_14">
+                <span>Найдено: {{ count_product($pageData->mainInfo->totalProducts) }} </span></div>
             <div class="order btn-group">
                 <div class="dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
                     Сортировка
@@ -43,7 +44,7 @@ $total = $pageData->paginator->total;
     <!-- Показать на мобиле -->
     <div Class="catalog-subcategories-mob">
         @foreach($pageData->mainInfo->children as $child)
-                <a href="{{ $child->url }}">{{ $child->name }}</a>
+            <a href="{{ $child->url }}">{{ $child->name }}</a>
         @endforeach
     </div>
     <form action="" method="GET">
@@ -82,13 +83,9 @@ $total = $pageData->paginator->total;
                 @if(count($pageData->filters->tags) > 0)
                     <div class="box-card top-tags">
                         @foreach($pageData->filters->tags as $tag)
-                            @if($pageData->filters->tagId == $tag->id)
-                                <a href="{{ route('shop.category.view', [$pageData->mainInfo->slug]) }}"
-                                   class="tag-filter active" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
-                            @else
-                                <a href="{{ route('shop.category.view', [$pageData->mainInfo->slug, 'tag_id' => $tag->id]) }}"
-                                   class="tag-filter" data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
-                            @endif
+                            <a href="{{ route('shop.category.view', [$pageData->mainInfo->slug, 'tags[]' => $tag->id]) }}"
+                               class="tag-filter {{ in_array($tag->id, $request['tags'] ?? []) ? 'active' : '' }}"
+                               data-tag-id="{{ $tag->id }}">{{ $tag->name }}</a>
                         @endforeach
                     </div>
                 @endif
@@ -113,7 +110,6 @@ $total = $pageData->paginator->total;
     <div class="recommendation-block">
 
     </div>
-
 
 
     <script>
