@@ -24,7 +24,7 @@
     # Столы и столики
     RewriteRule ^product-category/stoly-i-stoliki/?$ /catalog/obedennye-stoly/ [R=301,L]
     RewriteRule ^product-category/stoly-i-stoliki/obedennye-stoly/?$ /catalog/obedennye-stoly/ [R=301,L]
-    RewriteRule ^product-category/stoly-i-stoliki/rabochie-stoly/?$ /catalog/kompyuternye-stoly/ [R=301,L]
+    RewriteRule ^product-category/stoly-i-stoliki/rabochie-stoly/?$ /catalog/pismennye-stoly/ [R=301,L]
     RewriteRule ^product-category/stoly-i-stoliki/tualetnye-stoliki/?$ /catalog/tualetnye-stoliki/ [R=301,L]
     RewriteRule ^product-category/stoly-i-stoliki/stoliki/?$ /catalog/zhurnalnye-stoliki/ [R=301,L]
     RewriteRule ^product-category/stoly-i-stoliki/stoly-dlya-noutbuka/?$ /catalog/podstavki-i-stoliki-dlya-noutbuka/ [R=301,L]
