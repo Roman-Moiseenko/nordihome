@@ -247,6 +247,14 @@ function initSortable() {
     sortableInstance = Sortable.create(sortableEl.value, {
         handle: '.drag-handle',
         animation: 200,
+        // forceFallback отключает нативный HTML5 drag-and-drop,
+        // из-за которого браузер блокирует прокрутку колесом мыши во время перетаскивания
+        forceFallback: true,
+        // Автопрокрутка страницы при поднесении элемента к краю экрана
+        scroll: true,
+        scrollSensitivity: 30,
+        scrollSpeed: 10,
+        bubbleScroll: true,
         onEnd: async (evt) => {
             const children = sortableEl.value!.children
             if (!children.length) return

@@ -487,7 +487,7 @@ function onUploadError() {
 }
 
 .info-form {
-    flex: 1;
+   /* flex: 1;*/
 }
 
 .info-form :deep(.el-form-item) {
