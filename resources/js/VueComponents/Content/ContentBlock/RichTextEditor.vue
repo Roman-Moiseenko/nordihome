@@ -57,6 +57,50 @@ const toolbar: EditorToolbarGroup[] = [
     { items: ['removeformat', 'code', 'preview', 'fullscreen'] },
 ]
 
+// SVG-теги разрешаем дополнительно, чтобы в Source Code можно было вставлять иконки <svg>.
+const svgTags = [
+    'svg', 'path', 'g', 'defs', 'use', 'symbol', 'circle', 'rect',
+    'line', 'polyline', 'polygon', 'ellipse',
+]
+
+// Дефолтный allowlist редактора + SVG-теги (иначе <svg> вырезается встроенным санитайзером).
+const allowedTags = [
+    'p', 'br', 'div', 'span', 'strong', 'b', 'em', 'i', 'u', 's', 'strike',
+    'sup', 'sub', 'code', 'pre', 'blockquote',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
+    'ul', 'ol', 'li', 'input', 'a', 'img', 'figure', 'figcaption',
+    'table', 'thead', 'tbody', 'tfoot', 'tr', 'th', 'td', 'caption', 'hr',
+    'video', 'audio', 'source', 'iframe',
+    ...svgTags,
+]
+
+const allowedAttributes: Record<string, string[]> = {
+    '*': ['class', 'style', 'title', 'dir', 'id'],
+    span: ['data-erag-mention', 'data-erag-mention-id', 'data-erag-mention-label', 'data-erag-mention-value', 'data-erag-merge-tag', 'data-erag-merge-tag-value', 'data-erag-merge-tag-name', 'contenteditable'],
+    ul: ['data-erag-checklist'],
+    li: ['data-erag-checklist-item'],
+    input: ['type', 'checked', 'contenteditable', 'data-erag-checklist-checkbox'],
+    a: ['href', 'target', 'rel', 'name'],
+    img: ['src', 'alt', 'width', 'height'],
+    table: ['width', 'cellpadding', 'cellspacing', 'border'],
+    td: ['colspan', 'rowspan', 'width', 'height'],
+    th: ['colspan', 'rowspan', 'scope', 'width', 'height'],
+    video: ['src', 'controls', 'width', 'height', 'poster'],
+    audio: ['src', 'controls'],
+    source: ['src', 'type'],
+    iframe: ['src', 'width', 'height', 'allow', 'allowfullscreen', 'title'],
+    svg: ['viewBox', 'xmlns', 'width', 'height', 'fill', 'stroke', 'stroke-width', 'stroke-linecap', 'stroke-linejoin'],
+    path: ['d', 'fill', 'stroke', 'stroke-width'],
+    g: ['fill', 'stroke', 'stroke-width'],
+    circle: ['cx', 'cy', 'r', 'fill', 'stroke', 'stroke-width'],
+    rect: ['x', 'y', 'width', 'height', 'rx', 'ry', 'fill', 'stroke', 'stroke-width'],
+    line: ['x1', 'y1', 'x2', 'y2', 'stroke', 'stroke-width'],
+    polyline: ['points', 'fill', 'stroke', 'stroke-width'],
+    polygon: ['points', 'fill', 'stroke', 'stroke-width'],
+    ellipse: ['cx', 'cy', 'rx', 'ry', 'fill', 'stroke', 'stroke-width'],
+    use: ['href', 'xlink:href'],
+}
+
 const editorInit = computed<EditorInit>(() => ({
     height: props.height,
     minHeight: 160,
@@ -67,6 +111,8 @@ const editorInit = computed<EditorInit>(() => ({
     branding: false,
     promotion: false,
     resize: false,
+    allowedTags,
+    allowedAttributes,
     plugins: [
         'history',
         'formatting',
