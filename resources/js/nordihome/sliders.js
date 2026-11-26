@@ -31,6 +31,14 @@ window.$ = jQuery;
         }
     };
 
+    function initOwlAria($slider) {
+        $slider.find('.owl-prev').attr('aria-label', 'Предыдущий слайд');
+        $slider.find('.owl-next').attr('aria-label', 'Следующий слайд');
+        $slider.find('.owl-dot').each(function (index) {
+            $(this).attr('aria-label', 'Перейти к слайду ' + (index + 1));
+        });
+    }
+
     if (document.querySelectorAll('.widget-slider-common') !== null) {
         let slidersWidget= $('.widget-slider-common');
         slidersWidget.each(function (element) {
@@ -54,7 +62,7 @@ window.$ = jQuery;
             optionsSliderWidget.mouseDrag = mouseDrag;
             if (!nav) optionsSliderWidget.responsive = {}
 
-            sliderWidget.owlCarousel(optionsSliderWidget);
+
             if (mouseScroll === 1) {
                 sliderWidget.on('mousewheel', '.owl-stage', function (e) {
                     if (e.originalEvent.deltaY > 0) {
@@ -65,6 +73,12 @@ window.$ = jQuery;
                     e.preventDefault();
                 });
             }
+            sliderWidget.on('initialized.owl.carousel', function () {
+                setTimeout(function() {
+                    initOwlAria(sliderWidget);
+                }, 0);
+            });
+            sliderWidget.owlCarousel(optionsSliderWidget);
         });
     }
 
@@ -84,7 +98,11 @@ window.$ = jQuery;
             optionsSliderWidget.dots = dots;
             optionsSliderWidget.nav = nav;
             if (!nav) optionsSliderWidget.responsive = {}
-            //console.log(optionsSliderWidget)
+            sliderWidget.on('initialized.owl.carousel', function () {
+                setTimeout(function() {
+                    initOwlAria(sliderWidget);
+                }, 0);
+            });
             sliderWidget.owlCarousel(optionsSliderWidget);
         });
     }
@@ -190,7 +208,7 @@ window.$ = jQuery;
             product_optionsSliderBase.loop = false;
 
             product_optionsSliderBase.margin = 0;
-            sliderImagesProduct.owlCarousel(product_optionsSliderBase);
+
             if (mouseScroll !== 0) {
                 sliderImagesProduct.on('mousewheel', '.owl-stage', function (e) {
                     if (e.originalEvent.deltaY > 0) {
@@ -201,6 +219,12 @@ window.$ = jQuery;
                     e.preventDefault();
                 });
             }
+            sliderImagesProduct.on('initialized.owl.carousel', function () {
+                setTimeout(function() {
+                    initOwlAria(sliderImagesProduct);
+                }, 0);
+            });
+            sliderImagesProduct.owlCarousel(product_optionsSliderBase);
         });
     }
     if (document.getElementById('slider-old-catalog') !== null) {
