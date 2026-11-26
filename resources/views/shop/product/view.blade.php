@@ -25,6 +25,7 @@
                 <div class="view-image-product">
                     @if(!empty($product->images))
                         <img id="main-image-product" src="{{ $product->images[0]->src }}"
+                             alt="{{ $product->images[0]->alt }}"
                              style="width: 100%; cursor: pointer" data-index="0">
 
                         @if($product->only_on_order)
