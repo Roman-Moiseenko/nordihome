@@ -9,7 +9,9 @@ use App\Modules\Parser\Application\DTOs\Category\ParserCategoryCreateData;
 use App\Modules\Parser\Infrastructure\Jobs\LoadCategoryIkeaJob;
 use App\Modules\Parser\Infrastructure\Persistence\ParserCategoryRepository;
 use App\Modules\Setting\Entity\Settings;
+use App\Modules\Shared\Application\Actions\GetPhotoByEntityUseCase;
 use App\Modules\Shared\Application\DTOs\JobPhotoLoadData;
+use App\Modules\Shared\Application\DTOs\Photo\PhotoByEntityData;
 use App\Modules\Shared\Domain\Entities\UserPermission;
 use App\Modules\Shared\Infrastructure\Job\LoadPhotoByUrlJob;
 
@@ -24,6 +26,7 @@ readonly class LoadParserCategoryIkeaService
         private TranslateService            $translate,
         private CreateParserCategoryUseCase $createCategoryUseCase,
         private ParserCategoryRepository $parserCategoryRepository,
+        private GetPhotoByEntityUseCase          $getPhotoByEntityUseCase,
     )
     {
         $this->userPermission = new UserPermission(
@@ -47,7 +50,14 @@ readonly class LoadParserCategoryIkeaService
 
     public function addCategory($categoryData, $parent_id = null): void
     {
-        if (!is_null($this->parserCategoryRepository->getByIkeaId($categoryData['id']))) return;
+        if (!is_null($category = $this->parserCategoryRepository->getByIkeaId($categoryData['id']))) {
+            $dto2 = new PhotoByEntityData($category->id, 'parser.category', 'image');
+            $photo = $this->getPhotoByEntityUseCase->execute($dto2);
+            if (empty($photo)) {
+                $this->loadImage($category->id, $categoryData['im'] ?? null);
+            }
+            return;
+        }
 
         $name = $this->translate->translate($categoryData['name']);
         $dto = new ParserCategoryCreateData(
@@ -56,7 +66,8 @@ readonly class LoadParserCategoryIkeaService
             parentId: $parent_id,
         );
         $category = $this->createCategoryUseCase->execute($dto, $this->userPermission);
-        if (isset($categoryData['im'])) {
+        $this->loadImage($category->id, $categoryData['im'] ?? null);
+       /* if (isset($categoryData['im'])) {
             $dto = new JobPhotoLoadData(
                 imageableId: $category->id,
                 modelType: 'parser.category',
@@ -66,10 +77,26 @@ readonly class LoadParserCategoryIkeaService
             );
             LoadPhotoByUrlJob::dispatch($dto, new UserPermission(null, ['admin'], ['storage.photo.unload']));
         }
+        */
         if (isset($categoryData['subs']))
             foreach ($categoryData['subs'] as $child) {
                 LoadCategoryIkeaJob::dispatch($child, $category->id); //$this->addCategory($child, $category->id);
             }
     }
+
+    private function loadImage(int $categoryId, string|null $url): void
+    {
+        if (!is_null($url)) {
+            $dto = new JobPhotoLoadData(
+                imageableId: $categoryId,
+                modelType: 'parser.category',
+                type: 'image',
+                url: $url,
+                isProxy: $this->isProxy,
+            );
+            LoadPhotoByUrlJob::dispatch($dto, new UserPermission(null, ['admin'], ['storage.photo.unload']));
+        }
+    }
+
 
 }

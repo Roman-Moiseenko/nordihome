@@ -77,7 +77,7 @@ readonly class LoadProductWpService
             //  $tempCategory = $this->findOrCreateTempCategoryUseCase->execute();
             //   if ($productEntity->mainCategoryId !== $tempCategory->id) {
             //Проверяем есть ли изображения
-            $dto = new PhotoByEntityData($productEntity->id, 'catalog.product', 'image');
+            $dto = new PhotoByEntityData($productEntity->id, 'catalog.product', 'gallery');
             $photo = $this->getPhotoByEntityUseCase->execute($dto);
             if (empty($photo)) {
                 $this->loadImages($productEntity->id, $product['images'], $userPermission);
