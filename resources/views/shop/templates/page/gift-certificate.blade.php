@@ -63,7 +63,7 @@
                                                 <label><input name="name" type="text" required placeholder="Ваше имя*"/></label>
                                             </div>
                                             <div class="col-sm-6 col-md-6 col-lg-3 m-b_10">
-                                                <label><input name="phone" class="mask-phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/></label>
+                                                <label><input name="phone" class="mask-phone" type="tel" required placeholder="Ваш телефон*"/></label>
                                             </div>
                                             <div class="col-sm-6 col-md-6 col-lg-3 m-b_10">
                                                 <label><input name="telegram" placeholder="Ник в Телеграм: @username"/></label>
@@ -244,7 +244,7 @@
                                                         <label><input name="name" type="text" required placeholder="Ваше имя*"/></label>
                                                     </div>
                                                     <div class="col-sm-6 col-md-6 col-lg-6 col-xl-5 sert-m-b m-b_10">
-                                                        <label><input name="phone" class="mask-phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/></label>
+                                                        <label><input name="phone" class="mask-phone" type="tel" required placeholder="Ваш телефон*"/></label>
                                                     </div>
                                                     <div class="col-sm-6 col-md-6 col-lg-6 col-xl-5 m-b_10">
                                                         <label><input placeholder="mail@yandex.ru" type="email" required name="email*"></label>
@@ -395,7 +395,7 @@
                                 </div>
                                 <div class="col-md-6 col-lg-4">
                                     <label>
-                                        <input name="phone" class="mask-phone" type="tel" required placeholder="Ваш телефон: +79097589135*"/>
+                                        <input name="phone" class="mask-phone" type="tel" required placeholder="Ваш телефон*"/>
                                     </label>
                                 </div>
                                 <div class="col-md-6 col-lg-4">

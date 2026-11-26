@@ -23,12 +23,12 @@
     <div id="{{ $widget->id }}" class="feedback" not-hide>
         <div class="m-b_10">
             <label>{{ $widget->fields["name"] }}<br>
-                <input name="name" size="40" type="text" required placeholder="Елена*"/>
+                <input name="name" size="40" type="text" required placeholder="Ваше имя*"/>
             </label>
         </div>
         <div class="m-b_10">
             <label>{{ $widget->fields["phone"] }}<br>
-                <input name="phone" class="mask-phone" size="40" type="tel" required placeholder="+79097589135*"/>
+                <input name="phone" class="mask-phone" size="40" type="tel" required placeholder="Ваш телефон*"/>
             </label>
         </div>
         <div class="m-b_10">
