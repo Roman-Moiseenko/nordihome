@@ -32,13 +32,13 @@ use App\Modules\Content\Entity\Widgets\FormWidget;
 <div>
     <div id="{{ $widget->id }}" class="feedback" not-hide>
         <div class="m-b_10 m-t_10">
-            <label> {{ $widget->fields["name"] }} <input name="name" class="width_100" required placeholder="Елена*"/></label>
+            <label> {{ $widget->fields["name"] }} <input name="name" class="width_100" required placeholder="Введите имя*"/></label>
         </div>
         <div class="m-b_10">
-            <label> {{ $widget->fields["phone"] }} <input type="tel" name="phone" class="mask-phone width_100" data-check="phone" required placeholder="+79097589135*"/></label>
+            <label> {{ $widget->fields["phone"] }} <input type="tel" name="phone" class="mask-phone width_100" data-check="phone" required placeholder="Введите номер*"/></label>
         </div>
         <div class="m-b_10">
-            <label>{{ $widget->fields["question"] }} <textarea name="question" class="width_100" required placeholder="Мой вопрос*"></textarea>
+            <label>{{ $widget->fields["question"] }} <textarea name="question" class="width_100" required placeholder="Напишите вопрос*"></textarea>
             </label>
         </div>
         <div class="m-b_10">

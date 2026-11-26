@@ -125,6 +125,7 @@ ul li, ol li {list-style-position: inside;}
 .p-relative {position:relative;}
 .overflow_hidden {overflow:hidden;}
 .width_100 {width:100%;}
+.width_auto {width:100%;}
 .bg-white {background:$white;}
 .bg-black {background:$black; color:$white;}
 .bg-blue {background:$blue; color:$white;}
@@ -149,7 +150,7 @@ ul li, ol li {list-style-position: inside;}
 .b-radius-right_16, .b-radius-right_16 img {border-radius: 0 $border-radius_16 $border-radius_16 0;}
 .img-article_b12 img {border-radius:$border-radius_12;}
 .img-article_b16 img {border-radius:$border-radius_16;}
- owl-carousel.article-slider-width_auto .owl-item img {width:auto;}
+.owl-carousel.article-slider-width_auto .owl-item img {width:auto;margin:0 auto;}
 .article_img_100 img {width:100%;}
 .article-img-radius-top img {border-radius: $border-radius_12 12px 0 0;width: 100%;}
 .article-lable_orange {background:$orange; border-radius:$border-radius_12;padding:5px 20px;}
@@ -439,6 +440,7 @@ a[href^="tel:"] {
         .owl-item {
             display: flex;
             flex-direction: column;
+            padding:0 5px;
             .text-center {
                 display: flex;
                 flex-direction: column;
@@ -531,7 +533,11 @@ a[href^="tel:"] {
         text-decoration: none;
     }
 }
-
+.article-ng26-img {display: flex;flex-wrap: wrap;justify-content: space-between;}
+.article-ng26-img > div {width:19%;}
+.article-ng26-img div.one {width:20%;}
+.article-ng26-img div .text {margin: 12px 0;}
+.article-ng26-img img {display:block;}
 @media (max-width: 990px) {
     .main-slider-sale .main-slider .sl-text {
         padding: 50px 50px 50px 30px;
@@ -555,6 +561,7 @@ a[href^="tel:"] {
     .p-b_50 {padding-bottom: 30px;}
     .p-t_50 {padding-top: 30px;}
     .p-block_50 {padding: 20px;}
+    .article-ng26-img div .text {margin: 3px 0;font-size: 13px;}
 }
 @media (max-width: 576px) {
     .main-slider-sale .main-slider .sl-text .heading-border {font-size: 24px;}
@@ -567,4 +574,8 @@ a[href^="tel:"] {
     h2 {font-size: 25px;}
     h3 {font-size: 22px;}
     h4 {font-size: 20px;}
+}
+@media (max-width: 500px) {
+    .article-ng26-img > div, .article-ng26-img div.one {width: 31%;margin-right: 5px;}
+    .article-ng26-img {justify-content: flex-start;}
 }

@@ -62,11 +62,11 @@
                     >{!! $contacts['avito']->svg !!}</a>
                 @endif</div>
             <div class="item-social m-t_10">
-                <div class="link">
+               <!-- <div class="link">
                     @if(isset($contacts['instagram']))
                         <b>{{ $contacts['instagram']->url }}</b>
                     @endif
-                </div>
+                </div> -->
                 @if(isset($contacts['vk']))
                     <a href="{{ $contacts['vk']->url }}" class="link" target="_blank"
                        data-analytics-action="contact_click"

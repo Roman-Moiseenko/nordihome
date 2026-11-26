@@ -67,7 +67,7 @@
                     </div>
                     <div class="col-md-6 col-lg-3">
                         <label>
-                            <input name="phone" type="tel" required placeholder="Ваш телефон: +79097589135*">
+                            <input name="phone" type="tel" required placeholder="Ваш телефон*">
                         </label>
                     </div>
                     <div class="col-md-9 col-lg-5">
