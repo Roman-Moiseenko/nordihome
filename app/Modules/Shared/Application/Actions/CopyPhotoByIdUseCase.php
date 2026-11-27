@@ -6,6 +6,7 @@ namespace App\Modules\Shared\Application\Actions;
 
 use App\Modules\Shared\Application\DTOs\JobPhotoCopyData;
 use App\Modules\Shared\Application\DTOs\Photo\PhotoUploadData;
+use App\Modules\Shared\Domain\ValueObjects\QueueName;
 use App\Modules\Shared\Infrastructure\Job\RemoveTempPhotoJob;
 use App\Modules\Shared\Infrastructure\Models\Photo;
 use App\Modules\Shared\Infrastructure\Services\PhotoService;
@@ -68,7 +69,7 @@ class CopyPhotoByIdUseCase
 
         // Для S3 localCopy возвращает временный файл — запланируем его удаление.
         if (str_starts_with($sourcePath, sys_get_temp_dir())) {
-            RemoveTempPhotoJob::dispatch($sourcePath)->delay(now()->addMinutes(2));
+            RemoveTempPhotoJob::dispatch($sourcePath)->delay(now()->addMinutes(2))->onQueue(QueueName::PHOTO);
         }
 
         return new UploadedFile(
